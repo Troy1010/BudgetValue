@@ -32,7 +32,6 @@ class HostActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_import_transactions -> {
-                logz("Import..")
                 val intent = Intent()
                 intent.type = "*/*"
                 intent.action = Intent.ACTION_GET_CONTENT
@@ -48,7 +47,8 @@ class HostActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         if (requestCode == CODE_PICK_TRANSACTIONS_FILE && resultCode == Activity.RESULT_OK) {
             try {
-                transactionsVM.importTransactions(intent!!.data!!)
+                val inputStream = contentResolver.openInputStream(intent!!.data!!)!!
+                transactionsVM.importTransactions(inputStream)
                 easyToast("Import successful")
             } catch (e: Exception) {
                 easyToast("Import failed")
