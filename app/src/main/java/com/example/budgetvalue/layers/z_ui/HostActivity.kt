@@ -1,13 +1,24 @@
 package com.example.budgetvalue.layers.z_ui
 
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
+import com.example.budgetvalue.App
+import com.example.budgetvalue.CODE_PICK_TRANSACTIONS_FILE
 import com.example.budgetvalue.R
+import com.example.budgetvalue.layers.view_models.TransactionsVM
+import com.example.tmcommonkotlin.easyToast
 import com.example.tmcommonkotlin.logz
+import com.example.tmcommonkotlin.vmFactoryFactory
 
 class HostActivity : AppCompatActivity() {
+    val appComponent by lazy { (applicationContext as App).appComponent }
+    val transactionsVM: TransactionsVM by viewModels { vmFactoryFactory { TransactionsVM(appComponent.getRepo()) } }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_host)
@@ -22,8 +33,28 @@ class HostActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.menu_import_transactions -> {
                 logz("Import..")
+                val intent = Intent()
+                intent.type = "*/*"
+                intent.action = Intent.ACTION_GET_CONTENT
+                startActivityForResult(
+                    Intent.createChooser(intent, "Select transactions csv"),
+                    CODE_PICK_TRANSACTIONS_FILE
+                )
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == CODE_PICK_TRANSACTIONS_FILE && resultCode == Activity.RESULT_OK) {
+            intent?.let {
+                if (transactionsVM.importTransactions(it.data!!)) {
+                    easyToast("Import successful")
+                } else {
+                    easyToast("Import failed")
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 }
