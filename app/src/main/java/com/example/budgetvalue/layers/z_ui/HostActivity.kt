@@ -51,6 +51,7 @@ class HostActivity : AppCompatActivity() {
                 transactionsVM.importTransactions(inputStream)
                 easyToast("Import successful")
             } catch (e: Exception) {
+                e.printStackTrace()
                 easyToast("Import failed")
             }
         }
