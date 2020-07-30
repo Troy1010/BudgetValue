@@ -45,16 +45,15 @@ class HostActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         if (requestCode == CODE_PICK_TRANSACTIONS_FILE && resultCode == Activity.RESULT_OK) {
-            intent?.let {
-                if (transactionsVM.importTransactions(it.data!!)) {
-                    easyToast("Import successful")
-                } else {
-                    easyToast("Import failed")
-                }
+            try {
+                transactionsVM.importTransactions(intent!!.data!!)
+                easyToast("Import successful")
+            } catch (e: Exception) {
+                easyToast("Import failed")
             }
         }
-        super.onActivityResult(requestCode, resultCode, data)
+        super.onActivityResult(requestCode, resultCode, intent)
     }
 }

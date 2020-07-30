@@ -23,4 +23,10 @@ interface MyDao {
 
     @Query("SELECT COUNT(*) FROM `Transaction`")
     fun sizeZ(): Int
+
+    fun add(transactions: List<Transaction>) {
+        for (transaction in transactions) {
+            add(transaction)
+        }
+    }
 }
