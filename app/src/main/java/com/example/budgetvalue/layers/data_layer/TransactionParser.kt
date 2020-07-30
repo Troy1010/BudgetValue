@@ -2,12 +2,14 @@ package com.example.budgetvalue.layers.data_layer
 
 import android.net.Uri
 import com.example.budgetvalue.models.Transaction
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
 
 class TransactionParser : ITransactionParser {
-    override fun parseInputStreamToTransactions(inputStream: InputStream) : List<Transaction> {
+    override suspend fun parseInputStreamToTransactions(inputStream: InputStream) : List<Transaction> = withContext(Dispatchers.IO) {
         val transactions = ArrayList<Transaction>()
         val reader = BufferedReader(InputStreamReader(inputStream))
         val iterator = reader.lineSequence().iterator()
@@ -64,6 +66,6 @@ class TransactionParser : ITransactionParser {
             //
             transactions.add(Transaction(date, description!!, amount))
         }
-        return transactions.toList()
+        return@withContext transactions.toList()
     }
 }

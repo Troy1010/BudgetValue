@@ -7,24 +7,24 @@ import com.example.budgetvalue.models.Transaction
 @Dao
 interface MyDao {
     @Query("DELETE FROM `Transaction`")
-    fun clear()
+    suspend fun clear()
 
     @Insert
-    fun add(transaction: Transaction)
+    suspend fun add(transaction: Transaction)
 
     @Query("select * from `Transaction`")
-    fun getTransactions(): List<Transaction>
+    suspend fun getTransactions(): List<Transaction>
 
     @Delete
-    fun deleteTransaction(transaction: Transaction)
+    suspend fun deleteTransaction(transaction: Transaction)
 
     @Update
-    fun updateTransaction(transaction: Transaction)
+    suspend fun updateTransaction(transaction: Transaction)
 
     @Query("SELECT COUNT(*) FROM `Transaction`")
-    fun sizeZ(): Int
+    suspend fun sizeZ(): Int
 
-    fun add(transactions: List<Transaction>) {
+    suspend fun add(transactions: List<Transaction>) {
         for (transaction in transactions) {
             add(transaction)
         }
