@@ -29,4 +29,10 @@ interface MyDao {
             add(transaction)
         }
     }
+
+    @Query("select date from `Transaction` WHERE id=:id")
+    fun getTransactionDate(id: Int): String
+
+    @Query("UPDATE `Transaction` SET date=:value WHERE id=:id")
+    fun setTransactionDate(id: Int, value: String)
 }

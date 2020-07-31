@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.navigation.Navigation
+import androidx.navigation.ui.setupWithNavController
 import com.example.budgetvalue.App
 import com.example.budgetvalue.CODE_PICK_TRANSACTIONS_FILE
 import com.example.budgetvalue.R
@@ -24,6 +26,7 @@ class HostActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_host)
+        bottom_navigation.setupWithNavController(Navigation.findNavController(this, R.id.fragNavHost))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
