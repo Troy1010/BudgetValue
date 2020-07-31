@@ -14,6 +14,8 @@ import com.example.budgetvalue.layers.view_models.TransactionsVM
 import com.example.tmcommonkotlin.easyToast
 import com.example.tmcommonkotlin.logz
 import com.example.tmcommonkotlin.vmFactoryFactory
+import kotlinx.android.synthetic.main.activity_host.*
+import kotlinx.coroutines.runBlocking
 
 class HostActivity : AppCompatActivity() {
     val appComponent by lazy { (applicationContext as App).appComponent }
@@ -39,6 +41,12 @@ class HostActivity : AppCompatActivity() {
                     Intent.createChooser(intent, "Select transactions csv"),
                     CODE_PICK_TRANSACTIONS_FILE
                 )
+            }
+            R.id.menu_print_transactions -> {
+                runBlocking {
+                    val transactions = appComponent.getRepo().getTransactions()
+                    logz("transactions:${transactions.joinToString(",")}")
+                }
             }
         }
         return super.onOptionsItemSelected(item)
