@@ -8,4 +8,9 @@
         <item name="colorOnSecondary">@color/colorVsLightSoft</item>
     </style>
 
+    <style name="AppTheme.StandardTextView">
+        <item name="android:textSize">22sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
 </resources>
