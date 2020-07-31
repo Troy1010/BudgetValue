@@ -78,4 +78,7 @@ dependencies {
     implementation "com.google.android.material:material:1.1.0"
     // MultiDex
     implementation 'com.android.support:multidex:1.0.3'
+    // Navigation
+    implementation "androidx.navigation:navigation-fragment-ktx:2.3.0"
+    implementation "androidx.navigation:navigation-ui-ktx:2.3.0"
 }
