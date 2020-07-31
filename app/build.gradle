@@ -81,4 +81,6 @@ dependencies {
     // Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:2.3.0"
     implementation "androidx.navigation:navigation-ui-ktx:2.3.0"
+    // GSon
+    implementation 'com.google.code.gson:gson:2.8.6'
 }
