@@ -17,12 +17,6 @@ class TransactionsVM(private val repo: Repo):ViewModel() {
             val transactions = repo.parseInputStreamToTransactions(inputStream)
             repo.clear()
             repo.add(transactions)
-            logz("transactions added.")
-        }
-    }
-    init {
-        transactions.observeForever {
-            logz("new transactions:${it.joinToString(",")}")
         }
     }
 }

@@ -14,11 +14,13 @@ import kotlinx.coroutines.launch
 class TransactionVM(repo: Repo, transactionsVM: TransactionsVM): ViewModel() {
     val transaction = MediatorLiveData<Transaction>()
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            while (transactionsVM.transactions.value?.get(0) == null) {
-                delay(50)
+        transaction.addSource(transactionsVM.transactions) {
+            if (it!=null) {
+                viewModelScope.launch(Dispatchers.IO) {
+                    transaction.postValue(it[0])
+                }
+                transaction.removeSource(transactionsVM.transactions)
             }
-            transaction.postValue(transactionsVM.transactions.value?.get(0))
         }
     }
 }
