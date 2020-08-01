@@ -13,4 +13,7 @@ data class Transaction(
     var categoryAmounts: String = Gson().toJson(HashMap<String, BigDecimal>()),
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0
-)
+) {
+    val isUncategorized: Boolean
+        get() = categoryAmounts == "{}"
+}

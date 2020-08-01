@@ -72,7 +72,7 @@
             app:layout_constraintEnd_toStartOf="@id/guideline_left"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:text='@{""+transactionsVM.transactions.size()}'
+            android:text='@{""+transactionsVM.uncategorizedTransactions.size()}'
             tools:text="25" />
 
         <TextView
