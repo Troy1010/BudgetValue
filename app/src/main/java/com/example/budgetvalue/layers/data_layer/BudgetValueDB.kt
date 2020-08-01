@@ -4,7 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.example.budgetvalue.models.Transaction
 
-@Database(entities = [Transaction::class], version = 1)
+@Database(entities = [Transaction::class], version = 2)
 abstract class BudgetValueDB : RoomDatabase() {
     abstract fun myDao(): MyDao
 }

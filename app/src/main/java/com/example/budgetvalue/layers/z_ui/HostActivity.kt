@@ -48,7 +48,7 @@ class HostActivity : AppCompatActivity() {
             R.id.menu_print_transactions -> {
                 runBlocking {
                     val transactions = appComponent.getRepo().getTransactions()
-                    logz("transactions:${transactions.joinToString(",")}")
+                    logz("transactions:${transactions.value?.joinToString(",")}")
                 }
             }
         }
