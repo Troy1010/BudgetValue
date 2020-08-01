@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -14,7 +13,7 @@ import com.example.budgetvalue.App
 import com.example.budgetvalue.R
 import com.example.budgetvalue.databinding.FragCategorizeSpendsBinding
 import com.example.budgetvalue.layers.view_models.CategoriesVM
-import com.example.budgetvalue.layers.view_models.TransactionVM
+import com.example.budgetvalue.layers.view_models.CategorizeSpendsVM
 import com.example.budgetvalue.layers.view_models.TransactionsVM
 import com.example.tmcommonkotlin.GenericRecyclerViewAdapter
 import com.example.tmcommonkotlin.vmFactoryFactory
@@ -25,7 +24,7 @@ class CategorizeSpendsFrag : Fragment(), GenericRecyclerViewAdapter.Callbacks {
     lateinit var mBinding: FragCategorizeSpendsBinding
     val appComponent by lazy { (requireActivity().application as App).appComponent }
     val transactionsVM: TransactionsVM by activityViewModels { vmFactoryFactory { TransactionsVM(appComponent.getRepo()) } }
-    val transactionVM:TransactionVM by viewModels { vmFactoryFactory { TransactionVM(appComponent.getRepo(), transactionsVM) }}
+    val categorizeSpendsVM:CategorizeSpendsVM by viewModels { vmFactoryFactory { CategorizeSpendsVM(appComponent.getRepo(), transactionsVM) }}
     val categoriesVM:CategoriesVM by activityViewModels { vmFactoryFactory { CategoriesVM() } }
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,7 +33,7 @@ class CategorizeSpendsFrag : Fragment(), GenericRecyclerViewAdapter.Callbacks {
     ): View? {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.frag_categorize_spends, container, false)
         mBinding.lifecycleOwner = this
-        mBinding.transactionVM = transactionVM
+        mBinding.categorizeSpendsVM = categorizeSpendsVM
         mBinding.transactionsVM = transactionsVM
         return mBinding.root
     }
@@ -54,7 +53,7 @@ class CategorizeSpendsFrag : Fragment(), GenericRecyclerViewAdapter.Callbacks {
     override fun bindRecyclerItemView(view: View, i: Int) {
         view.btn_category.text = categoriesVM.choosableCategories[i].name
         view.btn_category.setOnClickListener {
-            transactionVM.setTransactionCategory(categoriesVM.choosableCategories[i])
+            categorizeSpendsVM.setTransactionCategory(categoriesVM.choosableCategories[i])
         }
     }
 
