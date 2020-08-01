@@ -13,7 +13,4 @@ data class Transaction(
     var categoryAmounts: String = Gson().toJson(HashMap<String, BigDecimal>()),
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0
-) {
-    val wrapper
-        get() = TransactionWrapper(this)
-}
+)
