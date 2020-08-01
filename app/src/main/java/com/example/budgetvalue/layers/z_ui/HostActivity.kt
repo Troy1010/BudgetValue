@@ -46,10 +46,7 @@ class HostActivity : AppCompatActivity() {
                 )
             }
             R.id.menu_print_transactions -> {
-                runBlocking {
-                    val transactions = appComponent.getRepo().getTransactions()
-                    logz("transactions:${transactions.value?.joinToString(",")}")
-                }
+                logz("transactions:${transactionsVM.transactions.value?.joinToString(",")}")
             }
         }
         return super.onOptionsItemSelected(item)
