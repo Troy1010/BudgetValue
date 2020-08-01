@@ -29,6 +29,7 @@ class CategorizeSpendsFrag : Fragment() {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.frag_categorize_spends, container, false)
         mBinding.lifecycleOwner = this
         mBinding.transactionVM = transactionVM
+        mBinding.transactionsVM = transactionsVM
         return mBinding.root
     }
 }
