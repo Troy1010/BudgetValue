@@ -2,10 +2,11 @@
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <item name="colorPrimary">#2D882D</item>
         <item name="colorPrimaryVariant">#55AA55</item>
-        <item name="colorOnPrimary">@color/colorVsLightSoft</item>
+        <item name="colorOnPrimary">@color/colorVsLight</item>
         <item name="colorSecondary">#1B998C</item>
         <item name="colorSecondaryVariant">#5EC2B7</item>
-        <item name="colorOnSecondary">@color/colorVsLightSoft</item>
+        <item name="colorOnSecondary">@color/colorVsLight</item>
+        <item name="android:colorBackground">#333</item>
     </style>
 
     <style name="AppTheme.StandardTextView">
