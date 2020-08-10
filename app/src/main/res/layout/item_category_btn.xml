@@ -7,7 +7,8 @@
     <Button
         android:id="@+id/btn_category"
         android:text="(CATEGORY)"
-        android:textSize="16sp"
+        android:textAllCaps="false"
+        android:textSize="14sp"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_margin="10dp"/>
