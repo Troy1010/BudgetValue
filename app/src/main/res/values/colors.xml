@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorVsLight">#000</color>
-    <color name="colorVsLightSoft">#555</color>
-    <color name="colorVsDark">#fff</color>
-    <color name="colorVsDarkSoft">#aaa</color>
+    <color name="colorOnLight">#000</color>
+    <color name="colorOnLightSoft">#555</color>
+    <color name="colorOnDark">#fff</color>
+    <color name="colorOnDarkSoft">#aaa</color>
+    <color name="colorBackgroundHighlight">#111</color>
 </resources>
