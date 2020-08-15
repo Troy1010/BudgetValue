@@ -26,13 +26,15 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="?android:colorBackground">
 
                 <TextView
                     android:id="@+id/textview_date"
                     style="@style/AppTheme.StandardTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorOnDark"
                     app:layout_constraintTop_toTopOf="parent"
                     android:text="@{categorizeSpendsVM.transaction.date}"
                     tools:text="DATE" />
@@ -40,6 +42,7 @@
                 <TextView
                     android:id="@+id/textview_amount"
                     style="@style/AppTheme.StandardTextView"
+                    android:textColor="@color/colorOnDark"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/textview_date"
@@ -50,6 +53,7 @@
                     style="@style/AppTheme.StandardTextView"
                     android:textSize="14sp"
                     android:layout_width="match_parent"
+                    android:textColor="@color/colorOnDark"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/textview_amount"
                     android:text="@{categorizeSpendsVM.transaction.description}"
@@ -72,6 +76,7 @@
             app:layout_constraintEnd_toStartOf="@id/guideline_left"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:textColor="@color/colorOnDark"
             android:text='@{""+transactionsVM.uncategorizedTransactions.size()}'
             tools:text="25" />
 
@@ -80,6 +85,7 @@
             style="@style/AppTheme.StandardTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:textColor="@color/colorOnDark"
             app:layout_constraintEnd_toStartOf="@id/guideline_left"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textview_amount_left"
