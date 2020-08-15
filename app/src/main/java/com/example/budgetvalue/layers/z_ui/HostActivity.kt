@@ -8,6 +8,9 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.budgetvalue.App
 import com.example.budgetvalue.CODE_PICK_TRANSACTIONS_FILE
@@ -22,11 +25,24 @@ import kotlinx.coroutines.runBlocking
 class HostActivity : AppCompatActivity() {
     val appComponent by lazy { (applicationContext as App).appComponent }
     val transactionsVM: TransactionsVM by viewModels { vmFactoryFactory { TransactionsVM(appComponent.getRepo()) } }
+    val navController by lazy { findNavController(R.id.fragNavHost) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_host)
-        bottom_navigation.setupWithNavController(Navigation.findNavController(this, R.id.fragNavHost))
+        bottom_navigation.setOnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.menu_accounts -> {
+                    navController.navigate(R.id.accountsFrag)
+                    true
+                }
+                R.id.menu_categorize_spends -> {
+                    navController.navigate(R.id.categorizeSpendsFrag)
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -6,6 +6,6 @@
         android:id="@+id/menu_categorize_spends"
         android:title="Spends" />
     <item
-        android:id="@+id/menu_2"
-        android:title="2" />
+        android:id="@+id/menu_accounts"
+        android:title="Accounts" />
 </menu>
