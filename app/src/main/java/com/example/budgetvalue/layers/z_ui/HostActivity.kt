@@ -43,6 +43,7 @@ class HostActivity : AppCompatActivity() {
                 else -> false
             }
         }
+        bottom_navigation.selectedItemId = R.id.menu_categorize_spends
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
