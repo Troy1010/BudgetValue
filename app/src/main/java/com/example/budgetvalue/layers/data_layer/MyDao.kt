@@ -2,7 +2,7 @@ package com.example.budgetvalue.layers.data_layer
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import java.math.BigDecimal
+import com.example.budgetvalue.models.Account
 import com.example.budgetvalue.models.Transaction
 
 @Dao
@@ -11,7 +11,7 @@ interface MyDao {
     suspend fun clear()
 
     @Insert
-    suspend fun add(transaction: Transaction)
+    suspend fun addTransaction(transaction: Transaction)
 
     @Query("select * from `Transaction`")
     fun getTransactions(): LiveData<List<Transaction>>
@@ -25,9 +25,9 @@ interface MyDao {
     @Query("SELECT COUNT(*) FROM `Transaction`")
     suspend fun sizeZ(): Int
 
-    suspend fun add(transactions: List<Transaction>) {
+    suspend fun addTransaction(transactions: List<Transaction>) {
         for (transaction in transactions) {
-            add(transaction)
+            addTransaction(transaction)
         }
     }
 
@@ -36,4 +36,16 @@ interface MyDao {
 
     @Query("UPDATE `Transaction` SET date=:value WHERE id=:id")
     fun setTransactionDate(id: Int, value: String)
+
+    @Insert
+    suspend fun addAccount(account: Account)
+
+    @Delete
+    suspend fun deleteAccount(account: Account)
+
+    @Update
+    suspend fun updateAccount(account: Account)
+
+    @Query("select * from `Account`")
+    fun getAccounts(): LiveData<List<Account>>
 }
