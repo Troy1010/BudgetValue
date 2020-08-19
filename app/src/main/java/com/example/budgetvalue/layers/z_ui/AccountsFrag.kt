@@ -4,10 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.budgetvalue.App
 import com.example.budgetvalue.R
+import com.example.budgetvalue.databinding.FragAccountsBinding
+import com.example.budgetvalue.databinding.FragCategorizeSpendsBinding
 import com.example.budgetvalue.layers.view_models.AccountsVM
 import com.example.tmcommonkotlin.GenericRecyclerViewAdapter
 import com.example.tmcommonkotlin.vmFactoryFactory
@@ -22,7 +25,10 @@ class AccountsFrag: Fragment(), GenericRecyclerViewAdapter.Callbacks {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.frag_accounts, container, false)
+        val mBinding: FragAccountsBinding = DataBindingUtil.inflate(inflater, R.layout.frag_accounts, container, false)
+        mBinding.lifecycleOwner = this
+        mBinding.accountsVM = accountsVM
+        return mBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
