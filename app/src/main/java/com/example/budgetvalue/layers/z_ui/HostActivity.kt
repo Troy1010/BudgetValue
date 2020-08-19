@@ -30,11 +30,12 @@ class HostActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.menu_accounts -> navController.navigate(R.id.accountsFrag)
                 R.id.menu_categorize -> navController.navigate(R.id.categorizeSpendsFrag)
+                R.id.menu_split -> navController.navigate(R.id.splitFrag)
                 else -> bSuccessfulNavigation = false
             }
             bSuccessfulNavigation
         }
-        bottom_navigation.selectedItemId = R.id.menu_categorize
+        bottom_navigation.selectedItemId = R.id.menu_split
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
