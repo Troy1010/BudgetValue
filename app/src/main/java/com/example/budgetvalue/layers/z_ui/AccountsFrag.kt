@@ -55,6 +55,11 @@ class AccountsFrag: Fragment(), GenericRecyclerViewAdapter.Callbacks {
     override fun bindRecyclerItemView(view: View, i: Int) {
         view.editText_name?.setText(accountsVM.accounts.value?.get(i)?.name ?: "")
         view.editText_amount?.setText(accountsVM.accounts.value?.get(i)?.amount ?: "")
+        view.btn_delete_account.setOnClickListener {
+            accountsVM.accounts.value?.get(i)?.let {
+                accountsVM.intentDeleteAccount.onNext(it)
+            }
+        }
     }
 
     override fun getRecyclerDataSize(): Int {

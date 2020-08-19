@@ -13,13 +13,20 @@ class AccountsVM(val repo: Repo): ViewModel() {
     val disposables = CompositeDisposable()
     val accounts = repo.getAccounts()
     val intentAddAccount = PublishSubject.create<Unit>()
+    val intentDeleteAccount = PublishSubject.create<Account>()
     init {
-        disposables.add(
+        disposables.addAll(
             intentAddAccount
                 .subscribe {
                     logz("intentAddAccount:$it")
                     viewModelScope.launch {
                         repo.addAccount(Account("", "0.00"))
+                    }
+                },
+            intentDeleteAccount
+                .subscribe {
+                    viewModelScope.launch {
+                        repo.deleteAccount(it)
                     }
                 }
         )
