@@ -18,7 +18,6 @@ class AccountsVM(private val repo: Repo): ViewModel() {
         disposables.addAll(
             intentAddAccount
                 .subscribe {
-                    logz("intentAddAccount:$it")
                     viewModelScope.launch {
                         repo.addAccount(Account("", "0.00"))
                     }

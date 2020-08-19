@@ -16,6 +16,7 @@ import com.example.budgetvalue.layers.view_models.AccountsVM
 import com.example.tmcommonkotlin.GenericRecyclerViewAdapter
 import com.example.tmcommonkotlin.logz
 import com.example.tmcommonkotlin.vmFactoryFactory
+import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindToLifecycle
 import kotlinx.android.synthetic.main.frag_accounts.*
 import kotlinx.android.synthetic.main.item_account.view.*
 
@@ -42,15 +43,16 @@ class AccountsFrag: Fragment(), GenericRecyclerViewAdapter.Callbacks {
     private fun setupViews() {
         recyclerview_accounts.layoutManager = LinearLayoutManager(requireActivity())
         recyclerview_accounts.adapter = GenericRecyclerViewAdapter(this, requireContext(), R.layout.item_account)
-        btn_do_something.setOnClickListener {
-
-            logz("accountsVM.accounts.value?.size?:${accountsVM.accounts.value?.size?:0}")
-            recyclerview_accounts.adapter?.notifyDataSetChanged()
-        }
     }
 
     var bNotifyDataSetChanged = true
     private fun setupObservers() {
+        accountsVM.intentAddAccount.bindToLifecycle(viewLifecycleOwner).subscribe {
+            bNotifyDataSetChanged = true
+        }
+        accountsVM.intentDeleteAccount.bindToLifecycle(viewLifecycleOwner).subscribe {
+            bNotifyDataSetChanged = true
+        }
         accountsVM.accounts.observe(viewLifecycleOwner) {
             if (bNotifyDataSetChanged) {
                 bNotifyDataSetChanged = false
@@ -64,7 +66,6 @@ class AccountsFrag: Fragment(), GenericRecyclerViewAdapter.Callbacks {
         view.editText_name?.setText(account.name)
         view.editText_amount?.setText(account.amount)
         view.btn_delete_account.setOnClickListener {
-            bNotifyDataSetChanged = true
             accountsVM.intentDeleteAccount.onNext(account)
         }
         view.editText_amount.setOnFocusChangeListener { v, b ->
