@@ -12,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 
-class CategorizeSpendsVM(val repo: Repo, transactionsVM: TransactionsVM): ViewModel() {
+class CategorizeVM(val repo: Repo, transactionsVM: TransactionsVM): ViewModel() {
     val transaction = MediatorLiveData<Transaction>()
     init {
         transaction.addSource(transactionsVM.uncategorizedTransactions) {

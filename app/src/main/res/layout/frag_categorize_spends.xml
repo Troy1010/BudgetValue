@@ -3,7 +3,7 @@
     <data>
         <variable
             name="categorizeSpendsVM"
-            type="com.example.budgetvalue.layers.view_models.CategorizeSpendsVM" />
+            type="com.example.budgetvalue.layers.view_models.CategorizeVM" />
         <variable
             name="transactionsVM"
             type="com.example.budgetvalue.layers.view_models.TransactionsVM" />
