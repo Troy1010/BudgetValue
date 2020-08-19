@@ -31,19 +31,16 @@ class HostActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_host)
         bottom_navigation.setOnNavigationItemSelectedListener {
+            var bSuccessfulNavigation = true
             when (it.itemId) {
-                R.id.menu_accounts -> {
-                    navController.navigate(R.id.accountsFrag)
-                    true
-                }
-                R.id.menu_categorize_spends -> {
-                    navController.navigate(R.id.categorizeSpendsFrag)
-                    true
-                }
-                else -> false
+                R.id.menu_accounts -> navController.navigate(R.id.accountsFrag)
+                R.id.menu_categorize_spends -> navController.navigate(R.id.categorizeSpendsFrag)
+                R.id.menu_import_transactions -> navController.navigate(R.id.importTransactionsFrag)
+                else -> bSuccessfulNavigation = false
             }
+            bSuccessfulNavigation
         }
-        bottom_navigation.selectedItemId = R.id.menu_accounts
+        bottom_navigation.selectedItemId = R.id.menu_import_transactions
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

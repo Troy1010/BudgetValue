@@ -11,4 +11,8 @@
         android:id="@+id/accountsFrag"
         android:name="com.example.budgetvalue.layers.z_ui.AccountsFrag"
         android:label="AccountsFrag" />
+    <fragment
+        android:id="@+id/importTransactionsFrag"
+        android:name="com.example.budgetvalue.layers.z_ui.ImportTransactionsFrag"
+        android:label="ImportTransactionsFrag" />
 </navigation>
