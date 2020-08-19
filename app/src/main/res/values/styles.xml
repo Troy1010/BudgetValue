@@ -14,4 +14,8 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="AppTheme.StandardEditText" parent="@android:style/Widget.EditText">
+        <item name="android:textColor">@color/colorOnDark</item>
+    </style>
+
 </resources>
