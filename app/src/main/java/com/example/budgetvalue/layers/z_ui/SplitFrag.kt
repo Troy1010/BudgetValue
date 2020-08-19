@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.budgetvalue.App
 import com.example.budgetvalue.R
-import com.example.budgetvalue.databinding.FragAccountsBinding
 import com.example.budgetvalue.databinding.FragSplitBinding
 import com.example.budgetvalue.layers.view_models.SplitVM
 import com.example.tmcommonkotlin.vmFactoryFactory
