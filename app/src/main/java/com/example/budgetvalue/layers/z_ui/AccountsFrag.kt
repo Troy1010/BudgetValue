@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.budgetvalue.App
 import com.example.budgetvalue.R
 import com.example.budgetvalue.databinding.FragAccountsBinding
-import com.example.budgetvalue.databinding.FragCategorizeSpendsBinding
 import com.example.budgetvalue.layers.view_models.AccountsVM
 import com.example.tmcommonkotlin.GenericRecyclerViewAdapter
 import com.example.tmcommonkotlin.logz
@@ -43,12 +42,20 @@ class AccountsFrag: Fragment(), GenericRecyclerViewAdapter.Callbacks {
     private fun setupViews() {
         recyclerview_accounts.layoutManager = LinearLayoutManager(requireActivity())
         recyclerview_accounts.adapter = GenericRecyclerViewAdapter(this, requireContext(), R.layout.item_account)
+        btn_do_something.setOnClickListener {
+
+            logz("accountsVM.accounts.value?.size?:${accountsVM.accounts.value?.size?:0}")
+            recyclerview_accounts.adapter?.notifyDataSetChanged()
+        }
     }
 
+    var bNotifyDataSetChanged = true
     private fun setupObservers() {
         accountsVM.accounts.observe(viewLifecycleOwner) {
-            logz("notify data set changed..")
-            recyclerview_accounts.adapter?.notifyDataSetChanged()
+            if (bNotifyDataSetChanged) {
+                bNotifyDataSetChanged = false
+                recyclerview_accounts.adapter?.notifyDataSetChanged()
+            }
         }
     }
 
@@ -57,6 +64,7 @@ class AccountsFrag: Fragment(), GenericRecyclerViewAdapter.Callbacks {
         view.editText_name?.setText(account.name)
         view.editText_amount?.setText(account.amount)
         view.btn_delete_account.setOnClickListener {
+            bNotifyDataSetChanged = true
             accountsVM.intentDeleteAccount.onNext(account)
         }
         view.editText_amount.setOnFocusChangeListener { v, b ->

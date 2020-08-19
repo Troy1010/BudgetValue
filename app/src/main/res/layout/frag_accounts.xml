@@ -21,11 +21,18 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:rxClick="@{accountsVM.intentAddAccount}" />
 
+        <Button
+            android:id="@+id/btn_do_something"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Do Something"
+            app:layout_constraintBottom_toTopOf="@id/btn_add_account" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview_accounts"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/btn_add_account"
+            app:layout_constraintBottom_toTopOf="@id/btn_do_something"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
