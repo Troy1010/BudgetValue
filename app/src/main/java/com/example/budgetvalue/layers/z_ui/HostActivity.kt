@@ -7,11 +7,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
 import com.example.budgetvalue.App
 import com.example.budgetvalue.CODE_PICK_TRANSACTIONS_FILE
 import com.example.budgetvalue.R
@@ -20,7 +16,6 @@ import com.example.tmcommonkotlin.easyToast
 import com.example.tmcommonkotlin.logz
 import com.example.tmcommonkotlin.vmFactoryFactory
 import kotlinx.android.synthetic.main.activity_host.*
-import kotlinx.coroutines.runBlocking
 
 class HostActivity : AppCompatActivity() {
     val appComponent by lazy { (applicationContext as App).appComponent }
@@ -35,12 +30,11 @@ class HostActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.menu_accounts -> navController.navigate(R.id.accountsFrag)
                 R.id.menu_categorize_spends -> navController.navigate(R.id.categorizeSpendsFrag)
-                R.id.menu_import_transactions -> navController.navigate(R.id.importTransactionsFrag)
                 else -> bSuccessfulNavigation = false
             }
             bSuccessfulNavigation
         }
-        bottom_navigation.selectedItemId = R.id.menu_import_transactions
+        bottom_navigation.selectedItemId = R.id.menu_categorize_spends
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

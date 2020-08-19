@@ -13,7 +13,6 @@ import kotlinx.coroutines.launch
 import java.io.InputStream
 
 class TransactionsVM(private val repo: Repo):ViewModel() {
-    val intentImportTransactions = PublishSubject.create<Unit>()
     val transactions = repo.getTransactions()
     val uncategorizedTransactions = MediatorLiveData<List<Transaction>>()
     fun importTransactions(inputStream: InputStream) {
@@ -26,9 +25,6 @@ class TransactionsVM(private val repo: Repo):ViewModel() {
     init {
         uncategorizedTransactions.addSource(transactions) {
             uncategorizedTransactions.value = it.filter { it.isUncategorized }
-        }
-        intentImportTransactions.subscribe {
-            logz("intentImportTransactions:$it")
         }
     }
 }

@@ -6,9 +6,6 @@
         android:id="@+id/menu_accounts"
         android:title="Accounts" />
     <item
-        android:id="@+id/menu_import_transactions"
-        android:title="Import Transactions" />
-    <item
         android:id="@+id/menu_categorize_spends"
         android:title="Spends" />
 </menu>
