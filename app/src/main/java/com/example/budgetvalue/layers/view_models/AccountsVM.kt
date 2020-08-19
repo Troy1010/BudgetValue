@@ -9,7 +9,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.launch
 
-class AccountsVM(val repo: Repo): ViewModel() {
+class AccountsVM(private val repo: Repo): ViewModel() {
     val disposables = CompositeDisposable()
     val accounts = repo.getAccounts()
     val intentAddAccount = PublishSubject.create<Unit>()
@@ -30,6 +30,12 @@ class AccountsVM(val repo: Repo): ViewModel() {
                     }
                 }
         )
+    }
+
+    fun updateAccount(account: Account) {
+        viewModelScope.launch {
+            repo.updateAccount(account)
+        }
     }
 
     override fun onCleared() {
