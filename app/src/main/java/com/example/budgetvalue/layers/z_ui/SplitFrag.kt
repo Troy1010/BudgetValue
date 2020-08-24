@@ -11,7 +11,9 @@ import com.example.budgetvalue.App
 import com.example.budgetvalue.R
 import com.example.budgetvalue.databinding.FragSplitBinding
 import com.example.budgetvalue.layers.view_models.SplitVM
+import com.example.budgetvalue.layers.z_ui.table_view.MyTableViewAdapter
 import com.example.tmcommonkotlin.vmFactoryFactory
+import kotlinx.android.synthetic.main.frag_split.*
 
 class SplitFrag: Fragment() {
     val appComponent by lazy { (requireActivity().application as App).appComponent }
@@ -25,5 +27,10 @@ class SplitFrag: Fragment() {
         mBinding.lifecycleOwner = this
         mBinding.splitVM = splitVM
         return mBinding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        content_container.setAdapter(MyTableViewAdapter(requireContext()))
     }
 }
