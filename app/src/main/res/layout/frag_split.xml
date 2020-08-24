@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
             name="splitVM"
@@ -8,6 +8,18 @@
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <com.evrencoskun.tableview.TableView
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/content_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            app:column_header_height="50dp"
+            app:row_header_width="50dp"
+            app:selected_color="#f00"
+            app:shadow_color="#0f0"
+            app:unselected_color="#00f"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
