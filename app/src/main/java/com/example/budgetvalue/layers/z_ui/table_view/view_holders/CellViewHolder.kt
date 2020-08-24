@@ -3,7 +3,6 @@ package com.example.budgetvalue.layers.z_ui.table_view.view_holders
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.evrencoskun.tableview.adapter.recyclerview.holder.AbstractViewHolder
 import com.example.budgetvalue.R
@@ -26,22 +25,25 @@ class CellViewHolder(itemView: View) : AbstractViewHolder(itemView) {
         itemView.cell_data.requestLayout()
     }
 
-    override fun setSelected(p_nSelectionState: SelectionState) {
-        super.setSelected(p_nSelectionState)
-        if (p_nSelectionState == SelectionState.SELECTED) {
-            itemView.cell_data.setTextColor(
-                ContextCompat.getColor(
-                    itemView.cell_data.context,
-                    R.color.selected_text_color
+    override fun setSelected(selectionState: SelectionState) {
+        super.setSelected(selectionState)
+        when (selectionState) {
+            SelectionState.SELECTED -> {
+                itemView.cell_data.setTextColor(
+                    ContextCompat.getColor(
+                        itemView.cell_data.context,
+                        R.color.selected_text_color
+                    )
                 )
-            )
-        } else {
-            itemView.cell_data.setTextColor(
-                ContextCompat.getColor(
-                    itemView.cell_data.context,
-                    R.color.unselected_text_color
+            }
+            else -> {
+                itemView.cell_data.setTextColor(
+                    ContextCompat.getColor(
+                        itemView.cell_data.context,
+                        R.color.unselected_text_color
+                    )
                 )
-            )
+            }
         }
     }
 }
