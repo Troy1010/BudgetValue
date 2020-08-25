@@ -11,6 +11,8 @@ import com.evrencoskun.tableview.adapter.recyclerview.holder.AbstractSorterViewH
 import com.evrencoskun.tableview.sort.SortState
 import com.example.budgetvalue.R
 import com.example.budgetvalue.layers.z_ui.table_view.models.ColumnHeaderModel
+import com.example.budgetvalue.observeOnce
+import com.example.tmcommonkotlin.logz
 
 class ColumnHeaderViewHolder(itemView: View, val tableView: ITableView) :
     AbstractSorterViewHolder(itemView) {
@@ -49,11 +51,20 @@ class ColumnHeaderViewHolder(itemView: View, val tableView: ITableView) :
             COLUMN_TEXT_ALIGNS[pColumnPosition] or Gravity.CENTER_VERTICAL
 
         // Set text data
-        column_header_textview.setText(pColumnHeaderModel.title)
+
+        column_header_textview.text = pColumnHeaderModel.title
 
         // It is necessary to remeasure itself.
         column_header_container.layoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT
         column_header_textview.requestLayout()
+
+        //
+        if (pColumnHeaderModel.amount != null) {
+            pColumnHeaderModel.amount.observeOnce {
+                val s = """${pColumnHeaderModel.title} (${it})"""
+                column_header_textview.text = s
+            }
+        }
     }
 
     override fun setSelected(p_nSelectionState: SelectionState) {

@@ -18,6 +18,7 @@ import com.example.budgetvalue.layers.z_ui.table_view.MyTableViewAdapter
 import com.example.budgetvalue.layers.z_ui.table_view.models.CellModel
 import com.example.budgetvalue.layers.z_ui.table_view.models.ColumnHeaderModel
 import com.example.budgetvalue.layers.z_ui.table_view.models.RowHeaderModel
+import com.example.tmcommonkotlin.logz
 import com.example.tmcommonkotlin.vmFactoryFactory
 import kotlinx.android.synthetic.main.frag_split.*
 
@@ -42,7 +43,7 @@ class SplitFrag: Fragment() {
         val tableViewAdapter = MyTableViewAdapter(requireContext())
         tableview_1.setAdapter(tableViewAdapter)
         tableViewAdapter.setAllItems(
-            listOf(ColumnHeaderModel("Spent"), ColumnHeaderModel("Income"), ColumnHeaderModel("Budgeted")),
+            listOf(ColumnHeaderModel("Spent"), ColumnHeaderModel("Income", splitVM.incomeTotal), ColumnHeaderModel("Budgeted")),
             listOf(RowHeaderModel("ttt"), RowHeaderModel("Dinner")),
             listOf(listOf(CellModel("0", "00"), CellModel("1", "11")), listOf(CellModel("2", "22"), CellModel("3", "33")))
         )
