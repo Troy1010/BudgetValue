@@ -72,7 +72,7 @@ class MyTableViewAdapter(val context: Context) : AbstractTableAdapter<ColumnHead
     }
 
     override fun onCreateCornerView(parent: ViewGroup): View {
-        return View.inflate(context, R.layout.tableview_basic, parent)
+        return View.inflate(context, R.layout.tableview_basic, null)
     }
 
     override fun getCellItemViewType(position: Int): Int {
