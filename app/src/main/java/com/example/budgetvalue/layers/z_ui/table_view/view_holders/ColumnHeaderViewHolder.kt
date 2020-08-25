@@ -49,7 +49,7 @@ class ColumnHeaderViewHolder(itemView: View, val tableView: ITableView) :
             COLUMN_TEXT_ALIGNS[pColumnPosition] or Gravity.CENTER_VERTICAL
 
         // Set text data
-        column_header_textview.setText(pColumnHeaderModel.data)
+        column_header_textview.setText(pColumnHeaderModel.title)
 
         // It is necessary to remeasure itself.
         column_header_container.layoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT
