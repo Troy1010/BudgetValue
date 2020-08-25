@@ -12,8 +12,13 @@ import com.example.budgetvalue.R
 import com.example.budgetvalue.databinding.FragSplitBinding
 import com.example.budgetvalue.layers.view_models.SplitVM
 import com.example.budgetvalue.layers.z_ui.table_view.MyTableViewAdapter
+import com.example.budgetvalue.layers.z_ui.table_view.models.CellModel
+import com.example.budgetvalue.layers.z_ui.table_view.models.ColumnHeaderModel
+import com.example.budgetvalue.layers.z_ui.table_view.models.RowHeaderModel
+import com.example.tmcommonkotlin.logz
 import com.example.tmcommonkotlin.vmFactoryFactory
 import kotlinx.android.synthetic.main.frag_split.*
+import kotlinx.android.synthetic.main.frag_split.view.*
 
 class SplitFrag: Fragment() {
     val appComponent by lazy { (requireActivity().application as App).appComponent }
@@ -31,6 +36,12 @@ class SplitFrag: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        content_container.setAdapter(MyTableViewAdapter(requireContext()))
+        val tableViewAdapter = MyTableViewAdapter(requireContext())
+        tableview_1.setAdapter(tableViewAdapter)
+        tableViewAdapter.setAllItems(
+            listOf(ColumnHeaderModel("qwer"), ColumnHeaderModel("rewq")),
+            listOf(RowHeaderModel("ttt"), RowHeaderModel("Dinner")),
+            listOf(listOf(CellModel("0", "00"), CellModel("1", "11")), listOf(CellModel("2", "22"), CellModel("3", "33")))
+        )
     }
 }
