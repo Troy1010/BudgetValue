@@ -39,7 +39,7 @@ class SplitFrag: Fragment() {
         val tableViewAdapter = MyTableViewAdapter(requireContext())
         tableview_1.setAdapter(tableViewAdapter)
         tableViewAdapter.setAllItems(
-            listOf(ColumnHeaderModel("qwer"), ColumnHeaderModel("rewq")),
+            listOf(ColumnHeaderModel("Spent"), ColumnHeaderModel("Income"), ColumnHeaderModel("Budgeted")),
             listOf(RowHeaderModel("ttt"), RowHeaderModel("Dinner")),
             listOf(listOf(CellModel("0", "00"), CellModel("1", "11")), listOf(CellModel("2", "22"), CellModel("3", "33")))
         )
