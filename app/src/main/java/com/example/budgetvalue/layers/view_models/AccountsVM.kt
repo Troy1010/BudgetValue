@@ -19,7 +19,7 @@ class AccountsVM(private val repo: Repo): ViewModel() {
             intentAddAccount
                 .subscribe {
                     viewModelScope.launch {
-                        repo.addAccount(Account("", "0.00"))
+                        repo.addAccount(Account("", "0.00".toBigDecimal()))
                     }
                 },
             intentDeleteAccount

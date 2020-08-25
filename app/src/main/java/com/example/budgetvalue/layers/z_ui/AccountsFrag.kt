@@ -64,13 +64,13 @@ class AccountsFrag: Fragment(), GenericRecyclerViewAdapter.Callbacks {
     override fun bindRecyclerItemView(view: View, i: Int) {
         val account = accountsVM.accounts.value?.get(i) ?: return
         view.editText_name?.setText(account.name)
-        view.editText_amount?.setText(account.amount)
+        view.editText_amount?.setText(account.amount.toString())
         view.btn_delete_account.setOnClickListener {
             accountsVM.intentDeleteAccount.onNext(account)
         }
         view.editText_amount.setOnFocusChangeListener { v, b ->
             if (!b) {
-                account.amount = view.editText_amount.text.toString()
+                account.amount = view.editText_amount.text.toString().toBigDecimal()
                 accountsVM.updateAccount(account)
             }
         }
