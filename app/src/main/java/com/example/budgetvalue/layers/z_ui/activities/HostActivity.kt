@@ -1,4 +1,4 @@
-package com.example.budgetvalue.layers.z_ui
+package com.example.budgetvalue.layers.z_ui.activities
 
 import android.app.Activity
 import android.content.Intent

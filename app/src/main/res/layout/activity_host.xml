@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".layers.z_ui.HostActivity">
+    tools:context=".layers.z_ui.activities.HostActivity">
 
     <fragment
         android:id="@+id/fragNavHost"
