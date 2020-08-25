@@ -7,10 +7,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
-import com.example.budgetvalue.App
-import com.example.budgetvalue.CODE_PICK_TRANSACTIONS_FILE
-import com.example.budgetvalue.R
+import com.example.budgetvalue.*
 import com.example.budgetvalue.layers.view_models.TransactionsVM
 import com.example.tmcommonkotlin.easyToast
 import com.example.tmcommonkotlin.logz
@@ -55,7 +54,9 @@ class HostActivity : AppCompatActivity() {
                 )
             }
             R.id.menu_print_transactions -> {
-                logz("transactions:${transactionsVM.transactions.value?.joinToString(",")}")
+                transactionsVM.transactions.observeOnce {
+                    logz("transactions:${it?.joinToString(",")}")
+                }
             }
         }
         return super.onOptionsItemSelected(item)
