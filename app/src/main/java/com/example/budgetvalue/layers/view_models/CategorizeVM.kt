@@ -26,9 +26,8 @@ class CategorizeVM(val repo: Repo, transactionsVM: TransactionsVM): ViewModel() 
     fun setTransactionCategory(category: Category) {
         val transaction_ = transaction.value ?: return
         viewModelScope.launch(Dispatchers.IO) {
-            val newCategoryAmounts = HashMap<String, BigDecimal>()
-            newCategoryAmounts[category.name] = transaction_.amount.toBigDecimal()
-            transaction_.categoryAmounts = Gson().toJson(newCategoryAmounts)
+            transaction_.categoryAmounts.clear()
+            transaction_.categoryAmounts[category.name] = transaction_.amount
             repo.updateTransaction(transaction_)
         }
     }

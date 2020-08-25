@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/fragNavHost"
-        android:name="com.example.budgetvalue.layers.z_ui.NavHost"
+        android:name="com.example.budgetvalue.layers.z_ui.misc.NavHost"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"

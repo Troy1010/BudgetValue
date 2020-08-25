@@ -9,11 +9,11 @@ import java.math.BigDecimal
 data class Transaction(
     var date: String?,
     var description: String,
-    var amount: String,
-    var categoryAmounts: String = Gson().toJson(HashMap<String, BigDecimal>()),
+    var amount: BigDecimal,
+    val categoryAmounts: HashMap<String, BigDecimal> = hashMapOf(),
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0
 ) {
     val isUncategorized: Boolean
-        get() = categoryAmounts == "{}"
+        get() = categoryAmounts.isNullOrEmpty()
 }

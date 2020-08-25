@@ -64,7 +64,7 @@ class TransactionParser : ITransactionParser {
                 continue
             }
             //
-            transactions.add(Transaction(date, description!!, amount))
+            transactions.add(Transaction(date, description!!, amount.toBigDecimal()))
         }
         return@withContext transactions.toList()
     }
