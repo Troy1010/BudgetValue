@@ -35,3 +35,18 @@ fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, action:(T?) -> U
     }
     this.observe(lifecycleOwner, observer)
 }
+
+fun <T, R> Iterable<T>.zipWithDefault(other: Iterable<R>, default: R): List<Pair<T, R>> {
+    val first = iterator()
+    val second = other.iterator()
+    val list = ArrayList<Pair<T, R>>()
+    while (first.hasNext()) {
+        val y = if (second.hasNext()) {
+            second.next()
+        } else {
+            default
+        }
+        list.add(Pair(first.next(), y))
+    }
+    return list
+}
