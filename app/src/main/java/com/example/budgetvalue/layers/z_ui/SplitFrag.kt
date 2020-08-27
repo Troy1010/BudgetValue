@@ -45,11 +45,11 @@ class SplitFrag: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val tableViewAdapter = MyTableViewAdapter(requireContext())
         tableview_1.setAdapter(tableViewAdapter)
-        splitVM.activeCategories.observe(viewLifecycleOwner) {
+        splitVM.spentCategoryAmounts.observe(viewLifecycleOwner) {
             tableViewAdapter.setAllItems(
                 listOf(ColumnHeaderModel("Spent"), ColumnHeaderModel("Income", splitVM.incomeTotal), ColumnHeaderModel("Budgeted")),
-                it?.map { RowHeaderModel(it.name) }?: listOf(),
-                listOf(listOf(CellModel("0", "00"), CellModel("1", "11")), listOf(CellModel("2", "22"), CellModel("3", "33")))
+                splitVM.activeCategories.value?.map { RowHeaderModel(it.name) }?: listOf(),
+                it.map { listOf(CellModel("0", it)) }
             )
         }
     }
