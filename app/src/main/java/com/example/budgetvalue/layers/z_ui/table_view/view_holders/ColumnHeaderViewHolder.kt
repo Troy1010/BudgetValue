@@ -11,8 +11,7 @@ import com.evrencoskun.tableview.adapter.recyclerview.holder.AbstractSorterViewH
 import com.evrencoskun.tableview.sort.SortState
 import com.example.budgetvalue.R
 import com.example.budgetvalue.layers.z_ui.table_view.models.ColumnHeaderModel
-import com.example.budgetvalue.observeOnce
-import com.example.tmcommonkotlin.logz
+import com.example.budgetvalue.util.observeOnce
 
 class ColumnHeaderViewHolder(itemView: View, val tableView: ITableView) :
     AbstractSorterViewHolder(itemView) {
