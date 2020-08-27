@@ -5,7 +5,7 @@ import com.example.budgetvalue.layers.data_layer.Repo
 import com.example.budgetvalue.models.Account
 import com.example.budgetvalue.models.Category
 import com.example.budgetvalue.models.Transaction
-import com.example.tmcommonkotlin.logz
+import com.example.budgetvalue.util.zipWithDefault
 import java.math.BigDecimal
 
 class SplitVM(private val repo: Repo, private val categoriesVM: CategoriesVM, private val transactionSet: LiveData<List<Transaction>>, private val accounts: LiveData<List<Account>>) : ViewModel() {
@@ -13,7 +13,7 @@ class SplitVM(private val repo: Repo, private val categoriesVM: CategoriesVM, pr
     val activeCategories = MediatorLiveData<List<Category>>()
     val spentCategoryAmounts = MediatorLiveData<List<BigDecimal>>()
     val incomeCategoryAmounts = MediatorLiveData<List<String>>()
-    val budgetedCategoryAmounts = MediatorLiveData<List<String>>()
+    val budgetedCategoryAmounts = MediatorLiveData<List<BigDecimal>>()
     init {
         // incomeTotal depends on accountsTotal and previousAccountsTotal, assumed to be 0 for now TODO
         incomeTotal.addSource(accounts) {
@@ -60,6 +60,14 @@ class SplitVM(private val repo: Repo, private val categoriesVM: CategoriesVM, pr
             }
             spentCategoryAmounts.value = spentCategoryAmounts_.map { it.value }
         }
-        spentCategoryAmounts.observeForever {}
+        // budgetedCategoryAmounts depend on current Spent and Income, for now TODO
+        budgetedCategoryAmounts.addSource(spentCategoryAmounts) {
+            budgetedCategoryAmounts.value = it?.zipWithDefault(incomeCategoryAmounts.value?: listOf(), "0")
+                ?.map { it.first + it.second.toBigDecimal() }
+        }
+        budgetedCategoryAmounts.addSource(incomeCategoryAmounts) {
+            budgetedCategoryAmounts.value = spentCategoryAmounts.value?.zipWithDefault(it?: listOf(), "0")
+                ?.map { it.first + it.second.toBigDecimal() }
+        }
     }
 }

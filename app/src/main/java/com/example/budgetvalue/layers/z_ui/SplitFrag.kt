@@ -23,6 +23,7 @@ import com.example.budgetvalue.layers.z_ui.table_view.models.RowHeaderModel
 import com.example.tmcommonkotlin.logz
 import com.example.tmcommonkotlin.vmFactoryFactory
 import kotlinx.android.synthetic.main.frag_split.*
+import java.math.BigDecimal
 
 class SplitFrag: Fragment() {
     val appComponent by lazy { (requireActivity().application as App).appComponent }
@@ -45,11 +46,15 @@ class SplitFrag: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val tableViewAdapter = MyTableViewAdapter(requireContext())
         tableview_1.setAdapter(tableViewAdapter)
-        splitVM.spentCategoryAmounts.observe(viewLifecycleOwner) {
+        splitVM.budgetedCategoryAmounts.observe(viewLifecycleOwner) {
             tableViewAdapter.setAllItems(
                 listOf(ColumnHeaderModel("Spent"), ColumnHeaderModel("Income", splitVM.incomeTotal), ColumnHeaderModel("Budgeted")),
                 splitVM.activeCategories.value?.map { RowHeaderModel(it.name) }?: listOf(),
-                it.map { listOf(CellModel("0", it)) }
+                (it.indices).map { listOf(
+                    CellModel(splitVM.spentCategoryAmounts.value?.get(it)?:BigDecimal.ZERO),
+                    CellModel(splitVM.incomeCategoryAmounts.value?.get(it)?:"zz"),
+                    CellModel(splitVM.budgetedCategoryAmounts.value?.get(it)?:"zz")
+                )}
             )
         }
     }
