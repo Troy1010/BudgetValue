@@ -51,13 +51,13 @@ class CategorizeFrag : Fragment(), GenericRecyclerViewAdapter.Callbacks {
     }
 
     override fun bindRecyclerItemView(view: View, i: Int) {
-        view.btn_category.text = categoriesVM.choosableCategories[i].name
+        view.btn_category.text = categoriesVM.choosableCategories.value[i].name
         view.btn_category.setOnClickListener {
-            categorizeVM.setTransactionCategory(categoriesVM.choosableCategories[i])
+            categorizeVM.setTransactionCategory(categoriesVM.choosableCategories.value[i])
         }
     }
 
     override fun getRecyclerDataSize(): Int {
-        return categoriesVM.choosableCategories.size
+        return categoriesVM.choosableCategories.value.size
     }
 }

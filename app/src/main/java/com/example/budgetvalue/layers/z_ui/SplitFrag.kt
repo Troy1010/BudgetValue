@@ -8,10 +8,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.observe
 import com.example.budgetvalue.App
 import com.example.budgetvalue.R
 import com.example.budgetvalue.databinding.FragSplitBinding
 import com.example.budgetvalue.layers.view_models.AccountsVM
+import com.example.budgetvalue.layers.view_models.CategoriesVM
 import com.example.budgetvalue.layers.view_models.SplitVM
 import com.example.budgetvalue.layers.view_models.TransactionsVM
 import com.example.budgetvalue.layers.z_ui.table_view.MyTableViewAdapter
@@ -26,7 +28,8 @@ class SplitFrag: Fragment() {
     val appComponent by lazy { (requireActivity().application as App).appComponent }
     val accountsVM: AccountsVM by activityViewModels { vmFactoryFactory { AccountsVM(appComponent.getRepo()) } }
     val transactionsVM: TransactionsVM by activityViewModels { vmFactoryFactory { TransactionsVM(appComponent.getRepo()) } }
-    val splitVM : SplitVM by viewModels { vmFactoryFactory { SplitVM(appComponent.getRepo(), transactionsVM.transactions, accountsVM.accounts) } }
+    val categoriesVM: CategoriesVM by activityViewModels { vmFactoryFactory { CategoriesVM() }}
+    val splitVM : SplitVM by viewModels { vmFactoryFactory { SplitVM(appComponent.getRepo(), categoriesVM, transactionsVM.transactions, accountsVM.accounts) } }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,10 +45,12 @@ class SplitFrag: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val tableViewAdapter = MyTableViewAdapter(requireContext())
         tableview_1.setAdapter(tableViewAdapter)
-        tableViewAdapter.setAllItems(
-            listOf(ColumnHeaderModel("Spent"), ColumnHeaderModel("Income", splitVM.incomeTotal), ColumnHeaderModel("Budgeted")),
-            listOf(RowHeaderModel("ttt"), RowHeaderModel("Dinner")),
-            listOf(listOf(CellModel("0", "00"), CellModel("1", "11")), listOf(CellModel("2", "22"), CellModel("3", "33")))
-        )
+        splitVM.activeCategories.observe(viewLifecycleOwner) {
+            tableViewAdapter.setAllItems(
+                listOf(ColumnHeaderModel("Spent"), ColumnHeaderModel("Income", splitVM.incomeTotal), ColumnHeaderModel("Budgeted")),
+                it?.map { RowHeaderModel(it.name) }?: listOf(),
+                listOf(listOf(CellModel("0", "00"), CellModel("1", "11")), listOf(CellModel("2", "22"), CellModel("3", "33")))
+            )
+        }
     }
 }

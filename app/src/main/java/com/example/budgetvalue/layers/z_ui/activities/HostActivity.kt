@@ -7,10 +7,10 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import com.example.budgetvalue.*
 import com.example.budgetvalue.layers.view_models.TransactionsVM
+import com.example.budgetvalue.util.observeOnce
 import com.example.tmcommonkotlin.easyToast
 import com.example.tmcommonkotlin.logz
 import com.example.tmcommonkotlin.vmFactoryFactory
