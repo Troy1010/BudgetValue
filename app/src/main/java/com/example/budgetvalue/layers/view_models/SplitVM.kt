@@ -7,6 +7,7 @@ import com.example.budgetvalue.models.Category
 import com.example.budgetvalue.models.Transaction
 import com.example.budgetvalue.util.toBehaviorSubject
 import com.example.budgetvalue.util.toLiveData2
+import com.example.budgetvalue.util.zipWithDefault
 import com.example.tmcommonkotlin.logz
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -54,19 +55,11 @@ class SplitVM(
         }
         spentCategoryAmounts_.map { it.value }
     }.toBehaviorSubject()
-    val incomeCategoryAmounts = MediatorLiveData<List<String>>()
-    val budgetedCategoryAmounts = MediatorLiveData<List<BigDecimal>>()
-
-    init {
-        // budgetedCategoryAmounts depend on current Spent and Income, for now TODO
-//        budgetedCategoryAmounts.addSource(spentCategoryAmounts) {
-//            budgetedCategoryAmounts.value = it?.zipWithDefault(incomeCategoryAmounts.value?: listOf(), "0")
-//                ?.map { it.first + it.second.toBigDecimal() }
-//        }
-//        budgetedCategoryAmounts.addSource(incomeCategoryAmounts) {
-//            budgetedCategoryAmounts.value = spentCategoryAmounts.value?.zipWithDefault(it?: listOf(), "0")
-//                ?.map { it.first + it.second.toBigDecimal() }
-//        }
-    }
-
+    val incomeCategoryAmounts = BehaviorSubject.createDefault(listOf<BigDecimal>())
+    val budgetedCategoryAmounts = Observable.combineLatest(listOf(spentCategoryAmounts, incomeCategoryAmounts)) {
+        Pair(it[0] as List<BigDecimal>, it[1] as List<BigDecimal>)
+    }.map {
+        it.first.zipWithDefault(it.second, BigDecimal.ZERO)
+            .map { it.first + it.second }
+    }.toBehaviorSubject()
 }

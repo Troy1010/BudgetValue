@@ -56,7 +56,7 @@ class SplitFrag: Fragment() {
                 splitVM.activeCategories.value?.map { RowHeaderModel(it.name) }?: listOf(),
                 (it.indices).map { listOf(
                     CellModel(splitVM.spentCategoryAmounts.value?.get(it)?:BigDecimal.ZERO),
-                    CellModel(splitVM.incomeCategoryAmounts.value?.get(it)?:BigDecimal.ZERO),
+                    CellModel(splitVM.incomeCategoryAmounts.value?.getOrNull(it)?:BigDecimal.ZERO),
                     CellModel(splitVM.budgetedCategoryAmounts.value?.get(it)?:BigDecimal.ZERO)
                 )}
             )
