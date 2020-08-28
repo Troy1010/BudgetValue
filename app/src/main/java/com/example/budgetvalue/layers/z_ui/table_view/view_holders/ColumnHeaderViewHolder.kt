@@ -61,7 +61,7 @@ class ColumnHeaderViewHolder(itemView: View, val tableView: ITableView) :
 
         //
         if (pColumnHeaderModel.amount != null) {
-            val s = """${pColumnHeaderModel.title} (${pColumnHeaderModel.amount.value})"""
+            val s = """${pColumnHeaderModel.title} (${pColumnHeaderModel.amount})"""
             column_header_textview.text = s
         }
     }
