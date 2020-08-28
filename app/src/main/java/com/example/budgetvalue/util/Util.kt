@@ -53,6 +53,17 @@ fun <A, B, C, D> combineLatestAsTuple(a: ObservableSource<A>, b: ObservableSourc
         )
     }
 }
+fun <A, B, C> combineLatestAsTuple(a: ObservableSource<A>, b: ObservableSource<B>, c: ObservableSource<C>): Observable<Triple<A, B, C>> {
+    return Observable.combineLatest(
+        listOf(a, b, c)
+    ) {
+        Triple(
+            it[0] as A,
+            it[1] as B,
+            it[2] as C
+        )
+    }
+}
 
 fun <A, B> combineLatestAsTuple(a: ObservableSource<A>, b: ObservableSource<B>): Observable<Pair<A, B>> {
     return Observable.combineLatest(
