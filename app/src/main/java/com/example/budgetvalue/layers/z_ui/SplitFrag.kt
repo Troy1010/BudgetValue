@@ -22,6 +22,9 @@ import com.example.budgetvalue.layers.z_ui.table_view.models.ColumnHeaderModel
 import com.example.budgetvalue.layers.z_ui.table_view.models.RowHeaderModel
 import com.example.tmcommonkotlin.logz
 import com.example.tmcommonkotlin.vmFactoryFactory
+import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindToLifecycle
+import com.trello.rxlifecycle4.kotlin.bindToLifecycle
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.frag_split.*
 import java.math.BigDecimal
 
@@ -46,7 +49,7 @@ class SplitFrag: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val tableViewAdapter = MyTableViewAdapter(requireContext())
         tableview_1.setAdapter(tableViewAdapter)
-        splitVM.budgetedCategoryAmounts.observe(viewLifecycleOwner) {
+        splitVM.activeCategories.bindToLifecycle(viewLifecycleOwner).observeOn(AndroidSchedulers.mainThread()).subscribe {
             tableViewAdapter.setAllItems(
                 listOf(ColumnHeaderModel("Spent"), ColumnHeaderModel("Income", splitVM.incomeTotal), ColumnHeaderModel("Budgeted")),
                 splitVM.activeCategories.value?.map { RowHeaderModel(it.name) }?: listOf(),

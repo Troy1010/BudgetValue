@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetvalue.layers.data_layer.Repo
 import com.example.budgetvalue.models.Account
-import com.example.tmcommonkotlin.logz
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.launch

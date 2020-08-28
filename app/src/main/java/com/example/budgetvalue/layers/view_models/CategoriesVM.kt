@@ -4,11 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.example.budgetvalue.models.Category
 import com.example.budgetvalue.models.CategoryTypes
 import com.example.budgetvalue.util.ObservableArrayList
-import com.example.budgetvalue.util.ObservableHashMap
 import com.example.budgetvalue.util.toBehaviorSubject
-import com.example.tmcommonkotlin.logz
-import io.reactivex.rxjava3.internal.operators.observable.ObservableMap
-import io.reactivex.subjects.BehaviorSubject
 
 class CategoriesVM : ViewModel() {
     val defaultCategory = Category("Default", CategoryTypes.Default)

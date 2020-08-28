@@ -4,16 +4,15 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetvalue.layers.data_layer.Repo
-import com.example.budgetvalue.models.Account
 import com.example.budgetvalue.models.Transaction
-import com.example.tmcommonkotlin.logz
-import io.reactivex.rxjava3.subjects.PublishSubject
+import com.example.budgetvalue.util.toBehaviorSubject
+import com.example.tmcommonkotlin.toLiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.InputStream
 
 class TransactionsVM(private val repo: Repo):ViewModel() {
-    val transactions = repo.getTransactions()
+    val transactions = repo.getTransactions().toBehaviorSubject()
     val uncategorizedTransactions = MediatorLiveData<List<Transaction>>()
     fun importTransactions(inputStream: InputStream) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -23,7 +22,7 @@ class TransactionsVM(private val repo: Repo):ViewModel() {
         }
     }
     init {
-        uncategorizedTransactions.addSource(transactions) {
+        uncategorizedTransactions.addSource(transactions.toLiveData()) {
             uncategorizedTransactions.value = it.filter { it.isUncategorized }
         }
     }

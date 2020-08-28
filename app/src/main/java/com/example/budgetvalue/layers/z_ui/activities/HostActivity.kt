@@ -54,9 +54,9 @@ class HostActivity : AppCompatActivity() {
                 )
             }
             R.id.menu_print_transactions -> {
-                transactionsVM.transactions.observeOnce {
-                    logz("transactions:${it?.joinToString(",")}")
-                }
+//                transactionsVM.transactions.observeOnce {
+//                    logz("transactions:${it?.joinToString(",")}")
+//                }
             }
         }
         return super.onOptionsItemSelected(item)

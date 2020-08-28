@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.budgetvalue.models.Account
 import com.example.budgetvalue.models.Transaction
+import io.reactivex.rxjava3.core.Observable
 
 @Dao
 interface MyDao {
@@ -14,7 +15,7 @@ interface MyDao {
     suspend fun addTransaction(transaction: Transaction)
 
     @Query("select * from `Transaction`")
-    fun getTransactions(): LiveData<List<Transaction>>
+    fun getTransactions(): Observable<List<Transaction>>
 
     @Delete
     suspend fun deleteTransaction(transaction: Transaction)
@@ -46,6 +47,6 @@ interface MyDao {
     @Update
     suspend fun updateAccount(account: Account)
 
-    @Query("select * from `Account`")
+    @Query("select * from Account")
     fun getAccounts(): LiveData<List<Account>>
 }

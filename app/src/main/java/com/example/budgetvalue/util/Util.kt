@@ -2,9 +2,21 @@ package com.example.budgetvalue.util
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.Observer
+import io.reactivex.rxjava3.core.BackpressureStrategy
+import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.ObservableSource
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+
+fun <T> ObservableSource<T>.toLiveData2(): LiveData<T> {
+    return convertRXToLiveData2(this)
+}
+
+fun <T> convertRXToLiveData2 (observable: ObservableSource<T>): LiveData<T> {
+    return LiveDataReactiveStreams.fromPublisher(Flowable.fromObservable(observable, BackpressureStrategy.DROP))
+}
 
 // This might be buggy..
 fun <T> Observable<T>.toBehaviorSubject(): BehaviorSubject<T> {

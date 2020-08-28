@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import java.math.BigDecimal
 
 @Entity
-data class AccountZ (
+data class Account (
     var name: String,
     var amount: BigDecimal,
     @PrimaryKey(autoGenerate = true)
