@@ -5,6 +5,7 @@ import com.example.budgetvalue.layers.data_layer.Repo
 import com.example.budgetvalue.models.Account
 import com.example.budgetvalue.models.Category
 import com.example.budgetvalue.models.Transaction
+import com.example.budgetvalue.util.combineLatestAsTuple
 import com.example.budgetvalue.util.toBehaviorSubject
 import com.example.budgetvalue.util.toLiveData2
 import com.example.budgetvalue.util.zipWithDefault
@@ -56,9 +57,7 @@ class SplitVM(
         spentCategoryAmounts_.map { it.value }
     }.toBehaviorSubject()
     val incomeCategoryAmounts = BehaviorSubject.createDefault(listOf<BigDecimal>())
-    val budgetedCategoryAmounts = Observable.combineLatest(listOf(spentCategoryAmounts, incomeCategoryAmounts)) {
-        Pair(it[0] as List<BigDecimal>, it[1] as List<BigDecimal>)
-    }.map {
+    val budgetedCategoryAmounts = combineLatestAsTuple(spentCategoryAmounts, incomeCategoryAmounts).map {
         it.first.zipWithDefault(it.second, BigDecimal.ZERO)
             .map { it.first + it.second }
     }.toBehaviorSubject()

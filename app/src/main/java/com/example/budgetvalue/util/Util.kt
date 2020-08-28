@@ -54,6 +54,17 @@ fun <A, B, C, D> combineLatestAsTuple(a: ObservableSource<A>, b: ObservableSourc
     }
 }
 
+fun <A, B> combineLatestAsTuple(a: ObservableSource<A>, b: ObservableSource<B>): Observable<Pair<A, B>> {
+    return Observable.combineLatest(
+        listOf(a, b)
+    ) {
+        Pair(
+            it[0] as A,
+            it[1] as B
+        )
+    }
+}
+
 
 
 fun <T> LiveData<T>.observeOnce(action: (T?) -> Unit) {
