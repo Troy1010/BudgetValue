@@ -4,11 +4,14 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.Observer
+import com.example.budgetvalue.models.Category
+import io.reactivex.rxjava3.annotations.NonNull
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableSource
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import java.math.BigDecimal
 
 fun <T> ObservableSource<T>.toLiveData2(): LiveData<T> {
     return convertRXToLiveData2(this)
@@ -24,6 +27,33 @@ fun <T> Observable<T>.toBehaviorSubject(): BehaviorSubject<T> {
     this.subscribe(behaviorSubject)
     return behaviorSubject
 }
+
+fun <A, B, C, D, E> combineLatestAsTuple(a: ObservableSource<A>, b: ObservableSource<B>, c: ObservableSource<C>, d: ObservableSource<D>, e: ObservableSource<E>): Observable<Quintuple<A, B, C, D, E>> {
+    return Observable.combineLatest(
+        listOf(a, b, c, d, e)
+    ) {
+        Quintuple(
+            it[0] as A,
+            it[1] as B,
+            it[2] as C,
+            it[3] as D,
+            it[4] as E
+        )
+    }
+}
+fun <A, B, C, D> combineLatestAsTuple(a: ObservableSource<A>, b: ObservableSource<B>, c: ObservableSource<C>, d: ObservableSource<D>): Observable<Quadruple<A, B, C, D>> {
+    return Observable.combineLatest(
+        listOf(a, b, c, d)
+    ) {
+        Quadruple(
+            it[0] as A,
+            it[1] as B,
+            it[2] as C,
+            it[3] as D
+        )
+    }
+}
+
 
 
 fun <T> LiveData<T>.observeOnce(action: (T?) -> Unit) {
