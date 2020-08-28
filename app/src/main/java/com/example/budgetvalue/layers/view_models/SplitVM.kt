@@ -7,13 +7,23 @@ import com.example.budgetvalue.models.Category
 import com.example.budgetvalue.models.Transaction
 import com.example.budgetvalue.util.toBehaviorSubject
 import com.example.budgetvalue.util.toLiveData2
+import com.example.tmcommonkotlin.logz
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
+import java.util.*
+import kotlin.collections.HashMap
+import kotlin.collections.HashSet
 
-class SplitVM(private val repo: Repo, private val categoriesVM: CategoriesVM, private val transactionSet: BehaviorSubject<List<Transaction>>, private val accounts: LiveData<List<Account>>) : ViewModel() {
+class SplitVM(
+    private val repo: Repo,
+    private val categoriesVM: CategoriesVM,
+    private val transactionSet: BehaviorSubject<List<Transaction>>,
+    private val accounts: BehaviorSubject<List<Account>>
+) : ViewModel() {
     val incomeTotal = accounts.map {
-        it.fold(BigDecimal.ZERO) {acc, account -> acc + account.amount }
-    }
+        it.fold(BigDecimal.ZERO) { acc, account -> acc + account.amount }
+    }.toBehaviorSubject()
     val activeCategories = transactionSet.map {
         val activeCategories_ = HashSet<String>()
         for (transaction in it) {
@@ -23,41 +33,31 @@ class SplitVM(private val repo: Repo, private val categoriesVM: CategoriesVM, pr
         }
         activeCategories_.toList().map { categoriesVM.getCategoryByName(it) }
     }.toBehaviorSubject()
-    val spentCategoryAmounts = MediatorLiveData<List<BigDecimal>>()
-    val incomeCategoryAmounts = MediatorLiveData<List<String>>()
-    val budgetedCategoryAmounts = MediatorLiveData<List<BigDecimal>>()
-    init {
-        // spentCategoryAmounts depends on transactionSet and activeCategories
-        spentCategoryAmounts.addSource(transactionSet.toLiveData2()) {
-            val spentCategoryAmounts_ = HashMap<Category, BigDecimal>()
-            val activeCategories_ = activeCategories.value ?: listOf()
-            for (transaction in it) {
-                for (category in activeCategories_) {
-                    if (category !in spentCategoryAmounts_) {
-                        spentCategoryAmounts_[category] = transaction.categoryAmounts[category.name]?:BigDecimal.ZERO
-                    } else {
-                        spentCategoryAmounts_[category] =
-                            spentCategoryAmounts_[category]?.plus(transaction.categoryAmounts[category.name]?:BigDecimal.ZERO)?:BigDecimal.ZERO
-                    }
+
+    // spentCA depends on transactionSet + activeCategories
+    val spentCategoryAmounts = Observable.combineLatest(listOf(transactionSet, activeCategories)) {
+        Pair(it[0] as List<Transaction>, it[1] as List<Category>)
+    }.map {
+        val spentCategoryAmounts_ = HashMap<Category, BigDecimal>()
+        for (transaction in it.first) {
+            for (category in it.second) {
+                if (category !in spentCategoryAmounts_) {
+                    spentCategoryAmounts_[category] =
+                        transaction.categoryAmounts[category.name] ?: BigDecimal.ZERO
+                } else {
+                    spentCategoryAmounts_[category] =
+                        spentCategoryAmounts_[category]?.plus(
+                            transaction.categoryAmounts[category.name] ?: BigDecimal.ZERO
+                        ) ?: BigDecimal.ZERO
                 }
             }
-            spentCategoryAmounts.value = spentCategoryAmounts_.map { it.value }
         }
-//        spentCategoryAmounts.addSource(activeCategories.toLiveData2()) {
-//            val spentCategoryAmounts_ = HashMap<Category, BigDecimal>()
-//            val transactions = transactionSet.value ?: listOf()
-//            for (transaction in transactions) {
-//                for (category in it) {
-//                    if (category !in spentCategoryAmounts_) {
-//                        spentCategoryAmounts_[category] = transaction.categoryAmounts[category.name]?:BigDecimal.ZERO
-//                    } else {
-//                        spentCategoryAmounts_[category] =
-//                            spentCategoryAmounts_[category]?.plus(transaction.categoryAmounts[category.name]?:BigDecimal.ZERO)?:BigDecimal.ZERO
-//                    }
-//                }
-//            }
-//            spentCategoryAmounts.value = spentCategoryAmounts_.map { it.value }
-//        }
+        spentCategoryAmounts_.map { it.value }
+    }.toBehaviorSubject()
+    val incomeCategoryAmounts = MediatorLiveData<List<String>>()
+    val budgetedCategoryAmounts = MediatorLiveData<List<BigDecimal>>()
+
+    init {
         // budgetedCategoryAmounts depend on current Spent and Income, for now TODO
 //        budgetedCategoryAmounts.addSource(spentCategoryAmounts) {
 //            budgetedCategoryAmounts.value = it?.zipWithDefault(incomeCategoryAmounts.value?: listOf(), "0")
@@ -68,4 +68,5 @@ class SplitVM(private val repo: Repo, private val categoriesVM: CategoriesVM, pr
 //                ?.map { it.first + it.second.toBigDecimal() }
 //        }
     }
+
 }

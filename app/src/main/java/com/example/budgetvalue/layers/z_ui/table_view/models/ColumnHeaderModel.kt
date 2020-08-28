@@ -1,6 +1,6 @@
 package com.example.budgetvalue.layers.z_ui.table_view.models
 
-import androidx.lifecycle.LiveData
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
 
-data class ColumnHeaderModel(val title: String, val amount: LiveData<BigDecimal>? =null)
+data class ColumnHeaderModel(val title: String, val amount: BehaviorSubject<BigDecimal>? =null)

@@ -20,6 +20,7 @@ import com.example.budgetvalue.layers.z_ui.table_view.MyTableViewAdapter
 import com.example.budgetvalue.layers.z_ui.table_view.models.CellModel
 import com.example.budgetvalue.layers.z_ui.table_view.models.ColumnHeaderModel
 import com.example.budgetvalue.layers.z_ui.table_view.models.RowHeaderModel
+import com.example.budgetvalue.util.toLiveData2
 import com.example.tmcommonkotlin.logz
 import com.example.tmcommonkotlin.vmFactoryFactory
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindToLifecycle

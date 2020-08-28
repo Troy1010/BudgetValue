@@ -1,6 +1,5 @@
 package com.example.budgetvalue.layers.data_layer
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.budgetvalue.models.Account
 import com.example.budgetvalue.models.Transaction
@@ -16,6 +15,9 @@ interface MyDao {
 
     @Query("select * from `Transaction`")
     fun getTransactions(): Observable<List<Transaction>>
+
+    @Query("select * from `Account`")
+    fun getAccounts(): Observable<List<Account>>
 
     @Delete
     suspend fun deleteTransaction(transaction: Transaction)
@@ -46,7 +48,4 @@ interface MyDao {
 
     @Update
     suspend fun updateAccount(account: Account)
-
-    @Query("select * from Account")
-    fun getAccounts(): LiveData<List<Account>>
 }

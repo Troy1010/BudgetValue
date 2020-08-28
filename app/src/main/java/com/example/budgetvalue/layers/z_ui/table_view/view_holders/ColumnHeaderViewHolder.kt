@@ -12,6 +12,8 @@ import com.evrencoskun.tableview.sort.SortState
 import com.example.budgetvalue.R
 import com.example.budgetvalue.layers.z_ui.table_view.models.ColumnHeaderModel
 import com.example.budgetvalue.util.observeOnce
+import com.example.budgetvalue.util.toLiveData2
+import com.example.tmcommonkotlin.logz
 
 class ColumnHeaderViewHolder(itemView: View, val tableView: ITableView) :
     AbstractSorterViewHolder(itemView) {
@@ -59,10 +61,8 @@ class ColumnHeaderViewHolder(itemView: View, val tableView: ITableView) :
 
         //
         if (pColumnHeaderModel.amount != null) {
-            pColumnHeaderModel.amount.observeOnce {
-                val s = """${pColumnHeaderModel.title} (${it})"""
-                column_header_textview.text = s
-            }
+            val s = """${pColumnHeaderModel.title} (${pColumnHeaderModel.amount.value})"""
+            column_header_textview.text = s
         }
     }
 

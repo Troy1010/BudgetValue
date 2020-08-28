@@ -17,6 +17,7 @@ import com.example.tmcommonkotlin.GenericRecyclerViewAdapter
 import com.example.tmcommonkotlin.logz
 import com.example.tmcommonkotlin.vmFactoryFactory
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindToLifecycle
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.frag_accounts.*
 import kotlinx.android.synthetic.main.item_account.view.*
 
@@ -53,7 +54,7 @@ class AccountsFrag: Fragment(), GenericRecyclerViewAdapter.Callbacks {
         accountsVM.intentDeleteAccount.bindToLifecycle(viewLifecycleOwner).subscribe {
             bNotifyDataSetChanged = true
         }
-        accountsVM.accounts.observe(viewLifecycleOwner) {
+        accountsVM.accounts.bindToLifecycle(viewLifecycleOwner).observeOn(AndroidSchedulers.mainThread()).subscribe {
             if (bNotifyDataSetChanged) {
                 bNotifyDataSetChanged = false
                 recyclerview_accounts.adapter?.notifyDataSetChanged()
