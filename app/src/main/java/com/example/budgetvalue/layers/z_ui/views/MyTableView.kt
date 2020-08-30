@@ -36,9 +36,7 @@ class MyTableView @JvmOverloads constructor(
                 view.setDimToWrapContent()
             }
 
-            override fun getRecyclerDataSize(): Int {
-                return headers.size
-            }
+            override fun getRecyclerDataSize(): Int = headers.size
         }, context, R.layout.tableview_basic_cell)
         setColumnSize(headers.size)
     }
@@ -56,10 +54,7 @@ class MyTableView @JvmOverloads constructor(
                 view.text = dataZ[holder.adapterPosition]
                 view.setDimToWrapContent()
             }
-
-            override fun getRecyclerDataSize(): Int {
-                return dataZ.size
-            }
+            override fun getRecyclerDataSize(): Int = dataZ.size
         }, context, R.layout.tableview_basic_cell)
     }
     init {
