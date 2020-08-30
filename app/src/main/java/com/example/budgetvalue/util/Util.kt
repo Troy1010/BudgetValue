@@ -1,10 +1,13 @@
 package com.example.budgetvalue.util
 
+import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.models.Category
+import com.example.tmcommonkotlin.logz
 import io.reactivex.rxjava3.annotations.NonNull
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Flowable
@@ -113,4 +116,24 @@ fun <T, R> Iterable<T>.zipWithDefault(other: Iterable<R>, default: R): List<Pair
         list.add(Pair(first.next(), y))
     }
     return list
+}
+
+fun View.setDimToWrapContent() {
+    val wrapSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+    this.measure(wrapSpec, wrapSpec)
+    this.layoutParams = RecyclerView.LayoutParams(this.measuredWidth, this.measuredHeight)
+}
+
+fun generateLipsum(size: Int): List<String> {
+    val alphabet = "abcdefghijklmnopqrstuvwxyz"
+    val returning = ArrayList<String>()
+    for (i in 0 until size) {
+        var s = ""
+        val sizeOfWord = (4..30).random()
+        for (j in 0 until sizeOfWord) {
+            s+=alphabet.random()
+        }
+        returning.add(s)
+    }
+    return returning.toList()
 }
