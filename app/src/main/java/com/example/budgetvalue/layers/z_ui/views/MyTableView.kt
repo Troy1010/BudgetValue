@@ -108,11 +108,11 @@ class MyTableView @JvmOverloads constructor(
             false
         )
         mainView.recyclerview_data.layoutManager = LinearLayoutManager(context)
-//        val dividerItemDecoration = DecorationForRecyclerView(
-//            context as Activity,
-//            VERTICAL
-//        )
-//        mainView.recyclerview_data.addItemDecoration(dividerItemDecoration)
+        val dividerItemDecoration = DecorationForRecyclerView(
+            context as Activity,
+            VERTICAL
+        )
+        mainView.recyclerview_data.addItemDecoration(dividerItemDecoration)
         //
         streamBindsAreDone.observeOn(AndroidSchedulers.mainThread()).subscribe {
             val columnWidths = ArrayList<Int>()
