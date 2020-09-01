@@ -1,10 +1,12 @@
 package com.example.budgetvalue.util
 
+import android.annotation.SuppressLint
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.models.Category
 import com.example.tmcommonkotlin.logz
@@ -14,6 +16,7 @@ import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableSource
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 
 fun <T> ObservableSource<T>.toLiveData2(): LiveData<T> {
@@ -137,3 +140,47 @@ fun generateLipsum(size: Int): List<String> {
     }
     return returning.toList()
 }
+
+
+
+fun PublishSubject<Unit>.onNext() {
+    this.onNext(Unit)
+}
+
+@SuppressLint("CheckResult")
+fun <T> Observable<T>.logSubscribe2(msgPrefix: String? = null, bType: Boolean = false): Observable<T> {
+    val tempMsgPrefix: String = if (msgPrefix == null) "" else {
+        "$msgPrefix`"
+    }
+    this
+        .subscribe({
+            if (bType) {
+                val typeName = if (it == null) {
+                    "null"
+                } else {
+                    (it as Any)::class.java.simpleName
+                }
+                logz("$tempMsgPrefix$typeName`$it")
+            } else {
+                logz("$tempMsgPrefix$it")
+            }
+        }, {
+            logz("${tempMsgPrefix}Error`$it")
+        })
+    return this
+}
+
+val GridLayoutManager.visibleChildren: HashMap<Int, View>
+    get() {
+        val children = HashMap<Int, View>()
+        for (childIndex in this.findFirstVisibleItemPosition()..this.findLastVisibleItemPosition()) {
+            val child = this.getChildAt(childIndex)
+            if (child==null) {
+                logz("Warning`GridLayoutManager.visibleChildren`child was null at position:${childIndex}")
+                logz("this.findFirstVisibleItemPosition():${this.findFirstVisibleItemPosition()}, this.findLastVisibleItemPosition():${this.findLastVisibleItemPosition()}")
+            } else {
+                children[childIndex] = child
+            }
+        }
+        return children
+    }
