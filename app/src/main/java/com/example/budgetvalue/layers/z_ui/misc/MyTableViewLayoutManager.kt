@@ -18,11 +18,11 @@ class MyTableViewLayoutManager(
     override fun onLayoutChildren(recycler: RecyclerView.Recycler?, state: RecyclerView.State?) {
         if (firstPass) {
             firstPass = false
-            adapter.tableView.requestLayout()
-            adapter.tableView.initColumnWidths(
+            myTableView.requestLayout()
+            myTableView.initColumnWidths(
                 adapter,
-                adapter.tableView.generateIntrinsicWidths(adapter, adapter.tableView.dataZ, adapter.tableView.columnCount),
-                adapter.tableView.columnCount,
+                myTableView.generateIntrinsicWidths(adapter, myTableView.dataZ, myTableView.columnCount),
+                myTableView.columnCount,
                 myTableView.measuredWidth
             )
         }

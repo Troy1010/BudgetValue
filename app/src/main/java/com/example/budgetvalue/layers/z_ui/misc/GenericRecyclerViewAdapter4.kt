@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 open class GenericRecyclerViewAdapter4(
     val context : Context,
     val itemLayout: Int,
-    val getItemCountAction: () -> Int,
+    val getItemCount_: () -> Int,
     val bindDataAction: (ViewHolder, View) -> Unit
 ): RecyclerView.Adapter<GenericRecyclerViewAdapter4.ViewHolder>() {
     class ViewHolder (view: View) : RecyclerView.ViewHolder(view)
@@ -20,7 +20,7 @@ open class GenericRecyclerViewAdapter4(
     }
 
     override fun getItemCount(): Int {
-        return getItemCountAction()
+        return getItemCount_()
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

@@ -9,17 +9,15 @@ import android.widget.TextView
 import androidx.core.view.children
 import androidx.core.view.get
 import androidx.recyclerview.widget.RecyclerView
-import com.example.budgetvalue.layers.z_ui.views.MyTableView
 import com.example.tmcommonkotlin.logz
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class MyTableViewDataRecyclerViewAdapter(
-    var context: Context,
-    val tableView: MyTableView,
+    val rowViewFactory: () -> View,
+    val cellViewBindAction: (View, Any) -> Unit,
     val getRowCount: () -> Int,
     val getColumnCount: () -> Int,
-    val getData: () -> List<String>,
-    val getColumnWidths: () -> List<Int>
+    val getData: () -> List<String>
 ): RecyclerView.Adapter<MyTableViewDataRecyclerViewAdapter.ViewHolder>() {
 
     val streamDataChanged = PublishSubject.create<Unit>().also {
@@ -40,31 +38,10 @@ class MyTableViewDataRecyclerViewAdapter(
         }
     }
 
-    fun createRowView(): LinearLayout {
-        logz("createRowView`Open. getColumnWidths():${getColumnWidths()}")
-        val view = LinearLayout(context)
-        for (i in 0 until getColumnCount()) {
-            val textView = TextView(context)
-            textView.setTextColor(Color.WHITE)
-
-            val width = getColumnWidths().getOrNull(i) ?: 0
-            textView.layoutParams = LinearLayout.LayoutParams(
-                width,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-
-            view.addView(textView)
-        }
-        return view
-    }
-    fun bindDataAction(textView: TextView, s:String) {
-        textView.text = s
-    }
-
     class ViewHolder (view: View) : RecyclerView.ViewHolder(view)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(createRowView())
+        return ViewHolder(rowViewFactory())
     }
 
     override fun getItemCount(): Int = getRowCount()
@@ -75,7 +52,7 @@ class MyTableViewDataRecyclerViewAdapter(
         for ((i, child) in view.children.withIndex()) {
             (child as TextView)
             try {
-                bindDataAction(child, getData()[holder.adapterPosition * getColumnCount() + i])
+                cellViewBindAction(child, getData()[holder.adapterPosition * getColumnCount() + i])
             } catch (e: java.lang.IndexOutOfBoundsException) {
             }
         }
