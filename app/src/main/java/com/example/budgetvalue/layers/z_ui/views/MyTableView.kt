@@ -55,7 +55,7 @@ class MyTableView @JvmOverloads constructor(
     val headerFactory by lazy { headerViewFactory__ }
     val headerBindAction by lazy { headerViewBindAction__ }
     val cellViewFactory by lazy { cellViewFactory__ }
-    val cellViewBindAction by lazy { cellViewBindAction__ }
+    val cellBindAction by lazy { cellViewBindAction__ }
     lateinit var headerViewFactory__: () -> View
     lateinit var headerViewBindAction__: (View, Any) -> Unit
     lateinit var cellViewFactory__: () -> View
@@ -88,14 +88,11 @@ class MyTableView @JvmOverloads constructor(
         mainView.recyclerview_data.addItemDecoration(dividerItemDecoration)
         mainView.recyclerview_data.adapter = MyTableViewDataRecyclerViewAdapter(
             rowFactory,
-            cellViewBindAction,
+            cellBindAction,
             { dataZ.size / columnCount + if ((dataZ.size % columnCount) == 0) 0 else 1 },
             { columnCount },
             { dataZ })
-        mainView.recyclerview_data.layoutManager = MyTableViewLayoutManager(
-            context,
-            mainView.recyclerview_data.adapter!! as MyTableViewDataRecyclerViewAdapter, this
-        )
+        mainView.recyclerview_data.layoutManager = MyTableViewLayoutManager(this)
         mainView.requestLayout()
         bInitialized = true
     }
@@ -140,7 +137,8 @@ class MyTableView @JvmOverloads constructor(
     }
 
     fun generateIntrinsicWidths(
-        adapter: MyTableViewDataRecyclerViewAdapter,
+        rowFactory: () -> LinearLayout,
+        cellBindAction: (View, Any) -> Unit,
         data: List<String>,
         columnCount: Int
     ): List<Int> {
@@ -148,7 +146,7 @@ class MyTableView @JvmOverloads constructor(
         val view = rowFactory()
         for ((i, x) in data.withIndex()) {
             val viewChild = view[i % columnCount]
-            cellViewBindAction(viewChild, x)
+            cellBindAction(viewChild, x)
             intrinsicWidths.add(
                 viewChild.intrinsicWidth2
             )
@@ -158,12 +156,11 @@ class MyTableView @JvmOverloads constructor(
     }
 
     fun initColumnWidths(
-        adapter: MyTableViewDataRecyclerViewAdapter,
         intrinsicWidths: List<Int>,
         columnCount: Int,
         width: Int
     ) {
-        logz("generateColumnWidths`open. adapter:${adapter}, columnCount:${columnCount}, width:${width}")
+        logz("generateColumnWidths`open. columnCount:${columnCount}, width:${width}")
         //trigger: data set changed. input: data, layout. output: views will be correct size
         // define column widths
         val columnWidths_ = arrayListOfZeros(columnCount)

@@ -9,10 +9,8 @@ import com.example.budgetvalue.util.intrinsicWidth2
 import com.example.tmcommonkotlin.logz
 
 class MyTableViewLayoutManager(
-    context: Context,
-    val adapter: MyTableViewDataRecyclerViewAdapter,
     val myTableView: MyTableView
-) : LinearLayoutManager(context, RecyclerView.VERTICAL, false) {
+) : LinearLayoutManager(myTableView.context, RecyclerView.VERTICAL, false) {
     var firstPass = true
     override fun isAutoMeasureEnabled()=false
     override fun onLayoutChildren(recycler: RecyclerView.Recycler?, state: RecyclerView.State?) {
@@ -20,8 +18,7 @@ class MyTableViewLayoutManager(
             firstPass = false
             myTableView.requestLayout()
             myTableView.initColumnWidths(
-                adapter,
-                myTableView.generateIntrinsicWidths(adapter, myTableView.dataZ, myTableView.columnCount),
+                myTableView.generateIntrinsicWidths(myTableView.rowFactory, myTableView.cellBindAction, myTableView.dataZ, myTableView.columnCount),
                 myTableView.columnCount,
                 myTableView.measuredWidth
             )
