@@ -16,6 +16,8 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableSource
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
+import java.io.PrintWriter
+import java.io.StringWriter
 
 fun <T> ObservableSource<T>.toLiveData2(): LiveData<T> {
     return convertRXToLiveData2(this)
@@ -209,7 +211,13 @@ val GridLayoutManager.visibleChildren: HashMap<Int, View>
 
 
 
-val View.measuredWidth2 : Int
+fun Throwable.narrate(): String {
+    val sw = StringWriter()
+    this.printStackTrace(PrintWriter(sw))
+    return sw.toString()
+}
+
+val View.intrinsicWidth2 : Int
     get() {
         this.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
         return this.measuredWidth
