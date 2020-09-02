@@ -147,6 +147,14 @@ fun View.setDimToWrapContent() {
     this.layoutParams = RecyclerView.LayoutParams(this.measuredWidth, this.measuredHeight)
 }
 
+fun arrayListOfZeros(size: Int): ArrayList<Int> {
+    val returning = ArrayList<Int>()
+    for (i in 0 until size) {
+        returning.add(0)
+    }
+    return returning
+}
+
 fun generateLipsum(size: Int): List<String> {
     val alphabet = "abcdefghijklmnopqrstuvwxyz"
     val returning = ArrayList<String>()
@@ -222,6 +230,17 @@ val View.intrinsicWidth2 : Int
         this.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
         return this.measuredWidth
     }
+
+val View.exactWidth: Int
+    get() {
+        this.measure(View.MeasureSpec.EXACTLY, View.MeasureSpec.EXACTLY)
+        return this.measuredWidth
+    }
+
+fun getExactWidth(x: Any): Int {
+    (x as View).measure(View.MeasureSpec.EXACTLY, View.MeasureSpec.EXACTLY)
+    return x.measuredWidth
+}
 
 fun getScreenWidth(): Int {
     return Resources.getSystem().displayMetrics.widthPixels

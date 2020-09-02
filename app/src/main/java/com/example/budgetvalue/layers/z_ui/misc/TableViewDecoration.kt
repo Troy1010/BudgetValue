@@ -39,25 +39,27 @@ class TableViewDecoration(activity: Activity, val orientation:Int = VERTICAL, va
         // in between items
         if (bHasSubItems) {
 //            logz("hasSubItems")
-            val lastRow = (parent.getChildAt(parent.childCount-1) as LinearLayout)
-            for (subChild in lastRow.children) {
-                if (subChild == lastRow.children.last())
-                    break
+            val lastRow = parent.getChildAt(parent.childCount-1)
+            if (lastRow is LinearLayout) {
+                for (subChild in lastRow.children) {
+                    if (subChild == lastRow.children.last())
+                        break
 //                logz("subChild..${(subChild as TextView).text}") // somehow this makes the for loop actually loop over all items
-                when(orientation) {
-                    HORIZONTAL -> {
-                        val bottom = subChild.bottom
-                        val top = bottom - mDivider.intrinsicHeight
-                        mDivider.setBounds(0, top, lastRow.right, bottom)
-                    }
-                    else -> {
-                        val right = subChild.right
-                        val left = right - mDivider.intrinsicWidth
-                        mDivider.setBounds(left, 0, right, lastRow.bottom)
+                    when(orientation) {
+                        HORIZONTAL -> {
+                            val bottom = subChild.bottom
+                            val top = bottom - mDivider.intrinsicHeight
+                            mDivider.setBounds(0, top, lastRow.right, bottom)
+                        }
+                        else -> {
+                            val right = subChild.right
+                            val left = right - mDivider.intrinsicWidth
+                            mDivider.setBounds(left, 0, right, lastRow.bottom)
 //                        logz("mDivider bounds: ${mDivider}")
+                        }
                     }
+                    mDivider.draw(canvas)
                 }
-                mDivider.draw(canvas)
             }
         }
         canvas.restore()
