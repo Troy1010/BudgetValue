@@ -32,9 +32,16 @@ fun <T> convertRXToLiveData2(observable: ObservableSource<T>): LiveData<T> {
     )
 }
 
-// This might be buggy..
+
+
+// These might be buggy..
 fun <T> Observable<T>.toBehaviorSubject(): BehaviorSubject<T> {
     val behaviorSubject = BehaviorSubject.create<T>()
+    this.subscribe(behaviorSubject)
+    return behaviorSubject
+}
+fun <T> Observable<T>.toBehaviorSubjectWithDefault(defaultValue:T): BehaviorSubject<T> {
+    val behaviorSubject = BehaviorSubject.createDefault(defaultValue)
     this.subscribe(behaviorSubject)
     return behaviorSubject
 }

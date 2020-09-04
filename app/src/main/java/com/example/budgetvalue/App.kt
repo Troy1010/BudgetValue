@@ -7,7 +7,7 @@ import com.example.tmcommonkotlin.logz
 
 class App : Application() {
     override fun onCreate() {
-        logz("START")
+        logz("***************************START")
         super.onCreate()
     }
 
