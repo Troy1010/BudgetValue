@@ -232,6 +232,12 @@ fun Throwable.narrate(): String {
     return sw.toString()
 }
 
+val View.intrinsicHeight2 : Int
+    get() {
+        this.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+        return this.measuredHeight
+    }
+
 val View.intrinsicWidth2 : Int
     get() {
         this.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)

@@ -104,7 +104,7 @@ class TMTableView @JvmOverloads constructor(
                 headerBindAction(view, headers[holder.adapterPosition])
                 view.layoutParams = RecyclerView.LayoutParams(
                     { columnWidthsObservable.value.getOrNull(holder.adapterPosition) ?: 0 }(),
-                    200
+                    view.intrinsicHeight2
                 )
             },
             { headers.size }
