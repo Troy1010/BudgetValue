@@ -1,4 +1,4 @@
-package com.example.budgetvalue.layers.z_ui.views
+package com.example.budgetvalue.layers.z_ui.views.TMTableView
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -26,7 +26,7 @@ import java.lang.Math.max
 import kotlin.math.ceil
 
 
-class MyTableView @JvmOverloads constructor(
+class TMTableView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -159,7 +159,7 @@ class MyTableView @JvmOverloads constructor(
         view
     }
 
-    class InitializationNotFinished(msg: String = "${MyTableView::class.simpleName}`finishInit() must be called before layout is completed") : Exception(msg)
+    class InitializationNotFinished(msg: String = "${TMTableView::class.simpleName}`finishInit() must be called before layout is completed") : Exception(msg)
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         if (!bInitialized) throw InitializationNotFinished()

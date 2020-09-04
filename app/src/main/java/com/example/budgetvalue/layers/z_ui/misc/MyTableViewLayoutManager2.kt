@@ -2,14 +2,12 @@ package com.example.budgetvalue.layers.z_ui.misc
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.budgetvalue.layers.z_ui.views.MyTableView
-import com.example.tmcommonkotlin.logz
-import kotlinx.android.synthetic.main.tableview_layout.view.*
+import com.example.budgetvalue.layers.z_ui.views.TMTableView.TMTableView
 
 class MyTableViewLayoutManager2(
-    val myTableView: MyTableView,
+    val TMTableView: TMTableView,
     orientationz: Int = RecyclerView.VERTICAL
-) : LinearLayoutManager(myTableView.context, orientationz, false) {
+) : LinearLayoutManager(TMTableView.context, orientationz, false) {
     var firstPass = true
     override fun isAutoMeasureEnabled()=true
 
