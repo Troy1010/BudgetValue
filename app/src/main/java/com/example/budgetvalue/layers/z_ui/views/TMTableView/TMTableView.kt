@@ -41,20 +41,15 @@ class TMTableView @JvmOverloads constructor(
     val mainView: View = View.inflate(context, R.layout.tableview_layout, this)
     var columnCount = 0
     var bInitialized = false
-    val minColWidths = BehaviorSubject.createDefault<List<Int>>(listOf<Int>())
-    val intrinsicColWidths = BehaviorSubject.createDefault<List<Int>>(listOf<Int>())
-    val tableViewWidth = BehaviorSubject.createDefault<Int>(0)
+    val minColWidths = BehaviorSubject.create<List<Int>>()
+    val intrinsicColWidths = BehaviorSubject.create<List<Int>>()
+    val tableViewWidth = BehaviorSubject.create<Int>()
     val columnWidthsObservable = combineLatestAsTuple(
         minColWidths,
         intrinsicColWidths,
         tableViewWidth)
         .filter { it.first.isNotEmpty() && it.second.isNotEmpty() && (tableViewWidth.value!=0) }
-        .logSubscribe2("Before map that runs generateColWidths")
-        .map {
-            logz("About to run generateColumnWidths from chain")
-            generateColumnWidths(it.first, it.second, it.third)
-        }
-        .logSubscribe2("columnWidthsObservable")
+        .map { generateColumnWidths(it.first, it.second, it.third) }
         .toBehaviorSubjectWithDefault(listOf())
         .also {
             it.subscribe {
@@ -107,7 +102,6 @@ class TMTableView @JvmOverloads constructor(
             headerFactory,
             { holder, view->
                 headerBindAction(view, headers[holder.adapterPosition])
-                logz("columnWidths.getOrNull(holder.adapterPosition) ?: 0:${columnWidthsObservable.value.getOrNull(holder.adapterPosition) ?: 0}")
                 view.layoutParams = RecyclerView.LayoutParams(
                     { columnWidthsObservable.value.getOrNull(holder.adapterPosition) ?: 0 }(),
                     200
