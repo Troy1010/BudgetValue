@@ -54,7 +54,6 @@ class TMTableView @JvmOverloads constructor(
             logz("About to run generateColumnWidths from chain")
             generateColumnWidths(it.first, it.second, it.third)
         }
-        .publish().refCount()
         .logSubscribe2("columnWidthsObservable")
         .toBehaviorSubjectWithDefault(listOf())
         .also {
