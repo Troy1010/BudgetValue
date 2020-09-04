@@ -26,7 +26,6 @@ object ColumnWidthCalculator {
                 viewChild.intrinsicWidth2
             )
         }
-        logz("intrinsicWidths:${intrinsicWidths}")
         return intrinsicWidths
     }
 
@@ -41,7 +40,6 @@ object ColumnWidthCalculator {
             cellBindAction(view, s)
             minWidths.add(view.intrinsicWidth2)
         }
-        logz("minWidths:${minWidths}")
         return minWidths
     }
 
@@ -51,7 +49,6 @@ object ColumnWidthCalculator {
         parentWidth: Int
     ): List<Int> {
         val columnCount = minWidths.size
-        logz("generateColumnWidths`Open. columnCount:${columnCount} parentWidth:${parentWidth}")
         //trigger: data set changed. input: data, layout. output: views will be correct size
         // define column widths
         val columnWidths = arrayListOfZeros(columnCount)
@@ -77,7 +74,6 @@ object ColumnWidthCalculator {
             columnWidths[i] = max(minWidths[i], columnWidths[i] - 1)
             loopCount++
         }
-        logz("generateColumnWidths`Close. columnWidths:${columnWidths}. sum:${columnWidths.sum()} vs ${parentWidth}. minWidths.sum():${minWidths.sum()}")
         return columnWidths
     }
 }
