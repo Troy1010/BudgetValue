@@ -48,11 +48,6 @@ class TMTableView @JvmOverloads constructor(
         .filter { it.first.isNotEmpty() && it.second.isNotEmpty() && (tableViewWidth.value!=0) }
         .map { generateColumnWidths(it.first, it.second, it.third) }
         .toBehaviorSubjectWithDefault(listOf())
-        .also {
-            it.subscribe {
-                recyclerview_column_header.adapter?.notifyDataSetChanged()
-            }
-        }
     @SuppressLint("InflateParams")
     fun finishInit(headers: List<String>, data: List<String>) {
         finishInit(headers, data,
@@ -167,6 +162,8 @@ class TMTableView @JvmOverloads constructor(
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         tableViewWidth.onNext(w)
+        // header viewholders must be re-created when tableViewWidth changes
+        recyclerview_column_header.adapter?.notifyDataSetChanged()
     }
 
 }
