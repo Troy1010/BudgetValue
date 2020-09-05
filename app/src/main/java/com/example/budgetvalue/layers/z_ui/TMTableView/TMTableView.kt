@@ -95,7 +95,8 @@ class TMTableView @JvmOverloads constructor(
         columnCount = headers.size
         mainView.recyclerview_column_header.adapter = GenericRecyclerViewAdapter5(
             headerFactory,
-            { holder, view->
+            { holder ->
+                val view = holder.itemView
                 headerBindAction(view, headers[holder.adapterPosition])
                 view.layoutParams = RecyclerView.LayoutParams(
                     columnWidthsObservable.value.getOrNull(holder.adapterPosition) ?: 0,
