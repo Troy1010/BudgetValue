@@ -91,7 +91,7 @@ class TMTableView @JvmOverloads constructor(
         headerViewBindAction__ = headerViewBindAction_ as (View, Any) -> Unit
         cellViewFactory__ = cellViewFactory_
         cellViewBindAction__ = cellViewBindAction_ as (View, Any) -> Unit
-        // initialize
+        //
         columnCount = headers.size
         mainView.recyclerview_column_header.adapter = GenericRecyclerViewAdapter5(
             headerFactory,
