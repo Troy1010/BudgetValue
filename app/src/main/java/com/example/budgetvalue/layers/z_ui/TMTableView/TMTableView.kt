@@ -124,14 +124,14 @@ class TMTableView @JvmOverloads constructor(
             { data })
         mainView.recyclerview_data.layoutManager = MyTableViewLayoutManager(this)
         //
-        bInitialized = true
-        //
         intrinsicColWidths.onNext(
             generateIntrinsicWidths(rowFactory, cellBindAction, data, columnCount)
         )
         minColWidths.onNext(
             generateMinWidths(headerFactory, headerBindAction, headers)
         )
+        //
+        bInitialized = true
         //
         logz("finishInit`Close")
     }
