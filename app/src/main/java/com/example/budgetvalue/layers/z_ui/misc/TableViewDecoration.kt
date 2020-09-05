@@ -1,21 +1,20 @@
 package com.example.budgetvalue.layers.z_ui.misc
 
 import android.app.Activity
+import android.content.Context
 import android.graphics.Canvas
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.R
-import com.example.tmcommonkotlin.logz
 
-class TableViewDecoration(activity: Activity, val orientation:Int = VERTICAL, val bHasSubItems:Boolean=false) : RecyclerView.ItemDecoration() {
+class TableViewDecoration(context: Context, val orientation:Int = VERTICAL, val bHasSubItems:Boolean=false) : RecyclerView.ItemDecoration() {
     companion object {
         const val HORIZONTAL = 0
         const val VERTICAL = 1
     }
-    val mDivider = ContextCompat.getDrawable(activity, R.drawable.divider)!!
+    val mDivider = ContextCompat.getDrawable(context, R.drawable.divider)!!
     override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         canvas.save()
         for (i in 0 until parent.childCount) {

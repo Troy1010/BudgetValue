@@ -111,7 +111,7 @@ class TMTableView @JvmOverloads constructor(
         )
         //
         val dividerItemDecoration = TableViewDecoration(
-            context as Activity,
+            context,
             VERTICAL,
             true
         )
