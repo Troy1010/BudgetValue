@@ -53,24 +53,25 @@ class TMTableView @JvmOverloads constructor(
                 recyclerview_column_header.adapter?.notifyDataSetChanged()
             }
         }
-
     @SuppressLint("InflateParams")
-    val defaultHeaderFactory = {
-        val view = LayoutInflater.from(context).inflate(R.layout.tableview_header, null, false)
-        view
-    }
-    val defaultHeaderBindAction = { view: View, data: Any ->
-        view as TextView
-        view.text = data as String
-    }
-    val defaultCellViewFactory = {
-        val textView = TextView(context)
-        textView.setTextColor(Color.WHITE)
-        textView
-    }
-    val defaultCellViewBindAction = { view: View, data: Any ->
-        view as TextView
-        view.text = data as String
+    fun finishInit(headers: List<String>, data: List<String>) {
+        finishInit(headers, data,
+            {
+                LayoutInflater.from(context).inflate(R.layout.tableview_header, null, false) as TextView
+            },
+            { view: TextView, s: String ->
+                view.text = s
+            },
+            {
+                TextView(context)
+                    .apply {
+                        setTextColor(Color.WHITE)
+                    }
+            },
+            { view: TextView, s: String ->
+                view.text = s
+            }
+        )
     }
     val headerFactory by lazy { headerViewFactory__ }
     val headerBindAction by lazy { headerViewBindAction__ }
@@ -80,19 +81,19 @@ class TMTableView @JvmOverloads constructor(
     lateinit var headerViewBindAction__: (View, Any) -> Unit
     lateinit var cellViewFactory__: () -> View
     lateinit var cellViewBindAction__: (View, Any) -> Unit
-    fun finishInit(
+    fun <V:View, D:Any> finishInit(
         headers: List<String>,
         data: List<String>,
-        headerViewFactory_: (() -> View) = defaultHeaderFactory,
-        headerViewBindAction_: ((View, Any) -> Unit) = defaultHeaderBindAction,
-        cellViewFactory_: (() -> View) = defaultCellViewFactory,
-        cellViewBindAction_: ((View, Any) -> Unit) = defaultCellViewBindAction
+        headerViewFactory_: (() -> V),
+        headerViewBindAction_: ((V, D) -> Unit),
+        cellViewFactory_: (() -> V),
+        cellViewBindAction_: ((V, D) -> Unit)
     ) {
         logz("finishInit`Open")
         headerViewFactory__ = headerViewFactory_
-        headerViewBindAction__ = headerViewBindAction_
+        headerViewBindAction__ = headerViewBindAction_ as (View, Any) -> Unit
         cellViewFactory__ = cellViewFactory_
-        cellViewBindAction__ = cellViewBindAction_
+        cellViewBindAction__ = cellViewBindAction_ as (View, Any) -> Unit
         // initialize
         columnCount = headers.size
         mainView.recyclerview_column_header.adapter = GenericRecyclerViewAdapter5(
