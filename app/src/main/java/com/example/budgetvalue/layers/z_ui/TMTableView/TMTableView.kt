@@ -1,4 +1,4 @@
-package com.example.budgetvalue.layers.z_ui.views.TMTableView
+package com.example.budgetvalue.layers.z_ui.TMTableView
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -17,9 +17,9 @@ import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.R
 import com.example.budgetvalue.layers.z_ui.misc.*
-import com.example.budgetvalue.layers.z_ui.views.TMTableView.ColumnWidthCalculator.generateColumnWidths
-import com.example.budgetvalue.layers.z_ui.views.TMTableView.ColumnWidthCalculator.generateIntrinsicWidths
-import com.example.budgetvalue.layers.z_ui.views.TMTableView.ColumnWidthCalculator.generateMinWidths
+import com.example.budgetvalue.layers.z_ui.TMTableView.ColumnWidthCalculator.generateColumnWidths
+import com.example.budgetvalue.layers.z_ui.TMTableView.ColumnWidthCalculator.generateIntrinsicWidths
+import com.example.budgetvalue.layers.z_ui.TMTableView.ColumnWidthCalculator.generateMinWidths
 import com.example.budgetvalue.util.*
 import com.example.tmcommonkotlin.logz
 import io.reactivex.rxjava3.subjects.BehaviorSubject

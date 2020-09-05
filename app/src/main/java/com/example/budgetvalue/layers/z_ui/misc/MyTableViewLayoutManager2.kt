@@ -2,7 +2,7 @@ package com.example.budgetvalue.layers.z_ui.misc
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.budgetvalue.layers.z_ui.views.TMTableView.TMTableView
+import com.example.budgetvalue.layers.z_ui.TMTableView.TMTableView
 
 class MyTableViewLayoutManager2(
     val TMTableView: TMTableView,

@@ -1,11 +1,10 @@
-package com.example.budgetvalue.layers.z_ui.views.TMTableView
+package com.example.budgetvalue.layers.z_ui.TMTableView
 
 import android.view.View
 import android.widget.LinearLayout
 import androidx.core.view.get
 import com.example.budgetvalue.util.arrayListOfZeros
 import com.example.budgetvalue.util.intrinsicWidth2
-import com.example.tmcommonkotlin.logz
 import java.lang.Math.max
 import kotlin.math.ceil
 
