@@ -13,7 +13,7 @@ object ColumnWidthCalculator {
     fun generateIntrinsicWidths(
         rowFactory: () -> LinearLayout,
         cellBindAction: (View, Any) -> Unit,
-        data: List<String>,
+        data: List<Any>,
         columnCount: Int
     ): List<Int> {
         val intrinsicWidths = ArrayList<Int>()
@@ -31,7 +31,7 @@ object ColumnWidthCalculator {
     fun generateMinWidths(
         cellFactory: () -> View,
         cellBindAction: (View, Any) -> Unit,
-        data: List<String>
+        data: List<Any>
     ): List<Int> {
         val minWidths = ArrayList<Int>()
         for (s in data) {

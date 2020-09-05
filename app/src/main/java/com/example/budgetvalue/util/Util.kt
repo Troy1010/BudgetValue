@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.budgetvalue.Orientation
 import com.example.tmcommonkotlin.logz
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Flowable
@@ -261,4 +262,23 @@ fun getScreenWidth(): Int {
 
 fun getScreenHeight(): Int {
     return Resources.getSystem().displayMetrics.heightPixels
+}
+
+fun <T> make1d(orientation: Orientation, z2dCollection: List<List<T>>): List<T?> {
+    val returning = ArrayList<T?>()
+    when (orientation) {
+        Orientation.Vertical -> {
+            for (collection in z2dCollection) {
+                returning.addAll(collection)
+            }
+        }
+        Orientation.Horizontal -> {
+            for (i in 0 until (z2dCollection.map { it.size }.max()?:0)) {
+                for (collection in z2dCollection) {
+                    returning.add(collection.getOrNull(i))
+                }
+            }
+        }
+    }
+    return returning.toList()
 }

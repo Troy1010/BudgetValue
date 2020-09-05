@@ -17,7 +17,7 @@ class MyTableViewDataRecyclerViewAdapter(
     val cellViewBindAction: (View, Any) -> Unit,
     val getRowCount: () -> Int,
     val getColumnCount: () -> Int,
-    val getData: () -> List<String>
+    val getData: () -> List<Any>
 ): RecyclerView.Adapter<MyTableViewDataRecyclerViewAdapter.ViewHolder>() {
     class ViewHolder (view: View) : RecyclerView.ViewHolder(view)
 

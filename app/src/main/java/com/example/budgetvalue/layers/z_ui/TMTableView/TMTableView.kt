@@ -50,12 +50,12 @@ class TMTableView @JvmOverloads constructor(
         .map { generateColumnWidths(it.first, it.second, it.third) }
         .toBehaviorSubjectWithDefault(listOf())
     @SuppressLint("InflateParams")
-    fun finishInit(headers: List<String>, data: List<String>) {
+    fun finishInit(headers: List<String?>, data: List<String?>) {
         finishInit(headers, data,
             {
                 LayoutInflater.from(context).inflate(R.layout.tableview_header, null, false) as TextView
             },
-            { view: TextView, s: String ->
+            { view: TextView, s: String? ->
                 view.text = s
             },
             {
@@ -65,7 +65,7 @@ class TMTableView @JvmOverloads constructor(
                         setPadding(10)
                     }
             },
-            { view: TextView, s: String ->
+            { view: TextView, s: String? ->
                 view.text = s
             }
         )
@@ -78,9 +78,9 @@ class TMTableView @JvmOverloads constructor(
     lateinit var headerViewBindAction__: (View, Any) -> Unit
     lateinit var cellViewFactory__: () -> View
     lateinit var cellViewBindAction__: (View, Any) -> Unit
-    fun <V:View, D:Any> finishInit(
-        headers: List<String>,
-        data: List<String>,
+    fun <V:View, D:Any?> finishInit(
+        headers: List<D>,
+        data: List<D>,
         headerViewFactory_: (() -> V),
         headerViewBindAction_: ((V, D) -> Unit),
         cellViewFactory_: (() -> V),
@@ -97,7 +97,7 @@ class TMTableView @JvmOverloads constructor(
             headerFactory,
             { holder ->
                 val view = holder.itemView
-                headerBindAction(view, headers[holder.adapterPosition])
+                headerBindAction(view, headers[holder.adapterPosition] as Any)
                 view.layoutParams = RecyclerView.LayoutParams(
                     columnWidthsObservable.value.getOrNull(holder.adapterPosition) ?: 0,
                     view.intrinsicHeight2
@@ -122,14 +122,14 @@ class TMTableView @JvmOverloads constructor(
             cellBindAction,
             { data.size / columnCount + if ((data.size % columnCount) == 0) 0 else 1 },
             { columnCount },
-            { data })
+            { data as List<Any> })
         mainView.recyclerview_data.layoutManager = MyTableViewLayoutManager(context)
         //
         intrinsicColWidths.onNext(
-            generateIntrinsicWidths(rowFactory, cellBindAction, data, columnCount)
+            generateIntrinsicWidths(rowFactory, cellBindAction, data as List<Any>, columnCount)
         )
         minColWidths.onNext(
-            generateMinWidths(headerFactory, headerBindAction, headers)
+            generateMinWidths(headerFactory, headerBindAction, headers as List<Any>)
         )
         //
         bInitialized = true
