@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.setPadding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
@@ -61,6 +62,7 @@ class TMTableView @JvmOverloads constructor(
                 TextView(context)
                     .apply {
                         setTextColor(Color.WHITE)
+                        setPadding(10)
                     }
             },
             { view: TextView, s: String ->
