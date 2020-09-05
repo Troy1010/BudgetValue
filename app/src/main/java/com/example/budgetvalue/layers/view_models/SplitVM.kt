@@ -37,9 +37,8 @@ class SplitVM(
     }.toBehaviorSubject()
 
     // spentCA depends on transactionSet + activeCategories
-    val spentCategoryAmounts = Observable.combineLatest(listOf(transactionSet, activeCategories)) {
-        Pair(it[0] as List<Transaction>, it[1] as List<Category>)
-    }.map {
+    val spentCategoryAmounts = combineLatestAsTuple(transactionSet, activeCategories)
+        .map {
         val spentCategoryAmounts_ = HashMap<Category, BigDecimal>()
         for (transaction in it.first) {
             for (category in it.second) {
