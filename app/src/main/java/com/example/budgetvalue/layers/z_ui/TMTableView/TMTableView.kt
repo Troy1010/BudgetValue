@@ -122,7 +122,7 @@ class TMTableView @JvmOverloads constructor(
             { data.size / columnCount + if ((data.size % columnCount) == 0) 0 else 1 },
             { columnCount },
             { data })
-        mainView.recyclerview_data.layoutManager = MyTableViewLayoutManager(this)
+        mainView.recyclerview_data.layoutManager = MyTableViewLayoutManager(context)
         //
         intrinsicColWidths.onNext(
             generateIntrinsicWidths(rowFactory, cellBindAction, data, columnCount)
