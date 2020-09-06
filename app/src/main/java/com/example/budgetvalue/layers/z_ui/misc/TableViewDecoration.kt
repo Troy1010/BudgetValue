@@ -16,7 +16,7 @@ class TableViewDecoration(context: Context, val orientation:Int = VERTICAL, val 
     val mDivider = ContextCompat.getDrawable(context, R.drawable.divider)!!
     override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         canvas.save()
-        for (i in 0 until parent.childCount) {
+        for (i in 1 until parent.childCount) {
             val child = parent.getChildAt(i)
             val params = child.layoutParams as RecyclerView.LayoutParams
 
