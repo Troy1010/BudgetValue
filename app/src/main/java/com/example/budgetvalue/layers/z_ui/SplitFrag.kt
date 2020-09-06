@@ -20,25 +20,11 @@ class SplitFrag : Fragment(R.layout.frag_split) {
     val categoriesVM: CategoriesVM by viewModels { vmFactoryFactory { CategoriesVM() } }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val headerFactory = { View.inflate(context, R.layout.tableview_header, null) as TextView }
-        val headerBindAction = { view: TextView, s: String? ->
-            view.text = s
-        }
-        val cellFactory = {
-            TextView(context)
-                .apply {
-                    setTextColor(Color.WHITE)
-                    setPadding(10)
-                }
-        }
-        val cellBindAction ={ view: TextView, s: String? ->
-            view.text = s
-        }
         view.myTableView_1.finishInit(listOf(
-            TableViewColumnData("Category",headerFactory,headerBindAction, categoriesVM.categories.value.map {it.name},cellFactory, cellBindAction),
-            TableViewColumnData("Spent",headerFactory,headerBindAction, generateLipsum(5),cellFactory, cellBindAction),
-            TableViewColumnData("Income",headerFactory,headerBindAction, generateLipsum(6),cellFactory, cellBindAction),
-            TableViewColumnData("Budgeted",headerFactory,headerBindAction, generateLipsum(7),cellFactory, cellBindAction)
+            TableViewColumnData(requireContext(), "Category", categoriesVM.categories.value.map {it.name}),
+            TableViewColumnData(requireContext(),"Spent", generateLipsum(5)),
+            TableViewColumnData(requireContext(),"Income", generateLipsum(6)),
+            TableViewColumnData(requireContext(),"Budgeted", generateLipsum(7))
         ))
     }
 }

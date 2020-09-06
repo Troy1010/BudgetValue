@@ -10,42 +10,18 @@ import java.lang.Math.max
 import kotlin.math.ceil
 
 object ColumnWidthCalculator {
-    fun generateIntrinsicWidths(cellDatas: java.util.ArrayList<java.util.ArrayList<TableViewCellData>>): List<Int> {
+    fun generateIntrinsicWidths(cellDatas: List<List<TableViewCellData>>): List<Int> {
         val intrinsicWidths = ArrayList<Int>()
         for ((xPos, rowData) in cellDatas.withIndex()) {
             intrinsicWidths.add(0)
-            for ((yPos, cellData) in rowData.withIndex()) {
+            for (cellData in rowData) {
                 intrinsicWidths[xPos] = max(intrinsicWidths[xPos],cellData.intrinsicWidth)
             }
         }
-        logz("intrinsicWidths:${intrinsicWidths}")
         return intrinsicWidths
     }
 
-//    fun generateIntrinsicWidths(
-//        rowFactory: () -> LinearLayout,
-//        cellBindAction: (View, Any) -> Unit,
-//        data: List<Any>,
-//        columnCount: Int
-//    ): List<Int> {
-//        val intrinsicWidths = ArrayList<Int>()
-//        val view = rowFactory()
-//        for ((i, x) in data.withIndex()) {
-//            val viewChild = view[i % columnCount]
-//            cellBindAction(viewChild, x)
-//            intrinsicWidths.add(
-//                viewChild.intrinsicWidth2
-//            )
-//        }
-//        return intrinsicWidths
-//    }
-
-    fun generateMinWidths(
-        rowData: ArrayList<TableViewCellData>
-    ): List<Int> {
-        logz("minWiths:${rowData.map { it.intrinsicWidth }}")
-        return rowData.map { it.intrinsicWidth }
-    }
+    fun generateMinWidths(rowData: List<TableViewCellData>) = rowData.map { it.intrinsicWidth }
 
     fun generateColumnWidths(
         minWidths: List<Int>,
@@ -53,7 +29,6 @@ object ColumnWidthCalculator {
         parentWidth: Int
     ): List<Int> {
         val columnCount = minWidths.size
-        //trigger: data set changed. input: data, layout. output: views will be correct size
         // define column widths
         val columnWidths = arrayListOfZeros(columnCount)
         for ((i, intrinsicWidth) in intrinsicWidths.withIndex()) {
@@ -78,7 +53,6 @@ object ColumnWidthCalculator {
             columnWidths[i] = max(minWidths[i], columnWidths[i] - 1)
             loopCount++
         }
-        logz("columnWidths:${columnWidths}")
         return columnWidths
     }
 }
