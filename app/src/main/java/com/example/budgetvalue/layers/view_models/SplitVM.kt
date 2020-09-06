@@ -51,9 +51,8 @@ class SplitVM(
                 }
             }
         }
-            logz("spentCategoryAmounts_:${spentCategoryAmounts_}")
         spentCategoryAmounts_
-    }.toBehaviorSubject().also { it.logSubscribe2("spentCA:")}
+    }.toBehaviorSubject()
     val incomeCategoryAmounts = BehaviorSubject.createDefault(HashMap<Category, BigDecimal>())
     val budgetedCategoryAmounts = combineLatestAsTuple(
         activeCategories,
