@@ -36,7 +36,7 @@ data class TableViewColumnData<V: View, D:Any, V2, D2> (
                 { view: TextView, s: String? -> view.text = s }
             )
         }
-        fun createDAsString(
+        fun createCastString(
             context: Context,
             header: Any,
             data: List<Any>

@@ -18,8 +18,6 @@ import com.example.tmcommonkotlin.vmFactoryFactory
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindToLifecycle
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.frag_split.*
-import java.util.*
-import kotlin.collections.HashMap
 
 class SplitFrag : Fragment(R.layout.frag_split) {
     val appComponent by lazy { (requireActivity().application as App).appComponent }
@@ -43,10 +41,10 @@ class SplitFrag : Fragment(R.layout.frag_split) {
         ).observeOn(AndroidSchedulers.mainThread()).bindToLifecycle(viewLifecycleOwner).subscribe {
             val activeCategories = it.first
             myTableView_1.setData(listOf(
-                TableViewColumnData.createDAsString(requireContext(), "Category", it.first.map { it.name }),
-                TableViewColumnData.createDAsString(requireContext(), "Spent", it.second.sortByList(activeCategories).map { it.value }),
-                TableViewColumnData.createDAsString(requireContext(), "Income", it.third.sortByList(activeCategories).map { it.value }),
-                TableViewColumnData.createDAsString(requireContext(), "Budgeted", it.fourth.sortByList(activeCategories).map { it.value })
+                TableViewColumnData.createCastString(requireContext(), "Category", it.first.map { it.name }),
+                TableViewColumnData.createCastString(requireContext(), "Spent", it.second.sortByList(activeCategories).map { it.value }),
+                TableViewColumnData.createCastString(requireContext(), "Income", it.third.sortByList(activeCategories).map { it.value }),
+                TableViewColumnData.createCastString(requireContext(), "Budgeted", it.fourth.sortByList(activeCategories).map { it.value })
             ))
         }
     }
