@@ -12,11 +12,14 @@ import com.example.budgetvalue.layers.view_models.SplitVM
 import com.example.budgetvalue.layers.view_models.TransactionsVM
 import com.example.budgetvalue.layers.z_ui.TMTableView.TableViewColumnData
 import com.example.budgetvalue.util.combineLatestAsTuple
+import com.example.budgetvalue.util.sortByList
 import com.example.tmcommonkotlin.logz
 import com.example.tmcommonkotlin.vmFactoryFactory
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindToLifecycle
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.frag_split.*
+import java.util.*
+import kotlin.collections.HashMap
 
 class SplitFrag : Fragment(R.layout.frag_split) {
     val appComponent by lazy { (requireActivity().application as App).appComponent }
@@ -41,14 +44,10 @@ class SplitFrag : Fragment(R.layout.frag_split) {
             val activeCategories = it.first
             myTableView_1.setData(listOf(
                 TableViewColumnData.createDAsString(requireContext(), "Category", it.first.map { it.name }),
-                TableViewColumnData.createDAsString(requireContext(), "Spent", it.second.sortForValues(activeCategories)),
-                TableViewColumnData.createDAsString(requireContext(), "Income", it.third.sortForValues(activeCategories)),
-                TableViewColumnData.createDAsString(requireContext(), "Budgeted", it.fourth.sortForValues(activeCategories))
+                TableViewColumnData.createDAsString(requireContext(), "Spent", it.second.sortByList(activeCategories).map { it.value }),
+                TableViewColumnData.createDAsString(requireContext(), "Income", it.third.sortByList(activeCategories).map { it.value }),
+                TableViewColumnData.createDAsString(requireContext(), "Budgeted", it.fourth.sortByList(activeCategories).map { it.value })
             ))
         }
     }
-}
-
-private fun <K, V> HashMap<K, V>.sortForValues(list:List<K>): List<V> {
-    return toSortedMap(compareBy { list.indexOf(it) }).map { it.value }
 }

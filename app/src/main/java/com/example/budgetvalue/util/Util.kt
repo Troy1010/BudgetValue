@@ -19,6 +19,9 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.io.PrintWriter
 import java.io.StringWriter
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 fun <T> ObservableSource<T>.toLiveData2(): LiveData<T> {
     return convertRXToLiveData2(this)
@@ -304,4 +307,10 @@ fun <T> generate2dArrayList(xSize:Int, ySize:Int, orientation: Orientation): Arr
         }
     }
     return returning
+}
+
+
+
+fun <K, V> HashMap<K, V>.sortByList(list:List<K>): SortedMap<K, V> {
+    return toSortedMap(compareBy { list.indexOf(it) })
 }
