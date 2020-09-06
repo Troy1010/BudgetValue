@@ -23,7 +23,7 @@ class TMTableView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr) {
     init { View.inflate(context, R.layout.tableview_layout, this) }
     val minColWidths = BehaviorSubject.create<List<Int>>()
-    val intrinsicColWidths = BehaviorSubject.create<List<Int>>()
+    val intrinsicColWidths = BehaviorSubject.create<List<List<Int>>>()
     val tableViewWidth = BehaviorSubject.create<Int>()
     val columnWidthsObservable = combineLatestAsTuple(minColWidths, intrinsicColWidths, tableViewWidth)
         .filter { it.first.isNotEmpty() && it.second.isNotEmpty() && (tableViewWidth.value!=0) }
@@ -39,12 +39,8 @@ class TMTableView @JvmOverloads constructor(
         recyclerview_tier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
         recyclerview_tier1.addItemDecoration(TableViewDecoration(context, TableViewDecoration.VERTICAL, true))
         //
-        minColWidths.onNext(
-            generateMinWidths(data2d[0])
-        )
-        intrinsicColWidths.onNext(
-            generateIntrinsicWidths(data2d)
-        )
+        minColWidths.onNext(generateMinWidths(data2d[0]))
+        intrinsicColWidths.onNext(generateIntrinsicWidths(data2d))
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
