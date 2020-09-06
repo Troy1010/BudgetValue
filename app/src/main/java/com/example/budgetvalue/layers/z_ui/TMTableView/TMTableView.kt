@@ -15,7 +15,6 @@ import com.example.budgetvalue.layers.z_ui.misc.TableViewDecoration
 import com.example.budgetvalue.util.*
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.tableview_layout.view.*
-import java.lang.Exception
 
 class TMTableView @JvmOverloads constructor(
     context: Context,
@@ -23,7 +22,6 @@ class TMTableView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
     init { View.inflate(context, R.layout.tableview_layout, this) }
-    var bInitialized = false
     val minColWidths = BehaviorSubject.create<List<Int>>()
     val intrinsicColWidths = BehaviorSubject.create<List<Int>>()
     val tableViewWidth = BehaviorSubject.create<Int>()
@@ -32,14 +30,12 @@ class TMTableView @JvmOverloads constructor(
         .map { generateColumnWidths(it.first, it.second, it.third) }
         .toBehaviorSubjectWithDefault(listOf())
 
-    @JvmName("finishInitSecondConstructor")
-    fun <V:View,D:Any, V2:View, D2:Any> finishInit(data2d_ByColumnData: List<TableViewColumnData<V,D,V2,D2>>) {
-        finishInit(convertByColumnDataToCellData(data2d_ByColumnData))
+    @JvmName("setData_constructor2")
+    fun <V:View,D:Any, V2:View, D2:Any> setData(data2d_ByColumnData: List<TableViewColumnData<V,D,V2,D2>>) {
+        setData(convertByColumnDataToCellData(data2d_ByColumnData))
     }
-    fun finishInit(
-        data2d: List<List<TableViewCellData>>
-    ) {
-        recyclerview_tier1.adapter = TVVerticalRecyclerViewAdapter(context, { data2d }, columnWidthsObservable)
+    fun setData(data2d: List<List<TableViewCellData>>) {
+        recyclerview_tier1.adapter = TVRecyclerViewAdapter(context, { data2d }, columnWidthsObservable)
         recyclerview_tier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
         recyclerview_tier1.addItemDecoration(TableViewDecoration(context, TableViewDecoration.VERTICAL, true))
         //
@@ -49,15 +45,6 @@ class TMTableView @JvmOverloads constructor(
         intrinsicColWidths.onNext(
             generateIntrinsicWidths(data2d)
         )
-        //
-        bInitialized = true
-    }
-
-    class InitializationNotFinished(msg: String = "${TMTableView::class.simpleName}`finishInit() must be called before layout is completed") : Exception(msg)
-
-    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        if (!bInitialized) throw InitializationNotFinished()
-        super.onLayout(changed, left, top, right, bottom)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {

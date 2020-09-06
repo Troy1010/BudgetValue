@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import java.io.InputStream
 
 class TransactionsVM(private val repo: Repo):ViewModel() {
-    val transactions = repo.getTransactions().toBehaviorSubject()
+    val transactions = repo.getTransactions().toBehaviorSubject().also { it.subscribe() }
     val uncategorizedTransactions = MediatorLiveData<List<Transaction>>()
     fun importTransactions(inputStream: InputStream) {
         viewModelScope.launch(Dispatchers.IO) {

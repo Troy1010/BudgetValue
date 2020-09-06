@@ -5,7 +5,6 @@ import com.example.tmcommonkotlin.logz
 
 object Data2dConverter {
     fun <V:View,D:Any,V2:View,D2:Any>convertByColumnDataToCellData(data2d:List<TableViewColumnData<V,D,V2,D2>>): ArrayList<ArrayList<TableViewCellData>> {
-        logz("data2d:${data2d.map{ it.data }}")
         val rowCount = (data2d.map{it.data.size}.max()?:0)+1 // +1 for header
         val returning = ArrayList<ArrayList<TableViewCellData>>()
         for(yPos in 0 until rowCount) {
@@ -26,7 +25,6 @@ object Data2dConverter {
                 }
             }
         }
-        logz("data2d_ByCell:${returning.map{ it.map { it.data }}}")
         return returning
     }
 }

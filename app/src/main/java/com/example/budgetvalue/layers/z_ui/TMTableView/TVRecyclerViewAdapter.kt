@@ -5,14 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.view.get
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import androidx.recyclerview.widget.RecyclerView
-import com.example.tmcommonkotlin.logz
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import io.reactivex.rxjava3.subjects.PublishSubject
 
-class TVVerticalRecyclerViewAdapter(val context: Context, val data2d:()->List<List<TableViewCellData>>, val columnWidthsObservable: BehaviorSubject<List<Int>>) : RecyclerView.Adapter<TVVerticalRecyclerViewAdapter.ViewHolder>() {
+class TVRecyclerViewAdapter(val context: Context, val data2d:()->List<List<TableViewCellData>>, val columnWidthsObservable: BehaviorSubject<List<Int>>) : RecyclerView.Adapter<TVRecyclerViewAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
     override fun onCreateViewHolder(parent: ViewGroup, yPos: Int): ViewHolder {

@@ -36,5 +36,12 @@ data class TableViewColumnData<V: View, D:Any, V2, D2> (
                 { view: TextView, s: String? -> view.text = s }
             )
         }
+        fun createDAsString(
+            context: Context,
+            header: Any,
+            data: List<Any>
+        ): TableViewColumnData<TextView, String, TextView, String> {
+            return TableViewColumnData(context, header.toString(), data.map {it.toString()})
+        }
     }
 }

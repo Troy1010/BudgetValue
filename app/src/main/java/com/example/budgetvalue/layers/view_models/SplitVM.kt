@@ -5,10 +5,8 @@ import com.example.budgetvalue.layers.data_layer.Repo
 import com.example.budgetvalue.models.Account
 import com.example.budgetvalue.models.Category
 import com.example.budgetvalue.models.Transaction
-import com.example.budgetvalue.util.combineLatestAsTuple
-import com.example.budgetvalue.util.toBehaviorSubject
-import com.example.budgetvalue.util.toLiveData2
-import com.example.budgetvalue.util.zipWithDefault
+import com.example.budgetvalue.util.*
+import com.example.tmcommonkotlin.log
 import com.example.tmcommonkotlin.logz
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -53,11 +51,19 @@ class SplitVM(
                 }
             }
         }
-        spentCategoryAmounts_.map { it.value }
-    }.toBehaviorSubject()
-    val incomeCategoryAmounts = BehaviorSubject.createDefault(listOf<BigDecimal>())
-    val budgetedCategoryAmounts = combineLatestAsTuple(spentCategoryAmounts, incomeCategoryAmounts).map {
-        it.first.zipWithDefault(it.second, BigDecimal.ZERO)
-            .map { it.first + it.second }
+            logz("spentCategoryAmounts_:${spentCategoryAmounts_}")
+        spentCategoryAmounts_
+    }.toBehaviorSubject().also { it.logSubscribe2("spentCA:")}
+    val incomeCategoryAmounts = BehaviorSubject.createDefault(HashMap<Category, BigDecimal>())
+    val budgetedCategoryAmounts = combineLatestAsTuple(
+        activeCategories,
+        spentCategoryAmounts,
+        incomeCategoryAmounts
+    ).map {
+        val budgetedCategoryAmounts_ = HashMap<Category, BigDecimal>()
+        for (category in it.first) {
+            budgetedCategoryAmounts_[category] = (it.second[category]?: BigDecimal.ZERO) + (it.third[category]?: BigDecimal.ZERO)
+        }
+        budgetedCategoryAmounts_
     }.toBehaviorSubject()
 }

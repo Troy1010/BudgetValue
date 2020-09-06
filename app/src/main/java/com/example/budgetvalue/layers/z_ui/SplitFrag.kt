@@ -1,30 +1,54 @@
 package com.example.budgetvalue.layers.z_ui
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
-import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
+import com.example.budgetvalue.App
 import com.example.budgetvalue.R
 import com.example.budgetvalue.layers.view_models.CategoriesVM
-import com.example.budgetvalue.Orientation
+import com.example.budgetvalue.layers.view_models.AccountsVM
+import com.example.budgetvalue.layers.view_models.SplitVM
+import com.example.budgetvalue.layers.view_models.TransactionsVM
 import com.example.budgetvalue.layers.z_ui.TMTableView.TableViewColumnData
-import com.example.budgetvalue.util.generateLipsum
-import com.example.budgetvalue.util.make1d
+import com.example.budgetvalue.util.combineLatestAsTuple
+import com.example.tmcommonkotlin.logz
 import com.example.tmcommonkotlin.vmFactoryFactory
-import kotlinx.android.synthetic.main.frag_split.view.*
+import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindToLifecycle
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import kotlinx.android.synthetic.main.frag_split.*
 
 class SplitFrag : Fragment(R.layout.frag_split) {
-    val categoriesVM: CategoriesVM by viewModels { vmFactoryFactory { CategoriesVM() } }
+    val appComponent by lazy { (requireActivity().application as App).appComponent }
+    val categoriesVM: CategoriesVM by activityViewModels { vmFactoryFactory { CategoriesVM() } }
+    val transactionsVM: TransactionsVM by activityViewModels { vmFactoryFactory { TransactionsVM(appComponent.getRepo()) } }
+    val accountsVM: AccountsVM by activityViewModels{ vmFactoryFactory { AccountsVM(appComponent.getRepo()) }}
+    val splitVM: SplitVM by activityViewModels { vmFactoryFactory { SplitVM(appComponent.getRepo(), categoriesVM, transactionsVM.transactions, accountsVM.accounts ) } }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.myTableView_1.finishInit(listOf(
-            TableViewColumnData(requireContext(), "Category", categoriesVM.categories.value.map {it.name}),
-            TableViewColumnData(requireContext(),"Spent", generateLipsum(5)),
-            TableViewColumnData(requireContext(),"Income", generateLipsum(6)),
-            TableViewColumnData(requireContext(),"Budgeted", generateLipsum(7))
-        ))
+        logz("onViewCreated")
+        setupObservers()
     }
+
+    private fun setupObservers() {
+        combineLatestAsTuple(
+            categoriesVM.categories,
+            splitVM.spentCategoryAmounts,
+            splitVM.incomeCategoryAmounts,
+            splitVM.budgetedCategoryAmounts
+        ).observeOn(AndroidSchedulers.mainThread()).bindToLifecycle(viewLifecycleOwner).subscribe {
+            val activeCategories = it.first
+            myTableView_1.setData(listOf(
+                TableViewColumnData.createDAsString(requireContext(), "Category", it.first.map { it.name }),
+                TableViewColumnData.createDAsString(requireContext(), "Spent", it.second.sortForValues(activeCategories)),
+                TableViewColumnData.createDAsString(requireContext(), "Income", it.third.sortForValues(activeCategories)),
+                TableViewColumnData.createDAsString(requireContext(), "Budgeted", it.fourth.sortForValues(activeCategories))
+            ))
+        }
+    }
+}
+
+private fun <K, V> HashMap<K, V>.sortForValues(list:List<K>): List<V> {
+    return toSortedMap(compareBy { list.indexOf(it) }).map { it.value }
 }
