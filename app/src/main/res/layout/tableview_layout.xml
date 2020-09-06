@@ -6,22 +6,13 @@
     xmlns:tools="http://schemas.android.com/tools">
     <androidx.recyclerview.widget.RecyclerView
         app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/recyclerview_column_header"
+        android:id="@+id/recyclerview_tier1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:layoutManager="LinearLayoutManager"
         tools:listitem="@layout/tableview_basic_cell"
         tools:orientation="horizontal"
         tools:itemCount="4"/>
-    <androidx.recyclerview.widget.RecyclerView
-        app:layout_constraintTop_toBottomOf="@id/recyclerview_column_header"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:id="@+id/recyclerview_data"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        tools:layoutManager="GridLayoutManager"
-        tools:listitem="@layout/tableview_basic_cell"
-        tools:spanCount="4"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

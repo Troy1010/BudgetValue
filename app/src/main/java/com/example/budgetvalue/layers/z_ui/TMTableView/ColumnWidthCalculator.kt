@@ -5,41 +5,46 @@ import android.widget.LinearLayout
 import androidx.core.view.get
 import com.example.budgetvalue.util.arrayListOfZeros
 import com.example.budgetvalue.util.intrinsicWidth2
+import com.example.tmcommonkotlin.logz
 import java.lang.Math.max
 import kotlin.math.ceil
 
 object ColumnWidthCalculator {
-
-    fun generateIntrinsicWidths(
-        rowFactory: () -> LinearLayout,
-        cellBindAction: (View, Any) -> Unit,
-        data: List<Any>,
-        columnCount: Int
-    ): List<Int> {
+    fun generateIntrinsicWidths(cellDatas: java.util.ArrayList<java.util.ArrayList<TableViewCellData>>): List<Int> {
         val intrinsicWidths = ArrayList<Int>()
-        val view = rowFactory()
-        for ((i, x) in data.withIndex()) {
-            val viewChild = view[i % columnCount]
-            cellBindAction(viewChild, x)
-            intrinsicWidths.add(
-                viewChild.intrinsicWidth2
-            )
+        for ((xPos, rowData) in cellDatas.withIndex()) {
+            intrinsicWidths.add(0)
+            for ((yPos, cellData) in rowData.withIndex()) {
+                intrinsicWidths[xPos] = max(intrinsicWidths[xPos],cellData.intrinsicWidth)
+            }
         }
+        logz("intrinsicWidths:${intrinsicWidths}")
         return intrinsicWidths
     }
 
+//    fun generateIntrinsicWidths(
+//        rowFactory: () -> LinearLayout,
+//        cellBindAction: (View, Any) -> Unit,
+//        data: List<Any>,
+//        columnCount: Int
+//    ): List<Int> {
+//        val intrinsicWidths = ArrayList<Int>()
+//        val view = rowFactory()
+//        for ((i, x) in data.withIndex()) {
+//            val viewChild = view[i % columnCount]
+//            cellBindAction(viewChild, x)
+//            intrinsicWidths.add(
+//                viewChild.intrinsicWidth2
+//            )
+//        }
+//        return intrinsicWidths
+//    }
+
     fun generateMinWidths(
-        cellFactory: () -> View,
-        cellBindAction: (View, Any) -> Unit,
-        data: List<Any>
+        rowData: ArrayList<TableViewCellData>
     ): List<Int> {
-        val minWidths = ArrayList<Int>()
-        for (s in data) {
-            val view = cellFactory()
-            cellBindAction(view, s)
-            minWidths.add(view.intrinsicWidth2)
-        }
-        return minWidths
+        logz("minWiths:${rowData.map { it.intrinsicWidth }}")
+        return rowData.map { it.intrinsicWidth }
     }
 
     fun generateColumnWidths(
@@ -73,6 +78,7 @@ object ColumnWidthCalculator {
             columnWidths[i] = max(minWidths[i], columnWidths[i] - 1)
             loopCount++
         }
+        logz("columnWidths:${columnWidths}")
         return columnWidths
     }
 }

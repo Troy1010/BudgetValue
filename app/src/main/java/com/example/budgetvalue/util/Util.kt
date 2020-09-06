@@ -282,3 +282,26 @@ fun <T> make1d(orientation: Orientation, z2dCollection: List<List<T>>): List<T?>
     }
     return returning.toList()
 }
+
+fun <T> generate2dArrayList(xSize:Int, ySize:Int, orientation: Orientation): ArrayList<ArrayList<T?>> {
+    val returning = ArrayList<ArrayList<T?>>()
+    when (orientation) {
+        Orientation.Horizontal -> {
+            for (yPos in 0 until ySize) {
+                returning.add(ArrayList())
+                for (xPos in 0 until xSize) {
+                    returning[yPos].add(null)
+                }
+            }
+        }
+        Orientation.Vertical -> {
+            for (xPos in 0 until xSize) {
+                returning.add(ArrayList())
+                for (yPos in 0 until ySize) {
+                    returning[xPos].add(null)
+                }
+            }
+        }
+    }
+    return returning
+}
