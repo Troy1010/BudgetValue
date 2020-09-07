@@ -10,7 +10,7 @@ import java.lang.Math.max
 import kotlin.math.ceil
 
 object ColumnWidthCalculator {
-    fun generateIntrinsicWidths(cellDatas: List<List<TableViewCellData>>): List<List<Int>> {
+    fun generateIntrinsicWidths(cellDatas: List<List<ICellData>>): List<List<Int>> {
         val intrinsicWidths = ArrayList<ArrayList<Int>>()
         for ((yPos, rowData) in cellDatas.withIndex()) {
             intrinsicWidths.add(ArrayList())
@@ -18,16 +18,19 @@ object ColumnWidthCalculator {
                 intrinsicWidths[yPos].add(cellData.intrinsicWidth)
             }
         }
+        logz("intrinsicWidths:${intrinsicWidths}")
         return intrinsicWidths
     }
 
-    fun generateMinWidths(rowData: List<TableViewCellData>) = rowData.map { it.intrinsicWidth }
+    fun generateMinWidths(rowData: List<ICellData>) = rowData.map { it.intrinsicWidth }
 
     fun generateColumnWidths(
         minWidths: List<Int>,
         intrinsicWidths: List<List<Int>>,
         parentWidth: Int
     ): List<Int> {
+        if (minWidths.sum() > parentWidth)
+            logz("WARNING`minWidths.sum():${minWidths.sum()} > parentWidth:$parentWidth")
         val columnCount = minWidths.size
         // define column widths
         val columnWidths = arrayListOfZeros(columnCount)
@@ -54,6 +57,8 @@ object ColumnWidthCalculator {
             columnWidths[i] = max(minWidths[i], columnWidths[i] - 1)
             loopCount++
         }
+        if (columnWidths.sum() != parentWidth)
+            logz("WARNING`columnWidths.sum():${columnWidths.sum()} != parentWidth:$parentWidth")
         return columnWidths
     }
 }

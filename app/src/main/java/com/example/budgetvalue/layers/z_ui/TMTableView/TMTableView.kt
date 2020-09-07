@@ -10,8 +10,6 @@ import com.example.budgetvalue.R
 import com.example.budgetvalue.layers.z_ui.TMTableView.ColumnWidthCalculator.generateColumnWidths
 import com.example.budgetvalue.layers.z_ui.TMTableView.ColumnWidthCalculator.generateIntrinsicWidths
 import com.example.budgetvalue.layers.z_ui.TMTableView.ColumnWidthCalculator.generateMinWidths
-import com.example.budgetvalue.layers.z_ui.TMTableView.Data2dConverter.convertByColumnDataToCellData
-import com.example.budgetvalue.layers.z_ui.misc.TableViewDecoration
 import com.example.budgetvalue.util.*
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.tableview_layout.view.*
@@ -30,14 +28,13 @@ class TMTableView @JvmOverloads constructor(
         .map { generateColumnWidths(it.first, it.second, it.third) }
         .toBehaviorSubjectWithDefault(listOf())
 
-    @JvmName("setData_constructor2")
-    fun <V:View,D:Any, V2:View, D2:Any> setData(data2d_ByColumnData: List<TableViewColumnData<V,D,V2,D2>>) {
-        setData(convertByColumnDataToCellData(data2d_ByColumnData))
+    fun setDataByColumn(data2d_ByRow: List<List<ICellData>>) {
+        setData(data2d_ByRow.reflectXY())
     }
-    fun setData(data2d: List<List<TableViewCellData>>) {
-        recyclerview_tier1.adapter = TVRecyclerViewAdapter(context, { data2d }, columnWidthsObservable)
+    fun setData(data2d: List<List<ICellData>>) {
+        recyclerview_tier1.adapter = RecyclerViewAdapter(context, { data2d }, columnWidthsObservable)
         recyclerview_tier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
-        recyclerview_tier1.addItemDecoration(TableViewDecoration(context, TableViewDecoration.VERTICAL, true))
+        recyclerview_tier1.addItemDecoration(Decoration(context, Decoration.VERTICAL, true))
         //
         minColWidths.onNext(generateMinWidths(data2d[0]))
         intrinsicColWidths.onNext(generateIntrinsicWidths(data2d))

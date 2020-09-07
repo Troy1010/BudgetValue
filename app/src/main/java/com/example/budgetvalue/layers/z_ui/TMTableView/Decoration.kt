@@ -1,14 +1,15 @@
-package com.example.budgetvalue.layers.z_ui.misc
+package com.example.budgetvalue.layers.z_ui.TMTableView
 
 import android.content.Context
 import android.graphics.Canvas
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
+import androidx.core.view.iterator
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.R
 
-class TableViewDecoration(context: Context, val orientation:Int = VERTICAL, val bHasSubItems:Boolean=false) : RecyclerView.ItemDecoration() {
+class Decoration(context: Context, val orientation:Int = VERTICAL, val bHasSubItems:Boolean=false) : RecyclerView.ItemDecoration() {
     companion object {
         const val HORIZONTAL = 0
         const val VERTICAL = 1
@@ -16,8 +17,12 @@ class TableViewDecoration(context: Context, val orientation:Int = VERTICAL, val 
     val mDivider = ContextCompat.getDrawable(context, R.drawable.divider)!!
     override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         canvas.save()
-        for (i in 1 until parent.childCount) {
-            val child = parent.getChildAt(i)
+        var bFirst = true
+        for (child in parent.children.toList()) {
+            if (bFirst) {
+                bFirst = false
+                continue
+            }
             val params = child.layoutParams as RecyclerView.LayoutParams
 
             when (orientation) {
@@ -36,28 +41,30 @@ class TableViewDecoration(context: Context, val orientation:Int = VERTICAL, val 
         }
         // in between items
         if (bHasSubItems) {
-//            logz("hasSubItems")
-            val lastRow = parent.getChildAt(parent.childCount-1)
-            if (lastRow is LinearLayout) {
-                for (subChild in lastRow.children) {
-                    if (subChild == lastRow.children.last())
-                        break
-//                logz("subChild..${(subChild as TextView).text}") // somehow this makes the for loop actually loop over all items
-                    when(orientation) {
-                        HORIZONTAL -> {
-                            val bottom = subChild.bottom
-                            val top = bottom - mDivider.intrinsicHeight
-                            mDivider.setBounds(0, top, lastRow.right, bottom)
+            val bottomz = parent.getChildAt(parent.childCount-1).bottom
+            val rightz = parent.getChildAt(0).right
+            for (rowView in parent.children.toList()) {
+                if (rowView is LinearLayout) {
+                    var bFirst = true
+                    for (cellView in rowView) {
+                        if (bFirst) {
+                            bFirst=false
+                            continue
                         }
-                        else -> {
-                            val right = subChild.right
-                            val left = right - mDivider.intrinsicWidth
-                            mDivider.setBounds(left, 0, right, lastRow.bottom)
-//                        logz("mDivider bounds: ${mDivider}")
+                        when(orientation) {
+                            HORIZONTAL -> {
+                                TODO("Horizontal implementation is not yet implemented")
+                            }
+                            else -> {
+                                val left = cellView.left
+                                val right = left + mDivider.intrinsicWidth
+                                mDivider.setBounds(left, 0, right, bottomz)
+                            }
                         }
+                        mDivider.draw(canvas)
                     }
-                    mDivider.draw(canvas)
                 }
+                break
             }
         }
         canvas.restore()

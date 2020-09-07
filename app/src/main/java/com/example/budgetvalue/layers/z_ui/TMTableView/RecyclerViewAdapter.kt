@@ -6,9 +6,10 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.view.get
 import androidx.recyclerview.widget.RecyclerView
+import com.example.tmcommonkotlin.logz
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
-class TVRecyclerViewAdapter(val context: Context, val data2d:()->List<List<TableViewCellData>>, val columnWidthsObservable: BehaviorSubject<List<Int>>) : RecyclerView.Adapter<TVRecyclerViewAdapter.ViewHolder>() {
+class RecyclerViewAdapter(val context: Context, val data2d:()->List<List<ICellData>>, val columnWidthsObservable: BehaviorSubject<List<Int>>) : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
     override fun onCreateViewHolder(parent: ViewGroup, yPos: Int): ViewHolder {
@@ -23,6 +24,7 @@ class TVRecyclerViewAdapter(val context: Context, val data2d:()->List<List<Table
 
     override fun getItemViewType(position: Int) = position
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        logz("onBindViewHolder")
         val rowData = data2d()[holder.adapterPosition]
         val rowView = (holder.itemView as LinearLayout)
         for ((xPos, cellData) in rowData.withIndex()) {

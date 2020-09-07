@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.Orientation
+import com.example.budgetvalue.layers.z_ui.TMTableView.ICellData
 import com.example.tmcommonkotlin.logz
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Flowable
@@ -313,4 +314,17 @@ fun <T> generate2dArrayList(xSize:Int, ySize:Int, orientation: Orientation): Arr
 
 fun <K, V> HashMap<K, V>.sortByList(list:List<K>): SortedMap<K, V> {
     return toSortedMap(compareBy { list.indexOf(it) })
+}
+
+fun <T> List<List<T>>.reflectXY(): ArrayList<ArrayList<T>> {
+    val returning = ArrayList<ArrayList<T>>()
+    for (yPos in this.indices) {
+        for (xPos in this[yPos].indices) {
+            if (xPos >= returning.size) {
+                returning.add(ArrayList())
+            }
+            returning[xPos].add(this[yPos][xPos])
+        }
+    }
+    return returning
 }
