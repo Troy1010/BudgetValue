@@ -13,8 +13,9 @@ class CellRecipeBuilder<V : View, D : Any>(
     val bindAction: (V, D) -> Unit
 ) {
     fun build(datas: List<D>): List<CellRecipe<V, D>> {
-        return datas.map { CellRecipe(viewFactory, bindAction, it) }
+        return datas.map { CellRecipe(viewFactory, it, bindAction) }
     }
+    fun buildOne(data: D) = CellRecipe(viewFactory, data, bindAction)
 
     companion object {
         operator fun invoke(context: Context) = this(context, Default.CELL)
