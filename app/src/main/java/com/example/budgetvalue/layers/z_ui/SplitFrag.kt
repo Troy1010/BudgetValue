@@ -31,17 +31,17 @@ class SplitFrag : Fragment(R.layout.frag_split) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupObservers()
+        setupTableDataObserver()
     }
 
-    private fun setupObservers() {
+    fun setupTableDataObserver() {
         val cellRecipeBuilder = CellRecipeBuilder(requireContext(), Default.CELL)
         val headerRecipeBuilder = CellRecipeBuilder(requireContext(), Default.HEADER)
         val incomeHeaderRecipeBuilder = CellRecipeBuilder<LinearLayout, Pair<String, BigDecimal>>({ View.inflate(requireContext(), R.layout.tableview_header_income, null) as LinearLayout },
-                                {v, d ->
-                                    v.textview_header.text = d.first
-                                    v.textview_number.text = d.second.toString()
-                                })
+            {v, d ->
+                v.textview_header.text = d.first
+                v.textview_number.text = d.second.toString()
+            })
         val incomeRecipeBuilder = CellRecipeBuilder(requireContext(), Default.HEADER)
         combineLatestAsTuple(
             splitVM.rowDatas,
@@ -54,10 +54,10 @@ class SplitFrag : Fragment(R.layout.frag_split) {
             val budgeteds = rowDatas.map { it.budgeted.toString() }
             myTableView_1.setRecipes(
                 listOf(
-                    listOf(headerRecipeBuilder.build("Category")) + cellRecipeBuilder.build(categories),
-                    listOf(headerRecipeBuilder.build("Spent")) + cellRecipeBuilder.build(spents),
-                    listOf(incomeHeaderRecipeBuilder.build(Pair("Income",it.second))) + incomeRecipeBuilder.build(incomes),
-                    listOf(headerRecipeBuilder.build("Budgeted")) + cellRecipeBuilder.build(budgeteds)
+                    listOf(headerRecipeBuilder.buildOne("Category")) + cellRecipeBuilder.build(categories),
+                    listOf(headerRecipeBuilder.buildOne("Spent")) + cellRecipeBuilder.build(spents),
+                    listOf(incomeHeaderRecipeBuilder.buildOne(Pair("Income",it.second))) + incomeRecipeBuilder.build(incomes),
+                    listOf(headerRecipeBuilder.buildOne("Budgeted")) + cellRecipeBuilder.build(budgeteds)
                 ).reflectXY()
             )
         }
