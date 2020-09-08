@@ -28,8 +28,7 @@ class TMTableView @JvmOverloads constructor(
         .map { generateColumnWidths(it.first, it.second, it.third) }
         .toBehaviorSubjectWithDefault(listOf())
 
-    fun setDataByColumn(recipe2D_ByRow: List<List<ICellRecipe>>) = setData(recipe2D_ByRow.reflectXY())
-    fun setData(recipe2D: List<List<ICellRecipe>>) {
+    fun setRecipes(recipe2D: List<List<ICellRecipe>>) {
         recyclerview_tier1.adapter = RecyclerViewAdapter(context, { recipe2D }, columnWidthsObservable)
         recyclerview_tier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
         recyclerview_tier1.addItemDecoration(Decoration(context, Decoration.VERTICAL, true))

@@ -11,16 +11,16 @@ import com.example.budgetvalue.layers.view_models.CategoriesVM
 import com.example.budgetvalue.layers.view_models.AccountsVM
 import com.example.budgetvalue.layers.view_models.SplitVM
 import com.example.budgetvalue.layers.view_models.TransactionsVM
-import com.example.budgetvalue.layers.z_ui.TMTableView.CellRecipe
-import com.example.budgetvalue.layers.z_ui.TMTableView.CellRecipeBuilder
+import com.example.budgetvalue.layers.z_ui.TMTableView.*
 import com.example.budgetvalue.layers.z_ui.TMTableView.CellRecipeBuilder.Default
 import com.example.budgetvalue.util.combineLatestAsTuple
-import com.example.tmcommonkotlin.logz
+import com.example.budgetvalue.util.reflectXY
 import com.example.tmcommonkotlin.vmFactoryFactory
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindToLifecycle
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.frag_split.*
 import kotlinx.android.synthetic.main.tableview_header_income.view.*
+import java.math.BigDecimal
 
 class SplitFrag : Fragment(R.layout.frag_split) {
     val appComponent by lazy { (requireActivity().application as App).appComponent }
@@ -35,27 +35,31 @@ class SplitFrag : Fragment(R.layout.frag_split) {
     }
 
     private fun setupObservers() {
-        val cellRecipeBuilder = CellRecipeBuilder(requireContext())
+        val cellRecipeBuilder = CellRecipeBuilder(requireContext(), Default.CELL)
         val headerRecipeBuilder = CellRecipeBuilder(requireContext(), Default.HEADER)
+        val incomeHeaderRecipeBuilder = CellRecipeBuilder<LinearLayout, Pair<String, BigDecimal>>({ View.inflate(requireContext(), R.layout.tableview_header_income, null) as LinearLayout },
+                                {v, d ->
+                                    v.textview_header.text = d.first
+                                    v.textview_number.text = d.second.toString()
+                                })
+        val incomeRecipeBuilder = CellRecipeBuilder(requireContext(), Default.HEADER)
         combineLatestAsTuple(
             splitVM.rowDatas,
             splitVM.incomeTotal
         ).observeOn(AndroidSchedulers.mainThread()).bindToLifecycle(viewLifecycleOwner).subscribe {
             val rowDatas = it.first
-            myTableView_1.setData(
-                arrayListOf(
-                    headerRecipeBuilder.build(listOf("Category","Spent")) +
-                            CellRecipe({ View.inflate(requireContext(), R.layout.tableview_header_income, null) as LinearLayout },
-                                Pair("Income", it.second),
-                                {v, d ->
-                                    v.textview_header.text = d.first
-                                    v.textview_number.text = d.second.toString()
-                                }
-                            ) +
-                            headerRecipeBuilder.build("Budgeted")
-                ) + rowDatas.map { cellRecipeBuilder.build( it.toListStr()) }
+            val categories = rowDatas.map { it.category.name }
+            val spents = rowDatas.map { it.spent.toString() }
+            val incomes = rowDatas.map { it.income.toString() }
+            val budgeteds = rowDatas.map { it.budgeted.toString() }
+            myTableView_1.setRecipes(
+                listOf(
+                    listOf(headerRecipeBuilder.build("Category")) + cellRecipeBuilder.build(categories),
+                    listOf(headerRecipeBuilder.build("Spent")) + cellRecipeBuilder.build(spents),
+                    listOf(incomeHeaderRecipeBuilder.build(Pair("Income",it.second))) + incomeRecipeBuilder.build(incomes),
+                    listOf(headerRecipeBuilder.build("Budgeted")) + cellRecipeBuilder.build(budgeteds)
+                ).reflectXY()
             )
         }
     }
 }
-// TODO weird bug if only 3 headers

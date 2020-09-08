@@ -18,7 +18,6 @@ class CellRecipeBuilder<V : View, D : Any>(
     fun build(data: D) = CellRecipe(viewFactory, data, bindAction)
 
     companion object {
-        operator fun invoke(context: Context) = this(context, Default.CELL)
         operator fun invoke(context: Context, e: Default): CellRecipeBuilder<TextView, String> {
             return when (e) {
                 Default.HEADER -> CellRecipeBuilder(
