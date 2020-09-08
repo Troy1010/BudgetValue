@@ -11,6 +11,7 @@ import com.example.budgetvalue.layers.view_models.AccountsVM
 import com.example.budgetvalue.layers.view_models.SplitVM
 import com.example.budgetvalue.layers.view_models.TransactionsVM
 import com.example.budgetvalue.layers.z_ui.TMTableView.CellRecipeBuilder
+import com.example.budgetvalue.layers.z_ui.TMTableView.CellRecipeBuilder.Default
 import com.example.tmcommonkotlin.logz
 import com.example.tmcommonkotlin.vmFactoryFactory
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindToLifecycle
@@ -32,7 +33,7 @@ class SplitFrag : Fragment(R.layout.frag_split) {
 
     private fun setupObservers() {
         val cellRecipeBuilder = CellRecipeBuilder(requireContext())
-        val headerRecipeBuilder = CellRecipeBuilder(requireContext(),1)
+        val headerRecipeBuilder = CellRecipeBuilder(requireContext(), Default.HEADER)
         splitVM.rowDatas.observeOn(AndroidSchedulers.mainThread()).bindToLifecycle(viewLifecycleOwner).subscribe {
             val rowDatas = it
             myTableView_1.setData(
@@ -40,7 +41,6 @@ class SplitFrag : Fragment(R.layout.frag_split) {
                     headerRecipeBuilder.build(listOf("Category","Spent","Income", "Budgeted"))
                 ) + rowDatas.map { cellRecipeBuilder.build( it.toListStr()) }
             )
-
         }
     }
 }

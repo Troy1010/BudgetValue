@@ -2,6 +2,7 @@ package com.example.budgetvalue.layers.z_ui.TMTableView
 
 import android.content.Context
 import android.graphics.Color
+import android.view.Gravity
 import android.view.View
 import android.widget.TextView
 import androidx.core.view.setPadding
@@ -16,10 +17,10 @@ class CellRecipeBuilder<V : View, D : Any>(
     }
 
     companion object {
-        operator fun invoke(context: Context) = this(context, 0)
-        operator fun invoke(context: Context, i: Int): CellRecipeBuilder<TextView, String> {
-            return when (i) {
-                1 -> CellRecipeBuilder(
+        operator fun invoke(context: Context) = this(context, Default.CELL)
+        operator fun invoke(context: Context, e: Default): CellRecipeBuilder<TextView, String> {
+            return when (e) {
+                Default.HEADER -> CellRecipeBuilder(
                     { View.inflate(context, R.layout.tableview_header, null) as TextView },
                     { view: TextView, s: String? -> view.text = s }
                 )
@@ -29,11 +30,15 @@ class CellRecipeBuilder<V : View, D : Any>(
                             .apply {
                                 setTextColor(Color.WHITE)
                                 setPadding(10)
+                                gravity = Gravity.CENTER
                             }
                     },
                     { view: TextView, s: String? -> view.text = s }
                 )
             }
         }
+    }
+    enum class Default {
+        CELL, HEADER
     }
 }
