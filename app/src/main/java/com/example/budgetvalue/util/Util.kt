@@ -10,12 +10,9 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.Orientation
-import com.example.budgetvalue.layers.z_ui.TMTableView.ICellData
 import com.example.tmcommonkotlin.logz
-import io.reactivex.rxjava3.core.BackpressureStrategy
-import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.core.*
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.ObservableSource
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.io.PrintWriter
@@ -110,6 +107,16 @@ fun <A, B> combineLatestAsTuple(a: ObservableSource<A>, b: ObservableSource<B>):
         Pair(
             it[0] as A,
             it[1] as B
+        )
+    }
+}
+
+fun <A> combineLatestAsTuple(a: ObservableSource<A>): Observable<Single<A>> {
+    return Observable.combineLatest(
+        listOf(a)
+    ) {
+        Single(
+            it[0] as A
         )
     }
 }

@@ -10,10 +10,7 @@ import com.example.budgetvalue.layers.view_models.CategoriesVM
 import com.example.budgetvalue.layers.view_models.AccountsVM
 import com.example.budgetvalue.layers.view_models.SplitVM
 import com.example.budgetvalue.layers.view_models.TransactionsVM
-import com.example.budgetvalue.layers.z_ui.TMTableView.CellData
-import com.example.budgetvalue.layers.z_ui.TMTableView.CellDataCollection
-import com.example.budgetvalue.util.combineLatestAsTuple
-import com.example.budgetvalue.util.generateLipsum
+import com.example.budgetvalue.layers.z_ui.TMTableView.CellRecipeBuilder
 import com.example.tmcommonkotlin.logz
 import com.example.tmcommonkotlin.vmFactoryFactory
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindToLifecycle
@@ -34,38 +31,16 @@ class SplitFrag : Fragment(R.layout.frag_split) {
     }
 
     private fun setupObservers() {
-        combineLatestAsTuple(
-            categoriesVM.categories,
-            splitVM.spentCategoryAmounts,
-            splitVM.incomeCategoryAmounts,
-            splitVM.budgetedCategoryAmounts,
-            splitVM.incomeTotal
-        ).observeOn(AndroidSchedulers.mainThread()).bindToLifecycle(viewLifecycleOwner).subscribe {
-            val activeCategories = it.first
-            myTableView_1.setDataByColumn(
-                listOf(
-                    CellDataCollection.create(requireContext(), it.first.map { it.name }).toCellDatas().also { it.add(0, CellData.create2(requireContext(), "Category")) },
-//                    CellDataCollection.create(requireContext(), it.first.map { it.name }).toCellDatas().also { it.add(0, CellData.create2(requireContext(), "Category")) },
-                    CellDataCollection.create(requireContext(), generateLipsum(2)).toCellDatas().also { it.add(0, CellData.create2(requireContext(), "Spent")) },
-                    CellDataCollection.create(requireContext(), generateLipsum(3)).toCellDatas().also { it.add(0, CellData.create2(requireContext(), "Income")) },
-                    CellDataCollection.create(requireContext(), generateLipsum(4)).toCellDatas().also { it.add(0, CellData.create2(requireContext(), "Budgeted")) }
-                )
-//                listOf(
-//                    ColumnData.createCastString(requireContext(), "Category", it.first.map { it.name }),
-//                    ColumnData.createCastString(requireContext(), "Spent", it.second.sortByList(activeCategories).map { it.value }),
-//                    ColumnData.createUniqueHeader(requireContext(), TableViewCellData(
-//                        { View.inflate(context, R.layout.tableview_header_income, null) },
-//                        { view, any ->
-//                            view as LinearLayout
-//                            any as Pair<String, String>
-//                            view.textview_header.text = any.first
-//                            view.textview_number.text = any.second
-//                        },
-//                        Pair("Income", it.fifth.toString())
-//                    ), it.third.sortByList(activeCategories).map { it.value.toString() }),
-//                    ColumnData.createCastString(requireContext(), "Budgeted", it.fourth.sortByList(activeCategories).map { it.value })
-//                ) as List<TableViewCellData>
+        val cellRecipeBuilder = CellRecipeBuilder(requireContext())
+        val headerRecipeBuilder = CellRecipeBuilder(requireContext(),1)
+        splitVM.rowDatas.observeOn(AndroidSchedulers.mainThread()).bindToLifecycle(viewLifecycleOwner).subscribe {
+            val rowDatas = it
+            myTableView_1.setData(
+                arrayListOf(
+                    headerRecipeBuilder.build(listOf("Category","Spent","Income", "Budgeted"))
+                ) + rowDatas.map { cellRecipeBuilder.build( it.toListStr()) }
             )
+
         }
     }
 }

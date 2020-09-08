@@ -2,6 +2,13 @@ package com.example.budgetvalue.util
 
 import java.io.Serializable
 
+public data class Single<out A>(
+    val first: A
+) : Serializable {
+    public override fun toString(): String = "($first)"
+}
+public fun <T> Single<T>.toList(): List<T> = listOf(first)
+
 public data class Quadruple<out A, out B, out C, out D>(
     val first: A,
     val second: B,

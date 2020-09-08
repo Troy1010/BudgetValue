@@ -2,6 +2,7 @@ package com.example.budgetvalue.layers.view_models
 
 import androidx.lifecycle.*
 import com.example.budgetvalue.layers.data_layer.Repo
+import com.example.budgetvalue.layers.z_ui.misc.SplitRowData
 import com.example.budgetvalue.models.Account
 import com.example.budgetvalue.models.Category
 import com.example.budgetvalue.models.Transaction
@@ -33,6 +34,25 @@ class SplitVM(
         }
         activeCategories_.toList().map { categoriesVM.getCategoryByName(it) }
     }.toBehaviorSubject()
+    val incomeCategoryAmounts = BehaviorSubject.createDefault(HashMap<Category, BigDecimal>())
+    val rowDatas = combineLatestAsTuple(transactionSet, activeCategories, incomeCategoryAmounts).map {
+        val rowDatas = ArrayList<SplitRowData>()
+        for (category in it.second) {
+            var spent = BigDecimal.ZERO
+            for (transaction in it.first) {
+                spent += transaction.categoryAmounts[category.name] ?: BigDecimal.ZERO
+            }
+            rowDatas.add(SplitRowData(
+                category,
+                spent,
+                it.third[category] ?: BigDecimal.ZERO
+            ))
+        }
+        rowDatas
+    }.toBehaviorSubject()
+
+
+
 
     // spentCA depends on transactionSet + activeCategories
     val spentCategoryAmounts = combineLatestAsTuple(transactionSet, activeCategories)
@@ -53,7 +73,6 @@ class SplitVM(
         }
         spentCategoryAmounts_
     }.toBehaviorSubject()
-    val incomeCategoryAmounts = BehaviorSubject.createDefault(HashMap<Category, BigDecimal>())
     val budgetedCategoryAmounts = combineLatestAsTuple(
         activeCategories,
         spentCategoryAmounts,
