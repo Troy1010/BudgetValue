@@ -50,38 +50,4 @@ class SplitVM(
         }
         rowDatas
     }.toBehaviorSubject()
-
-
-
-
-    // spentCA depends on transactionSet + activeCategories
-    val spentCategoryAmounts = combineLatestAsTuple(transactionSet, activeCategories)
-        .map {
-        val spentCategoryAmounts_ = HashMap<Category, BigDecimal>()
-        for (transaction in it.first) {
-            for (category in it.second) {
-                if (category !in spentCategoryAmounts_) {
-                    spentCategoryAmounts_[category] =
-                        transaction.categoryAmounts[category.name] ?: BigDecimal.ZERO
-                } else {
-                    spentCategoryAmounts_[category] =
-                        spentCategoryAmounts_[category]?.plus(
-                            transaction.categoryAmounts[category.name] ?: BigDecimal.ZERO
-                        ) ?: BigDecimal.ZERO
-                }
-            }
-        }
-        spentCategoryAmounts_
-    }.toBehaviorSubject()
-    val budgetedCategoryAmounts = combineLatestAsTuple(
-        activeCategories,
-        spentCategoryAmounts,
-        incomeCategoryAmounts
-    ).map {
-        val budgetedCategoryAmounts_ = HashMap<Category, BigDecimal>()
-        for (category in it.first) {
-            budgetedCategoryAmounts_[category] = (it.second[category]?: BigDecimal.ZERO) + (it.third[category]?: BigDecimal.ZERO)
-        }
-        budgetedCategoryAmounts_
-    }.toBehaviorSubject()
 }
