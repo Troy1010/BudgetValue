@@ -6,7 +6,7 @@ data class CellRecipe <V:View, D:Any>(
     override val viewFactory: () -> V,
     val bindAction_: (V, D) -> Unit,
     override val data: D
-) : ICellData {
+) : ICellRecipe {
     override val bindAction = bindAction_ as (View, Any) -> Unit
     override val intrinsicWidth : Int
         get() {

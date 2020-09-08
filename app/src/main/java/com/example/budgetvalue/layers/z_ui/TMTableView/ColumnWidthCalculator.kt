@@ -1,18 +1,14 @@
 package com.example.budgetvalue.layers.z_ui.TMTableView
 
-import android.view.View
-import android.widget.LinearLayout
-import androidx.core.view.get
 import com.example.budgetvalue.util.arrayListOfZeros
-import com.example.budgetvalue.util.intrinsicWidth2
 import com.example.tmcommonkotlin.logz
 import java.lang.Math.max
 import kotlin.math.ceil
 
 object ColumnWidthCalculator {
-    fun generateIntrinsicWidths(cellDatas: List<List<ICellData>>): List<List<Int>> {
+    fun generateIntrinsicWidths(cellRecipes: List<List<ICellRecipe>>): List<List<Int>> {
         val intrinsicWidths = ArrayList<ArrayList<Int>>()
-        for ((yPos, rowData) in cellDatas.withIndex()) {
+        for ((yPos, rowData) in cellRecipes.withIndex()) {
             intrinsicWidths.add(ArrayList())
             for (cellData in rowData) {
                 intrinsicWidths[yPos].add(cellData.intrinsicWidth)
@@ -22,7 +18,7 @@ object ColumnWidthCalculator {
         return intrinsicWidths
     }
 
-    fun generateMinWidths(rowData: List<ICellData>) = rowData.map { it.intrinsicWidth }
+    fun generateMinWidths(rowData: List<ICellRecipe>) = rowData.map { it.intrinsicWidth }
 
     fun generateColumnWidths(
         minWidths: List<Int>,

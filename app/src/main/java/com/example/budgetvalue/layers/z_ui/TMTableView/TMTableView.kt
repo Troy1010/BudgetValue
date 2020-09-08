@@ -28,16 +28,16 @@ class TMTableView @JvmOverloads constructor(
         .map { generateColumnWidths(it.first, it.second, it.third) }
         .toBehaviorSubjectWithDefault(listOf())
 
-    fun setDataByColumn(data2d_ByRow: List<List<ICellData>>) {
-        setData(data2d_ByRow.reflectXY())
+    fun setDataByColumn(recipe2D_ByRow: List<List<ICellRecipe>>) {
+        setData(recipe2D_ByRow.reflectXY())
     }
-    fun setData(data2d: List<List<ICellData>>) {
-        recyclerview_tier1.adapter = RecyclerViewAdapter(context, { data2d }, columnWidthsObservable)
+    fun setData(recipe2D: List<List<ICellRecipe>>) {
+        recyclerview_tier1.adapter = RecyclerViewAdapter(context, { recipe2D }, columnWidthsObservable)
         recyclerview_tier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
         recyclerview_tier1.addItemDecoration(Decoration(context, Decoration.VERTICAL, true))
         //
-        minColWidths.onNext(generateMinWidths(data2d[0]))
-        intrinsicColWidths.onNext(generateIntrinsicWidths(data2d))
+        minColWidths.onNext(generateMinWidths(recipe2D[0]))
+        intrinsicColWidths.onNext(generateIntrinsicWidths(recipe2D))
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
