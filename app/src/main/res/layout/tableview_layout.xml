@@ -8,7 +8,7 @@
         android:id="@+id/frame_headers"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_width="match_parent"
-        android:layout_height="50dp"/>
+        android:layout_height="wrap_content"/>
     <androidx.recyclerview.widget.RecyclerView
         app:layout_constraintTop_toBottomOf="@id/frame_headers"
         app:layout_constraintBottom_toBottomOf="parent"

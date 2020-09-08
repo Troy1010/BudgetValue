@@ -1,11 +1,13 @@
 package com.example.budgetvalue.layers.z_ui.TMTableView
 
 import android.content.Context
+import android.graphics.Color
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.view.iterator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -40,9 +42,24 @@ class TMTableView @JvmOverloads constructor(
         intrinsicColWidths.onNext(generateIntrinsicWidths(recipe2D))
         //
         frame_headers.removeAllViews()
-        val linearLayout = createRow(context, recipe2D[0])
-        bindRow(linearLayout, recipe2D[0], columnWidthsObservable)
+        val linearLayout = LinearLayout(context)
+        linearLayout.orientation = LinearLayout.VERTICAL
+        linearLayout.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        val row = createRow(context, recipe2D[0])
+        bindRow(row, recipe2D[0], columnWidthsObservable)
+        linearLayout.addView(row)
+        val bar = View(context)
+        bar.layoutParams = LayoutParams(
+            LayoutParams.MATCH_PARENT,
+            10
+        )
+        bar.setBackgroundColor(Color.GRAY)
+        linearLayout.addView(bar)
         frame_headers.addView(linearLayout)
+        frame_headers.setPadding(0,0,0,0)
         //
         recyclerview_tier1.adapter = RecyclerViewAdapter(context, { ArrayList(recipe2D).also { it.removeAt(0) } }, columnWidthsObservable)
         recyclerview_tier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)

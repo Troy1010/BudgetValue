@@ -39,34 +39,6 @@ class Decoration(context: Context, val orientation:Int = VERTICAL, val bHasSubIt
             }
             mDivider.draw(canvas)
         }
-        // in between items
-        if (bHasSubItems) {
-            val bottomz = parent.getChildAt(parent.childCount-1).bottom
-            val rightz = parent.getChildAt(0).right
-            for (rowView in parent.children.toList()) {
-                if (rowView is LinearLayout) {
-                    var bFirst = true
-                    for (cellView in rowView) {
-                        if (bFirst) {
-                            bFirst=false
-                            continue
-                        }
-                        when(orientation) {
-                            HORIZONTAL -> {
-                                TODO("Horizontal implementation is not yet implemented")
-                            }
-                            else -> {
-                                val left = cellView.left
-                                val right = left + mDivider.intrinsicWidth
-                                mDivider.setBounds(left, 0, right, bottomz)
-                            }
-                        }
-                        mDivider.draw(canvas)
-                    }
-                }
-                break
-            }
-        }
         canvas.restore()
     }
 }

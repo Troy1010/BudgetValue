@@ -3,7 +3,9 @@ package com.example.budgetvalue.layers.z_ui.TMTableView
 import android.content.Context
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.core.content.ContextCompat
 import androidx.core.view.get
+import com.example.budgetvalue.R
 import com.example.tmcommonkotlin.logz
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
@@ -14,6 +16,9 @@ fun createRow(context: Context, rowRecipes: List<ICellRecipe>): LinearLayout {
         val cellView = cellRecipe.viewFactory()
         view.addView(cellView)
     }
+    view.showDividers = LinearLayout.SHOW_DIVIDER_MIDDLE
+    view.dividerPadding = 1
+    view.dividerDrawable = ContextCompat.getDrawable(context, R.drawable.divider)!!
     return view
 }
 
