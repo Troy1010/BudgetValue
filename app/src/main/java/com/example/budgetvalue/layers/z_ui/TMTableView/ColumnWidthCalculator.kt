@@ -14,7 +14,6 @@ object ColumnWidthCalculator {
                 intrinsicWidths[yPos].add(cellData.intrinsicWidth)
             }
         }
-        logz("intrinsicWidths:${intrinsicWidths}")
         return intrinsicWidths
     }
 
