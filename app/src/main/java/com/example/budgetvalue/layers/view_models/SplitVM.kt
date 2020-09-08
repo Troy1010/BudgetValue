@@ -34,7 +34,7 @@ class SplitVM(
         }
         activeCategories_.toList().map { categoriesVM.getCategoryByName(it) }
     }.toBehaviorSubject()
-    val incomeCategoryAmounts = BehaviorSubject.createDefault(HashMap<Category, BigDecimal>())
+    val incomeCategoryAmounts = BehaviorSubject.createDefault(HashMap<Category, BehaviorSubject<BigDecimal>>())
     val rowDatas = combineLatestAsTuple(transactionSet, activeCategories, incomeCategoryAmounts).map {
         val rowDatas = ArrayList<SplitRowData>()
         for (category in it.second) {
@@ -45,7 +45,7 @@ class SplitVM(
             rowDatas.add(SplitRowData(
                 category,
                 spent,
-                it.third[category] ?: BigDecimal.ZERO
+                it.third[category] ?: BehaviorSubject.createDefault(BigDecimal.ZERO)
             ))
         }
         rowDatas

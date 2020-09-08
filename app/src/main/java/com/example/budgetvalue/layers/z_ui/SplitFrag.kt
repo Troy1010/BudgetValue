@@ -2,6 +2,7 @@ package com.example.budgetvalue.layers.z_ui
 
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -42,7 +43,10 @@ class SplitFrag : Fragment(R.layout.frag_split) {
                 v.textview_header.text = d.first
                 v.textview_number.text = d.second.toString()
             })
-        val incomeRecipeBuilder = CellRecipeBuilder(requireContext(), Default.HEADER)
+        val incomeRecipeBuilder = CellRecipeBuilder<EditText, String>(
+            { View.inflate(context, R.layout.item_text_edit, null) as EditText },
+            { v, a -> v.setText(a)}
+        )
         combineLatestAsTuple(
             splitVM.rowDatas,
             splitVM.incomeTotal
@@ -50,7 +54,7 @@ class SplitFrag : Fragment(R.layout.frag_split) {
             val rowDatas = it.first
             val categories = rowDatas.map { it.category.name }
             val spents = rowDatas.map { it.spent.toString() }
-            val incomes = rowDatas.map { it.income.toString() }
+            val incomes = rowDatas.map { it.income.value.toString() }
             val budgeteds = rowDatas.map { it.budgeted.toString() }
             myTableView_1.setRecipes(
                 listOf(
