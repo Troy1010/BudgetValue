@@ -52,7 +52,7 @@ class SplitFrag : Fragment(R.layout.frag_split) {
                                     v.textview_number.text = d.second.toString()
                                 }
                             ) +
-                            headerRecipeBuilder.buildOne("Budgeted")
+                            headerRecipeBuilder.build("Budgeted")
                 ) + rowDatas.map { cellRecipeBuilder.build( it.toListStr()) }
             )
         }
