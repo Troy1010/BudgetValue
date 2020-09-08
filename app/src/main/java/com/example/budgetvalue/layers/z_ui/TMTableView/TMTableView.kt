@@ -42,23 +42,9 @@ class TMTableView @JvmOverloads constructor(
         intrinsicColWidths.onNext(generateIntrinsicWidths(recipe2D))
         //
         frame_headers.removeAllViews()
-        val linearLayout = LinearLayout(context)
-        linearLayout.orientation = LinearLayout.VERTICAL
-        linearLayout.layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
         val row = createRow(context, recipe2D[0])
         bindRow(row, recipe2D[0], columnWidthsObservable)
-        linearLayout.addView(row)
-        val bar = View(context)
-        bar.layoutParams = LayoutParams(
-            LayoutParams.MATCH_PARENT,
-            10
-        )
-        bar.setBackgroundColor(Color.GRAY)
-        linearLayout.addView(bar)
-        frame_headers.addView(linearLayout)
+        frame_headers.addView(row)
         frame_headers.setPadding(0,0,0,0)
         //
         recyclerview_tier1.adapter = RecyclerViewAdapter(context, { ArrayList(recipe2D).also { it.removeAt(0) } }, columnWidthsObservable)
