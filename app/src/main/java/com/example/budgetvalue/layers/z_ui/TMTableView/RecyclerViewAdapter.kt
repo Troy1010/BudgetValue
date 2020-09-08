@@ -24,14 +24,13 @@ class RecyclerViewAdapter(val context: Context, val recipe2D:()->List<List<ICell
 
     override fun getItemViewType(position: Int) = position
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        logz("onBindViewHolder")
         val rowData = recipe2D()[holder.adapterPosition]
         val rowView = (holder.itemView as LinearLayout)
         for ((xPos, cellData) in rowData.withIndex()) {
             cellData.bindAction(rowView[xPos], cellData.data)
             rowView[xPos].layoutParams = LinearLayout.LayoutParams(
                 columnWidthsObservable.value.getOrNull(xPos) ?: 0,
-                LinearLayout.LayoutParams.WRAP_CONTENT
+                LinearLayout.LayoutParams.MATCH_PARENT
             )
         }
     }
