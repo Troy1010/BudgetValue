@@ -5,7 +5,11 @@ import android.widget.EditText
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
-fun <T> EditText.bind(
+fun <T> EditText.rxBind(bs: BehaviorSubject<T>, x:EditTextRxBinder<T>) {
+    x.rxBind(this, bs)
+}
+
+fun <T> EditText.rxBind(
     bs:BehaviorSubject<T>,
     validate: (T)->T,
     toT:(String)->T,
@@ -42,6 +46,6 @@ fun <T> EditText.bind(
     }
 }
 
-fun EditText.bind(bs:BehaviorSubject<String?>, validate: (String?)->String = { it?:"" }): Disposable {
-    return this.bind(bs, validate, { it }, { it?:"" } )
+fun EditText.rxBind(bs:BehaviorSubject<String?>, validate: (String?)->String = { it?:"" }): Disposable {
+    return this.rxBind(bs, validate, { it }, { it?:"" } )
 }

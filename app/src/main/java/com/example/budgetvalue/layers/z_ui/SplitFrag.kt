@@ -14,11 +14,10 @@ import com.example.budgetvalue.layers.view_models.SplitVM
 import com.example.budgetvalue.layers.view_models.TransactionsVM
 import com.example.budgetvalue.layers.z_ui.TMTableView.*
 import com.example.budgetvalue.layers.z_ui.TMTableView.CellRecipeBuilder.Default
-import com.example.budgetvalue.layers.z_ui.misc.bind
+import com.example.budgetvalue.layers.z_ui.misc.rxBind
 import com.example.budgetvalue.util.combineLatestAsTuple
 import com.example.budgetvalue.util.logSubscribe2
 import com.example.budgetvalue.util.reflectXY
-import com.example.budgetvalue.util.toBehaviorSubject
 import com.example.tmcommonkotlin.logz
 import com.example.tmcommonkotlin.vmFactoryFactory
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindToLifecycle
@@ -45,7 +44,7 @@ class SplitFrag : Fragment(R.layout.frag_split) {
         it.logSubscribe2("iii")
     }
     private fun setupViews() {
-        edit_text.bind(x) {
+        edit_text.rxBind(x) {
             it?.substring(0..2)?:""
         }
         btn_print_test.setOnClickListener {
@@ -66,7 +65,7 @@ class SplitFrag : Fragment(R.layout.frag_split) {
             })
         val incomeRecipeBuilder = CellRecipeBuilder<EditText, BehaviorSubject<BigDecimal>>(
             { View.inflate(context, R.layout.item_text_edit, null) as EditText },
-            { v, a -> v.bind(a, {
+            { v, a -> v.rxBind(a, {
                 if (it > 10.toBigDecimal()) {
                     it
                 } else {
