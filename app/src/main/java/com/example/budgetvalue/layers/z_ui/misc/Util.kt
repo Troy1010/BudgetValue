@@ -8,8 +8,8 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 fun <T> EditText.bind(
     bs:BehaviorSubject<T>,
     validate: (T)->T,
-    toDisplayStr:(T)->String,
-    toT:(String)->T): Disposable {
+    toT:(String)->T,
+    toDisplayStr:(T)->String = { it.toString() }): Disposable {
     val rxDisposable = bs.distinctUntilChanged().subscribe {
         if (layoutParams!=null) {
             this.setText(toDisplayStr(it))
@@ -43,5 +43,5 @@ fun <T> EditText.bind(
 }
 
 fun EditText.bind(bs:BehaviorSubject<String?>, validate: (String?)->String = { it?:"" }): Disposable {
-    return this.bind(bs, validate, { it?:"" }, { it })
+    return this.bind(bs, validate, { it }, { it?:"" } )
 }

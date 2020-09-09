@@ -64,9 +64,17 @@ class SplitFrag : Fragment(R.layout.frag_split) {
                 v.textview_header.text = d.first
                 v.textview_number.text = d.second.toString()
             })
-        val incomeRecipeBuilder = CellRecipeBuilder<EditText, BehaviorSubject<String?>>(
+        val incomeRecipeBuilder = CellRecipeBuilder<EditText, BehaviorSubject<BigDecimal>>(
             { View.inflate(context, R.layout.item_text_edit, null) as EditText },
-            { v, a -> v.bind(a) }
+            { v, a -> v.bind(a, {
+                if (it > 10.toBigDecimal()) {
+                    it
+                } else {
+                    (6.7).toBigDecimal()
+                }
+            }, {
+                it.toBigDecimal()
+            } )}
         )
         combineLatestAsTuple(
             splitVM.rowDatas,
@@ -75,7 +83,7 @@ class SplitFrag : Fragment(R.layout.frag_split) {
             val rowDatas = it.first
             val categories = rowDatas.map { it.category.name }
             val spents = rowDatas.map { it.spent.toString() }
-            val incomes = rowDatas.map { it.income.map { it.toString() }.toBehaviorSubject<String?>() }
+            val incomes = rowDatas.map { it.income }
             val budgeteds = rowDatas.map { it.budgeted.toString() }
             myTableView_1.setRecipes(
                 listOf(
