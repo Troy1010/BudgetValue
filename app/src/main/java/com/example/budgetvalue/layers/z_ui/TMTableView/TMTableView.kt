@@ -54,9 +54,11 @@ class TMTableView @JvmOverloads constructor(
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        tableViewWidth.onNext(w)
-        // recyclerview viewholders must be re-created
-        recyclerview_tier1.adapter?.notifyDataSetChanged()
+        if (w != oldw) {
+            tableViewWidth.onNext(w)
+            // recyclerview viewholders must be re-created
+            recyclerview_tier1.adapter?.notifyDataSetChanged()
+        }
     }
 
 }

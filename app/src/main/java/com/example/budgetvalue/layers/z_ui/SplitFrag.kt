@@ -14,11 +14,16 @@ import com.example.budgetvalue.layers.view_models.SplitVM
 import com.example.budgetvalue.layers.view_models.TransactionsVM
 import com.example.budgetvalue.layers.z_ui.TMTableView.*
 import com.example.budgetvalue.layers.z_ui.TMTableView.CellRecipeBuilder.Default
+import com.example.budgetvalue.layers.z_ui.misc.bind
 import com.example.budgetvalue.util.combineLatestAsTuple
+import com.example.budgetvalue.util.logSubscribe2
 import com.example.budgetvalue.util.reflectXY
+import com.example.budgetvalue.util.toBehaviorSubject
+import com.example.tmcommonkotlin.logz
 import com.example.tmcommonkotlin.vmFactoryFactory
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindToLifecycle
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.frag_split.*
 import kotlinx.android.synthetic.main.tableview_header_income.view.*
 import java.math.BigDecimal
@@ -33,6 +38,22 @@ class SplitFrag : Fragment(R.layout.frag_split) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupTableDataObserver()
+        setupViews()
+    }
+
+    val x = BehaviorSubject.createDefault<String>("9").also {
+        it.logSubscribe2("iii")
+    }
+    private fun setupViews() {
+        edit_text.bind(x) {
+            it?.substring(0..2)?:""
+        }
+        btn_print_test.setOnClickListener {
+            logz("x.value:${x.value}")
+        }
+        btn_change_bs.setOnClickListener {
+            x.onNext("uuu")
+        }
     }
 
     fun setupTableDataObserver() {
@@ -43,9 +64,9 @@ class SplitFrag : Fragment(R.layout.frag_split) {
                 v.textview_header.text = d.first
                 v.textview_number.text = d.second.toString()
             })
-        val incomeRecipeBuilder = CellRecipeBuilder<EditText, String>(
+        val incomeRecipeBuilder = CellRecipeBuilder<EditText, BehaviorSubject<String?>>(
             { View.inflate(context, R.layout.item_text_edit, null) as EditText },
-            { v, a -> v.setText(a)}
+            { v, a -> v.bind(a) }
         )
         combineLatestAsTuple(
             splitVM.rowDatas,
@@ -54,7 +75,7 @@ class SplitFrag : Fragment(R.layout.frag_split) {
             val rowDatas = it.first
             val categories = rowDatas.map { it.category.name }
             val spents = rowDatas.map { it.spent.toString() }
-            val incomes = rowDatas.map { it.income.value.toString() }
+            val incomes = rowDatas.map { it.income.map { it.toString() }.toBehaviorSubject<String?>() }
             val budgeteds = rowDatas.map { it.budgeted.toString() }
             myTableView_1.setRecipes(
                 listOf(

@@ -11,6 +11,7 @@ import com.example.tmcommonkotlin.log
 import com.example.tmcommonkotlin.logz
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 import java.util.*
 import kotlin.collections.HashMap
@@ -34,7 +35,7 @@ class SplitVM(
         }
         activeCategories_.toList().map { categoriesVM.getCategoryByName(it) }
     }.toBehaviorSubject()
-    val incomeCategoryAmounts = BehaviorSubject.createDefault(HashMap<Category, BehaviorSubject<BigDecimal>>())
+    val incomeCategoryAmounts = PublishSubject.create<HashMap<Category, BehaviorSubject<BigDecimal>>>().startWith(Observable.just(HashMap()))
     val rowDatas = combineLatestAsTuple(transactionSet, activeCategories, incomeCategoryAmounts).map {
         val rowDatas = ArrayList<SplitRowData>()
         for (category in it.second) {
