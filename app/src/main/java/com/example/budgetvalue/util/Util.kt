@@ -1,3 +1,5 @@
+@file:Suppress("NAME_SHADOWING")
+
 package com.example.budgetvalue.util
 
 import android.annotation.SuppressLint
@@ -10,12 +12,12 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.Orientation
-import com.example.budgetvalue.models.Category
 import com.example.tmcommonkotlin.logz
-import io.reactivex.rxjava3.annotations.NonNull
 import io.reactivex.rxjava3.core.*
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.functions.BiFunction
+import io.reactivex.rxjava3.functions.Function3
+import io.reactivex.rxjava3.functions.Function4
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.io.PrintWriter
@@ -361,6 +363,14 @@ fun String.toBigDecimal2(): BigDecimal {
     return if (this == "") BigDecimal.ZERO else this.toBigDecimal()
 }
 
-fun <T,G> zip(x:ObservableSource<T>, y:ObservableSource<G>) : Observable<Pair<T,G>> {
-    return Observable.zip(x,y, BiFunction<T, G, Pair<T,G>> { a, b -> Pair<T,G>(a, b) })
+fun <A,B> zip(a:ObservableSource<A>, b:ObservableSource<B>) : Observable<Pair<A,B>> {
+    return Observable.zip(a,b, BiFunction<A, B, Pair<A,B>> { a, b -> Pair(a, b) })
+}
+
+fun <A,B,C> zip(a:ObservableSource<A>, b:ObservableSource<B>, c:ObservableSource<C>) : Observable<Triple<A,B,C>> {
+    return Observable.zip(a,b,c, Function3<A, B, C, Triple<A,B,C>> { a, b, c -> Triple(a, b, c) })
+}
+
+fun <A,B,C,D> zip(a:ObservableSource<A>, b:ObservableSource<B>, c:ObservableSource<C>, d:ObservableSource<D>) : Observable<Quadruple<A,B,C,D>> {
+    return Observable.zip(a,b,c,d, Function4<A, B, C, D, Quadruple<A,B,C,D>> { a, b, c, d -> Quadruple(a, b, c, d) })
 }
