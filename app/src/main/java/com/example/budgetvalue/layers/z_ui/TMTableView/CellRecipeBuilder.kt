@@ -25,14 +25,7 @@ class CellRecipeBuilder<V : View, D : Any>(
                     { view: TextView, s: String? -> view.text = s }
                 )
                 else -> CellRecipeBuilder(
-                    {
-                        TextView(context)
-                            .apply {
-                                setTextColor(Color.WHITE)
-                                setPadding(10)
-                                gravity = Gravity.CENTER
-                            }
-                    },
+                    { View.inflate(context, R.layout.tableview_basic_cell, null) as TextView },
                     { view: TextView, s: String? -> view.text = s }
                 )
             }

@@ -31,7 +31,6 @@ class SplitVM(
     val activeCategories = transactionSet
         .map {
             val activeCategories_ = HashSet<String>()
-            activeCategories_.add(categoriesVM.defaultCategory.name)
             for (transaction in it) {
                 for (categoryAmount in transaction.categoryAmounts) {
                     activeCategories_.add(categoryAmount.key)
@@ -106,4 +105,12 @@ class SplitVM(
         .map {
             it.first - it.second + it.third.map { it.spent }.sum()
         }.toBehaviorSubject()
+    val spentLeftToCategorize = transactionSet
+        .map {
+            it.map { it.uncategorizedAmounts }.sum() // TODO this is unperformant
+        }.toBehaviorSubject()
+    val uncategorizedBudgeted = combineLatestAsTuple(incomeLeftToCategorize, spentLeftToCategorize)
+        .map {
+            it.first + it.second
+        }
 }

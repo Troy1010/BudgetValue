@@ -53,8 +53,8 @@ class SplitFrag : Fragment(R.layout.frag_split) {
             { View.inflate(context, R.layout.item_text_edit, null) as EditText },
             { v, bs -> v.rxBind(bs, { it.toBigDecimal2() } )}
         )
-        val budgetedRecipeBuilder = CellRecipeBuilder<TextView, Observable<BigDecimal>>(
-            { View.inflate(context, R.layout.tableview_header, null) as TextView },
+        val oneWayCellRecipeBuilder = CellRecipeBuilder<TextView, Observable<BigDecimal>>(
+            { View.inflate(context, R.layout.tableview_basic_cell, null) as TextView },
             { v, observable -> v.rxBindOneWay(observable)}
         )
         splitVM.rowDatas.observeOn(AndroidSchedulers.mainThread()).bindToLifecycle(viewLifecycleOwner).subscribe {
@@ -67,10 +67,18 @@ class SplitFrag : Fragment(R.layout.frag_split) {
             }
             myTableView_1.setRecipes(
                 listOf(
-                    listOf(headerRecipeBuilder.buildOne("Category")) + cellRecipeBuilder.build(categories),
-                    listOf(headerRecipeBuilder.buildOne("Spent")) + cellRecipeBuilder.build(spents),
-                    listOf(headerRecipeBuilder_numbered.buildOne(Pair("Income",splitVM.incomeLeftToCategorize))) + incomeRecipeBuilder.build(incomes),
-                    listOf(headerRecipeBuilder_numbered.buildOne(Pair("Budgeted",splitVM.incomeTotal))) + budgetedRecipeBuilder.build(budgeteds)
+                    listOf(headerRecipeBuilder.buildOne("Category"))
+                            + listOf(cellRecipeBuilder.buildOne("Default"))
+                            + cellRecipeBuilder.build(categories),
+                    listOf(headerRecipeBuilder.buildOne("Spent"))
+                            + listOf(oneWayCellRecipeBuilder.buildOne(splitVM.spentLeftToCategorize))
+                            + cellRecipeBuilder.build(spents),
+                    listOf(headerRecipeBuilder.buildOne("Income"))
+                            + listOf(oneWayCellRecipeBuilder.buildOne(splitVM.incomeLeftToCategorize))
+                            + incomeRecipeBuilder.build(incomes),
+                    listOf(headerRecipeBuilder_numbered.buildOne(Pair("Budgeted",splitVM.incomeTotal)))
+                            + listOf(oneWayCellRecipeBuilder.buildOne(splitVM.uncategorizedBudgeted))
+                            + oneWayCellRecipeBuilder.build(budgeteds)
                 ).reflectXY()
             )
         }
