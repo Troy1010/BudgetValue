@@ -55,5 +55,5 @@ fun <T> EditText.rxBind(
 
 
 fun Iterable<BigDecimal>.sum(): BigDecimal {
-    return this.fold(BigDecimal.ZERO) { acc, value -> acc + value }
+    return this.fold(BigDecimal.ZERO) { accumulator, value -> accumulator + value }
 }
