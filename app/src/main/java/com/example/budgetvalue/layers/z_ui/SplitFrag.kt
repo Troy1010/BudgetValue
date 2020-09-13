@@ -17,12 +17,7 @@ import com.example.budgetvalue.layers.z_ui.TMTableView.*
 import com.example.budgetvalue.layers.z_ui.TMTableView.CellRecipeBuilder.Default
 import com.example.budgetvalue.layers.z_ui.misc.rxBind
 import com.example.budgetvalue.layers.z_ui.misc.rxBindOneWay
-import com.example.budgetvalue.util.combineLatestAsTuple
-import com.example.budgetvalue.util.logSubscribe2
 import com.example.budgetvalue.util.reflectXY
-import com.example.budgetvalue.util.toBehaviorSubject
-import com.example.tmcommonkotlin.log
-import com.example.tmcommonkotlin.logz
 import com.example.tmcommonkotlin.vmFactoryFactory
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindToLifecycle
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -47,7 +42,7 @@ class SplitFrag : Fragment(R.layout.frag_split) {
     fun setupTableDataObserver() {
         val cellRecipeBuilder = CellRecipeBuilder(requireContext(), Default.CELL)
         val headerRecipeBuilder = CellRecipeBuilder(requireContext(), Default.HEADER)
-        val incomeHeaderRecipeBuilder = CellRecipeBuilder<LinearLayout, Pair<String, Observable<BigDecimal>>>(
+        val headerRecipeBuilder_numbered = CellRecipeBuilder<LinearLayout, Pair<String, Observable<BigDecimal>>>(
             { View.inflate(requireContext(), R.layout.tableview_header_income, null) as LinearLayout },
             {v, d ->
                 v.textview_header.text = d.first
@@ -73,8 +68,8 @@ class SplitFrag : Fragment(R.layout.frag_split) {
                 listOf(
                     listOf(headerRecipeBuilder.buildOne("Category")) + cellRecipeBuilder.build(categories),
                     listOf(headerRecipeBuilder.buildOne("Spent")) + cellRecipeBuilder.build(spents),
-                    listOf(incomeHeaderRecipeBuilder.buildOne(Pair("Income",splitVM.incomeLeftToCategorize))) + incomeRecipeBuilder.build(incomes),
-                    listOf(headerRecipeBuilder.buildOne("Budgeted")) + budgetedRecipeBuilder.build(budgeteds)
+                    listOf(headerRecipeBuilder_numbered.buildOne(Pair("Income",splitVM.incomeLeftToCategorize))) + incomeRecipeBuilder.build(incomes),
+                    listOf(headerRecipeBuilder_numbered.buildOne(Pair("Budgeted",splitVM.incomeTotal))) + budgetedRecipeBuilder.build(budgeteds)
                 ).reflectXY()
             )
         }
