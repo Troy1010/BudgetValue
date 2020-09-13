@@ -62,7 +62,7 @@ class SplitVM(
             returning
         }
         .doOnNext {
-            // bind BehaviorSubjects with the db
+            // bind BehaviorSubjects->db
             for (pair in it) {
                 pair.value.skip(1).subscribe {
                     viewModelScope.launch {
