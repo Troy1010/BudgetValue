@@ -17,6 +17,8 @@ data class Transaction(
 ) {
     val isUncategorized: Boolean
         get() = categoryAmounts.isNullOrEmpty()
+    val isSpend:Boolean
+        get() = amount < BigDecimal.ZERO
     val uncategorizedAmounts: BigDecimal
         get() {
             return amount - categoryAmounts.values.sum()

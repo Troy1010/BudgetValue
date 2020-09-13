@@ -69,6 +69,7 @@
             app:layout_constraintGuide_percent="0.25" />
 
         <TextView
+            app:rxBindOneWay2="@{transactionsVM.uncategorizedSpendsSize}"
             android:id="@+id/textview_amount_left"
             style="@style/AppTheme.StandardTextView"
             android:layout_width="0dp"
@@ -77,7 +78,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:textColor="@color/colorOnDark"
-            android:text='@{""+transactionsVM.uncategorizedTransactions.size()}'
             tools:text="25" />
 
         <TextView
