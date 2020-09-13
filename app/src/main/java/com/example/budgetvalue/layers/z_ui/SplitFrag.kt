@@ -18,6 +18,8 @@ import com.example.budgetvalue.layers.z_ui.misc.rxBind
 import com.example.budgetvalue.util.combineLatestAsTuple
 import com.example.budgetvalue.util.logSubscribe2
 import com.example.budgetvalue.util.reflectXY
+import com.example.budgetvalue.util.toBehaviorSubject
+import com.example.tmcommonkotlin.log
 import com.example.tmcommonkotlin.logz
 import com.example.tmcommonkotlin.vmFactoryFactory
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindToLifecycle
@@ -51,6 +53,10 @@ class SplitFrag : Fragment(R.layout.frag_split) {
             { View.inflate(context, R.layout.item_text_edit, null) as EditText },
             { v, bs -> v.rxBind(bs, { it }, { it.toBigDecimal() } )}
         )
+        val budgetedRecipeBuilder = CellRecipeBuilder<EditText, BehaviorSubject<BigDecimal>>(
+            { View.inflate(context, R.layout.item_text_edit, null) as EditText },
+            { v, bs -> v.rxBind(bs, { it }, { it.toBigDecimal() } )}
+        )
         combineLatestAsTuple(
             splitVM.rowDatas,
             splitVM.incomeTotal
@@ -59,13 +65,15 @@ class SplitFrag : Fragment(R.layout.frag_split) {
             val categories = rowDatas.map { it.category.name }
             val spents = rowDatas.map { it.spent.toString() }
             val incomes = rowDatas.map { it.income }
-            val budgeteds = rowDatas.map { it.budgeted.toString() }
+            val budgeteds = rowDatas.map { rowData ->
+                rowData.income.map { rowData.getBudgeted2(it) }.toBehaviorSubject()
+            }
             myTableView_1.setRecipes(
                 listOf(
                     listOf(headerRecipeBuilder.buildOne("Category")) + cellRecipeBuilder.build(categories),
                     listOf(headerRecipeBuilder.buildOne("Spent")) + cellRecipeBuilder.build(spents),
                     listOf(incomeHeaderRecipeBuilder.buildOne(Pair("Income",it.second))) + incomeRecipeBuilder.build(incomes),
-                    listOf(headerRecipeBuilder.buildOne("Budgeted")) + cellRecipeBuilder.build(budgeteds)
+                    listOf(headerRecipeBuilder.buildOne("Budgeted")) + budgetedRecipeBuilder.build(budgeteds)
                 ).reflectXY()
             )
         }

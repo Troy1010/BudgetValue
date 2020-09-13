@@ -10,4 +10,7 @@ data class SplitRowData (
     val income: BehaviorSubject<BigDecimal>
 ) {
     val budgeted = spent + income.value
+    fun getBudgeted2(incomeValue: BigDecimal): BigDecimal { // TODO: hacky
+        return spent + incomeValue
+    }
 }
