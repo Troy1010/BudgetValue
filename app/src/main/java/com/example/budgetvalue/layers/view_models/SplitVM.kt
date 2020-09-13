@@ -88,7 +88,7 @@ class SplitVM(
             }
 
         }
-        .startWith(Observable.just(HashMap()))
+        .startWithItem(HashMap())
     val rowDatas = combineLatestAsTuple(transactionSet, activeCategories, incomeCategoryAmounts)
         .map {
             val rowDatas = ArrayList<SplitRowData>()
