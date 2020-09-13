@@ -38,7 +38,9 @@ class CategoriesVM : ViewModel() {
             Category("Improvements", CategoryTypes.Always),
             Category("Dentist", CategoryTypes.Always),
             Category("Diabetic Supplies", CategoryTypes.Always),
-            Category("Leli gifts/activities", CategoryTypes.Always)
+            Category("Leli gifts/activities", CategoryTypes.Always),
+            Category("Misc", CategoryTypes.Always),
+            Category("Gas", CategoryTypes.Always)
         ))
     }
 }
