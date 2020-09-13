@@ -18,6 +18,7 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.io.PrintWriter
 import java.io.StringWriter
+import java.math.BigDecimal
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -350,4 +351,10 @@ fun <T:Any> Observable<T>.pairwiseDefault(initialValue:T): Observable<Pair<T, T>
         lastValue = it
         returning
     }
+}
+
+
+
+fun String.toBigDecimal2(): BigDecimal {
+    return if (this == "") BigDecimal.ZERO else this.toBigDecimal()
 }

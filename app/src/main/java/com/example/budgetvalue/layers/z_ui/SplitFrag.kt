@@ -18,6 +18,7 @@ import com.example.budgetvalue.layers.z_ui.TMTableView.CellRecipeBuilder.Default
 import com.example.budgetvalue.layers.z_ui.misc.rxBind
 import com.example.budgetvalue.layers.z_ui.misc.rxBindOneWay
 import com.example.budgetvalue.util.reflectXY
+import com.example.budgetvalue.util.toBigDecimal2
 import com.example.tmcommonkotlin.vmFactoryFactory
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindToLifecycle
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -50,7 +51,7 @@ class SplitFrag : Fragment(R.layout.frag_split) {
             })
         val incomeRecipeBuilder = CellRecipeBuilder<EditText, BehaviorSubject<BigDecimal>>(
             { View.inflate(context, R.layout.item_text_edit, null) as EditText },
-            { v, bs -> v.rxBind(bs, { it.toBigDecimal() } )}
+            { v, bs -> v.rxBind(bs, { it.toBigDecimal2() } )}
         )
         val budgetedRecipeBuilder = CellRecipeBuilder<TextView, Observable<BigDecimal>>(
             { View.inflate(context, R.layout.tableview_header, null) as TextView },
