@@ -15,7 +15,10 @@ class CellRecipeBuilder<V : View, D : Any>(
     fun build(datas: List<D>): List<CellRecipe<V, D>> {
         return datas.map { CellRecipe(viewFactory, it, bindAction) }
     }
-    fun buildOne(data: D) = CellRecipe(viewFactory, data, bindAction)
+    fun buildOne(data: D): List<CellRecipe<V, D>> {
+        return listOf(CellRecipe(viewFactory, data, bindAction))
+    }
+    fun buildOne2(data: D) = CellRecipe(viewFactory, data, bindAction)
 
     companion object {
         operator fun invoke(context: Context, e: Default): CellRecipeBuilder<TextView, String> {

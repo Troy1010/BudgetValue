@@ -67,17 +67,17 @@ class SplitFrag : Fragment(R.layout.frag_split) {
             }
             myTableView_1.setRecipes(
                 listOf(
-                    listOf(headerRecipeBuilder.buildOne("Category"))
-                            + listOf(cellRecipeBuilder.buildOne("Default"))
+                    headerRecipeBuilder.buildOne("Category")
+                            + cellRecipeBuilder.buildOne("Default")
                             + cellRecipeBuilder.build(categories),
-                    listOf(headerRecipeBuilder.buildOne("Spent"))
-                            + listOf(oneWayCellRecipeBuilder.buildOne(splitVM.spentLeftToCategorize))
+                    headerRecipeBuilder.buildOne("Spent")
+                            + oneWayCellRecipeBuilder.buildOne(splitVM.spentLeftToCategorize)
                             + cellRecipeBuilder.build(spents),
-                    listOf(headerRecipeBuilder.buildOne("Income"))
-                            + listOf(oneWayCellRecipeBuilder.buildOne(splitVM.incomeLeftToCategorize))
+                    headerRecipeBuilder.buildOne("Income")
+                            + oneWayCellRecipeBuilder.buildOne(splitVM.incomeLeftToCategorize)
                             + incomeRecipeBuilder.build(incomes),
-                    listOf(headerRecipeBuilder_numbered.buildOne(Pair("Budgeted",splitVM.incomeTotal)))
-                            + listOf(oneWayCellRecipeBuilder.buildOne(splitVM.uncategorizedBudgeted))
+                    headerRecipeBuilder_numbered.buildOne(Pair("Budgeted",splitVM.incomeTotal))
+                            + oneWayCellRecipeBuilder.buildOne(splitVM.uncategorizedBudgeted)
                             + oneWayCellRecipeBuilder.build(budgeteds)
                 ).reflectXY()
             )
