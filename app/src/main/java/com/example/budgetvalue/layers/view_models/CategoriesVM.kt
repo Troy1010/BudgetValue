@@ -3,7 +3,7 @@ package com.example.budgetvalue.layers.view_models
 import androidx.lifecycle.ViewModel
 import com.example.budgetvalue.models.Category
 import com.example.budgetvalue.models.CategoryTypes
-import com.example.budgetvalue.util.ObservableArrayList
+import com.example.budgetvalue.util.SourceArrayList
 import com.example.budgetvalue.util.toBehaviorSubject
 import com.example.tmcommonkotlin.logz
 
@@ -12,7 +12,7 @@ private lateinit var categoriesVM_: CategoriesVM
 class CategoriesVM : ViewModel() {
     val defaultCategory = Category("Default", CategoryTypes.Default)
     val incomeCategory = Category("Income", CategoryTypes.Income)
-    val userAddedCategories = ObservableArrayList<Category>()
+    val userAddedCategories = SourceArrayList<Category>()
     val categories = userAddedCategories.observable.map {
         ArrayList(userAddedCategories + defaultCategory + incomeCategory)
     }.toBehaviorSubject()

@@ -2,7 +2,7 @@ package com.example.budgetvalue.util
 
 import io.reactivex.rxjava3.subjects.PublishSubject
 
-class ObservableArrayList<T> : ArrayList<T>() {
+class SourceArrayList<T> : ArrayList<T>() {
     val observable = PublishSubject.create<ArrayList<T>>()
 
     override fun clear() {

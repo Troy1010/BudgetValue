@@ -2,7 +2,7 @@ package com.example.budgetvalue.util
 
 import io.reactivex.rxjava3.subjects.PublishSubject
 
-class ObservableHashMap<T, V> : HashMap<T, V>() {
+class SourceHashMap<T, V> : HashMap<T, V>() {
     val observable = PublishSubject.create<Unit>()
     override fun clear() {
         super.clear()
