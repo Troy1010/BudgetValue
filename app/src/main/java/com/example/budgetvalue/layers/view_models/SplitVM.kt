@@ -10,15 +10,9 @@ import com.example.budgetvalue.models.IncomeCategoryAmounts
 import com.example.budgetvalue.models.Transaction
 import com.example.budgetvalue.util.*
 import com.example.tmcommonkotlin.log
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import io.reactivex.rxjava3.subjects.PublishSubject
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.math.BigDecimal
 import java.util.*
-import kotlin.collections.HashMap
 import kotlin.collections.HashSet
 
 class SplitVM(
@@ -40,59 +34,30 @@ class SplitVM(
             }
             activeCategories_.toList().map { categoriesVM.getCategoryByName(it) }
         }
-        .doOnNext {
-            // bind to IncomeCategoryAmounts db
-            runBlocking {
-                for (category in it) {
-                    if (!repo.doesIncomeCategoryAmountHaveCategory(category)) {
-                        repo.addIncomeCategoryAmount(category)
-                    }
-                }
-                // should remove anything from ICA that is not in activeCategories
-                for (category in repo.getIncomeCategoryAmounts().blockingFirst().map { it.category }) {
-                    if (category !in it) {
-                        repo.deleteIncomeCategoryAmount(category)
-                    }
-                }
-            }
-        }
         .toBehaviorSubject()
-    val categorizedIncomesChanged = PublishSubject.create<BigDecimal>()
-    val categorizedIncomesTotal = categorizedIncomesChanged
-        .scan(BigDecimal.ZERO, BigDecimal::add)
-    var iSkipCount = 0
-    val incomeCategoryAmounts = combineLatestAsTuple(repo.getIncomeCategoryAmounts(), activeCategories)
-        .filter {
-            if (iSkipCount>0) {
-                iSkipCount--
-                false
-            } else {
-                true
-            }
-        }
-        .map {
-            val incomeCA = it.first.associate { ca -> Pair(ca.category, ca.amount) }
-            val activeCategories = it.second
-            val returning = HashMap<Category, BehaviorSubject<BigDecimal>>()
-            for (category in activeCategories) {
-                val initValue = incomeCA[category] ?: BigDecimal.ZERO
-                val bs = BehaviorSubject.createDefault(initValue)
-                returning[category] = bs
-            }
-            returning
-        }
-        .doOnNext {
-            for (pair in it) {
-                pair.value.skip(1).subscribe {
-                    // bind BehaviorSubjects->db
-                    viewModelScope.launch {
-                        iSkipCount++ // TODO: This is pretty hacky
-                        repo.updateIncomeCategoryAmount(IncomeCategoryAmounts(pair.key, it))
-                    }
+    val incomeCategoryAmounts = activeCategories
+        .scan(getIncomeCASourceHashMap(repo)) { x:SourceHashMap<Category, BigDecimal>, y:List<Category> ->
+            for (xKey in x.keys) {
+                if (xKey !in y) {
+                    x.remove(xKey)
                 }
-                pair.value.pairwiseDefault(BigDecimal.ZERO).map { it.second - it.first }.subscribe(categorizedIncomesChanged) // TODO: This is pretty hacky
+            }
+            for (yKey in y) {
+                if (yKey !in x.keys) {
+                    x[yKey] = BigDecimal.ZERO
+                }
+            }
+            x
+        }.toBehaviorSubject().apply {
+            subscribe {
+                it.observable.subscribe {
+                    repo.writeIncomeCA(it.map { IncomeCategoryAmounts(it.key, it.value) })
+                }
             }
         }
+    val incomeCATotal = incomeCategoryAmounts
+        .value.observable
+        .map { it.values.sum() }
     val rowDatas = zip(transactionSet, activeCategories, incomeCategoryAmounts)
         .map {
             val rowDatas = ArrayList<SplitRowData>()
@@ -101,7 +66,7 @@ class SplitVM(
                 rowDatas.add(SplitRowData(
                     category,
                     spent,
-                    it.third[category] ?: error("it.third[category] was null")
+                    it.third.itemObservables[category] ?: error("it.third[category] was null")
                 ))
             }
             rowDatas
@@ -110,9 +75,9 @@ class SplitVM(
         .map {
             it.map { it.uncategorizedAmounts }.sum()
         }.toBehaviorSubject()
-    val incomeLeftToCategorize = combineLatestAsTuple(incomeTotal, categorizedIncomesTotal, rowDatas)
+    val incomeLeftToCategorize = combineLatestAsTuple(incomeTotal, incomeCATotal, rowDatas, spentLeftToCategorize)
         .map {
-            it.first - it.second - it.third.map { it.spent }.sum()
+            it.first - it.second - it.third.map { it.spent }.sum() - it.fourth
         }.toBehaviorSubject()
     val uncategorizedBudgeted = combineLatestAsTuple(incomeLeftToCategorize, spentLeftToCategorize)
         .map {
