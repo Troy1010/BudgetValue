@@ -2,7 +2,8 @@ package com.example.budgetvalue.layers.z_ui.misc
 
 import android.view.View
 import android.widget.EditText
-import com.example.tmcommonkotlin.logz
+import android.widget.TextView
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
@@ -49,6 +50,16 @@ fun <T> EditText.rxBind(
             }
         }
         override fun isDisposed() = bDisposed
+    }
+}
+
+
+fun <T> TextView.rxBindOneWay(
+    observable: Observable<T>,
+    toDisplayStr:(T)->String = { it.toString() }
+): Disposable {
+    return observable.distinctUntilChanged().subscribe { value ->
+        layoutParams?.let { setText(toDisplayStr(value)) }
     }
 }
 
