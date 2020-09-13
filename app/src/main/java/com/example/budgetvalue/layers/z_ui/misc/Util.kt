@@ -7,8 +7,12 @@ import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
 
-fun <T> EditText.rxBind(bs: BehaviorSubject<T>, x:EditTextRxBinder<T>) {
-    x.rxBind(this, bs)
+fun <T> EditText.rxBind(bs: BehaviorSubject<T>, editTextRxBinder:EditTextRxBinder<T>) {
+    editTextRxBinder.rxBind(this, bs)
+}
+
+fun EditText.rxBind(bs:BehaviorSubject<String?>, validate: (String?)->String = { it?:"" }): Disposable {
+    return this.rxBind(bs, validate, { it }, { it?:"" } )
 }
 
 fun <T> EditText.rxBind(
@@ -46,10 +50,6 @@ fun <T> EditText.rxBind(
         }
         override fun isDisposed() = bDisposed
     }
-}
-
-fun EditText.rxBind(bs:BehaviorSubject<String?>, validate: (String?)->String = { it?:"" }): Disposable {
-    return this.rxBind(bs, validate, { it }, { it?:"" } )
 }
 
 
