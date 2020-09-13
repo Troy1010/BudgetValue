@@ -62,7 +62,7 @@ class SplitFrag : Fragment(R.layout.frag_split) {
         )
         combineLatestAsTuple(
             splitVM.rowDatas,
-            splitVM.incomeTotal
+            splitVM.incomeLeftToCategorize
         ).observeOn(AndroidSchedulers.mainThread()).bindToLifecycle(viewLifecycleOwner).subscribe {
             val rowDatas = it.first
             val categories = rowDatas.map { it.category.name }
