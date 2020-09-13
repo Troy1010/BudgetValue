@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.Orientation
 import com.example.tmcommonkotlin.logz
+import io.reactivex.rxjava3.annotations.NonNull
 import io.reactivex.rxjava3.core.*
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -198,6 +199,10 @@ fun PublishSubject<Unit>.onNext() {
     this.onNext(Unit)
 }
 
+fun PublishSubject<Unit>.emit() {
+    this.onNext(Unit)
+}
+
 @SuppressLint("CheckResult")
 fun <T> Observable<T>.logSubscribe2(msgPrefix: String? = null, bType: Boolean = false): Observable<T> {
     val tempMsgPrefix: String = if (msgPrefix == null) "" else {
@@ -334,4 +339,15 @@ fun <T> List<List<T>>.reflectXY(): ArrayList<ArrayList<T>> {
         }
     }
     return returning
+}
+
+
+
+fun <T:Any> Observable<T>.pairwiseDefault(initialValue:T): Observable<Pair<T, T>> {
+    var lastValue = initialValue
+    return this.map {
+        val returning = Pair(lastValue, it)
+        lastValue = it
+        returning
+    }
 }

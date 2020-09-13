@@ -2,6 +2,7 @@ package com.example.budgetvalue.layers.data_layer
 
 import androidx.room.*
 import com.example.budgetvalue.models.Account
+import com.example.budgetvalue.models.Category
 import com.example.budgetvalue.models.IncomeCategoryAmounts
 import com.example.budgetvalue.models.Transaction
 import io.reactivex.rxjava3.core.Observable
@@ -66,9 +67,20 @@ interface MyDao {
     @Insert
     suspend fun addIncomeCategoryAmount(incomeCategoryAmounts: IncomeCategoryAmounts)
 
+    suspend fun addIncomeCategoryAmount(category: Category) {
+        addIncomeCategoryAmount(IncomeCategoryAmounts(category))
+    }
+
     @Delete
     suspend fun deleteIncomeCategoryAmount(incomeCategoryAmounts: IncomeCategoryAmounts)
 
     @Update
     suspend fun updateIncomeCategoryAmount(incomeCategoryAmounts: IncomeCategoryAmounts)
+
+    @Query("select * from `IncomeCategoryAmounts` where category == :categoryName")
+    suspend fun howManyIncomeCategoryAmountHaveCategory(categoryName: String): List<IncomeCategoryAmounts>
+
+    suspend fun doesIncomeCategoryAmountHaveCategory(category: Category): Boolean {
+        return howManyIncomeCategoryAmountHaveCategory(category.name).isNotEmpty() // TODO could be more performant
+    }
 }
