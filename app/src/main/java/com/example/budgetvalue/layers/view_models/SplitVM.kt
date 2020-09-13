@@ -49,6 +49,11 @@ class SplitVM(
                     }
                 }
                 // should remove anything from ICA that is not in activeCategories
+                for (category in repo.getIncomeCategoryAmounts().blockingFirst().map { it.category }) {
+                    if (category !in it) {
+                        repo.deleteIncomeCategoryAmount(category)
+                    }
+                }
             }
         }
         .toBehaviorSubject()

@@ -74,6 +74,13 @@ interface MyDao {
     @Delete
     suspend fun deleteIncomeCategoryAmount(incomeCategoryAmounts: IncomeCategoryAmounts)
 
+    @Query("DELETE FROM `IncomeCategoryAmounts` WHERE category = :categoryName")
+    suspend fun deleteIncomeCategoryAmount(categoryName: String)
+
+    suspend fun deleteIncomeCategoryAmount(category: Category) {
+        return deleteIncomeCategoryAmount(category.name)
+    }
+
     @Update
     suspend fun updateIncomeCategoryAmount(incomeCategoryAmounts: IncomeCategoryAmounts)
 
