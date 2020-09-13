@@ -88,8 +88,7 @@ class SplitVM(
                 pair.value.pairwiseDefault(BigDecimal.ZERO).map { it.second - it.first }.subscribe(categorizedIncomesChanged) // TODO: This is pretty hacky
             }
         }
-    val rowDatas = combineLatestAsTuple(transactionSet, zip(activeCategories, incomeCategoryAmounts))
-        .map { Triple(it.first, it.second.first, it.second.second) }
+    val rowDatas = zip(transactionSet, activeCategories, incomeCategoryAmounts)
         .map {
             val rowDatas = ArrayList<SplitRowData>()
             for (category in it.second) {
