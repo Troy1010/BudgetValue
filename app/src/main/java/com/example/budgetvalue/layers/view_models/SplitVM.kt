@@ -9,7 +9,9 @@ import com.example.budgetvalue.models.Category
 import com.example.budgetvalue.models.IncomeCategoryAmounts
 import com.example.budgetvalue.models.Transaction
 import com.example.budgetvalue.util.*
+import com.example.tmcommonkotlin.log
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.launch
@@ -85,10 +87,9 @@ class SplitVM(
                 }
                 pair.value.pairwiseDefault(BigDecimal.ZERO).map { it.second - it.first }.subscribe(categorizedIncomesChanged) // TODO: This is pretty hacky
             }
-
         }
-        .startWithItem(HashMap())
-    val rowDatas = combineLatestAsTuple(transactionSet, activeCategories, incomeCategoryAmounts)
+    val rowDatas = combineLatestAsTuple(transactionSet, zip(activeCategories, incomeCategoryAmounts))
+        .map { Triple(it.first, it.second.first, it.second.second) }
         .map {
             val rowDatas = ArrayList<SplitRowData>()
             for (category in it.second) {

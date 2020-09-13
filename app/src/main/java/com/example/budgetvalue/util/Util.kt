@@ -10,10 +10,12 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.Orientation
+import com.example.budgetvalue.models.Category
 import com.example.tmcommonkotlin.logz
 import io.reactivex.rxjava3.annotations.NonNull
 import io.reactivex.rxjava3.core.*
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.io.PrintWriter
@@ -357,4 +359,8 @@ fun <T:Any> Observable<T>.pairwiseDefault(initialValue:T): Observable<Pair<T, T>
 
 fun String.toBigDecimal2(): BigDecimal {
     return if (this == "") BigDecimal.ZERO else this.toBigDecimal()
+}
+
+fun <T,G> zip(x:ObservableSource<T>, y:ObservableSource<G>) : Observable<Pair<T,G>> {
+    return Observable.zip(x,y, BiFunction<T, G, Pair<T,G>> { a, b -> Pair<T,G>(a, b) })
 }
