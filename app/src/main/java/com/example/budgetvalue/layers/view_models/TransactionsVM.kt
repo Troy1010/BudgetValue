@@ -13,8 +13,10 @@ import java.io.InputStream
 
 class TransactionsVM(private val repo: Repo):ViewModel() {
     val transactions = repo.getTransactions().toBehaviorSubject()
-    val uncategorizedSpends = transactions
-        .map { it.filter { it.isUncategorized && it.isSpend } }
+    val spends = transactions
+        .map { it.filter { it.isSpend } }.toBehaviorSubject()
+    val uncategorizedSpends = spends
+        .map { it.filter { it.isUncategorized } }
     val uncategorizedSpendsSize = uncategorizedSpends
         .map { it.size.toString() }
     fun importTransactions(inputStream: InputStream) {
