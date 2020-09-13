@@ -7,7 +7,7 @@ import com.example.budgetvalue.util.ObservableArrayList
 import com.example.budgetvalue.util.toBehaviorSubject
 import com.example.tmcommonkotlin.logz
 
-val categoriesVM by lazy { categoriesVM_ } // This is hacky
+val categoriesVM by lazy { categoriesVM_ } // TODO: hacky
 private lateinit var categoriesVM_: CategoriesVM
 class CategoriesVM : ViewModel() {
     val defaultCategory = Category("Default", CategoryTypes.Default)
