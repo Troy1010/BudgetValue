@@ -54,7 +54,7 @@ class SplitFrag : Fragment(R.layout.frag_split) {
             })
         val incomeRecipeBuilder = CellRecipeBuilder<EditText, BehaviorSubject<BigDecimal>>(
             { View.inflate(context, R.layout.item_text_edit, null) as EditText },
-            { v, bs -> v.rxBind(bs, { it }, { it.toBigDecimal() } )}
+            { v, bs -> v.rxBind(bs, { it.toBigDecimal() } )}
         )
         val budgetedRecipeBuilder = CellRecipeBuilder<TextView, Observable<BigDecimal>>(
             { View.inflate(context, R.layout.tableview_header, null) as TextView },

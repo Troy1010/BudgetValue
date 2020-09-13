@@ -13,19 +13,15 @@ fun <T> EditText.rxBind(bs: BehaviorSubject<T>, editTextRxBinder:EditTextRxBinde
 }
 
 fun EditText.rxBind(bs:BehaviorSubject<String?>, validate: (String?)->String = { it?:"" }): Disposable {
-    return this.rxBind(bs, validate, { it }, { it?:"" } )
+    return this.rxBind(bs, { it }, validate, { it?:"" } )
 }
 
 fun <T> EditText.rxBind(
     bs:BehaviorSubject<T>,
-    validate: (T)->T,
     toT:(String)->T,
+    validate: (T)->T = { it }, // TODO could be more performant
     toDisplayStr:(T)->String = { it.toString() }): Disposable {
-    val rxDisposable = bs.distinctUntilChanged().subscribe {
-        if (layoutParams!=null) {
-            this.setText(toDisplayStr(it))
-        }
-    }
+    val rxDisposable = rxBindOneWay(bs)
     this.onFocusChangeListener = View.OnFocusChangeListener { _, isFocused ->
         if (!isFocused) {
             val mText = this.text.toString()
@@ -66,5 +62,5 @@ fun <T> TextView.rxBindOneWay(
 
 
 fun Iterable<BigDecimal>.sum(): BigDecimal {
-    return this.fold(BigDecimal.ZERO) { accumulator, value -> accumulator + value }
+    return this.fold(BigDecimal.ZERO, BigDecimal::add)
 }

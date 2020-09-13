@@ -10,9 +10,9 @@ class EditTextRxBinder<T>(
 ) {
     fun rxBind(v: EditText, bs:BehaviorSubject<T>) {
         if (toDisplayStr!=null) {
-            v.rxBind(bs, validate, toT, toDisplayStr)
+            v.rxBind(bs, toT, validate, toDisplayStr)
         } else {
-            v.rxBind(bs, validate, toT)
+            v.rxBind(bs, toT, validate)
         }
     }
 }
