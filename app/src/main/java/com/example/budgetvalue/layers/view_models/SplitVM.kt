@@ -107,7 +107,7 @@ class SplitVM(
         }.toBehaviorSubject()
     val spentLeftToCategorize = transactionSet
         .map {
-            it.map { it.uncategorizedAmounts }.sum() // TODO this is unperformant
+            it.map { it.uncategorizedAmounts }.sum()
         }.toBehaviorSubject()
     val uncategorizedBudgeted = combineLatestAsTuple(incomeLeftToCategorize, spentLeftToCategorize)
         .map {
