@@ -102,13 +102,13 @@ class SplitVM(
             }
             rowDatas
         }.toBehaviorSubject()
-    val incomeLeftToCategorize = combineLatestAsTuple(incomeTotal, categorizedIncomesTotal, rowDatas)
-        .map {
-            it.first - it.second + it.third.map { it.spent }.sum()
-        }.toBehaviorSubject()
     val spentLeftToCategorize = transactionSet
         .map {
             it.map { it.uncategorizedAmounts }.sum()
+        }.toBehaviorSubject()
+    val incomeLeftToCategorize = combineLatestAsTuple(incomeTotal, categorizedIncomesTotal)
+        .map {
+            it.first - it.second
         }.toBehaviorSubject()
     val uncategorizedBudgeted = combineLatestAsTuple(incomeLeftToCategorize, spentLeftToCategorize)
         .map {
