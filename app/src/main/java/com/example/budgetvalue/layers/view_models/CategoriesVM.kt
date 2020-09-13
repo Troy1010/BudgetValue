@@ -5,7 +5,10 @@ import com.example.budgetvalue.models.Category
 import com.example.budgetvalue.models.CategoryTypes
 import com.example.budgetvalue.util.ObservableArrayList
 import com.example.budgetvalue.util.toBehaviorSubject
+import com.example.tmcommonkotlin.logz
 
+val categoriesVM by lazy { categoriesVM_ } // This is hacky
+private lateinit var categoriesVM_: CategoriesVM
 class CategoriesVM : ViewModel() {
     val defaultCategory = Category("Default", CategoryTypes.Default)
     val incomeCategory = Category("Income", CategoryTypes.Income)
@@ -20,9 +23,14 @@ class CategoriesVM : ViewModel() {
         it.associateBy { it.name } as HashMap<String, Category>
     }.toBehaviorSubject()
     fun getCategoryByName(name: String): Category {
-        return nameToCategoryMap.value[name]!!
+        val category = nameToCategoryMap.value[name]
+        if (category==null)
+            logz("getCategoryByName`WARNING:had to return default for category name:$name")
+        return category?:defaultCategory
     }
     init {
+        categoriesVM_ = this
+        categoriesVM
         userAddedCategories.addAll(listOf(
             Category("Food", CategoryTypes.Always),
             Category("Soda", CategoryTypes.Always),

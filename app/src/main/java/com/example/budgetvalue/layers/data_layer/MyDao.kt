@@ -2,11 +2,15 @@ package com.example.budgetvalue.layers.data_layer
 
 import androidx.room.*
 import com.example.budgetvalue.models.Account
+import com.example.budgetvalue.models.IncomeCategoryAmounts
 import com.example.budgetvalue.models.Transaction
 import io.reactivex.rxjava3.core.Observable
 
 @Dao
 interface MyDao {
+
+    // Transactions
+
     @Query("DELETE FROM `Transaction`")
     suspend fun clear()
 
@@ -15,9 +19,6 @@ interface MyDao {
 
     @Query("select * from `Transaction`")
     fun getTransactions(): Observable<List<Transaction>>
-
-    @Query("select * from `Account`")
-    fun getAccounts(): Observable<List<Account>>
 
     @Delete
     suspend fun deleteTransaction(transaction: Transaction)
@@ -40,6 +41,14 @@ interface MyDao {
     @Query("UPDATE `Transaction` SET date=:value WHERE id=:id")
     fun setTransactionDate(id: Int, value: String)
 
+    // Accounts
+
+    @Query("select * from `Account`")
+    fun getAccounts(): Observable<List<Account>>
+
+    @Query("select * from `Account` where id=:id")
+    suspend fun getAccount(id: Int) : Account
+
     @Insert
     suspend fun addAccount(account: Account)
 
@@ -48,4 +57,18 @@ interface MyDao {
 
     @Update
     suspend fun updateAccount(account: Account)
+
+    // IncomeCategoryAmounts
+
+    @Query("select * from `IncomeCategoryAmounts`")
+    fun getIncomeCategoryAmounts(): Observable<List<IncomeCategoryAmounts>>
+
+    @Insert
+    suspend fun addIncomeCategoryAmount(incomeCategoryAmounts: IncomeCategoryAmounts)
+
+    @Delete
+    suspend fun deleteIncomeCategoryAmount(incomeCategoryAmounts: IncomeCategoryAmounts)
+
+    @Update
+    suspend fun updateIncomeCategoryAmount(incomeCategoryAmounts: IncomeCategoryAmounts)
 }

@@ -37,22 +37,6 @@ class SplitFrag : Fragment(R.layout.frag_split) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupTableDataObserver()
-        setupViews()
-    }
-
-    val x = BehaviorSubject.createDefault<String>("9").also {
-        it.logSubscribe2("iii")
-    }
-    private fun setupViews() {
-        edit_text.rxBind(x) {
-            it?.substring(0..2)?:""
-        }
-        btn_print_test.setOnClickListener {
-            logz("x.value:${x.value}")
-        }
-        btn_change_bs.setOnClickListener {
-            x.onNext("uuu")
-        }
     }
 
     fun setupTableDataObserver() {
@@ -65,15 +49,7 @@ class SplitFrag : Fragment(R.layout.frag_split) {
             })
         val incomeRecipeBuilder = CellRecipeBuilder<EditText, BehaviorSubject<BigDecimal>>(
             { View.inflate(context, R.layout.item_text_edit, null) as EditText },
-            { v, a -> v.rxBind(a, {
-                if (it > 10.toBigDecimal()) {
-                    it
-                } else {
-                    (6.7).toBigDecimal()
-                }
-            }, {
-                it.toBigDecimal()
-            } )}
+            { v, a -> v.rxBind(a, { it }, { it.toBigDecimal() } )}
         )
         combineLatestAsTuple(
             splitVM.rowDatas,

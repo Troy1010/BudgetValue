@@ -33,7 +33,8 @@ class AccountsVM(private val repo: Repo): ViewModel() {
 
     fun updateAccount(account: Account) {
         viewModelScope.launch {
-            repo.updateAccount(account)
+            if (account != repo.getAccount(account.id))
+                repo.updateAccount(account)
         }
     }
 

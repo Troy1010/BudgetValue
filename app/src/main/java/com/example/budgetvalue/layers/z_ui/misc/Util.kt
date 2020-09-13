@@ -2,8 +2,10 @@ package com.example.budgetvalue.layers.z_ui.misc
 
 import android.view.View
 import android.widget.EditText
+import com.example.tmcommonkotlin.logz
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import java.math.BigDecimal
 
 fun <T> EditText.rxBind(bs: BehaviorSubject<T>, x:EditTextRxBinder<T>) {
     x.rxBind(this, bs)
@@ -48,4 +50,10 @@ fun <T> EditText.rxBind(
 
 fun EditText.rxBind(bs:BehaviorSubject<String?>, validate: (String?)->String = { it?:"" }): Disposable {
     return this.rxBind(bs, validate, { it }, { it?:"" } )
+}
+
+
+
+fun Iterable<BigDecimal>.sum(): BigDecimal {
+    return this.fold(BigDecimal.ZERO) { acc, value -> acc + value }
 }
