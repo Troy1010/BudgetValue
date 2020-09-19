@@ -27,8 +27,6 @@ class SourceHashMap<T, V> : HashMap<T, V>() {
             }
             x
         }.toBehaviorSubject()
-    val itemObservables
-        get() = itemObservables_.value
 
     var bSkipNext = false
     fun createItemObservable(key:T): BehaviorSubject<V> {
