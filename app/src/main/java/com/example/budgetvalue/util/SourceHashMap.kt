@@ -14,9 +14,6 @@ class SourceHashMap<T, V> : HashMap<T, V>() {
                 true
             }
         }
-        .doOnNext {
-            val i = 8
-        }
         .scan(HashMap()) { x:HashMap<T, BehaviorSubject<V>>, y:HashMap<T, V> ->
             for (xKey in x.keys) {
                 if (xKey !in y.keys) {

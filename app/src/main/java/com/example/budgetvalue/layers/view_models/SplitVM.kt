@@ -10,6 +10,7 @@ import com.example.budgetvalue.models.IncomeCategoryAmounts
 import com.example.budgetvalue.models.Transaction
 import com.example.budgetvalue.util.*
 import com.example.tmcommonkotlin.log
+import com.example.tmcommonkotlin.logz
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
 import java.util.*
@@ -24,8 +25,9 @@ class SplitVM(
     val incomeTotal = accounts.map {
         it.fold(BigDecimal.ZERO) { acc, account -> acc + account.amount }
     }.toBehaviorSubject()
-    val activeCategories = transactionSet
+    val mainStream = transactionSet
         .map {
+            // define activeCategories
             val activeCategories_ = HashSet<String>()
             for (transaction in it) {
                 for (categoryAmount in transaction.categoryAmounts) {
@@ -33,41 +35,41 @@ class SplitVM(
                 }
             }
             activeCategories_.toList().map { categoriesVM.getCategoryByName(it) }
-        }
-        .toBehaviorSubject()
-    val incomeCategoryAmounts = activeCategories
-        .scan(getIncomeCASourceHashMap(repo)) { x:SourceHashMap<Category, BigDecimal>, y:List<Category> ->
-            for (xKey in x.keys) {
-                if (xKey !in y) {
-                    x.remove(xKey)
-                }
+        }.map { activeCategories ->
+            // define IncomeCA
+            val newIncomeCA = SourceHashMap<Category, BigDecimal>()
+            val oldIncomeCA = repo.readIncomeCA().associate { it.category to it.amount }
+            for (category in activeCategories) {
+                newIncomeCA[category] = oldIncomeCA[category] ?: BigDecimal.ZERO
             }
-            for (yKey in y) {
-                if (yKey !in x.keys) {
-                    x[yKey] = BigDecimal.ZERO
-                }
-            }
-            x
-        }.toBehaviorSubject().apply {
-            subscribe {
-                it.observable.subscribe {
-                    repo.writeIncomeCA(it.map { IncomeCategoryAmounts(it.key, it.value) })
-                }
-            }
-        }
+            Pair(activeCategories, newIncomeCA)
+        }.doOnNext{
+            // bind IncomeCA to database
+            it.second.observable.subscribe({
+                repo.writeIncomeCA(it.map { IncomeCategoryAmounts(it.key, it.value) })
+            }) { logz("hhh:${it.narrate()}") }
+        }.toBehaviorSubject()
+    val activeCategories = mainStream
+        .map {
+            it.first
+        }.toBehaviorSubject()
+    val incomeCategoryAmounts = mainStream
+        .map {
+            it.second
+        }.toBehaviorSubject()
     val incomeCATotal = incomeCategoryAmounts
-        .value.observable
-        .map { it.values.sum() }
+        .map { it.map{ it.value }.sum() }.toBehaviorSubject()
     val rowDatas = zip(transactionSet, activeCategories, incomeCategoryAmounts)
         .map {
+            // define rowDatas
             val rowDatas = ArrayList<SplitRowData>()
             for (category in it.second) {
                 val spent = it.first.map { it.categoryAmounts[category.name] ?: BigDecimal.ZERO }.sum()
                 rowDatas.add(SplitRowData(
                     category,
                     spent,
-                    it.third.itemObservables[category] ?: error("it.third[category] was null")
-                ))
+                    it.third.itemObservables_.value[category] ?: error("it.third~[category] was null"))
+                )
             }
             rowDatas
         }.toBehaviorSubject()
