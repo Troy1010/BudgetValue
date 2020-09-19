@@ -15,10 +15,14 @@ class SourceHashMap<T, V> : HashMap<T, V>() {
             }
         }
         .scan(HashMap()) { x:HashMap<T, BehaviorSubject<V>>, y:HashMap<T, V> ->
+            val xKeysToRemove = arrayListOf<T>()
             for (xKey in x.keys) {
                 if (xKey !in y.keys) {
-                    x.remove(xKey)
+                    xKeysToRemove.add(xKey)
                 }
+            }
+            for (xKey in xKeysToRemove) {
+                x.remove(xKey)
             }
             for (yKey in y.keys) {
                 if (yKey !in x.keys) {
