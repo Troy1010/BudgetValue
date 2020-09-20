@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import com.example.budgetvalue.*
 import com.example.budgetvalue.layers.view_models.AccountsVM
@@ -15,8 +14,6 @@ import com.example.budgetvalue.layers.view_models.CategoriesVM
 import com.example.budgetvalue.layers.view_models.SplitVM
 import com.example.budgetvalue.layers.view_models.TransactionsVM
 import com.example.budgetvalue.layers.z_ui.misc.sum
-import com.example.budgetvalue.util.observeOnce
-import com.example.budgetvalue.util.writeToFile
 import com.example.tmcommonkotlin.easyToast
 import com.example.tmcommonkotlin.logz
 import com.example.tmcommonkotlin.vmFactoryFactory
@@ -70,16 +67,35 @@ class HostActivity : AppCompatActivity() {
                     logz("transactions:${it?.joinToString(",")}")
                 }
             }
-            R.id.menu_export_spends -> {
+            R.id.menu_print_spends -> {
                 // define spends
-                val spends = arrayListOf<BigDecimal>()
+                val spends = hashMapOf<String, BigDecimal>()
                 for (category in splitVM.activeCategories.value) {
-                    spends.add(transactionsVM.transactions.value.map { it.categoryAmounts[category.name] ?: BigDecimal.ZERO }.sum())
+                    spends[category.name] = transactionsVM.transactions.value.map { it.categoryAmounts[category.name] ?: BigDecimal.ZERO }.sum()
                 }
-                spends.add(0,splitVM.spentLeftToCategorize.value)
-                // export
-                writeToFile(this, "TheSpends.txt", spends.joinToString(","))
-                easyToast("Export successful")
+                spends["Default"] = splitVM.incomeTotal.value
+                // convert spends -> spendsString
+                //  define rows
+                val rows = listOf(
+                    "",
+                    "",
+                    "",
+                    splitVM.incomeTotal.value,
+                    "",
+                    "",
+                    spends["Food"] ?: "",
+                    spends["Drinks"] ?: "",
+                    spends["Vanity Food"] ?: "",
+                    spends["Improvements"] ?: "",
+                    spends["Dentist"] ?: "",
+                    spends["Diabetic Supplies"] ?: "",
+                    spends["Leli"] ?: "",
+                    spends["Misc"] ?: "",
+                    spends["Gas"] ?: ""
+                )
+                //
+                val spendsString = rows.joinToString("\n")
+                logz("spendsString:${spendsString}")
             }
         }
         return super.onOptionsItemSelected(item)
