@@ -3,7 +3,9 @@
 package com.example.budgetvalue.util
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.res.Resources
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -13,13 +15,17 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.Orientation
 import com.example.tmcommonkotlin.logz
-import io.reactivex.rxjava3.core.*
+import io.reactivex.rxjava3.core.BackpressureStrategy
+import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.ObservableSource
 import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.functions.Function3
 import io.reactivex.rxjava3.functions.Function4
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
+import java.io.IOException
+import java.io.OutputStreamWriter
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.math.BigDecimal
@@ -48,7 +54,7 @@ fun <T> Observable<T>.toBehaviorSubject(): BehaviorSubject<T> {
     this.subscribe(behaviorSubject)
     return behaviorSubject
 }
-fun <T> Observable<T>.toBehaviorSubjectWithDefault(defaultValue:T): BehaviorSubject<T> {
+fun <T> Observable<T>.toBehaviorSubjectWithDefault(defaultValue: T): BehaviorSubject<T> {
     val behaviorSubject = BehaviorSubject.createDefault(defaultValue)
     this.subscribe(behaviorSubject)
     return behaviorSubject
@@ -294,7 +300,7 @@ fun <T> make1d(orientation: Orientation, z2dCollection: List<List<T>>): List<T?>
             }
         }
         Orientation.Horizontal -> {
-            for (i in 0 until (z2dCollection.map { it.size }.max()?:0)) {
+            for (i in 0 until (z2dCollection.map { it.size }.max() ?: 0)) {
                 for (collection in z2dCollection) {
                     returning.add(collection.getOrNull(i))
                 }
@@ -304,7 +310,7 @@ fun <T> make1d(orientation: Orientation, z2dCollection: List<List<T>>): List<T?>
     return returning.toList()
 }
 
-fun <T> generate2dArrayList(xSize:Int, ySize:Int, orientation: Orientation): ArrayList<ArrayList<T?>> {
+fun <T> generate2dArrayList(xSize: Int, ySize: Int, orientation: Orientation): ArrayList<ArrayList<T?>> {
     val returning = ArrayList<ArrayList<T?>>()
     when (orientation) {
         Orientation.Horizontal -> {
@@ -329,7 +335,7 @@ fun <T> generate2dArrayList(xSize:Int, ySize:Int, orientation: Orientation): Arr
 
 
 
-fun <K, V> HashMap<K, V>.sortByList(list:List<K>): SortedMap<K, V> {
+fun <K, V> HashMap<K, V>.sortByList(list: List<K>): SortedMap<K, V> {
     return toSortedMap(compareBy { list.indexOf(it) })
 }
 
@@ -348,7 +354,7 @@ fun <T> List<List<T>>.reflectXY(): ArrayList<ArrayList<T>> {
 
 
 
-fun <T:Any> Observable<T>.pairwiseDefault(initialValue:T): Observable<Pair<T, T>> {
+fun <T : Any> Observable<T>.pairwiseDefault(initialValue: T): Observable<Pair<T, T>> {
     var lastValue = initialValue
     return this.map {
         val returning = Pair(lastValue, it)
@@ -363,14 +369,39 @@ fun String.toBigDecimal2(): BigDecimal {
     return if (this == "") BigDecimal.ZERO else this.toBigDecimal()
 }
 
-fun <A,B> zip(a:ObservableSource<A>, b:ObservableSource<B>) : Observable<Pair<A,B>> {
-    return Observable.zip(a,b, BiFunction<A, B, Pair<A,B>> { a, b -> Pair(a, b) })
+fun <A, B> zip(a: ObservableSource<A>, b: ObservableSource<B>) : Observable<Pair<A, B>> {
+    return Observable.zip(a, b, BiFunction<A, B, Pair<A, B>> { a, b -> Pair(a, b) })
 }
 
-fun <A,B,C> zip(a:ObservableSource<A>, b:ObservableSource<B>, c:ObservableSource<C>) : Observable<Triple<A,B,C>> {
-    return Observable.zip(a,b,c, Function3<A, B, C, Triple<A,B,C>> { a, b, c -> Triple(a, b, c) })
+fun <A, B, C> zip(a: ObservableSource<A>, b: ObservableSource<B>, c: ObservableSource<C>) : Observable<Triple<A, B, C>> {
+    return Observable.zip(a,
+        b,
+        c,
+        Function3<A, B, C, Triple<A, B, C>> { a, b, c -> Triple(a, b, c) })
 }
 
-fun <A,B,C,D> zip(a:ObservableSource<A>, b:ObservableSource<B>, c:ObservableSource<C>, d:ObservableSource<D>) : Observable<Quadruple<A,B,C,D>> {
-    return Observable.zip(a,b,c,d, Function4<A, B, C, D, Quadruple<A,B,C,D>> { a, b, c, d -> Quadruple(a, b, c, d) })
+fun <A, B, C, D> zip(
+    a: ObservableSource<A>,
+    b: ObservableSource<B>,
+    c: ObservableSource<C>,
+    d: ObservableSource<D>
+) : Observable<Quadruple<A, B, C, D>> {
+    return Observable.zip(a, b, c, d, Function4<A, B, C, D, Quadruple<A, B, C, D>> { a, b, c, d ->
+        Quadruple(
+            a,
+            b,
+            c,
+            d)
+    })
+}
+
+fun writeToFile(context: Context, fileName:String, data: String) {
+    try {
+        val outputStreamWriter =
+            OutputStreamWriter(context.openFileOutput(fileName, Context.MODE_PRIVATE))
+        outputStreamWriter.write(data)
+        outputStreamWriter.close()
+    } catch (e: IOException) {
+        Log.e("Exception", "File write failed: " + e.toString())
+    }
 }
