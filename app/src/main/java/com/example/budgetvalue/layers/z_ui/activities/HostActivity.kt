@@ -91,7 +91,10 @@ class HostActivity : AppCompatActivity() {
                     spends["Diabetic Supplies"] ?: "",
                     spends["Leli"] ?: "",
                     spends["Misc"] ?: "",
-                    spends["Gas"] ?: ""
+                    spends["Gas"] ?: "",
+                    "",
+                    spends["Vanity Food"] ?: "",
+                    spends["Emergency"] ?: ""
                 )
                 //
                 val spendsString = rows.joinToString("\n")
