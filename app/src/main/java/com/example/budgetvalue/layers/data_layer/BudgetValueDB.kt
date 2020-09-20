@@ -7,7 +7,7 @@ import com.example.budgetvalue.models.Account
 import com.example.budgetvalue.models.IncomeCategoryAmounts
 import com.example.budgetvalue.models.Transaction
 
-@Database(entities = [Transaction::class, Account::class, IncomeCategoryAmounts::class], version = 7)
+@Database(entities = [Transaction::class, Account::class, IncomeCategoryAmounts::class], version = 9)
 @TypeConverters(MyTypeConverters::class)
 abstract class BudgetValueDB : RoomDatabase() {
     abstract fun myDao(): MyDao

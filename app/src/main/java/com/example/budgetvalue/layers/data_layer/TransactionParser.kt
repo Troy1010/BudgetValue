@@ -2,11 +2,15 @@ package com.example.budgetvalue.layers.data_layer
 
 import android.net.Uri
 import com.example.budgetvalue.models.Transaction
+import com.example.tmcommonkotlin.logz
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class TransactionParser : ITransactionParser {
     override suspend fun parseInputStreamToTransactions(inputStream: InputStream) : List<Transaction> = withContext(Dispatchers.IO) {
@@ -16,10 +20,12 @@ class TransactionParser : ITransactionParser {
         while (iterator.hasNext()) {
             val row = ArrayList(iterator.next().split(","))
             // find date
-            var date: String? = null
+            var date: Date? = null
             for ((i, item) in row.withIndex()) {
                 if (Regex("""^[0-9]{13}${'$'}""").matches(item)) {
-                    date = row[i]
+                    logz(row[i])
+//                    date = SimpleDateFormat("MM/dd/yyyy").parse(row[i])
+                    date = Calendar.getInstance().time
                     row.removeAt(i)
                     break
                 }

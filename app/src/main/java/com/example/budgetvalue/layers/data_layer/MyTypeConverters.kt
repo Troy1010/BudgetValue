@@ -7,6 +7,9 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 import java.math.BigDecimal
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MyTypeConverters {
     companion object {
@@ -45,6 +48,18 @@ class MyTypeConverters {
         @JvmStatic
         fun fromStringToCategory(s: String): Category {
             return categoriesVM.getCategoryByName(s)
+        }
+
+        @TypeConverter
+        @JvmStatic
+        fun fromDateToString(x: Date): String {
+            return SimpleDateFormat("MM/dd/yyyy").format(x)
+        }
+
+        @TypeConverter
+        @JvmStatic
+        fun fromStringToDate(s: String): Date {
+            return SimpleDateFormat("MM/dd/yyyy").parse(s)!!
         }
     }
 }

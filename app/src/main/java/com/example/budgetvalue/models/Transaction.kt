@@ -5,10 +5,12 @@ import androidx.room.PrimaryKey
 import com.example.budgetvalue.layers.z_ui.misc.sum
 import com.google.gson.Gson
 import java.math.BigDecimal
+import java.util.*
+import kotlin.collections.HashMap
 
 @Entity
 data class Transaction(
-    var date: String?,
+    var date: Date,
     var description: String,
     var amount: BigDecimal,
     val categoryAmounts: HashMap<String, BigDecimal> = hashMapOf(),
