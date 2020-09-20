@@ -31,7 +31,7 @@ class CategoriesVM : ViewModel() {
         categoriesVM
         userAddedCategories.addAll(listOf(
             Category("Food", CategoryTypes.Always),
-            Category("Soda", CategoryTypes.Always),
+            Category("Drinks", CategoryTypes.Always),
             Category("Vanity Food", CategoryTypes.Always),
             Category("Improvements", CategoryTypes.Always),
             Category("Dentist", CategoryTypes.Always),
