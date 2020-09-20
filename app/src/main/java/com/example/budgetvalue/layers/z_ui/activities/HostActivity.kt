@@ -16,6 +16,7 @@ import com.example.budgetvalue.layers.view_models.SplitVM
 import com.example.budgetvalue.layers.view_models.TransactionsVM
 import com.example.budgetvalue.layers.z_ui.misc.sum
 import com.example.budgetvalue.util.observeOnce
+import com.example.budgetvalue.util.writeToFile
 import com.example.tmcommonkotlin.easyToast
 import com.example.tmcommonkotlin.logz
 import com.example.tmcommonkotlin.vmFactoryFactory
@@ -76,8 +77,9 @@ class HostActivity : AppCompatActivity() {
                     spends.add(transactionsVM.transactions.value.map { it.categoryAmounts[category.name] ?: BigDecimal.ZERO }.sum())
                 }
                 spends.add(0,splitVM.spentLeftToCategorize.value)
-                logz("Spends:${spends.joinToString(",")}")
                 // export
+                writeToFile(this, "TheSpends.txt", spends.joinToString(","))
+                easyToast("Export successful")
             }
         }
         return super.onOptionsItemSelected(item)
