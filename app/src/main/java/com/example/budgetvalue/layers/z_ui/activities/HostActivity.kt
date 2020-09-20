@@ -7,19 +7,30 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import com.example.budgetvalue.*
+import com.example.budgetvalue.layers.view_models.AccountsVM
+import com.example.budgetvalue.layers.view_models.CategoriesVM
+import com.example.budgetvalue.layers.view_models.SplitVM
 import com.example.budgetvalue.layers.view_models.TransactionsVM
+import com.example.budgetvalue.layers.z_ui.misc.sum
 import com.example.budgetvalue.util.observeOnce
 import com.example.tmcommonkotlin.easyToast
 import com.example.tmcommonkotlin.logz
 import com.example.tmcommonkotlin.vmFactoryFactory
 import kotlinx.android.synthetic.main.activity_host.*
+import java.math.BigDecimal
 
 class HostActivity : AppCompatActivity() {
     val appComponent by lazy { (applicationContext as App).appComponent }
     val transactionsVM: TransactionsVM by viewModels { vmFactoryFactory { TransactionsVM(appComponent.getRepo()) } }
     val navController by lazy { findNavController(R.id.fragNavHost) }
+
+    val categoriesVM: CategoriesVM by viewModels { vmFactoryFactory { CategoriesVM() } }
+    val accountsVM: AccountsVM by viewModels { vmFactoryFactory { AccountsVM(appComponent.getRepo()) }}
+    val splitVM: SplitVM by viewModels { vmFactoryFactory { SplitVM(appComponent.getRepo(), categoriesVM, transactionsVM.spends, accountsVM.accounts ) } }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +68,16 @@ class HostActivity : AppCompatActivity() {
                 transactionsVM.transactions.value.let {
                     logz("transactions:${it?.joinToString(",")}")
                 }
+            }
+            R.id.menu_export_spends -> {
+                // define spends
+                val spends = arrayListOf<BigDecimal>()
+                for (category in splitVM.activeCategories.value) {
+                    spends.add(transactionsVM.transactions.value.map { it.categoryAmounts[category.name] ?: BigDecimal.ZERO }.sum())
+                }
+                spends.add(0,splitVM.spentLeftToCategorize.value)
+                logz("Spends:${spends.joinToString(",")}")
+                // export
             }
         }
         return super.onOptionsItemSelected(item)

@@ -7,5 +7,8 @@
     <item
         android:id="@+id/menu_print_transactions"
         android:title="Print Transactions" />
+    <item
+        android:id="@+id/menu_export_spends"
+        android:title="Export Spends" />
 
 </menu>
