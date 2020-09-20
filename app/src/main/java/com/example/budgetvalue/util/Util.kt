@@ -394,14 +394,3 @@ fun <A, B, C, D> zip(
             d)
     })
 }
-
-fun writeToFile(context: Context, fileName:String, data: String) {
-    try {
-        val outputStreamWriter =
-            OutputStreamWriter(context.openFileOutput(fileName, Context.MODE_PRIVATE))
-        outputStreamWriter.write(data)
-        outputStreamWriter.close()
-    } catch (e: IOException) {
-        Log.e("Exception", "File write failed: " + e.toString())
-    }
-}
