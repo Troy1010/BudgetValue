@@ -3,6 +3,7 @@ package com.example.budgetvalue.layers.z_ui.misc
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -54,9 +55,10 @@ fun <T> TextView.rxBindOneWay(
     observable: Observable<T>,
     toDisplayStr:(T)->String = { it.toString() }
 ): Disposable {
-    return observable.distinctUntilChanged().subscribe { value ->
-        layoutParams?.let { setText(toDisplayStr(value)) }
-    }
+    return observable.distinctUntilChanged()
+        .observeOn(AndroidSchedulers.mainThread()).subscribe { value ->
+            layoutParams?.let { setText(toDisplayStr(value)) }
+        }
 }
 
 
