@@ -9,6 +9,8 @@ import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -20,10 +22,10 @@ class TransactionParser : ITransactionParser {
         while (iterator.hasNext()) {
             val row = ArrayList(iterator.next().split(","))
             // find date
-            var date: Date? = null
+            var date: LocalDate? = null
             for ((i, item) in row.withIndex()) {
                 if (Regex("""^[0-9]{13}${'$'}""").matches(item)) {
-                    date = SimpleDateFormat("yyyyMMdd").parse(row[i].substring(0,8))
+                    date = LocalDate.parse(row[i].substring(0,8), DateTimeFormatter.ofPattern("yyyyMMdd"))
                     row.removeAt(i)
                     break
                 }

@@ -9,6 +9,8 @@ import java.lang.reflect.Type
 import java.math.BigDecimal
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class MyTypeConverters {
@@ -52,14 +54,14 @@ class MyTypeConverters {
 
         @TypeConverter
         @JvmStatic
-        fun fromDateToString(x: Date): String {
-            return SimpleDateFormat("MM/dd/yyyy").format(x)
+        fun fromDateToString(x: LocalDate): String {
+            return x.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))
         }
 
         @TypeConverter
         @JvmStatic
-        fun fromStringToDate(s: String): Date {
-            return SimpleDateFormat("MM/dd/yyyy").parse(s)!!
+        fun fromStringToDate(s: String): LocalDate {
+            return LocalDate.parse(s, DateTimeFormatter.ofPattern("MM/dd/yyyy"))
         }
     }
 }

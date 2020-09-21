@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
 
 class CategorizeVM(val repo: Repo, transactionsVM: TransactionsVM): ViewModel() {
     val transaction = transactionsVM.uncategorizedSpends
@@ -24,7 +25,7 @@ class CategorizeVM(val repo: Repo, transactionsVM: TransactionsVM): ViewModel() 
     val transaction_ = transaction.toLiveData2()
     val dateAsString = transaction
         .map {
-            SimpleDateFormat("MM/dd/yyyy").format(it.date)
+            it.date.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))
         }.toBehaviorSubject()
     fun setTransactionCategory(category: Category) {
         val transaction_ = transaction.value ?: return
