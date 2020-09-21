@@ -23,9 +23,7 @@ class TransactionParser : ITransactionParser {
             var date: Date? = null
             for ((i, item) in row.withIndex()) {
                 if (Regex("""^[0-9]{13}${'$'}""").matches(item)) {
-                    logz(row[i])
-//                    date = SimpleDateFormat("MM/dd/yyyy").parse(row[i])
-                    date = Calendar.getInstance().time
+                    date = SimpleDateFormat("yyyyMMdd").parse(row[i].substring(0,8))
                     row.removeAt(i)
                     break
                 }
