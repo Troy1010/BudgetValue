@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.Orientation
+import com.example.budgetvalue.models.Transaction
 import com.example.tmcommonkotlin.logz
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Flowable
@@ -29,9 +30,49 @@ import java.io.OutputStreamWriter
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.math.BigDecimal
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.temporal.TemporalAdjusters
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
+
+fun Iterable<Transaction>.getBlocks(numOfWeeks: Int): HashMap<LocalDate, java.util.ArrayList<Transaction>> {
+    val transactionBlocks = HashMap<LocalDate, java.util.ArrayList<Transaction>>()
+    for (transaction in this) {
+        if (transactionBlocks[transaction.date.previousMonday()]==null)
+            transactionBlocks[transaction.date.previousMonday()] = arrayListOf()
+        transactionBlocks[transaction.date.previousMonday()]!!.add(transaction)
+    }
+    //
+    var i = 0
+    var mmm = arrayListOf<Transaction>()
+    var keysToRemove = arrayListOf<LocalDate>()
+    for (x in transactionBlocks.toSortedMap(compareBy { it })) {
+        val transactions = x.value
+        if (i==0) {
+            mmm = transactions
+        } else {
+            keysToRemove.add(x.key)
+            mmm.addAll(transactions)
+        }
+        i = (i + 1)%numOfWeeks
+    }
+    for (key in keysToRemove) {
+        transactionBlocks.remove(key)
+    }
+    return transactionBlocks
+}
+
+
+fun LocalDate.previousMonday(): LocalDate {
+    return this.with(TemporalAdjusters.next(DayOfWeek.MONDAY))
+}
+
+fun LocalDate.nextMonday(): LocalDate {
+    return this.with(TemporalAdjusters.previous(DayOfWeek.MONDAY))
+}
+
 
 fun <T> ObservableSource<T>.toLiveData2(): LiveData<T> {
     return convertRXToLiveData2(this)
@@ -347,6 +388,19 @@ fun <T> List<List<T>>.reflectXY(): ArrayList<ArrayList<T>> {
                 returning.add(ArrayList())
             }
             returning[xPos].add(this[yPos][xPos])
+        }
+    }
+    return returning
+}
+
+fun <T,V> List<HashMap<T,V>>.reflectXY(): HashMap<T,ArrayList<V>> {
+    val returning = HashMap<T,ArrayList<V>>()
+    for (yPos in this.indices) {
+        for (xPos in this[yPos].keys) {
+            if (returning[xPos] == null)
+                returning[xPos] = arrayListOf()
+            logz("xPos:${xPos} yPos:${yPos} ..adding:${this[yPos][xPos]}")
+            returning[xPos]!!.add(this[yPos][xPos]!!)
         }
     }
     return returning

@@ -13,12 +13,19 @@ import com.example.budgetvalue.layers.view_models.AccountsVM
 import com.example.budgetvalue.layers.view_models.CategoriesVM
 import com.example.budgetvalue.layers.view_models.SplitVM
 import com.example.budgetvalue.layers.view_models.TransactionsVM
-import com.example.budgetvalue.layers.z_ui.misc.sum
+import com.example.budgetvalue.models.Transaction
+import com.example.budgetvalue.util.getBlocks
+import com.example.budgetvalue.util.previousMonday
+import com.example.budgetvalue.util.reflectXY
 import com.example.tmcommonkotlin.easyToast
 import com.example.tmcommonkotlin.logz
 import com.example.tmcommonkotlin.vmFactoryFactory
 import kotlinx.android.synthetic.main.activity_host.*
 import java.math.BigDecimal
+import java.time.LocalDate
+import java.util.*
+import kotlin.collections.HashMap
+import kotlin.time.ExperimentalTime
 
 class HostActivity : AppCompatActivity() {
     val appComponent by lazy { (applicationContext as App).appComponent }
@@ -51,6 +58,7 @@ class HostActivity : AppCompatActivity() {
         return true
     }
 
+    @ExperimentalTime
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_import_transactions -> {
@@ -68,19 +76,34 @@ class HostActivity : AppCompatActivity() {
                 }
             }
             R.id.menu_print_spends -> {
-                // define spends
-                val spends = hashMapOf<String, BigDecimal>()
-                for (category in splitVM.activeCategories.value) {
-                    spends[category.name] = transactionsVM.transactions.value.map { it.categoryAmounts[category.name] ?: BigDecimal.ZERO }.sum()
+                // define transactionBlocks
+                val transactionBlocks = transactionsVM.transactions.value.getBlocks(2)
+                // define stringBlocks
+                val stringBlocks = arrayListOf<HashMap<String, String>>()
+                for (transactionBlock in transactionBlocks) {
+                    val curStringBlock = HashMap<String, String>()
+                    stringBlocks.add(curStringBlock)
+                    for (category in categoriesVM.categories.value) {
+                        curStringBlock[category.name] = transactionBlock.value
+                            .map { it.categoryAmounts[category.name] ?: BigDecimal.ZERO }
+                            .fold(BigDecimal.ZERO, BigDecimal::add)
+                            .toString()
+                    }
                 }
-                spends["Default"] = splitVM.incomeTotal.value
-                // convert spends -> spendsString
-                //  define rows
-                val rows = listOf(
+                //
+                logz("stringBlocks:${stringBlocks}")
+                logz("stringBlocks.reflectXY():${stringBlocks.reflectXY()}")
+                val spends = HashMap<String, String>()
+                for (x in stringBlocks.reflectXY()) {
+                    spends[x.key] = x.value.joinToString(",")
+                }
+                logz("spends:${spends}")
+                //
+                val column = listOf(
                     "",
                     "",
                     "",
-                    splitVM.incomeTotal.value,
+                    spends["Default"] ?: "",
                     "",
                     "",
                     spends["Food"] ?: "",
@@ -97,7 +120,7 @@ class HostActivity : AppCompatActivity() {
                     spends["Emergency"] ?: ""
                 )
                 //
-                val spendsString = rows.joinToString("\n")
+                val spendsString = column.joinToString("\n")
                 logz("spendsString:${spendsString}")
             }
         }
