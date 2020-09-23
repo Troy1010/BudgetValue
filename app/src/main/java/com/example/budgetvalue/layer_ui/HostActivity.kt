@@ -1,4 +1,4 @@
-package com.example.budgetvalue.layer_ui.activities
+package com.example.budgetvalue.layer_ui
 
 import android.app.Activity
 import android.content.Intent
@@ -9,10 +9,6 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.navigation.findNavController
 import com.example.budgetvalue.*
-import com.example.budgetvalue.layer_ui.AccountsVM
-import com.example.budgetvalue.layer_ui.CategoriesVM
-import com.example.budgetvalue.layer_ui.SplitVM
-import com.example.budgetvalue.layer_ui.TransactionsVM
 import com.example.budgetvalue.getBlocks
 import com.example.budgetvalue.reflectXY
 import com.example.tmcommonkotlin.easyToast
