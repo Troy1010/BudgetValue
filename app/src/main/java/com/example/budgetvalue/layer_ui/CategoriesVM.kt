@@ -3,8 +3,8 @@ package com.example.budgetvalue.layer_ui
 import androidx.lifecycle.ViewModel
 import com.example.budgetvalue.models.Category
 import com.example.budgetvalue.models.CategoryTypes
-import com.example.budgetvalue.util.SourceArrayList
-import com.example.budgetvalue.util.toBehaviorSubject
+import com.example.budgetvalue.SourceArrayList
+import com.example.budgetvalue.toBehaviorSubject
 import com.example.tmcommonkotlin.logz
 
 val categoriesVM by lazy { categoriesVM_ }

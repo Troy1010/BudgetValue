@@ -13,8 +13,8 @@ import com.example.budgetvalue.layer_ui.AccountsVM
 import com.example.budgetvalue.layer_ui.CategoriesVM
 import com.example.budgetvalue.layer_ui.SplitVM
 import com.example.budgetvalue.layer_ui.TransactionsVM
-import com.example.budgetvalue.util.getBlocks
-import com.example.budgetvalue.util.reflectXY
+import com.example.budgetvalue.getBlocks
+import com.example.budgetvalue.reflectXY
 import com.example.tmcommonkotlin.easyToast
 import com.example.tmcommonkotlin.logz
 import com.example.tmcommonkotlin.vmFactoryFactory

@@ -1,11 +1,9 @@
 @file:Suppress("NAME_SHADOWING")
 
-package com.example.budgetvalue.util
+package com.example.budgetvalue
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.res.Resources
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -13,7 +11,6 @@ import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.budgetvalue.Orientation
 import com.example.budgetvalue.models.Transaction
 import com.example.tmcommonkotlin.logz
 import io.reactivex.rxjava3.core.BackpressureStrategy
@@ -25,8 +22,6 @@ import io.reactivex.rxjava3.functions.Function3
 import io.reactivex.rxjava3.functions.Function4
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
-import java.io.IOException
-import java.io.OutputStreamWriter
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.math.BigDecimal

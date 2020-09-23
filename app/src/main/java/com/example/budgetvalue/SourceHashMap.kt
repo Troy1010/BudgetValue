@@ -1,4 +1,4 @@
-package com.example.budgetvalue.util
+package com.example.budgetvalue
 
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.ReplaySubject

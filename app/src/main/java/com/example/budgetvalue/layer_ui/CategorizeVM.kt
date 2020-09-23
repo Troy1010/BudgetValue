@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetvalue.layer_data.Repo
 import com.example.budgetvalue.models.Category
-import com.example.budgetvalue.util.toBehaviorSubject
-import com.example.budgetvalue.util.toLiveData2
+import com.example.budgetvalue.toBehaviorSubject
+import com.example.budgetvalue.toLiveData2
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter

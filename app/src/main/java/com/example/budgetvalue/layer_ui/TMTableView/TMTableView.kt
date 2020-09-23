@@ -7,10 +7,11 @@ import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 import com.example.budgetvalue.R
+import com.example.budgetvalue.combineLatestAsTuple
 import com.example.budgetvalue.layer_ui.TMTableView.ColumnWidthCalculator.generateColumnWidths
 import com.example.budgetvalue.layer_ui.TMTableView.ColumnWidthCalculator.generateIntrinsicWidths
 import com.example.budgetvalue.layer_ui.TMTableView.ColumnWidthCalculator.generateMinWidths
-import com.example.budgetvalue.util.*
+import com.example.budgetvalue.toBehaviorSubjectWithDefault
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.tableview_layout.view.*
 

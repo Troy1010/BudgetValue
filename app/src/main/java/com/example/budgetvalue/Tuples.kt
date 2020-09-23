@@ -1,4 +1,4 @@
-package com.example.budgetvalue.util
+package com.example.budgetvalue
 
 import java.io.Serializable
 
