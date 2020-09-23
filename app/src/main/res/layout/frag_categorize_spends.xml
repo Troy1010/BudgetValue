@@ -3,10 +3,10 @@
     <data>
         <variable
             name="categorizeSpendsVM"
-            type="com.example.budgetvalue.layers.view_models.CategorizeVM" />
+            type="com.example.budgetvalue.layers.layer_ui.CategorizeVM" />
         <variable
             name="transactionsVM"
-            type="com.example.budgetvalue.layers.view_models.TransactionsVM" />
+            type="com.example.budgetvalue.layers.layer_ui.TransactionsVM" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"

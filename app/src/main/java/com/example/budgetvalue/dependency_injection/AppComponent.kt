@@ -1,6 +1,6 @@
 package com.example.budgetvalue.dependency_injection
 
-import com.example.budgetvalue.layers.data_layer.Repo
+import com.example.budgetvalue.layer_data.Repo
 import dagger.Component
 import javax.inject.Singleton
 

@@ -2,11 +2,9 @@ package com.example.budgetvalue.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.budgetvalue.layers.z_ui.misc.sum
-import com.google.gson.Gson
+import com.example.budgetvalue.layer_ui.misc.sum
 import java.math.BigDecimal
 import java.time.LocalDate
-import java.util.*
 import kotlin.collections.HashMap
 
 @Entity

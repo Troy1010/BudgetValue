@@ -5,14 +5,14 @@
 
     <fragment
         android:id="@+id/categorizeSpendsFrag"
-        android:name="com.example.budgetvalue.layers.z_ui.CategorizeFrag"
+        android:name="com.example.budgetvalue.layer_ui.CategorizeFrag"
         android:label="CategorizeSpendsFrag" />
     <fragment
         android:id="@+id/accountsFrag"
-        android:name="com.example.budgetvalue.layers.z_ui.AccountsFrag"
+        android:name="com.example.budgetvalue.layer_ui.AccountsFrag"
         android:label="AccountsFrag" />
     <fragment
         android:id="@+id/splitFrag"
-        android:name="com.example.budgetvalue.layers.z_ui.SplitFrag"
+        android:name="com.example.budgetvalue.layer_ui.SplitFrag"
         android:label="SplitFrag" />
 </navigation>

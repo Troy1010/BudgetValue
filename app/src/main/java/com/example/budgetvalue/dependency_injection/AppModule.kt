@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
 import com.example.budgetvalue.SHARED_PREF_FILE_NAME
-import com.example.budgetvalue.layers.data_layer.*
+import com.example.budgetvalue.layer_data.*
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

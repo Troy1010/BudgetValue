@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".layers.z_ui.activities.HostActivity">
+    tools:context=".layer_ui.activities.HostActivity">
 
     <fragment
         android:id="@+id/fragNavHost"
-        android:name="com.example.budgetvalue.layers.z_ui.misc.NavHost"
+        android:name="com.example.budgetvalue.layer_ui.misc.NavHost"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
