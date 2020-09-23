@@ -1,12 +1,14 @@
 package com.example.budgetvalue.layer_ui.misc
 
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.Subject
 import java.math.BigDecimal
 
 fun <T> EditText.rxBind(bs: BehaviorSubject<T>, editTextRxBinder:EditTextRxBinder<T>) {
@@ -59,6 +61,10 @@ fun <T> TextView.rxBindOneWay(
         .observeOn(AndroidSchedulers.mainThread()).subscribe { value ->
             layoutParams?.let { setText(toDisplayStr(value)) }
         }
+}
+
+fun Button.setOnClickListener(subject: Subject<Unit>) {
+    setOnClickListener { subject.onNext(Unit) }
 }
 
 

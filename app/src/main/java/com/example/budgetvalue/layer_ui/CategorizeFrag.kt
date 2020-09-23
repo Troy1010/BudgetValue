@@ -11,33 +11,29 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.budgetvalue.App
 import com.example.budgetvalue.R
-import com.example.budgetvalue.databinding.FragCategorizeSpendsBinding
+import com.example.budgetvalue.layer_ui.misc.rxBindOneWay
 import com.example.tmcommonkotlin.GenericRecyclerViewAdapter
 import com.example.tmcommonkotlin.vmFactoryFactory
 import kotlinx.android.synthetic.main.frag_categorize_spends.*
 import kotlinx.android.synthetic.main.item_category_btn.view.*
 
-class CategorizeFrag : Fragment(), GenericRecyclerViewAdapter.Callbacks {
-    lateinit var mBinding: FragCategorizeSpendsBinding
+class CategorizeFrag : Fragment(R.layout.frag_categorize_spends), GenericRecyclerViewAdapter.Callbacks {
     val appComponent by lazy { (requireActivity().application as App).appComponent }
     val transactionsVM: TransactionsVM by activityViewModels { vmFactoryFactory { TransactionsVM(appComponent.getRepo()) } }
     val categorizeVM: CategorizeVM by viewModels { vmFactoryFactory { CategorizeVM(appComponent.getRepo(), transactionsVM) }}
     val categoriesVM: CategoriesVM by activityViewModels { vmFactoryFactory { CategoriesVM() } }
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        mBinding = DataBindingUtil.inflate(inflater, R.layout.frag_categorize_spends, container, false)
-        mBinding.lifecycleOwner = this
-        mBinding.categorizeSpendsVM = categorizeVM
-        mBinding.transactionsVM = transactionsVM
-        return mBinding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupViews()
+        setupBinds()
+    }
+
+    private fun setupBinds() {
+        textview_date.rxBindOneWay(categorizeVM.dateAsString)
+        textview_amount.rxBindOneWay(categorizeVM.transaction) { it.amount.toString() }
+        tv_description.rxBindOneWay(categorizeVM.transaction) { it.description }
+        textview_amount_left.rxBindOneWay(transactionsVM.uncategorizedSpendsSize)
     }
 
     private fun setupViews() {

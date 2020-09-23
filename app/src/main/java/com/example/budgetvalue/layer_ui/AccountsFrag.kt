@@ -10,7 +10,8 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.budgetvalue.App
 import com.example.budgetvalue.R
-import com.example.budgetvalue.databinding.FragAccountsBinding
+import com.example.budgetvalue.layer_ui.misc.rxBindOneWay
+import com.example.budgetvalue.layer_ui.misc.setOnClickListener
 import com.example.tmcommonkotlin.GenericRecyclerViewAdapter
 import com.example.tmcommonkotlin.vmFactoryFactory
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindToLifecycle
@@ -18,24 +19,19 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.frag_accounts.*
 import kotlinx.android.synthetic.main.item_account.view.*
 
-class AccountsFrag: Fragment(), GenericRecyclerViewAdapter.Callbacks {
+class AccountsFrag: Fragment(R.layout.frag_accounts), GenericRecyclerViewAdapter.Callbacks {
     val appComponent by lazy { (requireActivity().application as App).appComponent }
     val accountsVM : AccountsVM by viewModels { vmFactoryFactory { AccountsVM(appComponent.getRepo()) } }
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val mBinding: FragAccountsBinding = DataBindingUtil.inflate(inflater, R.layout.frag_accounts, container, false)
-        mBinding.lifecycleOwner = this
-        mBinding.accountsVM = accountsVM
-        return mBinding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupViews()
+        setupBinds()
         setupObservers()
+    }
+
+    private fun setupBinds() {
+        btn_add_account.setOnClickListener(accountsVM.intentAddAccount)
     }
 
     private fun setupViews() {

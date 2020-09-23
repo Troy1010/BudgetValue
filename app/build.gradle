@@ -16,10 +16,6 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
-    buildFeatures{
-        dataBinding = true
-    }
-
     defaultConfig {
         applicationId "com.example.budgetvalue"
         minSdkVersion 26
