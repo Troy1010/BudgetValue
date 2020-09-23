@@ -10,14 +10,20 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.budgetvalue.App
 import com.example.budgetvalue.R
+import com.example.budgetvalue.combineLatestAsTuple
 import com.example.budgetvalue.layer_ui.misc.rxBindOneWay
 import com.example.budgetvalue.layer_ui.misc.setOnClickListener
 import com.example.tmcommonkotlin.GenericRecyclerViewAdapter
+import com.example.tmcommonkotlin.logz
 import com.example.tmcommonkotlin.vmFactoryFactory
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindToLifecycle
+import com.trello.rxlifecycle4.kotlin.bind
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.frag_accounts.*
 import kotlinx.android.synthetic.main.item_account.view.*
+import kotlinx.coroutines.delay
+import java.util.concurrent.TimeUnit
 
 class AccountsFrag: Fragment(R.layout.frag_accounts), GenericRecyclerViewAdapter.Callbacks {
     val appComponent by lazy { (requireActivity().application as App).appComponent }
@@ -39,20 +45,14 @@ class AccountsFrag: Fragment(R.layout.frag_accounts), GenericRecyclerViewAdapter
         recyclerview_accounts.adapter = GenericRecyclerViewAdapter(this, requireContext(), R.layout.item_account)
     }
 
-    var bNotifyDataSetChanged = true
     private fun setupObservers() {
-        accountsVM.intentAddAccount.bindToLifecycle(viewLifecycleOwner).subscribe {
-            bNotifyDataSetChanged = true
-        }
-        accountsVM.intentDeleteAccount.bindToLifecycle(viewLifecycleOwner).subscribe {
-            bNotifyDataSetChanged = true
-        }
-        accountsVM.accounts.bindToLifecycle(viewLifecycleOwner).observeOn(AndroidSchedulers.mainThread()).subscribe {
-            if (bNotifyDataSetChanged) {
-                bNotifyDataSetChanged = false
+        accountsVM.intentAddAccount.mergeWith(accountsVM.intentDeleteAccount.map { Unit } )
+            .flatMap { accountsVM.accounts.take(2).skip(1) }
+            .bindToLifecycle(viewLifecycleOwner)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
                 recyclerview_accounts.adapter?.notifyDataSetChanged()
             }
-        }
     }
 
     override fun bindRecyclerItemView(view: View, i: Int) {
