@@ -18,3 +18,5 @@
 *.log
 
 app/schemas/com.example.budgetvalue.layers.data_layer.BudgetValueDB/9.json
+
+app/schemas/com.example.budgetvalue.layer_data.BudgetValueDB/9.json
