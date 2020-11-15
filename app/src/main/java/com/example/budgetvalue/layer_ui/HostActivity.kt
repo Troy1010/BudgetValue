@@ -11,9 +11,9 @@ import androidx.navigation.findNavController
 import com.example.budgetvalue.*
 import com.example.budgetvalue.getBlocks
 import com.example.budgetvalue.reflectXY
-import com.tminus1010.tmcommonkotlin.easyToast
-import com.tminus1010.tmcommonkotlin.logz
-import com.tminus1010.tmcommonkotlin.vmFactoryFactory
+import com.tminus1010.tmcommonkotlin.misc.easyToast
+import com.tminus1010.tmcommonkotlin.misc.logz
+import com.tminus1010.tmcommonkotlin.misc.vmFactoryFactory
 import kotlinx.android.synthetic.main.activity_host.*
 import java.math.BigDecimal
 import kotlin.collections.HashMap

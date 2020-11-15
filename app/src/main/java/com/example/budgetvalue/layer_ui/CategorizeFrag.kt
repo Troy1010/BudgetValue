@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.budgetvalue.App
 import com.example.budgetvalue.R
 import com.example.budgetvalue.layer_ui.misc.rxBindOneWay
-import com.tminus1010.tmcommonkotlin.GenericRecyclerViewAdapter
-import com.tminus1010.tmcommonkotlin.vmFactoryFactory
+import com.tminus1010.tmcommonkotlin.misc.GenericRecyclerViewAdapter
+import com.tminus1010.tmcommonkotlin.misc.vmFactoryFactory
 import kotlinx.android.synthetic.main.frag_categorize_spends.*
 import kotlinx.android.synthetic.main.item_category_btn.view.*
 

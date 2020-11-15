@@ -57,8 +57,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     // TMCommonKotlin
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin:1.0.23'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-tuple:1.0.24'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-misc:1.0.26'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-tuple:1.0.26'
     // ViewModel/LiveData
     def lifecycle_version = "2.2.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"

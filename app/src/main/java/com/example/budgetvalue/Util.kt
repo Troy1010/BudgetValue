@@ -12,10 +12,10 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.models.Transaction
-import com.tminus1010.tmcommonkotlin.logz
-import com.tminus1010.tmcommonkotlin.Box
-import com.tminus1010.tmcommonkotlin.Quadruple
-import com.tminus1010.tmcommonkotlin.Quintuple
+import com.tminus1010.tmcommonkotlin.misc.logz
+import com.tminus1010.tmcommonkotlin.tuple.Box
+import com.tminus1010.tmcommonkotlin.tuple.Quadruple
+import com.tminus1010.tmcommonkotlin.tuple.Quintuple
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
