@@ -5,7 +5,7 @@ import javax.inject.Inject
 class Repo @Inject constructor(
     transactionParser: TransactionParser,
     sharedPrefWrapper: ISharedPrefWrapper,
-    val myDao: MyDao
+    myDao: MyDao
 ) : ITransactionParser by transactionParser,
     ISharedPrefWrapper by sharedPrefWrapper,
     MyDao by myDao

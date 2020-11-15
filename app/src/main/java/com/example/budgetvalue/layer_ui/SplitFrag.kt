@@ -15,7 +15,7 @@ import com.example.budgetvalue.layer_ui.misc.rxBind
 import com.example.budgetvalue.layer_ui.misc.rxBindOneWay
 import com.example.budgetvalue.reflectXY
 import com.example.budgetvalue.toBigDecimal2
-import com.example.tmcommonkotlin.vmFactoryFactory
+import com.tminus1010.tmcommonkotlin.vmFactoryFactory
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindToLifecycle
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable

@@ -2,30 +2,30 @@ package com.example.budgetvalue
 
 import java.io.Serializable
 
-public data class Single<out A>(
+data class Single<out A>(
     val first: A
 ) : Serializable {
-    public override fun toString(): String = "($first)"
+    override fun toString(): String = "($first)"
 }
-public fun <T> Single<T>.toList(): List<T> = listOf(first)
+fun <T> Single<T>.toList(): List<T> = listOf(first)
 
-public data class Quadruple<out A, out B, out C, out D>(
+data class Quadruple<out A, out B, out C, out D>(
     val first: A,
     val second: B,
     val third: C,
     val fourth: D
 ) : Serializable {
-    public override fun toString(): String = "($first, $second, $third, $fourth)"
+    override fun toString(): String = "($first, $second, $third, $fourth)"
 }
-public fun <T> Quadruple<T, T, T, T>.toList(): List<T> = listOf(first, second, third, fourth)
+fun <T> Quadruple<T, T, T, T>.toList(): List<T> = listOf(first, second, third, fourth)
 
-public data class Quintuple<out A, out B, out C, out D, out E>(
+data class Quintuple<out A, out B, out C, out D, out E>(
     val first: A,
     val second: B,
     val third: C,
     val fourth: D,
     val fifth: E
 ) : Serializable {
-    public override fun toString(): String = "($first, $second, $third, $fourth, $fifth)"
+    override fun toString(): String = "($first, $second, $third, $fourth, $fifth)"
 }
-public fun <T> Quintuple<T, T, T, T, T>.toList(): List<T> = listOf(first, second, third, fourth, fifth)
+fun <T> Quintuple<T, T, T, T, T>.toList(): List<T> = listOf(first, second, third, fourth, fifth)

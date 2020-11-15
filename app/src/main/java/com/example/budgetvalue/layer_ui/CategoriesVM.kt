@@ -5,7 +5,7 @@ import com.example.budgetvalue.models.Category
 import com.example.budgetvalue.models.CategoryTypes
 import com.example.budgetvalue.SourceArrayList
 import com.example.budgetvalue.toBehaviorSubject
-import com.example.tmcommonkotlin.logz
+import com.tminus1010.tmcommonkotlin.logz
 
 val categoriesVM by lazy { categoriesVM_ }
 private lateinit var categoriesVM_: CategoriesVM

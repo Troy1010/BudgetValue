@@ -13,9 +13,9 @@ import com.example.budgetvalue.R
 import com.example.budgetvalue.combineLatestAsTuple
 import com.example.budgetvalue.layer_ui.misc.rxBindOneWay
 import com.example.budgetvalue.layer_ui.misc.setOnClickListener
-import com.example.tmcommonkotlin.GenericRecyclerViewAdapter
-import com.example.tmcommonkotlin.logz
-import com.example.tmcommonkotlin.vmFactoryFactory
+import com.tminus1010.tmcommonkotlin.GenericRecyclerViewAdapter
+import com.tminus1010.tmcommonkotlin.logz
+import com.tminus1010.tmcommonkotlin.vmFactoryFactory
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindToLifecycle
 import com.trello.rxlifecycle4.kotlin.bind
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
