@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.models.Transaction
 import com.tminus1010.tmcommonkotlin.logz
+import com.tminus1010.tmcommonkotlin_tuple.Box
+import com.tminus1010.tmcommonkotlin_tuple.Quadruple
+import com.tminus1010.tmcommonkotlin_tuple.Quintuple
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
@@ -159,11 +162,11 @@ fun <A, B> combineLatestAsTuple(a: ObservableSource<A>, b: ObservableSource<B>):
     }
 }
 
-fun <A> combineLatestAsTuple(a: ObservableSource<A>): Observable<Single<A>> {
+fun <A> combineLatestAsTuple(a: ObservableSource<A>): Observable<Box<A>> {
     return Observable.combineLatest(
         listOf(a)
     ) {
-        Single(
+        Box(
             it[0] as A
         )
     }
