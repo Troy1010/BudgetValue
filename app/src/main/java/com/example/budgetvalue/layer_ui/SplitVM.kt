@@ -40,13 +40,13 @@ class SplitVM(
             val newIncomeCA = SourceHashMap<Category, BigDecimal>()
             val oldIncomeCA = repo.readIncomeCA().associate { it.category to it.amount }
             for (category in activeCategories) {
-                newIncomeCA[category] = oldIncomeCA[category] ?: BigDecimal.ZERO
+                newIncomeCA[category] = oldIncomeCA[category.name] ?: BigDecimal.ZERO
             }
             Pair(activeCategories, newIncomeCA)
         }.doOnNext{
             // bind IncomeCA to database
             it.second.observable.subscribe({
-                repo.writeIncomeCA(it.map { IncomeCategoryAmounts(it.key, it.value) })
+                repo.writeIncomeCA(it.map { IncomeCategoryAmounts(it.key.name, it.value) })
             }) { logz("hhh:${it.narrate()}") }
         }.toBehaviorSubject()
     val activeCategories = mainStream

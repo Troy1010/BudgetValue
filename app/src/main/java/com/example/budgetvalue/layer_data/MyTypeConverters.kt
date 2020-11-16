@@ -1,8 +1,6 @@
 package com.example.budgetvalue.layer_data
 
 import androidx.room.TypeConverter
-import com.example.budgetvalue.layer_ui.categoriesVM
-import com.example.budgetvalue.model_app.Category
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
@@ -36,18 +34,6 @@ class MyTypeConverters {
         fun toCategoryAmounts(s: String): HashMap<String, BigDecimal> {
             val type: Type = object : TypeToken<HashMap<String, BigDecimal>>() {}.type
             return Gson().fromJson<HashMap<String, BigDecimal>>(s, type)
-        }
-
-        @TypeConverter
-        @JvmStatic
-        fun fromCategoryToString(x: Category): String {
-            return x.name
-        }
-
-        @TypeConverter
-        @JvmStatic
-        fun fromStringToCategory(s: String): Category {
-            return categoriesVM.getCategoryByName(s)
         }
 
         @TypeConverter

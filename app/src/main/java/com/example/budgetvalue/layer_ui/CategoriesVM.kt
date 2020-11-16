@@ -7,8 +7,6 @@ import com.example.budgetvalue.SourceArrayList
 import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 
-val categoriesVM by lazy { categoriesVM_ }
-private lateinit var categoriesVM_: CategoriesVM
 class CategoriesVM : ViewModel() {
     val defaultCategory = Category("Default", CategoryTypes.Default)
     val incomeCategory = Category("Income", CategoryTypes.Income)
@@ -27,8 +25,6 @@ class CategoriesVM : ViewModel() {
         return category?:defaultCategory
     }
     init {
-        categoriesVM_ = this
-        categoriesVM
         userAddedCategories.addAll(listOf(
             Category("Food", CategoryTypes.Always),
             Category("Drinks", CategoryTypes.Always),

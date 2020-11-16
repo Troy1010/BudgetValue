@@ -68,7 +68,7 @@ interface MyDao {
     suspend fun addIncomeCategoryAmount(incomeCategoryAmounts: IncomeCategoryAmounts)
 
     suspend fun addIncomeCategoryAmount(category: Category) {
-        addIncomeCategoryAmount(IncomeCategoryAmounts(category))
+        addIncomeCategoryAmount(IncomeCategoryAmounts(category.name))
     }
 
     @Delete
