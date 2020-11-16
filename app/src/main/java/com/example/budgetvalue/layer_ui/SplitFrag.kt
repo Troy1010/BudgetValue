@@ -65,16 +65,16 @@ class SplitFrag : Fragment(R.layout.frag_split) {
                 listOf(
                     headerRecipeBuilder.buildOne("Category")
                             + cellRecipeBuilder.buildOne("Default")
-                            + cellRecipeBuilder.build(categories),
+                            + cellRecipeBuilder.buildMany(categories),
                     headerRecipeBuilder.buildOne("Spent")
                             + oneWayCellRecipeBuilder.buildOne(splitVM.spentLeftToCategorize)
-                            + cellRecipeBuilder.build(spents),
+                            + cellRecipeBuilder.buildMany(spents),
                     headerRecipeBuilder.buildOne("Income")
                             + oneWayCellRecipeBuilder.buildOne(splitVM.incomeLeftToCategorize)
-                            + incomeRecipeBuilder.build(incomes),
+                            + incomeRecipeBuilder.buildMany(incomes),
                     headerRecipeBuilder_numbered.buildOne(Pair("Budgeted",splitVM.incomeTotal))
                             + oneWayCellRecipeBuilder.buildOne(splitVM.uncategorizedBudgeted)
-                            + oneWayCellRecipeBuilder.build(budgeteds)
+                            + oneWayCellRecipeBuilder.buildMany(budgeteds)
                 ).reflectXY()
             )
         }

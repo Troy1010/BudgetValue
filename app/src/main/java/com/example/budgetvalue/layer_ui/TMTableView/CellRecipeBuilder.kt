@@ -9,7 +9,7 @@ class CellRecipeBuilder<V : View, D : Any>(
     val viewFactory: () -> V,
     val bindAction: (V, D) -> Unit
 ) {
-    fun build(datas: List<D>): List<CellRecipe<V, D>> {
+    fun buildMany(datas: List<D>): List<CellRecipe<V, D>> {
         return datas.map { CellRecipe(viewFactory, it, bindAction) }
     }
     fun buildOne(data: D): List<CellRecipe<V, D>> {
