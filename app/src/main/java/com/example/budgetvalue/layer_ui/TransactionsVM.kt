@@ -18,7 +18,7 @@ class TransactionsVM(private val repo: Repo):ViewModel() {
         .map { it.size.toString() }
     fun importTransactions(inputStream: InputStream) {
         viewModelScope.launch(Dispatchers.IO) {
-            val transactions = repo.parseInputStreamToTransactions(inputStream)
+            val transactions = repo.parseToTransactions(inputStream)
             repo.clear()
             repo.addTransaction(transactions)
         }

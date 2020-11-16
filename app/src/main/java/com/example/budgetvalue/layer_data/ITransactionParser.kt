@@ -4,5 +4,5 @@ import com.example.budgetvalue.model_data.Transaction
 import java.io.InputStream
 
 interface ITransactionParser {
-    suspend fun parseInputStreamToTransactions(inputStream: InputStream): List<Transaction>
+    suspend fun parseToTransactions(inputStream: InputStream): List<Transaction>
 }

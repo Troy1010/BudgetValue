@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter
 import kotlin.collections.ArrayList
 
 class TransactionParser : ITransactionParser {
-    override suspend fun parseInputStreamToTransactions(inputStream: InputStream) : List<Transaction> = withContext(Dispatchers.IO) {
+    override suspend fun parseToTransactions(inputStream: InputStream) : List<Transaction> = withContext(Dispatchers.IO) {
         val transactions = ArrayList<Transaction>()
         val reader = BufferedReader(InputStreamReader(inputStream))
         val iterator = reader.lineSequence().iterator()
