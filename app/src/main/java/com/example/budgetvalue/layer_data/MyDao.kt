@@ -1,10 +1,10 @@
 package com.example.budgetvalue.layer_data
 
 import androidx.room.*
-import com.example.budgetvalue.models.Account
-import com.example.budgetvalue.models.Category
-import com.example.budgetvalue.models.IncomeCategoryAmounts
-import com.example.budgetvalue.models.Transaction
+import com.example.budgetvalue.model_data.Account
+import com.example.budgetvalue.model_app.Category
+import com.example.budgetvalue.model_data.IncomeCategoryAmounts
+import com.example.budgetvalue.model_data.Transaction
 import io.reactivex.rxjava3.core.Observable
 
 @Dao

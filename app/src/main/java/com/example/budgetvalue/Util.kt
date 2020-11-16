@@ -11,8 +11,8 @@ import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.budgetvalue.models.Transaction
-import com.tminus1010.tmcommonkotlin.misc.logz
+import com.example.budgetvalue.model_data.Transaction
+import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import com.tminus1010.tmcommonkotlin.tuple.Quadruple
 import com.tminus1010.tmcommonkotlin.tuple.Quintuple

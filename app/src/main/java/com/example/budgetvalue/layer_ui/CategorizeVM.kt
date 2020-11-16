@@ -3,7 +3,7 @@ package com.example.budgetvalue.layer_ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetvalue.layer_data.Repo
-import com.example.budgetvalue.models.Category
+import com.example.budgetvalue.model_app.Category
 import com.example.budgetvalue.toBehaviorSubject
 import com.example.budgetvalue.toLiveData2
 import kotlinx.coroutines.Dispatchers

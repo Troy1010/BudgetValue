@@ -11,9 +11,9 @@ import androidx.navigation.findNavController
 import com.example.budgetvalue.*
 import com.example.budgetvalue.getBlocks
 import com.example.budgetvalue.reflectXY
-import com.tminus1010.tmcommonkotlin.misc.easyToast
-import com.tminus1010.tmcommonkotlin.misc.logz
-import com.tminus1010.tmcommonkotlin.misc.vmFactoryFactory
+import com.tminus1010.tmcommonkotlin.misc.toast
+import com.tminus1010.tmcommonkotlin.logz.logz
+import com.tminus1010.tmcommonkotlin.misc.createVmFactory
 import kotlinx.android.synthetic.main.activity_host.*
 import java.math.BigDecimal
 import kotlin.collections.HashMap
@@ -21,12 +21,12 @@ import kotlin.time.ExperimentalTime
 
 class HostActivity : AppCompatActivity() {
     val appComponent by lazy { (applicationContext as App).appComponent }
-    val transactionsVM: TransactionsVM by viewModels { vmFactoryFactory { TransactionsVM(appComponent.getRepo()) } }
+    val transactionsVM: TransactionsVM by viewModels { createVmFactory { TransactionsVM(appComponent.getRepo()) } }
     val navController by lazy { findNavController(R.id.fragNavHost) }
 
-    val categoriesVM: CategoriesVM by viewModels { vmFactoryFactory { CategoriesVM() } }
-    val accountsVM: AccountsVM by viewModels { vmFactoryFactory { AccountsVM(appComponent.getRepo()) }}
-    val splitVM: SplitVM by viewModels { vmFactoryFactory { SplitVM(appComponent.getRepo(), categoriesVM, transactionsVM.spends, accountsVM.accounts ) } }
+    val categoriesVM: CategoriesVM by viewModels { createVmFactory { CategoriesVM() } }
+    val accountsVM: AccountsVM by viewModels { createVmFactory { AccountsVM(appComponent.getRepo()) }}
+    val splitVM: SplitVM by viewModels { createVmFactory { SplitVM(appComponent.getRepo(), categoriesVM, transactionsVM.spends, accountsVM.accounts ) } }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -124,10 +124,10 @@ class HostActivity : AppCompatActivity() {
             try {
                 val inputStream = contentResolver.openInputStream(intent!!.data!!)!!
                 transactionsVM.importTransactions(inputStream)
-                easyToast("Import successful")
+                toast("Import successful")
             } catch (e: Exception) {
                 e.printStackTrace()
-                easyToast("Import failed")
+                toast("Import failed")
             }
         }
         super.onActivityResult(requestCode, resultCode, intent)

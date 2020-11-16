@@ -1,7 +1,7 @@
 package com.example.budgetvalue.layer_data
 
 import android.content.SharedPreferences
-import com.example.budgetvalue.models.IncomeCategoryAmounts
+import com.example.budgetvalue.model_data.IncomeCategoryAmounts
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import javax.inject.Inject

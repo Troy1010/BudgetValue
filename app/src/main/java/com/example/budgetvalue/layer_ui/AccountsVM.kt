@@ -3,7 +3,7 @@ package com.example.budgetvalue.layer_ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetvalue.layer_data.Repo
-import com.example.budgetvalue.models.Account
+import com.example.budgetvalue.model_data.Account
 import com.example.budgetvalue.toBehaviorSubject
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.subjects.PublishSubject

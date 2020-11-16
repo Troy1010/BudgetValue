@@ -2,7 +2,7 @@ package com.example.budgetvalue.layer_data
 
 import androidx.room.TypeConverter
 import com.example.budgetvalue.layer_ui.categoriesVM
-import com.example.budgetvalue.models.Category
+import com.example.budgetvalue.model_app.Category
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type

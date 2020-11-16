@@ -3,9 +3,9 @@ package com.example.budgetvalue.layer_data
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.budgetvalue.models.Account
-import com.example.budgetvalue.models.IncomeCategoryAmounts
-import com.example.budgetvalue.models.Transaction
+import com.example.budgetvalue.model_data.Account
+import com.example.budgetvalue.model_data.IncomeCategoryAmounts
+import com.example.budgetvalue.model_data.Transaction
 
 @Database(entities = [Transaction::class, Account::class, IncomeCategoryAmounts::class], version = 9)
 @TypeConverters(MyTypeConverters::class)

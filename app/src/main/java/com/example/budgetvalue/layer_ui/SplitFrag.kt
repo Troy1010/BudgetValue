@@ -15,7 +15,7 @@ import com.example.budgetvalue.layer_ui.misc.rxBind
 import com.example.budgetvalue.layer_ui.misc.rxBindOneWay
 import com.example.budgetvalue.reflectXY
 import com.example.budgetvalue.toBigDecimal2
-import com.tminus1010.tmcommonkotlin.misc.vmFactoryFactory
+import com.tminus1010.tmcommonkotlin.misc.createVmFactory
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindToLifecycle
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -26,10 +26,10 @@ import java.math.BigDecimal
 
 class SplitFrag : Fragment(R.layout.frag_split) {
     val appComponent by lazy { (requireActivity().application as App).appComponent }
-    val categoriesVM: CategoriesVM by activityViewModels { vmFactoryFactory { CategoriesVM() } }
-    val transactionsVM: TransactionsVM by activityViewModels { vmFactoryFactory { TransactionsVM(appComponent.getRepo()) } }
-    val accountsVM: AccountsVM by activityViewModels{ vmFactoryFactory { AccountsVM(appComponent.getRepo()) }}
-    val splitVM: SplitVM by activityViewModels { vmFactoryFactory { SplitVM(appComponent.getRepo(), categoriesVM, transactionsVM.spends, accountsVM.accounts ) } }
+    val categoriesVM: CategoriesVM by activityViewModels { createVmFactory { CategoriesVM() } }
+    val transactionsVM: TransactionsVM by activityViewModels { createVmFactory { TransactionsVM(appComponent.getRepo()) } }
+    val accountsVM: AccountsVM by activityViewModels{ createVmFactory { AccountsVM(appComponent.getRepo()) }}
+    val splitVM: SplitVM by activityViewModels { createVmFactory { SplitVM(appComponent.getRepo(), categoriesVM, transactionsVM.spends, accountsVM.accounts ) } }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

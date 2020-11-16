@@ -1,4 +1,4 @@
-package com.example.budgetvalue.models
+package com.example.budgetvalue.model_app
 
 data class Category (
     var name:String,
