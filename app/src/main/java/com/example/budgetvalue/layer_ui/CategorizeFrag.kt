@@ -28,8 +28,8 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize_spends), GenericRecycle
 
     private fun setupBinds() {
         textview_date.rxBindOneWay(categorizeVM.dateAsString)
-        textview_amount.rxBindOneWay(categorizeVM.transaction) { it.amount.toString() }
-        tv_description.rxBindOneWay(categorizeVM.transaction) { it.description }
+        textview_amount.rxBindOneWay(categorizeVM.transactionBox) { it.first?.amount?.toString()?:"" }
+        tv_description.rxBindOneWay(categorizeVM.transactionBox) { it.first?.description?:"" }
         textview_amount_left.rxBindOneWay(transactionsVM.uncategorizedSpendsSize)
     }
 

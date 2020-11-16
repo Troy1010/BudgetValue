@@ -55,14 +55,15 @@ fun <T> EditText.rxBind(
 
 fun <T> TextView.rxBindOneWay(
     observable: Observable<T>,
-    getDisplayable:((T)->Any)? = null
+    provideDisplayable:((T)->Any)? = null
 ): Disposable {
-    return observable.distinctUntilChanged()
-        .observeOn(AndroidSchedulers.mainThread()).subscribe { value ->
-            layoutParams?.let {
-                val value_ = getDisplayable?.invoke(value) ?: value
-                setText(value_.toString())
-            }
+    return observable
+        .distinctUntilChanged()
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe {
+            if (this.layoutParams!=null)
+                this.text = (provideDisplayable?.invoke(it) ?: it)
+                    .toString()
         }
 }
 
