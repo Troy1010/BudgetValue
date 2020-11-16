@@ -16,6 +16,7 @@ import com.example.budgetvalue.layer_ui.misc.rxBindOneWay
 import com.example.budgetvalue.reflectXY
 import com.example.budgetvalue.toBigDecimal2
 import com.tminus1010.tmcommonkotlin.misc.createVmFactory
+import com.tminus1010.tmcommonkotlin_rx.observe
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindToLifecycle
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -53,30 +54,34 @@ class SplitFrag : Fragment(R.layout.frag_split) {
             { View.inflate(context, R.layout.tableview_basic_cell, null) as TextView },
             { v, observable -> v.rxBindOneWay(observable)}
         )
-        splitVM.rowDatas.observeOn(AndroidSchedulers.mainThread()).bindToLifecycle(viewLifecycleOwner).subscribe {
-            val rowDatas = it
-            val categories = rowDatas.map { it.category.name }
-            val spents = rowDatas.map { it.spent.toString() }
-            val incomes = rowDatas.map { it.income }
-            val budgeteds = rowDatas.map { rowData ->
-                rowData.income.map { rowData.getBudgeted2(it) }
+        splitVM.rowDatas
+            .observeOn(AndroidSchedulers.mainThread())
+            .observe(viewLifecycleOwner) {
+                val rowDatas = it
+                val categories = rowDatas
+                    .map { it.category.name }
+                val spents = rowDatas
+                    .map { it.spent.toString() }
+                val incomes = rowDatas
+                    .map { it.income }
+                val budgeteds = rowDatas
+                    .map { rowData -> rowData.income.map { rowData.getBudgeted2(it) } }
+                myTableView_1.setRecipes(
+                    listOf(
+                        headerRecipeBuilder.buildOne("Category")
+                                + cellRecipeBuilder.buildOne("Default")
+                                + cellRecipeBuilder.buildMany(categories),
+                        headerRecipeBuilder.buildOne("Spent")
+                                + oneWayCellRecipeBuilder.buildOne(splitVM.spentLeftToCategorize)
+                                + cellRecipeBuilder.buildMany(spents),
+                        headerRecipeBuilder.buildOne("Income")
+                                + oneWayCellRecipeBuilder.buildOne(splitVM.incomeLeftToCategorize)
+                                + incomeRecipeBuilder.buildMany(incomes),
+                        headerRecipeBuilder_numbered.buildOne(Pair("Budgeted",splitVM.incomeTotal))
+                                + oneWayCellRecipeBuilder.buildOne(splitVM.uncategorizedBudgeted)
+                                + oneWayCellRecipeBuilder.buildMany(budgeteds)
+                    ).reflectXY()
+                )
             }
-            myTableView_1.setRecipes(
-                listOf(
-                    headerRecipeBuilder.buildOne("Category")
-                            + cellRecipeBuilder.buildOne("Default")
-                            + cellRecipeBuilder.buildMany(categories),
-                    headerRecipeBuilder.buildOne("Spent")
-                            + oneWayCellRecipeBuilder.buildOne(splitVM.spentLeftToCategorize)
-                            + cellRecipeBuilder.buildMany(spents),
-                    headerRecipeBuilder.buildOne("Income")
-                            + oneWayCellRecipeBuilder.buildOne(splitVM.incomeLeftToCategorize)
-                            + incomeRecipeBuilder.buildMany(incomes),
-                    headerRecipeBuilder_numbered.buildOne(Pair("Budgeted",splitVM.incomeTotal))
-                            + oneWayCellRecipeBuilder.buildOne(splitVM.uncategorizedBudgeted)
-                            + oneWayCellRecipeBuilder.buildMany(budgeteds)
-                ).reflectXY()
-            )
-        }
     }
 }
