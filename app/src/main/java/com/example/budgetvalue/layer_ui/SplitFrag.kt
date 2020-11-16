@@ -10,7 +10,7 @@ import androidx.fragment.app.activityViewModels
 import com.example.budgetvalue.App
 import com.example.budgetvalue.R
 import com.example.budgetvalue.layer_ui.TMTableView.*
-import com.example.budgetvalue.layer_ui.TMTableView.CellRecipeBuilder.Default
+import com.example.budgetvalue.layer_ui.TMTableView.CellRecipeBuilder.DefaultType
 import com.example.budgetvalue.layer_ui.misc.rxBind
 import com.example.budgetvalue.layer_ui.misc.rxBindOneWay
 import com.example.budgetvalue.reflectXY
@@ -37,8 +37,8 @@ class SplitFrag : Fragment(R.layout.frag_split) {
     }
 
     fun setupTableDataObserver() {
-        val cellRecipeBuilder = CellRecipeBuilder(requireContext(), Default.CELL)
-        val headerRecipeBuilder = CellRecipeBuilder(requireContext(), Default.HEADER)
+        val cellRecipeBuilder = CellRecipeBuilder(requireContext(), DefaultType.CELL)
+        val headerRecipeBuilder = CellRecipeBuilder(requireContext(), DefaultType.HEADER)
         val headerRecipeBuilder_numbered = CellRecipeBuilder<LinearLayout, Pair<String, Observable<BigDecimal>>>(
             { View.inflate(requireContext(), R.layout.tableview_header_income, null) as LinearLayout },
             {v, d ->

@@ -15,12 +15,11 @@ class CellRecipeBuilder<V : View, D : Any>(
     fun buildOne(data: D): List<CellRecipe<V, D>> {
         return listOf(CellRecipe(viewFactory, data, bindAction))
     }
-    fun buildOne2(data: D) = CellRecipe(viewFactory, data, bindAction)
 
     companion object {
-        operator fun invoke(context: Context, e: Default): CellRecipeBuilder<TextView, String> {
-            return when (e) {
-                Default.HEADER -> CellRecipeBuilder(
+        operator fun invoke(context: Context, defaultType: DefaultType): CellRecipeBuilder<TextView, String> {
+            return when (defaultType) {
+                DefaultType.HEADER -> CellRecipeBuilder(
                     { View.inflate(context, R.layout.tableview_header, null) as TextView },
                     { view: TextView, s: String? -> view.text = s }
                 )
@@ -31,7 +30,5 @@ class CellRecipeBuilder<V : View, D : Any>(
             }
         }
     }
-    enum class Default {
-        CELL, HEADER
-    }
+    enum class DefaultType { CELL, HEADER }
 }
