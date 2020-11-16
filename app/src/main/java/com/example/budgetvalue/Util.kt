@@ -7,7 +7,6 @@ import android.content.res.Resources
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,14 +15,11 @@ import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import com.tminus1010.tmcommonkotlin.tuple.Quadruple
 import com.tminus1010.tmcommonkotlin.tuple.Quintuple
-import io.reactivex.rxjava3.core.BackpressureStrategy
-import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableSource
 import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.functions.Function3
 import io.reactivex.rxjava3.functions.Function4
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -69,20 +65,6 @@ fun LocalDate.previousMonday(): LocalDate {
 
 fun LocalDate.nextMonday(): LocalDate {
     return this.with(TemporalAdjusters.previous(DayOfWeek.MONDAY))
-}
-
-
-fun <T> ObservableSource<T>.toLiveData2(): LiveData<T> {
-    return convertRXToLiveData2(this)
-}
-
-fun <T> convertRXToLiveData2(observable: ObservableSource<T>): LiveData<T> {
-    return LiveDataReactiveStreams.fromPublisher(
-        Flowable.fromObservable(
-            observable,
-            BackpressureStrategy.DROP
-        )
-    )
 }
 
 

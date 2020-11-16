@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetvalue.layer_data.Repo
 import com.example.budgetvalue.model_app.Category
-import com.example.budgetvalue.toLiveData2
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,7 +13,6 @@ class CategorizeVM(val repo: Repo, transactionsVM: TransactionsVM): ViewModel() 
     val transaction = transactionsVM.uncategorizedSpends
         .map { it[0] }
         .toBehaviorSubject()
-    val transaction_ = transaction.toLiveData2()
     val dateAsString = transaction
         .map { it.date.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")) }
         .toBehaviorSubject()
