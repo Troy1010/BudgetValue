@@ -11,13 +11,14 @@ class CategoriesVM : ViewModel() {
     val defaultCategory = Category("Default", CategoryTypes.Default)
     val incomeCategory = Category("Income", CategoryTypes.Income)
     val userAddedCategories = SourceArrayList<Category>()
-    val categories = userAddedCategories.observable.map {
-        ArrayList(userAddedCategories + defaultCategory + incomeCategory)
-    }.toBehaviorSubject()
-    val choosableCategories = userAddedCategories.observable.toBehaviorSubject()
-    private val nameToCategoryMap = categories.map {
-        it.associateBy { it.name } as HashMap<String, Category>
-    }.toBehaviorSubject()
+    val categories = userAddedCategories.observable
+        .map { ArrayList(userAddedCategories + defaultCategory + incomeCategory) }
+        .toBehaviorSubject()
+    val choosableCategories = userAddedCategories.observable
+        .toBehaviorSubject()
+    private val nameToCategoryMap = categories
+        .map { it.associateBy { it.name } as HashMap<String, Category> }
+        .toBehaviorSubject()
     fun getCategoryByName(name: String): Category {
         val category = nameToCategoryMap.value[name]
         if (category==null)
