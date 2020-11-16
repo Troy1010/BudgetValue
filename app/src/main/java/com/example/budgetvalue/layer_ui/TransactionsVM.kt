@@ -3,7 +3,7 @@ package com.example.budgetvalue.layer_ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetvalue.layer_data.Repo
-import com.example.budgetvalue.toBehaviorSubject
+import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.InputStream

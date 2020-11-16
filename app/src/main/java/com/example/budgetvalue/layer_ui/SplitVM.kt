@@ -10,6 +10,7 @@ import com.example.budgetvalue.model_app.Category
 import com.example.budgetvalue.model_data.IncomeCategoryAmounts
 import com.example.budgetvalue.model_data.Transaction
 import com.tminus1010.tmcommonkotlin.logz.logz
+import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
 import java.util.*

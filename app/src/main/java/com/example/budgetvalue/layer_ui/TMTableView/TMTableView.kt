@@ -11,7 +11,7 @@ import com.example.budgetvalue.combineLatestAsTuple
 import com.example.budgetvalue.layer_ui.TMTableView.ColumnWidthCalculator.generateColumnWidths
 import com.example.budgetvalue.layer_ui.TMTableView.ColumnWidthCalculator.generateIntrinsicWidths
 import com.example.budgetvalue.layer_ui.TMTableView.ColumnWidthCalculator.generateMinWidths
-import com.example.budgetvalue.toBehaviorSubjectWithDefault
+import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubjectWithDefault
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.tableview_layout.view.*
 

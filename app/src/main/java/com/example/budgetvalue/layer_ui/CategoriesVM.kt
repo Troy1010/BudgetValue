@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import com.example.budgetvalue.model_app.Category
 import com.example.budgetvalue.model_app.CategoryTypes
 import com.example.budgetvalue.SourceArrayList
-import com.example.budgetvalue.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.logz.logz
+import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 
 val categoriesVM by lazy { categoriesVM_ }
 private lateinit var categoriesVM_: CategoriesVM
