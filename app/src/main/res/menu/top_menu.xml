@@ -5,6 +5,9 @@
         android:id="@+id/menu_import_transactions"
         android:title="Import Transactions" />
     <item
+        android:id="@+id/menu_import_debug_transactions"
+        android:title="Import Debug Transactions" />
+    <item
         android:id="@+id/menu_print_transactions"
         android:title="Print Transactions" />
     <item

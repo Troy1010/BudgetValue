@@ -62,6 +62,10 @@ class HostActivity : AppCompatActivity() {
                     CODE_PICK_TRANSACTIONS_FILE
                 )
             }
+            R.id.menu_import_debug_transactions -> {
+                val inputStream = assets.open("transactions_2013487188.csv").buffered()
+                transactionsVM.importTransactions(inputStream)
+            }
             R.id.menu_print_transactions -> {
                 transactionsVM.transactions.value.let {
                     logz("transactions:${it?.joinToString(",")}")
