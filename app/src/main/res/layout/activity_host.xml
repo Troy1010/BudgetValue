@@ -24,11 +24,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorBackgroundHighlight"
-        app:itemTextColor="@color/bottom_nav_color_selector"
-        app:itemIconTint="@color/bottom_nav_color_selector"
+        android:gravity="center"
         android:textAlignment="center"
+        app:itemIconTint="@color/bottom_nav_color_selector"
+        app:itemTextColor="@color/bottom_nav_color_selector"
+        app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/bot_menu"
-        android:gravity="center" />
+        app:menu="@menu/bot_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
