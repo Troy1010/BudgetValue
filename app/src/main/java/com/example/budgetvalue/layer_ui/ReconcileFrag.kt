@@ -20,11 +20,11 @@ import com.tminus1010.tmcommonkotlin_rx.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import kotlinx.android.synthetic.main.frag_split.*
+import kotlinx.android.synthetic.main.frag_reconcile.*
 import kotlinx.android.synthetic.main.tableview_header_income.view.*
 import java.math.BigDecimal
 
-class ReconcileFrag : Fragment(R.layout.frag_split) {
+class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
     val appComponent by lazy { (requireActivity().application as App).appComponent }
     val categoriesVM: CategoriesVM by activityViewModels { createVmFactory { CategoriesVM() } }
     val transactionsVM: TransactionsVM by activityViewModels { createVmFactory { TransactionsVM(appComponent.getRepo()) } }

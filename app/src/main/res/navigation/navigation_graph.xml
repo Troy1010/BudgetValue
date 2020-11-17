@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/navigation_graph"
-    app:startDestination="@id/categorizeSpendsFrag">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/actualFrag">
 
     <fragment
-        android:id="@+id/categorizeSpendsFrag"
+        android:id="@+id/actualFrag"
         android:name="com.example.budgetvalue.layer_ui.ActualFrag"
-        android:label="CategorizeSpendsFrag" />
+        android:label="ActualFrag" />
     <fragment
         android:id="@+id/accountsFrag"
         android:name="com.example.budgetvalue.layer_ui.AccountsFrag"
         android:label="AccountsFrag" />
     <fragment
-        android:id="@+id/splitFrag"
+        android:id="@+id/reconcileFrag"
         android:name="com.example.budgetvalue.layer_ui.ReconcileFrag"
-        android:label="SplitFrag" />
+        android:label="ReconcileFrag" />
     <fragment
         android:id="@+id/planFrag"
         android:name="com.example.budgetvalue.layer_ui.PlanFrag"
