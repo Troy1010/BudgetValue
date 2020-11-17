@@ -25,11 +25,13 @@ fun bindRow(
     rowRecipes: List<ICellRecipe>,
     columnWidthsObservable: BehaviorSubject<List<Int>>
 ) {
-    for ((xPos, cellData) in rowRecipes.withIndex()) {
-        cellData.bindAction(rowView[xPos], cellData.data)
-        rowView[xPos].layoutParams = LinearLayout.LayoutParams(
-            columnWidthsObservable.value.getOrNull(xPos) ?: 0,
-            LinearLayout.LayoutParams.MATCH_PARENT
-        )
+    columnWidthsObservable.filter { it.isNotEmpty() }.take(1).subscribe {
+        for ((xPos, cellData) in rowRecipes.withIndex()) {
+            cellData.bindAction(rowView[xPos], cellData.data)
+            rowView[xPos].layoutParams = LinearLayout.LayoutParams(
+                it[xPos],
+                LinearLayout.LayoutParams.MATCH_PARENT
+            )
+        }
     }
 }
