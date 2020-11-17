@@ -9,6 +9,6 @@
         android:id="@+id/menu_actual"
         android:title="Actual" />
     <item
-        android:id="@+id/menu_split"
-        android:title="Split" />
+        android:id="@+id/menu_reconcile"
+        android:title="Reconcile" />
 </menu>

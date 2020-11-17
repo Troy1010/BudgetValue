@@ -26,7 +26,7 @@ class HostActivity : AppCompatActivity() {
 
     val categoriesVM: CategoriesVM by viewModels { createVmFactory { CategoriesVM() } }
     val accountsVM: AccountsVM by viewModels { createVmFactory { AccountsVM(appComponent.getRepo()) }}
-    val splitVM: SplitVM by viewModels { createVmFactory { SplitVM(appComponent.getRepo(), categoriesVM, transactionsVM.spends, accountsVM.accounts ) } }
+    val reconcileVM: ReconcileVM by viewModels { createVmFactory { ReconcileVM(appComponent.getRepo(), categoriesVM, transactionsVM.spends, accountsVM.accounts ) } }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,12 +37,12 @@ class HostActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.menu_accounts -> navController.navigate(R.id.accountsFrag)
                 R.id.menu_actual -> navController.navigate(R.id.categorizeSpendsFrag)
-                R.id.menu_split -> navController.navigate(R.id.splitFrag)
+                R.id.menu_reconcile -> navController.navigate(R.id.splitFrag)
                 else -> bSuccessfulNavigation = false
             }
             bSuccessfulNavigation
         }
-        bottom_navigation.selectedItemId = R.id.menu_split
+        bottom_navigation.selectedItemId = R.id.menu_reconcile
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

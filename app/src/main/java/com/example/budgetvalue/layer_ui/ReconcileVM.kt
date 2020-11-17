@@ -16,7 +16,7 @@ import java.math.BigDecimal
 import java.util.*
 import kotlin.collections.HashSet
 
-class SplitVM(
+class ReconcileVM(
     private val repo: Repo,
     private val categoriesVM: CategoriesVM,
     private val transactionSet: BehaviorSubject<List<Transaction>>,

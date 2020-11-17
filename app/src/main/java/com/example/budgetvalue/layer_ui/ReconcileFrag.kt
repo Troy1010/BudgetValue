@@ -17,7 +17,6 @@ import com.example.budgetvalue.reflectXY
 import com.example.budgetvalue.toBigDecimal2
 import com.tminus1010.tmcommonkotlin.misc.createVmFactory
 import com.tminus1010.tmcommonkotlin_rx.observe
-import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindToLifecycle
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -25,12 +24,12 @@ import kotlinx.android.synthetic.main.frag_split.*
 import kotlinx.android.synthetic.main.tableview_header_income.view.*
 import java.math.BigDecimal
 
-class SplitFrag : Fragment(R.layout.frag_split) {
+class ReconcileFrag : Fragment(R.layout.frag_split) {
     val appComponent by lazy { (requireActivity().application as App).appComponent }
     val categoriesVM: CategoriesVM by activityViewModels { createVmFactory { CategoriesVM() } }
     val transactionsVM: TransactionsVM by activityViewModels { createVmFactory { TransactionsVM(appComponent.getRepo()) } }
     val accountsVM: AccountsVM by activityViewModels{ createVmFactory { AccountsVM(appComponent.getRepo()) }}
-    val splitVM: SplitVM by activityViewModels { createVmFactory { SplitVM(appComponent.getRepo(), categoriesVM, transactionsVM.spends, accountsVM.accounts ) } }
+    val reconcileVM: ReconcileVM by activityViewModels { createVmFactory { ReconcileVM(appComponent.getRepo(), categoriesVM, transactionsVM.spends, accountsVM.accounts ) } }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -54,7 +53,7 @@ class SplitFrag : Fragment(R.layout.frag_split) {
             { View.inflate(context, R.layout.tableview_basic_cell, null) as TextView },
             { v, observable -> v.rxBindOneWay(observable)}
         )
-        splitVM.rowDatas
+        reconcileVM.rowDatas
             .observeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) {
                 val rowDatas = it
@@ -72,13 +71,13 @@ class SplitFrag : Fragment(R.layout.frag_split) {
                                 + cellRecipeBuilder.buildOne("Default")
                                 + cellRecipeBuilder.buildMany(categories),
                         headerRecipeBuilder.buildOne("Spent")
-                                + oneWayCellRecipeBuilder.buildOne(splitVM.spentLeftToCategorize)
+                                + oneWayCellRecipeBuilder.buildOne(reconcileVM.spentLeftToCategorize)
                                 + cellRecipeBuilder.buildMany(spents),
                         headerRecipeBuilder.buildOne("Income")
-                                + oneWayCellRecipeBuilder.buildOne(splitVM.incomeLeftToCategorize)
+                                + oneWayCellRecipeBuilder.buildOne(reconcileVM.incomeLeftToCategorize)
                                 + incomeRecipeBuilder.buildMany(incomes),
-                        headerRecipeBuilder_numbered.buildOne(Pair("Budgeted",splitVM.incomeTotal))
-                                + oneWayCellRecipeBuilder.buildOne(splitVM.uncategorizedBudgeted)
+                        headerRecipeBuilder_numbered.buildOne(Pair("Budgeted",reconcileVM.incomeTotal))
+                                + oneWayCellRecipeBuilder.buildOne(reconcileVM.uncategorizedBudgeted)
                                 + oneWayCellRecipeBuilder.buildMany(budgeteds)
                     ).reflectXY()
                 )

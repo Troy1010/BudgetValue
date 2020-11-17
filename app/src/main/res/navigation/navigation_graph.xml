@@ -13,6 +13,6 @@
         android:label="AccountsFrag" />
     <fragment
         android:id="@+id/splitFrag"
-        android:name="com.example.budgetvalue.layer_ui.SplitFrag"
+        android:name="com.example.budgetvalue.layer_ui.ReconcileFrag"
         android:label="SplitFrag" />
 </navigation>
