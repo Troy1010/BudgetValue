@@ -14,10 +14,10 @@ import com.tminus1010.tmcommonkotlin.misc.createVmFactory
 import kotlinx.android.synthetic.main.frag_categorize_spends.*
 import kotlinx.android.synthetic.main.item_category_btn.view.*
 
-class CategorizeFrag : Fragment(R.layout.frag_categorize_spends), GenericRecyclerViewAdapter.Callbacks {
+class ActualFrag : Fragment(R.layout.frag_categorize_spends), GenericRecyclerViewAdapter.Callbacks {
     val appComponent by lazy { (requireActivity().application as App).appComponent }
     val transactionsVM: TransactionsVM by activityViewModels { createVmFactory { TransactionsVM(appComponent.getRepo()) } }
-    val categorizeVM: CategorizeVM by viewModels { createVmFactory { CategorizeVM(appComponent.getRepo(), transactionsVM) }}
+    val actualVM: ActualVM by viewModels { createVmFactory { ActualVM(appComponent.getRepo(), transactionsVM) }}
     val categoriesVM: CategoriesVM by activityViewModels { createVmFactory { CategoriesVM() } }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -27,9 +27,9 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize_spends), GenericRecycle
     }
 
     private fun setupBinds() {
-        textview_date.rxBindOneWay(categorizeVM.dateAsString)
-        textview_amount.rxBindOneWay(categorizeVM.transactionBox) { it.first?.amount?.toString()?:"" }
-        tv_description.rxBindOneWay(categorizeVM.transactionBox) { it.first?.description?:"" }
+        textview_date.rxBindOneWay(actualVM.dateAsString)
+        textview_amount.rxBindOneWay(actualVM.transactionBox) { it.first?.amount?.toString()?:"" }
+        tv_description.rxBindOneWay(actualVM.transactionBox) { it.first?.description?:"" }
         textview_amount_left.rxBindOneWay(transactionsVM.uncategorizedSpendsSize)
     }
 
@@ -43,7 +43,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize_spends), GenericRecycle
     override fun bindRecyclerItem(holder: GenericRecyclerViewAdapter.ViewHolder, view: View) {
         view.btn_category.text = categoriesVM.choosableCategories.value[holder.adapterPosition].name
         view.btn_category.setOnClickListener {
-            categorizeVM.setTransactionCategory(categoriesVM.choosableCategories.value[holder.adapterPosition])
+            actualVM.setTransactionCategory(categoriesVM.choosableCategories.value[holder.adapterPosition])
         }
     }
 

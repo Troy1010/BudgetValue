@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 
-class CategorizeVM(val repo: Repo, transactionsVM: TransactionsVM): ViewModel() {
+class ActualVM(val repo: Repo, transactionsVM: TransactionsVM): ViewModel() {
     val transactionBox = transactionsVM.uncategorizedSpends
         .map { Box(it.getOrNull(0)) }
         .toBehaviorSubject()

@@ -36,7 +36,7 @@ class HostActivity : AppCompatActivity() {
             var bSuccessfulNavigation = true
             when (it.itemId) {
                 R.id.menu_accounts -> navController.navigate(R.id.accountsFrag)
-                R.id.menu_categorize -> navController.navigate(R.id.categorizeSpendsFrag)
+                R.id.menu_actual -> navController.navigate(R.id.categorizeSpendsFrag)
                 R.id.menu_split -> navController.navigate(R.id.splitFrag)
                 else -> bSuccessfulNavigation = false
             }

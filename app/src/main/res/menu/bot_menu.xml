@@ -6,8 +6,8 @@
         android:id="@+id/menu_accounts"
         android:title="Accounts" />
     <item
-        android:id="@+id/menu_categorize"
-        android:title="Categorize" />
+        android:id="@+id/menu_actual"
+        android:title="Actual" />
     <item
         android:id="@+id/menu_split"
         android:title="Split" />
