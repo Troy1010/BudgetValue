@@ -6,6 +6,9 @@
         android:id="@+id/menu_accounts"
         android:title="Accounts" />
     <item
+        android:id="@+id/menu_plan"
+        android:title="Plan" />
+    <item
         android:id="@+id/menu_actual"
         android:title="Actual" />
     <item
