@@ -25,7 +25,7 @@ class TMTableView @JvmOverloads constructor(
     val intrinsicColWidths = BehaviorSubject.create<List<List<Int>>>()
     val tableViewWidth = BehaviorSubject.create<Int>()
     val columnWidthsObservable = combineLatestAsTuple(minColWidths, intrinsicColWidths, tableViewWidth)
-        .filter { it.first.isNotEmpty() && it.second.isNotEmpty() && (tableViewWidth.value!=0) }
+        .filter { it.first.isNotEmpty() && it.second.isNotEmpty() && it.third!=0 }
         .map { generateColumnWidths(it.first, it.second, it.third) }
         .toBehaviorSubjectWithDefault(listOf())
 
