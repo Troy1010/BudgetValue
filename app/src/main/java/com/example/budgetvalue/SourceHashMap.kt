@@ -33,7 +33,7 @@ class SourceHashMap<T, V> : HashMap<T, V>() {
             x
         }.toBehaviorSubject()
 
-    var bSkipNext = false
+    private var bSkipNext = false
     fun createItemObservable(key:T): BehaviorSubject<V> {
         return BehaviorSubject.createDefault(this[key]!!).apply {
             observable.map { it[key]!! }.distinctUntilChanged().subscribe(this)
