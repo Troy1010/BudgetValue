@@ -16,6 +16,7 @@ import com.example.budgetvalue.reflectXY
 import com.example.budgetvalue.toBigDecimal2
 import com.tminus1010.tmcommonkotlin.misc.createVmFactory
 import com.tminus1010.tmcommonkotlin_rx.observe
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.frag_plan.*
@@ -49,6 +50,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
             { v, bs -> v.rxBind(bs, { it.toBigDecimal2() } )}
         )
         planVM.planCategoryAmounts.observable
+            .observeOn(AndroidSchedulers.mainThread())
             .observe(this) {
                 myTableView_plan.setRecipes(
                     listOf(

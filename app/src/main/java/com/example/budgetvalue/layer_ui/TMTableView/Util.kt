@@ -5,6 +5,7 @@ import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import com.example.budgetvalue.R
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
 
@@ -25,13 +26,17 @@ fun bindRow(
     rowRecipes: List<ICellRecipe>,
     columnWidthsObservable: BehaviorSubject<List<Int>>
 ) {
-    columnWidthsObservable.filter { it.isNotEmpty() }.take(1).subscribe {
-        for ((xPos, cellData) in rowRecipes.withIndex()) {
-            cellData.bindAction(rowView[xPos], cellData.data)
-            rowView[xPos].layoutParams = LinearLayout.LayoutParams(
-                it[xPos],
-                LinearLayout.LayoutParams.MATCH_PARENT
-            )
+    columnWidthsObservable
+        .filter { it.isNotEmpty() }
+        .take(1)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe {
+            for ((xPos, cellData) in rowRecipes.withIndex()) {
+                cellData.bindAction(rowView[xPos], cellData.data)
+                rowView[xPos].layoutParams = LinearLayout.LayoutParams(
+                    it[xPos],
+                    LinearLayout.LayoutParams.MATCH_PARENT
+                )
+            }
         }
-    }
 }
