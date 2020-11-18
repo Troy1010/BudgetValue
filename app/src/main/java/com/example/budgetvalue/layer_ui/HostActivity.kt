@@ -43,7 +43,7 @@ class HostActivity : AppCompatActivity() {
             }
             bSuccessfulNavigation
         }
-        bottom_navigation.selectedItemId = R.id.menu_reconcile
+        bottom_navigation.selectedItemId = R.id.menu_plan
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
