@@ -11,18 +11,18 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class AppModule(private val app: Application) {
+open class AppModule(private val appProvider: () -> Application) {
     @Provides
     @Singleton
-    fun providesAppContext(): Context = app
+    open fun providesAppContext(): Context = appProvider()
 
     @Provides
     @Singleton
-    fun providesApp(): Application = app
+    open fun providesApp(): Application = appProvider()
 
     @Provides
     @Singleton
-    fun providesDatabase(app: Application): BudgetValueDB {
+    open fun providesDatabase(app: Application): BudgetValueDB {
         return Room.databaseBuilder(app, BudgetValueDB::class.java, "BudgetValueDB")
             .fallbackToDestructiveMigration()
             .build()
@@ -30,7 +30,7 @@ class AppModule(private val app: Application) {
 
     @Provides
     @Singleton
-    fun providesSharedPreferences(appContext: Context): SharedPreferences {
+    open fun providesSharedPreferences(appContext: Context): SharedPreferences {
         return appContext.getSharedPreferences(
             SHARED_PREF_FILE_NAME,
             Context.MODE_PRIVATE
@@ -39,13 +39,13 @@ class AppModule(private val app: Application) {
 
     @Provides
     @Singleton
-    fun providesDao(roomDatabase: BudgetValueDB): MyDao {
+    open fun providesDao(roomDatabase: BudgetValueDB): MyDao {
         return roomDatabase.myDao()
     }
 
     @Provides
     @Singleton
-    fun providesRepo(myDao: MyDao, sharedPrefWrapper: SharedPrefWrapper): Repo {
+    open fun providesRepo(myDao: MyDao, sharedPrefWrapper: SharedPrefWrapper): Repo {
         return Repo(
             TransactionParser(),
             sharedPrefWrapper,

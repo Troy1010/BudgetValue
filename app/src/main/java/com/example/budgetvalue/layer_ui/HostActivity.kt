@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import androidx.navigation.findNavController
 import com.example.budgetvalue.*
 import com.example.budgetvalue.getBlocks
+import com.example.budgetvalue.globals.appComponent
 import com.example.budgetvalue.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.toast
 import com.tminus1010.tmcommonkotlin.logz.logz
@@ -20,7 +21,6 @@ import kotlin.collections.HashMap
 import kotlin.time.ExperimentalTime
 
 class HostActivity : AppCompatActivity() {
-    val appComponent by lazy { (applicationContext as App).appComponent }
     val transactionsVM: TransactionsVM by viewModels { createVmFactory { TransactionsVM(appComponent.getRepo()) } }
     val navController by lazy { findNavController(R.id.fragNavHost) }
 

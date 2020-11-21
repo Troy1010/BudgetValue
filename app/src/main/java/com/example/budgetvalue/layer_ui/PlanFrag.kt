@@ -25,7 +25,6 @@ import kotlinx.android.synthetic.main.tableview_header_income.view.*
 import java.math.BigDecimal
 
 class PlanFrag: Fragment(R.layout.frag_plan) {
-    val appComponent by lazy { (requireActivity().application as App).appComponent }
     val categoriesVM : CategoriesVM by viewModels { createVmFactory { CategoriesVM() } }
     val planVM : PlanVM by viewModels { createVmFactory { PlanVM(categoriesVM) } }
 

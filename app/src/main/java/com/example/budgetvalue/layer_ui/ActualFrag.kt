@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.budgetvalue.App
 import com.example.budgetvalue.R
+import com.example.budgetvalue.globals.appComponent
 import com.example.budgetvalue.layer_ui.misc.rxBindOneWay
 import com.tminus1010.tmcommonkotlin.misc.GenericRecyclerViewAdapter
 import com.tminus1010.tmcommonkotlin.misc.createVmFactory
@@ -15,7 +16,6 @@ import kotlinx.android.synthetic.main.frag_actual.*
 import kotlinx.android.synthetic.main.item_category_btn.view.*
 
 class ActualFrag : Fragment(R.layout.frag_actual), GenericRecyclerViewAdapter.Callbacks {
-    val appComponent by lazy { (requireActivity().application as App).appComponent }
     val transactionsVM: TransactionsVM by activityViewModels { createVmFactory { TransactionsVM(appComponent.getRepo()) } }
     val actualVM: ActualVM by viewModels { createVmFactory { ActualVM(appComponent.getRepo(), transactionsVM) }}
     val categoriesVM: CategoriesVM by activityViewModels { createVmFactory { CategoriesVM() } }

@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.budgetvalue.App
 import com.example.budgetvalue.R
+import com.example.budgetvalue.globals.appComponent
 import com.example.budgetvalue.layer_ui.misc.setOnClickListener
 import com.tminus1010.tmcommonkotlin.misc.GenericRecyclerViewAdapter
 import com.tminus1010.tmcommonkotlin.misc.createVmFactory
@@ -16,7 +17,6 @@ import kotlinx.android.synthetic.main.frag_accounts.*
 import kotlinx.android.synthetic.main.item_account.view.*
 
 class AccountsFrag: Fragment(R.layout.frag_accounts), GenericRecyclerViewAdapter.Callbacks {
-    val appComponent by lazy { (requireActivity().application as App).appComponent }
     val accountsVM : AccountsVM by viewModels { createVmFactory { AccountsVM(appComponent.getRepo()) } }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
