@@ -4,6 +4,7 @@ import androidx.room.*
 import com.example.budgetvalue.model_data.Account
 import com.example.budgetvalue.model_app.Category
 import com.example.budgetvalue.model_data.IncomeCategoryAmounts
+import com.example.budgetvalue.model_data.PlanCategoryAmounts
 import com.example.budgetvalue.model_data.Transaction
 import io.reactivex.rxjava3.core.Observable
 
@@ -90,4 +91,15 @@ interface MyDao {
     suspend fun doesIncomeCategoryAmountHaveCategory(category: Category): Boolean {
         return howManyIncomeCategoryAmountHaveCategory(category.name).isNotEmpty() // TODO could be more performant
     }
+
+    // # PlanCategoryAmounts
+
+    @Query("select * from `PlanCategoryAmounts`")
+    fun getPlanCategoryAmounts(): Observable<List<PlanCategoryAmounts>>
+
+    @Insert
+    fun addPlanCategoryAmounts(planCategoryAmounts: PlanCategoryAmounts)
+
+    @Query("DELETE FROM `IncomeCategoryAmounts`")
+    suspend fun deleteAllPlanCategoryAmounts()
 }
