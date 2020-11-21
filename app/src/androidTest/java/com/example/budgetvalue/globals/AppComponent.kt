@@ -2,12 +2,15 @@ package com.example.budgetvalue.globals
 
 import com.example.budgetvalue.dependency_injection.AppComponent
 import com.example.budgetvalue.dependency_injection.AppModule
-import com.example.budgetvalue.dependency_injection.DaggerMockAppComponent
-import com.example.budgetvalue.dependency_injection.MockDBModule
+import com.example.budgetvalue.dependency_injection.DaggerAppComponentMock
+import com.example.budgetvalue.dependency_injection.DBModuleMock
 
-val appComponent : AppComponent by lazy {
-    DaggerMockAppComponent.builder()
+/**
+ * This appComponent overrides the main/ source set's appComponent.
+ */
+val appComponent: AppComponent by lazy {
+    DaggerAppComponentMock.builder()
         .appModule(AppModule { app })
-        .mockDBModule(MockDBModule())
+        .dBModuleMock(DBModuleMock())
         .build()
 }
