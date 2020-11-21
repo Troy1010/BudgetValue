@@ -4,6 +4,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.budgetvalue.globals.appComponent
 import com.example.budgetvalue.model_data.PlanCategoryAmounts
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.math.BigDecimal
@@ -11,6 +12,11 @@ import java.math.BigDecimal
 @RunWith(AndroidJUnit4::class)
 class RepoTest {
     val repo by lazy { appComponent.getRepo() }
+
+    @Before
+    fun before() {
+        repo.deleteAllPlanCategoryAmounts()
+    }
 
     @Test
     fun addAndGetPlanCategoryAmountsTest() {
