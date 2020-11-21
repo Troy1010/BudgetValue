@@ -15,7 +15,7 @@ class RepoTest {
 
     @Before
     fun before() {
-        repo.deleteAllPlanCategoryAmounts()
+        repo.clearPlanCategoryAmounts()
     }
 
     @Test
@@ -36,7 +36,7 @@ class RepoTest {
         repo.addPlanCategoryAmounts(PlanCategoryAmounts("SomeCategoryB", BigDecimal.TEN))
         repo.addPlanCategoryAmounts(PlanCategoryAmounts("SomeCategoryC", BigDecimal.TEN))
         // # Stimulate
-        repo.deleteAllPlanCategoryAmounts()
+        repo.clearPlanCategoryAmounts()
         // # Verify
         assertEquals(0, repo.getPlanCategoryAmounts().blockingFirst().size)
     }

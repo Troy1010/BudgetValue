@@ -101,5 +101,5 @@ interface MyDao {
     fun addPlanCategoryAmounts(planCategoryAmounts: PlanCategoryAmounts)
 
     @Query("DELETE FROM `PlanCategoryAmounts`")
-    fun deleteAllPlanCategoryAmounts()
+    fun clearPlanCategoryAmounts()
 }
