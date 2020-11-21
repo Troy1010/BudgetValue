@@ -31,15 +31,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupViews()
-        setupBinds()
         setupObservers()
-    }
-
-    private fun setupBinds() {
-    }
-
-    private fun setupViews() {
     }
 
     private fun setupObservers() {
