@@ -1,9 +1,7 @@
 package com.example.budgetvalue.layer_data
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
-import com.example.budgetvalue.App
-import com.example.budgetvalue.globals.appComponent
+import com.example.budgetvalue.globals.mockAppComponent
 import com.example.budgetvalue.model_data.PlanCategoryAmounts
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -12,7 +10,7 @@ import java.math.BigDecimal
 
 @RunWith(AndroidJUnit4::class)
 class RepoTest {
-    val repo by lazy { appComponent.getRepo() }
+    val repo by lazy { mockAppComponent.getRepo() }
 
     @Test
     fun addAndGetPlanCategoryAmountsTest() {
@@ -27,6 +25,13 @@ class RepoTest {
 
     @Test
     fun deleteAllPlanCategoryAmountTests() {
-
+        // # Given
+        repo.addPlanCategoryAmounts(PlanCategoryAmounts("SomeCategoryA", BigDecimal.TEN))
+        repo.addPlanCategoryAmounts(PlanCategoryAmounts("SomeCategoryB", BigDecimal.TEN))
+        repo.addPlanCategoryAmounts(PlanCategoryAmounts("SomeCategoryC", BigDecimal.TEN))
+        // # Stimulate
+        repo.deleteAllPlanCategoryAmounts()
+        // # Verify
+        assertEquals(0, repo.getPlanCategoryAmounts().blockingFirst().size)
     }
 }

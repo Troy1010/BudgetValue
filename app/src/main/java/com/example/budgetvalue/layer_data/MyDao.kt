@@ -100,6 +100,6 @@ interface MyDao {
     @Insert
     fun addPlanCategoryAmounts(planCategoryAmounts: PlanCategoryAmounts)
 
-    @Query("DELETE FROM `IncomeCategoryAmounts`")
-    suspend fun deleteAllPlanCategoryAmounts()
+    @Query("DELETE FROM `PlanCategoryAmounts`")
+    fun deleteAllPlanCategoryAmounts()
 }

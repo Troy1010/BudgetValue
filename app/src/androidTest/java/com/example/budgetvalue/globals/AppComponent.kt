@@ -1,8 +1,12 @@
 package com.example.budgetvalue.globals
 
-import com.example.budgetvalue.dependency_injection.DaggerAppComponent
-import com.example.budgetvalue.dependency_injection.MockAppModule
+import com.example.budgetvalue.dependency_injection.AppModule
+import com.example.budgetvalue.dependency_injection.DaggerMockAppComponent
+import com.example.budgetvalue.dependency_injection.MockDBModule
 
-val appComponent by lazy {
-    DaggerAppComponent.builder().appModule(MockAppModule { app }).build()
+val mockAppComponent by lazy {
+    DaggerMockAppComponent.builder()
+        .appModule(AppModule { app })
+        .mockDBModule(MockDBModule())
+        .build()
 }

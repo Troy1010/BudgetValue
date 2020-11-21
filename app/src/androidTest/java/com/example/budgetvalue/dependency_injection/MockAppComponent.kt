@@ -5,7 +5,7 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules= [AppModule::class, DBModule::class])
-interface AppComponent {
+@Component(modules= [AppModule::class, MockDBModule::class])
+interface MockAppComponent {
     fun getRepo(): Repo
 }
