@@ -40,10 +40,10 @@ class ReconcileVM(
     fun getRowDatas(transactionSet: List<Transaction>, activeCategories: List<Category>, incomeCA: SourceHashMap<Category, BigDecimal>): ArrayList<ReconcileRowData> {
         val rowDatas = ArrayList<ReconcileRowData>()
         for (category in activeCategories) {
-            val spent = transactionSet.map { it.categoryAmounts[category.name] ?: BigDecimal.ZERO }.sum()
+            val actual = transactionSet.map { it.categoryAmounts[category.name] ?: BigDecimal.ZERO }.sum()
             rowDatas.add(ReconcileRowData(
                 category,
-                spent,
+                actual,
                 incomeCA.itemObservables_.value[category] ?: error("it.third~[category] was null"))
             )
         }
