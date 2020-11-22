@@ -102,4 +102,7 @@ interface MyDao {
 
     @Query("DELETE FROM `PlanCategoryAmounts`")
     fun clearPlanCategoryAmounts()
+
+    @Update
+    fun updatePlanCategoryAmounts(planCategoryAmounts: PlanCategoryAmounts)
 }

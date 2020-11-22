@@ -13,6 +13,8 @@ class CategoriesVM : ViewModel() {
     val categories = userAddedCategories.observable
         .map { ArrayList(userAddedCategories + defaultCategory + incomeCategory) }
         .toBehaviorSubject()
+    val categoryNames = categories
+        .map { it.map { it.name } }
     val choosableCategories = userAddedCategories.observable
         .toBehaviorSubject()
     private val nameToCategoryMap = categories
