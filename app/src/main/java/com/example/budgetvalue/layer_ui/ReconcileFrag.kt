@@ -70,10 +70,10 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                         headerRecipeBuilder.buildOne("Category")
                                 + cellRecipeBuilder.buildOne("Default")
                                 + cellRecipeBuilder.buildMany(categories),
-                        headerRecipeBuilder.buildOne("Spent")
+                        headerRecipeBuilder.buildOne("Actual")
                                 + oneWayCellRecipeBuilder.buildOne(reconcileVM.spentLeftToCategorize)
                                 + cellRecipeBuilder.buildMany(spents),
-                        headerRecipeBuilder.buildOne("Income")
+                        headerRecipeBuilder.buildOne("Reconcile")
                                 + oneWayCellRecipeBuilder.buildOne(reconcileVM.incomeLeftToCategorize)
                                 + incomeRecipeBuilder.buildMany(incomes),
                         headerRecipeBuilder_numbered.buildOne(Pair("Budgeted",accountsVM.accountsTotal))
