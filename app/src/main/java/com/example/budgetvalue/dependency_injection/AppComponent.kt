@@ -5,7 +5,11 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules= [MiscModule::class, BudgetValueDBModule::class])
+@Component(modules=[
+    MiscModule::class,
+    BudgetValueDBModule::class,
+    RepoModule::class
+])
 interface AppComponent {
     fun getRepo(): Repo
 }

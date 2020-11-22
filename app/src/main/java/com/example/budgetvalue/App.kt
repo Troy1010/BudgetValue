@@ -14,7 +14,6 @@ open class App : Application() {
     open val appComponent by lazy {
         DaggerAppComponent.builder()
             .miscModule(MiscModule(this))
-            .budgetValueDBModule(BudgetValueDBModule())
             .build()
     }
 }
