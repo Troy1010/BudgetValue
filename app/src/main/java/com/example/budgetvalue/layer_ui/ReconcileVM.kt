@@ -74,13 +74,13 @@ class ReconcileVM(
     }
 
     fun getActiveCategories(transactionSet: List<Transaction>): List<Category> {
-        val activeCategories_ = HashSet<String>()
+        val activeCategories = HashSet<String>()
         for (transaction in transactionSet) {
             for (categoryAmount in transaction.categoryAmounts) {
-                activeCategories_.add(categoryAmount.key)
+                activeCategories.add(categoryAmount.key)
             }
         }
-        return activeCategories_.toList().map { categoriesVM.getCategoryByName(it) }
+        return activeCategories.toList().map { categoriesVM.getCategoryByName(it) }
     }
 
     fun bindIncomeCAToRepo(incomeCA: SourceHashMap<Category, BigDecimal>) {
