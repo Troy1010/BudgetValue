@@ -22,38 +22,12 @@ class ReconcileVM(
     private val transactionSet: BehaviorSubject<List<Transaction>>,
     private val accountsTotal: BehaviorSubject<BigDecimal>
 ) : ViewModel() {
-    val mainStream = transactionSet
-        .map {
-            // define activeCategories
-            val activeCategories_ = HashSet<String>()
-            for (transaction in it) {
-                for (categoryAmount in transaction.categoryAmounts) {
-                    activeCategories_.add(categoryAmount.key)
-                }
-            }
-            activeCategories_.toList().map { categoriesVM.getCategoryByName(it) }
-        }.map { activeCategories ->
-            // define IncomeCA
-            val newIncomeCA = SourceHashMap<Category, BigDecimal>()
-            val oldIncomeCA = repo.readIncomeCA().associate { it.category to it.amount }
-            for (category in activeCategories) {
-                newIncomeCA[category] = oldIncomeCA[category.name] ?: BigDecimal.ZERO
-            }
-            Pair(activeCategories, newIncomeCA)
-        }.doOnNext{
-            // bind IncomeCA to database
-            it.second.observable
-                .subscribe({ repo.writeIncomeCA(it.map { IncomeCategoryAmounts(it.key.name, it.value) }) })
-                { logz("hhh:${it.narrate()}") }
-        }.toBehaviorSubject()
-    val activeCategories = mainStream
-        .map {
-            it.first
-        }.toBehaviorSubject()
-    val incomeCategoryAmounts = mainStream
-        .map {
-            it.second
-        }.toBehaviorSubject()
+    val activeCategories = transactionSet
+        .map(::getActiveCategories)
+    val incomeCategoryAmounts = activeCategories
+        .map(::getIncomeCA)
+        .doOnNext(::bindIncomeCAToRepo)
+        .toBehaviorSubject()
     val incomeCATotal = incomeCategoryAmounts
         .map { it.map{ it.value }.sum() }.toBehaviorSubject()
     val rowDatas = zip(transactionSet, activeCategories, incomeCategoryAmounts)
@@ -82,4 +56,28 @@ class ReconcileVM(
         .map {
             it.first + it.second
         }
+
+    fun getIncomeCA(activeCategories: List<Category>): SourceHashMap<Category, BigDecimal> {
+        val newIncomeCA = SourceHashMap<Category, BigDecimal>()
+        val oldIncomeCA = repo.readIncomeCA().associate { it.category to it.amount }
+        for (category in activeCategories) {
+            newIncomeCA[category] = oldIncomeCA[category.name] ?: BigDecimal.ZERO
+        }
+        return newIncomeCA
+    }
+
+    fun getActiveCategories(transactionSet: List<Transaction>): List<Category> {
+        val activeCategories_ = HashSet<String>()
+        for (transaction in transactionSet) {
+            for (categoryAmount in transaction.categoryAmounts) {
+                activeCategories_.add(categoryAmount.key)
+            }
+        }
+        return activeCategories_.toList().map { categoriesVM.getCategoryByName(it) }
+    }
+
+    fun bindIncomeCAToRepo(incomeCA: SourceHashMap<Category, BigDecimal>) {
+        incomeCA.observable // TODO("Handle disposables")
+            .subscribe { repo.writeIncomeCA(it.map { IncomeCategoryAmounts(it.key.name, it.value) }) }
+    }
 }
