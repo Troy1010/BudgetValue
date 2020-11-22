@@ -29,7 +29,8 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
     val categoriesVM: CategoriesVM by activityViewModels { createVmFactory { CategoriesVM() } }
     val transactionsVM: TransactionsVM by activityViewModels { createVmFactory { TransactionsVM(app.appComponent.getRepo()) } }
     val accountsVM: AccountsVM by activityViewModels{ createVmFactory { AccountsVM(app.appComponent.getRepo()) }}
-    val reconcileVM: ReconcileVM by activityViewModels { createVmFactory { ReconcileVM(app.appComponent.getRepo(), categoriesVM, transactionsVM.spends, accountsVM.accountsTotal ) } }
+    val planVM: PlanVM by activityViewModels{ createVmFactory { PlanVM(app.appComponent.getRepo(), categoriesVM) }}
+    val reconcileVM: ReconcileVM by activityViewModels { createVmFactory { ReconcileVM(app.appComponent.getRepo(), categoriesVM, transactionsVM.spends, accountsVM.accountsTotal, planVM) } }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -55,30 +56,21 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
         )
         reconcileVM.rowDatas
             .observeOn(AndroidSchedulers.mainThread())
-            .observe(viewLifecycleOwner) {
-                val rowDatas = it
-                val categories = rowDatas
-                    .map { it.category.name }
-                val spents = rowDatas
-                    .map { it.actual.toString() }
-                val incomes = rowDatas
-                    .map { it.reconcile }
-                val budgeteds = rowDatas
-                    .map { rowData -> rowData.reconcile.map { rowData.getBudgeted2(it) } }
+            .observe(viewLifecycleOwner) { rowDatas ->
                 myTableView_1.setRecipes(
                     listOf(
                         headerRecipeBuilder.buildOne("Category")
                                 + cellRecipeBuilder.buildOne("Default")
-                                + cellRecipeBuilder.buildMany(categories),
+                                + cellRecipeBuilder.buildMany(rowDatas.map { it.category.name }),
                         headerRecipeBuilder.buildOne("Actual")
                                 + oneWayCellRecipeBuilder.buildOne(reconcileVM.spentLeftToCategorize)
-                                + cellRecipeBuilder.buildMany(spents),
+                                + oneWayCellRecipeBuilder.buildMany(rowDatas.map { it.actual }),
                         headerRecipeBuilder.buildOne("Reconcile")
                                 + oneWayCellRecipeBuilder.buildOne(reconcileVM.incomeLeftToCategorize)
-                                + incomeRecipeBuilder.buildMany(incomes),
+                                + incomeRecipeBuilder.buildMany(rowDatas.map { it.reconcile }),
                         headerRecipeBuilder_numbered.buildOne(Pair("Budgeted",accountsVM.accountsTotal))
                                 + oneWayCellRecipeBuilder.buildOne(reconcileVM.uncategorizedBudgeted)
-                                + oneWayCellRecipeBuilder.buildMany(budgeteds)
+                                + oneWayCellRecipeBuilder.buildMany(rowDatas.map { it.budgeted })
                     ).reflectXY()
                 )
             }

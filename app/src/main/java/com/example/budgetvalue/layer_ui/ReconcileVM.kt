@@ -12,13 +12,15 @@ import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
 import java.util.*
+import kotlin.collections.HashMap
 import kotlin.collections.HashSet
 
 class ReconcileVM(
     private val repo: Repo,
     private val categoriesVM: CategoriesVM,
     private val transactionSet: BehaviorSubject<List<Transaction>>,
-    private val accountsTotal: BehaviorSubject<BigDecimal>
+    private val accountsTotal: BehaviorSubject<BigDecimal>,
+    private val planVM: PlanVM
 ) : ViewModel() {
     val activeCategories = transactionSet
         .map(::getActiveCategories)
@@ -28,19 +30,29 @@ class ReconcileVM(
         .toBehaviorSubject()
     val incomeCATotal = incomeCategoryAmounts
         .map { it.map{ it.value }.sum() }
-    val rowDatas = zip(transactionSet, activeCategories, incomeCategoryAmounts)
-        .map { getRowDatas(it.first, it.second, it.third) }
+    val rowDatas = zip(transactionSet, activeCategories, incomeCategoryAmounts, planVM.planCategoryAmounts.observable)
+        .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
     val spentLeftToCategorize = transactionSet
         .map { it.map { it.uncategorizedAmounts }.sum() }
-    val incomeLeftToCategorize = combineLatestAsTuple(accountsTotal, incomeCATotal, rowDatas, spentLeftToCategorize)
-        .map { it.first - it.second - it.third.map { it.actual }.sum() - it.fourth }
+//    val incomeLeftToCategorize = combineLatestAsTuple(accountsTotal, incomeCATotal, rowDatas, spentLeftToCategorize)
+//        .map { it.first - it.second - it.third.map { it.actual }.sum() - it.fourth } // TODO()
+    val incomeLeftToCategorize = BehaviorSubject.createDefault(BigDecimal.ZERO)
     val uncategorizedBudgeted = combineLatestAsTuple(incomeLeftToCategorize, spentLeftToCategorize)
         .map { it.first + it.second }
 
-    fun getRowDatas(transactionSet: List<Transaction>, activeCategories: List<Category>, incomeCA: SourceHashMap<Category, BigDecimal>): ArrayList<ReconcileRowData> {
+    fun getRowDatas(
+        transactionSet: List<Transaction>,
+        activeCategories: List<Category>,
+        incomeCA: SourceHashMap<Category, BigDecimal>,
+        planCA: HashMap<String, BehaviorSubject<BigDecimal>>
+    ): ArrayList<ReconcileRowData> {
         val rowDatas = ArrayList<ReconcileRowData>()
         for (category in activeCategories) {
-            val actual = transactionSet.map { it.categoryAmounts[category.name] ?: BigDecimal.ZERO }.sum()
+            val spent = transactionSet.map { it.categoryAmounts[category.name] ?: BigDecimal.ZERO }.sum()
+            val planAmount = planCA[category.name]!!
+            val actual = planAmount
+                .map { it + spent }
+                .toBehaviorSubject()
             rowDatas.add(ReconcileRowData(
                 category,
                 actual,

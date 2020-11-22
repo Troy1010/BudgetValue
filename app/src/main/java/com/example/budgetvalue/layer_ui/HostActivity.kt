@@ -26,7 +26,6 @@ class HostActivity : AppCompatActivity() {
 
     val categoriesVM: CategoriesVM by viewModels { createVmFactory { CategoriesVM() } }
     val accountsVM: AccountsVM by viewModels { createVmFactory { AccountsVM(app.appComponent.getRepo()) }}
-    val reconcileVM: ReconcileVM by viewModels { createVmFactory { ReconcileVM(app.appComponent.getRepo(), categoriesVM, transactionsVM.spends, accountsVM.accountsTotal ) } }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
