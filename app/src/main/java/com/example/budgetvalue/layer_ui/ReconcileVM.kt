@@ -24,13 +24,13 @@ class ReconcileVM(
 ) : ViewModel() {
     val activeCategories = transactionSet
         .map(::getActiveCategories)
-    val incomeCategoryAmounts = activeCategories
+    val reconcileCategoryAmounts = activeCategories
         .map(::getIncomeCA)
         .doOnNext(::bindIncomeCAToRepo)
         .toBehaviorSubject()
-    val incomeCATotal = incomeCategoryAmounts
+    val reconcileCategoryAmountsTotal = reconcileCategoryAmounts
         .map { it.map{ it.value }.sum() }
-    val rowDatas = zip(transactionSet, activeCategories, incomeCategoryAmounts, planVM.planCategoryAmounts.observable)
+    val rowDatas = zip(transactionSet, activeCategories, reconcileCategoryAmounts, planVM.planCategoryAmounts.observable)
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
     val spentLeftToCategorize = transactionSet
         .map { it.map { it.uncategorizedAmounts }.sum() }
