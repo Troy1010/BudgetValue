@@ -30,7 +30,7 @@ class MyDaoTest {
     }
 
     @Test
-    fun deleteAllPlanCategoryAmountTests() {
+    fun clearPlanCategoryAmountTest() {
         // # Given
         myDao.addPlanCategoryAmounts(PlanCategoryAmounts("SomeCategoryA", BigDecimal.TEN))
         myDao.addPlanCategoryAmounts(PlanCategoryAmounts("SomeCategoryB", BigDecimal.TEN))
