@@ -30,7 +30,7 @@ class ReconcileVM(
         .toBehaviorSubject()
     val reconcileCategoryAmountsTotal = reconcileCategoryAmounts
         .map { it.map{ it.value }.sum() }
-    val rowDatas = zip(transactionSet, activeCategories, reconcileCategoryAmounts, planVM.planCategoryAmounts.observable)
+    val rowDatas = zip(transactionSet, activeCategories, reconcileCategoryAmounts, planVM.planCategoryAmounts.itemObservablesObservable)
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
     val spentLeftToCategorize = transactionSet
         .map { it.map { it.uncategorizedAmounts }.sum() }
@@ -58,7 +58,7 @@ class ReconcileVM(
             rowDatas.add(ReconcileRowData(
                 category,
                 actual,
-                reconcileCA.itemObservables_.value[category] ?: error("it.third~[category] was null"))
+                reconcileCA.itemObservablesObservable.value[category] ?: error("it.third~[category] was null"))
             )
         }
         return rowDatas

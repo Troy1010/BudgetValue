@@ -6,6 +6,7 @@ import com.example.budgetvalue.combineLatestAsTuple
 import com.example.budgetvalue.layer_data.Repo
 import com.example.budgetvalue.layer_ui.misc.sum
 import com.example.budgetvalue.model_data.PlanCategoryAmounts
+import com.example.budgetvalue.pairwiseDefault
 import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -13,23 +14,28 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
 
 class PlanVM(repo: Repo, categoriesVM: CategoriesVM): ViewModel() {
-    val planCategoryAmounts = SourceHashMap<String, BehaviorSubject<BigDecimal>>()
+    val planCategoryAmounts = SourceHashMap<String, BigDecimal>()
     private var repoLoadComplete = BehaviorSubject.createDefault(false) // TODO("Simplify this")
-    val planCategoryAmountsTotal = planCategoryAmounts.observable
-        .map {it.map { it.value.value }.sum() } // TODO("Simplify")
+    val planCategoryAmountsTotal = planCategoryAmounts.itemObservablesObservable
+        .map { it.map { it.value } }
+        .flatMap {
+            val x = BehaviorSubject.createDefault(BigDecimal.ZERO)
+            it.forEach { it.pairwiseDefault(BigDecimal.ZERO).map { it.second - it.first }.subscribe(x) } // TODO("Are these subscriptions safe?")
+            x.scan(BigDecimal.ZERO) { acc, y -> acc + y }
+        }
         .toBehaviorSubject()
     init {
-        // # Sync planCategoryAmounts with Repo
+        // # Bind once Repo <-> planCategoryAmounts
         // ## Bind once Repo -> planCategoryAmounts
         repo.getPlanCategoryAmounts().take(1).observeOn(Schedulers.io()).subscribe {
             logz("Repo -> planCategoryAmounts")
             for (x in it) {
-                planCategoryAmounts[x.category] = BehaviorSubject.createDefault(x.amount)
+                planCategoryAmounts[x.category] = x.amount
             }
             repoLoadComplete.onNext(true) // TODO("Simplify this")
         }
         // ## Bind planCategoryAmounts -> Repo
-        combineLatestAsTuple(planCategoryAmounts.observable, repoLoadComplete)
+        combineLatestAsTuple(planCategoryAmounts.itemObservablesObservable, repoLoadComplete)
             .observeOn(Schedulers.io())
             .filter { it.second }
             .map { it.first }
@@ -60,7 +66,7 @@ class PlanVM(repo: Repo, categoriesVM: CategoriesVM): ViewModel() {
                 }
                 for (categoryName in categoryNames) {
                     if (categoryName !in planCategoryAmounts)
-                        planCategoryAmounts[categoryName] = BehaviorSubject.createDefault(BigDecimal.ZERO)
+                        planCategoryAmounts[categoryName] = BigDecimal.ZERO
                 }
             }
     }

@@ -5,8 +5,16 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.ReplaySubject
 
 class SourceHashMap<T, V> : HashMap<T, V>() {
+    /**
+     * This observable emits whenever SourceHashMap puts or removes.
+     * It emits a HashMap of T : V
+     */
     val observable = ReplaySubject.create<HashMap<T, V>>()
-    val itemObservables_ = observable
+    /**
+     * this observable emits whenever SourceHashMap puts or removes.
+     * It emits a HashMap of T : BehaviorSubject<V>
+     */
+    val itemObservablesObservable: BehaviorSubject<HashMap<T, BehaviorSubject<V>>> = observable
         .filter {
             if (bSkipNext) {
                 bSkipNext = false

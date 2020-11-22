@@ -36,7 +36,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
             { View.inflate(context, R.layout.item_text_edit, null) as EditText },
             { v, bs -> v.rxBind(bs, { it.toBigDecimal2() } )}
         )
-        planVM.planCategoryAmounts.observable
+        planVM.planCategoryAmounts.itemObservablesObservable
             .observeOn(AndroidSchedulers.mainThread())
             .observe(this) {
                 myTableView_plan.setRecipes(
