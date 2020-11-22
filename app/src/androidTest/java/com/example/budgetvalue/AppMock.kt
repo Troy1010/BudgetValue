@@ -7,7 +7,7 @@ import com.example.budgetvalue.dependency_injection.DaggerAppComponentMock
 class AppMock : App() {
     override val appComponent by lazy {
         DaggerAppComponentMock.builder()
-            .miscModule(MiscModule { this })
+            .miscModule(MiscModule(this))
             .budgetValueDBModuleMock(BudgetValueDBModuleMock())
             .build()
     }
