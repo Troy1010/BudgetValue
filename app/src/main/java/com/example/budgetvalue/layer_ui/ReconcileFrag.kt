@@ -60,11 +60,11 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                 val categories = rowDatas
                     .map { it.category.name }
                 val spents = rowDatas
-                    .map { it.spent.toString() }
+                    .map { it.actual.toString() }
                 val incomes = rowDatas
-                    .map { it.income }
+                    .map { it.reconcile }
                 val budgeteds = rowDatas
-                    .map { rowData -> rowData.income.map { rowData.getBudgeted2(it) } }
+                    .map { rowData -> rowData.reconcile.map { rowData.getBudgeted2(it) } }
                 myTableView_1.setRecipes(
                     listOf(
                         headerRecipeBuilder.buildOne("Category")

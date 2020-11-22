@@ -5,11 +5,11 @@ import java.math.BigDecimal
 
 data class ReconcileRowData (
     val category: Category,
-    val spent: BigDecimal,
-    val income: BehaviorSubject<BigDecimal>
+    val actual: BigDecimal,
+    val reconcile: BehaviorSubject<BigDecimal>
 ) {
-    val budgeted = spent + income.value
+    val budgeted = actual + reconcile.value
     fun getBudgeted2(incomeValue: BigDecimal): BigDecimal { // TODO: hacky
-        return spent + incomeValue
+        return actual + incomeValue
     }
 }
