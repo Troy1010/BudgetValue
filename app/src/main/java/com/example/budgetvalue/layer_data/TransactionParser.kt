@@ -10,6 +10,11 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.collections.ArrayList
 
+/**
+ * TransactionParser is able to convert input streams into Transactions.
+ * It's unusual that TransactionParser provides the parse methods instead of the
+ * read/write methods.. but I do not yet know the best way to get ActivityResults from the repo.
+ */
 class TransactionParser : ITransactionParser {
     override suspend fun parseToTransactions(inputStream: InputStream) : List<Transaction> = withContext(Dispatchers.IO) {
         val transactions = ArrayList<Transaction>()
