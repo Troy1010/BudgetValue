@@ -10,7 +10,6 @@ import androidx.activity.viewModels
 import androidx.navigation.findNavController
 import com.example.budgetvalue.*
 import com.example.budgetvalue.getBlocks
-import com.example.budgetvalue.globals.appComponent
 import com.example.budgetvalue.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.toast
 import com.tminus1010.tmcommonkotlin.logz.logz
@@ -21,12 +20,13 @@ import kotlin.collections.HashMap
 import kotlin.time.ExperimentalTime
 
 class HostActivity : AppCompatActivity() {
-    val transactionsVM: TransactionsVM by viewModels { createVmFactory { TransactionsVM(appComponent.getRepo()) } }
+    val app by lazy { application as App }
+    val transactionsVM: TransactionsVM by viewModels { createVmFactory { TransactionsVM(app.appComponent.getRepo()) } }
     val navController by lazy { findNavController(R.id.fragNavHost) }
 
     val categoriesVM: CategoriesVM by viewModels { createVmFactory { CategoriesVM() } }
-    val accountsVM: AccountsVM by viewModels { createVmFactory { AccountsVM(appComponent.getRepo()) }}
-    val reconcileVM: ReconcileVM by viewModels { createVmFactory { ReconcileVM(appComponent.getRepo(), categoriesVM, transactionsVM.spends, accountsVM.accounts ) } }
+    val accountsVM: AccountsVM by viewModels { createVmFactory { AccountsVM(app.appComponent.getRepo()) }}
+    val reconcileVM: ReconcileVM by viewModels { createVmFactory { ReconcileVM(app.appComponent.getRepo(), categoriesVM, transactionsVM.spends, accountsVM.accounts ) } }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

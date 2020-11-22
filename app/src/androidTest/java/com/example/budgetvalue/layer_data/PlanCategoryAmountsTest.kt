@@ -1,7 +1,8 @@
 package com.example.budgetvalue.layer_data
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.budgetvalue.globals.appComponentMock
+import androidx.test.platform.app.InstrumentationRegistry
+import com.example.budgetvalue.AppMock
 import com.example.budgetvalue.model_data.PlanCategoryAmounts
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -11,7 +12,8 @@ import java.math.BigDecimal
 
 @RunWith(AndroidJUnit4::class)
 class PlanCategoryAmountsTest {
-    val repo by lazy { appComponentMock.getRepo() }
+    val app by lazy { InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as AppMock }
+    val repo by lazy { app.appComponent.getRepo() }
 
     @Before
     fun before() {

@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.budgetvalue.App
 import com.example.budgetvalue.R
-import com.example.budgetvalue.globals.appComponent
 import com.example.budgetvalue.layer_ui.TMTableView.*
 import com.example.budgetvalue.layer_ui.TMTableView.CellRecipeBuilder.DefaultType
 import com.example.budgetvalue.layer_ui.misc.rxBind
@@ -26,10 +25,11 @@ import kotlinx.android.synthetic.main.tableview_header_income.view.*
 import java.math.BigDecimal
 
 class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
+    val app by lazy { requireActivity().application as App }
     val categoriesVM: CategoriesVM by activityViewModels { createVmFactory { CategoriesVM() } }
-    val transactionsVM: TransactionsVM by activityViewModels { createVmFactory { TransactionsVM(appComponent.getRepo()) } }
-    val accountsVM: AccountsVM by activityViewModels{ createVmFactory { AccountsVM(appComponent.getRepo()) }}
-    val reconcileVM: ReconcileVM by activityViewModels { createVmFactory { ReconcileVM(appComponent.getRepo(), categoriesVM, transactionsVM.spends, accountsVM.accounts ) } }
+    val transactionsVM: TransactionsVM by activityViewModels { createVmFactory { TransactionsVM(app.appComponent.getRepo()) } }
+    val accountsVM: AccountsVM by activityViewModels{ createVmFactory { AccountsVM(app.appComponent.getRepo()) }}
+    val reconcileVM: ReconcileVM by activityViewModels { createVmFactory { ReconcileVM(app.appComponent.getRepo(), categoriesVM, transactionsVM.spends, accountsVM.accounts ) } }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
