@@ -4,9 +4,8 @@ import androidx.lifecycle.ViewModel
 import com.example.budgetvalue.SourceHashMap
 import com.example.budgetvalue.combineLatestAsTuple
 import com.example.budgetvalue.layer_data.Repo
-import com.example.budgetvalue.layer_ui.misc.sum
 import com.example.budgetvalue.model_data.PlanCategoryAmounts
-import com.example.budgetvalue.pairwiseDefault
+import com.example.budgetvalue.pairwise
 import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -19,9 +18,9 @@ class PlanVM(repo: Repo, categoriesVM: CategoriesVM): ViewModel() {
     val planCategoryAmountsTotal = planCategoryAmounts.itemObservablesObservable
         .map { it.map { it.value } }
         .flatMap {
-            val x = BehaviorSubject.createDefault(BigDecimal.ZERO)
-            it.forEach { it.pairwiseDefault(BigDecimal.ZERO).map { it.second - it.first }.subscribe(x) } // TODO("Are these subscriptions safe?")
-            x.scan(BigDecimal.ZERO) { acc, y -> acc + y }
+            val pairwiseDifference = BehaviorSubject.create<BigDecimal>()
+            it.forEach { it.pairwise(BigDecimal.ZERO).map { it.second - it.first }.subscribe(pairwiseDifference) } // TODO("Are these subscriptions safe?")
+            pairwiseDifference.scan(BigDecimal.ZERO) { acc, y -> acc + y }
         }
         .toBehaviorSubject()
     init {

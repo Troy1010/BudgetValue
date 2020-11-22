@@ -378,13 +378,18 @@ fun <T,V> List<HashMap<T,V>>.reflectXY(): HashMap<T,ArrayList<V>> {
 
 
 
-fun <T : Any> Observable<T>.pairwiseDefault(initialValue: T): Observable<Pair<T, T>> {
-    var lastValue = initialValue
-    return this.map {
-        val returning = Pair(lastValue, it)
-        lastValue = it
-        returning
-    }
+fun <T : Any> Observable<T>.pairwise(initialValue: T): Observable<Pair<T, T>> {
+    return this
+        .startWithItem(initialValue)
+        .pairwise()
+}
+
+fun <T : Any> Observable<T>.pairwise(): Observable<Pair<T, T>> {
+    lateinit var lastValue: T
+    return this
+        .doOnNext { lastValue = it }
+        .skip(1)
+        .map { Pair(lastValue, it) }
 }
 
 
