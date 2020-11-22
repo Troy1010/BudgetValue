@@ -8,13 +8,11 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class DBModuleMock {
+class BudgetValueDBModule {
     @Provides
     @Singleton
     fun providesDatabase(app: Application): BudgetValueDB {
-        // *inMemoryDatabaseBuilder does not write to device
-        return Room.inMemoryDatabaseBuilder(app, BudgetValueDB::class.java)
-            .allowMainThreadQueries()
+        return Room.databaseBuilder(app, BudgetValueDB::class.java, "BudgetValueDB")
             .fallbackToDestructiveMigration()
             .build()
     }

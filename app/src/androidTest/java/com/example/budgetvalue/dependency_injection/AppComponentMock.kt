@@ -5,7 +5,7 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules= [AppModule::class, DBModuleMock::class])
+@Component(modules= [AppModule::class, BudgetValueDBModuleMock::class])
 interface AppComponentMock : AppComponent {
     fun getMyDao(): MyDao
 }
