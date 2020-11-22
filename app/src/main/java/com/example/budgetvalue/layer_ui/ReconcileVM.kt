@@ -3,7 +3,7 @@ package com.example.budgetvalue.layer_ui
 import androidx.lifecycle.*
 import com.example.budgetvalue.*
 import com.example.budgetvalue.layer_data.Repo
-import com.example.budgetvalue.layer_ui.misc.ReconcileRowData
+import com.example.budgetvalue.model_app.ReconcileRowData
 import com.example.budgetvalue.layer_ui.misc.sum
 import com.example.budgetvalue.model_app.Category
 import com.example.budgetvalue.model_data.IncomeCategoryAmounts

@@ -1,6 +1,5 @@
-package com.example.budgetvalue.layer_ui.misc
+package com.example.budgetvalue.model_app
 
-import com.example.budgetvalue.model_app.Category
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
 
