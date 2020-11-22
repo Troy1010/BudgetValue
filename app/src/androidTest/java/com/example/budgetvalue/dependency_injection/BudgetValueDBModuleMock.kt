@@ -12,8 +12,8 @@ class BudgetValueDBModuleMock {
     @Provides
     @Singleton
     fun providesDatabase(app: Application): BudgetValueDB {
-        // *inMemoryDatabaseBuilder does not write to device
-        return Room.inMemoryDatabaseBuilder(app, BudgetValueDB::class.java)
+        return Room
+            .inMemoryDatabaseBuilder(app, BudgetValueDB::class.java) // inMemoryDatabaseBuilder does not write to device
             .allowMainThreadQueries()
             .fallbackToDestructiveMigration()
             .build()
