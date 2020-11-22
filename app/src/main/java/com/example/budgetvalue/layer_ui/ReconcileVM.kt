@@ -45,7 +45,7 @@ class ReconcileVM(
     fun getRowDatas(
         transactionSet: List<Transaction>,
         activeCategories: List<Category>,
-        incomeCA: SourceHashMap<Category, BigDecimal>,
+        reconcileCA: SourceHashMap<Category, BigDecimal>,
         planCA: HashMap<String, BehaviorSubject<BigDecimal>>
     ): ArrayList<ReconcileRowData> {
         val rowDatas = ArrayList<ReconcileRowData>()
@@ -58,7 +58,7 @@ class ReconcileVM(
             rowDatas.add(ReconcileRowData(
                 category,
                 actual,
-                incomeCA.itemObservables_.value[category] ?: error("it.third~[category] was null"))
+                reconcileCA.itemObservables_.value[category] ?: error("it.third~[category] was null"))
             )
         }
         return rowDatas
