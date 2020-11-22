@@ -20,11 +20,8 @@ class ReconcileVM(
     private val repo: Repo,
     private val categoriesVM: CategoriesVM,
     private val transactionSet: BehaviorSubject<List<Transaction>>,
-    private val accounts: BehaviorSubject<List<Account>>
+    private val accountsTotal: BehaviorSubject<BigDecimal>
 ) : ViewModel() {
-    val incomeTotal = accounts.map {
-        it.fold(BigDecimal.ZERO) { acc, account -> acc + account.amount }
-    }.toBehaviorSubject()
     val mainStream = transactionSet
         .map {
             // define activeCategories
@@ -77,7 +74,7 @@ class ReconcileVM(
         .map {
             it.map { it.uncategorizedAmounts }.sum()
         }.toBehaviorSubject()
-    val incomeLeftToCategorize = combineLatestAsTuple(incomeTotal, incomeCATotal, rowDatas, spentLeftToCategorize)
+    val incomeLeftToCategorize = combineLatestAsTuple(accountsTotal, incomeCATotal, rowDatas, spentLeftToCategorize)
         .map {
             it.first - it.second - it.third.map { it.spent }.sum() - it.fourth
         }.toBehaviorSubject()

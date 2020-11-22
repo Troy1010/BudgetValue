@@ -29,7 +29,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
     val categoriesVM: CategoriesVM by activityViewModels { createVmFactory { CategoriesVM() } }
     val transactionsVM: TransactionsVM by activityViewModels { createVmFactory { TransactionsVM(app.appComponent.getRepo()) } }
     val accountsVM: AccountsVM by activityViewModels{ createVmFactory { AccountsVM(app.appComponent.getRepo()) }}
-    val reconcileVM: ReconcileVM by activityViewModels { createVmFactory { ReconcileVM(app.appComponent.getRepo(), categoriesVM, transactionsVM.spends, accountsVM.accounts ) } }
+    val reconcileVM: ReconcileVM by activityViewModels { createVmFactory { ReconcileVM(app.appComponent.getRepo(), categoriesVM, transactionsVM.spends, accountsVM.accountsTotal ) } }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -76,7 +76,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                         headerRecipeBuilder.buildOne("Income")
                                 + oneWayCellRecipeBuilder.buildOne(reconcileVM.incomeLeftToCategorize)
                                 + incomeRecipeBuilder.buildMany(incomes),
-                        headerRecipeBuilder_numbered.buildOne(Pair("Budgeted",reconcileVM.incomeTotal))
+                        headerRecipeBuilder_numbered.buildOne(Pair("Budgeted",accountsVM.accountsTotal))
                                 + oneWayCellRecipeBuilder.buildOne(reconcileVM.uncategorizedBudgeted)
                                 + oneWayCellRecipeBuilder.buildMany(budgeteds)
                     ).reflectXY()
