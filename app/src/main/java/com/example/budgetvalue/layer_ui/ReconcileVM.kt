@@ -34,6 +34,8 @@ class ReconcileVM(
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
     val spentLeftToCategorize = transactionSet
         .map { it.map { it.uncategorizedAmounts }.sum() }
+    val uncategorizedActual = combineLatestAsTuple(spentLeftToCategorize, planVM.planCategoryAmountsTotal)
+        .map { it.first + it.second }
 //    val incomeLeftToCategorize = combineLatestAsTuple(accountsTotal, incomeCATotal, rowDatas, spentLeftToCategorize)
 //        .map { it.first - it.second - it.third.map { it.actual }.sum() - it.fourth } // TODO()
     val incomeLeftToCategorize = BehaviorSubject.createDefault(BigDecimal.ZERO)

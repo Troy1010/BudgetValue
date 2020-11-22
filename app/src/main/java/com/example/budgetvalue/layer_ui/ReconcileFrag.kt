@@ -63,7 +63,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                                 + cellRecipeBuilder.buildOne("Default")
                                 + cellRecipeBuilder.buildMany(rowDatas.map { it.category.name }),
                         headerRecipeBuilder.buildOne("Actual")
-                                + oneWayCellRecipeBuilder.buildOne(reconcileVM.spentLeftToCategorize)
+                                + oneWayCellRecipeBuilder.buildOne(reconcileVM.uncategorizedActual)
                                 + oneWayCellRecipeBuilder.buildMany(rowDatas.map { it.actual }),
                         headerRecipeBuilder.buildOne("Reconcile")
                                 + oneWayCellRecipeBuilder.buildOne(reconcileVM.incomeLeftToCategorize)
