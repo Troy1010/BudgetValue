@@ -29,33 +29,28 @@ class ReconcileVM(
         .doOnNext(::bindIncomeCAToRepo)
         .toBehaviorSubject()
     val incomeCATotal = incomeCategoryAmounts
-        .map { it.map{ it.value }.sum() }.toBehaviorSubject()
+        .map { it.map{ it.value }.sum() }
     val rowDatas = zip(transactionSet, activeCategories, incomeCategoryAmounts)
-        .map {
-            // define rowDatas
-            val rowDatas = ArrayList<SplitRowData>()
-            for (category in it.second) {
-                val spent = it.first.map { it.categoryAmounts[category.name] ?: BigDecimal.ZERO }.sum()
-                rowDatas.add(SplitRowData(
-                    category,
-                    spent,
-                    it.third.itemObservables_.value[category] ?: error("it.third~[category] was null"))
-                )
-            }
-            rowDatas
-        }.toBehaviorSubject()
+        .map { getRowDatas(it.first, it.second, it.third) }
     val spentLeftToCategorize = transactionSet
-        .map {
-            it.map { it.uncategorizedAmounts }.sum()
-        }.toBehaviorSubject()
+        .map { it.map { it.uncategorizedAmounts }.sum() }
     val incomeLeftToCategorize = combineLatestAsTuple(accountsTotal, incomeCATotal, rowDatas, spentLeftToCategorize)
-        .map {
-            it.first - it.second - it.third.map { it.spent }.sum() - it.fourth
-        }.toBehaviorSubject()
+        .map { it.first - it.second - it.third.map { it.spent }.sum() - it.fourth }
     val uncategorizedBudgeted = combineLatestAsTuple(incomeLeftToCategorize, spentLeftToCategorize)
-        .map {
-            it.first + it.second
+        .map { it.first + it.second }
+
+    fun getRowDatas(transactionSet: List<Transaction>, activeCategories: List<Category>, incomeCA: SourceHashMap<Category, BigDecimal>): ArrayList<SplitRowData> {
+        val rowDatas = ArrayList<SplitRowData>()
+        for (category in activeCategories) {
+            val spent = transactionSet.map { it.categoryAmounts[category.name] ?: BigDecimal.ZERO }.sum()
+            rowDatas.add(SplitRowData(
+                category,
+                spent,
+                incomeCA.itemObservables_.value[category] ?: error("it.third~[category] was null"))
+            )
         }
+        return rowDatas
+    }
 
     fun getIncomeCA(activeCategories: List<Category>): SourceHashMap<Category, BigDecimal> {
         val newIncomeCA = SourceHashMap<Category, BigDecimal>()
