@@ -3,30 +3,26 @@ package com.example.budgetvalue.layer_ui
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import com.example.budgetvalue.App
 import com.example.budgetvalue.R
 import com.example.budgetvalue.layer_ui.TMTableView.CellRecipeBuilder
 import com.example.budgetvalue.layer_ui.misc.rxBind
-import com.example.budgetvalue.layer_ui.misc.rxBindOneWay
 import com.example.budgetvalue.reflectXY
 import com.example.budgetvalue.toBigDecimal2
 import com.tminus1010.tmcommonkotlin.misc.createVmFactory
 import com.tminus1010.tmcommonkotlin_rx.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.frag_plan.*
-import kotlinx.android.synthetic.main.frag_reconcile.*
-import kotlinx.android.synthetic.main.tableview_header_income.view.*
 import java.math.BigDecimal
 
 class PlanFrag: Fragment(R.layout.frag_plan) {
-    val categoriesVM : CategoriesVM by viewModels { createVmFactory { CategoriesVM() } }
-    val planVM : PlanVM by viewModels { createVmFactory { PlanVM(categoriesVM) } }
+    val app by lazy { requireActivity().application as App }
+    val repo by lazy { app.appComponent.getRepo() }
+    val categoriesVM : CategoriesVM by activityViewModels { createVmFactory { CategoriesVM() } }
+    val planVM : PlanVM by activityViewModels { createVmFactory { PlanVM(repo, categoriesVM) } }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
