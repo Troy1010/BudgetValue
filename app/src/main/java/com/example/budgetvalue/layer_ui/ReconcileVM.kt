@@ -3,13 +3,11 @@ package com.example.budgetvalue.layer_ui
 import androidx.lifecycle.*
 import com.example.budgetvalue.*
 import com.example.budgetvalue.layer_data.Repo
-import com.example.budgetvalue.layer_ui.misc.SplitRowData
+import com.example.budgetvalue.layer_ui.misc.ReconcileRowData
 import com.example.budgetvalue.layer_ui.misc.sum
-import com.example.budgetvalue.model_data.Account
 import com.example.budgetvalue.model_app.Category
 import com.example.budgetvalue.model_data.IncomeCategoryAmounts
 import com.example.budgetvalue.model_data.Transaction
-import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
@@ -39,11 +37,11 @@ class ReconcileVM(
     val uncategorizedBudgeted = combineLatestAsTuple(incomeLeftToCategorize, spentLeftToCategorize)
         .map { it.first + it.second }
 
-    fun getRowDatas(transactionSet: List<Transaction>, activeCategories: List<Category>, incomeCA: SourceHashMap<Category, BigDecimal>): ArrayList<SplitRowData> {
-        val rowDatas = ArrayList<SplitRowData>()
+    fun getRowDatas(transactionSet: List<Transaction>, activeCategories: List<Category>, incomeCA: SourceHashMap<Category, BigDecimal>): ArrayList<ReconcileRowData> {
+        val rowDatas = ArrayList<ReconcileRowData>()
         for (category in activeCategories) {
             val spent = transactionSet.map { it.categoryAmounts[category.name] ?: BigDecimal.ZERO }.sum()
-            rowDatas.add(SplitRowData(
+            rowDatas.add(ReconcileRowData(
                 category,
                 spent,
                 incomeCA.itemObservables_.value[category] ?: error("it.third~[category] was null"))

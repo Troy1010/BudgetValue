@@ -4,7 +4,7 @@ import com.example.budgetvalue.model_app.Category
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
 
-data class SplitRowData (
+data class ReconcileRowData (
     val category: Category,
     val spent: BigDecimal,
     val income: BehaviorSubject<BigDecimal>
