@@ -45,9 +45,9 @@ class ReconcileVM(
             Pair(activeCategories, newIncomeCA)
         }.doOnNext{
             // bind IncomeCA to database
-            it.second.observable.subscribe({
-                repo.writeIncomeCA(it.map { IncomeCategoryAmounts(it.key.name, it.value) })
-            }) { logz("hhh:${it.narrate()}") }
+            it.second.observable
+                .subscribe({ repo.writeIncomeCA(it.map { IncomeCategoryAmounts(it.key.name, it.value) }) })
+                { logz("hhh:${it.narrate()}") }
         }.toBehaviorSubject()
     val activeCategories = mainStream
         .map {
