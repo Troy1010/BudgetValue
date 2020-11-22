@@ -1,8 +1,8 @@
 package com.example.budgetvalue.dependency_injection
 
-import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.budgetvalue.App
 import com.example.budgetvalue.SHARED_PREF_FILE_NAME
 import com.example.budgetvalue.layer_data.*
 import dagger.Module
@@ -10,19 +10,15 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class MiscModule(val app: Application) {
+class MiscModule(val app: App) {
     @Provides
     @Singleton
-    fun providesAppContext(): Context = app
+    fun providesApp(): App = app
 
     @Provides
     @Singleton
-    fun providesApp(): Application = app
-
-    @Provides
-    @Singleton
-    fun providesSharedPreferences(appContext: Context): SharedPreferences {
-        return appContext.getSharedPreferences(
+    fun providesSharedPreferences(app: App): SharedPreferences {
+        return app.getSharedPreferences(
             SHARED_PREF_FILE_NAME,
             Context.MODE_PRIVATE
         )
