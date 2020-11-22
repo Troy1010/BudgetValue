@@ -12,7 +12,7 @@ import java.math.BigDecimal
 
 class PlanVM(repo: Repo, categoriesVM: CategoriesVM): ViewModel() {
     val planCategoryAmounts = SourceHashMap<String, BehaviorSubject<BigDecimal>>()
-    var repoLoadComplete = BehaviorSubject.createDefault(false)
+    private var repoLoadComplete = BehaviorSubject.createDefault(false) // TODO("Simplify this")
     init {
         // # Sync planCategoryAmounts with Repo
         // ## Bind once Repo -> planCategoryAmounts
