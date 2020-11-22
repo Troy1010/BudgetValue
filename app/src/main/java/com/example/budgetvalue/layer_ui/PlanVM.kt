@@ -28,20 +28,6 @@ class PlanVM(repo: Repo, categoriesVM: CategoriesVM): ViewModel() {
             }
             repoLoadComplete.onNext(true) // TODO("Simplify this")
         }
-        // # Bind categoriesVM.categories -> planCategoryAmounts
-        combineLatestAsTuple(categoriesVM.categoryNames, repoLoadComplete)
-            .observeOn(Schedulers.io())
-            .filter { it.second }
-            .map { it.first }
-            .subscribe { categoryNames ->
-                for (categoryName in planCategoryAmounts.keys) {
-                    if (categoryName !in categoryNames) planCategoryAmounts.remove(categoryName)
-                }
-                for (categoryName in categoryNames) {
-                    if (categoryName !in planCategoryAmounts)
-                        planCategoryAmounts[categoryName] = BehaviorSubject.createDefault(BigDecimal.ZERO)
-                }
-            }
         // ## Bind planCategoryAmounts -> Repo
         combineLatestAsTuple(planCategoryAmounts.observable, repoLoadComplete)
             .observeOn(Schedulers.io())
@@ -61,6 +47,20 @@ class PlanVM(repo: Repo, categoriesVM: CategoriesVM): ViewModel() {
                             it
                         ))
                     }
+                }
+            }
+        // # Bind categoriesVM.categories -> planCategoryAmounts
+        combineLatestAsTuple(categoriesVM.categoryNames, repoLoadComplete)
+            .observeOn(Schedulers.io())
+            .filter { it.second }
+            .map { it.first }
+            .subscribe { categoryNames ->
+                for (categoryName in planCategoryAmounts.keys) {
+                    if (categoryName !in categoryNames) planCategoryAmounts.remove(categoryName)
+                }
+                for (categoryName in categoryNames) {
+                    if (categoryName !in planCategoryAmounts)
+                        planCategoryAmounts[categoryName] = BehaviorSubject.createDefault(BigDecimal.ZERO)
                 }
             }
     }
