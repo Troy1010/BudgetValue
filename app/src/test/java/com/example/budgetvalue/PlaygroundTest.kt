@@ -1,4 +1,4 @@
-package com.example.budgetvalue.extensions
+package com.example.budgetvalue
 
 import org.junit.Test
 import io.reactivex.rxjava3.core.Observable
