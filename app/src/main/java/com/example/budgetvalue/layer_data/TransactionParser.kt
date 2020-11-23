@@ -16,7 +16,7 @@ import kotlin.collections.ArrayList
  * read/write methods.. but I do not yet know the best way to get ActivityResults from the repo.
  */
 class TransactionParser : ITransactionParser {
-    override suspend fun parseToTransactions(inputStream: InputStream) : List<Transaction> = withContext(Dispatchers.IO) {
+    override fun parseToTransactions(inputStream: InputStream) : List<Transaction> {
         val transactions = ArrayList<Transaction>()
         val reader = BufferedReader(InputStreamReader(inputStream))
         val iterator = reader.lineSequence().iterator()
@@ -73,6 +73,6 @@ class TransactionParser : ITransactionParser {
             //
             transactions.add(Transaction(date, description!!, amount.toBigDecimal()))
         }
-        return@withContext transactions.toList()
+        return transactions.toList()
     }
 }

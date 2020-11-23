@@ -6,91 +6,96 @@ import com.example.budgetvalue.model_app.Category
 import com.example.budgetvalue.model_data.IncomeCategoryAmounts
 import com.example.budgetvalue.model_data.PlanCategoryAmounts
 import com.example.budgetvalue.model_data.Transaction
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
+import java.math.BigDecimal
 
 @Dao
 interface MyDao {
 
-    // Transactions
+    // # Transactions
 
     @Query("DELETE FROM `Transaction`")
-    suspend fun clear()
+    fun clearTransactions()
 
     @Insert
-    suspend fun addTransaction(transaction: Transaction)
+    fun add(transaction: Transaction)
 
     @Query("select * from `Transaction`")
     fun getTransactions(): Observable<List<Transaction>>
 
     @Delete
-    suspend fun deleteTransaction(transaction: Transaction)
+    fun delete(transaction: Transaction)
 
     @Update
-    suspend fun updateTransaction(transaction: Transaction)
+    fun update(transaction: Transaction)
 
-    @Query("SELECT COUNT(*) FROM `Transaction`")
-    suspend fun sizeZ(): Int
-
-    suspend fun addTransaction(transactions: List<Transaction>) {
-        for (transaction in transactions) {
-            addTransaction(transaction)
-        }
+    fun add(transactions: List<Transaction>) {
+        transactions.forEach { add(it) }
     }
 
     @Query("select date from `Transaction` WHERE id=:id")
-    fun getTransactionDate(id: Int): String
+    fun getTransactionDate(id: Int): Observable<String>
 
-    @Query("UPDATE `Transaction` SET date=:value WHERE id=:id")
-    fun setTransactionDate(id: Int, value: String)
+    @Query("UPDATE `Transaction` SET date=:date WHERE id=:id")
+    fun updateTransactionDate(id: Int, date: String)
 
-    // Accounts
+    @Query("UPDATE `Transaction` SET categoryAmounts=:categoryAmounts WHERE id=:id")
+    fun updateTransactionCategoryAmounts(id: Int, categoryAmounts: HashMap<String, BigDecimal>)
+
+    // # Accounts
 
     @Query("select * from `Account`")
     fun getAccounts(): Observable<List<Account>>
 
     @Query("select * from `Account` where id=:id")
-    suspend fun getAccount(id: Int) : Account
+    fun getAccount(id: Int) : Observable<Account>
 
     @Insert
-    suspend fun addAccount(account: Account)
+    fun add(account: Account)
 
     @Delete
-    suspend fun deleteAccount(account: Account)
+    fun delete(account: Account)
 
     @Update
-    suspend fun updateAccount(account: Account)
+    fun _update(account: Account) : Completable
 
-    // IncomeCategoryAmounts
+    fun update(account: Account): Completable {
+        return getAccount(account.id)
+            .take(1)
+            .flatMapCompletable {
+                if (it == account)
+                    Completable.fromAction {  }
+                else
+                    _update(account).observeOn(Schedulers.io()).subscribeOn(Schedulers.io())
+            }// TODO("Simplify")
+    }
+
+    // # IncomeCategoryAmounts
 
     @Query("select * from `IncomeCategoryAmounts`")
     fun getIncomeCategoryAmounts(): Observable<List<IncomeCategoryAmounts>>
 
     @Insert
-    suspend fun addIncomeCategoryAmount(incomeCategoryAmounts: IncomeCategoryAmounts)
+    fun addIncomeCategoryAmount(incomeCategoryAmounts: IncomeCategoryAmounts)
 
-    suspend fun addIncomeCategoryAmount(category: Category) {
+    fun addIncomeCategoryAmount(category: Category) {
         addIncomeCategoryAmount(IncomeCategoryAmounts(category.name))
     }
 
     @Delete
-    suspend fun deleteIncomeCategoryAmount(incomeCategoryAmounts: IncomeCategoryAmounts)
+    fun delete(incomeCategoryAmounts: IncomeCategoryAmounts)
 
     @Query("DELETE FROM `IncomeCategoryAmounts` WHERE category = :categoryName")
-    suspend fun deleteIncomeCategoryAmount(categoryName: String)
+    fun deleteIncomeCategoryAmount(categoryName: String)
 
-    suspend fun deleteIncomeCategoryAmount(category: Category) {
+    fun deleteIncomeCategoryAmount(category: Category) {
         return deleteIncomeCategoryAmount(category.name)
     }
 
     @Update
-    suspend fun updateIncomeCategoryAmount(incomeCategoryAmounts: IncomeCategoryAmounts)
-
-    @Query("select * from `IncomeCategoryAmounts` where category == :categoryName")
-    suspend fun howManyIncomeCategoryAmountHaveCategory(categoryName: String): List<IncomeCategoryAmounts>
-
-    suspend fun doesIncomeCategoryAmountHaveCategory(category: Category): Boolean {
-        return howManyIncomeCategoryAmountHaveCategory(category.name).isNotEmpty() // TODO could be more performant
-    }
+    fun update(incomeCategoryAmounts: IncomeCategoryAmounts)
 
     // # PlanCategoryAmounts
 
@@ -98,11 +103,11 @@ interface MyDao {
     fun getPlanCategoryAmounts(): Observable<List<PlanCategoryAmounts>>
 
     @Insert
-    fun addPlanCategoryAmounts(planCategoryAmounts: PlanCategoryAmounts)
+    fun add(planCategoryAmounts: PlanCategoryAmounts)
 
     @Query("DELETE FROM `PlanCategoryAmounts`")
     fun clearPlanCategoryAmounts()
 
     @Update
-    fun updatePlanCategoryAmounts(planCategoryAmounts: PlanCategoryAmounts)
+    fun update(planCategoryAmounts: PlanCategoryAmounts)
 }

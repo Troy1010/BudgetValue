@@ -10,17 +10,17 @@ import com.example.budgetvalue.model_app.Category
 import com.example.budgetvalue.model_data.IncomeCategoryAmounts
 import com.example.budgetvalue.model_data.Transaction
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
-import java.util.*
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
 
 class ReconcileVM(
     private val repo: Repo,
     private val categoriesVM: CategoriesVM,
-    private val transactionSet: BehaviorSubject<List<Transaction>>,
-    private val accountsTotal: BehaviorSubject<BigDecimal>,
+    private val transactionSet: Observable<List<Transaction>>,
+    private val accountsTotal: Observable<BigDecimal>,
     private val planVM: PlanVM
 ) : ViewModel() {
     val activeCategories = transactionSet

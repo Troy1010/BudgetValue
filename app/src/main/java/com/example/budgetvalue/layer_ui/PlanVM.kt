@@ -31,12 +31,12 @@ class PlanVM(repo: Repo, categoriesVM: CategoriesVM): ViewModel() {
             .doOnNext { Completable.fromAction { repo.clearPlanCategoryAmounts() }.blockingAwait() }
             .subscribe {
                 for ((categoryName, amountBehaviorSubject) in it) {
-                    repo.addPlanCategoryAmounts(PlanCategoryAmounts(
+                    repo.add(PlanCategoryAmounts(
                         categoryName,
                         BigDecimal.ZERO
                     ))
                     amountBehaviorSubject.observeOn(Schedulers.io()).subscribe { // TODO("Handle disposables")
-                        repo.updatePlanCategoryAmounts(PlanCategoryAmounts(
+                        repo.update(PlanCategoryAmounts(
                             categoryName,
                             it
                         ))

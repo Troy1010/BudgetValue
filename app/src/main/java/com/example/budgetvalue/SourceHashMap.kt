@@ -9,7 +9,7 @@ class SourceHashMap<T, V> : HashMap<T, V>() {
      * This observable emits whenever SourceHashMap puts or removes.
      * It emits a HashMap of T : V
      */
-    val observable = ReplaySubject.create<HashMap<T, V>>()
+    val observable = ReplaySubject.create<SourceHashMap<T, V>>()
     /**
      * this observable emits whenever SourceHashMap puts or removes.
      * It emits a HashMap of T : BehaviorSubject<V>
