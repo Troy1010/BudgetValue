@@ -15,7 +15,7 @@ import java.math.BigDecimal
 class PlanVM(repo: Repo, categoriesVM: CategoriesVM): ViewModel() {
     val planCategoryAmounts = SourceHashMap<String, BigDecimal>()
     private var repoLoadComplete = BehaviorSubject.createDefault(false) // TODO("Simplify this")
-    val planCategoryAmountsTotal = planCategoryAmounts.itemObservablesObservable
+    val uncategorizedPlan = planCategoryAmounts.itemObservablesObservable
         .map { it.map { it.value } }
         .flatMap {
             val pairwiseDifference = BehaviorSubject.createDefault(BigDecimal.ZERO)

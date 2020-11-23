@@ -32,14 +32,14 @@ class ReconcileVM(
         .map { it.map{ it.value }.sum() }
     val rowDatas = zip(transactionSet, activeCategories, reconcileCategoryAmounts, planVM.planCategoryAmounts.itemObservablesObservable)
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
-    val spentLeftToCategorize = transactionSet
-        .map { it.map { it.uncategorizedAmounts }.sum() }
-    val uncategorizedActual = combineLatestAsTuple(spentLeftToCategorize, planVM.planCategoryAmountsTotal)
-        .map { it.first + it.second }
+    val uncategorizedSpent = transactionSet
+        .map { -it.map { it.uncategorizedAmounts }.sum() }
+    val uncategorizedActual = combineLatestAsTuple(accountsTotal, uncategorizedSpent, planVM.uncategorizedPlan)
+        .map { it.first - it.second - it.third }
 //    val incomeLeftToCategorize = combineLatestAsTuple(accountsTotal, incomeCATotal, rowDatas, spentLeftToCategorize)
 //        .map { it.first - it.second - it.third.map { it.actual }.sum() - it.fourth } // TODO()
     val incomeLeftToCategorize = BehaviorSubject.createDefault(BigDecimal.ZERO)
-    val uncategorizedBudgeted = combineLatestAsTuple(incomeLeftToCategorize, spentLeftToCategorize)
+    val uncategorizedBudgeted = combineLatestAsTuple(incomeLeftToCategorize, uncategorizedSpent)
         .map { it.first + it.second }
 
     fun getRowDatas(
