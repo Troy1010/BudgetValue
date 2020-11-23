@@ -42,6 +42,7 @@ class PlanVM(repo: Repo, categoriesVM: CategoriesVM): ViewModel() {
             .subscribe {
                 logz("planCategoryAmounts -> Repo")
                 repo.clearPlanCategoryAmounts()
+                Thread.sleep(1000) // TODO("this should be unnecessary")
                 for ((categoryName, amountBehaviorSubject) in it) {
                     repo.addPlanCategoryAmounts(PlanCategoryAmounts(
                         categoryName,
