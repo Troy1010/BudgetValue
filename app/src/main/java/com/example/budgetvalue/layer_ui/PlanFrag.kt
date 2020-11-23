@@ -3,12 +3,14 @@ package com.example.budgetvalue.layer_ui
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.budgetvalue.App
 import com.example.budgetvalue.R
 import com.example.budgetvalue.layer_ui.TMTableView.CellRecipeBuilder
 import com.example.budgetvalue.layer_ui.misc.rxBind
+import com.example.budgetvalue.layer_ui.misc.rxBindOneWay
 import com.example.budgetvalue.reflectXY
 import com.example.budgetvalue.toBigDecimal2
 import com.tminus1010.tmcommonkotlin.misc.createVmFactory
@@ -32,9 +34,13 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
     private fun setupObservers() {
         val cellRecipeBuilder = CellRecipeBuilder(requireContext(), CellRecipeBuilder.DefaultType.CELL)
         val headerRecipeBuilder = CellRecipeBuilder(requireContext(), CellRecipeBuilder.DefaultType.HEADER)
-        val incomeRecipeBuilder = CellRecipeBuilder<EditText, BehaviorSubject<BigDecimal>>(
+        val inputRecipeBuilder = CellRecipeBuilder<EditText, BehaviorSubject<BigDecimal>>(
             { View.inflate(context, R.layout.item_text_edit, null) as EditText },
             { v, bs -> v.rxBind(bs, { it.toBigDecimal2() } )}
+        )
+        val incomeRecipeBuilder = CellRecipeBuilder<TextView, BehaviorSubject<BigDecimal>>(
+            { View.inflate(context, R.layout.tableview_basic_cell, null) as TextView },
+            { v, bs -> v.rxBindOneWay(bs)}
         )
         planVM.planCategoryAmounts.itemObservablesObservable
             .observeOn(AndroidSchedulers.mainThread())
@@ -42,9 +48,11 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
                 myTableView_plan.setRecipes(
                     listOf(
                         headerRecipeBuilder.buildOne("Category")
+                                + cellRecipeBuilder.buildOne("Expected Income")
                                 + cellRecipeBuilder.buildMany(it.keys.toList()),
                         headerRecipeBuilder.buildOne("Plan")
-                                + incomeRecipeBuilder.buildMany(it.values.toList())
+                                + incomeRecipeBuilder.buildOne(planVM.uncategorizedPlan)
+                                + inputRecipeBuilder.buildMany(it.values.toList())
                     ).reflectXY()
                 )
             }
