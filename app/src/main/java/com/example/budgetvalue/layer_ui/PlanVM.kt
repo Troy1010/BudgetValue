@@ -28,10 +28,13 @@ class PlanVM(repo: Repo, categoriesVM: CategoriesVM): ViewModel() {
             .switchMap { planCategoryAmounts.itemObservablesObservable }
             .subscribe {
                 repo.clearPlanCategoryAmounts().blockingAwait()
-                for ((categoryName, amountBehaviorSubject) in it) {
-                    repo.add(PlanCategoryAmounts(categoryName, BigDecimal.ZERO))
-                    amountBehaviorSubject.observeOn(Schedulers.io()).subscribe { // TODO("Handle disposables")
-                        repo.update(PlanCategoryAmounts(categoryName, it))
+                synchronized(planCategoryAmounts) {
+                    for ((categoryName, amountBehaviorSubject) in it) {
+                        repo.add(PlanCategoryAmounts(categoryName, BigDecimal.ZERO))
+                        amountBehaviorSubject.observeOn(Schedulers.io())
+                            .subscribe { // TODO("Handle disposables")
+                                repo.update(PlanCategoryAmounts(categoryName, it))
+                            }
                     }
                 }
             }
@@ -40,13 +43,15 @@ class PlanVM(repo: Repo, categoriesVM: CategoriesVM): ViewModel() {
             .observeOn(Schedulers.io())
             .switchMap { categoriesVM.choosableCategoryNames }
             .subscribe { categoryNames ->
-                for (categoryName in planCategoryAmounts.keys) {
-                    if (categoryName !in categoryNames)
-                        planCategoryAmounts.remove(categoryName)
-                }
-                for (categoryName in categoryNames) {
-                    if (categoryName !in planCategoryAmounts)
-                        planCategoryAmounts[categoryName] = BigDecimal.ZERO
+                synchronized(planCategoryAmounts) {
+                    for (categoryName in planCategoryAmounts.keys) {
+                        if (categoryName !in categoryNames)
+                            planCategoryAmounts.remove(categoryName)
+                    }
+                    for (categoryName in categoryNames) {
+                        if (categoryName !in planCategoryAmounts)
+                            planCategoryAmounts[categoryName] = BigDecimal.ZERO
+                    }
                 }
             }
     }
