@@ -28,18 +28,15 @@ class ReconcileVM(
         .map(::getIncomeCA)
         .doOnNext(::bindIncomeCAToRepo)
         .toBehaviorSubject()
-    val reconcileCategoryAmountsTotal = reconcileCategoryAmounts
-        .map { it.map{ it.value }.sum() }
     val rowDatas = zip(transactionSet, activeCategories, reconcileCategoryAmounts, planVM.planCategoryAmounts.itemObservablesObservable)
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
     val uncategorizedSpent = transactionSet
         .map { -it.map { it.uncategorizedAmounts }.sum() }
     val uncategorizedActual = combineLatestAsTuple(accountsTotal, uncategorizedSpent, planVM.uncategorizedPlan)
-        .map { it.first - it.second - it.third }
-//    val incomeLeftToCategorize = combineLatestAsTuple(accountsTotal, incomeCATotal, rowDatas, spentLeftToCategorize)
-//        .map { it.first - it.second - it.third.map { it.actual }.sum() - it.fourth } // TODO()
-    val incomeLeftToCategorize = BehaviorSubject.createDefault(BigDecimal.ZERO)
-    val uncategorizedBudgeted = combineLatestAsTuple(incomeLeftToCategorize, uncategorizedSpent)
+        .map { it.first - it.second - it.third } // TODO("Should subtract from last block")
+    val uncategorizedReconcile = reconcileCategoryAmounts
+        .map { -it.map{ it.value }.sum() }
+    val uncategorizedBudgeted = combineLatestAsTuple(uncategorizedActual, uncategorizedReconcile)
         .map { it.first + it.second }
 
     fun getRowDatas(
@@ -58,8 +55,8 @@ class ReconcileVM(
             rowDatas.add(ReconcileRowData(
                 category,
                 actual,
-                reconcileCA.itemObservablesObservable.value[category] ?: error("it.third~[category] was null"))
-            )
+                reconcileCA.itemObservablesObservable.value[category]!!
+            ))
         }
         return rowDatas
     }
