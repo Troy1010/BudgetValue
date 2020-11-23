@@ -2,6 +2,7 @@ package com.example.budgetvalue.layer_ui
 
 import androidx.lifecycle.*
 import com.example.budgetvalue.*
+import com.example.budgetvalue.extensions.toSourceHashMap
 import com.example.budgetvalue.layer_data.Repo
 import com.example.budgetvalue.model_app.ReconcileRowData
 import com.example.budgetvalue.layer_ui.misc.sum
@@ -25,7 +26,7 @@ class ReconcileVM(
     val activeCategories = transactionSet
         .map(::getActiveCategories)
     val reconcileCategoryAmounts = activeCategories
-        .map(::getIncomeCA)
+        .map(::getReconcileCategoryAmounts)
         .doOnNext(::bindIncomeCAToRepo)
         .toBehaviorSubject()
     val rowDatas = zip(transactionSet, activeCategories, reconcileCategoryAmounts, planVM.planCategoryAmounts.itemObservablesObservable)
@@ -41,7 +42,7 @@ class ReconcileVM(
 
     fun getRowDatas(
         transactionSet: List<Transaction>,
-        activeCategories: List<Category>,
+        activeCategories: Iterable<Category>,
         reconcileCA: SourceHashMap<Category, BigDecimal>,
         planCA: HashMap<String, BehaviorSubject<BigDecimal>>
     ): ArrayList<ReconcileRowData> {
@@ -61,23 +62,19 @@ class ReconcileVM(
         return rowDatas
     }
 
-    fun getIncomeCA(activeCategories: List<Category>): SourceHashMap<Category, BigDecimal> {
-        val newIncomeCA = SourceHashMap<Category, BigDecimal>()
-        val oldIncomeCA = repo.readIncomeCA().associate { it.category to it.amount }
-        for (category in activeCategories) {
-            newIncomeCA[category] = oldIncomeCA[category.name] ?: BigDecimal.ZERO
-        }
-        return newIncomeCA
+    fun getReconcileCategoryAmounts(activeCategories: Iterable<Category>): SourceHashMap<Category, BigDecimal> {
+        val oldReconcileCategoryAmounts = repo.readIncomeCA().associate { it.category to it.amount }
+        return activeCategories
+            .associateWith { oldReconcileCategoryAmounts[it.name] ?: BigDecimal.ZERO }
+            .toSourceHashMap()
     }
 
-    fun getActiveCategories(transactionSet: List<Transaction>): List<Category> {
-        val activeCategories = HashSet<String>()
-        for (transaction in transactionSet) {
-            for (categoryAmount in transaction.categoryAmounts) {
-                activeCategories.add(categoryAmount.key)
-            }
+    fun getActiveCategories(transactionSet: Iterable<Transaction>): HashSet<Category> {
+        fun getCategories(transaction: Transaction): Iterable<Category> {
+            return transaction.categoryAmounts.keys.map { categoriesVM.getCategoryByName(it) }
         }
-        return activeCategories.toList().map { categoriesVM.getCategoryByName(it) }
+        return transactionSet
+            .fold(HashSet()) { acc, transaction -> acc.addAll(getCategories(transaction)); acc }
     }
 
     fun bindIncomeCAToRepo(incomeCA: SourceHashMap<Category, BigDecimal>) {
