@@ -16,6 +16,7 @@ import com.example.budgetvalue.toBigDecimal2
 import com.tminus1010.tmcommonkotlin.misc.createVmFactory
 import com.tminus1010.tmcommonkotlin_rx.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.frag_plan.*
 import java.math.BigDecimal
@@ -38,7 +39,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
             { v, bs -> v.rxBind(bs, { it.toBigDecimal2() } )}
         )
-        val incomeRecipeBuilder = CellRecipeBuilder<TextView, BehaviorSubject<BigDecimal>>(
+        val oneWayCellRecipeBuilder = CellRecipeBuilder<TextView, Observable<BigDecimal>>(
             { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
             { v, bs -> v.rxBindOneWay(bs)}
         )
@@ -49,9 +50,11 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
                     listOf(
                         headerRecipeBuilder.buildOne("Category")
                                 + cellRecipeBuilder.buildOne("Expected Income")
+                                + cellRecipeBuilder.buildOne("Difference")
                                 + cellRecipeBuilder.buildMany(it.keys.toList()),
                         headerRecipeBuilder.buildOne("Plan")
-                                + incomeRecipeBuilder.buildOne(planVM.uncategorizedPlan)
+                                + inputRecipeBuilder.buildOne(planVM.expectedIncome)
+                                + oneWayCellRecipeBuilder.buildOne(planVM.difference)
                                 + inputRecipeBuilder.buildMany(it.values.toList())
                     ).reflectXY()
                 )
