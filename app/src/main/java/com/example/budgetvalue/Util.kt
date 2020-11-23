@@ -10,16 +10,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.budgetvalue.extensions.pairwise
 import com.example.budgetvalue.model_data.Transaction
 import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import com.tminus1010.tmcommonkotlin.tuple.Quadruple
 import com.tminus1010.tmcommonkotlin.tuple.Quintuple
+import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableSource
 import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.functions.Function3
 import io.reactivex.rxjava3.functions.Function4
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -407,3 +410,14 @@ fun <A, B, C, D> zip(
             d)
     })
 }
+
+
+fun getTotalObservable(it: Iterable<BehaviorSubject<BigDecimal>>): BehaviorSubject<BigDecimal> {
+    val pairwiseDifference = BehaviorSubject.createDefault(BigDecimal.ZERO)
+    val returning = pairwiseDifference
+        .scan(BigDecimal.ZERO) { acc, y -> acc + y }
+        .toBehaviorSubject() // TODO("Simplify")
+    it.forEach { it.pairwise(BigDecimal.ZERO).map { it.second - it.first }.subscribe(pairwiseDifference) } // TODO("Are these subscriptions safe?")
+    return returning
+}
+

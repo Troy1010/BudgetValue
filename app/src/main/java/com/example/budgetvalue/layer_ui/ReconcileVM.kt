@@ -36,7 +36,9 @@ class ReconcileVM(
     val uncategorizedActual = combineLatestAsTuple(accountsTotal, uncategorizedSpent, planVM.uncategorizedPlan)
         .map { it.first - it.second - it.third } // TODO("Should subtract from last block")
     val uncategorizedReconcile = reconcileCategoryAmounts
-        .map { -it.map{ it.value }.sum() }
+        .switchMap { it.itemObservablesObservable }
+        .flatMap { getTotalObservable(it.values) }
+        .map { -it }
     val uncategorizedBudgeted = combineLatestAsTuple(uncategorizedActual, uncategorizedReconcile)
         .map { it.first + it.second }
 
