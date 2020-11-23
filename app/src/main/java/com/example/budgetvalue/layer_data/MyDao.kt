@@ -106,7 +106,7 @@ interface MyDao {
     fun add(planCategoryAmounts: PlanCategoryAmounts)
 
     @Query("DELETE FROM `PlanCategoryAmounts`")
-    fun clearPlanCategoryAmounts()
+    fun clearPlanCategoryAmounts() : Completable
 
     @Update
     fun update(planCategoryAmounts: PlanCategoryAmounts)

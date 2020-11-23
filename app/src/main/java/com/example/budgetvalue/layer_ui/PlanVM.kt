@@ -2,12 +2,10 @@ package com.example.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
 import com.example.budgetvalue.SourceHashMap
-import com.example.budgetvalue.combineLatestAsTuple
 import com.example.budgetvalue.extensions.pairwise
 import com.example.budgetvalue.layer_data.Repo
 import com.example.budgetvalue.model_data.PlanCategoryAmounts
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
@@ -28,26 +26,20 @@ class PlanVM(repo: Repo, categoriesVM: CategoriesVM): ViewModel() {
         loadFromRepoObservable
             .observeOn(Schedulers.io())
             .switchMap { planCategoryAmounts.itemObservablesObservable }
-            .doOnNext { Completable.fromAction { repo.clearPlanCategoryAmounts() }.blockingAwait() }
             .subscribe {
+                repo.clearPlanCategoryAmounts().blockingAwait()
                 for ((categoryName, amountBehaviorSubject) in it) {
-                    repo.add(PlanCategoryAmounts(
-                        categoryName,
-                        BigDecimal.ZERO
-                    ))
+                    repo.add(PlanCategoryAmounts(categoryName, BigDecimal.ZERO))
                     amountBehaviorSubject.observeOn(Schedulers.io()).subscribe { // TODO("Handle disposables")
-                        repo.update(PlanCategoryAmounts(
-                            categoryName,
-                            it
-                        ))
+                        repo.update(PlanCategoryAmounts(categoryName, it))
                     }
                 }
             }
         // # Bind categoriesVM.categoryNames -> planCategoryAmounts
         loadFromRepoObservable
             .observeOn(Schedulers.io())
-            .switchMap { combineLatestAsTuple(planCategoryAmounts.observable, categoriesVM.choosableCategoryNames) }
-            .subscribe { (planCategoryAmounts, categoryNames) ->
+            .switchMap { categoriesVM.choosableCategoryNames }
+            .subscribe { categoryNames ->
                 for (categoryName in planCategoryAmounts.keys) {
                     if (categoryName !in categoryNames)
                         planCategoryAmounts.remove(categoryName)
