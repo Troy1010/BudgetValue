@@ -17,6 +17,8 @@ class CategoriesVM : ViewModel() {
         .map { it.map { it.name } }
     val choosableCategories = userAddedCategories.observable
         .toBehaviorSubject()
+    val choosableCategoryNames = choosableCategories
+        .map { it.map { it.name } }
     private val nameToCategoryMap = categories
         .map { it.associateBy { it.name } as HashMap<String, Category> }
         .toBehaviorSubject()

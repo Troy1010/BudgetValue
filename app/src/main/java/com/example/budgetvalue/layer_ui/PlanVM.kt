@@ -46,7 +46,7 @@ class PlanVM(repo: Repo, categoriesVM: CategoriesVM): ViewModel() {
         // # Bind categoriesVM.categoryNames -> planCategoryAmounts
         loadFromRepoObservable
             .observeOn(Schedulers.io())
-            .switchMap { combineLatestAsTuple(planCategoryAmounts.observable, categoriesVM.categoryNames) }
+            .switchMap { combineLatestAsTuple(planCategoryAmounts.observable, categoriesVM.choosableCategoryNames) }
             .subscribe { (planCategoryAmounts, categoryNames) ->
                 for (categoryName in planCategoryAmounts.keys) {
                     if (categoryName !in categoryNames)
