@@ -46,7 +46,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                 v.textview_header.text = d.first
                 v.textview_number.rxBindOneWay(d.second)
             })
-        val incomeRecipeBuilder = CellRecipeBuilder<EditText, BehaviorSubject<BigDecimal>>(
+        val inputRecipeBuilder = CellRecipeBuilder<EditText, BehaviorSubject<BigDecimal>>(
             { View.inflate(context, R.layout.item_text_edit, null) as EditText },
             { v, bs -> v.rxBind(bs, { it.toBigDecimal2() } )}
         )
@@ -67,7 +67,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                                 + oneWayCellRecipeBuilder.buildMany(rowDatas.map { it.actual }),
                         headerRecipeBuilder.buildOne("Reconcile")
                                 + oneWayCellRecipeBuilder.buildOne(reconcileVM.uncategorizedReconcile)
-                                + incomeRecipeBuilder.buildMany(rowDatas.map { it.reconcile }),
+                                + inputRecipeBuilder.buildMany(rowDatas.map { it.reconcile }),
                         headerRecipeBuilder_numbered.buildOne(Pair("Budgeted",accountsVM.accountsTotal))
                                 + oneWayCellRecipeBuilder.buildOne(reconcileVM.uncategorizedBudgeted)
                                 + oneWayCellRecipeBuilder.buildMany(rowDatas.map { it.budgeted })
