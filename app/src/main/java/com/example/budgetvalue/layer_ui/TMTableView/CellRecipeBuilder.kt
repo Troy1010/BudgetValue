@@ -24,7 +24,7 @@ class CellRecipeBuilder<V : View, D : Any>(
                     { view: TextView, s: String? -> view.text = s }
                 )
                 else -> CellRecipeBuilder(
-                    { View.inflate(context, R.layout.tableview_basic_cell, null) as TextView },
+                    { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
                     { view: TextView, s: String? -> view.text = s }
                 )
             }

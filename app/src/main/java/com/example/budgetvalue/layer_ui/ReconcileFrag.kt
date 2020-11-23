@@ -47,11 +47,11 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                 v.textview_number.rxBindOneWay(d.second)
             })
         val inputRecipeBuilder = CellRecipeBuilder<EditText, BehaviorSubject<BigDecimal>>(
-            { View.inflate(context, R.layout.item_text_edit, null) as EditText },
+            { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
             { v, bs -> v.rxBind(bs, { it.toBigDecimal2() } )}
         )
         val oneWayCellRecipeBuilder = CellRecipeBuilder<TextView, Observable<BigDecimal>>(
-            { View.inflate(context, R.layout.tableview_basic_cell, null) as TextView },
+            { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
             { v, observable -> v.rxBindOneWay(observable)}
         )
         reconcileVM.rowDatas

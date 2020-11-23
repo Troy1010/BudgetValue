@@ -22,9 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         tools:layoutManager="LinearLayoutManager"
-        tools:listitem="@layout/tableview_basic_cell"
+        tools:listitem="@layout/tableview_text_view"
         tools:orientation="horizontal"
         tools:itemCount="4"/>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

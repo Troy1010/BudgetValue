@@ -35,11 +35,11 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
         val cellRecipeBuilder = CellRecipeBuilder(requireContext(), CellRecipeBuilder.DefaultType.CELL)
         val headerRecipeBuilder = CellRecipeBuilder(requireContext(), CellRecipeBuilder.DefaultType.HEADER)
         val inputRecipeBuilder = CellRecipeBuilder<EditText, BehaviorSubject<BigDecimal>>(
-            { View.inflate(context, R.layout.item_text_edit, null) as EditText },
+            { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
             { v, bs -> v.rxBind(bs, { it.toBigDecimal2() } )}
         )
         val incomeRecipeBuilder = CellRecipeBuilder<TextView, BehaviorSubject<BigDecimal>>(
-            { View.inflate(context, R.layout.tableview_basic_cell, null) as TextView },
+            { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
             { v, bs -> v.rxBindOneWay(bs)}
         )
         planVM.planCategoryAmounts.itemObservablesObservable
