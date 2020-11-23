@@ -1,8 +1,8 @@
 package com.example.budgetvalue.layer_data
 
-import com.example.budgetvalue.model_data.IncomeCategoryAmounts
+import com.example.budgetvalue.model_data.ReconcileCategoryAmounts
 
 interface ISharedPrefWrapper {
-    fun readIncomeCA(): List<IncomeCategoryAmounts>
-    fun writeIncomeCA(incomeCA: List<IncomeCategoryAmounts>?)
+    fun fetchReconcileCategoryAmounts(): List<ReconcileCategoryAmounts>
+    fun pushReconcileCategoryAmounts(reconcileCA: List<ReconcileCategoryAmounts>?)
 }

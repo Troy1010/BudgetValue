@@ -7,7 +7,7 @@ import com.example.budgetvalue.layer_data.Repo
 import com.example.budgetvalue.model_app.ReconcileRowData
 import com.example.budgetvalue.layer_ui.misc.sum
 import com.example.budgetvalue.model_app.Category
-import com.example.budgetvalue.model_data.IncomeCategoryAmounts
+import com.example.budgetvalue.model_data.ReconcileCategoryAmounts
 import com.example.budgetvalue.model_data.Transaction
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
@@ -27,7 +27,7 @@ class ReconcileVM(
         .map(::getActiveCategories)
     val reconcileCategoryAmounts = activeCategories
         .map(::getReconcileCategoryAmounts)
-        .doOnNext(::bindIncomeCAToRepo)
+        .doOnNext(::bindReconcileCategoryAmountsToRepo)
         .toBehaviorSubject()
     val rowDatas = zip(transactionSet, activeCategories, reconcileCategoryAmounts, planVM.planCategoryAmounts.itemObservablesObservable)
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
@@ -63,7 +63,7 @@ class ReconcileVM(
     }
 
     fun getReconcileCategoryAmounts(activeCategories: Iterable<Category>): SourceHashMap<Category, BigDecimal> {
-        val oldReconcileCategoryAmounts = repo.readIncomeCA().associate { it.category to it.amount }
+        val oldReconcileCategoryAmounts = repo.fetchReconcileCategoryAmounts().associate { it.categoryName to it.amount }
         return activeCategories
             .associateWith { oldReconcileCategoryAmounts[it.name] ?: BigDecimal.ZERO }
             .toSourceHashMap()
@@ -77,8 +77,8 @@ class ReconcileVM(
             .fold(HashSet()) { acc, transaction -> acc.addAll(getCategories(transaction)); acc }
     }
 
-    fun bindIncomeCAToRepo(incomeCA: SourceHashMap<Category, BigDecimal>) {
-        incomeCA.observable // TODO("Handle disposables")
-            .subscribe { repo.writeIncomeCA(it.map { IncomeCategoryAmounts(it.key.name, it.value) }) }
+    fun bindReconcileCategoryAmountsToRepo(reconcileCategoryAmounts: SourceHashMap<Category, BigDecimal>) {
+        reconcileCategoryAmounts.observable // TODO("Handle disposables")
+            .subscribe { repo.pushReconcileCategoryAmounts(it.map { ReconcileCategoryAmounts(it.key.name, it.value) }) }
     }
 }

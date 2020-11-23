@@ -3,7 +3,7 @@ package com.example.budgetvalue.layer_data
 import androidx.room.*
 import com.example.budgetvalue.model_data.Account
 import com.example.budgetvalue.model_app.Category
-import com.example.budgetvalue.model_data.IncomeCategoryAmounts
+import com.example.budgetvalue.model_data.ReconcileCategoryAmounts
 import com.example.budgetvalue.model_data.PlanCategoryAmounts
 import com.example.budgetvalue.model_data.Transaction
 import io.reactivex.rxjava3.core.Completable
@@ -72,30 +72,30 @@ interface MyDao {
             }// TODO("Simplify")
     }
 
-    // # IncomeCategoryAmounts
+    // # ReconcileCategoryAmounts
 
-    @Query("select * from `IncomeCategoryAmounts`")
-    fun getIncomeCategoryAmounts(): Observable<List<IncomeCategoryAmounts>>
+    @Query("select * from ReconcileCategoryAmounts")
+    fun getReconcileCategoryAmount(): Observable<List<ReconcileCategoryAmounts>>
 
     @Insert
-    fun addIncomeCategoryAmount(incomeCategoryAmounts: IncomeCategoryAmounts)
+    fun add(reconcileCategoryAmounts: ReconcileCategoryAmounts)
 
-    fun addIncomeCategoryAmount(category: Category) {
-        addIncomeCategoryAmount(IncomeCategoryAmounts(category.name))
+    fun addReconcileCategoryAmount(category: Category) {
+        add(ReconcileCategoryAmounts(category.name))
     }
 
     @Delete
-    fun delete(incomeCategoryAmounts: IncomeCategoryAmounts)
+    fun delete(reconcileCategoryAmounts: ReconcileCategoryAmounts)
 
-    @Query("DELETE FROM `IncomeCategoryAmounts` WHERE category = :categoryName")
-    fun deleteIncomeCategoryAmount(categoryName: String)
+    @Query("DELETE FROM ReconcileCategoryAmounts WHERE categoryName = :categoryName")
+    fun deleteReconcileCategoryAmount(categoryName: String)
 
-    fun deleteIncomeCategoryAmount(category: Category) {
-        return deleteIncomeCategoryAmount(category.name)
+    fun deleteReconcileCategoryAmount(category: Category) {
+        return deleteReconcileCategoryAmount(category.name)
     }
 
     @Update
-    fun update(incomeCategoryAmounts: IncomeCategoryAmounts)
+    fun update(reconcileCategoryAmounts: ReconcileCategoryAmounts)
 
     // # PlanCategoryAmounts
 
