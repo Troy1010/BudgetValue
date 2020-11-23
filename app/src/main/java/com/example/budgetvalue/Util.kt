@@ -378,22 +378,6 @@ fun <T,V> List<HashMap<T,V>>.reflectXY(): HashMap<T,ArrayList<V>> {
 
 
 
-fun <T : Any> Observable<T>.pairwise(initialValue: T): Observable<Pair<T, T>> {
-    return this
-        .startWithItem(initialValue)
-        .pairwise()
-}
-
-fun <T : Any> Observable<T>.pairwise(): Observable<Pair<T, T>> {
-    lateinit var lastValue: T
-    return this
-        .doOnNext { lastValue = it }
-        .skip(1)
-        .map { Pair(lastValue, it) }
-}
-
-
-
 fun String.toBigDecimal2(): BigDecimal {
     return if (this == "") BigDecimal.ZERO else this.toBigDecimal()
 }

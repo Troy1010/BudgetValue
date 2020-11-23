@@ -3,11 +3,12 @@ package com.example.budgetvalue.layer_ui
 import androidx.lifecycle.ViewModel
 import com.example.budgetvalue.SourceHashMap
 import com.example.budgetvalue.combineLatestAsTuple
+import com.example.budgetvalue.extensions.pairwise
 import com.example.budgetvalue.layer_data.Repo
 import com.example.budgetvalue.model_data.PlanCategoryAmounts
-import com.example.budgetvalue.pairwise
 import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
