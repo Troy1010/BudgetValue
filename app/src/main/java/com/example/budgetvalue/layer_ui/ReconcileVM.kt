@@ -31,16 +31,12 @@ class ReconcileVM(
         .toBehaviorSubject()
     val rowDatas = zip(transactionSet, activeCategories, reconcileCategoryAmounts, planVM.planCategoryAmounts.itemObservablesObservable)
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
-    val uncategorizedSpent = transactionSet
-        .map { -it.map { it.uncategorizedAmounts }.sum() }
-    val uncategorizedActual = combineLatestAsTuple(accountsTotal, uncategorizedSpent, planVM.uncategorizedPlan)
-        .map { it.first - it.second - it.third } // TODO("Should subtract from last block")
     val uncategorizedReconcile = reconcileCategoryAmounts
         .switchMap { it.itemObservablesObservable }
         .flatMap { getTotalObservable(it.values) }
         .map { -it }
-    val uncategorizedBudgeted = combineLatestAsTuple(uncategorizedActual, uncategorizedReconcile)
-        .map { it.first + it.second }
+    val uncategorizedBudgeted = combineLatestAsTuple(accountsTotal, rowDatas.flatMap { getTotalObservable(it.map { it.budgeted }) })
+        .map { it.first - it.second }
 
     fun getRowDatas(
         transactionSet: List<Transaction>,

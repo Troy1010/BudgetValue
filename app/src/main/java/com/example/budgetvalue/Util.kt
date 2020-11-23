@@ -412,7 +412,7 @@ fun <A, B, C, D> zip(
 }
 
 
-fun getTotalObservable(it: Iterable<BehaviorSubject<BigDecimal>>): BehaviorSubject<BigDecimal> {
+fun getTotalObservable(it: Iterable<Observable<BigDecimal>>): BehaviorSubject<BigDecimal> {
     val pairwiseDifference = BehaviorSubject.createDefault(BigDecimal.ZERO)
     val returning = pairwiseDifference
         .scan(BigDecimal.ZERO) { acc, y -> acc + y }
