@@ -50,7 +50,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
                     listOf(
                         headerRecipeBuilder.buildOne("Category")
                                 + cellRecipeBuilder.buildOne("Expected Income")
-                                + cellRecipeBuilder.buildOne("Difference")
+                                + cellRecipeBuilder.buildOne("Default")
                                 + cellRecipeBuilder.buildMany(it.keys.toList()),
                         headerRecipeBuilder.buildOne("Plan")
                                 + inputRecipeBuilder.buildOne(planVM.expectedIncome)
