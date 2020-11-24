@@ -20,10 +20,12 @@ object ColumnWidthCalculator {
     fun generateMinWidths(rowData: List<ICellRecipe>) = rowData.map { it.intrinsicWidth }
 
     fun generateColumnWidths(
-        minWidths: List<Int>,
-        intrinsicWidths: List<List<Int>>,
+        recipe2d: List<List<ICellRecipe>>,
         parentWidth: Int
     ): List<Int> {
+        val minWidths = generateMinWidths(recipe2d[0])
+        val intrinsicWidths = generateIntrinsicWidths(recipe2d)
+
         if (minWidths.sum() > parentWidth)
             logz("WARNING`minWidths.sum():${minWidths.sum()} > parentWidth:$parentWidth")
         val columnCount = minWidths.size

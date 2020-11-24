@@ -24,19 +24,14 @@ fun createRow(context: Context, rowRecipes: List<ICellRecipe>): LinearLayout {
 fun bindRow(
     rowView: LinearLayout,
     rowRecipes: List<ICellRecipe>,
-    columnWidthsObservable: BehaviorSubject<List<Int>>
+    columnWidths: List<Int>
 ) {
-    columnWidthsObservable
-        .filter { it.isNotEmpty() }
-        .take(1)
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe {
-            for ((xPos, cellData) in rowRecipes.withIndex()) {
-                cellData.bindAction(rowView[xPos], cellData.data)
-                rowView[xPos].layoutParams = LinearLayout.LayoutParams(
-                    it[xPos],
-                    LinearLayout.LayoutParams.MATCH_PARENT
-                )
-            }
-        }
+    for ((xPos, cellData) in rowRecipes.withIndex()) {
+        cellData.bindAction(rowView[xPos], cellData.data)
+        rowView[xPos].layoutParams = LinearLayout.LayoutParams(
+            columnWidths[xPos],
+            LinearLayout.LayoutParams.MATCH_PARENT
+        )
+    }
+
 }
