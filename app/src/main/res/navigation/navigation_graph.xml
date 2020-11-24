@@ -5,19 +5,19 @@
     app:startDestination="@id/planFrag">
 
     <fragment
-        android:id="@+id/actualFrag"
-        android:name="com.example.budgetvalue.layer_ui.ActualFrag"
-        android:label="ActualFrag" />
+        android:id="@+id/categorizeFrag"
+        android:name="com.example.budgetvalue.layer_ui.CategorizeFrag"
+        android:label="Categorize" />
     <fragment
         android:id="@+id/importFrag"
         android:name="com.example.budgetvalue.layer_ui.ImportFrag"
-        android:label="ImportFrag" />
+        android:label="Import" />
     <fragment
         android:id="@+id/reconcileFrag"
         android:name="com.example.budgetvalue.layer_ui.ReconcileFrag"
-        android:label="ReconcileFrag" />
+        android:label="Reconcile" />
     <fragment
         android:id="@+id/planFrag"
         android:name="com.example.budgetvalue.layer_ui.PlanFrag"
-        android:label="PlanFrag" />
+        android:label="Plan" />
 </navigation>

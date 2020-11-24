@@ -36,7 +36,7 @@ class HostActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.menu_import -> navController.navigate(R.id.importFrag)
                 R.id.menu_plan -> navController.navigate(R.id.planFrag)
-                R.id.menu_actual -> navController.navigate(R.id.actualFrag)
+                R.id.menu_categorize -> navController.navigate(R.id.categorizeFrag)
                 R.id.menu_reconcile -> navController.navigate(R.id.reconcileFrag)
                 else -> bSuccessfulNavigation = false
             }

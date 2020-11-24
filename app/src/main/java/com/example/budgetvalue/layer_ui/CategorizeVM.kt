@@ -7,7 +7,7 @@ import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.time.format.DateTimeFormatter
 
-class ActualVM(val repo: Repo, transactionsVM: TransactionsVM): ViewModel() {
+class CategorizeVM(val repo: Repo, transactionsVM: TransactionsVM): ViewModel() {
     val transactionBox = transactionsVM.uncategorizedSpends
         .map { Box(it.getOrNull(0)) }
     val dateAsString = transactionBox

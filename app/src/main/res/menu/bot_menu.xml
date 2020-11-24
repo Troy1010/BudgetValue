@@ -9,8 +9,8 @@
         android:id="@+id/menu_plan"
         android:title="Plan" />
     <item
-        android:id="@+id/menu_actual"
-        android:title="Actual" />
+        android:id="@+id/menu_categorize"
+        android:title="Categorize" />
     <item
         android:id="@+id/menu_reconcile"
         android:title="Reconcile" />
