@@ -13,5 +13,8 @@
     <item
         android:id="@+id/menu_print_spends"
         android:title="Print Spends" />
+    <item
+        android:id="@+id/menu_save_reconciliation"
+        android:title="Save Reconciliation" />
 
 </menu>

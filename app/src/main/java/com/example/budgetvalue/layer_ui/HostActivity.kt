@@ -23,9 +23,7 @@ class HostActivity : AppCompatActivity() {
     val app by lazy { application as App }
     val transactionsVM: TransactionsVM by viewModels { createVmFactory { TransactionsVM(app.appComponent.getRepo()) } }
     val navController by lazy { findNavController(R.id.fragNavHost) }
-
     val categoriesVM: CategoriesVM by viewModels { createVmFactory { CategoriesVM() } }
-    val accountsVM: AccountsVM by viewModels { createVmFactory { AccountsVM(app.appComponent.getRepo()) }}
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -118,6 +116,10 @@ class HostActivity : AppCompatActivity() {
                 //
                 val spendsString = column.joinToString("\n")
                 logz("spendsString:${spendsString}")
+            }
+            R.id.menu_save_reconciliation -> {
+                
+                toast("Reconciliation Saved")
             }
         }
         return super.onOptionsItemSelected(item)
