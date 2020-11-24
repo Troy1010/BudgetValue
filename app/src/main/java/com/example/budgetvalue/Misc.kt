@@ -382,7 +382,7 @@ fun <T,V> List<HashMap<T,V>>.reflectXY(): HashMap<T,ArrayList<V>> {
 
 
 fun String.toBigDecimal2(): BigDecimal {
-    return if (this == "") BigDecimal.ZERO else this.toBigDecimal()
+    return try { this.toBigDecimal() } catch (e:NumberFormatException) { BigDecimal.ZERO }
 }
 
 fun <A, B> zip(a: ObservableSource<A>, b: ObservableSource<B>) : Observable<Pair<A, B>> {
