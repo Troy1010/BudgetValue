@@ -16,7 +16,7 @@ class PlanVM(repo: Repo, categoriesVM: CategoriesVM): ViewModel() {
     val loadFromRepoObservable = repo.getPlanCategoryAmounts()
         .observeOn(Schedulers.io())
         .take(1)
-        .doOnNext { planCategoryAmounts.putAll(it.associate { Pair(it.category, it.amount) }) }
+        .doOnNext { planCategoryAmounts.putAll(it.associate { Pair(it.categoryName, it.amount) }) }
         .toBehaviorSubject()
     val uncategorizedPlan = planCategoryAmounts.itemObservablesObservable
         .flatMap { getTotalObservable(it.values) }

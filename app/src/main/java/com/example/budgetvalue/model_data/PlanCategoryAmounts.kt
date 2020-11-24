@@ -7,6 +7,6 @@ import java.math.BigDecimal
 @Entity
 data class PlanCategoryAmounts(
     @PrimaryKey
-    val category: String,
+    val categoryName: String,
     val amount: BigDecimal = BigDecimal.ZERO
 )
