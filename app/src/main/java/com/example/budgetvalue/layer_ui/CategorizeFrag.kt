@@ -11,10 +11,10 @@ import com.example.budgetvalue.R
 import com.example.budgetvalue.layer_ui.misc.rxBindOneWay
 import com.tminus1010.tmcommonkotlin.misc.GenericRecyclerViewAdapter
 import com.tminus1010.tmcommonkotlin.misc.createVmFactory
-import kotlinx.android.synthetic.main.frag_actual.*
+import kotlinx.android.synthetic.main.frag_categorize.*
 import kotlinx.android.synthetic.main.item_category_btn.view.*
 
-class CategorizeFrag : Fragment(R.layout.frag_actual), GenericRecyclerViewAdapter.Callbacks {
+class CategorizeFrag : Fragment(R.layout.frag_categorize), GenericRecyclerViewAdapter.Callbacks {
     val app by lazy { requireActivity().application as App }
     val transactionsVM: TransactionsVM by activityViewModels { createVmFactory { TransactionsVM(app.appComponent.getRepo()) } }
     val categorizeVM: CategorizeVM by viewModels { createVmFactory { CategorizeVM(app.appComponent.getRepo(), transactionsVM) }}
