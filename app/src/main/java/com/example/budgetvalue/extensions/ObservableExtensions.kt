@@ -12,12 +12,12 @@ fun <T : Any> Observable<T>.pairwise(initialValue: T): Observable<Pair<T, T>> {
 
 @Suppress("UNUSED_EXPRESSION")
 fun <T : Any> Observable<T>.pairwise(): Observable<Pair<T, T>> {
-    lateinit var lastValue: T
     return this
-        .doOnNext { try { lastValue } catch (e: UninitializedPropertyAccessException) { lastValue = it } }
-        .skip(1)
-        .map { Pair(lastValue, it) }
-        .doOnNext { lastValue = it.second }
+        .compose { observable ->
+            observable
+                .skip(1)
+                .zipWith(observable, BiFunction<T, T, Pair<T, T>> { a, b -> Pair(b,a)})
+        }
 }
 
 fun <T : Any, G: Any> Observable<T>.withLatestFrom(x : Observable<G>): Observable<Pair<T, G>> {
