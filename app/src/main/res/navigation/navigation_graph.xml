@@ -20,4 +20,8 @@
         android:id="@+id/planFrag"
         android:name="com.example.budgetvalue.layer_ui.PlanFrag"
         android:label="Plan" />
+    <fragment
+        android:id="@+id/historyFrag"
+        android:name="com.example.budgetvalue.layer_ui.HistoryFrag"
+        android:label="History" />
 </navigation>

@@ -36,6 +36,7 @@ class HostActivity : AppCompatActivity() {
                 R.id.menu_plan -> navController.navigate(R.id.planFrag)
                 R.id.menu_categorize -> navController.navigate(R.id.categorizeFrag)
                 R.id.menu_reconcile -> navController.navigate(R.id.reconcileFrag)
+                R.id.menu_history -> navController.navigate(R.id.historyFrag)
                 else -> bSuccessfulNavigation = false
             }
             bSuccessfulNavigation
@@ -118,7 +119,7 @@ class HostActivity : AppCompatActivity() {
                 logz("spendsString:${spendsString}")
             }
             R.id.menu_save_reconciliation -> {
-                
+
                 toast("Reconciliation Saved")
             }
         }
