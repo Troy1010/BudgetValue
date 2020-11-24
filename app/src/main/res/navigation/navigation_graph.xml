@@ -9,9 +9,9 @@
         android:name="com.example.budgetvalue.layer_ui.ActualFrag"
         android:label="ActualFrag" />
     <fragment
-        android:id="@+id/accountsFrag"
-        android:name="com.example.budgetvalue.layer_ui.AccountsFrag"
-        android:label="AccountsFrag" />
+        android:id="@+id/importFrag"
+        android:name="com.example.budgetvalue.layer_ui.ImportFrag"
+        android:label="ImportFrag" />
     <fragment
         android:id="@+id/reconcileFrag"
         android:name="com.example.budgetvalue.layer_ui.ReconcileFrag"

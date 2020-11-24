@@ -12,10 +12,10 @@ import com.tminus1010.tmcommonkotlin.misc.GenericRecyclerViewAdapter
 import com.tminus1010.tmcommonkotlin.misc.createVmFactory
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindToLifecycle
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.frag_accounts.*
+import kotlinx.android.synthetic.main.frag_import.*
 import kotlinx.android.synthetic.main.item_account.view.*
 
-class AccountsFrag: Fragment(R.layout.frag_accounts), GenericRecyclerViewAdapter.Callbacks {
+class ImportFrag: Fragment(R.layout.frag_import), GenericRecyclerViewAdapter.Callbacks {
     val app by lazy { requireActivity().application as App }
     val accountsVM : AccountsVM by viewModels { createVmFactory { AccountsVM(app.appComponent.getRepo()) } }
 

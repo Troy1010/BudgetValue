@@ -34,7 +34,7 @@ class HostActivity : AppCompatActivity() {
         bottom_navigation.setOnNavigationItemSelectedListener {
             var bSuccessfulNavigation = true
             when (it.itemId) {
-                R.id.menu_accounts -> navController.navigate(R.id.accountsFrag)
+                R.id.menu_import -> navController.navigate(R.id.importFrag)
                 R.id.menu_plan -> navController.navigate(R.id.planFrag)
                 R.id.menu_actual -> navController.navigate(R.id.actualFrag)
                 R.id.menu_reconcile -> navController.navigate(R.id.reconcileFrag)
