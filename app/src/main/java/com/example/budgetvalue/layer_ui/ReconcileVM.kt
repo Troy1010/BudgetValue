@@ -46,18 +46,15 @@ class ReconcileVM(
         activeCategories: Iterable<Category>,
         reconcileCA: SourceHashMap<Category, BigDecimal>,
         planCA: SourceHashMap<Category, BigDecimal>
-    ): ArrayList<ReconcileRowData> {
-        val rowDatas = ArrayList<ReconcileRowData>()
-        for (category in activeCategories) {
-            val actual = BehaviorSubject.createDefault(transactionSet.map { it.categoryAmounts[category.name] ?: BigDecimal.ZERO }.sum())
-            rowDatas.add(ReconcileRowData(
+    ): Iterable<ReconcileRowData> {
+        return activeCategories.map { category ->
+            ReconcileRowData(
                 category,
                 planCA.itemObservablesObservable.value[category]!!,
-                actual,
+                BehaviorSubject.createDefault(transactionSet.map { it.categoryAmounts[category.name] ?: BigDecimal.ZERO }.sum()),
                 reconcileCA.itemObservablesObservable.value[category]!!
-            ))
+            )
         }
-        return rowDatas
     }
 
     fun getReconcileCategoryAmounts(activeCategories: Iterable<Category>): SourceHashMap<Category, BigDecimal> {
