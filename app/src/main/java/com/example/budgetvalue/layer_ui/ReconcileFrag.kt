@@ -66,7 +66,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                                 + cellRecipeBuilder.buildOne("")
                                 + oneWayCellRecipeBuilder.buildMany(rowDatas.map { it.actual }),
                         headerRecipeBuilder.buildOne("Reconcile")
-                                + oneWayCellRecipeBuilder.buildOne(reconcileVM.uncategorizedReconcile)
+                                + oneWayCellRecipeBuilder.buildOne(reconcileVM.reconcileDefault)
                                 + inputRecipeBuilder.buildMany(rowDatas.map { it.reconcile }),
                         headerRecipeBuilder_numbered.buildOne(Pair("Budgeted",accountsVM.accountsTotal))
                                 + oneWayCellRecipeBuilder.buildOne(reconcileVM.uncategorizedBudgeted)

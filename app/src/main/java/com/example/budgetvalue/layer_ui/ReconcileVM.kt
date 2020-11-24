@@ -3,6 +3,7 @@ package com.example.budgetvalue.layer_ui
 import androidx.lifecycle.*
 import com.example.budgetvalue.*
 import com.example.budgetvalue.extensions.toSourceHashMap
+import com.example.budgetvalue.extensions.withLatestFrom
 import com.example.budgetvalue.layer_data.Repo
 import com.example.budgetvalue.model_app.ReconcileRowData
 import com.example.budgetvalue.layer_ui.misc.sum
@@ -11,6 +12,7 @@ import com.example.budgetvalue.model_data.ReconcileCategoryAmounts
 import com.example.budgetvalue.model_data.Transaction
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
 import kotlin.collections.HashMap
@@ -31,10 +33,11 @@ class ReconcileVM(
         .toBehaviorSubject()
     val rowDatas = zip(transactionSet, activeCategories, reconcileCategoryAmounts, planVM.planCategoryAmounts.itemObservablesObservable)
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
-    val uncategorizedReconcile = reconcileCategoryAmounts
+    val reconcileDefault = reconcileCategoryAmounts
         .switchMap { it.itemObservablesObservable }
         .flatMap { getTotalObservable(it.values) }
-        .map { -it }
+        .withLatestFrom(accountsTotal)
+        .map { it.second - it.first } // TODO("Should subtract previous accountsTotal")
     val uncategorizedBudgeted = combineLatestAsTuple(accountsTotal, rowDatas.flatMap { getTotalObservable(it.map { it.budgeted }) })
         .map { it.first - it.second }
 
