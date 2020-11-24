@@ -17,7 +17,7 @@ class ObservableExtensionsKtTest {
     }
 
     @Test
-    fun pairwise2() {
+    fun pairwiseDefault() {
         // # Given
         val observable = Observable.just(9, 5, 8, 6, 2)
         // # Stimulate
