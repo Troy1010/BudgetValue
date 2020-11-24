@@ -51,11 +51,11 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
                         headerRecipeBuilder.buildOne("Category")
                                 + cellRecipeBuilder.buildOne("Expected Income")
                                 + cellRecipeBuilder.buildOne("Default")
-                                + cellRecipeBuilder.buildMany(it.keys.toList()),
+                                + cellRecipeBuilder.buildMany(it.keys.map { it.name }),
                         headerRecipeBuilder.buildOne("Plan")
                                 + inputRecipeBuilder.buildOne(planVM.expectedIncome)
                                 + oneWayCellRecipeBuilder.buildOne(planVM.difference)
-                                + inputRecipeBuilder.buildMany(it.values.toList())
+                                + inputRecipeBuilder.buildMany(it.values)
                     ).reflectXY()
                 )
             }

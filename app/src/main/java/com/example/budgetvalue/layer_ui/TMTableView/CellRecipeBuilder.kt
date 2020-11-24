@@ -9,10 +9,10 @@ class CellRecipeBuilder<V : View, D : Any>(
     val viewFactory: () -> V,
     val bindAction: (V, D) -> Unit
 ) {
-    fun buildMany(datas: List<D>): List<CellRecipe<V, D>> {
+    fun buildMany(datas: Iterable<D>): Iterable<CellRecipe<V, D>> {
         return datas.map { CellRecipe(viewFactory, it, bindAction) }
     }
-    fun buildOne(data: D): List<CellRecipe<V, D>> {
+    fun buildOne(data: D): Iterable<CellRecipe<V, D>> {
         return listOf(CellRecipe(viewFactory, data, bindAction))
     }
 

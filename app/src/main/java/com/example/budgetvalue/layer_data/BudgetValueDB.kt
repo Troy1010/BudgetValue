@@ -8,7 +8,7 @@ import com.example.budgetvalue.model_data.ReconcileCategoryAmounts
 import com.example.budgetvalue.model_data.PlanCategoryAmounts
 import com.example.budgetvalue.model_data.Transaction
 
-@Database(entities = [Transaction::class, Account::class, ReconcileCategoryAmounts::class, PlanCategoryAmounts::class], version = 12)
+@Database(entities = [Transaction::class, Account::class, ReconcileCategoryAmounts::class, PlanCategoryAmounts::class], version = 13)
 @TypeConverters(MyTypeConverters::class)
 abstract class BudgetValueDB : RoomDatabase() {
     abstract fun myDao(): MyDao
