@@ -9,7 +9,7 @@ import javax.inject.Inject
 class Repo @Inject constructor(
     transactionParser: TransactionParser,
     sharedPrefWrapper: ISharedPrefWrapper,
-    myDao: MyDao
+    myDaoWrapper: IMyDaoWrapper
 ) : ITransactionParser by transactionParser,
     ISharedPrefWrapper by sharedPrefWrapper,
-    MyDao by myDao
+    IMyDaoWrapper by myDaoWrapper

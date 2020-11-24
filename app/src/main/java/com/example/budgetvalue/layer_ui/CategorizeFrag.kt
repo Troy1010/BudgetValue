@@ -18,7 +18,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize), GenericRecyclerViewAd
     val app by lazy { requireActivity().application as App }
     val transactionsVM: TransactionsVM by activityViewModels { createVmFactory { TransactionsVM(app.appComponent.getRepo()) } }
     val categorizeVM: CategorizeVM by viewModels { createVmFactory { CategorizeVM(app.appComponent.getRepo(), transactionsVM) }}
-    val categoriesVM: CategoriesVM by activityViewModels { createVmFactory { CategoriesVM() } }
+    val categoriesVM: CategoriesAppVM by activityViewModels { createVmFactory { CategoriesAppVM() } }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

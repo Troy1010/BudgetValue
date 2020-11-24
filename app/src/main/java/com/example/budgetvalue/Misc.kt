@@ -11,7 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.extensions.pairwise
-import com.example.budgetvalue.model_data.Transaction
+import com.example.budgetvalue.model_app.Transaction
 import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import com.tminus1010.tmcommonkotlin.tuple.Quadruple

@@ -22,17 +22,23 @@ class RepoModule {
 
     @Provides
     @Singleton
-    fun providesDao(roomDatabase: BudgetValueDB): MyDao {
+    fun providesMyDao(roomDatabase: BudgetValueDB): MyDao {
         return roomDatabase.myDao()
     }
 
     @Provides
     @Singleton
-    fun providesRepo(myDao: MyDao, sharedPrefWrapper: SharedPrefWrapper): Repo {
+    fun providesDaoWrapper(myDao: MyDao): MyDaoWrapper {
+        return MyDaoWrapper(myDao)
+    }
+
+    @Provides
+    @Singleton
+    fun providesRepo(myDaoWrapper: MyDaoWrapper, sharedPrefWrapper: SharedPrefWrapper): Repo {
         return Repo(
             TransactionParser(),
             sharedPrefWrapper,
-            myDao
+            myDaoWrapper
         )
     }
 }

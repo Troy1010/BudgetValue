@@ -12,7 +12,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
 
-class PlanVM(repo: Repo, categoriesVM: CategoriesVM) : ViewModel() {
+class PlanVM(repo: Repo, categoriesVM: CategoriesAppVM) : ViewModel() {
     val planCategoryAmounts = SourceHashMap<Category, BigDecimal>()
     val loadFromRepoObservable = repo.getPlanCategoryAmounts()
         .observeOn(Schedulers.io())

@@ -9,18 +9,16 @@ import com.example.budgetvalue.model_app.ReconcileRowData
 import com.example.budgetvalue.layer_ui.misc.sum
 import com.example.budgetvalue.model_app.Category
 import com.example.budgetvalue.model_data.ReconcileCategoryAmounts
-import com.example.budgetvalue.model_data.Transaction
+import com.example.budgetvalue.model_app.Transaction
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
-import kotlin.collections.HashMap
 import kotlin.collections.HashSet
 
 class ReconcileVM(
     private val repo: Repo,
-    private val categoriesVM: CategoriesVM,
+    private val categoriesVM: CategoriesAppVM,
     private val transactionSet: Observable<List<Transaction>>,
     private val accountsTotal: Observable<BigDecimal>,
     private val planVM: PlanVM

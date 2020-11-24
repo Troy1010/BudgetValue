@@ -23,7 +23,7 @@ class HostActivity : AppCompatActivity() {
     val app by lazy { application as App }
     val transactionsVM: TransactionsVM by viewModels { createVmFactory { TransactionsVM(app.appComponent.getRepo()) } }
     val navController by lazy { findNavController(R.id.fragNavHost) }
-    val categoriesVM: CategoriesVM by viewModels { createVmFactory { CategoriesVM() } }
+    val categoriesVM: CategoriesAppVM by viewModels { createVmFactory { CategoriesAppVM() } }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

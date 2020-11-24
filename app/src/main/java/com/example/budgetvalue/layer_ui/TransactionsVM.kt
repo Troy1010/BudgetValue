@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import java.io.InputStream
 
 class TransactionsVM(private val repo: Repo):ViewModel() {
-    val transactions = repo.getTransactions()
+    val transactions = repo.getTransactions2()
         .toBehaviorSubject()
     val spends = transactions
         .map { it.filter { it.isSpend } }

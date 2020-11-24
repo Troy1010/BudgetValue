@@ -26,7 +26,7 @@ import java.math.BigDecimal
 
 class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
     val app by lazy { requireActivity().application as App }
-    val categoriesVM: CategoriesVM by activityViewModels { createVmFactory { CategoriesVM() } }
+    val categoriesVM: CategoriesAppVM by activityViewModels { createVmFactory { CategoriesAppVM() } }
     val transactionsVM: TransactionsVM by activityViewModels { createVmFactory { TransactionsVM(app.appComponent.getRepo()) } }
     val accountsVM: AccountsVM by activityViewModels{ createVmFactory { AccountsVM(app.appComponent.getRepo()) }}
     val planVM: PlanVM by activityViewModels{ createVmFactory { PlanVM(app.appComponent.getRepo(), categoriesVM) }}

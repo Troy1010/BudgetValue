@@ -6,7 +6,7 @@ import com.example.budgetvalue.SourceArrayList
 import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 
-class CategoriesVM : ViewModel() {
+class CategoriesAppVM : ViewModel() {
     val defaultCategory = Category("Default", Category.Type.Default)
     val incomeCategory = Category("Income", Category.Type.Income)
     val userAddedCategories = SourceArrayList<Category>()

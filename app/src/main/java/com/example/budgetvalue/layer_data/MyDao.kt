@@ -5,7 +5,7 @@ import com.example.budgetvalue.model_data.Account
 import com.example.budgetvalue.model_app.Category
 import com.example.budgetvalue.model_data.ReconcileCategoryAmounts
 import com.example.budgetvalue.model_data.PlanCategoryAmounts
-import com.example.budgetvalue.model_data.Transaction
+import com.example.budgetvalue.model_data.TransactionReceived
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -16,32 +16,32 @@ interface MyDao {
 
     // # Transactions
 
-    @Query("DELETE FROM `Transaction`")
+    @Query("DELETE FROM `TransactionReceived`")
     fun clearTransactions()
 
     @Insert
-    fun add(transaction: Transaction)
+    fun add(transaction: TransactionReceived)
 
-    @Query("select * from `Transaction`")
-    fun getTransactions(): Observable<List<Transaction>>
+    @Query("select * from `TransactionReceived`")
+    fun getTransactions(): Observable<List<TransactionReceived>>
 
     @Delete
-    fun delete(transaction: Transaction)
+    fun delete(transaction: TransactionReceived)
 
     @Update
-    fun update(transaction: Transaction)
+    fun update(transaction: TransactionReceived)
 
-    fun add(transactions: List<Transaction>) {
+    fun add(transactions: List<TransactionReceived>) {
         transactions.forEach { add(it) }
     }
 
-    @Query("select date from `Transaction` WHERE id=:id")
+    @Query("select date from `TransactionReceived` WHERE id=:id")
     fun getTransactionDate(id: Int): Observable<String>
 
-    @Query("UPDATE `Transaction` SET date=:date WHERE id=:id")
+    @Query("UPDATE `TransactionReceived` SET date=:date WHERE id=:id")
     fun updateTransactionDate(id: Int, date: String)
 
-    @Query("UPDATE `Transaction` SET categoryAmounts=:categoryAmounts WHERE id=:id")
+    @Query("UPDATE `TransactionReceived` SET categoryAmounts=:categoryAmounts WHERE id=:id")
     fun updateTransactionCategoryAmounts(id: Int, categoryAmounts: HashMap<String, BigDecimal>)
 
     // # Accounts
