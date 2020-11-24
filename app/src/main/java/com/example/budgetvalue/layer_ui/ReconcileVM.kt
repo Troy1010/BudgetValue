@@ -49,13 +49,11 @@ class ReconcileVM(
     ): ArrayList<ReconcileRowData> {
         val rowDatas = ArrayList<ReconcileRowData>()
         for (category in activeCategories) {
-            val spent = transactionSet.map { it.categoryAmounts[category.name] ?: BigDecimal.ZERO }.sum()
-            val planAmount = planCA[category.name]!!
-            val actual = planAmount
-                .map { it + spent }
-                .toBehaviorSubject()
+            val actual = BehaviorSubject.createDefault(transactionSet.map { it.categoryAmounts[category.name] ?: BigDecimal.ZERO }.sum())
+            val plan = planCA[category.name]!!
             rowDatas.add(ReconcileRowData(
                 category,
+                plan,
                 actual,
                 reconcileCA.itemObservablesObservable.value[category]!!
             ))
