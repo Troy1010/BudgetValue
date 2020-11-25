@@ -23,7 +23,7 @@ class HostActivity : AppCompatActivity() {
     val app by lazy { application as App }
     val transactionsVM: TransactionsVM by viewModels { createVmFactory { TransactionsVM(app.appComponent.getRepo()) } }
     val navController by lazy { findNavController(R.id.fragNavHost) }
-    val categoriesVM: CategoriesAppVM by viewModels { createVmFactory { CategoriesAppVM() } }
+    val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,9 +78,9 @@ class HostActivity : AppCompatActivity() {
                 for (transactionBlock in transactionBlocks) {
                     val curStringBlock = HashMap<String, String>()
                     stringBlocks.add(curStringBlock)
-                    for (category in categoriesVM.categories.value) {
+                    for (category in categoriesAppVM.categories.value) {
                         curStringBlock[category.name] = transactionBlock.value
-                            .map { it.categoryAmounts[category.name] ?: BigDecimal.ZERO }
+                            .map { it.categoryAmounts[category] ?: BigDecimal.ZERO }
                             .fold(BigDecimal.ZERO, BigDecimal::add)
                             .toString()
                     }

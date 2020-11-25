@@ -18,7 +18,7 @@ import kotlin.collections.HashSet
 
 class ReconcileVM(
     private val repo: Repo,
-    private val categoriesVM: CategoriesAppVM,
+    private val categoriesAppVM: CategoriesAppVM,
     private val transactionSet: Observable<List<Transaction>>,
     private val accountsTotal: Observable<BigDecimal>,
     private val planVM: PlanVM
@@ -49,7 +49,7 @@ class ReconcileVM(
             ReconcileRowData(
                 category,
                 planCA.itemObservablesObservable.value[category]!!,
-                BehaviorSubject.createDefault(transactionSet.map { it.categoryAmounts[category.name] ?: BigDecimal.ZERO }.sum()),
+                BehaviorSubject.createDefault(transactionSet.map { it.categoryAmounts[category] ?: BigDecimal.ZERO }.sum()),
                 reconcileCA.itemObservablesObservable.value[category]!!
             )
         }
@@ -63,11 +63,8 @@ class ReconcileVM(
     }
 
     fun getActiveCategories(transactionSet: Iterable<Transaction>): HashSet<Category> {
-        fun getCategories(transaction: Transaction): Iterable<Category> {
-            return transaction.categoryAmounts.keys.map { categoriesVM.getCategoryByName(it) }
-        }
         return transactionSet
-            .fold(HashSet()) { acc, transaction -> acc.addAll(getCategories(transaction)); acc }
+            .fold(HashSet()) { acc, transaction -> acc.addAll(transaction.categoryAmounts.keys); acc }
     }
 
     fun bindReconcileCategoryAmountsToRepo(reconcileCategoryAmounts: SourceHashMap<Category, BigDecimal>) {

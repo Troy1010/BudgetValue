@@ -12,12 +12,12 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
 
-class PlanVM(repo: Repo, categoriesVM: CategoriesAppVM) : ViewModel() {
+class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
     val planCategoryAmounts = SourceHashMap<Category, BigDecimal>()
     val loadFromRepoObservable = repo.getPlanCategoryAmounts()
         .observeOn(Schedulers.io())
         .take(1)
-        .map { it.associate { Pair(categoriesVM.getCategoryByName(it.categoryName), it.amount) } }
+        .map { it.associate { Pair(categoriesAppVM.getCategoryByName(it.categoryName), it.amount) } }
         .doOnNext { planCategoryAmounts.putAll(it) }
         .toBehaviorSubject()
     val uncategorizedPlan = planCategoryAmounts.itemObservablesObservable
@@ -46,10 +46,10 @@ class PlanVM(repo: Repo, categoriesVM: CategoriesAppVM) : ViewModel() {
                     }
                 }
             }
-        // # Bind categoriesVM.categoryNames -> planCategoryAmounts
+        // # Bind categoriesAppVM.categoryNames -> planCategoryAmounts
         loadFromRepoObservable
             .observeOn(Schedulers.io())
-            .switchMap { categoriesVM.choosableCategories }
+            .switchMap { categoriesAppVM.choosableCategories }
             .subscribe { chooseableCategories ->
                 synchronized(planCategoryAmounts) {
                     for (category in planCategoryAmounts.keys.filter { it !in chooseableCategories }) {

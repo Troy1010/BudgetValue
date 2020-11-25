@@ -26,11 +26,11 @@ import java.math.BigDecimal
 
 class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
     val app by lazy { requireActivity().application as App }
-    val categoriesVM: CategoriesAppVM by activityViewModels { createVmFactory { CategoriesAppVM() } }
+    val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
     val transactionsVM: TransactionsVM by activityViewModels { createVmFactory { TransactionsVM(app.appComponent.getRepo()) } }
     val accountsVM: AccountsVM by activityViewModels{ createVmFactory { AccountsVM(app.appComponent.getRepo()) }}
-    val planVM: PlanVM by activityViewModels{ createVmFactory { PlanVM(app.appComponent.getRepo(), categoriesVM) }}
-    val reconcileVM: ReconcileVM by activityViewModels { createVmFactory { ReconcileVM(app.appComponent.getRepo(), categoriesVM, transactionsVM.spends, accountsVM.accountsTotal, planVM) } }
+    val planVM: PlanVM by activityViewModels{ createVmFactory { PlanVM(app.appComponent.getRepo(), categoriesAppVM) }}
+    val reconcileVM: ReconcileVM by activityViewModels { createVmFactory { ReconcileVM(app.appComponent.getRepo(), categoriesAppVM, transactionsVM.spends, accountsVM.accountsTotal, planVM) } }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

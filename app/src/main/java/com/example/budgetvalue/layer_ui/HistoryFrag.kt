@@ -10,9 +10,9 @@ import com.tminus1010.tmcommonkotlin.misc.createVmFactory
 
 class HistoryFrag: Fragment(R.layout.frag_history) {
     val app by lazy { requireActivity().application as App }
+    val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
     val repo by lazy { app.appComponent.getRepo() }
-    val categoriesVM : CategoriesAppVM by activityViewModels { createVmFactory { CategoriesAppVM() } }
-    val historyVM: HistoryVM by activityViewModels { createVmFactory { HistoryVM(repo, categoriesVM) } }
+    val historyVM: HistoryVM by activityViewModels { createVmFactory { HistoryVM(repo, categoriesAppVM) } }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

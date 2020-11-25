@@ -16,9 +16,9 @@ import kotlinx.android.synthetic.main.item_category_btn.view.*
 
 class CategorizeFrag : Fragment(R.layout.frag_categorize), GenericRecyclerViewAdapter.Callbacks {
     val app by lazy { requireActivity().application as App }
+    val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
     val transactionsVM: TransactionsVM by activityViewModels { createVmFactory { TransactionsVM(app.appComponent.getRepo()) } }
     val categorizeVM: CategorizeVM by viewModels { createVmFactory { CategorizeVM(app.appComponent.getRepo(), transactionsVM) }}
-    val categoriesVM: CategoriesAppVM by activityViewModels { createVmFactory { CategoriesAppVM() } }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,13 +41,13 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize), GenericRecyclerViewAd
     }
 
     override fun bindRecyclerItem(holder: GenericRecyclerViewAdapter.ViewHolder, view: View) {
-        view.btn_category.text = categoriesVM.choosableCategories.value[holder.adapterPosition].name
+        view.btn_category.text = categoriesAppVM.choosableCategories.value[holder.adapterPosition].name
         view.btn_category.setOnClickListener {
-            categorizeVM.setTransactionCategory(categoriesVM.choosableCategories.value[holder.adapterPosition])
+            categorizeVM.setTransactionCategory(categoriesAppVM.choosableCategories.value[holder.adapterPosition])
         }
     }
 
     override fun getRecyclerDataSize(): Int {
-        return categoriesVM.choosableCategories.value.size
+        return categoriesAppVM.choosableCategories.value.size
     }
 }

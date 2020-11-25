@@ -2,12 +2,13 @@ package com.example.budgetvalue.model_data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.budgetvalue.extensions.toHashMap
 import com.example.budgetvalue.layer_ui.misc.sum
 import com.example.budgetvalue.model_app.Category
+import com.example.budgetvalue.model_app.IParseCategory
 import com.example.budgetvalue.model_app.Transaction
 import java.math.BigDecimal
 import java.time.LocalDate
-import kotlin.collections.HashMap
 
 @Entity
 data class TransactionReceived(
@@ -18,6 +19,13 @@ data class TransactionReceived(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0
 ) {
+    constructor(transaction: Transaction): this(
+        transaction.date,
+        transaction.description,
+        transaction.amount,
+        transaction.categoryAmounts.mapKeys { it.key.name }.toHashMap(),
+        transaction.id
+    )
     val isUncategorized: Boolean
         get() = categoryAmounts.isNullOrEmpty()
     val isSpend:Boolean
@@ -26,7 +34,7 @@ data class TransactionReceived(
         get() {
             return amount - categoryAmounts.values.sum()
         }
-    fun toTransaction(transformCategoryAction: (String) -> Category): Transaction {
-        return Transaction(this, transformCategoryAction)
+    fun toTransaction(parseCategory: IParseCategory): Transaction {
+        return Transaction(this, parseCategory)
     }
 }

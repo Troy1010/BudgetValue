@@ -20,7 +20,7 @@ interface MyDao {
     fun clearTransactions()
 
     @Insert
-    fun add(transaction: TransactionReceived)
+    fun add(transaction: TransactionReceived): Completable
 
     @Query("select * from `TransactionReceived`")
     fun getTransactions(): Observable<List<TransactionReceived>>
@@ -31,8 +31,8 @@ interface MyDao {
     @Update
     fun update(transaction: TransactionReceived)
 
-    fun add(transactions: List<TransactionReceived>) {
-        transactions.forEach { add(it) }
+    fun add(transactions: List<TransactionReceived>): Completable {
+        return Completable.fromAction { transactions.forEach { add(it) } }
     }
 
     @Query("select date from `TransactionReceived` WHERE id=:id")

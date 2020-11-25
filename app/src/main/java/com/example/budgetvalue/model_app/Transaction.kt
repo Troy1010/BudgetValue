@@ -12,11 +12,11 @@ data class Transaction(
     val categoryAmounts: Map<Category, BigDecimal> = hashMapOf(),
     val id: Int = 0
 ) {
-    constructor(transactionReceived: TransactionReceived, transformCategoryAction: (String) -> Category): this(
+    constructor(transactionReceived: TransactionReceived, parseCategory: IParseCategory): this(
         transactionReceived.date,
         transactionReceived.description,
         transactionReceived.amount,
-        transactionReceived.categoryAmounts.mapKeys { transformCategoryAction(it.key) },
+        transactionReceived.categoryAmounts.mapKeys { parseCategory.parseCategory(it.key) },
         transactionReceived.id
     )
 
@@ -28,4 +28,7 @@ data class Transaction(
         get() {
             return amount - categoryAmounts.values.sum()
         }
+    fun toTransactionReceived(): TransactionReceived {
+        return TransactionReceived(this)
+    }
 }
