@@ -5,12 +5,13 @@ import com.example.budgetvalue.AppMock
 import com.example.budgetvalue.extensions.plusAssign
 import com.example.budgetvalue.model_data.Account
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import java.math.BigDecimal
 
-class MyDaoWrapperTest {
+class AccountTest {
     val app by lazy { InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as AppMock }
     val repo by lazy { app.appComponent.getRepo() }
     val disposables = CompositeDisposable()
@@ -36,16 +37,50 @@ class MyDaoWrapperTest {
     }
 
     @Test
+    fun getAccounts_MultipleTimes() {
+        // # Given
+        repo.add(Account("bank", BigDecimal.ONE)).blockingAwait()
+        repo.add(Account("paypal", BigDecimal.TEN)).blockingAwait()
+        // # Stimulate & Verify
+        assertEquals(2, repo.getAccounts().blockingFirst().size)
+        assertEquals(2, repo.getAccounts().blockingFirst().size)
+        assertEquals(2, repo.getAccounts().blockingFirst().size)
+        assertEquals(2, repo.getAccounts().blockingFirst().size)
+    }
+
+    @Test
+    fun add_ObservationCount() {
+        // # Given
+        Thread.sleep(10) // TODO("These sleeps should not be necessary")
+        var observationCount = 0
+        disposables += repo.getAccounts().subscribeOn(Schedulers.trampoline()).subscribe { observationCount += 1 }
+        assertEquals(0, repo.getAccounts().blockingFirst().size)
+        // # Stimulate
+        repo.add(Account("bank", BigDecimal.ONE)).blockingAwait()
+        Thread.sleep(10)
+        repo.add(Account("paypal", BigDecimal.TEN)).blockingAwait()
+        Thread.sleep(10)
+        repo.add(Account("cash", BigDecimal.ZERO)).blockingAwait()
+        Thread.sleep(10)
+        // # Verify
+        assertEquals(4, observationCount)
+    }
+
+    @Test
     fun update_ObservationCount() {
         // # Given
         repo.add(Account("bank", BigDecimal.ONE)).blockingAwait()
-        val account = repo.getAccounts().blockingFirst()[0]
+        Thread.sleep(10)
         var observationCount = 0
-        disposables += repo.getAccounts().subscribe { observationCount += 1 }
+        disposables += repo.getAccounts().subscribeOn(Schedulers.trampoline()).subscribe { observationCount += 1 }
+        val account = repo.getAccounts().blockingFirst()[0]
         // # Stimulate
         repo.update(account.copy(amount = BigDecimal.TEN)).blockingAwait()
+        Thread.sleep(10)
         repo.update(account.copy(amount = BigDecimal.TEN)).blockingAwait()
+        Thread.sleep(10)
         repo.update(account.copy(amount = BigDecimal.TEN)).blockingAwait()
+        Thread.sleep(10)
         // # Verify
         assertEquals(2, observationCount)
     }
