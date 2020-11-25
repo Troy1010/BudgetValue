@@ -1,14 +1,11 @@
 package com.example.budgetvalue.layer_data
 
-import com.example.budgetvalue.model_app.Transaction
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.example.budgetvalue.model_data.TransactionReceived
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import kotlin.collections.ArrayList
 
 /**
  * TransactionParser is able to convert input streams into Transactions.
@@ -16,8 +13,8 @@ import kotlin.collections.ArrayList
  * read/write methods.. but I do not yet know the best way to get ActivityResults from the repo.
  */
 class TransactionParser : ITransactionParser {
-    override fun parseToTransactions(inputStream: InputStream) : List<Transaction> {
-        val transactions = ArrayList<Transaction>()
+    override fun parseToTransactions(inputStream: InputStream) : List<TransactionReceived> {
+        val transactions = ArrayList<TransactionReceived>()
         val reader = BufferedReader(InputStreamReader(inputStream))
         val iterator = reader.lineSequence().iterator()
         while (iterator.hasNext()) {
@@ -71,7 +68,7 @@ class TransactionParser : ITransactionParser {
                 continue
             }
             //
-            transactions.add(Transaction(date, description!!, amount.toBigDecimal()))
+            transactions.add(TransactionReceived(date, description!!, amount.toBigDecimal()))
         }
         return transactions.toList()
     }

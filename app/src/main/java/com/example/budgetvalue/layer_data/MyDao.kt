@@ -17,32 +17,31 @@ interface MyDao {
     // # Transactions
 
     @Query("DELETE FROM `TransactionReceived`")
-    fun clearTransactions()
+    fun clearTransactions(): Completable
 
     @Insert
-    fun add(transaction: TransactionReceived): Completable
+    fun add(transactionReceived: TransactionReceived): Completable
+
+    @Insert
+    fun add(transactionsReceived: List<TransactionReceived>): Completable
 
     @Query("select * from `TransactionReceived`")
-    fun getTransactions(): Observable<List<TransactionReceived>>
+    fun getTransactionsReceived(): Observable<List<TransactionReceived>>
 
     @Delete
-    fun delete(transaction: TransactionReceived)
+    fun delete(transaction: TransactionReceived): Completable
 
     @Update
-    fun update(transaction: TransactionReceived)
-
-    fun add(transactions: List<TransactionReceived>): Completable {
-        return Completable.fromAction { transactions.forEach { add(it) } }
-    }
+    fun update(transaction: TransactionReceived): Completable
 
     @Query("select date from `TransactionReceived` WHERE id=:id")
     fun getTransactionDate(id: Int): Observable<String>
 
     @Query("UPDATE `TransactionReceived` SET date=:date WHERE id=:id")
-    fun updateTransactionDate(id: Int, date: String)
+    fun updateTransactionDate(id: Int, date: String): Completable
 
     @Query("UPDATE `TransactionReceived` SET categoryAmounts=:categoryAmounts WHERE id=:id")
-    fun updateTransactionCategoryAmounts(id: Int, categoryAmounts: HashMap<String, BigDecimal>)
+    fun updateTransactionCategoryAmounts(id: Int, categoryAmounts: HashMap<String, BigDecimal>): Completable
 
     // # Accounts
 
@@ -59,18 +58,7 @@ interface MyDao {
     fun delete(account: Account)
 
     @Update
-    fun _update(account: Account) : Completable
-
-    fun update(account: Account): Completable {
-        return getAccount(account.id)
-            .take(1)
-            .flatMapCompletable {
-                if (it == account)
-                    Completable.fromAction {  }
-                else
-                    _update(account).observeOn(Schedulers.io()).subscribeOn(Schedulers.io())
-            }// TODO("Simplify")
-    }
+    fun update(account: Account) : Completable
 
     // # ReconcileCategoryAmounts
 

@@ -1,6 +1,7 @@
 package com.example.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
+import com.example.budgetvalue.extensions.unbox
 import com.example.budgetvalue.layer_data.Repo
 import com.example.budgetvalue.model_app.Category
 import com.tminus1010.tmcommonkotlin.tuple.Box
@@ -16,11 +17,9 @@ class CategorizeVM(val repo: Repo, transactionsVM: TransactionsVM): ViewModel() 
         transactionBox
             .observeOn(Schedulers.io())
             .take(1)
-            .filter { it.first != null }
-            .map { it.first!! }
-            .subscribe { transaction ->
-                val categoryAmounts = hashMapOf(Pair(category.name, transaction.amount))
-                repo.updateTransactionCategoryAmounts(transaction.id, categoryAmounts)
-            }
+            .unbox()
+            .map { Pair(it.id, hashMapOf(category.name to it.amount)) }
+            .flatMapCompletable { (id, categoryAmounts) -> repo.updateTransactionCategoryAmounts(id, categoryAmounts) }
+            .subscribe()
     }
 }
