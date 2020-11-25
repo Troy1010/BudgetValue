@@ -5,8 +5,6 @@ import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import com.example.budgetvalue.R
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 
 
 fun createRow(context: Context, rowRecipes: List<ICellRecipe>): LinearLayout {

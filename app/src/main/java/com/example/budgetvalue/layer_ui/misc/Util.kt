@@ -70,9 +70,3 @@ fun <T> TextView.rxBindOneWay(
 fun Button.setOnClickListener(subject: Subject<Unit>) {
     setOnClickListener { subject.onNext(Unit) }
 }
-
-
-
-fun Iterable<BigDecimal>.sum(): BigDecimal {
-    return this.fold(BigDecimal.ZERO, BigDecimal::add)
-}

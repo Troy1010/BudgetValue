@@ -3,10 +3,9 @@ package com.example.budgetvalue.model_data
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.budgetvalue.extensions.toHashMap
-import com.example.budgetvalue.layer_ui.misc.sum
-import com.example.budgetvalue.model_app.Category
 import com.example.budgetvalue.model_app.IParseCategory
 import com.example.budgetvalue.model_app.Transaction
+import com.example.budgetvalue.sum
 import java.math.BigDecimal
 import java.time.LocalDate
 

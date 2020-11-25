@@ -1,19 +1,14 @@
 package com.example.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
-import com.example.budgetvalue.SourceHashMap
-import com.example.budgetvalue.combineLatestAsTuple
+import com.example.budgetvalue.*
 import com.example.budgetvalue.extensions.toSourceHashMap
 import com.example.budgetvalue.extensions.withLatestFrom
-import com.example.budgetvalue.getTotalObservable
 import com.example.budgetvalue.layer_data.Repo
-import com.example.budgetvalue.layer_ui.misc.sum
 import com.example.budgetvalue.model_app.Category
 import com.example.budgetvalue.model_app.ReconcileRowData
 import com.example.budgetvalue.model_app.Transaction
 import com.example.budgetvalue.model_data.ReconcileCategoryAmounts
-import com.example.budgetvalue.zip
-import com.tminus1010.tmcommonkotlin.tuple.Quadruple
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject

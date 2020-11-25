@@ -421,3 +421,6 @@ fun getTotalObservable(it: Iterable<Observable<BigDecimal>>): BehaviorSubject<Bi
     return returning
 }
 
+fun Iterable<BigDecimal>.sum(): BigDecimal {
+    return this.fold(BigDecimal.ZERO, BigDecimal::add)
+}
