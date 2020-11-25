@@ -27,7 +27,7 @@ class ReconcileVM(
         .map(::getReconcileCategoryAmounts)
         .doOnNext(::bindReconcileCategoryAmountsToRepo)
         .toBehaviorSubject()
-    val rowDatas = zip(activeCategories, reconcileCategoryAmounts, planVM.planCategoryAmounts.observable, transactionSet)
+    val rowDatas = zip(activeCategories, reconcileCategoryAmounts, planVM.planCategoryAmounts.observable, transactionSet) // TODO("Is this zipping correctly..?")
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
     val reconcileDefault = reconcileCategoryAmounts
         .switchMap { it.itemObservablesObservable }
