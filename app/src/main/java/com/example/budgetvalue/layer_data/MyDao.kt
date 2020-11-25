@@ -2,13 +2,10 @@ package com.example.budgetvalue.layer_data
 
 import androidx.room.*
 import com.example.budgetvalue.model_data.Account
-import com.example.budgetvalue.model_app.Category
-import com.example.budgetvalue.model_data.ReconcileCategoryAmounts
-import com.example.budgetvalue.model_data.PlanCategoryAmounts
+import com.example.budgetvalue.model_data.PlanCategoryAmount
 import com.example.budgetvalue.model_data.TransactionReceived
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
 import java.math.BigDecimal
 
 @Dao
@@ -62,15 +59,15 @@ interface MyDao {
 
     // # PlanCategoryAmounts
 
-    @Query("select * from `PlanCategoryAmounts`")
-    fun getPlanCategoryAmounts(): Observable<List<PlanCategoryAmounts>>
+    @Query("select * from PlanCategoryAmount")
+    fun getPlanCategoryAmounts(): Observable<List<PlanCategoryAmount>>
 
     @Insert
-    fun add(planCategoryAmounts: PlanCategoryAmounts)
+    fun add(planCategoryAmount: PlanCategoryAmount)
 
-    @Query("DELETE FROM `PlanCategoryAmounts`")
+    @Query("DELETE FROM PlanCategoryAmount")
     fun clearPlanCategoryAmounts() : Completable
 
     @Update
-    fun update(planCategoryAmounts: PlanCategoryAmounts)
+    fun update(planCategoryAmount: PlanCategoryAmount)
 }

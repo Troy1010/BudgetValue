@@ -8,7 +8,7 @@ import com.example.budgetvalue.layer_data.Repo
 import com.example.budgetvalue.model_app.Category
 import com.example.budgetvalue.model_app.ReconcileRowData
 import com.example.budgetvalue.model_app.Transaction
-import com.example.budgetvalue.model_data.ReconcileCategoryAmounts
+import com.example.budgetvalue.model_data.ReconcileCategoryAmount
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -67,6 +67,6 @@ class ReconcileVM(
 
     fun bindReconcileCategoryAmountsToRepo(reconcileCategoryAmounts: SourceHashMap<Category, BigDecimal>) {
         reconcileCategoryAmounts.observable // TODO("Handle disposables")
-            .subscribe { repo.pushReconcileCategoryAmounts(it.map { ReconcileCategoryAmounts(it.key.name, it.value) }) }
+            .subscribe { repo.pushReconcileCategoryAmounts(it.map { ReconcileCategoryAmount(it.key.name, it.value) }) }
     }
 }

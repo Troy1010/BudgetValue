@@ -1,7 +1,7 @@
 package com.example.budgetvalue.layer_data
 
 import android.content.SharedPreferences
-import com.example.budgetvalue.model_data.ReconcileCategoryAmounts
+import com.example.budgetvalue.model_data.ReconcileCategoryAmount
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.math.BigDecimal
@@ -14,17 +14,17 @@ class SharedPrefWrapper @Inject constructor(val sharedPreferences: SharedPrefere
         const val KEY_EXPECTED_INCOME = "KEY_EXPECTED_INCOME"
     }
     val editor = sharedPreferences.edit()
-    override fun fetchReconcileCategoryAmounts(): List<ReconcileCategoryAmounts> {
+    override fun fetchReconcileCategoryAmounts(): List<ReconcileCategoryAmount> {
         var storedReconcileCategoryAmounts = sharedPreferences.getString(KEY_INCOME_CA, null)
         if (storedReconcileCategoryAmounts==null) {
             return listOf()
         } else {
-            val t = object : TypeToken<List<ReconcileCategoryAmounts>>() {}.type
+            val t = object : TypeToken<List<ReconcileCategoryAmount>>() {}.type
             return Gson().fromJson(storedReconcileCategoryAmounts, t)
         }
     }
 
-    override fun pushReconcileCategoryAmounts(reconcileCA: List<ReconcileCategoryAmounts>?) {
+    override fun pushReconcileCategoryAmounts(reconcileCA: List<ReconcileCategoryAmount>?) {
         if (reconcileCA == null) editor.remove(KEY_INCOME_CA) else {
             editor.putString(KEY_INCOME_CA, Gson().toJson(reconcileCA))
         }

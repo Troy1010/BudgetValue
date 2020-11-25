@@ -6,7 +6,7 @@ import com.example.budgetvalue.model_app.Category
 import java.math.BigDecimal
 
 @Entity
-data class PlanCategoryAmounts(
+data class PlanCategoryAmount(
     @PrimaryKey
     val categoryName: String,
     val amount: BigDecimal = BigDecimal.ZERO

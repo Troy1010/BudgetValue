@@ -3,7 +3,7 @@ package com.example.budgetvalue.layer_data
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.example.budgetvalue.AppMock
-import com.example.budgetvalue.model_data.PlanCategoryAmounts
+import com.example.budgetvalue.model_data.PlanCategoryAmount
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -11,7 +11,7 @@ import org.junit.runner.RunWith
 import java.math.BigDecimal
 
 @RunWith(AndroidJUnit4::class)
-class PlanCategoryAmountsTest {
+class PlanCategoryAmountTest {
     val app by lazy { InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as AppMock }
     val repo by lazy { app.appComponent.getRepo() }
 
@@ -23,7 +23,7 @@ class PlanCategoryAmountsTest {
     @Test
     fun addAndGetPlanCategoryAmountsTest() {
         // # Given
-        val planCategoryAmounts = PlanCategoryAmounts("SomeCategory", BigDecimal.TEN)
+        val planCategoryAmounts = PlanCategoryAmount("SomeCategory", BigDecimal.TEN)
         // # Stimulate
         repo.add(planCategoryAmounts)
         // # Verify
@@ -34,9 +34,9 @@ class PlanCategoryAmountsTest {
     @Test
     fun clearPlanCategoryAmountTest() {
         // # Given
-        repo.add(PlanCategoryAmounts("SomeCategoryA", BigDecimal.TEN))
-        repo.add(PlanCategoryAmounts("SomeCategoryB", BigDecimal.TEN))
-        repo.add(PlanCategoryAmounts("SomeCategoryC", BigDecimal.TEN))
+        repo.add(PlanCategoryAmount("SomeCategoryA", BigDecimal.TEN))
+        repo.add(PlanCategoryAmount("SomeCategoryB", BigDecimal.TEN))
+        repo.add(PlanCategoryAmount("SomeCategoryC", BigDecimal.TEN))
         assertEquals(3, repo.getPlanCategoryAmounts().blockingFirst().size)
         // # Stimulate
         repo.clearPlanCategoryAmounts().blockingAwait()

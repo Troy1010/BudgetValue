@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import java.math.BigDecimal
 
 @Entity
-data class ReconcileCategoryAmounts(
+data class ReconcileCategoryAmount(
     @PrimaryKey
     val categoryName: String,
     val amount: BigDecimal = BigDecimal.ZERO

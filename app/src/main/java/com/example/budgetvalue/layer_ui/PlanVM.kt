@@ -6,7 +6,7 @@ import com.example.budgetvalue.combineLatestAsTuple
 import com.example.budgetvalue.getTotalObservable
 import com.example.budgetvalue.layer_data.Repo
 import com.example.budgetvalue.model_app.Category
-import com.example.budgetvalue.model_data.PlanCategoryAmounts
+import com.example.budgetvalue.model_data.PlanCategoryAmount
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -38,10 +38,10 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
                 repo.clearPlanCategoryAmounts().blockingAwait()
                 synchronized(planCategoryAmounts) {
                     for ((category, amountBehaviorSubject) in it) {
-                        repo.add(PlanCategoryAmounts(category, BigDecimal.ZERO))
+                        repo.add(PlanCategoryAmount(category, BigDecimal.ZERO))
                         amountBehaviorSubject.observeOn(Schedulers.io())
                             .subscribe { // TODO("Handle disposables")
-                                repo.update(PlanCategoryAmounts(category, it))
+                                repo.update(PlanCategoryAmount(category, it))
                             }
                     }
                 }
