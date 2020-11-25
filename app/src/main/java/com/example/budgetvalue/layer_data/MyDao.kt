@@ -42,6 +42,9 @@ interface MyDao {
 
     // # Accounts
 
+    @Query("DELETE FROM `Account`")
+    fun clearAccounts(): Completable
+
     @Query("select * from `Account`")
     fun getAccounts(): Observable<List<Account>>
 
