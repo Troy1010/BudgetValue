@@ -2,7 +2,9 @@ package com.example.budgetvalue.layer_data
 
 import androidx.test.platform.app.InstrumentationRegistry
 import com.example.budgetvalue.AppMock
+import com.example.budgetvalue.extensions.plusAssign
 import com.example.budgetvalue.model_data.Account
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -11,9 +13,11 @@ import java.math.BigDecimal
 class MyDaoWrapperTest {
     val app by lazy { InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as AppMock }
     val repo by lazy { app.appComponent.getRepo() }
+    val disposables = CompositeDisposable()
 
     @Before
     fun before() {
+        disposables.dispose()
         repo.clearAccounts().blockingAwait()
     }
 
@@ -37,7 +41,7 @@ class MyDaoWrapperTest {
         repo.add(Account("bank", BigDecimal.ONE)).blockingAwait()
         val account = repo.getAccounts().blockingFirst()[0]
         var observationCount = 0
-        repo.getAccounts().subscribe { observationCount += 1 }
+        disposables += repo.getAccounts().subscribe { observationCount += 1 }
         // # Stimulate
         repo.update(account.copy(amount = BigDecimal.TEN)).blockingAwait()
         repo.update(account.copy(amount = BigDecimal.TEN)).blockingAwait()
