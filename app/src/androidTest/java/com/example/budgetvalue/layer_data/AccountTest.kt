@@ -2,9 +2,7 @@ package com.example.budgetvalue.layer_data
 
 import androidx.test.platform.app.InstrumentationRegistry
 import com.example.budgetvalue.AppMock
-import com.example.budgetvalue.extensions.plusAssign
 import com.example.budgetvalue.model_data.Account
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -14,11 +12,9 @@ import java.math.BigDecimal
 class AccountTest {
     val app by lazy { InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as AppMock }
     val repo by lazy { app.appComponent.getRepo() }
-    val disposables = CompositeDisposable()
 
     @Before
     fun before() {
-        disposables.dispose()
         repo.clearAccounts().blockingAwait()
     }
 
@@ -53,7 +49,7 @@ class AccountTest {
         // # Given
         Thread.sleep(10) // TODO("These sleeps should not be necessary")
         var observationCount = 0
-        disposables += repo.getAccounts().subscribeOn(Schedulers.trampoline()).subscribe { observationCount += 1 }
+        repo.getAccounts().subscribeOn(Schedulers.trampoline()).subscribe { observationCount += 1 } // TODO("handle disposables")
         assertEquals(0, repo.getAccounts().blockingFirst().size)
         // # Stimulate
         repo.add(Account("bank", BigDecimal.ONE)).blockingAwait()
@@ -72,7 +68,7 @@ class AccountTest {
         repo.add(Account("bank", BigDecimal.ONE)).blockingAwait()
         Thread.sleep(10)
         var observationCount = 0
-        disposables += repo.getAccounts().subscribeOn(Schedulers.trampoline()).subscribe { observationCount += 1 }
+        repo.getAccounts().subscribeOn(Schedulers.trampoline()).subscribe { observationCount += 1 }
         val account = repo.getAccounts().blockingFirst()[0]
         // # Stimulate
         repo.update(account.copy(amount = BigDecimal.TEN)).blockingAwait()
