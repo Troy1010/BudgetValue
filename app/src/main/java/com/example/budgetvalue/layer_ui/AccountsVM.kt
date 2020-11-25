@@ -11,9 +11,9 @@ import java.math.BigDecimal
 class AccountsVM(private val repo: Repo): ViewModel() {
     val accounts = repo.getAccounts().toBehaviorSubject()
     val intentAddAccount = PublishSubject.create<Unit>()
-        .also { it.observeOn(Schedulers.io()).subscribe { repo.add(Account("", BigDecimal.ZERO)) } }
+        .also { it.observeOn(Schedulers.io()).flatMapCompletable { repo.add(Account("", BigDecimal.ZERO)) }.subscribe() }
     val intentDeleteAccount = PublishSubject.create<Account>()
-        .also { it.observeOn(Schedulers.io()).subscribe { repo.delete(it) } }
+        .also { it.observeOn(Schedulers.io()).flatMapCompletable { repo.delete(it) }.subscribe() }
     val accountsTotal = accounts
         .map { it.fold(BigDecimal.ZERO) { acc, account -> acc + account.amount } }
         .toBehaviorSubject()

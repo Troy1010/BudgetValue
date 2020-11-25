@@ -52,38 +52,13 @@ interface MyDao {
     fun getAccount(id: Int) : Observable<Account>
 
     @Insert
-    fun add(account: Account)
+    fun add(account: Account): Completable
 
     @Delete
-    fun delete(account: Account)
+    fun delete(account: Account): Completable
 
     @Update
     fun update(account: Account) : Completable
-
-    // # ReconcileCategoryAmounts
-
-    @Query("select * from ReconcileCategoryAmounts")
-    fun getReconcileCategoryAmount(): Observable<List<ReconcileCategoryAmounts>>
-
-    @Insert
-    fun add(reconcileCategoryAmounts: ReconcileCategoryAmounts)
-
-    fun addReconcileCategoryAmount(category: Category) {
-        add(ReconcileCategoryAmounts(category.name))
-    }
-
-    @Delete
-    fun delete(reconcileCategoryAmounts: ReconcileCategoryAmounts)
-
-    @Query("DELETE FROM ReconcileCategoryAmounts WHERE categoryName = :categoryName")
-    fun deleteReconcileCategoryAmount(categoryName: String)
-
-    fun deleteReconcileCategoryAmount(category: Category) {
-        return deleteReconcileCategoryAmount(category.name)
-    }
-
-    @Update
-    fun update(reconcileCategoryAmounts: ReconcileCategoryAmounts)
 
     // # PlanCategoryAmounts
 
