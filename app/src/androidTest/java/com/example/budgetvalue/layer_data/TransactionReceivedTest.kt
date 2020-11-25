@@ -27,8 +27,8 @@ class TransactionReceivedTest {
         // # Stimulate
         repo.add(transactionReceived).blockingAwait()
         // # Verify
-        assertEquals(1, repo.getTransactions().blockingFirst().size)
-        assertEquals(transactionReceived, repo.getTransactions().blockingFirst()[0])
+        assertEquals(1, repo.getTransactionsReceived().blockingFirst().size)
+        assertEquals(transactionReceived, repo.getTransactionsReceived().blockingFirst()[0])
     }
 
     @Test
@@ -42,7 +42,7 @@ class TransactionReceivedTest {
         // # Stimulate
         repo.add(transactionsReceived).blockingAwait()
         // # Verify
-        assertEquals(3, repo.getTransactions().blockingFirst().size)
+        assertEquals(3, repo.getTransactionsReceived().blockingFirst().size)
     }
 
     @Test
@@ -51,10 +51,10 @@ class TransactionReceivedTest {
         repo.add(TransactionReceived(LocalDate.now(), "zoopA", 1.5.toBigDecimal())).blockingAwait()
         repo.add(TransactionReceived(LocalDate.now(), "zoopB", 1.5.toBigDecimal())).blockingAwait()
         repo.add(TransactionReceived(LocalDate.now(), "zoopC", 1.5.toBigDecimal())).blockingAwait()
-        assertEquals(3, repo.getTransactions().blockingFirst().size)
+        assertEquals(3, repo.getTransactionsReceived().blockingFirst().size)
         // # Stimulate
         repo.clearTransactions().blockingAwait()
         // # Verify
-        assertEquals(0, repo.getTransactions().blockingFirst().size)
+        assertEquals(0, repo.getTransactionsReceived().blockingFirst().size)
     }
 }

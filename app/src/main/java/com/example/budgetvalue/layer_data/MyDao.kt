@@ -46,7 +46,7 @@ interface MyDao {
     fun getAccounts(): Observable<List<Account>>
 
     @Query("select * from `Account` where id=:id")
-    fun getAccount(id: Int) : Observable<Account>
+    fun getAccount(id: Int): Observable<Account>
 
     @Insert
     fun add(account: Account): Completable
@@ -55,7 +55,7 @@ interface MyDao {
     fun delete(account: Account): Completable
 
     @Update
-    fun update(account: Account) : Completable
+    fun update(account: Account): Completable
 
     // # PlanCategoryAmounts
 
@@ -63,11 +63,11 @@ interface MyDao {
     fun getPlanCategoryAmountsReceived(): Observable<List<PlanCategoryAmount>>
 
     @Insert
-    fun add(planCategoryAmount: PlanCategoryAmount)
+    fun add(planCategoryAmount: PlanCategoryAmount): Completable
 
     @Query("DELETE FROM PlanCategoryAmount")
-    fun clearPlanCategoryAmounts() : Completable
+    fun clearPlanCategoryAmounts(): Completable
 
     @Update
-    fun update(planCategoryAmount: PlanCategoryAmount)
+    fun update(planCategoryAmount: PlanCategoryAmount): Completable
 }

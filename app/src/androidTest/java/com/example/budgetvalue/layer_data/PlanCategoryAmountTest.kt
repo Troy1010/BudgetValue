@@ -25,22 +25,22 @@ class PlanCategoryAmountTest {
         // # Given
         val planCategoryAmounts = PlanCategoryAmount("SomeCategory", BigDecimal.TEN)
         // # Stimulate
-        repo.add(planCategoryAmounts)
+        repo.add(planCategoryAmounts).blockingAwait()
         // # Verify
-        assertEquals(1, repo.getPlanCategoryAmounts().blockingFirst().size)
-        assertEquals(planCategoryAmounts, repo.getPlanCategoryAmounts().blockingFirst()[0])
+        assertEquals(1, repo.getPlanCategoryAmountsReceived().blockingFirst().size)
+        assertEquals(planCategoryAmounts, repo.getPlanCategoryAmountsReceived().blockingFirst().toList().first())
     }
 
     @Test
     fun clearPlanCategoryAmountTest() {
         // # Given
-        repo.add(PlanCategoryAmount("SomeCategoryA", BigDecimal.TEN))
-        repo.add(PlanCategoryAmount("SomeCategoryB", BigDecimal.TEN))
-        repo.add(PlanCategoryAmount("SomeCategoryC", BigDecimal.TEN))
-        assertEquals(3, repo.getPlanCategoryAmounts().blockingFirst().size)
+        repo.add(PlanCategoryAmount("SomeCategoryA", BigDecimal.TEN)).blockingAwait()
+        repo.add(PlanCategoryAmount("SomeCategoryB", BigDecimal.TEN)).blockingAwait()
+        repo.add(PlanCategoryAmount("SomeCategoryC", BigDecimal.TEN)).blockingAwait()
+        assertEquals(3, repo.getPlanCategoryAmountsReceived().blockingFirst().size)
         // # Stimulate
         repo.clearPlanCategoryAmounts().blockingAwait()
         // # Verify
-        assertEquals(0, repo.getPlanCategoryAmounts().blockingFirst().size)
+        assertEquals(0, repo.getPlanCategoryAmountsReceived().blockingFirst().size)
     }
 }

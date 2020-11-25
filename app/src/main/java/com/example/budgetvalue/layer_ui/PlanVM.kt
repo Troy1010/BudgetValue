@@ -37,10 +37,10 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
                 repo.clearPlanCategoryAmounts().blockingAwait()
                 synchronized(planCategoryAmounts) {
                     for ((category, amountBehaviorSubject) in it) {
-                        repo.add(PlanCategoryAmount(category, BigDecimal.ZERO))
+                        repo.add(PlanCategoryAmount(category, BigDecimal.ZERO)).subscribe()
                         amountBehaviorSubject.observeOn(Schedulers.io())
                             .subscribe { // TODO("Handle disposables")
-                                repo.update(PlanCategoryAmount(category, it))
+                                repo.update(PlanCategoryAmount(category, it)).subscribe()
                             }
                     }
                 }
