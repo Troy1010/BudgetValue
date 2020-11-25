@@ -60,7 +60,7 @@ interface MyDao {
     // # PlanCategoryAmounts
 
     @Query("select * from PlanCategoryAmount")
-    fun getPlanCategoryAmounts(): Observable<List<PlanCategoryAmount>>
+    fun getPlanCategoryAmountsReceived(): Observable<List<PlanCategoryAmount>>
 
     @Insert
     fun add(planCategoryAmount: PlanCategoryAmount)

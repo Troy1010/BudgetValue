@@ -14,10 +14,9 @@ import java.math.BigDecimal
 
 class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
     val planCategoryAmounts = SourceHashMap<Category, BigDecimal>()
-    val loadFromRepoObservable = repo.getPlanCategoryAmounts()
+    val loadFromRepoObservable = repo.planCategoryAmounts
         .observeOn(Schedulers.io())
         .take(1)
-        .map { it.associate { Pair(categoriesAppVM.parseCategory(it.categoryName), it.amount) } }
         .doOnNext { planCategoryAmounts.putAll(it) }
         .toBehaviorSubject()
     val uncategorizedPlan = planCategoryAmounts.itemObservablesObservable

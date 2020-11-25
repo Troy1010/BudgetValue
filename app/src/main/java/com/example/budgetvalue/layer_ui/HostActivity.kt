@@ -66,13 +66,13 @@ class HostActivity : AppCompatActivity() {
                 transactionsVM.importTransactions(inputStream)
             }
             R.id.menu_print_transactions -> {
-                transactionsVM.transactions.value.let {
+                transactionsVM.transactions.take(1).subscribe {
                     logz("transactions:${it?.joinToString(",")}")
                 }
             }
             R.id.menu_print_spends -> {
                 // define transactionBlocks
-                val transactionBlocks = transactionsVM.transactions.value.getBlocks(2)
+                val transactionBlocks = transactionsVM.transactions.blockingFirst().getBlocks(2)
                 // define stringBlocks
                 val stringBlocks = arrayListOf<HashMap<String, String>>()
                 for (transactionBlock in transactionBlocks) {

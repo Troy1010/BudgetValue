@@ -2,13 +2,11 @@ package com.example.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
 import com.example.budgetvalue.layer_data.Repo
-import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.io.InputStream
 
 class TransactionsVM(private val repo: Repo):ViewModel() {
-    val transactions = repo.getTransactions()
-        .toBehaviorSubject()
+    val transactions = repo.transactions
     val spends = transactions
         .map { it.filter { it.isSpend } }
     val uncategorizedSpends = spends
