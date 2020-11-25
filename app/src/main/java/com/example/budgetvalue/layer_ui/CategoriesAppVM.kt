@@ -11,7 +11,7 @@ import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
  * Because this is used by the repo, it must be an AppVM; ie - it must
  * be provided by dagger, not activityViewModels().
  */
-class CategoriesAppVM: IParseCategory {
+class CategoriesAppVM : IParseCategory {
     val defaultCategory = Category("Default", Category.Type.Default)
     val incomeCategory = Category("Income", Category.Type.Income)
     val userAddedCategories = SourceArrayList<Category>()
@@ -23,13 +23,6 @@ class CategoriesAppVM: IParseCategory {
     private val nameToCategoryMap = categories
         .map { it.associateBy { it.name } as HashMap<String, Category> }
         .toBehaviorSubject()
-
-    fun getCategoryByName(name: String): Category {// TODO("Just combine with parseCategory")
-        val category = nameToCategoryMap.value[name]
-        if (category == null)
-            logz("getCategoryByName`WARNING:had to return default for category name:$name")
-        return category ?: defaultCategory
-    }
 
     init {
         userAddedCategories.addAll(listOf(
@@ -47,6 +40,8 @@ class CategoriesAppVM: IParseCategory {
     }
 
     override fun parseCategory(categoryName: String): Category {
-        return getCategoryByName(categoryName)
+        val category = nameToCategoryMap.value[categoryName]
+        if (category == null) logz("parseCategory`WARNING:had to return default for category name:$categoryName")
+        return category ?: defaultCategory
     }
 }
