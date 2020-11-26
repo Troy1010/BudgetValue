@@ -12,11 +12,11 @@ data class Transaction(
     val categoryAmounts: Map<Category, BigDecimal> = hashMapOf(),
     val id: Int = 0
 ) {
-    constructor(transactionReceived: TransactionReceived, parseCategory: IParseCategory): this(
+    constructor(transactionReceived: TransactionReceived, categoryParser: ICategoryParser): this(
         transactionReceived.date,
         transactionReceived.description,
         transactionReceived.amount,
-        transactionReceived.categoryAmounts.mapKeys { parseCategory.parseCategory(it.key) },
+        transactionReceived.categoryAmounts.mapKeys { categoryParser.parseCategory(it.key) },
         transactionReceived.id
     )
 

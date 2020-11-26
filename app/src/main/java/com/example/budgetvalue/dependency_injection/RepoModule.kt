@@ -6,8 +6,7 @@ import com.example.budgetvalue.App
 import com.example.budgetvalue.SHARED_PREF_FILE_NAME
 import com.example.budgetvalue.layer_data.*
 import com.example.budgetvalue.layer_ui.CategoriesAppVM
-import com.example.budgetvalue.model_app.Category
-import com.example.budgetvalue.model_app.IParseCategory
+import com.example.budgetvalue.model_app.ICategoryParser
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -22,7 +21,7 @@ class RepoModule {
 
     @Provides
     @Singleton
-    fun providesParseCategory(categoriesAppVM: CategoriesAppVM): IParseCategory {
+    fun providesParseCategory(categoriesAppVM: CategoriesAppVM): ICategoryParser {
         return categoriesAppVM
     }
 
@@ -43,8 +42,8 @@ class RepoModule {
 
     @Provides
     @Singleton
-    fun providesDaoWrapper(myDao: MyDao, parseCategory:IParseCategory): MyDaoWrapper {
-        return MyDaoWrapper(myDao, parseCategory)
+    fun providesDaoWrapper(myDao: MyDao, categoryParser:ICategoryParser): MyDaoWrapper {
+        return MyDaoWrapper(myDao, categoryParser)
     }
 
     @Provides

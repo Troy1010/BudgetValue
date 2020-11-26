@@ -2,7 +2,7 @@ package com.example.budgetvalue.layer_ui
 
 import com.example.budgetvalue.model_app.Category
 import com.example.budgetvalue.SourceArrayList
-import com.example.budgetvalue.model_app.IParseCategory
+import com.example.budgetvalue.model_app.ICategoryParser
 import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 
@@ -11,7 +11,7 @@ import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
  * Because this is used by the repo, it must be an AppVM; ie - it must
  * be provided by dagger, not activityViewModels().
  */
-class CategoriesAppVM : IParseCategory {
+class CategoriesAppVM : ICategoryParser {
     val defaultCategory = Category("Default", Category.Type.Default)
     val incomeCategory = Category("Income", Category.Type.Income)
     val userAddedCategories = SourceArrayList<Category>()

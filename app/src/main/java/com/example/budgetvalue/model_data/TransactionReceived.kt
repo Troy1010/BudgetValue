@@ -3,7 +3,7 @@ package com.example.budgetvalue.model_data
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.budgetvalue.extensions.toHashMap
-import com.example.budgetvalue.model_app.IParseCategory
+import com.example.budgetvalue.model_app.ICategoryParser
 import com.example.budgetvalue.model_app.Transaction
 import com.example.budgetvalue.sum
 import java.math.BigDecimal
@@ -33,7 +33,7 @@ data class TransactionReceived(
         get() {
             return amount - categoryAmounts.values.sum()
         }
-    fun toTransaction(parseCategory: IParseCategory): Transaction {
-        return Transaction(this, parseCategory)
+    fun toTransaction(categoryParser: ICategoryParser): Transaction {
+        return Transaction(this, categoryParser)
     }
 }

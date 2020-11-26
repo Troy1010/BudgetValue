@@ -1,5 +1,5 @@
 package com.example.budgetvalue.model_app
 
-interface IParseCategory {
+interface ICategoryParser {
     fun parseCategory(categoryName: String): Category
 }
