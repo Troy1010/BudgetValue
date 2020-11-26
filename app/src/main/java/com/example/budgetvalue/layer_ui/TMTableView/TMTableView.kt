@@ -23,8 +23,8 @@ class TMTableView @JvmOverloads constructor(
 
     init {
         // # Inflate measureMe
-        // measureMe needs to be inflated to trigger onSizeChanged
-        View.inflate(context, R.layout.tableview_measure_me, this)
+        // A view needs to be inflated to trigger onSizeChanged
+        View.inflate(context, R.layout.blank_view, this)
         // # Observe
         combineLatestAsTuple(_recipe2D, tableViewWidth)
             .map { (recipe2D, tableViewWidth) -> Pair(recipe2D, generateColumnWidths(recipe2D, tableViewWidth)) }
