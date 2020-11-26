@@ -10,7 +10,7 @@ import androidx.fragment.app.activityViewModels
 import com.example.budgetvalue.App
 import com.example.budgetvalue.R
 import com.example.budgetvalue.layer_ui.TMTableView.*
-import com.example.budgetvalue.layer_ui.TMTableView.RecipeFactory.DefaultType
+import com.example.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory.DefaultType
 import com.example.budgetvalue.layer_ui.misc.rxBind
 import com.example.budgetvalue.layer_ui.misc.rxBindOneWay
 import com.example.budgetvalue.reflectXY
@@ -38,19 +38,19 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
     }
 
     fun setupTableDataObserver() {
-        val cellRecipeBuilder = RecipeFactory(requireContext(), DefaultType.CELL)
-        val headerRecipeBuilder = RecipeFactory(requireContext(), DefaultType.HEADER)
-        val headerRecipeBuilder_numbered = RecipeFactory<LinearLayout, Pair<String, Observable<BigDecimal>>>(
+        val cellRecipeBuilder = ViewItemRecipeFactory(requireContext(), DefaultType.CELL)
+        val headerRecipeBuilder = ViewItemRecipeFactory(requireContext(), DefaultType.HEADER)
+        val headerRecipeBuilder_numbered = ViewItemRecipeFactory<LinearLayout, Pair<String, Observable<BigDecimal>>>(
             { View.inflate(requireContext(), R.layout.tableview_header_income, null) as LinearLayout },
             {v, d ->
                 v.textview_header.text = d.first
                 v.textview_number.rxBindOneWay(d.second)
             })
-        val inputRecipeBuilder = RecipeFactory<EditText, BehaviorSubject<BigDecimal>>(
+        val inputRecipeBuilder = ViewItemRecipeFactory<EditText, BehaviorSubject<BigDecimal>>(
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
             { v, bs -> v.rxBind(bs, { it.toBigDecimal2() } )}
         )
-        val oneWayCellRecipeBuilder = RecipeFactory<TextView, Observable<BigDecimal>>(
+        val oneWayCellRecipeBuilder = ViewItemRecipeFactory<TextView, Observable<BigDecimal>>(
             { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
             { v, observable -> v.rxBindOneWay(observable)}
         )

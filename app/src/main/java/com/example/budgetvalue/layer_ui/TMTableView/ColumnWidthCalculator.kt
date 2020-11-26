@@ -6,9 +6,9 @@ import java.lang.Math.max
 import kotlin.math.ceil
 
 object ColumnWidthCalculator {
-    fun generateIntrinsicWidths(recipes: List<List<IRecipe>>): List<List<Int>> {
+    fun generateIntrinsicWidths(viewItemRecipes: List<List<IViewItemRecipe>>): List<List<Int>> {
         val intrinsicWidths = ArrayList<ArrayList<Int>>()
-        for ((yPos, rowData) in recipes.withIndex()) {
+        for ((yPos, rowData) in viewItemRecipes.withIndex()) {
             intrinsicWidths.add(ArrayList())
             for (cellData in rowData) {
                 intrinsicWidths[yPos].add(cellData.intrinsicWidth)
@@ -17,14 +17,14 @@ object ColumnWidthCalculator {
         return intrinsicWidths
     }
 
-    fun generateMinWidths(rowData: List<IRecipe>) = rowData.map { it.intrinsicWidth }
+    fun generateMinWidths(rowData: List<IViewItemRecipe>) = rowData.map { it.intrinsicWidth }
 
     fun generateColumnWidths(
-        recipe2d: List<List<IRecipe>>,
+        viewItemRecipe2D: List<List<IViewItemRecipe>>,
         parentWidth: Int
     ): List<Int> {
-        val minWidths = generateMinWidths(recipe2d[0])
-        val intrinsicWidths = generateIntrinsicWidths(recipe2d)
+        val minWidths = generateMinWidths(viewItemRecipe2D[0])
+        val intrinsicWidths = generateIntrinsicWidths(viewItemRecipe2D)
 
         if (minWidths.sum() > parentWidth)
             logz("WARNING`minWidths.sum():${minWidths.sum()} > parentWidth:$parentWidth")

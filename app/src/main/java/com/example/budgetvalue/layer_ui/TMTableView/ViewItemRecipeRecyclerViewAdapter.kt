@@ -6,18 +6,18 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 
-class RecyclerViewRecipeAdapter(
+class ViewItemRecipeRecyclerViewAdapter(
     val context: Context,
-    val recipe2D: () -> List<List<IRecipe>>,
+    val viewItemRecipe2D: () -> List<List<IViewItemRecipe>>,
     val columnWidths: List<Int>
-) : RecyclerView.Adapter<RecyclerViewRecipeAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<ViewItemRecipeRecyclerViewAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
     override fun onCreateViewHolder(parent: ViewGroup, yPos: Int): ViewHolder {
-        return ViewHolder(createRow(context, recipe2D()[yPos]))
+        return ViewHolder(createRow(context, viewItemRecipe2D()[yPos]))
     }
     override fun getItemViewType(position: Int) = position
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        bindRow((holder.itemView as LinearLayout), recipe2D()[holder.adapterPosition], columnWidths)
+        bindRow((holder.itemView as LinearLayout), viewItemRecipe2D()[holder.adapterPosition], columnWidths)
     }
-    override fun getItemCount() = recipe2D().size
+    override fun getItemCount() = viewItemRecipe2D().size
 }
