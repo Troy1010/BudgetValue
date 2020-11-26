@@ -9,10 +9,7 @@ import com.example.budgetvalue.R
 
 fun createRow(context: Context, rowViewItemRecipes: List<IViewItemRecipe>): LinearLayout {
     val view = LinearLayout(context)
-    for (cellRecipe in rowViewItemRecipes) {
-        val cellView = cellRecipe.viewProvider()
-        view.addView(cellView)
-    }
+    rowViewItemRecipes.forEach { view.addView(it.viewProvider()) }
     view.showDividers = LinearLayout.SHOW_DIVIDER_MIDDLE
     view.dividerPadding = 1
     view.dividerDrawable = ContextCompat.getDrawable(context, R.drawable.divider)!!
