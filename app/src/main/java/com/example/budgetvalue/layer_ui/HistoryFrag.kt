@@ -7,14 +7,23 @@ import androidx.fragment.app.activityViewModels
 import com.example.budgetvalue.App
 import com.example.budgetvalue.R
 import com.tminus1010.tmcommonkotlin.misc.createVmFactory
+import com.tminus1010.tmcommonkotlin_rx.observe
 
 class HistoryFrag: Fragment(R.layout.frag_history) {
     val app by lazy { requireActivity().application as App }
-    val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
     val repo by lazy { app.appComponent.getRepo() }
-    val historyVM: HistoryVM by activityViewModels { createVmFactory { HistoryVM(repo, categoriesAppVM) } }
+    val transactionsVM : TransactionsVM by activityViewModels { createVmFactory { TransactionsVM(repo) } }
+    val historyVM: HistoryVM by activityViewModels { createVmFactory { HistoryVM(transactionsVM) } }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupObservers()
+    }
+
+    private fun setupObservers() {
+        historyVM.historyColumnData
+            .observe(viewLifecycleOwner) {
+
+            }
     }
 }
