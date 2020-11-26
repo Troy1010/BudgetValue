@@ -8,7 +8,6 @@ import com.example.budgetvalue.layer_data.Repo
 import com.example.budgetvalue.model_app.Category
 import com.example.budgetvalue.model_app.ReconcileRowData
 import com.example.budgetvalue.model_app.Transaction
-import com.example.budgetvalue.model_data.ReconcileCategoryAmount
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -24,7 +23,8 @@ class ReconcileVM(
         .map(::getActiveCategories)
         .toBehaviorSubject()
     val reconcileCategoryAmounts = activeCategories
-        .map(::getReconcileCategoryAmounts)
+        .withLatestFrom(repo.fetchReconcileCategoryAmounts())
+        .map { (a,b) -> mapReconcileCategoryAmounts(a,b) }
         .doOnNext(::bindReconcileCategoryAmountsToRepo)
         .toBehaviorSubject()
     val rowDatas = zip(activeCategories, reconcileCategoryAmounts, planVM.planCategoryAmounts.observable, transactionSet) // TODO("Is this zipping correctly..?")
@@ -53,10 +53,9 @@ class ReconcileVM(
         }
     }
 
-    fun getReconcileCategoryAmounts(activeCategories: Iterable<Category>): SourceHashMap<Category, BigDecimal> {
-        val oldReconcileCategoryAmounts = repo.fetchReconcileCategoryAmounts().associate { it.categoryName to it.amount }
+    fun mapReconcileCategoryAmounts(activeCategories: Iterable<Category>, oldReconcileCategoryAmounts:Map<Category, BigDecimal>): SourceHashMap<Category, BigDecimal> {
         return activeCategories
-            .associateWith { oldReconcileCategoryAmounts[it.name] ?: BigDecimal.ZERO }
+            .associateWith { oldReconcileCategoryAmounts[it] ?: BigDecimal.ZERO }
             .toSourceHashMap()
     }
 
@@ -67,6 +66,6 @@ class ReconcileVM(
 
     fun bindReconcileCategoryAmountsToRepo(reconcileCategoryAmounts: SourceHashMap<Category, BigDecimal>) {
         reconcileCategoryAmounts.observable // TODO("Handle disposables")
-            .subscribe { repo.pushReconcileCategoryAmounts(it.map { ReconcileCategoryAmount(it.key.name, it.value) }) }
+            .subscribe { repo.pushReconcileCategoryAmounts(it) }
     }
 }

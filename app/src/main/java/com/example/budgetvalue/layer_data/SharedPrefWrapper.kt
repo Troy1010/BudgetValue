@@ -2,17 +2,18 @@ package com.example.budgetvalue.layer_data
 
 import android.content.SharedPreferences
 import com.example.budgetvalue.getType
-import com.example.budgetvalue.model_data.ReconcileCategoryAmount
+import com.example.budgetvalue.model_app.Category
 import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 import javax.inject.Inject
 
-class SharedPrefWrapper @Inject constructor(val sharedPreferences: SharedPreferences) :
-    ISharedPrefWrapper {
+class SharedPrefWrapper @Inject constructor(
+    val sharedPreferences: SharedPreferences
+) : ISharedPrefWrapper {
     companion object {
-        const val KEY_INCOME_CA = "KEY_INCOME_CA"
+        const val KEY_RECONCILE_CATEGORY_AMOUNTS = "KEY_RECONCILE_CATEGORY_AMOUNTS"
         const val KEY_EXPECTED_INCOME = "KEY_EXPECTED_INCOME"
         const val KEY_ANCHOR_DATE_OFFSET = "KEY_ANCHOR_DATE_OFFSET"
         const val KEY_BLOCK_SIZE = "KEY_BLOCK_SIZE"
@@ -21,19 +22,23 @@ class SharedPrefWrapper @Inject constructor(val sharedPreferences: SharedPrefere
     }
 
     val editor = sharedPreferences.edit()
-    override fun fetchReconcileCategoryAmounts(): List<ReconcileCategoryAmount> {
-        val storedReconcileCategoryAmounts = sharedPreferences.getString(KEY_INCOME_CA, null)
-        return if (storedReconcileCategoryAmounts == null) listOf() else {
-            Gson().fromJson(storedReconcileCategoryAmounts,
-                getType<List<ReconcileCategoryAmount>>())
+
+    private val reconcileCategoryAmountsPublisher = PublishSubject.create<Map<Category, BigDecimal>>()
+    override fun fetchReconcileCategoryAmounts(): Observable<Map<Category, BigDecimal>> {
+        val s = sharedPreferences.getString(KEY_RECONCILE_CATEGORY_AMOUNTS, null)
+        val reconcileCategoryAmounts: Map<Category, BigDecimal> = if (s == null) emptyMap() else {
+            Gson().fromJson(s, getType<HashMap<Category, BigDecimal>>())
         }
+        return reconcileCategoryAmountsPublisher
+            .startWithItem(reconcileCategoryAmounts)
     }
 
-    override fun pushReconcileCategoryAmounts(reconcileCA: List<ReconcileCategoryAmount>?) {
-        if (reconcileCA == null) editor.remove(KEY_INCOME_CA) else {
-            editor.putString(KEY_INCOME_CA, Gson().toJson(reconcileCA))
+    override fun pushReconcileCategoryAmounts(reconcileCategoryAmounts: Map<Category, BigDecimal>?) {
+        if (reconcileCategoryAmounts == null) editor.remove(KEY_RECONCILE_CATEGORY_AMOUNTS) else {
+            editor.putString(KEY_RECONCILE_CATEGORY_AMOUNTS, Gson().toJson(reconcileCategoryAmounts))
         }
         editor.apply()
+        reconcileCategoryAmountsPublisher.onNext(reconcileCategoryAmounts ?: hashMapOf())
     }
 
     override fun fetchExpectedIncome(): BigDecimal {
@@ -51,7 +56,8 @@ class SharedPrefWrapper @Inject constructor(val sharedPreferences: SharedPrefere
     private val anchorDateOffsetPublisher = PublishSubject.create<Long>()
     override fun fetchAnchorDateOffset(): Observable<Long> {
         return anchorDateOffsetPublisher
-            .startWithItem(sharedPreferences.getLong(KEY_ANCHOR_DATE_OFFSET, ANCHOR_DATE_OFFSET_DEFAULT))
+            .startWithItem(sharedPreferences
+                .getLong(KEY_ANCHOR_DATE_OFFSET, ANCHOR_DATE_OFFSET_DEFAULT))
     }
 
     override fun pushAnchorDateOffset(anchorDateOffset: Long?) {
