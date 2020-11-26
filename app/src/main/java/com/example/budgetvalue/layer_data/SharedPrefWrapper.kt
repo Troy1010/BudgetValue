@@ -16,11 +16,9 @@ class SharedPrefWrapper @Inject constructor(val sharedPreferences: SharedPrefere
     }
     val editor = sharedPreferences.edit()
     override fun fetchReconcileCategoryAmounts(): List<ReconcileCategoryAmount> {
-        var storedReconcileCategoryAmounts = sharedPreferences.getString(KEY_INCOME_CA, null)
-        if (storedReconcileCategoryAmounts==null) {
-            return listOf()
-        } else {
-            return Gson().fromJson(storedReconcileCategoryAmounts, getType<List<ReconcileCategoryAmount>>())
+        val storedReconcileCategoryAmounts = sharedPreferences.getString(KEY_INCOME_CA, null)
+        return if (storedReconcileCategoryAmounts==null) listOf() else {
+            Gson().fromJson(storedReconcileCategoryAmounts, getType<List<ReconcileCategoryAmount>>())
         }
     }
 
