@@ -5,25 +5,25 @@ import android.view.View
 import android.widget.TextView
 import com.example.budgetvalue.R
 
-class CellRecipeBuilder<V : View, D : Any>(
+class CellRecipeFactory<V : View, D : Any>(
     val viewFactory: () -> V,
     val bindAction: (V, D) -> Unit
 ) {
-    fun buildMany(datas: Iterable<D>): Iterable<CellRecipe<V, D>> {
+    fun createMany(datas: Iterable<D>): Iterable<CellRecipe<V, D>> {
         return datas.map { CellRecipe(viewFactory, it, bindAction) }
     }
-    fun buildOne(data: D): Iterable<CellRecipe<V, D>> {
+    fun createOne(data: D): Iterable<CellRecipe<V, D>> {
         return listOf(CellRecipe(viewFactory, data, bindAction))
     }
 
     companion object {
-        operator fun invoke(context: Context, defaultType: DefaultType): CellRecipeBuilder<TextView, String> {
+        operator fun invoke(context: Context, defaultType: DefaultType): CellRecipeFactory<TextView, String> {
             return when (defaultType) {
-                DefaultType.HEADER -> CellRecipeBuilder(
+                DefaultType.HEADER -> CellRecipeFactory(
                     { View.inflate(context, R.layout.tableview_header, null) as TextView },
                     { view: TextView, s: String? -> view.text = s }
                 )
-                else -> CellRecipeBuilder(
+                else -> CellRecipeFactory(
                     { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
                     { view: TextView, s: String? -> view.text = s }
                 )

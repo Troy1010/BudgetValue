@@ -10,7 +10,7 @@ import androidx.fragment.app.activityViewModels
 import com.example.budgetvalue.App
 import com.example.budgetvalue.R
 import com.example.budgetvalue.layer_ui.TMTableView.*
-import com.example.budgetvalue.layer_ui.TMTableView.CellRecipeBuilder.DefaultType
+import com.example.budgetvalue.layer_ui.TMTableView.CellRecipeFactory.DefaultType
 import com.example.budgetvalue.layer_ui.misc.rxBind
 import com.example.budgetvalue.layer_ui.misc.rxBindOneWay
 import com.example.budgetvalue.reflectXY
@@ -38,19 +38,19 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
     }
 
     fun setupTableDataObserver() {
-        val cellRecipeBuilder = CellRecipeBuilder(requireContext(), DefaultType.CELL)
-        val headerRecipeBuilder = CellRecipeBuilder(requireContext(), DefaultType.HEADER)
-        val headerRecipeBuilder_numbered = CellRecipeBuilder<LinearLayout, Pair<String, Observable<BigDecimal>>>(
+        val cellRecipeBuilder = CellRecipeFactory(requireContext(), DefaultType.CELL)
+        val headerRecipeBuilder = CellRecipeFactory(requireContext(), DefaultType.HEADER)
+        val headerRecipeBuilder_numbered = CellRecipeFactory<LinearLayout, Pair<String, Observable<BigDecimal>>>(
             { View.inflate(requireContext(), R.layout.tableview_header_income, null) as LinearLayout },
             {v, d ->
                 v.textview_header.text = d.first
                 v.textview_number.rxBindOneWay(d.second)
             })
-        val inputRecipeBuilder = CellRecipeBuilder<EditText, BehaviorSubject<BigDecimal>>(
+        val inputRecipeBuilder = CellRecipeFactory<EditText, BehaviorSubject<BigDecimal>>(
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
             { v, bs -> v.rxBind(bs, { it.toBigDecimal2() } )}
         )
-        val oneWayCellRecipeBuilder = CellRecipeBuilder<TextView, Observable<BigDecimal>>(
+        val oneWayCellRecipeBuilder = CellRecipeFactory<TextView, Observable<BigDecimal>>(
             { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
             { v, observable -> v.rxBindOneWay(observable)}
         )
@@ -59,21 +59,21 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
             .observe(viewLifecycleOwner) { rowDatas ->
                 myTableView_1.setRecipes(
                     listOf(
-                        headerRecipeBuilder.buildOne("Category")
-                                + cellRecipeBuilder.buildOne("Default")
-                                + cellRecipeBuilder.buildMany(rowDatas.map { it.category.name }),
-                        headerRecipeBuilder_numbered.buildOne(Pair("Plan", planVM.expectedIncome))
-                                + oneWayCellRecipeBuilder.buildOne(planVM.difference)
-                                + oneWayCellRecipeBuilder.buildMany(rowDatas.map { it.plan }),
-                        headerRecipeBuilder.buildOne("Actual")
-                                + cellRecipeBuilder.buildOne("")
-                                + oneWayCellRecipeBuilder.buildMany(rowDatas.map { it.actual }),
-                        headerRecipeBuilder.buildOne("Reconcile")
-                                + oneWayCellRecipeBuilder.buildOne(reconcileVM.reconcileDefault)
-                                + inputRecipeBuilder.buildMany(rowDatas.map { it.reconcile }),
-                        headerRecipeBuilder_numbered.buildOne(Pair("Budgeted",accountsVM.accountsTotal))
-                                + oneWayCellRecipeBuilder.buildOne(reconcileVM.uncategorizedBudgeted)
-                                + oneWayCellRecipeBuilder.buildMany(rowDatas.map { it.budgeted })
+                        headerRecipeBuilder.createOne("Category")
+                                + cellRecipeBuilder.createOne("Default")
+                                + cellRecipeBuilder.createMany(rowDatas.map { it.category.name }),
+                        headerRecipeBuilder_numbered.createOne(Pair("Plan", planVM.expectedIncome))
+                                + oneWayCellRecipeBuilder.createOne(planVM.difference)
+                                + oneWayCellRecipeBuilder.createMany(rowDatas.map { it.plan }),
+                        headerRecipeBuilder.createOne("Actual")
+                                + cellRecipeBuilder.createOne("")
+                                + oneWayCellRecipeBuilder.createMany(rowDatas.map { it.actual }),
+                        headerRecipeBuilder.createOne("Reconcile")
+                                + oneWayCellRecipeBuilder.createOne(reconcileVM.reconcileDefault)
+                                + inputRecipeBuilder.createMany(rowDatas.map { it.reconcile }),
+                        headerRecipeBuilder_numbered.createOne(Pair("Budgeted",accountsVM.accountsTotal))
+                                + oneWayCellRecipeBuilder.createOne(reconcileVM.uncategorizedBudgeted)
+                                + oneWayCellRecipeBuilder.createMany(rowDatas.map { it.budgeted })
                     ).reflectXY()
                 )
             }
