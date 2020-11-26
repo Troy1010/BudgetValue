@@ -4,7 +4,8 @@ import android.content.SharedPreferences
 import com.example.budgetvalue.getType
 import com.example.budgetvalue.model_data.ReconcileCategoryAmount
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -14,6 +15,9 @@ class SharedPrefWrapper @Inject constructor(val sharedPreferences: SharedPrefere
         const val KEY_INCOME_CA = "KEY_INCOME_CA"
         const val KEY_EXPECTED_INCOME = "KEY_EXPECTED_INCOME"
         const val KEY_ANCHOR_DATE_OFFSET = "KEY_ANCHOR_DATE_OFFSET"
+        const val KEY_BLOCK_SIZE = "KEY_BLOCK_SIZE"
+        const val ANCHOR_DATE_OFFSET_DEFAULT: Long = 0
+        const val BLOCK_SIZE_DEFAULT: Long = 14
     }
 
     val editor = sharedPreferences.edit()
@@ -44,14 +48,32 @@ class SharedPrefWrapper @Inject constructor(val sharedPreferences: SharedPrefere
         editor.apply()
     }
 
-    override fun fetchAnchorDateOffset(): Int {
-        return sharedPreferences.getInt(KEY_ANCHOR_DATE_OFFSET, 0)
+    private val anchorDateOffsetPublisher = PublishSubject.create<Long>()
+    override fun fetchAnchorDateOffset(): Observable<Long> {
+        return anchorDateOffsetPublisher
+            .startWithItem(sharedPreferences.getLong(KEY_ANCHOR_DATE_OFFSET, ANCHOR_DATE_OFFSET_DEFAULT))
     }
 
-    override fun pushAnchorDateOffset(anchorDateOffset: Int?) {
+    override fun pushAnchorDateOffset(anchorDateOffset: Long?) {
         if (anchorDateOffset == null) editor.remove(KEY_ANCHOR_DATE_OFFSET) else {
-            editor.putInt(KEY_ANCHOR_DATE_OFFSET, anchorDateOffset)
+            editor.putLong(KEY_ANCHOR_DATE_OFFSET, anchorDateOffset)
         }
         editor.apply()
+        anchorDateOffsetPublisher.onNext(anchorDateOffset ?: ANCHOR_DATE_OFFSET_DEFAULT)
+    }
+
+
+    private val blockSizePublisher = PublishSubject.create<Long>()
+    override fun fetchBlockSize(): Observable<Long> {
+        return blockSizePublisher
+            .startWithItem(sharedPreferences.getLong(KEY_BLOCK_SIZE, BLOCK_SIZE_DEFAULT))
+    }
+
+    override fun pushBlockSize(blockSize: Long?) {
+        if (blockSize == null) editor.remove(KEY_BLOCK_SIZE) else {
+            editor.putLong(KEY_BLOCK_SIZE, blockSize)
+        }
+        editor.apply()
+        anchorDateOffsetPublisher.onNext(blockSize ?: BLOCK_SIZE_DEFAULT)
     }
 }
