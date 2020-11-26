@@ -17,7 +17,7 @@ class ViewItemRecipeFactory<V : View, D : Any>(
     }
 
     companion object {
-        // These are just some common ViewItemRecipeFactory that you might want.
+        // These are just some common ViewItemRecipeFactory
         fun createHeaderRecipeFactory(context: Context): ViewItemRecipeFactory<TextView, String> {
             return ViewItemRecipeFactory(
                 { View.inflate(context, R.layout.tableview_header, null) as TextView },
