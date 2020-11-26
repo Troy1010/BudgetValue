@@ -8,4 +8,6 @@ interface ISharedPrefWrapper {
     fun pushReconcileCategoryAmounts(reconcileCA: List<ReconcileCategoryAmount>?)
     fun fetchExpectedIncome(): BigDecimal
     fun pushExpectedIncome(expectedIncome: BigDecimal?)
+    fun fetchAnchorDateOffset(): Int
+    fun pushAnchorDateOffset(anchorDateOffset: Int?)
 }

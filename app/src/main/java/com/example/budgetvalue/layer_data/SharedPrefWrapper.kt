@@ -13,6 +13,7 @@ class SharedPrefWrapper @Inject constructor(val sharedPreferences: SharedPrefere
     companion object {
         const val KEY_INCOME_CA = "KEY_INCOME_CA"
         const val KEY_EXPECTED_INCOME = "KEY_EXPECTED_INCOME"
+        const val KEY_ANCHOR_DATE_OFFSET = "KEY_ANCHOR_DATE_OFFSET"
     }
     val editor = sharedPreferences.edit()
     override fun fetchReconcileCategoryAmounts(): List<ReconcileCategoryAmount> {
@@ -37,6 +38,17 @@ class SharedPrefWrapper @Inject constructor(val sharedPreferences: SharedPrefere
     override fun pushExpectedIncome(expectedIncome: BigDecimal?) {
         if (expectedIncome==null) editor.remove(KEY_EXPECTED_INCOME) else {
             editor.putString(KEY_EXPECTED_INCOME, expectedIncome.toString())
+        }
+        editor.apply()
+    }
+
+    override fun fetchAnchorDateOffset(): Int {
+        return sharedPreferences.getInt(KEY_ANCHOR_DATE_OFFSET, 0)
+    }
+
+    override fun pushAnchorDateOffset(anchorDateOffset: Int?) {
+        if (anchorDateOffset==null) editor.remove(KEY_ANCHOR_DATE_OFFSET) else {
+            editor.putInt(KEY_ANCHOR_DATE_OFFSET, anchorDateOffset)
         }
         editor.apply()
     }
