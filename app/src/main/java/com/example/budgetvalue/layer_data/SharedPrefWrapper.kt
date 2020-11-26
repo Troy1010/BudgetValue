@@ -1,6 +1,7 @@
 package com.example.budgetvalue.layer_data
 
 import android.content.SharedPreferences
+import com.example.budgetvalue.getType
 import com.example.budgetvalue.model_data.ReconcileCategoryAmount
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -19,8 +20,7 @@ class SharedPrefWrapper @Inject constructor(val sharedPreferences: SharedPrefere
         if (storedReconcileCategoryAmounts==null) {
             return listOf()
         } else {
-            val t = object : TypeToken<List<ReconcileCategoryAmount>>() {}.type
-            return Gson().fromJson(storedReconcileCategoryAmounts, t)
+            return Gson().fromJson(storedReconcileCategoryAmounts, getType<List<ReconcileCategoryAmount>>())
         }
     }
 

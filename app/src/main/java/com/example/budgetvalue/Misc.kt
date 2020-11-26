@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.extensions.pairwise
 import com.example.budgetvalue.model_app.Transaction
+import com.google.gson.reflect.TypeToken
 import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import com.tminus1010.tmcommonkotlin.tuple.Quadruple
@@ -26,6 +27,7 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.io.PrintWriter
 import java.io.StringWriter
+import java.lang.reflect.Type
 import java.math.BigDecimal
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -423,4 +425,9 @@ fun getTotalObservable(it: Iterable<Observable<BigDecimal>>): BehaviorSubject<Bi
 
 fun Iterable<BigDecimal>.sum(): BigDecimal {
     return this.fold(BigDecimal.ZERO, BigDecimal::add)
+}
+
+// Useful for Gson().fromJson(x, getType<List<Int>>())
+fun <T> getType(): Type {
+    return object : TypeToken<T>() {}.type
 }
