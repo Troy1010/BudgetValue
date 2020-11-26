@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.extensions.pairwise
+import com.example.budgetvalue.extensions.previous
 import com.example.budgetvalue.model_app.Transaction
 import com.google.gson.reflect.TypeToken
 import com.tminus1010.tmcommonkotlin.logz.logz
@@ -39,9 +40,9 @@ import kotlin.collections.HashMap
 fun Iterable<Transaction>.getBlocks(numOfWeeks: Int): HashMap<LocalDate, java.util.ArrayList<Transaction>> {
     val transactionBlocks = HashMap<LocalDate, java.util.ArrayList<Transaction>>()
     for (transaction in this) {
-        if (transactionBlocks[transaction.date.previousMonday()]==null)
-            transactionBlocks[transaction.date.previousMonday()] = arrayListOf()
-        transactionBlocks[transaction.date.previousMonday()]!!.add(transaction)
+        if (transactionBlocks[transaction.date.previous(DayOfWeek.MONDAY)]==null)
+            transactionBlocks[transaction.date.previous(DayOfWeek.MONDAY)] = arrayListOf()
+        transactionBlocks[transaction.date.previous(DayOfWeek.MONDAY)]!!.add(transaction)
     }
     //
     var i = 0
@@ -61,15 +62,6 @@ fun Iterable<Transaction>.getBlocks(numOfWeeks: Int): HashMap<LocalDate, java.ut
         transactionBlocks.remove(key)
     }
     return transactionBlocks
-}
-
-
-fun LocalDate.previousMonday(): LocalDate {
-    return this.with(TemporalAdjusters.next(DayOfWeek.MONDAY))
-}
-
-fun LocalDate.nextMonday(): LocalDate {
-    return this.with(TemporalAdjusters.previous(DayOfWeek.MONDAY))
 }
 
 
