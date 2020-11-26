@@ -15,11 +15,13 @@ class SharedPrefWrapper @Inject constructor(val sharedPreferences: SharedPrefere
         const val KEY_EXPECTED_INCOME = "KEY_EXPECTED_INCOME"
         const val KEY_ANCHOR_DATE_OFFSET = "KEY_ANCHOR_DATE_OFFSET"
     }
+
     val editor = sharedPreferences.edit()
     override fun fetchReconcileCategoryAmounts(): List<ReconcileCategoryAmount> {
         val storedReconcileCategoryAmounts = sharedPreferences.getString(KEY_INCOME_CA, null)
-        return if (storedReconcileCategoryAmounts==null) listOf() else {
-            Gson().fromJson(storedReconcileCategoryAmounts, getType<List<ReconcileCategoryAmount>>())
+        return if (storedReconcileCategoryAmounts == null) listOf() else {
+            Gson().fromJson(storedReconcileCategoryAmounts,
+                getType<List<ReconcileCategoryAmount>>())
         }
     }
 
@@ -31,12 +33,12 @@ class SharedPrefWrapper @Inject constructor(val sharedPreferences: SharedPrefere
     }
 
     override fun fetchExpectedIncome(): BigDecimal {
-        val returning = sharedPreferences.getString(KEY_EXPECTED_INCOME, null)
-        return returning?.toBigDecimal() ?: BigDecimal.ZERO
+        return sharedPreferences.getString(KEY_EXPECTED_INCOME, null)?.toBigDecimal()
+            ?: BigDecimal.ZERO
     }
 
     override fun pushExpectedIncome(expectedIncome: BigDecimal?) {
-        if (expectedIncome==null) editor.remove(KEY_EXPECTED_INCOME) else {
+        if (expectedIncome == null) editor.remove(KEY_EXPECTED_INCOME) else {
             editor.putString(KEY_EXPECTED_INCOME, expectedIncome.toString())
         }
         editor.apply()
@@ -47,7 +49,7 @@ class SharedPrefWrapper @Inject constructor(val sharedPreferences: SharedPrefere
     }
 
     override fun pushAnchorDateOffset(anchorDateOffset: Int?) {
-        if (anchorDateOffset==null) editor.remove(KEY_ANCHOR_DATE_OFFSET) else {
+        if (anchorDateOffset == null) editor.remove(KEY_ANCHOR_DATE_OFFSET) else {
             editor.putInt(KEY_ANCHOR_DATE_OFFSET, anchorDateOffset)
         }
         editor.apply()
