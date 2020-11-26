@@ -6,9 +6,9 @@ import java.lang.Math.max
 import kotlin.math.ceil
 
 object ColumnWidthCalculator {
-    fun generateIntrinsicWidths(cellRecipes: List<List<ICellRecipe>>): List<List<Int>> {
+    fun generateIntrinsicWidths(recipes: List<List<IRecipe>>): List<List<Int>> {
         val intrinsicWidths = ArrayList<ArrayList<Int>>()
-        for ((yPos, rowData) in cellRecipes.withIndex()) {
+        for ((yPos, rowData) in recipes.withIndex()) {
             intrinsicWidths.add(ArrayList())
             for (cellData in rowData) {
                 intrinsicWidths[yPos].add(cellData.intrinsicWidth)
@@ -17,10 +17,10 @@ object ColumnWidthCalculator {
         return intrinsicWidths
     }
 
-    fun generateMinWidths(rowData: List<ICellRecipe>) = rowData.map { it.intrinsicWidth }
+    fun generateMinWidths(rowData: List<IRecipe>) = rowData.map { it.intrinsicWidth }
 
     fun generateColumnWidths(
-        recipe2d: List<List<ICellRecipe>>,
+        recipe2d: List<List<IRecipe>>,
         parentWidth: Int
     ): List<Int> {
         val minWidths = generateMinWidths(recipe2d[0])

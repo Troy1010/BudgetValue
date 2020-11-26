@@ -2,11 +2,15 @@ package com.example.budgetvalue.layer_ui.TMTableView
 
 import android.view.View
 
-data class CellRecipe <V:View, D:Any>(
+/**
+ * Recipe contains everything required by RecyclerViewRecipeAdapter
+ */
+// TODO("Rename this. 'Recipe' is not a very informant name.")
+data class Recipe <V:View, D:Any>(
     override val viewProvider: () -> V,
     override val data: D,
     val bindAction_: (V, D) -> Unit
-) : ICellRecipe {
+) : IRecipe {
     override val bindAction = bindAction_ as (View, Any) -> Unit
     override val intrinsicWidth : Int
         get() {

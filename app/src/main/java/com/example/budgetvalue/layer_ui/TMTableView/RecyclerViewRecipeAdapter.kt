@@ -6,11 +6,11 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 
-class RecyclerViewAdapter(
+class RecyclerViewRecipeAdapter(
     val context: Context,
-    val recipe2D: () -> List<List<ICellRecipe>>,
+    val recipe2D: () -> List<List<IRecipe>>,
     val columnWidths: List<Int>
-) : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<RecyclerViewRecipeAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
     override fun onCreateViewHolder(parent: ViewGroup, yPos: Int): ViewHolder {
         return ViewHolder(createRow(context, recipe2D()[yPos]))

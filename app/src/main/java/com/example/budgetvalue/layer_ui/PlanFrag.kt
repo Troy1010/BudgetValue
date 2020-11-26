@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.budgetvalue.App
 import com.example.budgetvalue.R
-import com.example.budgetvalue.layer_ui.TMTableView.CellRecipeFactory
+import com.example.budgetvalue.layer_ui.TMTableView.RecipeFactory
 import com.example.budgetvalue.layer_ui.misc.rxBind
 import com.example.budgetvalue.layer_ui.misc.rxBindOneWay
 import com.example.budgetvalue.reflectXY
@@ -33,13 +33,13 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
     }
 
     private fun setupObservers() {
-        val cellRecipeBuilder = CellRecipeFactory(requireContext(), CellRecipeFactory.DefaultType.CELL)
-        val headerRecipeBuilder = CellRecipeFactory(requireContext(), CellRecipeFactory.DefaultType.HEADER)
-        val inputRecipeBuilder = CellRecipeFactory<EditText, BehaviorSubject<BigDecimal>>(
+        val cellRecipeBuilder = RecipeFactory(requireContext(), RecipeFactory.DefaultType.CELL)
+        val headerRecipeBuilder = RecipeFactory(requireContext(), RecipeFactory.DefaultType.HEADER)
+        val inputRecipeBuilder = RecipeFactory<EditText, BehaviorSubject<BigDecimal>>(
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
             { v, bs -> v.rxBind(bs, { it.toBigDecimal2() } )}
         )
-        val oneWayCellRecipeBuilder = CellRecipeFactory<TextView, Observable<BigDecimal>>(
+        val oneWayCellRecipeBuilder = RecipeFactory<TextView, Observable<BigDecimal>>(
             { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
             { v, bs -> v.rxBindOneWay(bs)}
         )

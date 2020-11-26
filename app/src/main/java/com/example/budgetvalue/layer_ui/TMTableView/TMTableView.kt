@@ -19,7 +19,7 @@ class TMTableView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr) {
     var tableView: View? = null
     val tableViewWidth = BehaviorSubject.create<Int>()
-    val _recipe2D = BehaviorSubject.create<List<List<ICellRecipe>>>()
+    val _recipe2D = BehaviorSubject.create<List<List<IRecipe>>>()
 
     init {
         // # Inflate measureMe
@@ -36,11 +36,11 @@ class TMTableView @JvmOverloads constructor(
         if (w != oldw) tableViewWidth.onNext(w)
     }
 
-    fun setRecipes(recipe2D: List<List<ICellRecipe>>) {
+    fun setRecipes(recipe2D: List<List<IRecipe>>) {
         _recipe2D.onNext(recipe2D)
     }
 
-    fun inflateAndBind(recipe2D: List<List<ICellRecipe>>, columnWidths: List<Int>) {
+    fun inflateAndBind(recipe2D: List<List<IRecipe>>, columnWidths: List<Int>) {
         // # Inflate tableView
         if (tableView == null) tableView = View.inflate(context, R.layout.tableview_layout, this)
         // # Column Headers
@@ -50,7 +50,7 @@ class TMTableView @JvmOverloads constructor(
         frame_headers.addView(row)
         frame_headers.setPadding(0, 0, 0, 0)
         // # Cells
-        recyclerview_tier1.adapter = RecyclerViewAdapter(
+        recyclerview_tier1.adapter = RecyclerViewRecipeAdapter(
             context,
             { ArrayList(recipe2D).also { it.removeAt(0) } },
             columnWidths

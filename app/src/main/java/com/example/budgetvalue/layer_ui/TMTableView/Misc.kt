@@ -7,7 +7,7 @@ import androidx.core.view.get
 import com.example.budgetvalue.R
 
 
-fun createRow(context: Context, rowRecipes: List<ICellRecipe>): LinearLayout {
+fun createRow(context: Context, rowRecipes: List<IRecipe>): LinearLayout {
     val view = LinearLayout(context)
     for (cellRecipe in rowRecipes) {
         val cellView = cellRecipe.viewProvider()
@@ -21,7 +21,7 @@ fun createRow(context: Context, rowRecipes: List<ICellRecipe>): LinearLayout {
 
 fun bindRow(
     rowView: LinearLayout,
-    rowRecipes: List<ICellRecipe>,
+    rowRecipes: List<IRecipe>,
     columnWidths: List<Int>
 ) {
     for ((xPos, cellData) in rowRecipes.withIndex()) {
