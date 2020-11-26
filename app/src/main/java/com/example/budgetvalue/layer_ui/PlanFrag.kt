@@ -33,9 +33,9 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
     }
 
     private fun setupObservers() {
-        val cellRecipeBuilder = ViewItemRecipeFactory(requireContext(), ViewItemRecipeFactory.DefaultType.CELL)
-        val headerRecipeBuilder = ViewItemRecipeFactory(requireContext(), ViewItemRecipeFactory.DefaultType.HEADER)
-        val inputRecipeBuilder = ViewItemRecipeFactory<EditText, BehaviorSubject<BigDecimal>>(
+        val cellRecipeFactory = ViewItemRecipeFactory.createCellRecipeFactory(requireContext())
+        val headerRecipeFactory = ViewItemRecipeFactory.createHeaderRecipeFactory(requireContext())
+        val inputRecipeFactory = ViewItemRecipeFactory<EditText, BehaviorSubject<BigDecimal>>(
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
             { v, bs -> v.rxBind(bs, { it.toBigDecimal2() } )}
         )
@@ -48,14 +48,14 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
             .observe(this) {
                 myTableView_plan.setRecipes(
                     listOf(
-                        headerRecipeBuilder.createOne("Category")
-                                + cellRecipeBuilder.createOne("Expected Income")
-                                + cellRecipeBuilder.createOne("Default")
-                                + cellRecipeBuilder.createMany(it.keys.map { it.name }),
-                        headerRecipeBuilder.createOne("Plan")
-                                + inputRecipeBuilder.createOne(planVM.expectedIncome)
+                        headerRecipeFactory.createOne("Category")
+                                + cellRecipeFactory.createOne("Expected Income")
+                                + cellRecipeFactory.createOne("Default")
+                                + cellRecipeFactory.createMany(it.keys.map { it.name }),
+                        headerRecipeFactory.createOne("Plan")
+                                + inputRecipeFactory.createOne(planVM.expectedIncome)
                                 + oneWayCellRecipeBuilder.createOne(planVM.difference)
-                                + inputRecipeBuilder.createMany(it.values)
+                                + inputRecipeFactory.createMany(it.values)
                     ).reflectXY()
                 )
             }

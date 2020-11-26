@@ -17,18 +17,18 @@ class ViewItemRecipeFactory<V : View, D : Any>(
     }
 
     companion object {
-        operator fun invoke(context: Context, defaultType: DefaultType): ViewItemRecipeFactory<TextView, String> {
-            return when (defaultType) {
-                DefaultType.HEADER -> ViewItemRecipeFactory(
-                    { View.inflate(context, R.layout.tableview_header, null) as TextView },
-                    { view: TextView, s: String? -> view.text = s }
-                )
-                else -> ViewItemRecipeFactory(
-                    { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
-                    { view: TextView, s: String? -> view.text = s }
-                )
-            }
+        // These are just some common ViewItemRecipeFactory that you might want.
+        fun createHeaderRecipeFactory(context: Context): ViewItemRecipeFactory<TextView, String> {
+            return ViewItemRecipeFactory(
+                { View.inflate(context, R.layout.tableview_header, null) as TextView },
+                { view: TextView, s: String? -> view.text = s }
+            )
+        }
+        fun createCellRecipeFactory(context: Context): ViewItemRecipeFactory<TextView, String> {
+            return ViewItemRecipeFactory(
+                { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
+                { view: TextView, s: String? -> view.text = s }
+            )
         }
     }
-    enum class DefaultType { CELL, HEADER }
 }
