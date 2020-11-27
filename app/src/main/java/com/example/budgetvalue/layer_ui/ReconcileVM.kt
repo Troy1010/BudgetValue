@@ -30,7 +30,7 @@ class ReconcileVM(
     val rowDatas = zip(activeCategories, reconcileCategoryAmounts, planVM.planCategoryAmounts, transactionSet) // TODO("Is this zipping correctly..?")
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
     val reconcileDefault = reconcileCategoryAmounts
-        .switchMap { it.itemObservablesObservable }
+        .switchMap { it.observable }
         .flatMap { getTotalObservable(it.values) }
         .withLatestFrom(accountsTotal)
         .map { it.second - it.first } // TODO("Should subtract previous accountsTotal")
@@ -46,9 +46,9 @@ class ReconcileVM(
         return activeCategories.map { category ->
             ReconcileRowData(
                 category,
-                planCA.itemObservablesObservable.value[category] ?: Observable.just(BigDecimal.ZERO),
+                planCA.observable.value[category] ?: Observable.just(BigDecimal.ZERO),
                 BehaviorSubject.createDefault(transactionSet.map { it.categoryAmounts[category] ?: BigDecimal.ZERO }.sum()),
-                reconcileCA.itemObservablesObservable.value[category]!!
+                reconcileCA.observable.value[category]!!
             )
         }
     }
@@ -66,7 +66,7 @@ class ReconcileVM(
 
     fun bindReconcileCategoryAmountsToRepo(reconcileCategoryAmounts: SourceHashMap<Category, BigDecimal>) {
         // TODO("move this logic to Repo")
-        reconcileCategoryAmounts.itemObservablesObservable // TODO("Handle disposables")
+        reconcileCategoryAmounts.observable // TODO("Handle disposables")
             .subscribe { ca -> ca.forEach { kv -> kv.value.skip(1).subscribe { repo.pushReconcileCategoryAmounts(ca.mapValues { it.value.value }) } } }
     }
 }

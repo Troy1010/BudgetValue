@@ -12,7 +12,7 @@ import java.math.BigDecimal
 class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
     val planCategoryAmounts = repo.planCategoryAmounts
     val uncategorizedPlan = planCategoryAmounts
-        .flatMap { it.itemObservablesObservable }
+        .flatMap { it.observable }
         .flatMap { getTotalObservable(it.values) }
         .toBehaviorSubject()
     val expectedIncome = BehaviorSubject.createDefault(repo.fetchExpectedIncome())

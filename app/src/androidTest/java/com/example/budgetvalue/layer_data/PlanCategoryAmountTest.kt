@@ -67,7 +67,7 @@ class PlanCategoryAmountTest {
         repo.planCategoryAmounts
             .subscribeOn(Schedulers.trampoline())
             .take(1)
-            .flatMap { it.itemObservablesObservable }
+            .flatMap { it.observable }
             .doOnNext { it.values.zip(listOf(64, 22, 39)).forEach { (bs, v) -> bs.onNext(BigDecimal(v)) } }
             .subscribe()
         // # Verify

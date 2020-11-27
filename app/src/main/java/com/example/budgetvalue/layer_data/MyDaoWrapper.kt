@@ -1,6 +1,5 @@
 package com.example.budgetvalue.layer_data
 
-import com.example.budgetvalue.SourceHashMap
 import com.example.budgetvalue.extensions.toSourceHashMap
 import com.example.budgetvalue.model_app.Category
 import com.example.budgetvalue.model_app.ICategoryParser
@@ -25,7 +24,7 @@ class MyDaoWrapper(
         .subscribeOn(Schedulers.io())
         .map { it.associate { Pair(categoryParser.parseCategory(it.categoryName), it.amount) } }
         .map { it.toSourceHashMap() }
-        .doOnNext { it.itemObservablesObservable.observeOn(Schedulers.io()).subscribe(::bindToPlanCategoryAmounts) }
+        .doOnNext { it.observable.observeOn(Schedulers.io()).subscribe(::bindToPlanCategoryAmounts) }
         .replay(1).refCount()
 
     private fun bindToPlanCategoryAmounts(itemObservablesObservable: HashMap<Category, BehaviorSubject<BigDecimal>>) {

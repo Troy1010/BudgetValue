@@ -45,7 +45,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
         )
         planVM.planCategoryAmounts
             .observeOn(AndroidSchedulers.mainThread())
-            .flatMap { it.itemObservablesObservable }
+            .flatMap { it.observable }
             .observe(this) {
                 myTableView_plan.setRecipes(
                     listOf(

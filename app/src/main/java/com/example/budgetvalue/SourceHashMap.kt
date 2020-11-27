@@ -5,40 +5,36 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.ReplaySubject
 
 class SourceHashMap<T, V> : HashMap<T, V>() {
-    /**
-     * This observable emits whenever SourceHashMap puts or removes.
-     * It emits a HashMap of T : V
-     */
-    val observable = ReplaySubject.create<SourceHashMap<T, V>>()
+    private val innerObservable = ReplaySubject.create<SourceHashMap<T, V>>()
     /**
      * this observable emits whenever SourceHashMap puts or removes.
      * It emits a HashMap of T : BehaviorSubject<V>
      */
     // # Bind Map -> ObservableMap
-    val itemObservablesObservable: BehaviorSubject<HashMap<T, BehaviorSubject<V>>> = observable
-        .scan(HashMap()) { x:HashMap<T, BehaviorSubject<V>>, y:HashMap<T, V> ->
-            val xKeysToRemove = arrayListOf<T>()
-            for (xKey in x.keys) {
-                if (xKey !in y.keys) {
-                    xKeysToRemove.add(xKey)
+    val observable: BehaviorSubject<HashMap<T, BehaviorSubject<V>>> = innerObservable
+        .scan(HashMap()) { observableMap:HashMap<T, BehaviorSubject<V>>, map:HashMap<T, V> ->
+            val observableMapKeysToRemove = arrayListOf<T>()
+            for (observableMapKey in observableMap.keys) {
+                if (observableMapKey !in map.keys) {
+                    observableMapKeysToRemove.add(observableMapKey)
                 }
             }
-            for (xKey in xKeysToRemove) {
-                x.remove(xKey)
+            for (xKey in observableMapKeysToRemove) {
+                observableMap.remove(xKey)
             }
-            for (yKey in y.keys) {
-                if (yKey !in x.keys) {
-                    x[yKey] = createItemObservable(yKey)
+            for (mapKey in map.keys) {
+                if (mapKey !in observableMap.keys) {
+                    observableMap[mapKey] = createItemObservable(mapKey)
                 }
             }
-            x
+            observableMap
         }.toBehaviorSubject()
 
     fun createItemObservable(key:T): BehaviorSubject<V> {
         return BehaviorSubject.createDefault(this[key]!!)
             .also {
                 // # Bind Map -> ItemObservable
-                observable.map { it[key]!! }.distinctUntilChanged().subscribe(it)
+                innerObservable.map { it[key]!! }.distinctUntilChanged().subscribe(it)
                 // # Bind ItemObservable -> Map
                 it.skip(1).subscribe { super.put(key, it) }
             }
@@ -46,23 +42,23 @@ class SourceHashMap<T, V> : HashMap<T, V>() {
 
     override fun clear() {
         super.clear()
-        observable.onNext(this)
+        innerObservable.onNext(this)
     }
 
     override fun putAll(from: Map<out T, V>) {
         super.putAll(from)
-        observable.onNext(this)
+        innerObservable.onNext(this)
     }
 
     override fun put(key: T, value: V): V? {
         val x = super.put(key, value)
-        observable.onNext(this)
+        innerObservable.onNext(this)
         return x
     }
 
     override fun remove(key: T): V? {
         val x = super.remove(key)
-        observable.onNext(this)
+        innerObservable.onNext(this)
         return x
     }
 }

@@ -15,7 +15,7 @@ class SourceHashMapTest {
         // # Verify
         assertEquals(sourceHashMap[0], 10)
         Thread.sleep(1000) // TODO("use RxThreadsRule")
-        assertEquals(10, sourceHashMap.itemObservablesObservable.value[0]!!.value)
+        assertEquals(10, sourceHashMap.observable.value[0]!!.value)
     }
 
     @Test
@@ -30,9 +30,9 @@ class SourceHashMapTest {
         assertEquals(sourceHashMap[3], 30)
         assertEquals(sourceHashMap[9], 90)
         Thread.sleep(1000) // TODO("use RxThreadsRule")
-        assertEquals(10, sourceHashMap.itemObservablesObservable.value[0]!!.value)
-        assertEquals(30, sourceHashMap.itemObservablesObservable.value[3]!!.value)
-        assertEquals(90, sourceHashMap.itemObservablesObservable.value[9]!!.value)
+        assertEquals(10, sourceHashMap.observable.value[0]!!.value)
+        assertEquals(30, sourceHashMap.observable.value[3]!!.value)
+        assertEquals(90, sourceHashMap.observable.value[9]!!.value)
     }
 
     @Test
@@ -46,8 +46,8 @@ class SourceHashMapTest {
         assertEquals(sourceHashMap[3], 30)
         assertEquals(sourceHashMap[9], 90)
         Thread.sleep(1000) // TODO("use RxThreadsRule")
-        assertEquals(10, sourceHashMap.itemObservablesObservable.value[0]!!.value)
-        assertEquals(30, sourceHashMap.itemObservablesObservable.value[3]!!.value)
-        assertEquals(90, sourceHashMap.itemObservablesObservable.value[9]!!.value)
+        assertEquals(10, sourceHashMap.observable.value[0]!!.value)
+        assertEquals(30, sourceHashMap.observable.value[3]!!.value)
+        assertEquals(90, sourceHashMap.observable.value[9]!!.value)
     }
 }
