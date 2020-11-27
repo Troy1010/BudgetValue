@@ -65,7 +65,7 @@ class ReconcileVM(
     }
 
     fun bindReconcileCategoryAmountsToRepo(reconcileCategoryAmounts: SourceHashMap<Category, BigDecimal>) {
-        reconcileCategoryAmounts.observable // TODO("Handle disposables")
-            .subscribe { repo.pushReconcileCategoryAmounts(it) }
+//        reconcileCategoryAmounts.itemObservablesObservable // TODO("Handle disposables")
+//            .subscribe { it.forEach { kv -> kv.value.subscribe { repo.up(it) } } } // update ReconcileCA
     }
 }
