@@ -29,22 +29,6 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
         .map { it.first - it.second }
 
     init {
-        // # Bind planCategoryAmounts -> Repo
-        loadFromRepoObservable
-            .observeOn(Schedulers.io())
-            .switchMap { planCategoryAmounts.itemObservablesObservable }
-            .subscribe {
-                repo.clearPlanCategoryAmounts().blockingAwait()
-                synchronized(planCategoryAmounts) {
-                    for ((category, amountBehaviorSubject) in it) {
-                        repo.add(PlanCategoryAmount(category, BigDecimal.ZERO)).subscribe()
-                        amountBehaviorSubject.observeOn(Schedulers.io())
-                            .subscribe { // TODO("Handle disposables")
-                                repo.update(PlanCategoryAmount(category, it)).subscribe()
-                            }
-                    }
-                }
-            }
         // # Bind categoriesAppVM.categoryNames -> planCategoryAmounts
         loadFromRepoObservable
             .observeOn(Schedulers.io())

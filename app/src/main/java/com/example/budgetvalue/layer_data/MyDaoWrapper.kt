@@ -1,9 +1,14 @@
 package com.example.budgetvalue.layer_data
 
+import com.example.budgetvalue.SourceHashMap
+import com.example.budgetvalue.extensions.toSourceHashMap
+import com.example.budgetvalue.model_app.Category
 import com.example.budgetvalue.model_app.ICategoryParser
 import com.example.budgetvalue.model_data.Account
+import com.example.budgetvalue.model_data.PlanCategoryAmount
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import java.math.BigDecimal
 
 class MyDaoWrapper(
     val myDao: MyDao,
@@ -15,8 +20,26 @@ class MyDaoWrapper(
 
     override val planCategoryAmounts = myDao
         .getPlanCategoryAmountsReceived()
+        .subscribeOn(Schedulers.io())
         .map { it.associate { Pair(categoryParser.parseCategory(it.categoryName), it.amount) } }
+        .map { it.toSourceHashMap() }
+        .doOnNext(::bindToPlanCategoryAmounts)
         .replay(1).refCount()
+
+    private fun bindToPlanCategoryAmounts(categoryAmounts: SourceHashMap<Category, BigDecimal>) {
+        synchronized(categoryAmounts) {
+            myDao.clearPlanCategoryAmounts().blockingAwait()
+            categoryAmounts.itemObservablesObservable.take(1).subscribe {
+                for ((category, amountBehaviorSubject) in it) {
+                    myDao.add(PlanCategoryAmount(category, BigDecimal.ZERO)).subscribe()
+                    amountBehaviorSubject.observeOn(Schedulers.io())
+                        .subscribe { // TODO("Handle disposables")
+                            myDao.update(PlanCategoryAmount(category, it)).subscribe()
+                        }
+                }
+            }
+        }
+    }
 
     override fun update(account: Account): Completable {
         return myDao
