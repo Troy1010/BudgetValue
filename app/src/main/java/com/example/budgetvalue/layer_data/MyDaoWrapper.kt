@@ -24,7 +24,7 @@ class MyDaoWrapper(
         .subscribeOn(Schedulers.io())
         .map { it.associate { Pair(categoryParser.parseCategory(it.categoryName), it.amount) } }
         .map { it.toSourceHashMap() }
-        .doOnNext { it.observable.subscribeOn(Schedulers.io()).subscribe(::bindToPlanCategoryAmounts) }
+        .doOnNext { it.observable.observeOn(Schedulers.io()).subscribe(::bindToPlanCategoryAmounts) }
         .replay(1).refCount()
 
     private fun bindToPlanCategoryAmounts(categoryAmounts: SourceHashMap<Category, BigDecimal>) {
