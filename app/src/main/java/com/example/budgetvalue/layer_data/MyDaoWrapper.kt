@@ -20,6 +20,7 @@ class MyDaoWrapper(
 
     override val planCategoryAmounts = myDao
         .getPlanCategoryAmountsReceived()
+        .take(1)
         .subscribeOn(Schedulers.io())
         .map { it.associate { Pair(categoryParser.parseCategory(it.categoryName), it.amount) } }
         .map { it.toSourceHashMap() }

@@ -24,8 +24,7 @@ import java.math.BigDecimal
 class PlanFrag: Fragment(R.layout.frag_plan) {
     val app by lazy { requireActivity().application as App }
     val repo by lazy { app.appComponent.getRepo() }
-    val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
-    val planVM : PlanVM by activityViewModels { createVmFactory { PlanVM(repo, categoriesAppVM) } }
+    val planVM : PlanVM by activityViewModels { createVmFactory { PlanVM(repo) } }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,8 +42,9 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
             { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
             { v, bs -> v.rxBindOneWay(bs)}
         )
-        planVM.planCategoryAmounts.itemObservablesObservable
+        planVM.planCategoryAmounts
             .observeOn(AndroidSchedulers.mainThread())
+            .flatMap { it.itemObservablesObservable }
             .observe(this) {
                 myTableView_plan.setRecipes(
                     listOf(
