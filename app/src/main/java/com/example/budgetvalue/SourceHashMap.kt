@@ -14,15 +14,8 @@ class SourceHashMap<T, V> : HashMap<T, V>() {
      * this observable emits whenever SourceHashMap puts or removes.
      * It emits a HashMap of T : BehaviorSubject<V>
      */
+    // # Bind Map -> ObservableMap
     val itemObservablesObservable: BehaviorSubject<HashMap<T, BehaviorSubject<V>>> = observable
-        .filter {
-            if (bSkipNext) {
-                bSkipNext = false
-                false
-            } else {
-                true
-            }
-        }
         .scan(HashMap()) { x:HashMap<T, BehaviorSubject<V>>, y:HashMap<T, V> ->
             val xKeysToRemove = arrayListOf<T>()
             for (xKey in x.keys) {
@@ -41,15 +34,14 @@ class SourceHashMap<T, V> : HashMap<T, V>() {
             x
         }.toBehaviorSubject()
 
-    private var bSkipNext = false
     fun createItemObservable(key:T): BehaviorSubject<V> {
-        return BehaviorSubject.createDefault(this[key]!!).apply {
-            observable.map { it[key]!! }.distinctUntilChanged().subscribe(this)
-            skip(1).subscribe {
-                bSkipNext = true
-                this@SourceHashMap[key] = it
+        return BehaviorSubject.createDefault(this[key]!!)
+            .also {
+                // # Bind Map -> ItemObservable
+                observable.map { it[key]!! }.distinctUntilChanged().subscribe(it)
+                // # Bind ItemObservable -> Map
+                it.skip(1).subscribe { super.put(key, it) }
             }
-        }
     }
 
     override fun clear() {
