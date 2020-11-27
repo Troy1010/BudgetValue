@@ -16,5 +16,8 @@
     <item
         android:id="@+id/menu_save_reconciliation"
         android:title="Save Reconciliation" />
+    <item
+        android:id="@+id/menu_debug_do_something"
+        android:title="Debug Do Something" />
 
 </menu>

@@ -24,6 +24,7 @@ class HostActivity : AppCompatActivity() {
     val transactionsVM: TransactionsVM by viewModels { createVmFactory { TransactionsVM(app.appComponent.getRepo()) } }
     val navController by lazy { findNavController(R.id.fragNavHost) }
     val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
+    val repo by lazy { app.appComponent.getRepo() }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -121,6 +122,13 @@ class HostActivity : AppCompatActivity() {
             R.id.menu_save_reconciliation -> {
 
                 toast("Reconciliation Saved")
+            }
+            R.id.menu_debug_do_something -> {
+                toast("Debug Do Something")
+//                repo.fetchReconcileCategoryAmounts().take(1).subscribe {
+//                    logz("fetchedReconcileCA:$it")
+//                }
+                repo.pushReconcileCategoryAmounts(null)
             }
         }
         return super.onOptionsItemSelected(item)
