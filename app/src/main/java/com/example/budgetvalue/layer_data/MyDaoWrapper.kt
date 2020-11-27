@@ -8,6 +8,7 @@ import com.example.budgetvalue.model_data.Account
 import com.example.budgetvalue.model_data.PlanCategoryAmount
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
 
 class MyDaoWrapper(
@@ -24,20 +25,18 @@ class MyDaoWrapper(
         .subscribeOn(Schedulers.io())
         .map { it.associate { Pair(categoryParser.parseCategory(it.categoryName), it.amount) } }
         .map { it.toSourceHashMap() }
-        .doOnNext { it.observable.observeOn(Schedulers.io()).subscribe(::bindToPlanCategoryAmounts) }
+        .doOnNext { it.itemObservablesObservable.observeOn(Schedulers.io()).subscribe(::bindToPlanCategoryAmounts) }
         .replay(1).refCount()
 
-    private fun bindToPlanCategoryAmounts(categoryAmounts: SourceHashMap<Category, BigDecimal>) {
-        synchronized(categoryAmounts) {
+    private fun bindToPlanCategoryAmounts(itemObservablesObservable: HashMap<Category, BehaviorSubject<BigDecimal>>) {
+        synchronized(itemObservablesObservable) {
             myDao.clearPlanCategoryAmounts().blockingAwait()
-            categoryAmounts.itemObservablesObservable.take(1).subscribe {
-                for ((category, amountBehaviorSubject) in it) {
-                    myDao.add(PlanCategoryAmount(category, BigDecimal.ZERO)).subscribeOn(Schedulers.io()).blockingAwait()
-                    amountBehaviorSubject.observeOn(Schedulers.io())
-                        .subscribe { // TODO("Handle disposables")
-                            myDao.update(PlanCategoryAmount(category, it)).subscribeOn(Schedulers.io()).blockingAwait()
-                        }
-                }
+            for ((category, amountBehaviorSubject) in itemObservablesObservable) {
+                myDao.add(PlanCategoryAmount(category, BigDecimal.ZERO)).subscribeOn(Schedulers.io()).blockingAwait()
+                amountBehaviorSubject.observeOn(Schedulers.io())
+                    .subscribe { // TODO("Handle disposables")
+                        myDao.update(PlanCategoryAmount(category, it)).subscribeOn(Schedulers.io()).blockingAwait()
+                    }
             }
         }
     }
