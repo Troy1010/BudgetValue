@@ -28,7 +28,8 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
     val repo by lazy { app.appComponent.getRepo() }
     val transactionsVM: TransactionsVM by activityViewModels { createVmFactory { TransactionsVM(repo) } }
     val accountsVM: AccountsVM by activityViewModels{ createVmFactory { AccountsVM(repo) }}
-    val planVM: PlanVM by activityViewModels{ createVmFactory { PlanVM(repo) }}
+    val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
+    val planVM: PlanVM by activityViewModels{ createVmFactory { PlanVM(repo, categoriesAppVM) }}
     val reconcileVM: ReconcileVM by activityViewModels { createVmFactory { ReconcileVM(repo, transactionsVM.spends, accountsVM.accountsTotal, planVM) } }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

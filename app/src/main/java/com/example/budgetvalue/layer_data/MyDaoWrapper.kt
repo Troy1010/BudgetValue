@@ -24,7 +24,7 @@ class MyDaoWrapper(
         .subscribeOn(Schedulers.io())
         .map { it.associate { Pair(categoryParser.parseCategory(it.categoryName), it.amount) } }
         .map { it.toSourceHashMap() }
-        .doOnNext(::bindToPlanCategoryAmounts)
+        .doOnNext { it.observable.subscribeOn(Schedulers.io()).subscribe(::bindToPlanCategoryAmounts) }
         .replay(1).refCount()
 
     private fun bindToPlanCategoryAmounts(categoryAmounts: SourceHashMap<Category, BigDecimal>) {
@@ -32,10 +32,10 @@ class MyDaoWrapper(
             myDao.clearPlanCategoryAmounts().blockingAwait()
             categoryAmounts.itemObservablesObservable.take(1).subscribe {
                 for ((category, amountBehaviorSubject) in it) {
-                    myDao.add(PlanCategoryAmount(category, BigDecimal.ZERO)).subscribe()
+                    myDao.add(PlanCategoryAmount(category, BigDecimal.ZERO)).subscribeOn(Schedulers.io()).blockingAwait()
                     amountBehaviorSubject.observeOn(Schedulers.io())
                         .subscribe { // TODO("Handle disposables")
-                            myDao.update(PlanCategoryAmount(category, it)).subscribe()
+                            myDao.update(PlanCategoryAmount(category, it)).subscribeOn(Schedulers.io()).blockingAwait()
                         }
                 }
             }

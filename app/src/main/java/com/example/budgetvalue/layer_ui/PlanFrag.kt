@@ -24,7 +24,8 @@ import java.math.BigDecimal
 class PlanFrag: Fragment(R.layout.frag_plan) {
     val app by lazy { requireActivity().application as App }
     val repo by lazy { app.appComponent.getRepo() }
-    val planVM : PlanVM by activityViewModels { createVmFactory { PlanVM(repo) } }
+    val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
+    val planVM : PlanVM by activityViewModels { createVmFactory { PlanVM(repo, categoriesAppVM) } }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
