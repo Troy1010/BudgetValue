@@ -28,15 +28,13 @@ class MyDaoWrapper(
         .replay(1).refCount()
 
     private fun bindToPlanCategoryAmounts(itemObservablesObservable: HashMap<Category, BehaviorSubject<BigDecimal>>) {
-        synchronized(itemObservablesObservable) {
-            myDao.clearPlanCategoryAmounts().blockingAwait()
-            for ((category, amountBehaviorSubject) in itemObservablesObservable) {
-                myDao.add(PlanCategoryAmount(category, BigDecimal.ZERO)).subscribeOn(Schedulers.io()).blockingAwait()
-                amountBehaviorSubject.observeOn(Schedulers.io())
-                    .subscribe { // TODO("Handle disposables")
-                        myDao.update(PlanCategoryAmount(category, it)).subscribeOn(Schedulers.io()).blockingAwait()
-                    }
-            }
+        myDao.clearPlanCategoryAmounts().blockingAwait()
+        for ((category, amountBehaviorSubject) in itemObservablesObservable) {
+            myDao.add(PlanCategoryAmount(category, BigDecimal.ZERO)).subscribeOn(Schedulers.io()).blockingAwait()
+            amountBehaviorSubject.observeOn(Schedulers.io())
+                .subscribe { // TODO("Handle disposables")
+                    myDao.update(PlanCategoryAmount(category, it)).subscribeOn(Schedulers.io()).blockingAwait()
+                }
         }
     }
 

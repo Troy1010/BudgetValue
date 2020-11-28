@@ -25,11 +25,9 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
         combineLatestAsTuple(categoriesAppVM.choosableCategories, planCategoryAmounts)
             .subscribeOn(Schedulers.io())
             .subscribe { (chooseableCategories, planCA) ->
-                synchronized(planCA) {
-                    chooseableCategories.asSequence()
-                        .filter { it !in planCA }
-                        .forEach { planCA[it] = BigDecimal.ZERO }
-                }
+                chooseableCategories.asSequence()
+                    .filter { it !in planCA }
+                    .forEach { planCA[it] = BigDecimal.ZERO }
             }
     }
 }
