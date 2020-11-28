@@ -6,7 +6,8 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.function.BiFunction
 import java.util.function.Function
 
-class SourceHashMap<K, V> : HashMap<K, V>() {
+class SourceHashMap<K, V>(): HashMap<K, V>() {
+    constructor(map: Map<K, V>): this() { putAll(map) }
     private val observableMapPublisher = PublishSubject.create<MutableMap<K, BehaviorSubject<V>>>()
     private val observableMap = mutableMapOf<K, BehaviorSubject<V>>()
     /**
