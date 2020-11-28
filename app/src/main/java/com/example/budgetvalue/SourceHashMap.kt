@@ -13,19 +13,13 @@ class SourceHashMap<T, V> : HashMap<T, V>() {
     // # Bind Map -> ObservableMap
     val observable: BehaviorSubject<HashMap<T, BehaviorSubject<V>>> = innerObservable
         .scan(HashMap()) { observableMap:HashMap<T, BehaviorSubject<V>>, map:HashMap<T, V> ->
-            val observableMapKeysToRemove = arrayListOf<T>()
-            for (observableMapKey in observableMap.keys) {
-                if (observableMapKey !in map.keys) {
-                    observableMapKeysToRemove.add(observableMapKey)
-                }
+            val keysToRemove = arrayListOf<T>()
+            for (observableMapKey in observableMap.keys.asSequence().filter { it !in map.keys }) {
+                keysToRemove.add(observableMapKey)
             }
-            for (xKey in observableMapKeysToRemove) {
-                observableMap.remove(xKey)
-            }
-            for (mapKey in map.keys) {
-                if (mapKey !in observableMap.keys) {
-                    observableMap[mapKey] = createItemObservable(mapKey)
-                }
+            keysToRemove.forEach { observableMap.remove(it) }
+            for (mapKey in map.keys.asSequence().filter { it !in observableMap.keys }) {
+                observableMap[mapKey] = createItemObservable(mapKey)
             }
             observableMap
         }.toBehaviorSubject()
