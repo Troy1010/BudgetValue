@@ -11,6 +11,11 @@ class SourceHashMap<K, V>(): HashMap<K, V>() {
     private val observableMapPublisher = PublishSubject.create<MutableMap<K, BehaviorSubject<V>>>()
     private val observableMap = mutableMapOf<K, BehaviorSubject<V>>()
     /**
+     * this observable emits whenever SourceHashMap is added to.
+     * It emits a K : BehaviorSubject<V> pair
+     */
+    val additionsObservable = PublishSubject.create<Pair<K, BehaviorSubject<V>>>()
+    /**
      * this observable emits whenever SourceHashMap is edited.
      * It emits a map of K : BehaviorSubject<V>
      */
@@ -34,20 +39,26 @@ class SourceHashMap<K, V>(): HashMap<K, V>() {
 
     override fun putAll(from: Map<out K, V>) {
         super.putAll(from)
-        observableMap.putAll(from.mapValues { createItemObservable(it.key, it.value) })
+        val fromRedefined = from.mapValues { createItemObservable(it.key, it.value) }
+        observableMap.putAll(fromRedefined)
+        fromRedefined.forEach { (k, v) -> additionsObservable.onNext(k to v) }
         observableMapPublisher.onNext(observableMap)
     }
 
     override fun put(key: K, value: V): V? {
         val x = super.put(key, value)
-        observableMap.put(key, createItemObservable(key, value))
+        val valueRedefined = createItemObservable(key, value)
+        observableMap.put(key, valueRedefined)
+        additionsObservable.onNext(key to valueRedefined)
         observableMapPublisher.onNext(observableMap)
         return x
     }
 
     override fun putIfAbsent(key: K, value: V): V? {
         val x = super.putIfAbsent(key, value)
-        observableMap.putIfAbsent(key, createItemObservable(key, value))
+        val valueRedefined = createItemObservable(key, value)
+        observableMap.putIfAbsent(key, valueRedefined)
+        additionsObservable.onNext(key to valueRedefined)
         observableMapPublisher.onNext(observableMap)
         return x
     }
