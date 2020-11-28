@@ -14,6 +14,7 @@ class SourceHashMap<K, V> : HashMap<K, V>() {
      */
     val observable = observableMapPublisher
         .startWithItem(observableMap)
+        .map { observableMap.toImmutableMap() }
 
     private fun createItemObservable(key: K, value: V): BehaviorSubject<V> {
         return BehaviorSubject.createDefault(value)
