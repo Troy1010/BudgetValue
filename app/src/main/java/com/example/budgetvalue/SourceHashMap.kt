@@ -1,5 +1,6 @@
 package com.example.budgetvalue
 
+import com.example.budgetvalue.extensions.removeIf
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.ReplaySubject
@@ -13,13 +14,9 @@ class SourceHashMap<T, V> : HashMap<T, V>() {
     // # Bind Map -> ObservableMap
     val observable: BehaviorSubject<HashMap<T, BehaviorSubject<V>>> = innerObservable
         .scan(HashMap()) { observableMap:HashMap<T, BehaviorSubject<V>>, map:HashMap<T, V> ->
-            val keysToRemove = arrayListOf<T>()
-            observableMap.keys.asSequence()
-                .filter { it !in map.keys }
-                .forEach { keysToRemove.add(it) }
-            keysToRemove.forEach { observableMap.remove(it) }
+            observableMap.removeIf { (k, _) -> k !in map.keys }
             map.keys.asSequence()
-                .filter { it !in observableMap.keys }
+                .filter { k -> k !in observableMap.keys }
                 .forEach { observableMap[it] = createItemObservable(it) }
             observableMap
         }.toBehaviorSubject()
