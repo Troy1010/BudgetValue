@@ -1,24 +1,91 @@
 package com.example.budgetvalue
 
-import com.example.budgetvalue.extensions.toSourceHashMap
-import org.junit.Test
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThrows
+import org.junit.Test
 
 class PlaygroundTest() {
     @Test
     fun test1() {
         // # Given
-        val feedingMap = hashMapOf(0 to 10, 3 to 30, 9 to 90)
+        val toKeep = arrayListOf(68, 35, 54)
+        val subject = arrayListOf(4, 68, 65, 35, 54, 6, 6, 7, 97)
+        // # Stimulate & Verify
+        assertThrows(ConcurrentModificationException::class.java) {
+            for (x in subject) {
+                if (x !in toKeep)
+                    subject.remove(x)
+            }
+        }
+    }
+
+    @Test
+    fun test2() {
+        // # Given
+        val toKeep = arrayListOf(68, 35, 54)
+        val subject = arrayListOf(4, 68, 65, 35, 54, 6, 6, 7, 97)
+        // # Stimulate & Verify
+        assertThrows(ConcurrentModificationException::class.java) {
+            subject.asSequence()
+                .filter { it !in toKeep }
+                .forEach { subject.remove(it) }
+        }
+    }
+
+    @Test
+    fun test3() {
+        // # Given
+        val toKeep = arrayListOf(68, 35, 54)
+        val subject = arrayListOf(4, 68, 65, 35, 54, 6, 6, 7, 97)
+        // # Stimulate & Verify
+        assertThrows(ConcurrentModificationException::class.java) {
+            subject.asSequence()
+                .filter {
+                    println("it !in toKeep:${it !in toKeep}")
+                    it !in toKeep
+                }
+                .onEach {
+                    println("remove:${it}")
+                    subject.remove(it)
+                }
+                .toList()
+        }
+    }
+
+    @Test
+    fun test4() {
+        // # Given
+        val toKeep = arrayListOf(68, 35, 54)
+        val subject = arrayListOf(4, 68, 65, 35, 54, 6, 6, 7, 97)
         // # Stimulate
-//        val sourceHashMap = SourceHashMap<Int, Int>().apply { putAll(feedingMap) }
-        val sourceHashMap = feedingMap.toSourceHashMap()
+        subject
+            .filter { it !in toKeep }
+            .onEach { subject.remove(it) }
         // # Verify
-        assertEquals(sourceHashMap[0], 10)
-        assertEquals(sourceHashMap[3], 30)
-        assertEquals(sourceHashMap[9], 90)
-        Thread.sleep(1000) // TODO("use RxThreadsRule")
-        assertEquals(sourceHashMap.observable.value[0]!!.value, 10)
-        assertEquals(sourceHashMap.observable.value[3]!!.value, 30)
-        assertEquals(sourceHashMap.observable.value[9]!!.value, 90)
+        assertEquals(toKeep, subject)
+    }
+
+    @Test
+    fun test5() {
+        // # Given
+        val toKeep = arrayListOf(68, 35, 54)
+        val subject = arrayListOf(4, 68, 65, 35, 54, 6, 6, 7, 97)
+        // # Stimulate
+        subject.toList().asSequence()
+            .filter { it !in toKeep }
+            .forEach { subject.remove(it) }
+        // # Verify
+        assertEquals(toKeep, subject)
+    }
+
+    @Test
+    fun test6() {
+        // # Given
+        val toKeep = arrayListOf(68, 35, 54)
+        val subject = arrayListOf(4, 68, 65, 35, 54, 6, 6, 7, 97)
+        // # Stimulate & Verify
+        subject.removeIf { it !in toKeep }
+        // # Verify
+        assertEquals(toKeep, subject)
     }
 }
