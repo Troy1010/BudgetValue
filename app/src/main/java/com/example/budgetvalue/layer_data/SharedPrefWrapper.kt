@@ -1,11 +1,7 @@
 package com.example.budgetvalue.layer_data
 
 import android.content.SharedPreferences
-import com.example.budgetvalue.extensions.associate
-import com.example.budgetvalue.getType
 import com.example.budgetvalue.model_app.Category
-import com.example.budgetvalue.model_app.ICategoryParser
-import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
@@ -13,7 +9,7 @@ import javax.inject.Inject
 
 class SharedPrefWrapper @Inject constructor(
     val sharedPreferences: SharedPreferences,
-    val categoryParser: ICategoryParser
+    val typeConverterUtil: TypeConverterUtil
 ) : ISharedPrefWrapper {
     companion object {
         const val KEY_RECONCILE_CATEGORY_AMOUNTS = "KEY_RECONCILE_CATEGORY_AMOUNTS"
@@ -29,18 +25,14 @@ class SharedPrefWrapper @Inject constructor(
     private val reconcileCategoryAmountsPublisher = PublishSubject.create<Map<Category, BigDecimal>>()
     override fun fetchReconcileCategoryAmounts(): Observable<Map<Category, BigDecimal>> {
         val s = sharedPreferences.getString(KEY_RECONCILE_CATEGORY_AMOUNTS, null)
-        val reconcileCategoryAmountsReceived: Map<String, String> = if (s == null) emptyMap() else {
-            Gson().fromJson(s, getType<HashMap<String, String>>())
-        }
-        val reconcileCategoryAmounts = reconcileCategoryAmountsReceived.associate { categoryParser.parseCategory(it.key) to it.value.toBigDecimal() }
         return reconcileCategoryAmountsPublisher
-            .startWithItem(reconcileCategoryAmounts)
+            .startWithItem(typeConverterUtil.categoryAmounts(s))
     }
 
     override fun pushReconcileCategoryAmounts(reconcileCategoryAmounts: Map<Category, BigDecimal>?) {
-        val reconcileCategoryAmountsReceived = reconcileCategoryAmounts?.associate { it.key.name to it.value.toString() }
-        if (reconcileCategoryAmountsReceived == null) editor.remove(KEY_RECONCILE_CATEGORY_AMOUNTS) else {
-            editor.putString(KEY_RECONCILE_CATEGORY_AMOUNTS, Gson().toJson(reconcileCategoryAmountsReceived))
+        val s = typeConverterUtil.string(reconcileCategoryAmounts)
+        if (s==null) editor.remove(KEY_RECONCILE_CATEGORY_AMOUNTS) else {
+            editor.putString(KEY_RECONCILE_CATEGORY_AMOUNTS, s)
         }
         editor.apply()
         reconcileCategoryAmountsPublisher.onNext(reconcileCategoryAmounts ?: hashMapOf())

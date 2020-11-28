@@ -420,7 +420,7 @@ fun Iterable<BigDecimal>.sum(): BigDecimal {
 }
 
 // Useful for Gson().fromJson(x, getType<List<Int>>())
-fun <T> getType(): Type {
+fun <T> getTypeForGson(): Type {
     return object : TypeToken<T>() {}.type
 }
 

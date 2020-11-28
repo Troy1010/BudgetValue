@@ -7,6 +7,6 @@ import java.math.BigDecimal
 @Entity
 data class ReconcileCategoryAmount(
     @PrimaryKey
-    val categoryName: String,
-    val amount: BigDecimal = BigDecimal.ZERO
-)
+    override val categoryName: String,
+    override val amount: BigDecimal = BigDecimal.ZERO
+): ICategoryAmountReceived

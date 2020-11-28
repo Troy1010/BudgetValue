@@ -42,12 +42,6 @@ class RepoModule {
 
     @Provides
     @Singleton
-    fun providesDaoWrapper(myDao: MyDao, categoryParser:ICategoryParser): MyDaoWrapper {
-        return MyDaoWrapper(myDao, categoryParser)
-    }
-
-    @Provides
-    @Singleton
     fun providesRepo(myDaoWrapper: MyDaoWrapper, sharedPrefWrapper: SharedPrefWrapper): Repo {
         return Repo(
             TransactionParser(),

@@ -2,27 +2,27 @@ package com.example.budgetvalue.layer_data
 
 import com.example.budgetvalue.extensions.toSourceHashMap
 import com.example.budgetvalue.model_app.Category
-import com.example.budgetvalue.model_app.ICategoryParser
 import com.example.budgetvalue.model_data.Account
 import com.example.budgetvalue.model_data.PlanCategoryAmount
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
+import javax.inject.Inject
 
-class MyDaoWrapper(
+class MyDaoWrapper @Inject constructor(
     val myDao: MyDao,
-    val categoryParser: ICategoryParser
+    val typeConverterUtil: TypeConverterUtil
 ) : MyDao by myDao, IMyDaoWrapper {
     override val transactions = myDao.getTransactionsReceived()
-        .map { it.map { it.toTransaction(categoryParser) } }
+        .map(typeConverterUtil::transactions)
         .replay(1).refCount()
 
     override val planCategoryAmounts = myDao
         .getPlanCategoryAmountsReceived()
         .take(1)
         .subscribeOn(Schedulers.io())
-        .map { it.associate { Pair(categoryParser.parseCategory(it.categoryName), it.amount) } }
+        .map(typeConverterUtil::categoryAmounts)
         .map { it.toSourceHashMap() }
         .doOnNext { it.observable.observeOn(Schedulers.io()).subscribe(::bindToPlanCategoryAmounts) }
         .replay(1).refCount()

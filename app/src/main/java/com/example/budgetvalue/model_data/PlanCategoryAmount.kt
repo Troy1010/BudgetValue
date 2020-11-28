@@ -8,8 +8,8 @@ import java.math.BigDecimal
 @Entity
 data class PlanCategoryAmount(
     @PrimaryKey
-    val categoryName: String,
-    val amount: BigDecimal = BigDecimal.ZERO
-) {
+    override val categoryName: String,
+    override val amount: BigDecimal = BigDecimal.ZERO
+): ICategoryAmountReceived {
     constructor(category: Category, amount: BigDecimal) : this(category.name, amount)
 }
