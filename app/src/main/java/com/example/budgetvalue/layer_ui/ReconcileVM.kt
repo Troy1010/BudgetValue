@@ -23,12 +23,7 @@ class ReconcileVM(
     val activeCategories = transactionSet
         .map(::getActiveCategories)
         .toBehaviorSubject()
-    val reconcileCategoryAmounts = repo.fetchReconcileCategoryAmounts()
-//    val reconcileCategoryAmounts = activeCategories
-//        .withLatestFrom(repo.fetchReconcileCategoryAmounts())
-//        .map { (a,b) -> mapReconcileCategoryAmounts(a,b) }
-//        .doOnNext(::bindReconcileCategoryAmountsToRepo)
-//        .toBehaviorSubject()
+    val reconcileCategoryAmounts = repo.reconcileCategoryAmounts
     val rowDatas = zip(activeCategories, reconcileCategoryAmounts, planVM.planCategoryAmounts, transactionSet) // TODO("Is this zipping correctly..?")
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
     val reconcileDefault = reconcileCategoryAmounts
@@ -61,13 +56,13 @@ class ReconcileVM(
     }
 
     init {
-        // # Bind activeCategories -> planCA
+        // # Bind activeCategories -> reconcileCategoryAmounts
         combineLatestAsTuple(activeCategories, reconcileCategoryAmounts)
             .subscribeOn(Schedulers.io())
-            .subscribe { (activeCategories, planCA) ->
+            .subscribe { (activeCategories, reconcileCategoryAmounts) ->
                 activeCategories.asSequence()
                     .filter { it !in reconcileCategoryAmounts }
-                    .forEach { planCA[it] = BigDecimal.ZERO }
+                    .forEach { reconcileCategoryAmounts[it] = BigDecimal.ZERO }
             }
     }
 }

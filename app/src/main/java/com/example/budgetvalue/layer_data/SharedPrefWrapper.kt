@@ -3,7 +3,10 @@ package com.example.budgetvalue.layer_data
 import android.content.SharedPreferences
 import com.example.budgetvalue.SourceHashMap
 import com.example.budgetvalue.model_app.Category
+import com.example.budgetvalue.model_data.PlanCategoryAmount
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -23,22 +26,36 @@ class SharedPrefWrapper @Inject constructor(
 
     val editor = sharedPreferences.edit()
 
-    val reconcileCategoryAmounts
-    private val reconcileCategoryAmountsPublisher = PublishSubject.create<SourceHashMap<Category, BigDecimal>>()
-    override fun fetchReconcileCategoryAmounts(): Observable<SourceHashMap<Category, BigDecimal>> {
-        val s = sharedPreferences.getString(KEY_RECONCILE_CATEGORY_AMOUNTS, null)
-        return reconcileCategoryAmountsPublisher
-            .startWithItem(typeConverterUtil.categoryAmounts(s))
+    // # ReconcileCategoryAmounts
+
+    override val reconcileCategoryAmounts = Observable.just(fetchReconcileCategoryAmounts())
+        .doOnNext(::bindToReconcileCategoryAmounts)
+        .replay(1).refCount()
+
+    fun fetchReconcileCategoryAmounts(): SourceHashMap<Category, BigDecimal> {
+        return sharedPreferences.getString(KEY_RECONCILE_CATEGORY_AMOUNTS, null)
+            .let { typeConverterUtil.categoryAmounts(it) }
     }
 
-    override fun pushReconcileCategoryAmounts(reconcileCategoryAmounts: SourceHashMap<Category, BigDecimal>?) {
+    override fun pushReconcileCategoryAmounts(reconcileCategoryAmounts: Map<Category, BigDecimal>?) {
         val s = typeConverterUtil.string(reconcileCategoryAmounts)
-        if (s==null) editor.remove(KEY_RECONCILE_CATEGORY_AMOUNTS) else {
+        if (s == null) editor.remove(KEY_RECONCILE_CATEGORY_AMOUNTS) else {
             editor.putString(KEY_RECONCILE_CATEGORY_AMOUNTS, s)
         }
         editor.apply()
-        reconcileCategoryAmountsPublisher.onNext(reconcileCategoryAmounts ?: SourceHashMap())
     }
+
+    private fun bindToReconcileCategoryAmounts(map: SourceHashMap<Category, BigDecimal>) {
+        map.observable.observeOn(Schedulers.io())
+            .subscribe { // TODO("every emission, I do double subscriptions")
+                for ((_, v) in it) {
+                    v.observeOn(Schedulers.io())
+                        .subscribe { pushReconcileCategoryAmounts(map) }
+                }
+            }
+    }
+
+    //
 
     override fun fetchExpectedIncome(): BigDecimal {
         return sharedPreferences.getString(KEY_EXPECTED_INCOME, null)?.toBigDecimal()

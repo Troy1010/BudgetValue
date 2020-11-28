@@ -1,11 +1,11 @@
 package com.example.budgetvalue.layer_data
 
+import com.example.budgetvalue.SourceHashMap
 import com.example.budgetvalue.model_app.Category
 import com.example.budgetvalue.model_data.Account
 import com.example.budgetvalue.model_data.PlanCategoryAmount
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -22,16 +22,20 @@ class MyDaoWrapper @Inject constructor(
         .take(1)
         .subscribeOn(Schedulers.io())
         .map(typeConverterUtil::categoryAmounts)
-        .doOnNext { it.observable.observeOn(Schedulers.io()).subscribe(::bindToPlanCategoryAmounts) }
+        .doOnNext(::bindToPlanCategoryAmounts)
         .replay(1).refCount()
 
-    private fun bindToPlanCategoryAmounts(map: Map<Category, BehaviorSubject<BigDecimal>>) {
-        for ((category, amountBehaviorSubject) in map) {
-            amountBehaviorSubject.observeOn(Schedulers.io())
-                .subscribe { // TODO("Handle disposables")
-                    myDao.update(PlanCategoryAmount(category, it)).subscribeOn(Schedulers.io()).blockingAwait()
+    private fun bindToPlanCategoryAmounts(map: SourceHashMap<Category, BigDecimal>) {
+        map.observable.observeOn(Schedulers.io())
+            .subscribe { // TODO("every emission, I do double subscriptions")
+                for ((category, amountBehaviorSubject) in it) {
+                    amountBehaviorSubject.observeOn(Schedulers.io())
+                        .subscribe { // TODO("Handle disposables")
+                            myDao.update(PlanCategoryAmount(category, it)).subscribeOn(Schedulers.io())
+                                .blockingAwait()
+                        }
                 }
-        }
+            }
     }
 
     override fun update(account: Account): Completable {
