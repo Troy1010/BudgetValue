@@ -27,7 +27,7 @@ class MyDaoWrapper(
         .doOnNext { it.observable.observeOn(Schedulers.io()).subscribe(::bindToPlanCategoryAmounts) }
         .replay(1).refCount()
 
-    private fun bindToPlanCategoryAmounts(itemObservablesObservable: HashMap<Category, BehaviorSubject<BigDecimal>>) {
+    private fun bindToPlanCategoryAmounts(itemObservablesObservable: Map<Category, BehaviorSubject<BigDecimal>>) {
         myDao.clearPlanCategoryAmounts().blockingAwait()
         for ((category, amountBehaviorSubject) in itemObservablesObservable) {
             myDao.add(PlanCategoryAmount(category, BigDecimal.ZERO)).subscribeOn(Schedulers.io()).blockingAwait()

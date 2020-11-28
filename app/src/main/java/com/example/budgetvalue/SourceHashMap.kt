@@ -1,5 +1,6 @@
 package com.example.budgetvalue
 
+import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.function.BiFunction
@@ -15,6 +16,7 @@ class SourceHashMap<K, V> : HashMap<K, V>() {
     val observable = observableMapPublisher
         .startWithItem(observableMap)
         .map { observableMap.toImmutableMap() }
+        .toBehaviorSubject()
 
     private fun createItemObservable(key: K, value: V): BehaviorSubject<V> {
         return BehaviorSubject.createDefault(value)
