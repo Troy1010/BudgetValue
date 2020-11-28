@@ -26,9 +26,9 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
             .subscribeOn(Schedulers.io())
             .subscribe { (chooseableCategories, planCA) ->
                 synchronized(planCA) {
-                    for (category in chooseableCategories.filter { it !in planCA }) {
-                        planCA[category] = BigDecimal.ZERO
-                    }
+                    chooseableCategories.asSequence()
+                        .filter { it !in planCA }
+                        .forEach { planCA[it] = BigDecimal.ZERO }
                 }
             }
     }
