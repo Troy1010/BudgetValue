@@ -3,17 +3,15 @@ package com.example.budgetvalue.layer_data
 import android.content.SharedPreferences
 import com.example.budgetvalue.SourceHashMap
 import com.example.budgetvalue.model_app.Category
-import com.example.budgetvalue.model_data.PlanCategoryAmount
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 import javax.inject.Inject
 
 class SharedPrefWrapper @Inject constructor(
     val sharedPreferences: SharedPreferences,
-    val typeConverterUtil: TypeConverterUtil
+    val typeConverter: TypeConverter
 ) : ISharedPrefWrapper {
     companion object {
         const val KEY_RECONCILE_CATEGORY_AMOUNTS = "KEY_RECONCILE_CATEGORY_AMOUNTS"
@@ -34,11 +32,11 @@ class SharedPrefWrapper @Inject constructor(
 
     fun fetchReconcileCategoryAmounts(): SourceHashMap<Category, BigDecimal> {
         return sharedPreferences.getString(KEY_RECONCILE_CATEGORY_AMOUNTS, null)
-            .let { typeConverterUtil.categoryAmounts(it) }
+            .let { typeConverter.categoryAmounts(it) }
     }
 
     override fun pushReconcileCategoryAmounts(reconcileCategoryAmounts: Map<Category, BigDecimal>?) {
-        val s = typeConverterUtil.string(reconcileCategoryAmounts)
+        val s = typeConverter.string(reconcileCategoryAmounts)
         if (s == null) editor.remove(KEY_RECONCILE_CATEGORY_AMOUNTS) else {
             editor.putString(KEY_RECONCILE_CATEGORY_AMOUNTS, s)
         }

@@ -13,7 +13,7 @@ import com.google.gson.Gson
 import java.math.BigDecimal
 import javax.inject.Inject
 
-class TypeConverterUtil @Inject constructor(
+class TypeConverter @Inject constructor(
     val categoryParser: ICategoryParser
 ): ICategoryParser by categoryParser {
     fun transactions(transactionsReceived: Iterable<TransactionReceived>): List<Transaction> {
@@ -37,7 +37,8 @@ class TypeConverterUtil @Inject constructor(
     }
 
     fun string(categoryAmounts: Map<Category, BigDecimal>?): String? {
-        val reconcileCategoryAmountsReceived = categoryAmounts?.associate { it.key.name to it.value.toString() }
+        val reconcileCategoryAmountsReceived =
+            categoryAmounts?.associate { it.key.name to it.value.toString() }
         return if (reconcileCategoryAmountsReceived == null) null else {
             Gson().toJson(reconcileCategoryAmountsReceived)
         }

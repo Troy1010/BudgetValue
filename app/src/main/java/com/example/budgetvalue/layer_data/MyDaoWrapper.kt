@@ -11,17 +11,17 @@ import javax.inject.Inject
 
 class MyDaoWrapper @Inject constructor(
     val myDao: MyDao,
-    val typeConverterUtil: TypeConverterUtil
+    val typeConverter: TypeConverter
 ) : MyDao by myDao, IMyDaoWrapper {
     override val transactions = myDao.getTransactionsReceived()
-        .map(typeConverterUtil::transactions)
+        .map(typeConverter::transactions)
         .replay(1).refCount()
 
     override val planCategoryAmounts = myDao
         .getPlanCategoryAmountsReceived()
         .take(1)
         .subscribeOn(Schedulers.io())
-        .map(typeConverterUtil::categoryAmounts)
+        .map(typeConverter::categoryAmounts)
         .doOnNext(::bindToPlanCategoryAmounts)
         .replay(1).refCount()
 
