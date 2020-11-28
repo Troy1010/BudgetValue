@@ -27,10 +27,8 @@ class MyDaoWrapper @Inject constructor(
         .doOnNext { it.observable.observeOn(Schedulers.io()).subscribe(::bindToPlanCategoryAmounts) }
         .replay(1).refCount()
 
-    private fun bindToPlanCategoryAmounts(itemObservablesObservable: Map<Category, BehaviorSubject<BigDecimal>>) {
-        myDao.clearPlanCategoryAmounts().blockingAwait()
-        for ((category, amountBehaviorSubject) in itemObservablesObservable) {
-            myDao.add(PlanCategoryAmount(category, BigDecimal.ZERO)).subscribeOn(Schedulers.io()).blockingAwait()
+    private fun bindToPlanCategoryAmounts(map: Map<Category, BehaviorSubject<BigDecimal>>) {
+        for ((category, amountBehaviorSubject) in map) {
             amountBehaviorSubject.observeOn(Schedulers.io())
                 .subscribe { // TODO("Handle disposables")
                     myDao.update(PlanCategoryAmount(category, it)).subscribeOn(Schedulers.io()).blockingAwait()
