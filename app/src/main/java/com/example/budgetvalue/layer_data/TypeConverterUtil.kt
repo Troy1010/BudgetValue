@@ -1,15 +1,15 @@
 package com.example.budgetvalue.layer_data
 
+import com.example.budgetvalue.SourceHashMap
 import com.example.budgetvalue.extensions.associate
+import com.example.budgetvalue.extensions.toSourceHashMap
 import com.example.budgetvalue.getTypeForGson
 import com.example.budgetvalue.model_app.Category
 import com.example.budgetvalue.model_app.ICategoryParser
 import com.example.budgetvalue.model_app.Transaction
 import com.example.budgetvalue.model_data.ICategoryAmountReceived
-import com.example.budgetvalue.model_data.PlanCategoryAmount
 import com.example.budgetvalue.model_data.TransactionReceived
 import com.google.gson.Gson
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -20,16 +20,20 @@ class TypeConverterUtil @Inject constructor(
         return transactionsReceived.map { it.toTransaction(categoryParser) }
     }
 
-    fun categoryAmounts(categoryAmountsReceived: Iterable<ICategoryAmountReceived>): Map<Category, BigDecimal> {
-        return categoryAmountsReceived.associate { categoryParser.parseCategory(it.categoryName) to it.amount }
+    fun categoryAmounts(categoryAmountsReceived: Iterable<ICategoryAmountReceived>): SourceHashMap<Category, BigDecimal> {
+        return categoryAmountsReceived
+            .associate { categoryParser.parseCategory(it.categoryName) to it.amount }
+            .toSourceHashMap()
     }
 
-    fun categoryAmounts(s: String?): Map<Category, BigDecimal> {
+    fun categoryAmounts(s: String?): SourceHashMap<Category, BigDecimal> {
         val reconcileCategoryAmountsReceived: Map<String, String> =
             if (s == null) emptyMap() else {
                 Gson().fromJson(s, getTypeForGson<HashMap<String, String>>())
             }
-        return reconcileCategoryAmountsReceived.associate { categoryParser.parseCategory(it.key) to it.value.toBigDecimal() }
+        return reconcileCategoryAmountsReceived
+            .associate { categoryParser.parseCategory(it.key) to it.value.toBigDecimal() }
+            .toSourceHashMap()
     }
 
     fun string(categoryAmounts: Map<Category, BigDecimal>?): String? {

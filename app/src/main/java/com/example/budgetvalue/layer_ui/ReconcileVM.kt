@@ -10,6 +10,7 @@ import com.example.budgetvalue.model_app.ReconcileRowData
 import com.example.budgetvalue.model_app.Transaction
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
 
@@ -22,11 +23,12 @@ class ReconcileVM(
     val activeCategories = transactionSet
         .map(::getActiveCategories)
         .toBehaviorSubject()
-    val reconcileCategoryAmounts = activeCategories
-        .withLatestFrom(repo.fetchReconcileCategoryAmounts())
-        .map { (a,b) -> mapReconcileCategoryAmounts(a,b) }
-        .doOnNext(::bindReconcileCategoryAmountsToRepo)
-        .toBehaviorSubject()
+    val reconcileCategoryAmounts = repo.fetchReconcileCategoryAmounts()
+//    val reconcileCategoryAmounts = activeCategories
+//        .withLatestFrom(repo.fetchReconcileCategoryAmounts())
+//        .map { (a,b) -> mapReconcileCategoryAmounts(a,b) }
+//        .doOnNext(::bindReconcileCategoryAmountsToRepo)
+//        .toBehaviorSubject()
     val rowDatas = zip(activeCategories, reconcileCategoryAmounts, planVM.planCategoryAmounts, transactionSet) // TODO("Is this zipping correctly..?")
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
     val reconcileDefault = reconcileCategoryAmounts
@@ -53,20 +55,19 @@ class ReconcileVM(
         }
     }
 
-    fun mapReconcileCategoryAmounts(activeCategories: Iterable<Category>, oldReconcileCategoryAmounts:Map<Category, BigDecimal>): SourceHashMap<Category, BigDecimal> {
-        return activeCategories
-            .associateWith { oldReconcileCategoryAmounts[it] ?: BigDecimal.ZERO }
-            .toSourceHashMap()
-    }
-
     fun getActiveCategories(transactionSet: Iterable<Transaction>): HashSet<Category> {
         return transactionSet
             .fold(HashSet()) { acc, transaction -> acc.addAll(transaction.categoryAmounts.keys); acc }
     }
 
-    fun bindReconcileCategoryAmountsToRepo(reconcileCategoryAmounts: SourceHashMap<Category, BigDecimal>) {
-        // TODO("move this logic to Repo")
-        reconcileCategoryAmounts.observable // TODO("Handle disposables")
-            .subscribe { ca -> ca.forEach { kv -> kv.value.skip(1).subscribe { repo.pushReconcileCategoryAmounts(ca.mapValues { it.value.value }) } } }
+    init {
+        // # Bind activeCategories -> planCA
+        combineLatestAsTuple(activeCategories, reconcileCategoryAmounts)
+            .subscribeOn(Schedulers.io())
+            .subscribe { (activeCategories, planCA) ->
+                activeCategories.asSequence()
+                    .filter { it !in reconcileCategoryAmounts }
+                    .forEach { planCA[it] = BigDecimal.ZERO }
+            }
     }
 }

@@ -1,6 +1,7 @@
 package com.example.budgetvalue.layer_data
 
 import android.content.SharedPreferences
+import com.example.budgetvalue.SourceHashMap
 import com.example.budgetvalue.model_app.Category
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -22,20 +23,21 @@ class SharedPrefWrapper @Inject constructor(
 
     val editor = sharedPreferences.edit()
 
-    private val reconcileCategoryAmountsPublisher = PublishSubject.create<Map<Category, BigDecimal>>()
-    override fun fetchReconcileCategoryAmounts(): Observable<Map<Category, BigDecimal>> {
+    val reconcileCategoryAmounts
+    private val reconcileCategoryAmountsPublisher = PublishSubject.create<SourceHashMap<Category, BigDecimal>>()
+    override fun fetchReconcileCategoryAmounts(): Observable<SourceHashMap<Category, BigDecimal>> {
         val s = sharedPreferences.getString(KEY_RECONCILE_CATEGORY_AMOUNTS, null)
         return reconcileCategoryAmountsPublisher
             .startWithItem(typeConverterUtil.categoryAmounts(s))
     }
 
-    override fun pushReconcileCategoryAmounts(reconcileCategoryAmounts: Map<Category, BigDecimal>?) {
+    override fun pushReconcileCategoryAmounts(reconcileCategoryAmounts: SourceHashMap<Category, BigDecimal>?) {
         val s = typeConverterUtil.string(reconcileCategoryAmounts)
         if (s==null) editor.remove(KEY_RECONCILE_CATEGORY_AMOUNTS) else {
             editor.putString(KEY_RECONCILE_CATEGORY_AMOUNTS, s)
         }
         editor.apply()
-        reconcileCategoryAmountsPublisher.onNext(reconcileCategoryAmounts ?: hashMapOf())
+        reconcileCategoryAmountsPublisher.onNext(reconcileCategoryAmounts ?: SourceHashMap())
     }
 
     override fun fetchExpectedIncome(): BigDecimal {
