@@ -39,3 +39,8 @@ fun <T:Any> Observable<T>.logzz(msgPrefix:String, toDisplayable:(T)->Any = { it 
     return this
         .doOnNext { logz("$msgPrefix`${toDisplayable(it)}") }
 }
+
+fun <T> Observable<T>.startWith(item: T): Observable<T> {
+    return this
+        .startWithItem(item)
+}

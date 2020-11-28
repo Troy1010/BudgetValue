@@ -1,55 +1,50 @@
 package com.example.budgetvalue
 
-import com.example.budgetvalue.extensions.removeIf
-import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import io.reactivex.rxjava3.subjects.ReplaySubject
+import io.reactivex.rxjava3.subjects.PublishSubject
+import com.example.budgetvalue.extensions.startWith
+import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 
-class SourceHashMap<T, V> : HashMap<T, V>() {
-    private val innerObservable = ReplaySubject.create<SourceHashMap<T, V>>()
+class SourceHashMap<K, V> : HashMap<K, V>() {
+    private val publisher = PublishSubject.create<Unit>()
+    private val observableMap = mutableMapOf<K, BehaviorSubject<V>>()
     /**
      * this observable emits whenever SourceHashMap puts or removes.
-     * It emits a HashMap of T : BehaviorSubject<V>
+     * It emits a map of K : BehaviorSubject<V>
      */
-    // # Bind Map -> ObservableMap
-    val observable: BehaviorSubject<HashMap<T, BehaviorSubject<V>>> = innerObservable
-        .scan(HashMap()) { observableMap:HashMap<T, BehaviorSubject<V>>, map:HashMap<T, V> ->
-            observableMap.removeIf { (k, _) -> k !in map.keys }
-            map.keys.asSequence()
-                .filter { k -> k !in observableMap.keys }
-                .forEach { observableMap[it] = createItemObservable(it) }
-            observableMap
-        }.toBehaviorSubject()
+    val observable = publisher
+        .startWith(Unit)
+        .map { observableMap }
+        .toBehaviorSubject()
 
-    fun createItemObservable(key:T): BehaviorSubject<V> {
-        return BehaviorSubject.createDefault(this[key]!!)
-            .also {
-                // # Bind Map -> ItemObservable
-                innerObservable.map { it[key]!! }.distinctUntilChanged().subscribe(it)
-                // # Bind ItemObservable -> Map
-                it.skip(1).subscribe { super.put(key, it) }
-            }
+    fun createItemObservable(key: K, value: V): BehaviorSubject<V> {
+        return BehaviorSubject.createDefault(value)
+            .also { it.skip(1).subscribe { super.put(key, it) } } // TODO("dispose")
     }
 
     override fun clear() {
         super.clear()
-        innerObservable.onNext(this)
+        observableMap.clear()
+        publisher.onNext(Unit)
     }
 
-    override fun putAll(from: Map<out T, V>) {
+    override fun putAll(from: Map<out K, V>) {
         super.putAll(from)
-        innerObservable.onNext(this)
+        observableMap.putAll(from.mapValues { createItemObservable(it.key, it.value) })
+        publisher.onNext(Unit)
     }
 
-    override fun put(key: T, value: V): V? {
+    override fun put(key: K, value: V): V? {
         val x = super.put(key, value)
-        innerObservable.onNext(this)
+        observableMap.put(key, createItemObservable(key, value))
+        publisher.onNext(Unit)
         return x
     }
 
-    override fun remove(key: T): V? {
+    override fun remove(key: K): V? {
         val x = super.remove(key)
-        innerObservable.onNext(this)
+        observableMap.remove(key)
+        publisher.onNext(Unit)
         return x
     }
 }
