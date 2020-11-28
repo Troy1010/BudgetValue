@@ -42,9 +42,9 @@ class RepoModule {
 
     @Provides
     @Singleton
-    fun providesRepo(myDaoWrapper: MyDaoWrapper, sharedPrefWrapper: SharedPrefWrapper): Repo {
+    fun providesRepo(myDaoWrapper: MyDaoWrapper, sharedPrefWrapper: SharedPrefWrapper, transactionParser: TransactionParser): Repo {
         return Repo(
-            TransactionParser(),
+            transactionParser,
             sharedPrefWrapper,
             myDaoWrapper
         )

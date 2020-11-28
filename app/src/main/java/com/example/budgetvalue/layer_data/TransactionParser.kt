@@ -6,13 +6,14 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
 /**
  * TransactionParser is able to convert input streams into Transactions.
  * It's unusual that TransactionParser provides the parse methods instead of the
  * read/write methods.. but I do not yet know the best way to get ActivityResults from the repo.
  */
-class TransactionParser : ITransactionParser {
+class TransactionParser @Inject constructor() : ITransactionParser {
     override fun parseToTransactions(inputStream: InputStream) : List<TransactionReceived> {
         val transactions = ArrayList<TransactionReceived>()
         val reader = BufferedReader(InputStreamReader(inputStream))
