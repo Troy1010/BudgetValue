@@ -14,13 +14,13 @@ class SourceHashMap<T, V> : HashMap<T, V>() {
     val observable: BehaviorSubject<HashMap<T, BehaviorSubject<V>>> = innerObservable
         .scan(HashMap()) { observableMap:HashMap<T, BehaviorSubject<V>>, map:HashMap<T, V> ->
             val keysToRemove = arrayListOf<T>()
-            for (observableMapKey in observableMap.keys.asSequence().filter { it !in map.keys }) {
-                keysToRemove.add(observableMapKey)
-            }
+            observableMap.keys.asSequence()
+                .filter { it !in map.keys }
+                .forEach { keysToRemove.add(it) }
             keysToRemove.forEach { observableMap.remove(it) }
-            for (mapKey in map.keys.asSequence().filter { it !in observableMap.keys }) {
-                observableMap[mapKey] = createItemObservable(mapKey)
-            }
+            map.keys.asSequence()
+                .filter { it !in observableMap.keys }
+                .forEach { observableMap[it] = createItemObservable(it) }
             observableMap
         }.toBehaviorSubject()
 
