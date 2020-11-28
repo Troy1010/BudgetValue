@@ -63,10 +63,10 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     // # TMCommonKotlin
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-logz:1.0.28'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-rx:1.0.28'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-misc:1.0.28'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-tuple:1.0.28'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-logz:1.0.30'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-rx:1.0.30'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-misc:1.0.30'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-tuple:1.0.30'
 
     // # ViewModel
     def lifecycle_version = "2.2.0"
