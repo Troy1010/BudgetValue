@@ -1,6 +1,7 @@
 package com.example.budgetvalue.layer_data
 
 import com.example.budgetvalue.SourceHashMap
+import com.example.budgetvalue.extensions.noEnd
 import com.example.budgetvalue.model_app.Category
 import com.example.budgetvalue.model_data.Account
 import com.example.budgetvalue.model_data.PlanCategoryAmount
@@ -11,7 +12,7 @@ import javax.inject.Inject
 
 class MyDaoWrapper @Inject constructor(
     val myDao: MyDao,
-    val typeConverter: TypeConverter
+    val typeConverter: TypeConverter,
 ) : MyDao by myDao, IMyDaoWrapper {
     override val transactions = myDao.getTransactionsReceived()
         .map(typeConverter::transactions)
@@ -23,19 +24,15 @@ class MyDaoWrapper @Inject constructor(
         .subscribeOn(Schedulers.io())
         .map(typeConverter::categoryAmounts)
         .doOnNext(::bindToPlanCategoryAmounts)
-        .replay(1).refCount()
+        .noEnd().replay(1).refCount()
 
     private fun bindToPlanCategoryAmounts(map: SourceHashMap<Category, BigDecimal>) {
-        map.observable.observeOn(Schedulers.io())
-            .subscribe { // TODO("every emission, I do double subscriptions")
-                for ((category, amountBehaviorSubject) in it) {
-                    amountBehaviorSubject.observeOn(Schedulers.io())
-                        .subscribe { // TODO("Handle disposables")
-                            myDao.update(PlanCategoryAmount(category, it)).subscribeOn(Schedulers.io())
-                                .blockingAwait()
-                        }
-                }
-            }
+        map.additions.observeOn(Schedulers.io())
+            .flatMap { kv -> kv.value.distinctUntilChanged().skip(1).map { Pair(kv.key, it) } }
+            .subscribe {
+                myDao.update(PlanCategoryAmount(it))
+                    .subscribeOn(Schedulers.io()).blockingAwait()
+            } // TODO("Handle observables")
     }
 
     override fun update(account: Account): Completable {

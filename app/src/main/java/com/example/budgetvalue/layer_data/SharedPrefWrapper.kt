@@ -2,6 +2,8 @@ package com.example.budgetvalue.layer_data
 
 import android.content.SharedPreferences
 import com.example.budgetvalue.SourceHashMap
+import com.example.budgetvalue.extensions.logzz
+import com.example.budgetvalue.extensions.noEnd
 import com.example.budgetvalue.model_app.Category
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -11,7 +13,7 @@ import javax.inject.Inject
 
 class SharedPrefWrapper @Inject constructor(
     val sharedPreferences: SharedPreferences,
-    val typeConverter: TypeConverter
+    val typeConverter: TypeConverter,
 ) : ISharedPrefWrapper {
     companion object {
         const val KEY_RECONCILE_CATEGORY_AMOUNTS = "KEY_RECONCILE_CATEGORY_AMOUNTS"
@@ -28,7 +30,7 @@ class SharedPrefWrapper @Inject constructor(
 
     override val reconcileCategoryAmounts = Observable.just(fetchReconcileCategoryAmounts())
         .doOnNext(::bindToReconcileCategoryAmounts)
-        .replay(1).refCount()
+        .noEnd().replay(1).refCount()
 
     fun fetchReconcileCategoryAmounts(): SourceHashMap<Category, BigDecimal> {
         return sharedPreferences.getString(KEY_RECONCILE_CATEGORY_AMOUNTS, null)
@@ -44,13 +46,9 @@ class SharedPrefWrapper @Inject constructor(
     }
 
     private fun bindToReconcileCategoryAmounts(map: SourceHashMap<Category, BigDecimal>) {
-        map.observable.observeOn(Schedulers.io())
-            .subscribe { // TODO("every emission, I do double subscriptions")
-                for ((_, v) in it) {
-                    v.observeOn(Schedulers.io())
-                        .subscribe { pushReconcileCategoryAmounts(map) }
-                }
-            }
+        map.additions.observeOn(Schedulers.io())
+            .flatMap { kv -> kv.value.distinctUntilChanged().skip(1) }
+            .subscribe { pushReconcileCategoryAmounts(map) }
     }
 
     //

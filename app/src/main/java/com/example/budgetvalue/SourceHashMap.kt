@@ -9,12 +9,14 @@ import java.util.function.Function
 class SourceHashMap<K, V>(): HashMap<K, V>() {
     constructor(map: Map<K, V>): this() { putAll(map) }
     private val observableMapPublisher = PublishSubject.create<MutableMap<K, BehaviorSubject<V>>>()
+    val additionsObservablePublisher = PublishSubject.create<Map.Entry<K, BehaviorSubject<V>>>()
     private val observableMap = mutableMapOf<K, BehaviorSubject<V>>()
     /**
      * this observable emits whenever SourceHashMap is added to.
      * It emits a K : BehaviorSubject<V> pair
      */
-    val additionsObservable = PublishSubject.create<Pair<K, BehaviorSubject<V>>>()
+    val additions = additionsObservablePublisher
+        .startWithIterable(observableMap.entries)
     /**
      * this observable emits whenever SourceHashMap is edited.
      * It emits a map of K : BehaviorSubject<V>
@@ -41,7 +43,7 @@ class SourceHashMap<K, V>(): HashMap<K, V>() {
         super.putAll(from)
         val fromRedefined = from.mapValues { createItemObservable(it.key, it.value) }
         observableMap.putAll(fromRedefined)
-        fromRedefined.forEach { (k, v) -> additionsObservable.onNext(k to v) }
+        fromRedefined.entries.forEach { additionsObservablePublisher.onNext(it) }
         observableMapPublisher.onNext(observableMap)
     }
 
@@ -49,7 +51,12 @@ class SourceHashMap<K, V>(): HashMap<K, V>() {
         val x = super.put(key, value)
         val valueRedefined = createItemObservable(key, value)
         observableMap.put(key, valueRedefined)
-        additionsObservable.onNext(key to valueRedefined)
+        additionsObservablePublisher.onNext(object: Map.Entry<K, BehaviorSubject<V>> {
+            override val key: K
+                get() = key
+            override val value: BehaviorSubject<V>
+                get() = valueRedefined
+        })
         observableMapPublisher.onNext(observableMap)
         return x
     }
@@ -58,8 +65,15 @@ class SourceHashMap<K, V>(): HashMap<K, V>() {
         val x = super.putIfAbsent(key, value)
         val valueRedefined = createItemObservable(key, value)
         observableMap.putIfAbsent(key, valueRedefined)
-        additionsObservable.onNext(key to valueRedefined)
-        observableMapPublisher.onNext(observableMap)
+        if (x!=null) {
+            additionsObservablePublisher.onNext(object: Map.Entry<K, BehaviorSubject<V>> {
+                override val key: K
+                    get() = key
+                override val value: BehaviorSubject<V>
+                    get() = valueRedefined
+            })
+            observableMapPublisher.onNext(observableMap)
+        }
         return x
     }
 
