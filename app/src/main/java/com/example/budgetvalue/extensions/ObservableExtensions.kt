@@ -49,6 +49,12 @@ fun <T> Observable<T>.noEnd(): Observable<T> {
 fun <T : Iterable<Observable<BigDecimal>>> Observable<T>.total(): Observable<BigDecimal> {
     return this
         .flatMapIterable { it }
-        .flatMap { it.pairwise(BigDecimal.ZERO).map { it.second - it.first } }
+        .flatMap {
+            it
+                .startWithItem(BigDecimal.ZERO)
+                .distinctUntilChanged()
+                .pairwise()
+                .map { it.second - it.first }
+        }
         .scan(BigDecimal.ZERO, BigDecimal::add)
 }
