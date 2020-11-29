@@ -308,7 +308,7 @@ fun <T> make1d(orientation: Orientation, z2dCollection: List<List<T>>): List<T?>
             }
         }
         Orientation.Horizontal -> {
-            for (i in 0 until (z2dCollection.map { it.size }.max() ?: 0)) {
+            for (i in 0 until (z2dCollection.map { it.size }.maxOrNull() ?: 0)) {
                 for (collection in z2dCollection) {
                     returning.add(collection.getOrNull(i))
                 }
