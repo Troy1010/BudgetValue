@@ -1,7 +1,7 @@
 package com.example.budgetvalue.model_app
 
 import com.example.budgetvalue.combineLatestAsTuple
-import com.example.budgetvalue.sum
+import com.example.budgetvalue.extensions.sum
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal

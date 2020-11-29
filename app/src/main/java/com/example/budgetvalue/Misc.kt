@@ -405,10 +405,6 @@ fun <A, B, C, D> zip(
     })
 }
 
-fun Iterable<BigDecimal>.sum(): BigDecimal {
-    return this.fold(BigDecimal.ZERO, BigDecimal::add)
-}
-
 // Useful for Gson().fromJson(x, getType<List<Int>>())
 fun <T> getTypeForGson(): Type {
     return object : TypeToken<T>() {}.type

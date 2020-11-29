@@ -1,7 +1,7 @@
 package com.example.budgetvalue.model_app
 
 import com.example.budgetvalue.model_data.TransactionReceived
-import com.example.budgetvalue.sum
+import com.example.budgetvalue.extensions.sum
 import java.math.BigDecimal
 import java.time.LocalDate
 

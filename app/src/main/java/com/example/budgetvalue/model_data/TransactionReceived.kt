@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import com.example.budgetvalue.extensions.toHashMap
 import com.example.budgetvalue.model_app.ICategoryParser
 import com.example.budgetvalue.model_app.Transaction
-import com.example.budgetvalue.sum
+import com.example.budgetvalue.extensions.sum
 import java.math.BigDecimal
 import java.time.LocalDate
 

@@ -9,7 +9,7 @@ import com.example.budgetvalue.layer_data.Repo
 import com.example.budgetvalue.model_app.Category
 import com.example.budgetvalue.model_app.ReconcileRowData
 import com.example.budgetvalue.model_app.Transaction
-import com.example.budgetvalue.sum
+import com.example.budgetvalue.extensions.sum
 import com.example.budgetvalue.zip
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
