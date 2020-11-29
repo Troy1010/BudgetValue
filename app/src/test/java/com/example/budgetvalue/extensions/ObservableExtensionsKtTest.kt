@@ -1,5 +1,6 @@
 package com.example.budgetvalue.extensions
 
+import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
 import org.junit.Test
 
@@ -37,5 +38,51 @@ class ObservableExtensionsKtTest {
         val result = pairwiseObservable.toList().blockingGet()
         // # Verify
         assertEquals(listOf(9, -4, 3, -2, -4), result)
+    }
+
+
+    // No replay functionality, even with .replay()
+    @Test
+    fun noReplayFunctionality_GivenUsingReplay() {
+        // # Given
+        var count = 0
+        val observable = Observable.just(55)
+            .doOnNext { count++ }
+            .replay(1).refCount()
+        // # Stimulate
+        observable.subscribe()
+        observable.subscribe()
+        // # Verify
+        assertEquals(2, count)
+    }
+
+    // Replay functionality via noEnd
+    @Test
+    fun noEnd() {
+        // # Given
+        var count = 0
+        val observable = Observable.just(55).noEnd()
+            .doOnNext { count++ }
+            .replay(1).refCount()
+        // # Stimulate
+        observable.subscribe()
+        observable.subscribe()
+        // # Verify
+        assertEquals(1, count)
+    }
+
+    // Replay functionality via BehaviorSubject
+    @Test
+    fun replayFunctionality_GivenUsingToBehaviorSubject() {
+        // # Given
+        var count = 0
+        val observable = Observable.just(55)
+            .doOnNext { count++ }
+            .toBehaviorSubject()
+        // # Stimulate
+        observable.subscribe()
+        observable.subscribe()
+        // # Verify
+        assertEquals(1, count)
     }
 }

@@ -39,3 +39,8 @@ fun <T:Any> Observable<T>.logzz(msgPrefix:String, toDisplayable:(T)->Any = { it 
     return this
         .doOnNext { logz("$msgPrefix`${toDisplayable(it)}") }
 }
+
+fun <T> Observable<T>.noEnd(): Observable<T> {
+    return this
+        .mergeWith(Observable.never())
+}
