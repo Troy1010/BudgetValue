@@ -17,7 +17,7 @@ import com.tminus1010.tmcommonkotlin.misc.createVmFactory
 import com.tminus1010.tmcommonkotlin_rx.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.Subject
 import kotlinx.android.synthetic.main.frag_plan.*
 import java.math.BigDecimal
 
@@ -35,7 +35,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
     private fun setupObservers() {
         val cellRecipeFactory = ViewItemRecipeFactory.createCellRecipeFactory(requireContext())
         val headerRecipeFactory = ViewItemRecipeFactory.createHeaderRecipeFactory(requireContext())
-        val inputRecipeFactory = ViewItemRecipeFactory<EditText, BehaviorSubject<BigDecimal>>(
+        val inputRecipeFactory = ViewItemRecipeFactory<EditText, Subject<BigDecimal>>(
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
             { v, bs -> v.bind(bs, { it.toBigDecimalSafe() } ) }
         )
