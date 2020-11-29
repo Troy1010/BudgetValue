@@ -8,7 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.budgetvalue.App
 import com.example.budgetvalue.R
-import com.example.budgetvalue.layer_ui.misc.rxBindOneWay
+import com.example.budgetvalue.layer_ui.misc.bindIncoming
 import com.tminus1010.tmcommonkotlin.misc.GenericRecyclerViewAdapter
 import com.tminus1010.tmcommonkotlin.misc.createVmFactory
 import kotlinx.android.synthetic.main.frag_categorize.*
@@ -27,10 +27,10 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize), GenericRecyclerViewAd
     }
 
     private fun setupBinds() {
-        textview_date.rxBindOneWay(categorizeVM.dateAsString)
-        textview_amount.rxBindOneWay(categorizeVM.transactionBox) { it.first?.amount?.toString()?:"" }
-        tv_description.rxBindOneWay(categorizeVM.transactionBox) { it.first?.description?:"" }
-        textview_amount_left.rxBindOneWay(transactionsVM.uncategorizedSpendsSize)
+        textview_date.bindIncoming(categorizeVM.dateAsString)
+        textview_amount.bindIncoming(categorizeVM.transactionBox) { it.first?.amount?.toString()?:"" }
+        tv_description.bindIncoming(categorizeVM.transactionBox) { it.first?.description?:"" }
+        textview_amount_left.bindIncoming(transactionsVM.uncategorizedSpendsSize)
     }
 
     private fun setupViews() {

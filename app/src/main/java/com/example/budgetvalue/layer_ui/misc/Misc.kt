@@ -9,7 +9,6 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.Subject
-import java.math.BigDecimal
 
 fun <T> EditText.rxBind(bs: BehaviorSubject<T>, editTextRxBinder:EditTextRxBinder<T>) {
     editTextRxBinder.rxBind(this, bs)
@@ -24,7 +23,7 @@ fun <T> EditText.rxBind(
     toT:(String)->T,
     validate: (T)->T = { it }, // TODO could be more performant
     toDisplayStr:(T)->String = { it.toString() }): Disposable {
-    val rxDisposable = rxBindOneWay(bs)
+    val rxDisposable = bindIncoming(bs)
     this.onFocusChangeListener = View.OnFocusChangeListener { _, isFocused ->
         if (!isFocused) {
             val mText = this.text.toString()
@@ -52,8 +51,7 @@ fun <T> EditText.rxBind(
     }
 }
 
-
-fun <T> TextView.rxBindOneWay(
+fun <T> TextView.bindDownstream(
     observable: Observable<T>,
     provideDisplayable:((T)->Any)? = null
 ): Disposable {
@@ -64,6 +62,21 @@ fun <T> TextView.rxBindOneWay(
             if (this.layoutParams!=null)
                 this.text = (provideDisplayable?.invoke(it) ?: it)
                     .toString()
+        }
+}
+
+fun <T:Any> TextView.bindIncoming(
+    observable: Observable<T>,
+    toDisplayable:((T)->Any)? = null
+): Disposable {
+    return observable
+        .distinctUntilChanged()
+        .observeOn(AndroidSchedulers.mainThread())
+        .filter { this.layoutParams!=null }
+        .subscribe {
+            this.text = it
+                .let { if (toDisplayable==null) it else toDisplayable(it) }
+                .toString()
         }
 }
 

@@ -11,7 +11,7 @@ import com.example.budgetvalue.App
 import com.example.budgetvalue.R
 import com.example.budgetvalue.layer_ui.TMTableView.*
 import com.example.budgetvalue.layer_ui.misc.rxBind
-import com.example.budgetvalue.layer_ui.misc.rxBindOneWay
+import com.example.budgetvalue.layer_ui.misc.bindIncoming
 import com.example.budgetvalue.reflectXY
 import com.example.budgetvalue.toBigDecimal2
 import com.tminus1010.tmcommonkotlin.misc.createVmFactory
@@ -44,7 +44,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
             { View.inflate(requireContext(), R.layout.tableview_header_income, null) as LinearLayout },
             {v, d ->
                 v.textview_header.text = d.first
-                v.textview_number.rxBindOneWay(d.second)
+                v.textview_number.bindIncoming(d.second)
             })
         val twoWayRecipeFactory = ViewItemRecipeFactory<EditText, BehaviorSubject<BigDecimal>>(
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
@@ -52,7 +52,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
         )
         val oneWayRecipeFactory = ViewItemRecipeFactory<TextView, Observable<BigDecimal>>(
             { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
-            { v, observable -> v.rxBindOneWay(observable)}
+            { v, observable -> v.bindIncoming(observable)}
         )
         reconcileVM.rowDatas
             .observeOn(AndroidSchedulers.mainThread())
