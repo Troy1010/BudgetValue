@@ -36,9 +36,9 @@ fun <T> Observable<Box<T?>>.unbox(): Observable<T> {
         .map { it.first!! }
 }
 
-fun <T:Any> Observable<T>.logzz(msgPrefix:String, toDisplayable:(T)->Any = { it }): Observable<T> {
+fun <T> Observable<T>.logzz(msgPrefix:String, toDisplayable:((T)->Any)? = null): Observable<T> {
     return this
-        .doOnNext { logz("$msgPrefix`${toDisplayable(it)}") }
+        .doOnNext { logz("$msgPrefix`${if (toDisplayable==null) it else toDisplayable(it)}") }
 }
 
 fun <T> Observable<T>.noEnd(): Observable<T> {
