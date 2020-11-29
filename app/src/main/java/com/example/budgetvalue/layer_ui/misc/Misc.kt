@@ -27,6 +27,7 @@ fun <T> EditText.bindOutgoing(
     validate: ((T)->T)? = null
 ) {
     this.focusChanges()
+        .skip(1) //*focusChanges always starts with false, for some reason.
         .filter { !it }
         .withLatestFrom(this.textChanges()) { _, x -> x.toString() }
         .map { toT(it) }
