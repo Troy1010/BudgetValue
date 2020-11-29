@@ -37,11 +37,11 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
         val headerRecipeFactory = ViewItemRecipeFactory.createHeaderRecipeFactory(requireContext())
         val inputRecipeFactory = ViewItemRecipeFactory<EditText, BehaviorSubject<BigDecimal>>(
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
-            { v, bs -> v.rxBind(bs, { it.toBigDecimal2() } )}
+            { v, bs -> v.rxBind(bs, { it.toBigDecimal2() } ) }
         )
         val oneWayCellRecipeBuilder = ViewItemRecipeFactory<TextView, Observable<BigDecimal>>(
             { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
-            { v, bs -> v.rxBindOneWay(bs)}
+            { v, bs -> v.rxBindOneWay(bs) }
         )
         planVM.planCategoryAmounts
             .observeOn(AndroidSchedulers.mainThread())
