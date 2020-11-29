@@ -18,27 +18,19 @@ fun <T> EditText.bind(
     toDisplayable:((T)->Any)? = null
 ) {
     bindIncoming(subject, toDisplayable)
-    bindOutgoing(subject, toT, validate, toDisplayable)
+    bindOutgoing(subject, toT, validate)
 }
 
 fun <T> EditText.bindOutgoing(
     subject:Subject<T>,
     toT:(String)->T,
-    validate: ((T)->T)? = null,
-    toDisplayable:((T)->Any)? = null
+    validate: ((T)->T)? = null
 ) {
     this.focusChanges()
         .filter { !it }
         .withLatestFrom(this.textChanges()) { _, x -> x.toString() }
         .map { toT(it) }
         .map { if (validate==null) it else validate(it) }
-        .doOnNext { // *side-effects are generally not recommended.. but I think it's okay here.
-            // # Use toDisplayable to set the view's string.
-            val displayableStr = it
-                .let { if (toDisplayable==null) it else toDisplayable(it) }
-                .toString()
-            if (this.text.toString() != displayableStr) this.setText(displayableStr)
-        }
         .subscribe(subject)
 }
 
@@ -47,14 +39,11 @@ fun <T> TextView.bindIncoming(
     toDisplayable:((T)->Any)? = null
 ): Disposable {
     return observable
-        .distinctUntilChanged()
         .observeOn(AndroidSchedulers.mainThread())
-        .filter { this.layoutParams!=null }
-        .subscribe {
-            this.text = it
-                .let { if (toDisplayable==null) it else toDisplayable(it) }
-                .toString()
-        }
+        .filter { this.layoutParams!=null } // *An error happens if you try to set text while layoutParams is null. But perhaps this filter should be moved elsewhere.
+        .map { if (toDisplayable==null) it.toString() else toDisplayable(it).toString() }
+        .distinctUntilChanged()
+        .subscribe { this.text = it }
 }
 
 fun Button.setOnClickListener(subject: Subject<Unit>) {
