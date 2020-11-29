@@ -405,16 +405,6 @@ fun <A, B, C, D> zip(
     })
 }
 
-
-fun getTotalObservable(it: Iterable<Observable<BigDecimal>>): BehaviorSubject<BigDecimal> {
-    val pairwiseDifference = BehaviorSubject.createDefault(BigDecimal.ZERO)
-    val returning = pairwiseDifference
-        .scan(BigDecimal.ZERO) { acc, y -> acc + y }
-        .toBehaviorSubject() // TODO("Simplify")
-    it.forEach { it.pairwise(BigDecimal.ZERO).map { it.second - it.first }.subscribe(pairwiseDifference) } // TODO("Are these subscriptions safe?")
-    return returning
-}
-
 fun Iterable<BigDecimal>.sum(): BigDecimal {
     return this.fold(BigDecimal.ZERO, BigDecimal::add)
 }

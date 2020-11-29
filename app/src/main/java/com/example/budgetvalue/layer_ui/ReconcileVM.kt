@@ -3,6 +3,7 @@ package com.example.budgetvalue.layer_ui
 import androidx.lifecycle.ViewModel
 import com.example.budgetvalue.*
 import com.example.budgetvalue.extensions.toSourceHashMap
+import com.example.budgetvalue.extensions.total
 import com.example.budgetvalue.extensions.withLatestFrom
 import com.example.budgetvalue.layer_data.Repo
 import com.example.budgetvalue.model_app.Category
@@ -28,10 +29,11 @@ class ReconcileVM(
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
     val reconcileDefault = reconcileCategoryAmounts
         .switchMap { it.observable }
-        .flatMap { getTotalObservable(it.values) }
+        .map { it.values }
+        .total()
         .withLatestFrom(accountsTotal)
         .map { it.second - it.first } // TODO("Should subtract previous accountsTotal")
-    val uncategorizedBudgeted = combineLatestAsTuple(accountsTotal, rowDatas.flatMap { getTotalObservable(it.map { it.budgeted }) })
+    val uncategorizedBudgeted = combineLatestAsTuple(accountsTotal, rowDatas.map { it.map { it.budgeted } }.total())
         .map { it.first - it.second }
 
     fun getRowDatas(

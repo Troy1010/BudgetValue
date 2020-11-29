@@ -2,9 +2,8 @@ package com.example.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
 import com.example.budgetvalue.combineLatestAsTuple
-import com.example.budgetvalue.getTotalObservable
+import com.example.budgetvalue.extensions.total
 import com.example.budgetvalue.layer_data.Repo
-import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
@@ -13,8 +12,9 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
     val planCategoryAmounts = repo.planCategoryAmounts
     val uncategorizedPlan = planCategoryAmounts
         .flatMap { it.observable }
-        .flatMap { getTotalObservable(it.values) }
-        .toBehaviorSubject()
+        .map { it.values }
+        .total()
+        .replay(1).refCount()
     val expectedIncome = BehaviorSubject.createDefault(repo.fetchExpectedIncome())
         // # Bind expectedIncome -> Repo
         .also { it.skip(1).subscribe { repo.pushExpectedIncome(it) } }

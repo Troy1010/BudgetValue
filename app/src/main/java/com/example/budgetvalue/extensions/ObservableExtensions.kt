@@ -4,6 +4,7 @@ import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.functions.BiFunction
+import java.math.BigDecimal
 
 
 fun <T : Any> Observable<T>.pairwise(initialValue: T): Observable<Pair<T, T>> {
@@ -43,4 +44,11 @@ fun <T:Any> Observable<T>.logzz(msgPrefix:String, toDisplayable:(T)->Any = { it 
 fun <T> Observable<T>.noEnd(): Observable<T> {
     return this
         .mergeWith(Observable.never())
+}
+
+fun <T : Iterable<Observable<BigDecimal>>> Observable<T>.total(): Observable<BigDecimal> {
+    return this
+        .flatMap { Observable.fromIterable(it) }
+        .flatMap { it.pairwise(BigDecimal.ZERO).map { it.second - it.first } }
+        .scan(BigDecimal.ZERO, BigDecimal::add)
 }
