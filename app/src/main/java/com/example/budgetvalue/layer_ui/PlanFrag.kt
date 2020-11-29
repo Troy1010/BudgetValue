@@ -12,7 +12,7 @@ import com.example.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.example.budgetvalue.layer_ui.misc.bind
 import com.example.budgetvalue.layer_ui.misc.bindIncoming
 import com.example.budgetvalue.reflectXY
-import com.example.budgetvalue.toBigDecimal2
+import com.example.budgetvalue.toBigDecimalSafe
 import com.tminus1010.tmcommonkotlin.misc.createVmFactory
 import com.tminus1010.tmcommonkotlin_rx.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -37,7 +37,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
         val headerRecipeFactory = ViewItemRecipeFactory.createHeaderRecipeFactory(requireContext())
         val inputRecipeFactory = ViewItemRecipeFactory<EditText, BehaviorSubject<BigDecimal>>(
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
-            { v, bs -> v.bind(bs, { it.toBigDecimal2() } ) }
+            { v, bs -> v.bind(bs, { it.toBigDecimalSafe() } ) }
         )
         val oneWayCellRecipeBuilder = ViewItemRecipeFactory<TextView, Observable<BigDecimal>>(
             { View.inflate(context, R.layout.tableview_text_view, null) as TextView },

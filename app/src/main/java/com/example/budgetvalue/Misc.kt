@@ -375,7 +375,7 @@ fun <T,V> List<HashMap<T,V>>.reflectXY(): HashMap<T,ArrayList<V>> {
 
 
 
-fun String.toBigDecimal2(): BigDecimal {
+fun String.toBigDecimalSafe(): BigDecimal {
     return try { this.toBigDecimal() } catch (e:NumberFormatException) { BigDecimal.ZERO }
 }
 
