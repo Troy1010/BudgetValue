@@ -18,16 +18,16 @@ fun <T : Any> Observable<T>.pairwise(): Observable<Pair<T, T>> {
         .compose {
             it
                 .skip(1)
-                .zipWith(it, BiFunction<T, T, Pair<T, T>> { a, b -> Pair(b, a) })
+                .zipWith(it) { a, b -> Pair(b, a) }
         }
 }
 
 fun <T : Any, G : Any> Observable<T>.withLatestFrom(x: Observable<G>): Observable<Pair<T, G>> {
-    return this.withLatestFrom(x, BiFunction<T, G, Pair<T, G>> { t1: T, t2: G -> Pair(t1, t2) })
+    return this.withLatestFrom(x, BiFunction { t1: T, t2: G -> Pair(t1, t2) })
 }
 
 fun <T : Any, G : Any, R:Any> Observable<T>.withLatestFrom(x: Observable<G>, action: (T, G)->R): Observable<R> {
-    return this.withLatestFrom(x, BiFunction<T, G, R> { t1: T, t2: G -> action(t1, t2) })
+    return this.withLatestFrom(x, BiFunction { t1: T, t2: G -> action(t1, t2) })
 }
 
 fun <T> Observable<Box<T?>>.unbox(): Observable<T> {
