@@ -31,13 +31,13 @@ fun <T> EditText.bindOutgoing(
         .filter { !it }
         .withLatestFrom(this.textChanges()) { _, x -> x.toString() }
         .map { toT(it) }
+        .map { if (validate==null) it else validate(it) }
         .doOnNext { // *side-effects are generally not recommended.. but I think it's okay here.
-            // # Set the view's string, if it's invalid.
-            val validatedText = it
-                .let { if (validate==null) it else validate(it) }
+            // # Use toDisplayable to set the view's string.
+            val displayableStr = it
                 .let { if (toDisplayable==null) it else toDisplayable(it) }
                 .toString()
-            if (this.text.toString() != validatedText) this.setText(validatedText)
+            if (this.text.toString() != displayableStr) this.setText(displayableStr)
         }
         .subscribe(subject)
 }
