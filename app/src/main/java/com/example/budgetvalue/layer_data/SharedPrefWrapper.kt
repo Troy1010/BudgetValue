@@ -47,8 +47,13 @@ class SharedPrefWrapper @Inject constructor(
 
     private fun bindToReconcileCategoryAmounts(map: SourceHashMap<Category, BigDecimal>) {
         map.additions.observeOn(Schedulers.io())
-            .flatMap { kv -> kv.value.distinctUntilChanged().skip(1) }
-            .subscribe { pushReconcileCategoryAmounts(map) }
+            .flatMap { kv ->
+                kv.value
+                    .distinctUntilChanged()
+                    .skip(1)
+                    .doOnNext { pushReconcileCategoryAmounts(map) }
+            }
+            .subscribe()
     }
 
     //

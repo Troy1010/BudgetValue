@@ -28,13 +28,14 @@ class MyDaoWrapper @Inject constructor(
 
     private fun bindToPlanCategoryAmounts(map: SourceHashMap<Category, BigDecimal>) {
         map.additions.observeOn(Schedulers.io())
-            .flatMap { kv ->
+            .flatMapCompletable { kv ->
                 kv.value
+                    .observeOn(Schedulers.io())
                     .distinctUntilChanged()
                     .skip(1)
-                    .map { PlanCategoryAmount(kv.key, it) }
+                    .flatMapCompletable { myDao.update(PlanCategoryAmount(kv.key, it)) }
             }
-            .subscribe { myDao.update(it).subscribeOn(Schedulers.io()).blockingAwait() } // TODO("Handle observables")
+            .subscribe() // TODO("disposables")
     }
 
     override fun update(account: Account): Completable {
