@@ -1,71 +1,48 @@
 package com.example.budgetvalue.layer_ui.misc
 
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import com.jakewharton.rxbinding4.view.focusChanges
+import com.jakewharton.rxbinding4.widget.textChanges
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.Subject
 
-fun <T> EditText.rxBind(bs: BehaviorSubject<T>, editTextRxBinder:EditTextRxBinder<T>) {
-    editTextRxBinder.rxBind(this, bs)
-}
-
-fun EditText.rxBind(bs:BehaviorSubject<String?>, validate: (String?)->String = { it?:"" }): Disposable {
-    return this.rxBind(bs, { it }, validate, { it?:"" } )
-}
-
-fun <T> EditText.rxBind(
-    bs:BehaviorSubject<T>,
+// * I'm not sure if this is the best idea. It might be better to have 2 different incoming and outgoing streams.
+fun <T> EditText.bind(
+    subject:Subject<T>,
     toT:(String)->T,
-    validate: (T)->T = { it }, // TODO could be more performant
-    toDisplayStr:(T)->String = { it.toString() }): Disposable {
-    val rxDisposable = bindIncoming(bs)
-    this.onFocusChangeListener = View.OnFocusChangeListener { _, isFocused ->
-        if (!isFocused) {
-            val mText = this.text.toString()
-            val mTextValidated = toDisplayStr(validate(toT(mText)))
-            // validate
-            if (mText != mTextValidated) {
-                this.setText(mTextValidated)
-            }
-            // emit
-            if (this.text.toString() != bs.value) {
-                bs.onNext(validate(toT(this.text.toString())))
-            }
-        }
-    }
-    return object : Disposable {
-        var bDisposed = false
-        override fun dispose() {
-            if (!isDisposed) {
-                bDisposed = true
-                rxDisposable.dispose()
-                onFocusChangeListener = null
-            }
-        }
-        override fun isDisposed() = bDisposed
-    }
+    validate: ((T)->T)? = null,
+    toDisplayable:((T)->Any)? = null
+) {
+    bindIncoming(subject, toDisplayable)
+    bindOutgoing(subject, toT, validate, toDisplayable)
 }
 
-fun <T> TextView.bindDownstream(
-    observable: Observable<T>,
-    provideDisplayable:((T)->Any)? = null
-): Disposable {
-    return observable
-        .distinctUntilChanged()
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe {
-            if (this.layoutParams!=null)
-                this.text = (provideDisplayable?.invoke(it) ?: it)
-                    .toString()
+fun <T> EditText.bindOutgoing(
+    subject:Subject<T>,
+    toT:(String)->T,
+    validate: ((T)->T)? = null,
+    toDisplayable:((T)->Any)? = null
+) {
+    this.focusChanges()
+        .filter { !it }
+        .withLatestFrom(this.textChanges()) { _, x -> x.toString() }
+        .map { toT(it) }
+        .doOnNext { // *side-effects are generally not recommended.. but I think it's okay here.
+            // # Set the view's string, if it's invalid.
+            val validatedText = it
+                .let { if (validate==null) it else validate(it) }
+                .let { if (toDisplayable==null) it else toDisplayable(it) }
+                .toString()
+            if (this.text.toString() != validatedText) this.setText(validatedText)
         }
+        .subscribe(subject)
 }
 
-fun <T:Any> TextView.bindIncoming(
+fun <T> TextView.bindIncoming(
     observable: Observable<T>,
     toDisplayable:((T)->Any)? = null
 ): Disposable {
