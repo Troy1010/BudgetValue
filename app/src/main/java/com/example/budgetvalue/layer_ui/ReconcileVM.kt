@@ -1,18 +1,19 @@
 package com.example.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
-import com.example.budgetvalue.*
-import com.example.budgetvalue.extensions.toSourceHashMap
+import com.example.budgetvalue.SourceHashMap
+import com.example.budgetvalue.combineLatestAsTuple
 import com.example.budgetvalue.extensions.total
 import com.example.budgetvalue.extensions.withLatestFrom
 import com.example.budgetvalue.layer_data.Repo
 import com.example.budgetvalue.model_app.Category
 import com.example.budgetvalue.model_app.ReconcileRowData
 import com.example.budgetvalue.model_app.Transaction
+import com.example.budgetvalue.sum
+import com.example.budgetvalue.zip
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
 
 class ReconcileVM(
@@ -46,7 +47,7 @@ class ReconcileVM(
             ReconcileRowData(
                 category,
                 planCA.observable.value[category] ?: Observable.just(BigDecimal.ZERO),
-                BehaviorSubject.createDefault(transactionSet.map { it.categoryAmounts[category] ?: BigDecimal.ZERO }.sum()),
+                Observable.just(transactionSet.map { it.categoryAmounts[category] ?: BigDecimal.ZERO }.sum()),
                 reconcileCA.observable.value[category]!!
             )
         }
