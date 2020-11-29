@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import com.example.budgetvalue.SourceHashMap
 import com.example.budgetvalue.extensions.logzz
 import com.example.budgetvalue.extensions.noEnd
+import com.example.budgetvalue.extensions.toSourceHashMap
 import com.example.budgetvalue.model_app.Category
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -29,10 +30,11 @@ class SharedPrefWrapper @Inject constructor(
     // # ReconcileCategoryAmounts
 
     override val reconcileCategoryAmounts = Observable.just(fetchReconcileCategoryAmounts())
+        .map { it.toSourceHashMap() }
         .doOnNext(::bindToReconcileCategoryAmounts)
         .noEnd().replay(1).refCount()
 
-    fun fetchReconcileCategoryAmounts(): SourceHashMap<Category, BigDecimal> {
+    fun fetchReconcileCategoryAmounts(): Map<Category, BigDecimal> {
         return sharedPreferences.getString(KEY_RECONCILE_CATEGORY_AMOUNTS, null)
             .let { typeConverter.categoryAmounts(it) }
     }

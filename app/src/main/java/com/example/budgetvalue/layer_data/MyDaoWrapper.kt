@@ -2,6 +2,7 @@ package com.example.budgetvalue.layer_data
 
 import com.example.budgetvalue.SourceHashMap
 import com.example.budgetvalue.extensions.noEnd
+import com.example.budgetvalue.extensions.toSourceHashMap
 import com.example.budgetvalue.model_app.Category
 import com.example.budgetvalue.model_data.Account
 import com.example.budgetvalue.model_data.PlanCategoryAmount
@@ -23,6 +24,7 @@ class MyDaoWrapper @Inject constructor(
         .take(1)
         .subscribeOn(Schedulers.io())
         .map(typeConverter::categoryAmounts)
+        .map { it.toSourceHashMap() }
         .doOnNext(::bindToPlanCategoryAmounts)
         .noEnd().replay(1).refCount()
 
