@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.budgetvalue.App
 import com.example.budgetvalue.R
 import com.example.budgetvalue.layer_ui.misc.setOnClickListener
+import com.jakewharton.rxbinding4.view.clicks
+import com.jakewharton.rxbinding4.widget.textChanges
 import com.tminus1010.tmcommonkotlin.misc.GenericRecyclerViewAdapter
 import com.tminus1010.tmcommonkotlin.misc.createVmFactory
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindToLifecycle
@@ -27,7 +29,7 @@ class ImportFrag: Fragment(R.layout.frag_import), GenericRecyclerViewAdapter.Cal
     }
 
     private fun setupBinds() {
-        btn_add_account.setOnClickListener(accountsVM.intentAddAccount)
+        btn_add_account.clicks().subscribe(accountsVM.intentAddAccount)
     }
 
     private fun setupViews() {
@@ -49,9 +51,8 @@ class ImportFrag: Fragment(R.layout.frag_import), GenericRecyclerViewAdapter.Cal
         val account = accountsVM.accounts.value?.get(holder.adapterPosition) ?: return
         view.editText_name?.setText(account.name)
         view.editText_amount?.setText(account.amount.toString())
-        view.btn_delete_account.setOnClickListener {
-            accountsVM.intentDeleteAccount.onNext(account)
-        }
+
+        view.btn_delete_account.clicks().map { account }.subscribe(accountsVM.intentDeleteAccount)
         view.editText_amount.setOnFocusChangeListener { v, b ->
             if (!b) {
                 account.amount = view.editText_amount.text.toString().toBigDecimal()
