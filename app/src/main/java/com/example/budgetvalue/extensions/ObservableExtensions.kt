@@ -45,16 +45,3 @@ fun <T> Observable<T>.noEnd(): Observable<T> {
     return this
         .mergeWith(Observable.never())
 }
-
-fun <T : Iterable<Observable<BigDecimal>>> Observable<T>.total(): Observable<BigDecimal> {
-    return this
-        .flatMapIterable { it }
-        .flatMap {
-            it
-                .startWithItem(BigDecimal.ZERO)
-                .distinctUntilChanged()
-                .pairwise()
-                .map { it.second - it.first }
-        }
-        .scan(BigDecimal.ZERO, BigDecimal::add)
-}

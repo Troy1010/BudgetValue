@@ -30,11 +30,10 @@ class ReconcileVM(
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
     val reconcileDefault = reconcileCategoryAmounts
         .switchMap { it.observable }
-        .map { it.values }
-        .total()
+        .flatMap { it.values.total() }
         .withLatestFrom(accountsTotal)
         .map { it.second - it.first } // TODO("Should subtract previous accountsTotal")
-    val uncategorizedBudgeted = combineLatestAsTuple(accountsTotal, rowDatas.map { it.map { it.budgeted } }.total())
+    val uncategorizedBudgeted = combineLatestAsTuple(accountsTotal, rowDatas.flatMap { it.map { it.budgeted }.total() })
         .map { it.first - it.second }
 
     fun getRowDatas(

@@ -44,9 +44,8 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
         .logzz("xxx")
         .toBehaviorSubject()
     val statePlanUncategorized = statePlanCAs
-        .flatMap { it.observable }
-        .map { it.values }
-        .total()
+        .switchMap { it.observable }
+        .flatMap { it.values.total() }
         .replay(1).refCount()
     val stateExpectedIncome = actionPushExpectedIncome
         .startWithItem(repo.fetchExpectedIncome())
