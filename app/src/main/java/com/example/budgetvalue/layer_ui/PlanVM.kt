@@ -3,9 +3,9 @@ package com.example.budgetvalue.layer_ui
 import androidx.lifecycle.ViewModel
 import com.example.budgetvalue.SourceHashMap
 import com.example.budgetvalue.combineLatestAsTuple
-import com.example.budgetvalue.combineLatestWithIndex
 import com.example.budgetvalue.extensions.total
 import com.example.budgetvalue.layer_data.Repo
+import com.example.budgetvalue.mergeWithType
 import com.example.budgetvalue.model_app.Category
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -16,11 +16,22 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
         .also { it.subscribe(repo::pushExpectedIncome) }
     val intentPushPlanCategoryAmount = PublishSubject.create<Pair<Category, BigDecimal>>()
         .also { it.flatMapCompletable(repo::pushPlanCategoryAmount).subscribe() }
-    val statePlanCAs = combineLatestWithIndex(intentPushPlanCategoryAmount, repo.planCategoryAmounts)
-        .scan(SourceHashMap<Category, BigDecimal>()) { acc, (x0, x1, i) ->
+    val statePlanCAs = mergeWithType(intentPushPlanCategoryAmount, repo.planCategoryAmounts, categoriesAppVM.choosableCategories)
+        .scan(SourceHashMap<Category, BigDecimal>()) { acc, (i, x0, x1, x2) ->
             when (i) {
-                0 -> acc[x0.first] = x0.second
-                1 -> { acc.clear(); acc.putAll(x1) }
+                0 -> { x0!!; acc[x0.first] = x0.second }
+                1 -> { x1!!
+                    acc.clear()
+                    acc.putAll(x1)
+                    x2
+                        ?.filter { category -> category !in acc.observableMap.keys }
+                        ?.forEach { category -> acc[category] = BigDecimal.ZERO }
+                }
+                2 -> { x2!!
+                    x2
+                        .filter { category -> category !in acc.observableMap.keys }
+                        .forEach { category -> acc[category] = BigDecimal.ZERO }
+                }
             }
             acc
         }

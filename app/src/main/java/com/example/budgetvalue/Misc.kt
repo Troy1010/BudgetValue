@@ -10,6 +10,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.budgetvalue.extensions.boxStartNull
 import com.example.budgetvalue.extensions.previous
 import com.example.budgetvalue.model_app.Transaction
 import com.google.gson.reflect.TypeToken
@@ -411,8 +412,28 @@ data class IndexAndTuple<T>(
     val tuple: T
 )
 
-fun <A, B> combineLatestWithIndex(a: Observable<A>, b: Observable<B>): Observable<Triple<A, B, Int>> {
+fun <A, B> combineLatestWithIndex(a: Observable<A>, b: Observable<B>): Observable<Triple<Int, A, B>> {
     return Observable.merge(a.map { 0 }, b.map { 1 })
-        .zipWith(combineLatestAsTuple(a,b)) { a, b -> IndexAndTuple(a,b) }
-        .map { Triple(it.tuple.first, it.tuple.second, it.index) }
+        .zipWith(combineLatestAsTuple(a,b)) { index, tuple -> IndexAndTuple(index, tuple) }
+        .map { Triple(it.index, it.tuple.first, it.tuple.second) }
+}
+
+fun <A, B, C> combineLatestWithIndex(a: Observable<A>, b: Observable<B>, c: Observable<C>): Observable<Quadruple<Int, A, B, C>> {
+    return Observable.zip(
+        Observable.merge(a.map { 0 }, b.map { 1 }, c.map { 2 }),
+        combineLatestAsTuple(a,b,c)
+    ) { index, tuple -> IndexAndTuple(index, tuple) }
+        .map { Quadruple(it.index, it.tuple.first, it.tuple.second, it.tuple.third) }
+}
+
+fun <A, B, C> mergeWithType(a: Observable<A>, b: Observable<B>, c: Observable<C>): Observable<Quadruple<Int, A?, B?, C?>> {
+    return Observable.zip(
+        Observable.merge(a.map { 0 }, b.map { 1 }, c.map { 2 }),
+        combineLatestAsTuple(a.boxStartNull(), b.boxStartNull(), c.boxStartNull()).skip(1)
+    ) { index, tuple -> IndexAndTuple(index, tuple) }
+        .map { Quadruple(it.index, it.tuple.first.unbox(), it.tuple.second.unbox(), it.tuple.third.unbox()) }
+}
+
+fun <T> Box<T>.unbox(): T {
+    return this.first
 }
