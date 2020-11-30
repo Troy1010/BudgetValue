@@ -16,6 +16,7 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
         .also { it.subscribe(repo::pushExpectedIncome) }
     val intentPushPlanCategoryAmount = PublishSubject.create<Pair<Category, BigDecimal>>()
         .also { it.flatMapCompletable(repo::pushPlanCategoryAmount).subscribe() }
+    // TODO("feed response into state, not intent")
     val statePlanCAs = mergeWithIndex(intentPushPlanCategoryAmount, repo.planCategoryAmounts, categoriesAppVM.choosableCategories)
         .scan(SourceHashMap<Category, BigDecimal>()) { acc, (i, intentPushPlanCA, responsePlanCAs, stateChooseableCategories) ->
             when (i) {
