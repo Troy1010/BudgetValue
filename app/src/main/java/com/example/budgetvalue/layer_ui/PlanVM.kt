@@ -45,7 +45,6 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
         .toBehaviorSubject()
     val statePlanUncategorized = statePlanCAs
         .flatMap { it.observable }
-        .logzz("ttt")
         .map { it.values }
         .total()
         .replay(1).refCount()

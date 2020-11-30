@@ -30,8 +30,11 @@ fun <T> EditText.bindOutgoing(
         .skip(1) //*focusChanges always starts with false, for some reason.
         .filter { !it }
         .withLatestFrom(this.textChanges()) { _, x -> x.toString() }
+        .startWithItem(this.text.toString()) // starting with current text triggers distinctUntilChanged
         .map { toT(it) }
         .map { if (validate==null) it else validate(it) }
+        .distinctUntilChanged()
+        .skip(1) // starting with current text triggers distinctUntilChanged, but must be skipped.
         .subscribe(subject)
 }
 
