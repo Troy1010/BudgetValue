@@ -2,7 +2,9 @@ package com.example.budgetvalue.extensions
 
 import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin.tuple.Box
+import io.reactivex.rxjava3.annotations.NonNull
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.ObservableSource
 import io.reactivex.rxjava3.functions.BiFunction
 import java.math.BigDecimal
 
@@ -45,3 +47,21 @@ fun <T> Observable<T>.noEnd(): Observable<T> {
     return this
         .mergeWith(Observable.never())
 }
+
+fun <T> Observable<T>.box(): Observable<Box<T>> {
+    return this
+        .map { Box(it) }
+}
+
+fun <T> Observable<T>.boxNull(): Observable<Box<T?>> {
+    return this
+        .map { Box(it) }
+}
+
+fun <T> Observable<T>.boxStartNull(): Observable<Box<T?>> {
+    return this
+        .boxNull()
+        .startWithItem(Box(null))
+}
+
+
