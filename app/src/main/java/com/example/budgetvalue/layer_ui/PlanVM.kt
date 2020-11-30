@@ -17,18 +17,18 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
     val intentPushPlanCategoryAmount = PublishSubject.create<Pair<Category, BigDecimal>>()
         .also { it.flatMapCompletable(repo::pushPlanCategoryAmount).subscribe() }
     val statePlanCAs = mergeWithType(intentPushPlanCategoryAmount, repo.planCategoryAmounts, categoriesAppVM.choosableCategories)
-        .scan(SourceHashMap<Category, BigDecimal>()) { acc, (i, x0, x1, x2) ->
+        .scan(SourceHashMap<Category, BigDecimal>()) { acc, (i, intentPushPlanCA, responsePlanCAs, stateChooseableCategories) ->
             when (i) {
-                0 -> { x0!!; acc[x0.first] = x0.second }
-                1 -> { x1!!
-                    acc.clear()
-                    acc.putAll(x1)
-                    x2
+                0 -> { intentPushPlanCA!!; acc[intentPushPlanCA.first] = intentPushPlanCA.second }
+                1 -> { responsePlanCAs!!
+                    acc.clear() // TODO("clear might ruin pairwise totals, maybe use onComplete?")
+                    acc.putAll(responsePlanCAs)
+                    stateChooseableCategories
                         ?.filter { category -> category !in acc.observableMap.keys }
                         ?.forEach { category -> acc[category] = BigDecimal.ZERO }
                 }
-                2 -> { x2!!
-                    x2
+                2 -> { stateChooseableCategories!!
+                    stateChooseableCategories
                         .filter { category -> category !in acc.observableMap.keys }
                         .forEach { category -> acc[category] = BigDecimal.ZERO }
                 }

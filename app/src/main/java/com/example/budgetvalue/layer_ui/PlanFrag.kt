@@ -37,9 +37,9 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
             { v, (state, actionSubject) -> v.setText("$state"); v.bindOutgoing(actionSubject, { it.toBigDecimalSafe() } ) }
         )
-        val inputRecipeFactory2 = ViewItemRecipeFactory<EditText, Triple<BigDecimal, Subject<Pair<Category, BigDecimal>>, Category>>(
+        val inputRecipeFactory2 = ViewItemRecipeFactory<EditText, Pair<Map.Entry<Category, BigDecimal>, Subject<Pair<Category, BigDecimal>>>>(
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
-            { v, (state, actionSubject, category) -> v.setText("$state"); v.bindOutgoing(actionSubject, { Pair(category, it.toBigDecimalSafe()) } ) }
+            { v, (kv, actionSubject) -> v.setText("${kv.value}"); v.bindOutgoing(actionSubject, { Pair(kv.key, it.toBigDecimalSafe()) } ) }
         )
         val oneWayCellRecipeBuilder = ViewItemRecipeFactory<TextView, Observable<BigDecimal>>(
             { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
@@ -47,26 +47,23 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
         )
         combineLatestAsTuple(planVM.statePlanCAs, planVM.stateExpectedIncome)
             .observeOn(AndroidSchedulers.mainThread())
-            //*Without this, state changes will be needlessly pushed to
+            //*Without distinctUntilChanged, state changes are needlessly pushed to
             // ui when user uses an edit text.
             .distinctUntilChanged()
-            .map {
+            .map { (planCAs, expectedIncome) ->
                 listOf(
                     headerRecipeFactory.createOne("Category")
                             + cellRecipeFactory.createOne("Expected Income")
                             + cellRecipeFactory.createOne("Default")
-                            + cellRecipeFactory.createMany(it.first.keys.map { it.name }),
+                            + cellRecipeFactory.createMany(planCAs.keys.map { it.name }),
                     headerRecipeFactory.createOne("Plan")
-                            + inputRecipeFactory.createOne(Pair(it.second,
+                            + inputRecipeFactory.createOne(Pair(expectedIncome,
                         planVM.intentPushExpectedIncome))
                             + oneWayCellRecipeBuilder.createOne(planVM.stateDifference)
-                            + inputRecipeFactory2.createMany(it.first.map { kv -> Triple(
-                        it.first[kv.key]?:BigDecimal.ZERO,
-                        planVM.intentPushPlanCategoryAmount,
-                        kv.key
-                    )})
-                )
+                            + inputRecipeFactory2.createMany(planCAs.map { kv -> Pair(kv,
+                        planVM.intentPushPlanCategoryAmount)})
+                ).reflectXY()
             }
-            .observe(this) { myTableView_plan.setRecipes(it.reflectXY()) }
+            .observe(this) { myTableView_plan.setRecipes(it) }
     }
 }
