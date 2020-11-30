@@ -426,7 +426,7 @@ fun <A, B, C> combineLatestWithIndex(a: Observable<A>, b: Observable<B>, c: Obse
         .map { Quadruple(it.index, it.tuple.first, it.tuple.second, it.tuple.third) }
 }
 
-fun <A, B, C> mergeWithType(a: Observable<A>, b: Observable<B>, c: Observable<C>): Observable<Quadruple<Int, A?, B?, C?>> {
+fun <A, B, C> mergeWithIndex(a: Observable<A>, b: Observable<B>, c: Observable<C>): Observable<Quadruple<Int, A?, B?, C?>> {
     return Observable.zip(
         Observable.merge(a.map { 0 }, b.map { 1 }, c.map { 2 }),
         combineLatestAsTuple(a.boxStartNull(), b.boxStartNull(), c.boxStartNull()).skip(1)
