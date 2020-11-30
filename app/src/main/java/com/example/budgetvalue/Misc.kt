@@ -10,7 +10,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.budgetvalue.extensions.pairwise
 import com.example.budgetvalue.extensions.previous
 import com.example.budgetvalue.model_app.Transaction
 import com.google.gson.reflect.TypeToken
@@ -18,13 +17,11 @@ import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import com.tminus1010.tmcommonkotlin.tuple.Quadruple
 import com.tminus1010.tmcommonkotlin.tuple.Quintuple
-import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableSource
 import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.functions.Function3
 import io.reactivex.rxjava3.functions.Function4
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -32,7 +29,6 @@ import java.lang.reflect.Type
 import java.math.BigDecimal
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.temporal.TemporalAdjusters
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -408,4 +404,15 @@ fun <A, B, C, D> zip(
 // Useful for Gson().fromJson(x, getType<List<Int>>())
 fun <T> getTypeForGson(): Type {
     return object : TypeToken<T>() {}.type
+}
+
+data class IndexAndTuple<T>(
+    val index: Int,
+    val tuple: T
+)
+
+fun <A, B> combineLatestWithIndex(a: Observable<A>, b: Observable<B>): Observable<Triple<A, B, Int>> {
+    return Observable.merge(a.map { 0 }, b.map { 1 })
+        .zipWith(combineLatestAsTuple(a,b)) { a, b -> IndexAndTuple(a,b) }
+        .map { Triple(it.tuple.first, it.tuple.second, it.index) }
 }
