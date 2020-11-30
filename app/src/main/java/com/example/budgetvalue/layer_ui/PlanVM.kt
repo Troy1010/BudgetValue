@@ -3,7 +3,6 @@ package com.example.budgetvalue.layer_ui
 import androidx.lifecycle.ViewModel
 import com.example.budgetvalue.SourceHashMap
 import com.example.budgetvalue.combineLatestAsTuple
-import com.example.budgetvalue.extensions.logzz
 import com.example.budgetvalue.extensions.total
 import com.example.budgetvalue.layer_data.Repo
 import com.example.budgetvalue.model_app.Category
@@ -28,7 +27,6 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
 //        .also { repo.bindToPlanCategoryAmounts(it) }
 
     val actionPushPlanCategoryAmount = PublishSubject.create<Pair<Category, BigDecimal>>()
-        .also { it.logzz("eee").subscribe() }
     val statePlanCAs = Observable.merge(actionPushPlanCategoryAmount, repo.planCategoryAmounts)
         .scan(SourceHashMap<Category, BigDecimal>()) { acc, x:Any ->
             // TODO("simplify")
@@ -41,7 +39,6 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
             }
             acc
         }
-        .logzz("xxx")
         .toBehaviorSubject()
     val statePlanUncategorized = statePlanCAs
         .switchMap { it.observable }
