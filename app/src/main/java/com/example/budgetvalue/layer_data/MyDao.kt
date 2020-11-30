@@ -6,6 +6,7 @@ import com.example.budgetvalue.model_data.PlanCategoryAmount
 import com.example.budgetvalue.model_data.TransactionReceived
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import java.math.BigDecimal
 
 @Dao
@@ -64,6 +65,9 @@ interface MyDao {
 
     @Query("select * from PlanCategoryAmount")
     fun getPlanCategoryAmountsReceived(): Observable<List<PlanCategoryAmount>>
+
+    @Query("SELECT EXISTS (SELECT 1 FROM PlanCategoryAmount WHERE categoryName = :categoryName)")
+    fun has(categoryName: String): Single<Boolean>
 
     @Insert
     fun add(planCategoryAmount: PlanCategoryAmount): Completable

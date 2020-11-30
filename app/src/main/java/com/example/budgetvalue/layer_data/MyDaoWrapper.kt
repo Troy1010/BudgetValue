@@ -1,8 +1,6 @@
 package com.example.budgetvalue.layer_data
 
-import com.example.budgetvalue.SourceHashMap
 import com.example.budgetvalue.extensions.noEnd
-import com.example.budgetvalue.extensions.toSourceHashMap
 import com.example.budgetvalue.model_app.Category
 import com.example.budgetvalue.model_data.Account
 import com.example.budgetvalue.model_data.PlanCategoryAmount
@@ -26,16 +24,15 @@ class MyDaoWrapper @Inject constructor(
         .map(typeConverter::categoryAmounts)
         .noEnd().replay(1).refCount()
 
-    override fun bindToPlanCategoryAmounts(map: SourceHashMap<Category, BigDecimal>) {
-        map.additions.observeOn(Schedulers.io())
-            .flatMapCompletable { kv ->
-                kv.value
-                    .observeOn(Schedulers.io())
-                    .distinctUntilChanged()
-                    .skip(1)
-                    .flatMapCompletable { myDao.update(PlanCategoryAmount(kv.key, it)) }
+    override fun pushPlanCategoryAmount(categoryAmount: Pair<Category, BigDecimal>): Completable {
+        return myDao.has(categoryAmount.first.name)
+            .flatMapCompletable {
+                if (it)
+                    myDao.update(PlanCategoryAmount(categoryAmount))
+                else
+                    myDao.add(PlanCategoryAmount(categoryAmount))
             }
-            .subscribe() // TODO("disposables")
+            .subscribeOn(Schedulers.io())
     }
 
     override fun update(account: Account): Completable {

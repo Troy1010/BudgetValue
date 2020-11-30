@@ -16,6 +16,7 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
         .also { it.subscribe(repo::pushExpectedIncome) }
 
     val intentPushPlanCategoryAmount = PublishSubject.create<Pair<Category, BigDecimal>>()
+        .also { it.flatMapCompletable(repo::pushPlanCategoryAmount).subscribe() }
     val statePlanCAs = Observable.merge(intentPushPlanCategoryAmount, repo.planCategoryAmounts)
         .scan(SourceHashMap<Category, BigDecimal>()) { acc, x:Any ->
             // TODO("simplify")
