@@ -14,17 +14,6 @@ import java.math.BigDecimal
 class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
     val intentPushExpectedIncome = PublishSubject.create<BigDecimal>()
         .also { it.subscribe(repo::pushExpectedIncome) }
-//    val actionsPushPlanCategoryAmount = SourceHashMap<Category, BigDecimal>()
-//        .also {
-//            // # Feed choosableCategories into it
-//            // TODO("simplify")
-//            categoriesAppVM.choosableCategories.subscribe { categories ->
-//                categories
-//                    .filter { category -> category !in it.observableMap.keys }
-//                    .forEach { category -> it.prepareKey(category) }
-//            }
-//        }
-//        .also { repo.bindToPlanCategoryAmounts(it) }
 
     val intentPushPlanCategoryAmount = PublishSubject.create<Pair<Category, BigDecimal>>()
     val statePlanCAs = Observable.merge(intentPushPlanCategoryAmount, repo.planCategoryAmounts)
