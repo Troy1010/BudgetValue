@@ -24,11 +24,9 @@ class MyDaoWrapper @Inject constructor(
         .take(1)
         .subscribeOn(Schedulers.io())
         .map(typeConverter::categoryAmounts)
-        .map { it.toSourceHashMap() }
-        .doOnNext(::bindToPlanCategoryAmounts)
         .noEnd().replay(1).refCount()
 
-    private fun bindToPlanCategoryAmounts(map: SourceHashMap<Category, BigDecimal>) {
+    override fun bindToPlanCategoryAmounts(map: SourceHashMap<Category, BigDecimal>) {
         map.additions.observeOn(Schedulers.io())
             .flatMapCompletable { kv ->
                 kv.value

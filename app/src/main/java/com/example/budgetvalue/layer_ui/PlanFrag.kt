@@ -6,13 +6,11 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.example.budgetvalue.App
-import com.example.budgetvalue.R
+import com.example.budgetvalue.*
 import com.example.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
-import com.example.budgetvalue.layer_ui.misc.bind
 import com.example.budgetvalue.layer_ui.misc.bindIncoming
-import com.example.budgetvalue.reflectXY
-import com.example.budgetvalue.toBigDecimalSafe
+import com.example.budgetvalue.layer_ui.misc.bindOutgoing
+import com.example.budgetvalue.model_app.Category
 import com.tminus1010.tmcommonkotlin.misc.createVmFactory
 import com.tminus1010.tmcommonkotlin_rx.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -35,30 +33,40 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
     private fun setupObservers() {
         val cellRecipeFactory = ViewItemRecipeFactory.createCellRecipeFactory(requireContext())
         val headerRecipeFactory = ViewItemRecipeFactory.createHeaderRecipeFactory(requireContext())
-        val inputRecipeFactory = ViewItemRecipeFactory<EditText, Subject<BigDecimal>>(
+        val inputRecipeFactory = ViewItemRecipeFactory<EditText, Pair<BigDecimal, Subject<BigDecimal>>>(
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
-            { v, bs -> v.bind(bs, { it.toBigDecimalSafe() } ) }
+            { v, (state, actionSubject) -> v.setText("$state"); v.bindOutgoing(actionSubject, { it.toBigDecimalSafe() } ) }
+        )
+        val inputRecipeFactory2 = ViewItemRecipeFactory<EditText, Triple<BigDecimal, Subject<Pair<Category, BigDecimal>>, Category>>(
+            { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
+            { v, (state, actionSubject, category) -> v.setText("$state"); v.bindOutgoing(actionSubject, { Pair(category, it.toBigDecimalSafe()) } ) }
         )
         val oneWayCellRecipeBuilder = ViewItemRecipeFactory<TextView, Observable<BigDecimal>>(
             { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
             { v, bs -> v.bindIncoming(bs) }
         )
-        planVM.planCategoryAmounts
+        combineLatestAsTuple(planVM.statePlanCAs, planVM.stateExpectedIncome)
             .observeOn(AndroidSchedulers.mainThread())
-            .flatMap { it.observable }
-            .observe(this) {
-                myTableView_plan.setRecipes(
-                    listOf(
-                        headerRecipeFactory.createOne("Category")
-                                + cellRecipeFactory.createOne("Expected Income")
-                                + cellRecipeFactory.createOne("Default")
-                                + cellRecipeFactory.createMany(it.keys.map { it.name }),
-                        headerRecipeFactory.createOne("Plan")
-                                + inputRecipeFactory.createOne(planVM.expectedIncome)
-                                + oneWayCellRecipeBuilder.createOne(planVM.difference)
-                                + inputRecipeFactory.createMany(it.values)
-                    ).reflectXY()
+            //*Without this, state changes will be needlessly pushed to
+            // ui when user uses an edit text.
+            .distinctUntilChanged()
+            .map {
+                listOf(
+                    headerRecipeFactory.createOne("Category")
+                            + cellRecipeFactory.createOne("Expected Income")
+                            + cellRecipeFactory.createOne("Default")
+                            + cellRecipeFactory.createMany(it.first.keys.map { it.name }),
+                    headerRecipeFactory.createOne("Plan")
+                            + inputRecipeFactory.createOne(Pair(it.second,
+                        planVM.actionPushExpectedIncome))
+                            + oneWayCellRecipeBuilder.createOne(planVM.stateDifference)
+                            + inputRecipeFactory2.createMany(it.first.map { kv -> Triple(
+                        it.first[kv.key]?:BigDecimal.ZERO,
+                        planVM.actionPushPlanCategoryAmount,
+                        kv.key
+                    )})
                 )
             }
+            .observe(this) { myTableView_plan.setRecipes(it.reflectXY()) }
     }
 }

@@ -10,7 +10,7 @@ class SourceHashMap<K, V>(): HashMap<K, V>() {
     constructor(map: Map<K, V>): this() { putAll(map) }
     private val observableMapPublisher = PublishSubject.create<MutableMap<K, BehaviorSubject<V>>>()
     val additionsObservablePublisher = PublishSubject.create<Map.Entry<K, BehaviorSubject<V>>>()
-    private val observableMap = mutableMapOf<K, BehaviorSubject<V>>()
+    val observableMap = mutableMapOf<K, BehaviorSubject<V>>()
     /**
      * this observable emits whenever SourceHashMap is added to.
      * It emits a K : BehaviorSubject<V> pair
@@ -23,12 +23,33 @@ class SourceHashMap<K, V>(): HashMap<K, V>() {
      */
     val observable = observableMapPublisher
         .startWithItem(observableMap)
-        .map { observableMap.toImmutableMap() }
+//        .map { observableMap.toImmutableMap() }
+        .toBehaviorSubject()
+    /**
+     * this observable emits whenever SourceHashMap is edited.
+     * It emits this
+     */
+    val observableThis = observable
+        .map { this }
         .toBehaviorSubject()
 
     private fun createItemObservable(key: K, value: V): BehaviorSubject<V> {
         return BehaviorSubject.createDefault(value)
             .also { it.skip(1).subscribe { super.put(key, it) } } // TODO("dispose")
+    }
+
+    // this logic could be improved in the next iteration
+    fun prepareKey(key: K) {
+        val value = BehaviorSubject.create<V>()
+            .also { it.skip(1).subscribe { super.put(key, it) } } // TODO("dispose")
+        observableMap.put(key, value)
+        additionsObservablePublisher.onNext(object: Map.Entry<K, BehaviorSubject<V>> {
+            override val key: K
+                get() = key
+            override val value: BehaviorSubject<V>
+                get() = value
+        })
+        observableMapPublisher.onNext(observableMap)
     }
 
     // # Override HashMap functions
@@ -47,6 +68,7 @@ class SourceHashMap<K, V>(): HashMap<K, V>() {
         observableMapPublisher.onNext(observableMap)
     }
 
+    // TODO("might just need to onNext, not create a new observable every time")
     override fun put(key: K, value: V): V? {
         val x = super.put(key, value)
         val valueRedefined = createItemObservable(key, value)

@@ -8,5 +8,6 @@ import java.math.BigDecimal
 
 interface IMyDaoWrapper: MyDao {
     val transactions: Observable<List<Transaction>>
-    val planCategoryAmounts: Observable<SourceHashMap<Category, BigDecimal>>
+    val planCategoryAmounts: Observable<Map<Category, BigDecimal>>
+    fun bindToPlanCategoryAmounts(map: SourceHashMap<Category, BigDecimal>)
 }

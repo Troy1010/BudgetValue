@@ -1,33 +1,56 @@
 package com.example.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
+import com.example.budgetvalue.SourceHashMap
 import com.example.budgetvalue.combineLatestAsTuple
+import com.example.budgetvalue.extensions.logzz
 import com.example.budgetvalue.extensions.total
 import com.example.budgetvalue.layer_data.Repo
-import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.BehaviorSubject
+import com.example.budgetvalue.model_app.Category
+import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 
 class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
-    val planCategoryAmounts = repo.planCategoryAmounts
-    val uncategorizedPlan = planCategoryAmounts
+    val actionPushExpectedIncome = PublishSubject.create<BigDecimal>()
+        .also { it.subscribe(repo::pushExpectedIncome) }
+//    val actionsPushPlanCategoryAmount = SourceHashMap<Category, BigDecimal>()
+//        .also {
+//            // # Feed choosableCategories into it
+//            // TODO("simplify")
+//            categoriesAppVM.choosableCategories.subscribe { categories ->
+//                categories
+//                    .filter { category -> category !in it.observableMap.keys }
+//                    .forEach { category -> it.prepareKey(category) }
+//            }
+//        }
+//        .also { repo.bindToPlanCategoryAmounts(it) }
+
+    val actionPushPlanCategoryAmount = PublishSubject.create<Pair<Category, BigDecimal>>()
+        .also { it.logzz("eee").subscribe() }
+    val statePlanCAs = Observable.merge(actionPushPlanCategoryAmount, repo.planCategoryAmounts)
+        .scan(SourceHashMap<Category, BigDecimal>()) { acc, x:Any ->
+            // TODO("simplify")
+            if (x is Pair<*, *>) {
+                x as Pair<Category, BigDecimal>
+                acc[x.first] = x.second
+            } else if (x is Map<*, *>) {
+                x as Map<Category, BigDecimal>
+                acc.clear(); acc.putAll(x)
+            }
+            acc
+        }
+        .logzz("xxx")
+        .toBehaviorSubject()
+    val statePlanUncategorized = statePlanCAs
         .flatMap { it.observable }
+        .logzz("ttt")
         .map { it.values }
         .total()
         .replay(1).refCount()
-    val expectedIncome = BehaviorSubject.createDefault(repo.fetchExpectedIncome())
-        // # Bind expectedIncome -> Repo
-        .also { it.skip(1).subscribe { repo.pushExpectedIncome(it) } }
-    val difference = combineLatestAsTuple(expectedIncome, uncategorizedPlan)
+    val stateExpectedIncome = actionPushExpectedIncome
+        .startWithItem(repo.fetchExpectedIncome())
+    val stateDifference = combineLatestAsTuple(stateExpectedIncome, statePlanUncategorized)
         .map { it.first - it.second }
-    init {
-        // # Bind chooseableCategories -> planCA
-        combineLatestAsTuple(categoriesAppVM.choosableCategories, planCategoryAmounts)
-            .subscribeOn(Schedulers.io())
-            .subscribe { (chooseableCategories, planCA) ->
-                chooseableCategories.asSequence()
-                    .filter { it !in planCA }
-                    .forEach { planCA[it] = BigDecimal.ZERO }
-            }
-    }
 }
