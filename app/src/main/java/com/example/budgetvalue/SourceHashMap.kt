@@ -23,14 +23,7 @@ class SourceHashMap<K, V>(): HashMap<K, V>() {
      */
     val observable = observableMapPublisher
         .startWithItem(observableMap)
-//        .map { observableMap.toImmutableMap() }
-        .toBehaviorSubject()
-    /**
-     * this observable emits whenever SourceHashMap is edited.
-     * It emits this
-     */
-    val observableThis = observable
-        .map { this }
+        .map { observableMap.toMap() }
         .toBehaviorSubject()
 
     private fun createItemObservable(key: K, value: V): BehaviorSubject<V> {
