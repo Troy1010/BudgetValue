@@ -23,14 +23,15 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
                 1 -> { responsePlanCAs!!
                     acc.clear() // TODO("clear might ruin pairwise totals, maybe use onComplete?")
                     acc.putAll(responsePlanCAs)
-                    stateChooseableCategories
-                        ?.filter { category -> category !in acc.observableMap.keys }
-                        ?.forEach { category -> acc[category] = BigDecimal.ZERO }
+                    if (stateChooseableCategories!=null)
+                        acc.putAll(stateChooseableCategories
+                            .associate { it to BigDecimal.ZERO }
+                            .filter { kv -> kv.key !in acc.keys })
                 }
                 2 -> { stateChooseableCategories!!
-                    stateChooseableCategories
-                        .filter { category -> category !in acc.observableMap.keys }
-                        .forEach { category -> acc[category] = BigDecimal.ZERO }
+                    acc.putAll(stateChooseableCategories
+                        .associate { it to BigDecimal.ZERO }
+                        .filter { kv -> kv.key !in acc.keys })
                 }
             }
             acc
