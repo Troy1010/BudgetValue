@@ -58,11 +58,11 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
                             + cellRecipeFactory.createMany(it.first.keys.map { it.name }),
                     headerRecipeFactory.createOne("Plan")
                             + inputRecipeFactory.createOne(Pair(it.second,
-                        planVM.actionPushExpectedIncome))
+                        planVM.intentPushExpectedIncome))
                             + oneWayCellRecipeBuilder.createOne(planVM.stateDifference)
                             + inputRecipeFactory2.createMany(it.first.map { kv -> Triple(
                         it.first[kv.key]?:BigDecimal.ZERO,
-                        planVM.actionPushPlanCategoryAmount,
+                        planVM.intentPushPlanCategoryAmount,
                         kv.key
                     )})
                 )

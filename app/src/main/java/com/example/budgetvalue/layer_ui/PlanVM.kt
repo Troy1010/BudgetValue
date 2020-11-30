@@ -12,7 +12,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 
 class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
-    val actionPushExpectedIncome = PublishSubject.create<BigDecimal>()
+    val intentPushExpectedIncome = PublishSubject.create<BigDecimal>()
         .also { it.subscribe(repo::pushExpectedIncome) }
 //    val actionsPushPlanCategoryAmount = SourceHashMap<Category, BigDecimal>()
 //        .also {
@@ -26,8 +26,8 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
 //        }
 //        .also { repo.bindToPlanCategoryAmounts(it) }
 
-    val actionPushPlanCategoryAmount = PublishSubject.create<Pair<Category, BigDecimal>>()
-    val statePlanCAs = Observable.merge(actionPushPlanCategoryAmount, repo.planCategoryAmounts)
+    val intentPushPlanCategoryAmount = PublishSubject.create<Pair<Category, BigDecimal>>()
+    val statePlanCAs = Observable.merge(intentPushPlanCategoryAmount, repo.planCategoryAmounts)
         .scan(SourceHashMap<Category, BigDecimal>()) { acc, x:Any ->
             // TODO("simplify")
             if (x is Pair<*, *>) {
@@ -44,7 +44,7 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
         .switchMap { it.observable }
         .flatMap { it.values.total() }
         .replay(1).refCount()
-    val stateExpectedIncome = actionPushExpectedIncome
+    val stateExpectedIncome = intentPushExpectedIncome
         .startWithItem(repo.fetchExpectedIncome())
     val stateDifference = combineLatestAsTuple(stateExpectedIncome, statePlanUncategorized)
         .map { it.first - it.second }
