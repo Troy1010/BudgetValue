@@ -82,23 +82,9 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
             .observe(viewLifecycleOwner) { historyColumnDatas ->
                 tmTableView_history.setRecipes(
                     historyColumnDatas.map {
-                        headerRecipeFactory.createOne(it.title) + cellRecipeFactory.createOne("") + cellRecipeFactory.createOne(
-                            "") + cellRecipeFactory.createOne("") + cellRecipeFactory.createOne("") + cellRecipeFactory.createOne(
-                            "") + cellRecipeFactory.createOne("") + cellRecipeFactory.createOne("")
+                        headerRecipeFactory.createOne(it.title) +
+                                cellRecipeFactory.createMany(it.categoryAmounts.values.map { it.toString() })
                     }.reflectXY()
-
-//                    listOf(
-//                        headerRecipeFactory.createOne("Category")
-//                                + cellRecipeFactory.createOne("Default"),
-//                        headerRecipeFactory.createOne("Plan")
-//                                + oneWayRecipeFactory.createOne(planVM.stateDifference),
-//                        headerRecipeFactory.createOne("Actual")
-//                                + cellRecipeFactory.createOne(""),
-//                        headerRecipeFactory.createOne("Reconcile")
-//                                + oneWayRecipeFactory.createOne(reconcileVM.reconcileDefault),
-//                        headerRecipeFactory.createOne("Budgeted")
-//                                + oneWayRecipeFactory.createOne(reconcileVM.uncategorizedBudgeted)
-//                    ).reflectXY()
                 )
             }
     }
