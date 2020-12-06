@@ -2,6 +2,7 @@ package com.example.budgetvalue.dependency_injection
 
 import com.example.budgetvalue.layer_data.Repo
 import com.example.budgetvalue.layer_ui.CategoriesAppVM
+import com.example.budgetvalue.layer_ui.DatePeriodGetter
 import dagger.Component
 import javax.inject.Singleton
 
@@ -14,4 +15,5 @@ import javax.inject.Singleton
 interface AppComponent {
     fun getRepo(): Repo
     fun getCategoriesAppVM(): CategoriesAppVM
+    fun getDatePeriodGetter(): DatePeriodGetter
 }

@@ -446,6 +446,14 @@ fun <A, B, C> mergeWithIndex(a: Observable<A>, b: Observable<B>, c: Observable<C
         .map { Quadruple(it.index, it.tuple.first.unbox(), it.tuple.second.unbox(), it.tuple.third.unbox()) }
 }
 
+
+
+fun <A, B, C> combineLatestImpatient(a: Observable<A>, b: Observable<B>, c: Observable<C>): Observable<Triple<A?, B?, C?>> {
+    return combineLatestAsTuple(a.boxStartNull(), b.boxStartNull(), c.boxStartNull())
+        .skip(1)
+        .map { Triple(it.first.unbox(), it.second.unbox(), it.third.unbox()) }
+}
+
 fun <T> Box<T>.unbox(): T {
     return this.first
 }
