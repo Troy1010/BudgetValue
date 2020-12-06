@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class ViewItemRecipeRecyclerViewAdapter(
     val context: Context,
-    val viewItemRecipe2D: () -> List<List<IViewItemRecipe>>,
+    val viewItemRecipe2D: () -> List<Iterable<IViewItemRecipe>>,
     val columnWidths: List<Int>
 ) : RecyclerView.Adapter<ViewItemRecipeRecyclerViewAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)

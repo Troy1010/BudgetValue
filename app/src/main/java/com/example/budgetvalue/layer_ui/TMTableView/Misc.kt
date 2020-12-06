@@ -7,7 +7,7 @@ import androidx.core.view.get
 import com.example.budgetvalue.R
 
 
-fun createRow(context: Context, rowViewItemRecipes: List<IViewItemRecipe>): LinearLayout {
+fun createRow(context: Context, rowViewItemRecipes: Iterable<IViewItemRecipe>): LinearLayout {
     val view = LinearLayout(context)
     rowViewItemRecipes.forEach { view.addView(it.viewProvider()) }
     view.showDividers = LinearLayout.SHOW_DIVIDER_MIDDLE
@@ -18,7 +18,7 @@ fun createRow(context: Context, rowViewItemRecipes: List<IViewItemRecipe>): Line
 
 fun bindRow(
     rowView: LinearLayout,
-    rowViewItemRecipes: List<IViewItemRecipe>,
+    rowViewItemRecipes: Iterable<IViewItemRecipe>,
     columnWidths: List<Int>
 ) {
     for ((xPos, cellData) in rowViewItemRecipes.withIndex()) {

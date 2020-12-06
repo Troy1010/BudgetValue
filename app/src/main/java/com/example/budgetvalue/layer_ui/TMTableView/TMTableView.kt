@@ -19,7 +19,7 @@ class TMTableView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr) {
     var tableView: View? = null
     val tableViewWidth = BehaviorSubject.create<Int>()
-    val _recipe2D = BehaviorSubject.create<List<List<IViewItemRecipe>>>()
+    val _recipe2D = BehaviorSubject.create<Iterable<Iterable<IViewItemRecipe>>>()
 
     init {
         // # Inflate measureMe
@@ -36,23 +36,23 @@ class TMTableView @JvmOverloads constructor(
         if (w != oldw) tableViewWidth.onNext(w)
     }
 
-    fun setRecipes(viewItemRecipe2D: List<List<IViewItemRecipe>>) {
+    fun setRecipes(viewItemRecipe2D: Iterable<Iterable<IViewItemRecipe>>) {
         _recipe2D.onNext(viewItemRecipe2D)
     }
 
-    fun inflateAndBind(viewItemRecipe2D: List<List<IViewItemRecipe>>, columnWidths: List<Int>) {
+    fun inflateAndBind(viewItemRecipe2D: Iterable<Iterable<IViewItemRecipe>>, columnWidths: List<Int>) {
         // # Inflate tableView
         if (tableView == null) tableView = View.inflate(context, R.layout.tableview_layout, this)
         // # Column Headers
         frame_headers.removeAllViews()
-        val row = createRow(context, viewItemRecipe2D[0])
-        bindRow(row, viewItemRecipe2D[0], columnWidths)
+        val row = createRow(context, viewItemRecipe2D.first())
+        bindRow(row, viewItemRecipe2D.first(), columnWidths)
         frame_headers.addView(row)
         frame_headers.setPadding(0, 0, 0, 0)
         // # Cells
         recyclerview_tier1.adapter = ViewItemRecipeRecyclerViewAdapter(
             context,
-            { ArrayList(viewItemRecipe2D).also { it.removeAt(0) } },
+            { ArrayList(viewItemRecipe2D.toMutableList()).also { it.removeAt(0) } },
             columnWidths
         )
         recyclerview_tier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
