@@ -412,6 +412,11 @@ data class IndexAndTuple<T>(
     val tuple: T
 )
 
+data class TypeAndValue(
+    val type: Type,
+    val tuple: Any
+)
+
 fun <A, B> combineLatestWithIndex(a: Observable<A>, b: Observable<B>): Observable<Triple<Int, A, B>> {
     return Observable.merge(a.map { 0 }, b.map { 1 })
         .zipWith(combineLatestAsTuple(a,b)) { index, tuple -> IndexAndTuple(index, tuple) }
@@ -424,6 +429,13 @@ fun <A, B, C> combineLatestWithIndex(a: Observable<A>, b: Observable<B>, c: Obse
         combineLatestAsTuple(a,b,c)
     ) { index, tuple -> IndexAndTuple(index, tuple) }
         .map { Quadruple(it.index, it.tuple.first, it.tuple.second, it.tuple.third) }
+}
+
+fun <A, B, C> mergeWithType(a: Observable<A>, b: Observable<B>, c: Observable<C>): Observable<TypeAndValue> {
+    return Observable.zip(
+        Observable.merge(a.map { getTypeForGson<A>() }, b.map { getTypeForGson<B>() }, c.map { getTypeForGson<C>() }),
+        Observable.merge(a, b, c)
+    ) { type, value -> TypeAndValue(type, value) }
 }
 
 fun <A, B, C> mergeWithIndex(a: Observable<A>, b: Observable<B>, c: Observable<C>): Observable<Quadruple<Int, A?, B?, C?>> {
