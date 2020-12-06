@@ -21,7 +21,7 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
             when (i) {
                 0 -> { intentPushPlanCA!!; acc[intentPushPlanCA.first] = intentPushPlanCA.second }
                 1 -> { responsePlanCAs!!
-                    acc.clear() // TODO("clear might ruin pairwise totals, maybe use onComplete?")
+                    acc.clear()
                     acc.putAll(responsePlanCAs)
                     if (stateChooseableCategories!=null)
                         acc.putAll(stateChooseableCategories
