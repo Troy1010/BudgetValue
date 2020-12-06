@@ -5,14 +5,9 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
+import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import com.example.budgetvalue.R
-import com.example.budgetvalue.combineLatestAsTuple
-import com.example.budgetvalue.layer_ui.TMTableView.ColumnWidthCalculator.generateColumnWidths
 import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
-import com.example.budgetvalue.layer_ui.TMTableView.ViewItemRecipeRecyclerViewAdapter
-import com.example.budgetvalue.layer_ui.TMTableView.bindRow
-import com.example.budgetvalue.layer_ui.TMTableView.createRow
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.tableview_layout.view.*
 
@@ -39,12 +34,12 @@ class TMTableView2 @JvmOverloads constructor(
         // # Freeze columns/rows
         // TODO("Frozen columns/rows")
         // # Cells
-        recyclerview_tier1.adapter = ViewItemRecipeRecyclerViewAdapter(
+        recyclerview_tier1.adapter = ViewItemRecipeRecyclerViewAdapter2(
             context,
-            { viewItemRecipe2D.toMutableList() }
+            viewItemRecipe2D.toMutableList()
         )
-        recyclerview_tier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
-        recyclerview_tier1.addItemDecoration(Decoration(context, Decoration.VERTICAL, true))
+        recyclerview_tier1.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
+        recyclerview_tier1.addItemDecoration(Decoration(context, Decoration.HORIZONTAL, true))
     }
 }
 

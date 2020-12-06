@@ -79,12 +79,13 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
         )
         historyVM.stateHistoryColumnData
             .observeOn(AndroidSchedulers.mainThread())
+            .distinctUntilChanged() //*idk why this emitted a copy without distinctUntilChanged
             .observe(viewLifecycleOwner) { historyColumnDatas ->
                 tmTableView_history.setRecipes(
                     historyColumnDatas.map {
                         headerRecipeFactory.createOne(it.title) +
                                 cellRecipeFactory.createMany(it.categoryAmounts.values.map { it.toString() })
-                    }.reflectXY()
+                    }
                 )
             }
     }

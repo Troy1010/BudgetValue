@@ -5,6 +5,8 @@ import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import com.example.budgetvalue.R
+import com.example.budgetvalue.intrinsicHeight2
+import com.example.budgetvalue.intrinsicWidth2
 import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 
 fun createColumn(context: Context, columnViewItemRecipes: Iterable<IViewItemRecipe>): LinearLayout {
@@ -24,5 +26,15 @@ fun bindColumn(
         .withIndex()
         .forEach { (yPos, cellData) ->
             cellData.bindAction(columnView[yPos], cellData.data)
+            columnView[yPos].layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
         }
+    // * I'm not sure why WRAP_CONTENT does not work. This is the workaround.
+    columnView.layoutParams =
+        LinearLayout.LayoutParams(
+            columnView.intrinsicWidth2,
+            columnView.intrinsicHeight2
+        )
 }
