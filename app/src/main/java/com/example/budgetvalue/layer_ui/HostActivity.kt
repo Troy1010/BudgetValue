@@ -42,7 +42,8 @@ class HostActivity : AppCompatActivity() {
             }
             bSuccessfulNavigation
         }
-        bottom_navigation.selectedItemId = R.id.menu_plan
+        // # Start at..
+        bottom_navigation.selectedItemId = R.id.menu_history
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
