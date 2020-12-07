@@ -56,7 +56,7 @@ class TMTableView @JvmOverloads constructor(
             columnWidths
         )
         recyclerview_tier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
-        recyclerview_tier1.addItemDecoration(Decoration(context, Decoration.VERTICAL, true))
+        recyclerview_tier1.addItemDecoration(Decoration(context, Decoration.VERTICAL))
     }
 }
 

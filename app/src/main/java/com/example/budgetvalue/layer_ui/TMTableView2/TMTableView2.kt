@@ -40,7 +40,7 @@ class TMTableView2 @JvmOverloads constructor(
             viewItemRecipe2D.toMutableList()
         )
         recyclerview_tier1.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
-        recyclerview_tier1.addItemDecoration(Decoration(context, Decoration.HORIZONTAL, true))
+        recyclerview_tier1.addItemDecoration(Decoration(context, Decoration.HORIZONTAL))
     }
 }
 
