@@ -2,11 +2,8 @@ package com.example.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
 import com.example.budgetvalue.SourceArrayList
-import com.example.budgetvalue.combineLatestAsTuple
 import com.example.budgetvalue.combineLatestImpatient
-import com.example.budgetvalue.model_app.HistoryColumnData
-import com.example.budgetvalue.model_app.Plan
-import com.example.budgetvalue.model_app.Reconciliation
+import com.example.budgetvalue.model_app.*
 import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import java.time.LocalDate
@@ -23,29 +20,45 @@ class HistoryVM(val transactionsVM: TransactionsVM, val reconcileVM: ReconcileVM
     // Plan comes from "saves", but there can only be 1 save per block
     // Reconciliations come from "saves"
     // Actuals comes from transactions
-    val stateHistoryColumnData =
+    val stateHistoryColumnDatas =
         combineLatestImpatient(reconciliations, plans, transactionsVM.transactionBlocks)
             .map { (reconciliations, plans, transactionBlocks) ->
-                plans!!
+                // # Define blocks
+                val blockPeriodsUnsorted = ArrayList<LocalDatePeriod>()
+                plans?.forEach { blockPeriodsUnsorted.add(it.localDatePeriod.blockingFirst()) }
+                transactionBlocks?.forEach { blockPeriodsUnsorted.add(it.localDatePeriod) }
+                reconciliations?.forEach { blockPeriodsUnsorted.add(datePeriodGetter.getDatePeriod(it.localDate).blockingFirst()) }
+                val blockPeriods = blockPeriodsUnsorted.sortedBy { it.startDate }
+                logz("blockPeriods:${blockPeriodsUnsorted}")
+                // # Define historyColumnDatas
                 val historyColumnDatas = arrayListOf<HistoryColumnData>()
-                for (plan in plans) { // TODO("Sort by startDate")
-                    // # Add Plan
-                    historyColumnDatas.add(HistoryColumnData(
-                        "Plan",
-                        plan.planCategoryAmounts
-                    ))
-                    // # Add Actual
-                    if (transactionBlocks != null)
-                        transactionBlocks.find { it.localDatePeriod == plan.localDatePeriod.blockingFirst() }
+                for (blockPeriod in blockPeriods) {
+                    // ## Add Plan
+                    if (plans != null)
+                        plans.find { it.localDatePeriod.blockingFirst() == blockPeriod }
                             ?.also {
+                                logz("Adding Plan..")
+                                historyColumnDatas.add(HistoryColumnData(
+                                    "Plan",
+                                    it.planCategoryAmounts
+                                ))
+                            }
+                    // ## Add Actual
+                    logz("actuals:${transactionBlocks}")
+                    if (transactionBlocks != null)
+                        transactionBlocks.find { it.localDatePeriod == blockPeriod }
+                            ?.also {
+                                logz("Adding Actual..")
                                 historyColumnDatas.add(HistoryColumnData(
                                     "Actual",
                                     it.categoryAmounts
                                 ))
                             }
-                    // # Add Reconciliations
+                    // ## Add Reconciliations
+                    logz("reconciliations:${reconciliations}")
                     if (reconciliations != null)
-                        for (reconciliation in reconciliations.filter { it.localDate in plan.localDatePeriod.blockingFirst() }) {
+                        for (reconciliation in reconciliations.filter { it.localDate in blockPeriod }) {
+                            logz("Adding Reconciliation..")
                             historyColumnDatas.add(HistoryColumnData(
                                 "Reconciliation",
                                 reconciliation.categoryAmounts

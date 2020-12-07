@@ -12,16 +12,13 @@ import com.example.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.example.budgetvalue.layer_ui.misc.bindIncoming
 import com.example.budgetvalue.layer_ui.misc.bindOutgoing
 import com.example.budgetvalue.model_app.Category
-import com.example.budgetvalue.reflectXY
 import com.example.budgetvalue.toBigDecimalSafe
-import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin.misc.createVmFactory
 import com.tminus1010.tmcommonkotlin_rx.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.Subject
 import kotlinx.android.synthetic.main.frag_history.*
-import kotlinx.android.synthetic.main.frag_reconcile.*
 import java.math.BigDecimal
 
 class HistoryFrag : Fragment(R.layout.frag_history) {
@@ -77,7 +74,7 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
             { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
             { v, bs -> v.bindIncoming(bs) }
         )
-        historyVM.stateHistoryColumnData
+        historyVM.stateHistoryColumnDatas
             .observeOn(AndroidSchedulers.mainThread())
             .distinctUntilChanged() //*idk why this emitted a copy without distinctUntilChanged
             .observe(viewLifecycleOwner) { historyColumnDatas ->
