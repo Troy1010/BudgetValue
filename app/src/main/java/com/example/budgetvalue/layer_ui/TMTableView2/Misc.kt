@@ -31,7 +31,7 @@ fun bindColumn(
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
         }
-    // * I'm not sure why WRAP_CONTENT does not work. This is the workaround.
+    // * I'm not sure why WRAP_CONTENT does not work. This is a workaround.
     columnView.layoutParams =
         LinearLayout.LayoutParams(
             columnView.intrinsicWidth2,
