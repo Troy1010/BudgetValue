@@ -6,5 +6,6 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:textStyle="bold"
-    tools:text="HEADER"
+    android:paddingHorizontal="5dp"
+    tools:text="Header"
     android:textColor="@color/colorOnDark" />
