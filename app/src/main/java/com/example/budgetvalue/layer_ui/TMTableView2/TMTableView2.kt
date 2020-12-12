@@ -2,20 +2,21 @@ package com.example.budgetvalue.layer_ui.TMTableView2
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
-import androidx.core.view.children
+import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.R
+import com.example.budgetvalue.extensions.children
+import com.example.budgetvalue.intrinsicHeight2
 import com.example.budgetvalue.layer_ui.TMTableView.Decoration
 import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 import com.tminus1010.tmcommonkotlin.logz.logz
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.tableview_layout.view.*
+import java.lang.Math.max
 
 class TMTableView2 @JvmOverloads constructor(
     context: Context,
@@ -48,13 +49,39 @@ class TMTableView2 @JvmOverloads constructor(
             context,
             viewItemRecipe2D
         )
-        recyclerview_tier1.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
+        val addViewObservable = BehaviorSubject.create<Unit>()
+        recyclerview_tier1.layoutManager = object : LinearLayoutManager(context, HORIZONTAL, false) {
+            override fun addView(child: View?) {
+                super.addView(child)
+                addViewObservable.onNext(Unit)
+                // # Set yScroll
+                // TODO("This needs to be observed somewhere else so that it is fired when a view becomes visible")
+                ignoreVertScroll = true
+                (child as? RecyclerView)?.scrollBy(0, yScrollPosObservable.value)
+                ignoreVertScroll = false
+            }
+        }
         recyclerview_tier1.addItemDecoration(Decoration(context, Decoration.HORIZONTAL))
+        // ## Synchronize visible heights
+        fun syncHeights() {
+            val heightBarrier = recyclerview_tier1.layoutManager!!.children
+                .fold(0) { acc, v -> max(acc, v.intrinsicHeight2) }
+            logz("heightBarrier:$heightBarrier")
+            recyclerview_tier1.layoutManager!!.children
+                .forEach {
+                    logz("height:${it.height}")
+                    logz("layoutParamsHeight:${it.layoutParams.height}")
+//                    if (it.height != heightBarrier)
+//                        it.updateLayoutParams { height = heightBarrier }
+//                    it.requestLayout()
+                }
+        }
+        addViewObservable.subscribe { logz("addViewObservable") ; syncHeights() }
         // ## Synchronize vertical scrolling
         disposable?.dispose()
         disposable = vertScrollObservable
             .subscribe { (v, dy) ->
-                recyclerview_tier1.children
+                this.recyclerview_tier1.layoutManager!!.children
                     .filter { it != v }
                     .forEach {
                         ignoreVertScroll = true
