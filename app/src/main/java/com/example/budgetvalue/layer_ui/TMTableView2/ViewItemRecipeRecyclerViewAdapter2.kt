@@ -3,7 +3,6 @@ package com.example.budgetvalue.layer_ui.TMTableView2
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 
@@ -19,7 +18,7 @@ class ViewItemRecipeRecyclerViewAdapter2(
     }
     override fun getItemViewType(position: Int) = position
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        bindColumn((holder.itemView as RecyclerView), viewItemRecipe2D[holder.adapterPosition])
+        bindColumn2((holder.itemView as RecyclerView), viewItemRecipe2D[holder.adapterPosition])
     }
     override fun getItemCount() = viewItemRecipe2D.size
 }

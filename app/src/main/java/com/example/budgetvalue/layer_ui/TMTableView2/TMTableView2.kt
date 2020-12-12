@@ -2,13 +2,18 @@ package com.example.budgetvalue.layer_ui.TMTableView2
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
+import androidx.core.view.children
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
+import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.R
 import com.example.budgetvalue.layer_ui.TMTableView.Decoration
 import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
+import com.tminus1010.tmcommonkotlin.logz.logz
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.tableview_layout.view.*
 
@@ -17,8 +22,12 @@ class TMTableView2 @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
+    val TAG = TMTableView2::class.java.simpleName
+
     var tableView: View? = null
     val _recipe2D = BehaviorSubject.create<Iterable<Iterable<IViewItemRecipe>>>()
+
+    var disposable: Disposable? = null
 
     init {
         _recipe2D
@@ -41,6 +50,18 @@ class TMTableView2 @JvmOverloads constructor(
         )
         recyclerview_tier1.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
         recyclerview_tier1.addItemDecoration(Decoration(context, Decoration.HORIZONTAL))
+        // ## Synchronize vertical scrolling
+        disposable?.dispose()
+        disposable = vertScrollObservable
+            .subscribe { (v, dy) ->
+                recyclerview_tier1.children
+                    .filter { it != v }
+                    .forEach {
+                        ignoreVertScroll = true
+                        (it as? RecyclerView)?.scrollBy(0, dy)
+                        ignoreVertScroll = false
+                    }
+            }
     }
 }
 
