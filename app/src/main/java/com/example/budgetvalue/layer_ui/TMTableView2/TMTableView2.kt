@@ -7,6 +7,7 @@ import android.widget.FrameLayout
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import com.example.budgetvalue.R
 import com.example.budgetvalue.extensions.children
 import com.example.budgetvalue.intrinsicHeight2
@@ -21,7 +22,7 @@ import java.lang.Math.max
 class TMTableView2 @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
     val TAG = TMTableView2::class.java.simpleName
 
@@ -45,38 +46,9 @@ class TMTableView2 @JvmOverloads constructor(
         // # Freeze columns/rows
         // TODO("Frozen columns/rows")
         // # Cells
-        recyclerview_tier1.adapter = ViewItemRecipeRecyclerViewAdapter2(
-            context,
-            viewItemRecipe2D
-        )
-        val addViewObservable = BehaviorSubject.create<Unit>()
-        recyclerview_tier1.layoutManager = object : LinearLayoutManager(context, HORIZONTAL, false) {
-            override fun addView(child: View?) {
-                super.addView(child)
-                addViewObservable.onNext(Unit)
-                // # Set yScroll
-                // TODO("This needs to be observed somewhere else so that it is fired when a view becomes visible")
-                ignoreVertScroll = true
-                (child as? RecyclerView)?.scrollBy(0, yScrollPosObservable.value)
-                ignoreVertScroll = false
-            }
-        }
+        recyclerview_tier1.adapter = ViewItemRecipeRecyclerViewAdapter2(context, viewItemRecipe2D)
+        recyclerview_tier1.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
         recyclerview_tier1.addItemDecoration(Decoration(context, Decoration.HORIZONTAL))
-        // ## Synchronize visible heights
-        fun syncHeights() {
-            val heightBarrier = recyclerview_tier1.layoutManager!!.children
-                .fold(0) { acc, v -> max(acc, v.intrinsicHeight2) }
-            logz("heightBarrier:$heightBarrier")
-            recyclerview_tier1.layoutManager!!.children
-                .forEach {
-                    logz("height:${it.height}")
-                    logz("layoutParamsHeight:${it.layoutParams.height}")
-//                    if (it.height != heightBarrier)
-//                        it.updateLayoutParams { height = heightBarrier }
-//                    it.requestLayout()
-                }
-        }
-        addViewObservable.subscribe { logz("addViewObservable") ; syncHeights() }
         // ## Synchronize vertical scrolling
         disposable?.dispose()
         disposable = vertScrollObservable
