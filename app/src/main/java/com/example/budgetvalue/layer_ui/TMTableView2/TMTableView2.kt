@@ -4,20 +4,16 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
-import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import com.example.budgetvalue.R
 import com.example.budgetvalue.extensions.children
-import com.example.budgetvalue.intrinsicHeight2
 import com.example.budgetvalue.layer_ui.TMTableView.Decoration
 import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
-import com.tminus1010.tmcommonkotlin.logz.logz
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.tableview_layout.view.*
-import java.lang.Math.max
 
 class TMTableView2 @JvmOverloads constructor(
     context: Context,
