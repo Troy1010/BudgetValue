@@ -4,14 +4,8 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import androidx.core.view.updateLayoutParams
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.budgetvalue.intrinsicHeight2
-import com.example.budgetvalue.intrinsicWidth2
 import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
-import com.tminus1010.tmcommonkotlin.logz.logz
-import com.tminus1010.tmcommonkotlin.misc.fnName
 
 class InnerRecyclerViewAdapter(
     val context: Context,
@@ -34,7 +28,6 @@ class InnerRecyclerViewAdapter(
         )
         val bindAction = viewItemRecipes[holder.adapterPosition].bindAction
         val data = viewItemRecipes[holder.adapterPosition].data
-        logz("$fnName. data:$data")
         bindAction(view, data)
     }
 
