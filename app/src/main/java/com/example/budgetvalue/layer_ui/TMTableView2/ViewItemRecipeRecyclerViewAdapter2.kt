@@ -1,12 +1,16 @@
 package com.example.budgetvalue.layer_ui.TMTableView2
 
 import android.content.Context
+import android.graphics.Rect
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.extensions.scrollTo
+import com.example.budgetvalue.intrinsicHeight2
 import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
+import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 
 class ViewItemRecipeRecyclerViewAdapter2(
     val context: Context,
@@ -15,6 +19,40 @@ class ViewItemRecipeRecyclerViewAdapter2(
     constructor(context: Context, viewItemRecipe2D: Iterable<Iterable<IViewItemRecipe>>)
             : this(context, viewItemRecipe2D.toList())
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
+    //
+    val attachedViews = ArrayList<View>()
+    val attachedViewsObservable = BehaviorSubject.create<List<View>>()
+    val heightBarrier = attachedViewsObservable
+        .map { it.fold(0) { acc, v -> Math.max(acc, v.intrinsicHeight2) } }
+        .toBehaviorSubject()
+    init {
+        // # Synchronize heights
+        heightBarrier
+            .distinctUntilChanged()
+            .withLatestFrom(attachedViewsObservable) { heightBarrier, views ->
+                views
+                    .filter { it.measuredHeight != heightBarrier }
+                    .forEachIndexed { i, v ->
+                        v as RecyclerView
+                        val curHeight = v.measuredHeight
+                        v.addItemDecoration(object : RecyclerView.ItemDecoration() {
+                            override fun getItemOffsets(
+                                outRect: Rect,
+                                view: View,
+                                parent: RecyclerView,
+                                state: RecyclerView.State
+                            ) {
+                                val position = parent.getChildAdapterPosition(view)
+                                if (position + 1 == parent.adapter?.itemCount) {
+                                    outRect.bottom += heightBarrier - curHeight
+                                }
+                                view.intrinsicHeight2
+                            }
+                        })
+                    }
+            }
+            .subscribe()
+    }
     override fun onCreateViewHolder(parent: ViewGroup, yPos: Int): ViewHolder {
         return ViewHolder(createColumn(context, viewItemRecipe2D[yPos]))
     }
@@ -25,9 +63,17 @@ class ViewItemRecipeRecyclerViewAdapter2(
     override fun getItemCount() = viewItemRecipe2D.size
     override fun onViewAttachedToWindow(holder: ViewHolder) {
         super.onViewAttachedToWindow(holder)
+        attachedViews.add(holder.itemView)
+        attachedViewsObservable.onNext(attachedViews)
         // # Synchronize vertical scroll initialization
         ignoreVertScroll = true
         ((holder.itemView as RecyclerView).layoutManager as LinearLayoutManager).scrollTo(yScrollPosObservable.value)
+        holder.itemView.intrinsicHeight2
         ignoreVertScroll = false
+    }
+    override fun onViewDetachedFromWindow(holder: ViewHolder) {
+        super.onViewDetachedFromWindow(holder)
+        attachedViews.remove(holder.itemView)
+        attachedViewsObservable.onNext(attachedViews)
     }
 }
