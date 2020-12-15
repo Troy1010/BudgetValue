@@ -48,7 +48,7 @@ class HistoryVM(val transactionsVM: TransactionsVM, val reconcileVM: ReconcileVM
                     if (transactionBlocks != null)
                         transactionBlocks.find { it.localDatePeriod == blockPeriod }
                             ?.also {
-                                logz("Adding Actual..")
+                                logz("Adding Actual.. blockPeriod:${blockPeriod.startDate}")
                                 historyColumnDatas.add(HistoryColumnData(
                                     "Actual",
                                     it.categoryAmounts
