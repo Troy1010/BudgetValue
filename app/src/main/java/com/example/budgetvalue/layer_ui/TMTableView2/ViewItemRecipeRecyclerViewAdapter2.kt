@@ -21,39 +21,6 @@ class ViewItemRecipeRecyclerViewAdapter2(
             : this(context, viewItemRecipe2D.toList())
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
     //
-    val attachedViews = ArrayList<View>()
-    val attachedViewsObservable = BehaviorSubject.create<List<View>>()
-    val heightBarrier = attachedViewsObservable
-        .map { it.fold(0) { acc, v -> Math.max(acc, v.intrinsicWidth2) } }
-        .toBehaviorSubject()
-    init {
-        // # Synchronize heights
-        heightBarrier
-            .distinctUntilChanged()
-            .withLatestFrom(attachedViewsObservable) { heightBarrier, views ->
-                views
-                    .filter { it.measuredWidth != heightBarrier }
-                    .forEachIndexed { i, v ->
-                        v as RecyclerView
-                        val curHeight = v.measuredWidth
-                        v.addItemDecoration(object : RecyclerView.ItemDecoration() {
-                            override fun getItemOffsets(
-                                outRect: Rect,
-                                view: View,
-                                parent: RecyclerView,
-                                state: RecyclerView.State
-                            ) {
-                                val position = parent.getChildAdapterPosition(view)
-                                if (position + 1 == parent.adapter?.itemCount) {
-                                    outRect.bottom += heightBarrier - curHeight
-                                }
-                                view.measureUnspecified()
-                            }
-                        })
-                    }
-            }
-            .subscribe()
-    }
     override fun onCreateViewHolder(parent: ViewGroup, yPos: Int): ViewHolder {
         return ViewHolder(createInnerRV(context, viewItemRecipe2D[yPos]))
     }
@@ -64,17 +31,10 @@ class ViewItemRecipeRecyclerViewAdapter2(
     override fun getItemCount() = viewItemRecipe2D.size
     override fun onViewAttachedToWindow(holder: ViewHolder) {
         super.onViewAttachedToWindow(holder)
-        attachedViews.add(holder.itemView)
-        attachedViewsObservable.onNext(attachedViews)
         // # Synchronize vertical scroll initialization
         ignoreScroll = true
         ((holder.itemView as RecyclerView).layoutManager as LinearLayoutManager).scrollTo(scrollPosObservable.value)
         holder.itemView.measureUnspecified()
         ignoreScroll = false
-    }
-    override fun onViewDetachedFromWindow(holder: ViewHolder) {
-        super.onViewDetachedFromWindow(holder)
-        attachedViews.remove(holder.itemView)
-        attachedViewsObservable.onNext(attachedViews)
     }
 }
