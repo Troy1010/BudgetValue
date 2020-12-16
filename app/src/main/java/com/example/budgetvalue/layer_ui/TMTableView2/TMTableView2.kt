@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
+import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.example.budgetvalue.R
 import com.example.budgetvalue.extensions.children
 import com.example.budgetvalue.layer_ui.TMTableView.Decoration
@@ -43,18 +43,18 @@ class TMTableView2 @JvmOverloads constructor(
         // TODO("Frozen columns/rows")
         // # Cells
         recyclerview_tier1.adapter = ViewItemRecipeRecyclerViewAdapter2(context, viewItemRecipe2D)
-        recyclerview_tier1.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
-        recyclerview_tier1.addItemDecoration(Decoration(context, Decoration.HORIZONTAL))
+        recyclerview_tier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
+        recyclerview_tier1.addItemDecoration(Decoration(context, Decoration.VERTICAL))
         // ## Synchronize vertical scrolling
         disposable?.dispose()
-        disposable = vertScrollObservable
+        disposable = scrollObservable
             .subscribe { (v, dy) ->
                 this.recyclerview_tier1.layoutManager!!.children
                     .filter { it != v }
                     .forEach {
-                        ignoreVertScroll = true
-                        (it as? RecyclerView)?.scrollBy(0, dy)
-                        ignoreVertScroll = false
+                        ignoreScroll = true
+                        (it as? RecyclerView)?.scrollBy(dy, 0)
+                        ignoreScroll = false
                     }
             }
     }

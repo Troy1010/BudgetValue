@@ -4,42 +4,42 @@ import android.content.Context
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.budgetvalue.intrinsicWidth2
+import com.example.budgetvalue.intrinsicHeight2
 import com.example.budgetvalue.layer_ui.TMTableView.Decoration
 import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
-val vertScrollObservable = BehaviorSubject.create<Pair<View, Int>>() // TODO("Hacky")
-var ignoreVertScroll = false // TODO("Hacky")
-val yScrollPosObservable = vertScrollObservable
+val scrollObservable = BehaviorSubject.create<Pair<View, Int>>() // TODO("Hacky")
+var ignoreScroll = false // TODO("Hacky")
+val scrollPosObservable = scrollObservable
     .map { it.second }
     .startWithItem(0)
     .scan(0) { acc, value -> acc + value }
     .toBehaviorSubject()
 
-fun createColumn(context: Context, columnViewItemRecipes: Iterable<IViewItemRecipe>): RecyclerView {
+fun createInnerRV(context: Context, columnViewItemRecipes: Iterable<IViewItemRecipe>): RecyclerView {
     return RecyclerView(context)
         .apply {
             adapter = InnerRecyclerViewAdapter(context, columnViewItemRecipes)
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            addItemDecoration(Decoration(context, Decoration.VERTICAL))
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            addItemDecoration(Decoration(context, Decoration.HORIZONTAL))
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    if (!ignoreVertScroll)
-                        vertScrollObservable.onNext(Pair(recyclerView, dy))
+                    if (!ignoreScroll)
+                        scrollObservable.onNext(Pair(recyclerView, dy))
                     super.onScrolled(recyclerView, dx, dy)
                 }
             })
         }
 }
 
-fun bindColumn2(
+fun bindInnerRV(
     columnView: RecyclerView,
     columnViewItemRecipes: Iterable<IViewItemRecipe>,
 ) {
     columnView.layoutParams = RecyclerView.LayoutParams(
-        columnView.intrinsicWidth2,
-        RecyclerView.LayoutParams.MATCH_PARENT
+        RecyclerView.LayoutParams.MATCH_PARENT,
+        columnView.intrinsicHeight2
     )
 }

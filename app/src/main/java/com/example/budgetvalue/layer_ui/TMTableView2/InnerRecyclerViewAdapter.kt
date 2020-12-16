@@ -23,8 +23,8 @@ class InnerRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val view = holder.itemView
         view.layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.MATCH_PARENT
         )
         val bindAction = viewItemRecipes[holder.adapterPosition].bindAction
         val data = viewItemRecipes[holder.adapterPosition].data

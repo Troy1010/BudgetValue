@@ -37,7 +37,7 @@ import kotlin.collections.HashMap
 fun Iterable<Transaction>.getBlocks(numOfWeeks: Int): HashMap<LocalDate, java.util.ArrayList<Transaction>> {
     val transactionBlocks = HashMap<LocalDate, java.util.ArrayList<Transaction>>()
     for (transaction in this) {
-        if (transactionBlocks[transaction.date.previous(DayOfWeek.MONDAY)]==null)
+        if (transactionBlocks[transaction.date.previous(DayOfWeek.MONDAY)] == null)
             transactionBlocks[transaction.date.previous(DayOfWeek.MONDAY)] = arrayListOf()
         transactionBlocks[transaction.date.previous(DayOfWeek.MONDAY)]!!.add(transaction)
     }
@@ -47,13 +47,13 @@ fun Iterable<Transaction>.getBlocks(numOfWeeks: Int): HashMap<LocalDate, java.ut
     var keysToRemove = arrayListOf<LocalDate>()
     for (x in transactionBlocks.toSortedMap(compareBy { it })) {
         val transactions = x.value
-        if (i==0) {
+        if (i == 0) {
             mmm = transactions
         } else {
             keysToRemove.add(x.key)
             mmm.addAll(transactions)
         }
-        i = (i + 1)%numOfWeeks
+        i = (i + 1) % numOfWeeks
     }
     for (key in keysToRemove) {
         transactionBlocks.remove(key)
@@ -62,15 +62,12 @@ fun Iterable<Transaction>.getBlocks(numOfWeeks: Int): HashMap<LocalDate, java.ut
 }
 
 
-
-
-
 fun <A, B, C, D, E> combineLatestAsTuple(
     a: ObservableSource<A>,
     b: ObservableSource<B>,
     c: ObservableSource<C>,
     d: ObservableSource<D>,
-    e: ObservableSource<E>
+    e: ObservableSource<E>,
 ): Observable<Quintuple<A, B, C, D, E>> {
     return Observable.combineLatest(
         listOf(a, b, c, d, e)
@@ -84,11 +81,12 @@ fun <A, B, C, D, E> combineLatestAsTuple(
         )
     }
 }
+
 fun <A, B, C, D> combineLatestAsTuple(
     a: ObservableSource<A>,
     b: ObservableSource<B>,
     c: ObservableSource<C>,
-    d: ObservableSource<D>
+    d: ObservableSource<D>,
 ): Observable<Quadruple<A, B, C, D>> {
     return Observable.combineLatest(
         listOf(a, b, c, d)
@@ -101,10 +99,11 @@ fun <A, B, C, D> combineLatestAsTuple(
         )
     }
 }
+
 fun <A, B, C> combineLatestAsTuple(
     a: ObservableSource<A>,
     b: ObservableSource<B>,
-    c: ObservableSource<C>
+    c: ObservableSource<C>,
 ): Observable<Triple<A, B, C>> {
     return Observable.combineLatest(
         listOf(a, b, c)
@@ -117,7 +116,10 @@ fun <A, B, C> combineLatestAsTuple(
     }
 }
 
-fun <A, B> combineLatestAsTuple(a: ObservableSource<A>, b: ObservableSource<B>): Observable<Pair<A, B>> {
+fun <A, B> combineLatestAsTuple(
+    a: ObservableSource<A>,
+    b: ObservableSource<B>,
+): Observable<Pair<A, B>> {
     return Observable.combineLatest(
         listOf(a, b)
     ) {
@@ -137,7 +139,6 @@ fun <A> combineLatestAsTuple(a: ObservableSource<A>): Observable<Box<A>> {
         )
     }
 }
-
 
 
 fun <T> LiveData<T>.observeOnce(action: (T?) -> Unit) {
@@ -198,7 +199,7 @@ fun generateLipsum(size: Int): List<String> {
         var s = ""
         val sizeOfWord = (4..30).random()
         for (j in 0 until sizeOfWord) {
-            s+=alphabet.random()
+            s += alphabet.random()
         }
         returning.add(s)
     }
@@ -210,7 +211,6 @@ fun generateLipsum(): String {
 }
 
 
-
 fun PublishSubject<Unit>.onNext() {
     this.onNext(Unit)
 }
@@ -220,7 +220,10 @@ fun PublishSubject<Unit>.emit() {
 }
 
 @SuppressLint("CheckResult")
-fun <T> Observable<T>.logSubscribe2(msgPrefix: String? = null, bType: Boolean = false): Observable<T> {
+fun <T> Observable<T>.logSubscribe2(
+    msgPrefix: String? = null,
+    bType: Boolean = false,
+): Observable<T> {
     val tempMsgPrefix: String = if (msgPrefix == null) "" else {
         "$msgPrefix`"
     }
@@ -247,7 +250,7 @@ val GridLayoutManager.visibleChildren: HashMap<Int, View>
         val children = HashMap<Int, View>()
         for (childIndex in this.findFirstVisibleItemPosition()..this.findLastVisibleItemPosition()) {
             val child = this.getChildAt(childIndex)
-            if (child==null) {
+            if (child == null) {
                 logz("Warning`GridLayoutManager.visibleChildren`child was null at position:${childIndex}")
                 logz("this.findFirstVisibleItemPosition():${this.findFirstVisibleItemPosition()}, this.findLastVisibleItemPosition():${this.findLastVisibleItemPosition()}")
             } else {
@@ -258,20 +261,23 @@ val GridLayoutManager.visibleChildren: HashMap<Int, View>
     }
 
 
-
 fun Throwable.narrate(): String {
     val sw = StringWriter()
     this.printStackTrace(PrintWriter(sw))
     return sw.toString()
 }
 
-val View.intrinsicHeight2 : Int
+val View.intrinsicHeight2: Int
     get() {
         this.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
         return this.measuredHeight
     }
 
-val View.intrinsicWidth2 : Int
+fun View.measureUnspecified() {
+    this.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+}
+
+val View.intrinsicWidth2: Int
     get() {
         this.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
         return this.measuredWidth
@@ -315,7 +321,11 @@ fun <T> make1d(orientation: Orientation, z2dCollection: List<List<T>>): List<T?>
     return returning.toList()
 }
 
-fun <T> generate2dArrayList(xSize: Int, ySize: Int, orientation: Orientation): ArrayList<ArrayList<T?>> {
+fun <T> generate2dArrayList(
+    xSize: Int,
+    ySize: Int,
+    orientation: Orientation,
+): ArrayList<ArrayList<T?>> {
     val returning = ArrayList<ArrayList<T?>>()
     when (orientation) {
         Orientation.Horizontal -> {
@@ -339,7 +349,6 @@ fun <T> generate2dArrayList(xSize: Int, ySize: Int, orientation: Orientation): A
 }
 
 
-
 fun <K, V> HashMap<K, V>.sortByList(list: List<K>): SortedMap<K, V> {
     return toSortedMap(compareBy { list.indexOf(it) })
 }
@@ -357,8 +366,8 @@ fun <T> List<List<T>>.reflectXY(): ArrayList<ArrayList<T>> {
     return returning
 }
 
-fun <T,V> List<HashMap<T,V>>.reflectXY(): HashMap<T,ArrayList<V>> {
-    val returning = HashMap<T,ArrayList<V>>()
+fun <T, V> List<HashMap<T, V>>.reflectXY(): HashMap<T, ArrayList<V>> {
+    val returning = HashMap<T, ArrayList<V>>()
     for (yPos in this.indices) {
         for (xPos in this[yPos].keys) {
             if (returning[xPos] == null)
@@ -371,16 +380,23 @@ fun <T,V> List<HashMap<T,V>>.reflectXY(): HashMap<T,ArrayList<V>> {
 }
 
 
-
 fun String.toBigDecimalSafe(): BigDecimal {
-    return try { this.toBigDecimal() } catch (e:NumberFormatException) { BigDecimal.ZERO }
+    return try {
+        this.toBigDecimal()
+    } catch (e: NumberFormatException) {
+        BigDecimal.ZERO
+    }
 }
 
-fun <A, B> zip(a: ObservableSource<A>, b: ObservableSource<B>) : Observable<Pair<A, B>> {
+fun <A, B> zip(a: ObservableSource<A>, b: ObservableSource<B>): Observable<Pair<A, B>> {
     return Observable.zip(a, b, BiFunction<A, B, Pair<A, B>> { a, b -> Pair(a, b) })
 }
 
-fun <A, B, C> zip(a: ObservableSource<A>, b: ObservableSource<B>, c: ObservableSource<C>) : Observable<Triple<A, B, C>> {
+fun <A, B, C> zip(
+    a: ObservableSource<A>,
+    b: ObservableSource<B>,
+    c: ObservableSource<C>,
+): Observable<Triple<A, B, C>> {
     return Observable.zip(a,
         b,
         c,
@@ -391,8 +407,8 @@ fun <A, B, C, D> zip(
     a: ObservableSource<A>,
     b: ObservableSource<B>,
     c: ObservableSource<C>,
-    d: ObservableSource<D>
-) : Observable<Quadruple<A, B, C, D>> {
+    d: ObservableSource<D>,
+): Observable<Quadruple<A, B, C, D>> {
     return Observable.zip(a, b, c, d, Function4<A, B, C, D, Quadruple<A, B, C, D>> { a, b, c, d ->
         Quadruple(
             a,
@@ -409,46 +425,71 @@ fun <T> getTypeForGson(): Type {
 
 data class IndexAndTuple<T>(
     val index: Int,
-    val tuple: T
+    val tuple: T,
 )
 
 data class TypeAndValue(
     val type: Type,
-    val tuple: Any
+    val tuple: Any,
 )
 
-fun <A, B> combineLatestWithIndex(a: Observable<A>, b: Observable<B>): Observable<Triple<Int, A, B>> {
+fun <A, B> combineLatestWithIndex(
+    a: Observable<A>,
+    b: Observable<B>,
+): Observable<Triple<Int, A, B>> {
     return Observable.merge(a.map { 0 }, b.map { 1 })
-        .zipWith(combineLatestAsTuple(a,b)) { index, tuple -> IndexAndTuple(index, tuple) }
+        .zipWith(combineLatestAsTuple(a, b)) { index, tuple -> IndexAndTuple(index, tuple) }
         .map { Triple(it.index, it.tuple.first, it.tuple.second) }
 }
 
-fun <A, B, C> combineLatestWithIndex(a: Observable<A>, b: Observable<B>, c: Observable<C>): Observable<Quadruple<Int, A, B, C>> {
+fun <A, B, C> combineLatestWithIndex(
+    a: Observable<A>,
+    b: Observable<B>,
+    c: Observable<C>,
+): Observable<Quadruple<Int, A, B, C>> {
     return Observable.zip(
         Observable.merge(a.map { 0 }, b.map { 1 }, c.map { 2 }),
-        combineLatestAsTuple(a,b,c)
+        combineLatestAsTuple(a, b, c)
     ) { index, tuple -> IndexAndTuple(index, tuple) }
         .map { Quadruple(it.index, it.tuple.first, it.tuple.second, it.tuple.third) }
 }
 
-fun <A, B, C> mergeWithType(a: Observable<A>, b: Observable<B>, c: Observable<C>): Observable<TypeAndValue> {
+fun <A, B, C> mergeWithType(
+    a: Observable<A>,
+    b: Observable<B>,
+    c: Observable<C>,
+): Observable<TypeAndValue> {
     return Observable.zip(
-        Observable.merge(a.map { getTypeForGson<A>() }, b.map { getTypeForGson<B>() }, c.map { getTypeForGson<C>() }),
+        Observable.merge(a.map { getTypeForGson<A>() },
+            b.map { getTypeForGson<B>() },
+            c.map { getTypeForGson<C>() }),
         Observable.merge(a, b, c)
     ) { type, value -> TypeAndValue(type, value) }
 }
 
-fun <A, B, C> mergeWithIndex(a: Observable<A>, b: Observable<B>, c: Observable<C>): Observable<Quadruple<Int, A?, B?, C?>> {
+fun <A, B, C> mergeWithIndex(
+    a: Observable<A>,
+    b: Observable<B>,
+    c: Observable<C>,
+): Observable<Quadruple<Int, A?, B?, C?>> {
     return Observable.zip(
         Observable.merge(a.map { 0 }, b.map { 1 }, c.map { 2 }),
         combineLatestAsTuple(a.boxStartNull(), b.boxStartNull(), c.boxStartNull()).skip(1)
     ) { index, tuple -> IndexAndTuple(index, tuple) }
-        .map { Quadruple(it.index, it.tuple.first.unbox(), it.tuple.second.unbox(), it.tuple.third.unbox()) }
+        .map {
+            Quadruple(it.index,
+                it.tuple.first.unbox(),
+                it.tuple.second.unbox(),
+                it.tuple.third.unbox())
+        }
 }
 
 
-
-fun <A, B, C> combineLatestImpatient(a: Observable<A>, b: Observable<B>, c: Observable<C>): Observable<Triple<A?, B?, C?>> {
+fun <A, B, C> combineLatestImpatient(
+    a: Observable<A>,
+    b: Observable<B>,
+    c: Observable<C>,
+): Observable<Triple<A?, B?, C?>> {
     return combineLatestAsTuple(a.boxStartNull(), b.boxStartNull(), c.boxStartNull())
         .skip(1)
         .map { Triple(it.first.unbox(), it.second.unbox(), it.third.unbox()) }

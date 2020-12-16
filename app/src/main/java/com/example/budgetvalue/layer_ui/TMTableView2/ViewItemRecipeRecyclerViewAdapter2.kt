@@ -7,8 +7,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.extensions.scrollTo
-import com.example.budgetvalue.intrinsicHeight2
+import com.example.budgetvalue.intrinsicWidth2
 import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
+import com.example.budgetvalue.measureUnspecified
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
@@ -23,7 +24,7 @@ class ViewItemRecipeRecyclerViewAdapter2(
     val attachedViews = ArrayList<View>()
     val attachedViewsObservable = BehaviorSubject.create<List<View>>()
     val heightBarrier = attachedViewsObservable
-        .map { it.fold(0) { acc, v -> Math.max(acc, v.intrinsicHeight2) } }
+        .map { it.fold(0) { acc, v -> Math.max(acc, v.intrinsicWidth2) } }
         .toBehaviorSubject()
     init {
         // # Synchronize heights
@@ -31,10 +32,10 @@ class ViewItemRecipeRecyclerViewAdapter2(
             .distinctUntilChanged()
             .withLatestFrom(attachedViewsObservable) { heightBarrier, views ->
                 views
-                    .filter { it.measuredHeight != heightBarrier }
+                    .filter { it.measuredWidth != heightBarrier }
                     .forEachIndexed { i, v ->
                         v as RecyclerView
-                        val curHeight = v.measuredHeight
+                        val curHeight = v.measuredWidth
                         v.addItemDecoration(object : RecyclerView.ItemDecoration() {
                             override fun getItemOffsets(
                                 outRect: Rect,
@@ -46,7 +47,7 @@ class ViewItemRecipeRecyclerViewAdapter2(
                                 if (position + 1 == parent.adapter?.itemCount) {
                                     outRect.bottom += heightBarrier - curHeight
                                 }
-                                view.intrinsicHeight2
+                                view.measureUnspecified()
                             }
                         })
                     }
@@ -54,11 +55,11 @@ class ViewItemRecipeRecyclerViewAdapter2(
             .subscribe()
     }
     override fun onCreateViewHolder(parent: ViewGroup, yPos: Int): ViewHolder {
-        return ViewHolder(createColumn(context, viewItemRecipe2D[yPos]))
+        return ViewHolder(createInnerRV(context, viewItemRecipe2D[yPos]))
     }
     override fun getItemViewType(position: Int) = position
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        bindColumn2((holder.itemView as RecyclerView), viewItemRecipe2D[holder.adapterPosition])
+        bindInnerRV((holder.itemView as RecyclerView), viewItemRecipe2D[holder.adapterPosition])
     }
     override fun getItemCount() = viewItemRecipe2D.size
     override fun onViewAttachedToWindow(holder: ViewHolder) {
@@ -66,10 +67,10 @@ class ViewItemRecipeRecyclerViewAdapter2(
         attachedViews.add(holder.itemView)
         attachedViewsObservable.onNext(attachedViews)
         // # Synchronize vertical scroll initialization
-        ignoreVertScroll = true
-        ((holder.itemView as RecyclerView).layoutManager as LinearLayoutManager).scrollTo(yScrollPosObservable.value)
-        holder.itemView.intrinsicHeight2
-        ignoreVertScroll = false
+        ignoreScroll = true
+        ((holder.itemView as RecyclerView).layoutManager as LinearLayoutManager).scrollTo(scrollPosObservable.value)
+        holder.itemView.measureUnspecified()
+        ignoreScroll = false
     }
     override fun onViewDetachedFromWindow(holder: ViewHolder) {
         super.onViewDetachedFromWindow(holder)

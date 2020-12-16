@@ -12,6 +12,7 @@ import com.example.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.example.budgetvalue.layer_ui.misc.bindIncoming
 import com.example.budgetvalue.layer_ui.misc.bindOutgoing
 import com.example.budgetvalue.model_app.Category
+import com.example.budgetvalue.reflectXY
 import com.example.budgetvalue.toBigDecimalSafe
 import com.tminus1010.tmcommonkotlin.misc.createVmFactory
 import com.tminus1010.tmcommonkotlin_rx.observe
@@ -82,7 +83,7 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
                     historyColumnDatas.map {
                         headerRecipeFactory.createOne(it.title) +
                                 cellRecipeFactory.createMany(it.categoryAmounts.values.map { it.toString() })
-                    }
+                    }.reflectXY()
                 )
             }
     }
