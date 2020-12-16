@@ -24,6 +24,7 @@ class TMTableView2 @JvmOverloads constructor(
 
     var tableView: View? = null
     val _recipe2D = BehaviorSubject.create<Iterable<Iterable<IViewItemRecipe>>>()
+        .also { recipe2D = it }
 
     var disposable: Disposable? = null
 

@@ -4,8 +4,10 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
+import java.lang.Integer.max
 
 class InnerRecyclerViewAdapter(
     val context: Context,
@@ -33,5 +35,13 @@ class InnerRecyclerViewAdapter(
 
     override fun getItemCount(): Int {
         return viewItemRecipes.size
+    }
+
+    override fun onViewAttachedToWindow(holder: ViewHolder) {
+        super.onViewAttachedToWindow(holder)
+        val w = recipe2D!!.value
+            .map { try { it.toList()[holder.adapterPosition].intrinsicWidth } catch (e:Exception) { 0 } }
+            .fold(0) { acc, v -> max(acc, v) }
+        holder.itemView.updateLayoutParams { width = w }
     }
 }

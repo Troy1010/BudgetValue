@@ -10,6 +10,7 @@ import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
+var recipe2D : BehaviorSubject<Iterable<Iterable<IViewItemRecipe>>>? = null  // TODO("Hacky, only supports 1")
 val scrollObservable = BehaviorSubject.create<Pair<View, Int>>() // TODO("Hacky")
 var ignoreScroll = false // TODO("Hacky")
 val scrollPosObservable = scrollObservable
