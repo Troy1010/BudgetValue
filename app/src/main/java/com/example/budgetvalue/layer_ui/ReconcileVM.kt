@@ -54,7 +54,7 @@ class ReconcileVM(
 
     fun getActiveCategories(transactionSet: Iterable<Transaction>): HashSet<Category> {
         return transactionSet
-            .fold(HashSet()) { acc, transaction -> acc.addAll(transaction.categoryAmounts.keys); acc }
+            .fold(HashSet()) { acc, transaction -> acc.apply { addAll(transaction.categoryAmounts.keys) } }
     }
 
     init {
