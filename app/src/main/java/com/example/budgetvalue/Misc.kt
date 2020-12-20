@@ -353,6 +353,11 @@ fun <K, V> HashMap<K, V>.sortByList(list: List<K>): SortedMap<K, V> {
     return toSortedMap(compareBy { list.indexOf(it) })
 }
 
+
+fun <T> Iterable<Iterable<T>>.reflectXY(): ArrayList<ArrayList<T>> {
+    return this.map { it.toList() }.toList().reflectXY()
+}
+
 fun <T> List<List<T>>.reflectXY(): ArrayList<ArrayList<T>> {
     val returning = ArrayList<ArrayList<T>>()
     for (yPos in this.indices) {
