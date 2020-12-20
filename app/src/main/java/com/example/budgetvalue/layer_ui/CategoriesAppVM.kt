@@ -35,7 +35,8 @@ class CategoriesAppVM : ICategoryParser {
             Category("Misc", Category.Type.Always),
             Category("Gas", Category.Type.Always),
             Category("Vanity Food", Category.Type.Reservoir),
-            Category("Emergency", Category.Type.Reservoir)
+            Category("Emergency", Category.Type.Reservoir),
+            Category("Charity", Category.Type.Reservoir)
         ))
     }
 
