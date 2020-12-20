@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.budgetvalue.*
+import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 import com.example.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.example.budgetvalue.layer_ui.misc.bindIncoming
 import com.example.budgetvalue.layer_ui.misc.bindOutgoing
@@ -77,10 +78,20 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
             .distinctUntilChanged() //*idk why this emitted a copy without distinctUntilChanged
             .observe(viewLifecycleOwner) { (historyColumnDatas, activeCategories) ->
                 tmTableView_history.setRecipes(
-                    historyColumnDatas.map {
-                        headerRecipeFactory.createOne(it.title) +
-                                cellRecipeFactory.createMany(activeCategories.map { k -> it.categoryAmounts[k]?.toString()?:"" })
-                    }.reflectXY()
+                    arrayListOf<Iterable<IViewItemRecipe>>(
+                        headerRecipeFactory.createOne("Categories") +
+                                cellRecipeFactory.createMany(activeCategories.map { it.name })
+                    )
+                        .apply {
+                            addAll(
+                                historyColumnDatas.map {
+                                    headerRecipeFactory.createOne(it.title) +
+                                            cellRecipeFactory.createMany(activeCategories.map { k ->
+                                                it.categoryAmounts[k]?.toString() ?: ""
+                                            })
+                                }
+                            )
+                        }.reflectXY()
                 )
             }
     }
