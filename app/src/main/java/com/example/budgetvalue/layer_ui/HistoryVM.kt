@@ -69,4 +69,8 @@ class HistoryVM(val transactionsVM: TransactionsVM, val reconcileVM: ReconcileVM
             }
             .doOnNext { logz("historyColumnData:${it}") }
             .toBehaviorSubject()
+
+    // # Active Categories
+    val activeCategories = stateHistoryColumnDatas
+        .map { it.fold(HashSet<Category>()) { acc, v -> acc.apply { addAll(v.categoryAmounts.map{ it.key }) } } }
 }
