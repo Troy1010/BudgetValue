@@ -6,14 +6,11 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.example.budgetvalue.App
-import com.example.budgetvalue.R
+import com.example.budgetvalue.*
 import com.example.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.example.budgetvalue.layer_ui.misc.bindIncoming
 import com.example.budgetvalue.layer_ui.misc.bindOutgoing
 import com.example.budgetvalue.model_app.Category
-import com.example.budgetvalue.reflectXY
-import com.example.budgetvalue.toBigDecimalSafe
 import com.tminus1010.tmcommonkotlin.misc.createVmFactory
 import com.tminus1010.tmcommonkotlin_rx.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -75,14 +72,14 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
             { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
             { v, bs -> v.bindIncoming(bs) }
         )
-        historyVM.stateHistoryColumnDatas
+        combineLatestAsTuple(historyVM.stateHistoryColumnDatas, historyVM.activeCategories)
             .observeOn(AndroidSchedulers.mainThread())
             .distinctUntilChanged() //*idk why this emitted a copy without distinctUntilChanged
-            .observe(viewLifecycleOwner) { historyColumnDatas ->
+            .observe(viewLifecycleOwner) { (historyColumnDatas, activeCategories) ->
                 tmTableView_history.setRecipes(
                     historyColumnDatas.map {
                         headerRecipeFactory.createOne(it.title) +
-                                cellRecipeFactory.createMany(it.categoryAmounts.values.map { it.toString() })
+                                cellRecipeFactory.createMany(activeCategories.map { k -> it.categoryAmounts[k]?.toString()?:"" })
                     }.reflectXY()
                 )
             }
