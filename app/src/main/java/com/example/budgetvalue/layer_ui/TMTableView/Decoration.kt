@@ -7,35 +7,33 @@ import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.R
 
-class Decoration(context: Context, val orientation:Int = VERTICAL) : RecyclerView.ItemDecoration() {
+class Decoration(
+    context: Context, val orientation: Int = VERTICAL,
+) : RecyclerView.ItemDecoration() {
     companion object {
         const val HORIZONTAL = 0
         const val VERTICAL = 1
     }
-    val mDivider = ContextCompat.getDrawable(context, R.drawable.divider)!!
+
+    val dividerDrawable = ContextCompat.getDrawable(context, R.drawable.divider)!!
     override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         canvas.save()
-        var bFirst = true
-        for (child in parent.children.toList()) {
-            if (bFirst) {
-                bFirst = false
-                continue
-            }
+        for (child in parent.children.drop(1)) {
             val params = child.layoutParams as RecyclerView.LayoutParams
 
             when (orientation) {
                 HORIZONTAL -> {
                     val left = child.left + params.leftMargin
-                    val right = left + mDivider.intrinsicWidth
-                    mDivider.setBounds(left, 0, right, parent.height)
+                    val right = left + dividerDrawable.intrinsicWidth
+                    dividerDrawable.setBounds(left, 0, right, parent.height)
                 }
                 else -> {
                     val top = child.top + params.topMargin
-                    val bottom = top + mDivider.intrinsicHeight
-                    mDivider.setBounds(0, top, parent.width, bottom)
+                    val bottom = top + dividerDrawable.intrinsicHeight
+                    dividerDrawable.setBounds(0, top, parent.width, bottom)
                 }
             }
-            mDivider.draw(canvas)
+            dividerDrawable.draw(canvas)
         }
         canvas.restore()
     }
