@@ -93,6 +93,7 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
                             )
                         }.reflectXY()
                 )
+                tmTableView_history.setSeparators(emptyMap())
             }
     }
 }

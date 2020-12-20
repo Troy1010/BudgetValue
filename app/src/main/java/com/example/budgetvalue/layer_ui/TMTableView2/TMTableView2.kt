@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.example.budgetvalue.R
+import com.example.budgetvalue.combineLatestAsTuple
 import com.example.budgetvalue.extensions.children
 import com.example.budgetvalue.layer_ui.TMTableView.Decoration
 import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
@@ -25,19 +26,24 @@ class TMTableView2 @JvmOverloads constructor(
     var tableView: View? = null
     val _recipe2D = BehaviorSubject.create<Iterable<Iterable<IViewItemRecipe>>>()
         .also { recipe2D = it }
+    val _separatorMap = BehaviorSubject.create<Map<Int, IViewItemRecipe>>()
 
     var disposable: Disposable? = null
 
     init {
-        _recipe2D
-            .subscribe { inflateAndBind(it) }
+        combineLatestAsTuple(_recipe2D, _separatorMap)
+            .subscribe { inflateAndBind(it.first, it.second) }
     }
 
     fun setRecipes(viewItemRecipe2D: Iterable<Iterable<IViewItemRecipe>>) {
         _recipe2D.onNext(viewItemRecipe2D)
     }
 
-    fun inflateAndBind(viewItemRecipe2D: Iterable<Iterable<IViewItemRecipe>>) {
+    fun setSeparators(separatorMap: Map<Int, IViewItemRecipe>) {
+        _separatorMap.onNext(separatorMap)
+    }
+
+    fun inflateAndBind(viewItemRecipe2D: Iterable<Iterable<IViewItemRecipe>>, separatorMap: Map<Int, IViewItemRecipe>) {
         // # Inflate tableView
         if (tableView == null) tableView = View.inflate(context, R.layout.tableview_layout, this)
         // # Freeze columns/rows
