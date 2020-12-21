@@ -93,7 +93,7 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
                             )
                         }.reflectXY()
                 )
-                tmTableView_history.setSeparators(emptyMap())
+                tmTableView_history.setSeparators(mapOf(3 to cellRecipeFactory.createOne("qwer").first()))
             }
     }
 }
