@@ -99,7 +99,7 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
                         }.reflectXY()
                 )
                 // # setSeparators
-                tmTableView_history.setDiviers(mapOf(3 to titledDividerRecipeFactory.createOne2("CATEGORY A").first()))
+                tmTableView_history.setDiviers(mapOf(3 to titledDividerRecipeFactory.createOne("CATEGORY A")))
             }
     }
 }
