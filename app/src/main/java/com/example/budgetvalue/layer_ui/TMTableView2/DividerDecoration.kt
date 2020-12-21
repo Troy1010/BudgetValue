@@ -1,30 +1,31 @@
 package com.example.budgetvalue.layer_ui.TMTableView2
 
-import android.content.Context
 import android.graphics.Canvas
-import android.util.Log
-import androidx.core.content.ContextCompat
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Rect
 import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
-import com.example.budgetvalue.R
-import com.example.budgetvalue.intrinsicHeight2
-import com.example.budgetvalue.intrinsicWidth2
 import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 import com.example.budgetvalue.measureUnspecified
-import com.tminus1010.tmcommonkotlin.logz.logz
 
 class DividerDecoration(
-    context: Context, val orientation: Int = VERTICAL, val separatorMap: Map<Int, IViewItemRecipe>
+    val separatorMap: Map<Int, IViewItemRecipe>,
+    val orientation: Int = VERTICAL,
 ) : RecyclerView.ItemDecoration() {
     companion object {
         const val HORIZONTAL = 0
         const val VERTICAL = 1
     }
 
-    val defaultDividerDrawable = ContextCompat.getDrawable(context, R.drawable.divider)!!
+    val dividerHeightDefault = 1
+    val dividerPaintDefault by lazy {
+        Paint().apply { style = Paint.Style.FILL; color = Color.parseColor("#ffffff") }
+    }
+
     override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         canvas.save()
-        // ! Assuming that the last row does not need a separator below it.
+        // ! Assuming that the last row does not need a separator after it.
         for ((i, child) in parent.children.withIndex().toList().dropLast(1)) {
             val params = child.layoutParams as RecyclerView.LayoutParams
 
@@ -40,18 +41,16 @@ class DividerDecoration(
             } else {
                 when (orientation) {
                     HORIZONTAL -> {
-                        TODO("HORIZONTAL is not yet supported")
+                        TODO("HORIZONTAL is not yet tested")
 //                        val left = child.right + params.rightMargin
 //                        val right = left + defaultDividerDrawable.intrinsicWidth
-//                        defaultDividerDrawable.setBounds(left, 0, right, parent.height)
+//                        Rect(left, 0, right, parent.height)
                     }
                     else -> {
                         val top = child.bottom + params.bottomMargin
-                        val bottom = top + defaultDividerDrawable.intrinsicHeight
-                        defaultDividerDrawable.setBounds(0, top, parent.width, bottom)
+                        Rect(0, top, parent.width, top + dividerHeightDefault)
                     }
-                }
-                defaultDividerDrawable.draw(canvas)
+                }.also { canvas.drawRect(it, dividerPaintDefault) }
             }
         }
         canvas.restore()
