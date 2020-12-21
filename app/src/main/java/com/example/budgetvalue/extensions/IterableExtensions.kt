@@ -27,3 +27,12 @@ fun <T> Iterable<T>.pairwise(): Iterable<Pair<T, T>> {
 fun <T> Iterable<T>.startWith(item: T): Iterable<T> {
     return this.toMutableList().apply { add(0, item) }
 }
+
+fun <T> Iterable<T>.distinctUntilChangedBy(function: (T)->Any): Iterable<T> {
+    return this
+        .pairwise()
+        .filter { function(it.first) != function(it.second) }
+        .map { it.second }
+        .toMutableList()
+        .also { it.add(0, this.first()) }
+}
