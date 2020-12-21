@@ -73,6 +73,10 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
             { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
             { v, bs -> v.bindIncoming(bs) }
         )
+        val titledDividerRecipeFactory = ViewItemRecipeFactory<TextView, String>(
+            { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
+            { v, s -> v.text = s }
+        )
         combineLatestAsTuple(historyVM.stateHistoryColumnDatas, historyVM.activeCategories)
             .observeOn(AndroidSchedulers.mainThread())
             .distinctUntilChanged() //*idk why this emitted a copy without distinctUntilChanged
@@ -93,7 +97,7 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
                             )
                         }.reflectXY()
                 )
-                tmTableView_history.setSeparators(emptyMap())
+                tmTableView_history.setSeparators(mapOf(3 to titledDividerRecipeFactory.createOne("CATEGORY A").first()))
             }
     }
 }
