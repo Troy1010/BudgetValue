@@ -38,7 +38,7 @@ class DividerDecoration(
     }
 
     override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
-        // ! Assuming that the last row does not need a separator after it.
+        // ! Assuming that the last item does not need a separator after it.
         for (child in parent.children.toList().dropLast(1)) {
             val i = parent.getChildAdapterPosition(child)
             val layoutParams = child.layoutParams as RecyclerView.LayoutParams
