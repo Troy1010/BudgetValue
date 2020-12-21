@@ -4,10 +4,11 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
+import android.view.View
+import android.view.View.MeasureSpec
 import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
-import com.example.budgetvalue.measureUnspecified
 
 class DividerDecoration(
     val separatorMap: Map<Int, IViewItemRecipe>,
@@ -23,36 +24,61 @@ class DividerDecoration(
         Paint().apply { style = Paint.Style.FILL; color = Color.parseColor("#ffffff") }
     }
 
+    override fun getItemOffsets(
+        outRect: Rect,
+        view: View,
+        parent: RecyclerView,
+        state: RecyclerView.State,
+    ) {
+        val pos = parent.getChildAdapterPosition(view)
+        when (pos) {
+//            in separatorMap.keys -> outRect.apply { bottom = separatorMap[pos]!!.intrinsicHeight; logz("intrinsicHeight:${separatorMap[pos]!!.intrinsicHeight}") }
+//            else -> outRect.apply { bottom = dividerHeightDefault }
+            in separatorMap.keys -> outRect.apply { bottom = 300 }
+            else -> outRect.apply { bottom = 50 }
+        }
+    }
+
     override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
-        canvas.save()
         // ! Assuming that the last row does not need a separator after it.
-        for ((i, child) in parent.children.withIndex().toList().dropLast(1)) {
-            val params = child.layoutParams as RecyclerView.LayoutParams
+        for (child in parent.children.toList().dropLast(1)) {
+            val i = parent.getChildAdapterPosition(child)
+            val layoutParams = child.layoutParams as RecyclerView.LayoutParams
 
             if (i in separatorMap.keys) {
                 val view = separatorMap[i]!!.viewProvider()
-                view.measureUnspecified()
+
+                val top = child.bottom + layoutParams.bottomMargin
+                val rect = Rect(0, top, parent.width, top + 200)
+
+                val widthSpec = MeasureSpec.makeMeasureSpec(rect.width(), MeasureSpec.EXACTLY)
+                val heightSpec = MeasureSpec.makeMeasureSpec(rect.height(), MeasureSpec.EXACTLY)
+                view.measure(widthSpec, heightSpec)
+                view.layout(0, 0, view.measuredWidth, view.measuredHeight)
+
+//                view.measureExact()
 //                val top = child.top + params.topMargin
 //                logz("top:$top")
 //                val bottom = top + view.intrinsicHeight2
 //                val bottom = top + 80
-                view.layout(0, 300, parent.width, 800)
+//                view.layout(0, 300, parent.width, 800)
+                canvas.save()
+                canvas.translate(rect.left.toFloat(), rect.top.toFloat())
                 view.draw(canvas)
+                canvas.restore()
             } else {
                 when (orientation) {
                     HORIZONTAL -> {
                         TODO("HORIZONTAL is not yet tested")
 //                        val left = child.right + params.rightMargin
-//                        val right = left + defaultDividerDrawable.intrinsicWidth
-//                        Rect(left, 0, right, parent.height)
+//                        Rect(left, 0, left + dividerHeightDefault, parent.height)
                     }
                     else -> {
-                        val top = child.bottom + params.bottomMargin
+                        val top = child.bottom + layoutParams.bottomMargin
                         Rect(0, top, parent.width, top + dividerHeightDefault)
                     }
                 }.also { canvas.drawRect(it, dividerPaintDefault) }
             }
         }
-        canvas.restore()
     }
 }
