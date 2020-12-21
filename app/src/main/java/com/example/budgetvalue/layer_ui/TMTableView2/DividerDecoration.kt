@@ -32,10 +32,8 @@ class DividerDecoration(
     ) {
         val pos = parent.getChildAdapterPosition(view)
         when (pos) {
-//            in separatorMap.keys -> outRect.apply { bottom = separatorMap[pos]!!.intrinsicHeight; logz("intrinsicHeight:${separatorMap[pos]!!.intrinsicHeight}") }
-//            else -> outRect.apply { bottom = dividerHeightDefault }
-            in separatorMap.keys -> outRect.apply { bottom = 300 }
-            else -> outRect.apply { bottom = 50 }
+            in separatorMap.keys -> outRect.apply { bottom = separatorMap[pos]!!.intrinsicHeight }
+            else -> outRect.apply { bottom = dividerHeightDefault }
         }
     }
 
@@ -47,21 +45,16 @@ class DividerDecoration(
 
             if (i in separatorMap.keys) {
                 val view = separatorMap[i]!!.viewProvider()
+                    .also { separatorMap[i]!!.bindAction(it, separatorMap[i]!!.data) }
 
                 val top = child.bottom + layoutParams.bottomMargin
-                val rect = Rect(0, top, parent.width, top + 200)
+                val rect = Rect(0, top, parent.width, top + separatorMap[i]!!.intrinsicHeight)
 
                 val widthSpec = MeasureSpec.makeMeasureSpec(rect.width(), MeasureSpec.EXACTLY)
                 val heightSpec = MeasureSpec.makeMeasureSpec(rect.height(), MeasureSpec.EXACTLY)
                 view.measure(widthSpec, heightSpec)
                 view.layout(0, 0, view.measuredWidth, view.measuredHeight)
 
-//                view.measureExact()
-//                val top = child.top + params.topMargin
-//                logz("top:$top")
-//                val bottom = top + view.intrinsicHeight2
-//                val bottom = top + 80
-//                view.layout(0, 300, parent.width, 800)
                 canvas.save()
                 canvas.translate(rect.left.toFloat(), rect.top.toFloat())
                 view.draw(canvas)
