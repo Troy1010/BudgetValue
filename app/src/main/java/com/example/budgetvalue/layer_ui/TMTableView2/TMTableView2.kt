@@ -22,25 +22,15 @@ class TMTableView2 @JvmOverloads constructor(
     defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
     val TAG = TMTableView2::class.java.simpleName
-
     var tableView: View? = null
-    val _recipe2D = BehaviorSubject.create<Iterable<Iterable<IViewItemRecipe>>>()
-        .also { recipe2D = it }
-    val _dividerMap = BehaviorSubject.create<Map<Int, IViewItemRecipe>>()
-
     var disposable: Disposable? = null
 
-    init {
-        combineLatestAsTuple(_recipe2D, _dividerMap)
-            .subscribe { inflateAndBind(it.first, it.second) }
-    }
-
-    fun setRecipes(viewItemRecipe2D: Iterable<Iterable<IViewItemRecipe>>) {
-        _recipe2D.onNext(viewItemRecipe2D)
-    }
-
-    fun setDiviers(dividerMap: Map<Int, IViewItemRecipe>) {
-        _dividerMap.onNext(dividerMap)
+    fun initialize(
+        recipes2D_: Iterable<Iterable<IViewItemRecipe>>,
+        dividerMap: Map<Int, IViewItemRecipe> = emptyMap(),
+    ) {
+        recipe2D.onNext(recipes2D_) // TODO("Very hacky")
+        inflateAndBind(recipes2D_, dividerMap)
     }
 
     fun inflateAndBind(viewItemRecipe2D: Iterable<Iterable<IViewItemRecipe>>, separatorMap: Map<Int, IViewItemRecipe>) {

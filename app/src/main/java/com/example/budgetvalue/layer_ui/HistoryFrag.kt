@@ -82,8 +82,7 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
             .observeOn(AndroidSchedulers.mainThread())
             .distinctUntilChanged() //*idk why this emitted a copy without distinctUntilChanged
             .observe(viewLifecycleOwner) { (historyColumnDatas, activeCategories) ->
-                // # setRecipes
-                tmTableView_history.setRecipes(
+                val recipe2D =
                     arrayListOf<Iterable<IViewItemRecipe>>(
                         headerRecipeFactory.createOne2("Categories") +
                                 cellRecipeFactory.createMany(activeCategories.map { it.name })
@@ -97,13 +96,11 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
                             }
                         )
                     }.reflectXY()
-                )
-                // # setDividers
                 val dividerMap = activeCategories
                     .withIndex()
                     .distinctUntilChangedBy { it.value.type }
                     .associate { it.index to titledDividerRecipeFactory.createOne(it.value.type.name) }
-                tmTableView_history.setDiviers(dividerMap)
+                tmTableView_history.initialize(recipe2D, dividerMap)
             }
     }
 }
