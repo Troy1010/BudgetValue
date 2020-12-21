@@ -6,8 +6,7 @@
         <item name="colorSecondary">#1B998C</item>
         <item name="colorSecondaryVariant">#5EC2B7</item>
         <item name="colorOnSecondary">@color/colorOnLight</item>
-        <item name="android:colorBackground">#333</item>
-        <item name="android:listDivider">@drawable/list_divider_drawable</item>
+        <item name="android:colorBackground">@color/colorBackground</item>
     </style>
 
     <style name="AppTheme.StandardTextView">
