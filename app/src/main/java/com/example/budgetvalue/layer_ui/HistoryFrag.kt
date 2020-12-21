@@ -84,13 +84,13 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
                 // # setRecipes
                 tmTableView_history.setRecipes(
                     arrayListOf<Iterable<IViewItemRecipe>>(
-                        headerRecipeFactory.createOne("Categories") +
+                        headerRecipeFactory.createOne2("Categories") +
                                 cellRecipeFactory.createMany(activeCategories.map { it.name })
                     )
                         .apply {
                             addAll(
                                 historyColumnDatas.map {
-                                    headerRecipeFactory.createOne(it.title) +
+                                    headerRecipeFactory.createOne2(it.title) +
                                             cellRecipeFactory.createMany(activeCategories.map { k ->
                                                 it.categoryAmounts[k]?.toString() ?: ""
                                             })
@@ -99,7 +99,7 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
                         }.reflectXY()
                 )
                 // # setSeparators
-                tmTableView_history.setDiviers(mapOf(3 to titledDividerRecipeFactory.createOne("CATEGORY A").first()))
+                tmTableView_history.setDiviers(mapOf(3 to titledDividerRecipeFactory.createOne2("CATEGORY A").first()))
             }
     }
 }

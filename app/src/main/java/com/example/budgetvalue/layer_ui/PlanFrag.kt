@@ -52,14 +52,14 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
             .distinctUntilChanged()
             .map { (planCAs, expectedIncome) ->
                 listOf(
-                    headerRecipeFactory.createOne("Category")
-                            + cellRecipeFactory.createOne("Expected Income")
-                            + cellRecipeFactory.createOne("Default")
+                    headerRecipeFactory.createOne2("Category")
+                            + cellRecipeFactory.createOne2("Expected Income")
+                            + cellRecipeFactory.createOne2("Default")
                             + cellRecipeFactory.createMany(planCAs.keys.map { it.name }),
-                    headerRecipeFactory.createOne("Plan")
-                            + inputRecipeFactory.createOne(Pair(expectedIncome,
+                    headerRecipeFactory.createOne2("Plan")
+                            + inputRecipeFactory.createOne2(Pair(expectedIncome,
                         planVM.intentPushExpectedIncome))
-                            + oneWayCellRecipeBuilder.createOne(planVM.stateDifference)
+                            + oneWayCellRecipeBuilder.createOne2(planVM.stateDifference)
                             + inputRecipeFactory2.createMany(planCAs.map { kv -> Pair(kv,
                         planVM.intentPushPlanCategoryAmount)})
                 ).reflectXY()

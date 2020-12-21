@@ -59,20 +59,20 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
             .observe(viewLifecycleOwner) { rowDatas ->
                 myTableView_1.setRecipes(
                     listOf(
-                        headerRecipeFactory.createOne("Category")
-                                + cellRecipeFactory.createOne("Default")
+                        headerRecipeFactory.createOne2("Category")
+                                + cellRecipeFactory.createOne2("Default")
                                 + cellRecipeFactory.createMany(rowDatas.map { it.category.name }),
-                        headerRecipeFactory_numbered.createOne(Pair("Plan", planVM.stateExpectedIncome))
-                                + oneWayRecipeFactory.createOne(planVM.stateDifference)
+                        headerRecipeFactory_numbered.createOne2(Pair("Plan", planVM.stateExpectedIncome))
+                                + oneWayRecipeFactory.createOne2(planVM.stateDifference)
                                 + oneWayRecipeFactory.createMany(rowDatas.map { it.plan }),
-                        headerRecipeFactory.createOne("Actual")
-                                + cellRecipeFactory.createOne("")
+                        headerRecipeFactory.createOne2("Actual")
+                                + cellRecipeFactory.createOne2("")
                                 + oneWayRecipeFactory.createMany(rowDatas.map { it.actual }),
-                        headerRecipeFactory.createOne("Reconcile")
-                                + oneWayRecipeFactory.createOne(reconcileVM.reconcileDefault)
+                        headerRecipeFactory.createOne2("Reconcile")
+                                + oneWayRecipeFactory.createOne2(reconcileVM.reconcileDefault)
                                 + twoWayRecipeFactory.createMany(rowDatas.map { it.reconcile }),
-                        headerRecipeFactory_numbered.createOne(Pair("Budgeted",accountsVM.accountsTotal))
-                                + oneWayRecipeFactory.createOne(reconcileVM.uncategorizedBudgeted)
+                        headerRecipeFactory_numbered.createOne2(Pair("Budgeted",accountsVM.accountsTotal))
+                                + oneWayRecipeFactory.createOne2(reconcileVM.uncategorizedBudgeted)
                                 + oneWayRecipeFactory.createMany(rowDatas.map { it.budgeted })
                     ).reflectXY()
                 )

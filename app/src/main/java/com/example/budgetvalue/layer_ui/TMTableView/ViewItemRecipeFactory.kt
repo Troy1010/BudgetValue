@@ -12,8 +12,11 @@ class ViewItemRecipeFactory<V : View, D : Any>(
     fun createMany(datas: Iterable<D>): Iterable<ViewItemRecipe<V, D>> {
         return datas.map { ViewItemRecipe(viewFactory, it, bindAction) }
     }
-    fun createOne(data: D): Iterable<ViewItemRecipe<V, D>> {
+    fun createOne2(data: D): Iterable<ViewItemRecipe<V, D>> {
         return listOf(ViewItemRecipe(viewFactory, data, bindAction))
+    }
+    fun createOne(data: D): ViewItemRecipe<V, D> {
+        return ViewItemRecipe(viewFactory, data, bindAction)
     }
 
     companion object {
