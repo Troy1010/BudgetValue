@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.budgetvalue.*
-import com.example.budgetvalue.extensions.pairwise
+import com.example.budgetvalue.extensions.distinctUntilChangedBy
 import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 import com.example.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.example.budgetvalue.layer_ui.misc.bindIncoming
@@ -101,12 +101,8 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
                 // # setDividers
                 val dividerMap = activeCategories
                     .withIndex()
-                    .pairwise()
-                    .filter { it.first.value.type != it.second.value.type }
-                    .map { it.second }
+                    .distinctUntilChangedBy { it.value.type }
                     .associate { it.index to titledDividerRecipeFactory.createOne(it.value.type.name) }
-                    .toMutableMap()
-                    .apply { this[0] = titledDividerRecipeFactory.createOne(activeCategories.first().type.name) }
                 tmTableView_history.setDiviers(dividerMap)
             }
     }
