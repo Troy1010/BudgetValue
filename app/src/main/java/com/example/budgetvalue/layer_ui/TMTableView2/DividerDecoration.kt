@@ -44,8 +44,7 @@ class DividerDecoration(
             val layoutParams = child.layoutParams as RecyclerView.LayoutParams
 
             if (i in separatorMap.keys) {
-                val view = separatorMap[i]!!.viewProvider()
-                    .also { separatorMap[i]!!.bindAction(it, separatorMap[i]!!.data) }
+                val view = separatorMap[i]!!.createBoundView()
 
                 val top = child.bottom + layoutParams.bottomMargin
                 val rect = Rect(0, top, parent.width, top + separatorMap[i]!!.intrinsicHeight)
