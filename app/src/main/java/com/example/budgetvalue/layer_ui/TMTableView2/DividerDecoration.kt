@@ -1,16 +1,18 @@
 package com.example.budgetvalue.layer_ui.TMTableView2
 
+import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.Rect
 import android.view.View
 import android.view.View.MeasureSpec
+import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
+import com.example.budgetvalue.R
 import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 
 class DividerDecoration(
+    val context: Context,
     val separatorMap: Map<Int, IViewItemRecipe>,
     val orientation: Int = VERTICAL,
 ) : RecyclerView.ItemDecoration() {
@@ -18,11 +20,8 @@ class DividerDecoration(
         const val HORIZONTAL = 0
         const val VERTICAL = 1
     }
-
-    val dividerHeightDefault = 1
-    val dividerPaintDefault by lazy {
-        Paint().apply { style = Paint.Style.FILL; color = Color.parseColor("#ffffff") }
-    }
+    val defaultDividerDrawable by lazy { ContextCompat.getDrawable(context, R.drawable.divider)!! }
+    val defaultDividerHeight by lazy { defaultDividerDrawable.intrinsicHeight }
 
     override fun getItemOffsets(
         outRect: Rect,
@@ -33,7 +32,7 @@ class DividerDecoration(
         val pos = parent.getChildAdapterPosition(view)
         when (pos) {
             in separatorMap.keys -> outRect.apply { bottom = separatorMap[pos]!!.intrinsicHeight }
-            else -> outRect.apply { bottom = dividerHeightDefault }
+            else -> outRect.apply { bottom = defaultDividerHeight }
         }
     }
 
@@ -60,16 +59,13 @@ class DividerDecoration(
                 canvas.restore()
             } else {
                 when (orientation) {
-                    HORIZONTAL -> {
-                        TODO("HORIZONTAL is not yet tested")
-//                        val left = child.right + params.rightMargin
-//                        Rect(left, 0, left + dividerHeightDefault, parent.height)
-                    }
+                    HORIZONTAL -> TODO("HORIZONTAL is not yet implemented")
                     else -> {
                         val top = child.bottom + layoutParams.bottomMargin
-                        Rect(0, top, parent.width, top + dividerHeightDefault)
+                        defaultDividerDrawable.setBounds(0, top, parent.width, top + defaultDividerHeight)
                     }
-                }.also { canvas.drawRect(it, dividerPaintDefault) }
+                }
+                defaultDividerDrawable.draw(canvas)
             }
         }
     }
