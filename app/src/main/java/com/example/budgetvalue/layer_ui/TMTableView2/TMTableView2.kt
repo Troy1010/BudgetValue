@@ -26,12 +26,12 @@ class TMTableView2 @JvmOverloads constructor(
     var tableView: View? = null
     val _recipe2D = BehaviorSubject.create<Iterable<Iterable<IViewItemRecipe>>>()
         .also { recipe2D = it }
-    val _separatorMap = BehaviorSubject.create<Map<Int, IViewItemRecipe>>()
+    val _dividerMap = BehaviorSubject.create<Map<Int, IViewItemRecipe>>()
 
     var disposable: Disposable? = null
 
     init {
-        combineLatestAsTuple(_recipe2D, _separatorMap)
+        combineLatestAsTuple(_recipe2D, _dividerMap)
             .subscribe { inflateAndBind(it.first, it.second) }
     }
 
@@ -39,8 +39,8 @@ class TMTableView2 @JvmOverloads constructor(
         _recipe2D.onNext(viewItemRecipe2D)
     }
 
-    fun setSeparators(separatorMap: Map<Int, IViewItemRecipe>) {
-        _separatorMap.onNext(separatorMap)
+    fun setDiviers(dividerMap: Map<Int, IViewItemRecipe>) {
+        _dividerMap.onNext(dividerMap)
     }
 
     fun inflateAndBind(viewItemRecipe2D: Iterable<Iterable<IViewItemRecipe>>, separatorMap: Map<Int, IViewItemRecipe>) {

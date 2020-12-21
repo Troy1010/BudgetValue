@@ -81,6 +81,7 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
             .observeOn(AndroidSchedulers.mainThread())
             .distinctUntilChanged() //*idk why this emitted a copy without distinctUntilChanged
             .observe(viewLifecycleOwner) { (historyColumnDatas, activeCategories) ->
+                // # setRecipes
                 tmTableView_history.setRecipes(
                     arrayListOf<Iterable<IViewItemRecipe>>(
                         headerRecipeFactory.createOne("Categories") +
@@ -97,7 +98,8 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
                             )
                         }.reflectXY()
                 )
-                tmTableView_history.setSeparators(mapOf(3 to titledDividerRecipeFactory.createOne("CATEGORY A").first()))
+                // # setSeparators
+                tmTableView_history.setDiviers(mapOf(3 to titledDividerRecipeFactory.createOne("CATEGORY A").first()))
             }
     }
 }
