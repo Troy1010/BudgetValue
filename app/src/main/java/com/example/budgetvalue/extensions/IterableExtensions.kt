@@ -19,3 +19,7 @@ fun <T : Observable<BigDecimal>> Iterable<T>.total(): Observable<BigDecimal> {
         }
         .scan(BigDecimal.ZERO, BigDecimal::add)
 }
+
+fun <T> Iterable<T>.pairwise(): Iterable<Pair<T, T>> {
+    return this.zip(this.drop(1)) { a, b -> Pair(a, b) }
+}
