@@ -15,4 +15,11 @@ data class ViewItemRecipe <V:View, D:Any>(
             view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
             return view.measuredWidth
         }
+    override val intrinsicHeight : Int
+        get() {
+            val view = viewProvider()
+            bindAction(view, data)
+            view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+            return view.measuredHeight
+        }
 }

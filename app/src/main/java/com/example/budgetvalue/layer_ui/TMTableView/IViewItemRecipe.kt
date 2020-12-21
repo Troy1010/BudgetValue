@@ -7,4 +7,5 @@ interface IViewItemRecipe {
     val bindAction: (View, Any) -> Unit
     val data: Any
     val intrinsicWidth : Int
+    val intrinsicHeight: Int
 }
