@@ -28,7 +28,7 @@ fun createInnerRV(context: Context, columnViewItemRecipes: Iterable<IViewItemRec
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     if (!ignoreScroll)
-                        scrollObservable.onNext(Pair(recyclerView, dy))
+                        scrollObservable.onNext(Pair(recyclerView, dx))
                     super.onScrolled(recyclerView, dx, dy)
                 }
             })

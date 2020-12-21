@@ -55,12 +55,12 @@ class TMTableView2 @JvmOverloads constructor(
         // ## Synchronize vertical scrolling
         disposable?.dispose()
         disposable = scrollObservable
-            .subscribe { (v, dy) ->
+            .subscribe { (v, dx) ->
                 this.recyclerview_tier1.layoutManager!!.children
                     .filter { it != v }
                     .forEach {
                         ignoreScroll = true
-                        (it as? RecyclerView)?.scrollBy(dy, 0)
+                        (it as? RecyclerView)?.scrollBy(dx, 0)
                         ignoreScroll = false
                     }
             }
