@@ -277,6 +277,10 @@ fun View.measureUnspecified() {
     this.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
 }
 
+fun View.measureExact() {
+    this.measure(View.MeasureSpec.EXACTLY, View.MeasureSpec.EXACTLY)
+}
+
 val View.intrinsicWidth2: Int
     get() {
         this.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
