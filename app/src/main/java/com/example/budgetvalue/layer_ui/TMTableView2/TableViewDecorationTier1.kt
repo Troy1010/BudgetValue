@@ -74,6 +74,7 @@ class TableViewDecorationTier1(
         // # Frozen Columns
         if (freezeCountVert>1) TODO("Not yet implemented")
         if (freezeCountVert==1) {
+            if (orientation== HORIZONTAL) TODO("Not yet implemented")
             for (child in parent.children) {
                 val i = parent.getChildAdapterPosition(child)
                 val layoutParams = child.layoutParams as RecyclerView.LayoutParams
@@ -91,6 +92,10 @@ class TableViewDecorationTier1(
                 canvas.translate(rect.left.toFloat(), rect.top.toFloat())
                 view.draw(canvas)
                 canvas.restore()
+
+                // TODO("3 should not be hard coded")
+                defaultDividerDrawable.setBounds(firstRowWidth.value, top, firstRowWidth.value+3, top + recipes2D[i][0].intrinsicHeight)
+                defaultDividerDrawable.draw(canvas)
             }
         }
     }
