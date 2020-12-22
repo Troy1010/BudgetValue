@@ -21,7 +21,6 @@ class TMTableView2 @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
-    val TAG = TMTableView2::class.java.simpleName
     var tableView: View? = null
     var disposable: Disposable? = null
 
