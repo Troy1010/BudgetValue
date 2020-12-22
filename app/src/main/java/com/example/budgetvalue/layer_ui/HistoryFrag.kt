@@ -54,26 +54,6 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
     private fun setupObservers() {
         val cellRecipeFactory = ViewItemRecipeFactory.createCellRecipeFactory(requireContext())
         val headerRecipeFactory = ViewItemRecipeFactory.createHeaderRecipeFactory(requireContext())
-        val inputRecipeFactory =
-            ViewItemRecipeFactory<EditText, Pair<BigDecimal, Subject<BigDecimal>>>(
-                { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
-                { v, (state, actionSubject) ->
-                    v.setText("$state"); v.bindOutgoing(actionSubject,
-                    { it.toBigDecimalSafe() })
-                }
-            )
-        val inputRecipeFactory2 =
-            ViewItemRecipeFactory<EditText, Pair<Map.Entry<Category, BigDecimal>, Subject<Pair<Category, BigDecimal>>>>(
-                { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
-                { v, (kv, actionSubject) ->
-                    v.setText("${kv.value}"); v.bindOutgoing(actionSubject,
-                    { Pair(kv.key, it.toBigDecimalSafe()) })
-                }
-            )
-        val oneWayRecipeFactory = ViewItemRecipeFactory<TextView, Observable<BigDecimal>>(
-            { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
-            { v, bs -> v.bindIncoming(bs) }
-        )
         val titledDividerRecipeFactory = ViewItemRecipeFactory<TextView, String>(
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
