@@ -13,8 +13,8 @@ import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 
 class DividerDecoration(
     val context: Context,
-    val separatorMap: Map<Int, IViewItemRecipe>,
     val orientation: Int = VERTICAL,
+    val separatorMap: Map<Int, IViewItemRecipe>,
 ) : RecyclerView.ItemDecoration() {
     companion object {
         const val HORIZONTAL = 0
