@@ -9,4 +9,5 @@ interface IViewItemRecipe {
     val intrinsicWidth : Int
     val intrinsicHeight: Int
     fun createBoundView(): View
+    fun bindView(view: View)
 }

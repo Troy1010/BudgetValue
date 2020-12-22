@@ -15,4 +15,8 @@ data class ViewItemRecipe<V : View, D : Any>(
     override fun createBoundView(): View {
         return viewProvider().also { bindAction(it, data) }
     }
+
+    override fun bindView(view: View) {
+        bindAction(view, data)
+    }
 }
