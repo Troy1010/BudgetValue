@@ -38,6 +38,7 @@ class TMTableView2 @JvmOverloads constructor(
         freezeCountVert: Int,
         freezeCountHorz: Int,
     ) {
+        val viewItemRecipe2DRedefined = viewItemRecipe2D.map { it.toList() }.toList()
         // # Inflate tableView
         if (tableView == null) tableView = View.inflate(context, R.layout.tableview_layout, this)
         // # Freeze columns/rows
@@ -45,7 +46,7 @@ class TMTableView2 @JvmOverloads constructor(
         // # Cells
         recyclerview_tier1.adapter = ViewItemRecipeRecyclerViewAdapter2(context, viewItemRecipe2D)
         recyclerview_tier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
-        recyclerview_tier1.addItemDecoration(DividerDecoration(context, Decoration.VERTICAL, separatorMap))
+        recyclerview_tier1.addItemDecoration(DividerDecoration(context, Decoration.VERTICAL, separatorMap, viewItemRecipe2DRedefined, freezeCountHorz))
         // ## Synchronize scrolling
         disposable?.dispose()
         disposable = scrollObservable

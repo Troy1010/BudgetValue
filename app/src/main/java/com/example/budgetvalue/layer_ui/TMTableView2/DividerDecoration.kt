@@ -15,6 +15,8 @@ class DividerDecoration(
     val context: Context,
     val orientation: Int = VERTICAL,
     val separatorMap: Map<Int, IViewItemRecipe>,
+    val recipes2D: List<List<IViewItemRecipe>>,
+    val freezeCountVert: Int = 0
 ) : RecyclerView.ItemDecoration() {
     companion object {
         const val HORIZONTAL = 0
@@ -37,6 +39,7 @@ class DividerDecoration(
     }
 
     override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+        // # Dividers
         // ! Assuming that the last item does not need a separator after it.
         for (child in parent.children.toList().dropLast(1)) {
             val i = parent.getChildAdapterPosition(child)
@@ -66,6 +69,28 @@ class DividerDecoration(
                     }
                 }
                 defaultDividerDrawable.draw(canvas)
+            }
+        }
+        // # Frozen Columns
+        if (freezeCountVert>1) TODO("Not yet implemented")
+        if (freezeCountVert==1) {
+            for (child in parent.children) {
+                val i = parent.getChildAdapterPosition(child)
+                val layoutParams = child.layoutParams as RecyclerView.LayoutParams
+                val view = recipes2D[i][0].createBoundView()
+
+                val top = child.top - layoutParams.topMargin
+                val rect = Rect(0, top, firstRowWidth.value, top + recipes2D[i][0].intrinsicHeight)
+
+                val widthSpec = MeasureSpec.makeMeasureSpec(rect.width(), MeasureSpec.EXACTLY)
+                val heightSpec = MeasureSpec.makeMeasureSpec(rect.height(), MeasureSpec.EXACTLY)
+                view.measure(widthSpec, heightSpec)
+                view.layout(0, 0, view.measuredWidth, view.measuredHeight)
+
+                canvas.save()
+                canvas.translate(rect.left.toFloat(), rect.top.toFloat())
+                view.draw(canvas)
+                canvas.restore()
             }
         }
     }
