@@ -81,7 +81,7 @@ class TableViewDecorationTier1(
                 val view = recipes2D[i][0].createBoundView()
 
                 val top = child.top - layoutParams.topMargin
-                val rect = Rect(0, top, firstRowWidth.value, top + recipes2D[i][0].intrinsicHeight)
+                val rect = Rect(0, top, firstColWidth.value, top + recipes2D[i][0].intrinsicHeight)
 
                 val widthSpec = MeasureSpec.makeMeasureSpec(rect.width(), MeasureSpec.EXACTLY)
                 val heightSpec = MeasureSpec.makeMeasureSpec(rect.height(), MeasureSpec.EXACTLY)
@@ -94,7 +94,7 @@ class TableViewDecorationTier1(
                 canvas.restore()
 
                 // TODO("3 should not be hard coded")
-                defaultDividerDrawable.setBounds(firstRowWidth.value, top, firstRowWidth.value+3, top + recipes2D[i][0].intrinsicHeight)
+                defaultDividerDrawable.setBounds(firstColWidth.value, top, firstColWidth.value+3, top + recipes2D[i][0].intrinsicHeight)
                 defaultDividerDrawable.draw(canvas)
             }
         }

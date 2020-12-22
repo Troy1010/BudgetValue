@@ -12,7 +12,7 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlin.math.max
 
 val recipe2D = BehaviorSubject.create<Iterable<Iterable<IViewItemRecipe>>>()  // TODO("Hacky, only supports 1")
-val firstRowWidth = recipe2D
+val firstColWidth = recipe2D
     .map {
         it
             .map { it.first().intrinsicWidth }
