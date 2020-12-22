@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.R
 import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 
-class DividerDecoration(
+class TableViewDecorationTier1(
     val context: Context,
     val orientation: Int = VERTICAL,
     val separatorMap: Map<Int, IViewItemRecipe>,

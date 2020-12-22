@@ -46,7 +46,7 @@ class TMTableView2 @JvmOverloads constructor(
         // # Cells
         recyclerview_tier1.adapter = ViewItemRecipeRecyclerViewAdapter2(context, viewItemRecipe2D)
         recyclerview_tier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
-        recyclerview_tier1.addItemDecoration(DividerDecoration(context, Decoration.VERTICAL, separatorMap, viewItemRecipe2DRedefined, freezeCountHorz))
+        recyclerview_tier1.addItemDecoration(TableViewDecorationTier1(context, Decoration.VERTICAL, separatorMap, viewItemRecipe2DRedefined, freezeCountHorz))
         // ## Synchronize scrolling
         disposable?.dispose()
         disposable = scrollObservable
