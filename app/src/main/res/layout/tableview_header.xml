@@ -4,8 +4,9 @@
     android:id="@+id/textview_basic_cell"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     android:gravity="center"
-    android:textStyle="bold"
     android:paddingHorizontal="5dp"
-    tools:text="Header"
-    android:textColor="@color/colorOnDark" />
+    android:textColor="@color/colorOnDark"
+    android:textStyle="bold"
+    tools:text="Header" />
