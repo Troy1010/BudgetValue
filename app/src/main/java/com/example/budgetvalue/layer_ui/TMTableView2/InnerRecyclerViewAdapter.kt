@@ -36,9 +36,9 @@ class InnerRecyclerViewAdapter(
     override fun getItemCount() = viewItemRecipes.size
     override fun onViewAttachedToWindow(holder: ViewHolder) {
         super.onViewAttachedToWindow(holder)
-        val w = recipe2D!!.value
+        recipe2D!!.value
             .map { try { it.toList()[holder.adapterPosition].intrinsicWidth } catch (e:Exception) { 0 } }
             .fold(0) { acc, v -> max(acc, v) }
-        holder.itemView.updateLayoutParams { width = w }
+            .also { holder.itemView.updateLayoutParams { width = it } }
     }
 }
