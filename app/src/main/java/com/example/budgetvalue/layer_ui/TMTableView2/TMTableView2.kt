@@ -27,12 +27,19 @@ class TMTableView2 @JvmOverloads constructor(
     fun initialize(
         recipes2D_: Iterable<Iterable<IViewItemRecipe>>,
         dividerMap: Map<Int, IViewItemRecipe> = emptyMap(),
+        freezeCountVert: Int = 0,
+        freezeCountHorz: Int = 0,
     ) {
         recipe2D.onNext(recipes2D_) // TODO("Very hacky")
-        inflateAndBind(recipes2D_, dividerMap)
+        inflateAndBind(recipes2D_, dividerMap, freezeCountVert, freezeCountHorz)
     }
 
-    fun inflateAndBind(viewItemRecipe2D: Iterable<Iterable<IViewItemRecipe>>, separatorMap: Map<Int, IViewItemRecipe>) {
+    private fun inflateAndBind(
+        viewItemRecipe2D: Iterable<Iterable<IViewItemRecipe>>,
+        separatorMap: Map<Int, IViewItemRecipe>,
+        freezeCountVert: Int,
+        freezeCountHorz: Int,
+    ) {
         // # Inflate tableView
         if (tableView == null) tableView = View.inflate(context, R.layout.tableview_layout, this)
         // # Freeze columns/rows
