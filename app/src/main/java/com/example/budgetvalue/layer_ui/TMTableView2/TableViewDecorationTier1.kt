@@ -16,7 +16,7 @@ class TableViewDecorationTier1(
     val orientation: Int = VERTICAL,
     val separatorMap: Map<Int, IViewItemRecipe>,
     val recipes2D: List<List<IViewItemRecipe>>,
-    val freezeCountVert: Int = 0
+    val colFreezeCount: Int = 0
 ) : RecyclerView.ItemDecoration() {
     companion object {
         const val HORIZONTAL = 0
@@ -72,8 +72,8 @@ class TableViewDecorationTier1(
             }
         }
         // # Frozen Columns
-        if (freezeCountVert>1) TODO("Not yet implemented")
-        if (freezeCountVert==1) {
+        if (colFreezeCount>1) TODO("Not yet implemented")
+        if (colFreezeCount==1) {
             if (orientation== HORIZONTAL) TODO("Not yet implemented")
             for (child in parent.children) {
                 val i = parent.getChildAdapterPosition(child)

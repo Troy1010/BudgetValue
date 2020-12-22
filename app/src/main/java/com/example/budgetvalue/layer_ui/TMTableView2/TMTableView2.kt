@@ -25,18 +25,18 @@ class TMTableView2 @JvmOverloads constructor(
     fun initialize(
         recipes2D_: Iterable<Iterable<IViewItemRecipe>>,
         dividerMap: Map<Int, IViewItemRecipe> = emptyMap(),
-        freezeCountVert: Int = 0,
-        freezeCountHorz: Int = 0,
+        colFreezeCount: Int = 0,
+        rowFreezeCount: Int = 0,
     ) {
         recipe2D.onNext(recipes2D_) // TODO("Very hacky")
-        inflateAndBind(recipes2D_, dividerMap, freezeCountVert, freezeCountHorz)
+        inflateAndBind(recipes2D_, dividerMap, colFreezeCount, rowFreezeCount)
     }
 
     private fun inflateAndBind(
         viewItemRecipe2D: Iterable<Iterable<IViewItemRecipe>>,
         separatorMap: Map<Int, IViewItemRecipe>,
-        freezeCountVert: Int,
-        freezeCountHorz: Int,
+        colFreezeCount: Int,
+        rowFreezeCount: Int,
     ) {
         val viewItemRecipe2DRedefined = viewItemRecipe2D.map { it.toList() }.toList()
         // # Inflate tableView
@@ -46,7 +46,7 @@ class TMTableView2 @JvmOverloads constructor(
         // # Cells
         recyclerview_tier1.adapter = ViewItemRecipeRecyclerViewAdapter2(context, viewItemRecipe2D)
         recyclerview_tier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
-        recyclerview_tier1.addItemDecoration(TableViewDecorationTier1(context, Decoration.VERTICAL, separatorMap, viewItemRecipe2DRedefined, freezeCountHorz))
+        recyclerview_tier1.addItemDecoration(TableViewDecorationTier1(context, Decoration.VERTICAL, separatorMap, viewItemRecipe2DRedefined, rowFreezeCount))
         // ## Synchronize scrolling
         disposable?.dispose()
         disposable = scrollObservable
