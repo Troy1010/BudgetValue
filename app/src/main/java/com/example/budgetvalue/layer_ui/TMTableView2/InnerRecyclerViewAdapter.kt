@@ -33,10 +33,7 @@ class InnerRecyclerViewAdapter(
         bindAction(view, data)
     }
 
-    override fun getItemCount(): Int {
-        return viewItemRecipes.size
-    }
-
+    override fun getItemCount() = viewItemRecipes.size
     override fun onViewAttachedToWindow(holder: ViewHolder) {
         super.onViewAttachedToWindow(holder)
         val w = recipe2D!!.value
