@@ -23,14 +23,7 @@ class InnerRecyclerViewAdapter(
     override fun getItemViewType(position: Int) = position
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.itemView
-            .also { viewItemRecipes[holder.adapterPosition].bindView(it) }
-            .also {
-                it.layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT
-                )
-            }
+        viewItemRecipes[holder.adapterPosition].bindView(holder.itemView)
     }
 
     override fun getItemCount() = viewItemRecipes.size
