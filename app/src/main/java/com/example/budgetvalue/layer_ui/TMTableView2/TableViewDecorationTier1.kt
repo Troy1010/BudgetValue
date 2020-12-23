@@ -50,7 +50,7 @@ class TableViewDecorationTier1(
             if (i in separatorMap.keys) {
                 val view = separatorMap[i]!!.createBoundView()
 
-                val top = child.top - layoutParams.topMargin
+                val top = child.top - layoutParams.topMargin - separatorMap[i]!!.intrinsicHeight
                 val rect = Rect(0, top, parent.width, top + separatorMap[i]!!.intrinsicHeight)
 
                 val widthSpec = MeasureSpec.makeMeasureSpec(rect.width(), MeasureSpec.EXACTLY)
