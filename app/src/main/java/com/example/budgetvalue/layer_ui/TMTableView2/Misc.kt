@@ -19,6 +19,14 @@ val firstColWidth = recipe2D
             .fold(0) { acc, v -> max(acc, v) }
     }
     .toBehaviorSubject()
+val firstRowHeight = recipe2D
+    .map {
+        it
+            .first()
+            .map { it.intrinsicHeight }
+            .fold(0) { acc, v -> max(acc, v) }
+    }
+    .toBehaviorSubject()
 val scrollObservable = BehaviorSubject.create<Pair<View, Int>>() // TODO("Hacky")
 var ignoreScroll = false // TODO("Hacky")
 val scrollPosObservable = scrollObservable
