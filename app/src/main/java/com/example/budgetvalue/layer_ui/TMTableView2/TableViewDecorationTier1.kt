@@ -33,22 +33,24 @@ class TableViewDecorationTier1(
     ) {
         val i = parent.getChildAdapterPosition(view)
         when (i) {
-            in separatorMap.keys -> outRect.apply { bottom = separatorMap[i]!!.intrinsicHeight }
-            else -> outRect.apply { bottom = defaultDividerHeight }
+            in separatorMap.keys -> outRect.apply { top = separatorMap[i]!!.intrinsicHeight }
+            else -> {
+                if (i==0) return // The first item does not implicitly get a divider above it.
+                outRect.apply { top = defaultDividerHeight }
+            }
         }
     }
 
     override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         // # Dividers
-        // ! Assuming that the last item does not need a separator after it.
-        for (child in parent.children.toList().dropLast(1)) {
+        for (child in parent.children) {
             val i = parent.getChildAdapterPosition(child)
             val layoutParams = child.layoutParams as RecyclerView.LayoutParams
 
             if (i in separatorMap.keys) {
                 val view = separatorMap[i]!!.createBoundView()
 
-                val top = child.bottom + layoutParams.bottomMargin
+                val top = child.top - layoutParams.topMargin
                 val rect = Rect(0, top, parent.width, top + separatorMap[i]!!.intrinsicHeight)
 
                 val widthSpec = MeasureSpec.makeMeasureSpec(rect.width(), MeasureSpec.EXACTLY)
@@ -61,10 +63,11 @@ class TableViewDecorationTier1(
                 view.draw(canvas)
                 canvas.restore()
             } else {
+                if (i==0) continue // The first item does not implicitly get a divider above it.
                 when (orientation) {
-                    HORIZONTAL -> TODO("HORIZONTAL is not yet implemented")
+                    HORIZONTAL -> TODO()
                     else -> {
-                        val top = child.bottom + layoutParams.bottomMargin
+                        val top = child.top - layoutParams.topMargin - defaultDividerHeight
                         defaultDividerDrawable.setBounds(0, top, parent.width, top + defaultDividerHeight)
                     }
                 }
@@ -93,8 +96,8 @@ class TableViewDecorationTier1(
                 view.draw(canvas)
                 canvas.restore()
 
-                // TODO("3 should not be hard coded")
-                defaultDividerDrawable.setBounds(firstColWidth.value, top, firstColWidth.value+3, top + recipes2D[i][0].intrinsicHeight)
+                // ## vertical divider
+                defaultDividerDrawable.setBounds(firstColWidth.value, top, firstColWidth.value+defaultDividerHeight, top + recipes2D[i][0].intrinsicHeight)
                 defaultDividerDrawable.draw(canvas)
             }
         }
