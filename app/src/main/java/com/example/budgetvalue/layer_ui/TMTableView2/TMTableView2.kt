@@ -47,7 +47,7 @@ class TMTableView2 @JvmOverloads constructor(
         if (rowFreezeCount==1) {
             recyclerview_columnheaders.adapter = InnerRecyclerViewAdapter(context, viewItemRecipe2DRedefined[0])
             recyclerview_columnheaders.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
-            recyclerview_columnheaders.addItemDecoration(Decoration(context, HORIZONTAL))
+            recyclerview_columnheaders.addItemDecoration(FrozenRowDecoration(context, HORIZONTAL, colFreezeCount, viewItemRecipe2DRedefined))
             recyclerview_columnheaders.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     if (!ignoreScroll)

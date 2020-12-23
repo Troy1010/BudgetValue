@@ -7,7 +7,7 @@ import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.R
 
-class Decoration(
+open class Decoration(
     context: Context, val orientation: Int = VERTICAL,
 ) : RecyclerView.ItemDecoration() {
     companion object {
