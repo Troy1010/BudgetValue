@@ -48,6 +48,13 @@ class TMTableView2 @JvmOverloads constructor(
             recyclerview_columnheaders.adapter = InnerRecyclerViewAdapter(context, viewItemRecipe2DRedefined[0])
             recyclerview_columnheaders.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
             recyclerview_columnheaders.addItemDecoration(Decoration(context, HORIZONTAL))
+            recyclerview_columnheaders.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    if (!ignoreScroll)
+                        scrollObservable.onNext(Pair(recyclerView, dx))
+                    super.onScrolled(recyclerView, dx, dy)
+                }
+            })
         }
         val viewItemRecipe2DRedefinedRedefined =
             if (rowFreezeCount==1)
@@ -62,13 +69,20 @@ class TMTableView2 @JvmOverloads constructor(
         disposable?.dispose()
         disposable = scrollObservable
             .subscribe { (v, dx) ->
-                this.recyclerview_tier1.layoutManager!!.children
+                // scroll children in recyclerview_tier1
+                recyclerview_tier1.layoutManager!!.children
                     .filter { it != v }
                     .forEach {
                         ignoreScroll = true
                         (it as? RecyclerView)?.scrollBy(dx, 0)
                         ignoreScroll = false
                     }
+                // scroll frozen row
+                if (recyclerview_columnheaders != v) {
+                    ignoreScroll = true
+                    recyclerview_columnheaders.scrollBy(dx, 0)
+                    ignoreScroll = false
+                }
             }
     }
 }
