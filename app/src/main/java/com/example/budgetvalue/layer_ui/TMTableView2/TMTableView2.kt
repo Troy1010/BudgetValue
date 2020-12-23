@@ -34,7 +34,7 @@ class TMTableView2 @JvmOverloads constructor(
 
     private fun inflateAndBind(
         viewItemRecipe2D: Iterable<Iterable<IViewItemRecipe>>,
-        separatorMap: Map<Int, IViewItemRecipe>,
+        dividerMap: Map<Int, IViewItemRecipe>,
         colFreezeCount: Int,
         rowFreezeCount: Int,
     ) {
@@ -46,7 +46,7 @@ class TMTableView2 @JvmOverloads constructor(
         // # Cells
         recyclerview_tier1.adapter = ViewItemRecipeRecyclerViewAdapter2(context, viewItemRecipe2D)
         recyclerview_tier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
-        recyclerview_tier1.addItemDecoration(TableViewDecorationTier1(context, Decoration.VERTICAL, separatorMap, viewItemRecipe2DRedefined, colFreezeCount))
+        recyclerview_tier1.addItemDecoration(TableViewDecorationTier1(context, Decoration.VERTICAL, dividerMap, viewItemRecipe2DRedefined, colFreezeCount))
         // ## Synchronize scrolling
         disposable?.dispose()
         disposable = scrollObservable
