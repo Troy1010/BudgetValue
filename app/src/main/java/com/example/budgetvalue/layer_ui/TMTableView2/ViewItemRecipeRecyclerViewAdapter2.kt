@@ -1,17 +1,13 @@
 package com.example.budgetvalue.layer_ui.TMTableView2
 
 import android.content.Context
-import android.graphics.Rect
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.extensions.scrollTo
-import com.example.budgetvalue.intrinsicWidth2
 import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 import com.example.budgetvalue.measureUnspecified
-import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 
 class ViewItemRecipeRecyclerViewAdapter2(
     val context: Context,
