@@ -12,7 +12,7 @@ import com.example.budgetvalue.extensions.children
 import com.example.budgetvalue.layer_ui.TMTableView.Decoration
 import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 import io.reactivex.rxjava3.disposables.Disposable
-import kotlinx.android.synthetic.main.tableview_layout.view.*
+import kotlinx.android.synthetic.main.tableview_layout2.view.*
 
 class TMTableView2 @JvmOverloads constructor(
     context: Context,
@@ -40,7 +40,7 @@ class TMTableView2 @JvmOverloads constructor(
     ) {
         val viewItemRecipe2DRedefined = viewItemRecipe2D.map { it.toList() }.toList()
         // # Inflate tableView
-        if (tableView == null) tableView = View.inflate(context, R.layout.tableview_layout, this)
+        if (tableView == null) tableView = View.inflate(context, R.layout.tableview_layout2, this)
         // # Freeze columns/rows
         // TODO("Frozen columns/rows")
         // # Cells
