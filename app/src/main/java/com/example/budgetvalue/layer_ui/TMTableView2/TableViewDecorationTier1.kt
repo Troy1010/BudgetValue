@@ -31,9 +31,9 @@ class TableViewDecorationTier1(
         parent: RecyclerView,
         state: RecyclerView.State,
     ) {
-        val pos = parent.getChildAdapterPosition(view)
-        when (pos) {
-            in separatorMap.keys -> outRect.apply { bottom = separatorMap[pos]!!.intrinsicHeight }
+        val i = parent.getChildAdapterPosition(view)
+        when (i) {
+            in separatorMap.keys -> outRect.apply { bottom = separatorMap[i]!!.intrinsicHeight }
             else -> outRect.apply { bottom = defaultDividerHeight }
         }
     }
