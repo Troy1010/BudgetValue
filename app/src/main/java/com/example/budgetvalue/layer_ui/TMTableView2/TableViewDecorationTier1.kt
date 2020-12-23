@@ -72,9 +72,9 @@ class TableViewDecorationTier1(
             }
         }
         // # Frozen Columns
-        if (colFreezeCount>1) TODO("Not yet implemented")
+        if (colFreezeCount>1) TODO()
         if (colFreezeCount==1) {
-            if (orientation== HORIZONTAL) TODO("Not yet implemented")
+            if (orientation== HORIZONTAL) TODO()
             for (child in parent.children) {
                 val i = parent.getChildAdapterPosition(child)
                 val layoutParams = child.layoutParams as RecyclerView.LayoutParams
