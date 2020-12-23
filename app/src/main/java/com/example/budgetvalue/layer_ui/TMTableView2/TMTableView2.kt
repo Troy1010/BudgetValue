@@ -49,10 +49,15 @@ class TMTableView2 @JvmOverloads constructor(
             recyclerview_columnheaders.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
             recyclerview_columnheaders.addItemDecoration(Decoration(context, HORIZONTAL))
         }
+        val viewItemRecipe2DRedefinedRedefined =
+            if (rowFreezeCount==1)
+                viewItemRecipe2DRedefined.drop(1)
+            else
+                viewItemRecipe2DRedefined
         // # Cells
-        recyclerview_tier1.adapter = ViewItemRecipeRecyclerViewAdapter2(context, viewItemRecipe2D)
+        recyclerview_tier1.adapter = ViewItemRecipeRecyclerViewAdapter2(context, viewItemRecipe2DRedefinedRedefined)
         recyclerview_tier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
-        recyclerview_tier1.addItemDecoration(TableViewDecorationTier1(context, Decoration.VERTICAL, dividerMap, viewItemRecipe2DRedefined, colFreezeCount))
+        recyclerview_tier1.addItemDecoration(TableViewDecorationTier1(context, Decoration.VERTICAL, dividerMap, viewItemRecipe2DRedefinedRedefined, colFreezeCount))
         // ## Synchronize scrolling
         disposable?.dispose()
         disposable = scrollObservable
