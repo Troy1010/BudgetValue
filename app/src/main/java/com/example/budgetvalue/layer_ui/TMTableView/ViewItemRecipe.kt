@@ -4,19 +4,25 @@ import android.view.View
 import com.example.budgetvalue.measureUnspecified
 
 data class ViewItemRecipe<V : View, D : Any>(
-    override val viewProvider: () -> V,
-    override val data: D,
-    val bindAction_: (V, D) -> Unit,
+    private val viewProvider: () -> V,
+    private val data: D,
+    private val bindAction: (V, D) -> Unit,
 ) : IViewItemRecipe {
-    override val bindAction = bindAction_ as (View, Any) -> Unit
-    override val intrinsicWidth by lazy { createBoundView().also { it.measureUnspecified() }.measuredWidth }
-    override val intrinsicHeight by lazy { createBoundView().also { it.measureUnspecified() }.measuredHeight }
+    // This cast allows IViewItemRecipe of different view types to be stored together
+    private val bindAction_ = bindAction as (View, Any) -> Unit
+    override val intrinsicWidth
+        get() = createBoundView().apply { measureUnspecified() }.measuredWidth
+    override val intrinsicHeight
+        get() = createBoundView().apply { measureUnspecified() }.measuredHeight
+    override fun createView(): View {
+        return viewProvider()
+    }
 
     override fun createBoundView(): View {
-        return viewProvider().also { bindAction(it, data) }
+        return createView().also { bindAction_(it, data) }
     }
 
     override fun bindView(view: View) {
-        bindAction(view, data)
+        bindAction_(view, data)
     }
 }

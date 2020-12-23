@@ -15,8 +15,8 @@ class InnerRecyclerViewAdapter(
     constructor(context: Context, viewItemRecipes: Iterable<IViewItemRecipe>)
             : this(context, viewItemRecipes.toList())
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(viewItemRecipes[viewType].viewProvider())
+    override fun onCreateViewHolder(parent: ViewGroup, i: Int): ViewHolder {
+        return ViewHolder(viewItemRecipes[i].createView())
     }
 
     override fun getItemViewType(position: Int) = position
