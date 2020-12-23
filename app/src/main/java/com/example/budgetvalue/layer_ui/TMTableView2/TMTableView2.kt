@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.example.budgetvalue.R
 import com.example.budgetvalue.extensions.children
@@ -41,8 +42,13 @@ class TMTableView2 @JvmOverloads constructor(
         val viewItemRecipe2DRedefined = viewItemRecipe2D.map { it.toList() }.toList()
         // # Inflate tableView
         if (tableView == null) tableView = View.inflate(context, R.layout.tableview_layout2, this)
-        // # Freeze columns/rows
-        // TODO("Frozen columns/rows")
+        // # Freeze rows
+        if (rowFreezeCount>1) TODO()
+        if (rowFreezeCount==1) {
+            recyclerview_columnheaders.adapter = InnerRecyclerViewAdapter(context, viewItemRecipe2DRedefined[0])
+            recyclerview_columnheaders.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
+            recyclerview_columnheaders.addItemDecoration(Decoration(context, HORIZONTAL))
+        }
         // # Cells
         recyclerview_tier1.adapter = ViewItemRecipeRecyclerViewAdapter2(context, viewItemRecipe2D)
         recyclerview_tier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
