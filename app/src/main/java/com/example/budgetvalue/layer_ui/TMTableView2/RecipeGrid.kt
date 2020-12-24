@@ -24,7 +24,6 @@ class RecipeGrid(
             .fold(0) { acc, v -> max(acc, v) }
     }
     fun createResizedView(i: Int, j: Int): View {
-        logz("rrr ySize:${this.size} xSize:${this[0].size} xSizeIsSame:${this.map { it.size }.all { it == this[0].size }}")
         return recipes2d[j][i].createView().apply {
             if (layoutParams == null)
                 layoutParams = ViewGroup.LayoutParams(
