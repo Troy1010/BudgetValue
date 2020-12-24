@@ -30,24 +30,23 @@ class TMTableView2 @JvmOverloads constructor(
         rowFreezeCount: Int = 0,
     ) {
         recipe2D.onNext(recipes2D_) // TODO("Very hacky")
-        inflateAndBind(recipes2D_, dividerMap, colFreezeCount, rowFreezeCount)
+        inflateAndBind(RecipeGrid(recipes2D_.map { it.toList() }), dividerMap, colFreezeCount, rowFreezeCount)
     }
 
     private fun inflateAndBind(
-        viewItemRecipe2D: Iterable<Iterable<IViewItemRecipe>>,
+        recipeGrid: RecipeGrid,
         dividerMap: Map<Int, IViewItemRecipe>,
         colFreezeCount: Int,
         rowFreezeCount: Int,
     ) {
-        val viewItemRecipe2DRedefined = viewItemRecipe2D.map { it.toList() }.toList()
         // # Inflate tableView
         if (tableView == null) tableView = View.inflate(context, R.layout.tableview_layout2, this)
         // # Freeze rows
         if (rowFreezeCount>1) TODO()
         if (rowFreezeCount==1) {
-            recyclerview_columnheaders.adapter = InnerRecyclerViewAdapter(context, viewItemRecipe2DRedefined[0])
+            recyclerview_columnheaders.adapter = InnerRecyclerViewAdapter(context, recipeGrid[0])
             recyclerview_columnheaders.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
-            recyclerview_columnheaders.addItemDecoration(FrozenRowDecoration(context, HORIZONTAL, colFreezeCount, viewItemRecipe2DRedefined))
+            recyclerview_columnheaders.addItemDecoration(FrozenRowDecoration(context, HORIZONTAL, colFreezeCount, recipeGrid))
             recyclerview_columnheaders.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     if (!ignoreScroll)
@@ -56,15 +55,15 @@ class TMTableView2 @JvmOverloads constructor(
                 }
             })
         }
-        val viewItemRecipe2DRedefinedRedefined =
+        val recipeGridRedefined =
             if (rowFreezeCount==1)
-                viewItemRecipe2DRedefined.drop(1)
+                RecipeGrid(recipeGrid.drop(1))
             else
-                viewItemRecipe2DRedefined
+                recipeGrid
         // # Cells
-        recyclerview_tier1.adapter = ViewItemRecipeRecyclerViewAdapter2(context, viewItemRecipe2DRedefinedRedefined)
+        recyclerview_tier1.adapter = ViewItemRecipeRecyclerViewAdapter2(context, recipeGridRedefined)
         recyclerview_tier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
-        recyclerview_tier1.addItemDecoration(TableViewDecorationTier1(context, Decoration.VERTICAL, dividerMap, viewItemRecipe2DRedefinedRedefined, colFreezeCount))
+        recyclerview_tier1.addItemDecoration(TableViewDecorationTier1(context, Decoration.VERTICAL, dividerMap, recipeGridRedefined, colFreezeCount))
         // ## Synchronize scrolling
         disposable?.dispose()
         disposable = scrollObservable

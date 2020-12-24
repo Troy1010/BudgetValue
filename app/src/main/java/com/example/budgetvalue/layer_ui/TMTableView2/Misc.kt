@@ -19,14 +19,6 @@ val firstColWidth = recipe2D
             .fold(0) { acc, v -> max(acc, v) }
     }
     .toBehaviorSubject()
-val firstRowHeight = recipe2D
-    .map {
-        it
-            .first()
-            .map { it.intrinsicHeight }
-            .fold(0) { acc, v -> max(acc, v) }
-    }
-    .toBehaviorSubject()
 val scrollObservable = BehaviorSubject.create<Pair<View, Int>>() // TODO("Hacky")
 var ignoreScroll = false // TODO("Hacky")
 val scrollPosObservable = scrollObservable
@@ -48,15 +40,6 @@ fun createInnerRV(context: Context, columnViewItemRecipes: Iterable<IViewItemRec
                     super.onScrolled(recyclerView, dx, dy)
                 }
             })
+            layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, intrinsicHeight2)
         }
-}
-
-fun bindInnerRV(
-    columnView: RecyclerView,
-    columnViewItemRecipes: Iterable<IViewItemRecipe>,
-) {
-    columnView.layoutParams = RecyclerView.LayoutParams(
-        RecyclerView.LayoutParams.MATCH_PARENT,
-        columnView.intrinsicHeight2
-    )
 }
