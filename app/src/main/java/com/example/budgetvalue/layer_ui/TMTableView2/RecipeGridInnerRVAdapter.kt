@@ -4,13 +4,12 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.tminus1010.tmcommonkotlin.logz.logz
 
-class InnerRecyclerViewAdapter(
+class RecipeGridInnerRVAdapter(
     val context: Context,
     val recipeGrid: RecipeGrid,
     val j: Int,
-) : RecyclerView.Adapter<InnerRecyclerViewAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<RecipeGridInnerRVAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
     override fun onCreateViewHolder(parent: ViewGroup, i: Int): ViewHolder {

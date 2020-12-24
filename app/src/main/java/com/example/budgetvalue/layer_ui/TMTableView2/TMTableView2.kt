@@ -43,7 +43,7 @@ class TMTableView2 @JvmOverloads constructor(
         // # Freeze rows
         if (rowFreezeCount>1) TODO()
         if (rowFreezeCount==1) {
-            recyclerview_columnheaders.adapter = InnerRecyclerViewAdapter(context, recipeGrid, 0)
+            recyclerview_columnheaders.adapter = RecipeGridInnerRVAdapter(context, recipeGrid, 0)
             recyclerview_columnheaders.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
             recyclerview_columnheaders.addItemDecoration(FrozenRowDecoration(context, HORIZONTAL, recipeGrid, rowFreezeCount))
             recyclerview_columnheaders.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -55,7 +55,7 @@ class TMTableView2 @JvmOverloads constructor(
             })
         }
         // # Cells
-        recyclerview_tier1.adapter = ViewItemRecipeRecyclerViewAdapter2(context, recipeGrid, rowFreezeCount)
+        recyclerview_tier1.adapter = RecipeGridOuterRVAdapter(context, recipeGrid, rowFreezeCount)
         recyclerview_tier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
         recyclerview_tier1.addItemDecoration(TableViewDecorationTier1(context, Decoration.VERTICAL, dividerMap, recipeGrid, colFreezeCount, rowFreezeCount))
         // ## Synchronize scrolling

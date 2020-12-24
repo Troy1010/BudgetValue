@@ -10,11 +10,11 @@ import com.example.budgetvalue.intrinsicHeight2
 import com.example.budgetvalue.layer_ui.TMTableView.Decoration
 import com.example.budgetvalue.measureUnspecified
 
-class ViewItemRecipeRecyclerViewAdapter2(
+class RecipeGridOuterRVAdapter(
     val context: Context,
     val viewItemRecipe2D: RecipeGrid,
     val rowFreezeCount: Int,
-) : RecyclerView.Adapter<ViewItemRecipeRecyclerViewAdapter2.ViewHolder>() {
+) : RecyclerView.Adapter<RecipeGridOuterRVAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
     //
     override fun onCreateViewHolder(parent: ViewGroup, j: Int): ViewHolder {
@@ -34,7 +34,7 @@ class ViewItemRecipeRecyclerViewAdapter2(
     fun createInnerRV(j: Int): RecyclerView {
         return RecyclerView(context)
             .apply {
-                adapter = InnerRecyclerViewAdapter(context, viewItemRecipe2D, j)
+                adapter = RecipeGridInnerRVAdapter(context, viewItemRecipe2D, j)
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 addItemDecoration(Decoration(context, Decoration.HORIZONTAL))
                 addOnScrollListener(object : RecyclerView.OnScrollListener() {
