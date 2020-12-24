@@ -9,20 +9,20 @@ import com.example.budgetvalue.extensions.scrollTo
 import com.example.budgetvalue.intrinsicHeight2
 import com.example.budgetvalue.layer_ui.TMTableView.Decoration
 import com.example.budgetvalue.measureUnspecified
-import com.tminus1010.tmcommonkotlin.logz.logz
 
 class ViewItemRecipeRecyclerViewAdapter2(
     val context: Context,
-    val viewItemRecipe2D: RecipeGrid
+    val viewItemRecipe2D: RecipeGrid,
+    val rowFreezeCount: Int,
 ) : RecyclerView.Adapter<ViewItemRecipeRecyclerViewAdapter2.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
     //
     override fun onCreateViewHolder(parent: ViewGroup, j: Int): ViewHolder {
         return ViewHolder(createInnerRV(j))
     }
-    override fun getItemViewType(position: Int) = position
+    override fun getItemViewType(position: Int) = position + rowFreezeCount
     override fun onBindViewHolder(holder: ViewHolder, position: Int) { }
-    override fun getItemCount() = viewItemRecipe2D.size.also { logz("viewItemRecipe2D.size:${viewItemRecipe2D.size}") }
+    override fun getItemCount() = viewItemRecipe2D.size - rowFreezeCount
     override fun onViewAttachedToWindow(holder: ViewHolder) {
         super.onViewAttachedToWindow(holder)
         // # Synchronize vertical scroll initialization
