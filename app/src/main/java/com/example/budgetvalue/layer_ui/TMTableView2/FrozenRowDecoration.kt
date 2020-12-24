@@ -27,9 +27,10 @@ class FrozenRowDecoration(
             val child = parent
             val layoutParams = child.layoutParams as ConstraintLayout.LayoutParams
             val view = recipeGrid[0][0].createBoundView()
+            val width = recipeGrid.getColumnWidth(0)
 
             val top = child.top - layoutParams.topMargin
-            val rect = Rect(0, top, firstColWidth.value, top + recipeGrid[0][0].intrinsicHeight)
+            val rect = Rect(0, top, width, top + recipeGrid[0][0].intrinsicHeight)
 
             val widthSpec = View.MeasureSpec.makeMeasureSpec(rect.width(), View.MeasureSpec.EXACTLY)
             val heightSpec = View.MeasureSpec.makeMeasureSpec(rect.height(), View.MeasureSpec.EXACTLY)
@@ -42,7 +43,7 @@ class FrozenRowDecoration(
             canvas.restore()
 
             // ## vertical divider
-            defaultDividerDrawable.setBounds(firstColWidth.value, top, firstColWidth.value+defaultDividerHeight, top + recipeGrid[0][0].intrinsicHeight)
+            defaultDividerDrawable.setBounds(width, top, width + defaultDividerHeight, top + recipeGrid[0][0].intrinsicHeight)
             defaultDividerDrawable.draw(canvas)
         }
     }
