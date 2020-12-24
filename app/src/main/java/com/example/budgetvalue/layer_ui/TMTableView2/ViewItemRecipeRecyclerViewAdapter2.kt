@@ -25,7 +25,7 @@ class ViewItemRecipeRecyclerViewAdapter2(
     override fun getItemCount() = viewItemRecipe2D.size - rowFreezeCount
     override fun onViewAttachedToWindow(holder: ViewHolder) {
         super.onViewAttachedToWindow(holder)
-        // # Synchronize vertical scroll initialization
+        // # Synchronize scroll initialization
         ignoreScroll = true
         ((holder.itemView as RecyclerView).layoutManager as LinearLayoutManager).scrollTo(scrollPosObservable.value)
         holder.itemView.measureUnspecified()
