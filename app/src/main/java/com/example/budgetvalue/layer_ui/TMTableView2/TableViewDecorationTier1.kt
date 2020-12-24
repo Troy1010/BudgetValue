@@ -10,12 +10,13 @@ import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.R
 import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
+import com.tminus1010.tmcommonkotlin.logz.logz
 
 class TableViewDecorationTier1(
     val context: Context,
     val orientation: Int = VERTICAL,
     val separatorMap: Map<Int, IViewItemRecipe>,
-    val recipes2D: List<List<IViewItemRecipe>>,
+    val recipeGrid: RecipeGrid,
     val rowFreezeCount: Int = 0,
     val colFreezeCount: Int = 0,
 ) : RecyclerView.ItemDecoration() {
@@ -79,13 +80,15 @@ class TableViewDecorationTier1(
         if (colFreezeCount>1) TODO()
         if (colFreezeCount==1) {
             if (orientation== HORIZONTAL) TODO()
+            val width = recipeGrid.getColumnWidth(0)
             for (child in parent.children) {
                 val j = parent.getChildAdapterPosition(child) + rowFreezeCount
                 val layoutParams = child.layoutParams as RecyclerView.LayoutParams
-                val view = recipes2D[j][0].createBoundView()
+                val view = recipeGrid[j][0].createBoundView()
+                val height = recipeGrid.getRowHeight(j)
 
                 val top = child.top - layoutParams.topMargin
-                val rect = Rect(0, top, firstColWidth.value, top + recipes2D[j][0].intrinsicHeight)
+                val rect = Rect(0, top, width, top + height)
 
                 val widthSpec = MeasureSpec.makeMeasureSpec(rect.width(), MeasureSpec.EXACTLY)
                 val heightSpec = MeasureSpec.makeMeasureSpec(rect.height(), MeasureSpec.EXACTLY)
@@ -98,7 +101,7 @@ class TableViewDecorationTier1(
                 canvas.restore()
 
                 // ## vertical divider
-                defaultDividerDrawable.setBounds(firstColWidth.value, top, firstColWidth.value+defaultDividerHeight, top + recipes2D[j][0].intrinsicHeight)
+                defaultDividerDrawable.setBounds(width, top, width+defaultDividerHeight, top + height)
                 defaultDividerDrawable.draw(canvas)
             }
         }

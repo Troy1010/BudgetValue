@@ -29,7 +29,6 @@ class TMTableView2 @JvmOverloads constructor(
         colFreezeCount: Int = 0,
         rowFreezeCount: Int = 0,
     ) {
-        recipe2D.onNext(recipes2D_) // TODO("Very hacky")
         inflateAndBind(RecipeGrid(recipes2D_.map { it.toList() }), dividerMap, colFreezeCount, rowFreezeCount)
     }
 
