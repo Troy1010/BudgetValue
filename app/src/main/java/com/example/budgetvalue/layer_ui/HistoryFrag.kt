@@ -80,6 +80,7 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
                     .withIndex()
                     .distinctUntilChangedBy { it.value.type }
                     .associate { it.index to titledDividerRecipeFactory.createOne(it.value.type.name) }
+                    .mapKeys { it.key + 1 }
                 tmTableView_history.initialize(recipe2D, dividerMap, 1, 1)
             }
     }

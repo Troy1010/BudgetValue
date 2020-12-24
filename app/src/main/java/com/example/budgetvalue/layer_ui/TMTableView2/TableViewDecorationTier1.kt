@@ -16,7 +16,8 @@ class TableViewDecorationTier1(
     val orientation: Int = VERTICAL,
     val separatorMap: Map<Int, IViewItemRecipe>,
     val recipes2D: List<List<IViewItemRecipe>>,
-    val colFreezeCount: Int = 0
+    val rowFreezeCount: Int = 0,
+    val colFreezeCount: Int = 0,
 ) : RecyclerView.ItemDecoration() {
     companion object {
         const val HORIZONTAL = 0
@@ -31,11 +32,11 @@ class TableViewDecorationTier1(
         parent: RecyclerView,
         state: RecyclerView.State,
     ) {
-        val i = parent.getChildAdapterPosition(view)
-        when (i) {
-            in separatorMap.keys -> outRect.apply { top = separatorMap[i]!!.intrinsicHeight }
+        val j = parent.getChildAdapterPosition(view) + rowFreezeCount
+        when (j) {
+            in separatorMap.keys -> outRect.apply { top = separatorMap[j]!!.intrinsicHeight }
             else -> {
-                if (i==0) return // The first item does not implicitly get a divider above it.
+                if (j==0) return // The first item does not implicitly get a divider above it.
                 outRect.apply { top = defaultDividerHeight }
             }
         }
@@ -44,14 +45,14 @@ class TableViewDecorationTier1(
     override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         // # Dividers
         for (child in parent.children) {
-            val i = parent.getChildAdapterPosition(child)
+            val j = parent.getChildAdapterPosition(child) + rowFreezeCount
             val layoutParams = child.layoutParams as RecyclerView.LayoutParams
 
-            if (i in separatorMap.keys) {
-                val view = separatorMap[i]!!.createBoundView()
+            if (j in separatorMap.keys) {
+                val view = separatorMap[j]!!.createBoundView()
 
-                val top = child.top - layoutParams.topMargin - separatorMap[i]!!.intrinsicHeight
-                val rect = Rect(0, top, parent.width, top + separatorMap[i]!!.intrinsicHeight)
+                val top = child.top - layoutParams.topMargin - separatorMap[j]!!.intrinsicHeight
+                val rect = Rect(0, top, parent.width, top + separatorMap[j]!!.intrinsicHeight)
 
                 val widthSpec = MeasureSpec.makeMeasureSpec(rect.width(), MeasureSpec.EXACTLY)
                 val heightSpec = MeasureSpec.makeMeasureSpec(rect.height(), MeasureSpec.EXACTLY)
@@ -63,7 +64,7 @@ class TableViewDecorationTier1(
                 view.draw(canvas)
                 canvas.restore()
             } else {
-                if (i==0) continue // The first item does not implicitly get a divider above it.
+                if (j==0) continue // The first item does not implicitly get a divider above it.
                 when (orientation) {
                     HORIZONTAL -> TODO()
                     else -> {
@@ -79,12 +80,12 @@ class TableViewDecorationTier1(
         if (colFreezeCount==1) {
             if (orientation== HORIZONTAL) TODO()
             for (child in parent.children) {
-                val i = parent.getChildAdapterPosition(child)
+                val j = parent.getChildAdapterPosition(child) + rowFreezeCount
                 val layoutParams = child.layoutParams as RecyclerView.LayoutParams
-                val view = recipes2D[i][0].createBoundView()
+                val view = recipes2D[j][0].createBoundView()
 
                 val top = child.top - layoutParams.topMargin
-                val rect = Rect(0, top, firstColWidth.value, top + recipes2D[i][0].intrinsicHeight)
+                val rect = Rect(0, top, firstColWidth.value, top + recipes2D[j][0].intrinsicHeight)
 
                 val widthSpec = MeasureSpec.makeMeasureSpec(rect.width(), MeasureSpec.EXACTLY)
                 val heightSpec = MeasureSpec.makeMeasureSpec(rect.height(), MeasureSpec.EXACTLY)
@@ -97,7 +98,7 @@ class TableViewDecorationTier1(
                 canvas.restore()
 
                 // ## vertical divider
-                defaultDividerDrawable.setBounds(firstColWidth.value, top, firstColWidth.value+defaultDividerHeight, top + recipes2D[i][0].intrinsicHeight)
+                defaultDividerDrawable.setBounds(firstColWidth.value, top, firstColWidth.value+defaultDividerHeight, top + recipes2D[j][0].intrinsicHeight)
                 defaultDividerDrawable.draw(canvas)
             }
         }

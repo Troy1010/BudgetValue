@@ -44,9 +44,9 @@ class TMTableView2 @JvmOverloads constructor(
         // # Freeze rows
         if (rowFreezeCount>1) TODO()
         if (rowFreezeCount==1) {
-            recyclerview_columnheaders.adapter = InnerRecyclerViewAdapter(context, recipeGrid[0])
+            recyclerview_columnheaders.adapter = InnerRecyclerViewAdapter(context, recipeGrid, 0)
             recyclerview_columnheaders.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
-            recyclerview_columnheaders.addItemDecoration(FrozenRowDecoration(context, HORIZONTAL, colFreezeCount, recipeGrid))
+            recyclerview_columnheaders.addItemDecoration(FrozenRowDecoration(context, HORIZONTAL, recipeGrid, rowFreezeCount))
             recyclerview_columnheaders.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     if (!ignoreScroll)
@@ -55,15 +55,10 @@ class TMTableView2 @JvmOverloads constructor(
                 }
             })
         }
-        val recipeGridRedefined =
-            if (rowFreezeCount==1)
-                RecipeGrid(recipeGrid.drop(1))
-            else
-                recipeGrid
         // # Cells
-        recyclerview_tier1.adapter = ViewItemRecipeRecyclerViewAdapter2(context, recipeGridRedefined)
+        recyclerview_tier1.adapter = ViewItemRecipeRecyclerViewAdapter2(context, recipeGrid, rowFreezeCount)
         recyclerview_tier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
-        recyclerview_tier1.addItemDecoration(TableViewDecorationTier1(context, Decoration.VERTICAL, dividerMap, recipeGridRedefined, colFreezeCount))
+        recyclerview_tier1.addItemDecoration(TableViewDecorationTier1(context, Decoration.VERTICAL, dividerMap, recipeGrid, colFreezeCount, rowFreezeCount))
         // ## Synchronize scrolling
         disposable?.dispose()
         disposable = scrollObservable
