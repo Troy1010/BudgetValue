@@ -1,11 +1,6 @@
 package com.example.budgetvalue.layer_ui.TMTableView2
 
-import android.content.Context
 import android.view.View
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.budgetvalue.intrinsicHeight2
-import com.example.budgetvalue.layer_ui.TMTableView.Decoration
 import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -26,20 +21,3 @@ val scrollPosObservable = scrollObservable
     .startWithItem(0)
     .scan(0) { acc, value -> acc + value }
     .toBehaviorSubject()
-
-fun createInnerRV(context: Context, columnViewItemRecipes: Iterable<IViewItemRecipe>): RecyclerView {
-    return RecyclerView(context)
-        .apply {
-            adapter = InnerRecyclerViewAdapter(context, columnViewItemRecipes)
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            addItemDecoration(Decoration(context, Decoration.HORIZONTAL))
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    if (!ignoreScroll)
-                        scrollObservable.onNext(Pair(recyclerView, dx))
-                    super.onScrolled(recyclerView, dx, dy)
-                }
-            })
-            layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, intrinsicHeight2)
-        }
-}

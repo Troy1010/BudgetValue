@@ -44,7 +44,7 @@ class TMTableView2 @JvmOverloads constructor(
         // # Freeze rows
         if (rowFreezeCount>1) TODO()
         if (rowFreezeCount==1) {
-            recyclerview_columnheaders.adapter = InnerRecyclerViewAdapter(context, recipeGrid[0])
+            recyclerview_columnheaders.adapter = InnerRecyclerViewAdapter(context, recipeGrid, 0)
             recyclerview_columnheaders.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
             recyclerview_columnheaders.addItemDecoration(FrozenRowDecoration(context, HORIZONTAL, colFreezeCount, recipeGrid))
             recyclerview_columnheaders.addOnScrollListener(object : RecyclerView.OnScrollListener() {
