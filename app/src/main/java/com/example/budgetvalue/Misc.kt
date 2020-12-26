@@ -23,7 +23,6 @@ import io.reactivex.rxjava3.core.ObservableSource
 import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.functions.Function3
 import io.reactivex.rxjava3.functions.Function4
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -316,12 +315,12 @@ fun getScreenHeight(): Int {
 fun <T> make1d(orientation: Orientation, z2dCollection: List<List<T>>): List<T?> {
     val returning = ArrayList<T?>()
     when (orientation) {
-        Orientation.Vertical -> {
+        Orientation.VERTICAL -> {
             for (collection in z2dCollection) {
                 returning.addAll(collection)
             }
         }
-        Orientation.Horizontal -> {
+        Orientation.HORIZONTAL -> {
             for (i in 0 until (z2dCollection.map { it.size }.maxOrNull() ?: 0)) {
                 for (collection in z2dCollection) {
                     returning.add(collection.getOrNull(i))
@@ -339,7 +338,7 @@ fun <T> generate2dArrayList(
 ): ArrayList<ArrayList<T?>> {
     val returning = ArrayList<ArrayList<T?>>()
     when (orientation) {
-        Orientation.Horizontal -> {
+        Orientation.HORIZONTAL -> {
             for (yPos in 0 until ySize) {
                 returning.add(ArrayList())
                 for (xPos in 0 until xSize) {
@@ -347,7 +346,7 @@ fun <T> generate2dArrayList(
                 }
             }
         }
-        Orientation.Vertical -> {
+        Orientation.VERTICAL -> {
             for (xPos in 0 until xSize) {
                 returning.add(ArrayList())
                 for (yPos in 0 until ySize) {
