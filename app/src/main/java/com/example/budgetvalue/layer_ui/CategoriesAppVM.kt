@@ -37,7 +37,18 @@ class CategoriesAppVM : ICategoryParser {
             Category("Vanity Food", Category.Type.Reservoir),
             Category("Emergency", Category.Type.Reservoir),
             Category("Charity", Category.Type.Reservoir),
-            Category("Trips", Category.Type.Reservoir)
+            Category("Trips", Category.Type.Reservoir),
+            Category("Christmas", Category.Type.Reservoir),
+            Category("Gifts", Category.Type.Reservoir),
+            Category("Activities", Category.Type.Reservoir),
+            Category("CategoryA", Category.Type.Reservoir),
+            Category("CategoryB", Category.Type.Reservoir),
+            Category("CategoryC", Category.Type.Reservoir),
+            Category("CategoryD", Category.Type.Reservoir),
+            Category("CategoryE", Category.Type.Reservoir),
+            Category("CategoryF", Category.Type.Reservoir),
+            Category("CategoryG", Category.Type.Reservoir),
+            Category("CategoryH", Category.Type.Reservoir),
         ))
     }
 
