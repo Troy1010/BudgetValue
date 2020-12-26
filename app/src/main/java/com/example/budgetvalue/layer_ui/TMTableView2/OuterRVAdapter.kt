@@ -9,12 +9,12 @@ import com.example.budgetvalue.extensions.scrollTo
 import com.example.budgetvalue.layer_ui.TMTableView.Decoration
 import com.example.budgetvalue.measureUnspecified
 
-class RecipeGridOuterRVAdapter(
+class OuterRVAdapter(
     val context: Context,
     val recipeGrid: RecipeGrid,
     val rowFreezeCount: Int,
     val synchronizedScrollListener: SynchronizedScrollListener
-) : RecyclerView.Adapter<RecipeGridOuterRVAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<OuterRVAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
     //
     override fun onCreateViewHolder(parent: ViewGroup, j: Int): ViewHolder {
@@ -32,7 +32,7 @@ class RecipeGridOuterRVAdapter(
     fun createInnerRV(j: Int): RecyclerView {
         return RecyclerView(context)
             .apply {
-                adapter = RecipeGridInnerRVAdapter(context, recipeGrid, j)
+                adapter = InnerRVAdapter(context, recipeGrid, j)
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 addItemDecoration(Decoration(context, Decoration.HORIZONTAL))
                 addOnScrollListener(synchronizedScrollListener)

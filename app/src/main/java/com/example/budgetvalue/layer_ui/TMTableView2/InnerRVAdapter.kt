@@ -5,11 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class RecipeGridInnerRVAdapter(
+class InnerRVAdapter(
     val context: Context,
     val recipeGrid: RecipeGrid,
     val j: Int,
-) : RecyclerView.Adapter<RecipeGridInnerRVAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<InnerRVAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
     override fun onCreateViewHolder(parent: ViewGroup, i: Int): ViewHolder {
