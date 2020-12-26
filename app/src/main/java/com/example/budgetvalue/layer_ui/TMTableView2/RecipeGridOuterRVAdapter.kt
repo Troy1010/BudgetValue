@@ -12,8 +12,9 @@ import com.example.budgetvalue.measureUnspecified
 
 class RecipeGridOuterRVAdapter(
     val context: Context,
-    val viewItemRecipe2D: RecipeGrid,
+    val recipeGrid: RecipeGrid,
     val rowFreezeCount: Int,
+    val myScrollListener: MyScrollListener
 ) : RecyclerView.Adapter<RecipeGridOuterRVAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
     //
@@ -22,29 +23,21 @@ class RecipeGridOuterRVAdapter(
     }
     override fun getItemViewType(position: Int) = position + rowFreezeCount
     override fun onBindViewHolder(holder: ViewHolder, position: Int) { }
-    override fun getItemCount() = viewItemRecipe2D.size - rowFreezeCount
+    override fun getItemCount() = recipeGrid.size - rowFreezeCount
     override fun onViewAttachedToWindow(holder: ViewHolder) {
         super.onViewAttachedToWindow(holder)
         // # Synchronize scroll initialization
-        ignoreScroll = true
-        ((holder.itemView as RecyclerView).layoutManager as LinearLayoutManager).scrollTo(scrollPosObservable.value)
+        ((holder.itemView as RecyclerView).layoutManager as LinearLayoutManager).scrollTo(myScrollListener.scrollPosObservable.value)
         holder.itemView.measureUnspecified()
-        ignoreScroll = false
     }
     fun createInnerRV(j: Int): RecyclerView {
         return RecyclerView(context)
             .apply {
-                adapter = RecipeGridInnerRVAdapter(context, viewItemRecipe2D, j)
+                adapter = RecipeGridInnerRVAdapter(context, recipeGrid, j)
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 addItemDecoration(Decoration(context, Decoration.HORIZONTAL))
-                addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                        if (!ignoreScroll)
-                            scrollObservable.onNext(Pair(recyclerView, dx))
-                        super.onScrolled(recyclerView, dx, dy)
-                    }
-                })
-                layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, intrinsicHeight2)
+                addOnScrollListener(myScrollListener)
+                layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, recipeGrid.getRowHeight(j))
             }
     }
 }
