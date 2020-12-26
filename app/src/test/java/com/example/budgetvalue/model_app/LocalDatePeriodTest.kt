@@ -37,4 +37,17 @@ class LocalDatePeriodTest {
         assertFalse(date1 in localDatePeriod)
         assertFalse(date2 in localDatePeriod)
     }
+
+    @Test
+    fun toDisplayStr() {
+        // # Given
+        val localDatePeriod = LocalDatePeriod(
+            LocalDate.of(2020, Month.APRIL, 5),
+            LocalDate.of(2020, Month.APRIL, 28)
+        )
+        // # Stimulate
+        val result = localDatePeriod.toDisplayStr()
+        //
+        assertEquals("4/5/20 - 4/28/20", result)
+    }
 }

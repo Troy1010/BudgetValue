@@ -2,6 +2,8 @@ package com.example.budgetvalue.model_app
 
 import java.time.LocalDate
 import java.time.Period
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 data class LocalDatePeriod(
     val startDate: LocalDate,
@@ -12,5 +14,10 @@ data class LocalDatePeriod(
     operator fun contains(localDate: LocalDate): Boolean {
         return (localDate.isAfter(startDate) || localDate == startDate) &&
                 (localDate.isBefore(endDate) || localDate == endDate)
+    }
+
+    fun toDisplayStr(): String {
+        val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
+        return "${formatter.format(startDate)} - ${formatter.format(endDate)}"
     }
 }
