@@ -36,12 +36,7 @@ class SourceHashMap<K, V>(): HashMap<K, V>() {
         val value = BehaviorSubject.create<V>()
             .also { it.skip(1).subscribe { super.put(key, it) } } // TODO("dispose")
         observableMap.put(key, value)
-        additionsObservablePublisher.onNext(object: Map.Entry<K, BehaviorSubject<V>> {
-            override val key: K
-                get() = key
-            override val value: BehaviorSubject<V>
-                get() = value
-        })
+        additionsObservablePublisher.onNext(createMapEntry(key, value))
         observableMapPublisher.onNext(observableMap)
     }
 

@@ -23,6 +23,7 @@ import io.reactivex.rxjava3.core.ObservableSource
 import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.functions.Function3
 import io.reactivex.rxjava3.functions.Function4
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -512,4 +513,14 @@ fun <A, B, C> combineLatestImpatient(
 
 fun <T> Box<T>.unbox(): T {
     return this.first
+}
+
+// untested
+fun <K, V> createMapEntry(key: K, value: V): Map.Entry<K, V> {
+    return object: Map.Entry<K, V> {
+        override val key: K
+            get() = key
+        override val value: V
+            get() = value
+    }
 }
