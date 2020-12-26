@@ -9,7 +9,7 @@ import com.example.budgetvalue.R
 
 fun createRow(context: Context, rowViewItemRecipes: Iterable<IViewItemRecipe>): LinearLayout {
     val view = LinearLayout(context)
-    rowViewItemRecipes.forEach { view.addView(it.viewProvider()) }
+    rowViewItemRecipes.forEach { view.addView(it.createView()) }
     view.showDividers = LinearLayout.SHOW_DIVIDER_MIDDLE
     view.dividerPadding = 1
     view.dividerDrawable = ContextCompat.getDrawable(context, R.drawable.divider)!!
@@ -21,8 +21,8 @@ fun bindRow(
     rowViewItemRecipes: Iterable<IViewItemRecipe>,
     columnWidths: List<Int>
 ) {
-    for ((xPos, cellData) in rowViewItemRecipes.withIndex()) {
-        cellData.bindAction(rowView[xPos], cellData.data)
+    for ((xPos, recipe) in rowViewItemRecipes.withIndex()) {
+        recipe.bindView(rowView[xPos])
         rowView[xPos].layoutParams = LinearLayout.LayoutParams(
             columnWidths[xPos],
             LinearLayout.LayoutParams.MATCH_PARENT
