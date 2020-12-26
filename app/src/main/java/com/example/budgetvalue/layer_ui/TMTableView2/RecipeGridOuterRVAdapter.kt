@@ -12,7 +12,7 @@ import com.example.budgetvalue.measureUnspecified
 
 class RecipeGridOuterRVAdapter(
     val context: Context,
-    val viewItemRecipe2D: RecipeGrid,
+    val recipeGrid: RecipeGrid,
     val rowFreezeCount: Int,
     val myScrollListener: MyScrollListener
 ) : RecyclerView.Adapter<RecipeGridOuterRVAdapter.ViewHolder>() {
@@ -23,7 +23,7 @@ class RecipeGridOuterRVAdapter(
     }
     override fun getItemViewType(position: Int) = position + rowFreezeCount
     override fun onBindViewHolder(holder: ViewHolder, position: Int) { }
-    override fun getItemCount() = viewItemRecipe2D.size - rowFreezeCount
+    override fun getItemCount() = recipeGrid.size - rowFreezeCount
     override fun onViewAttachedToWindow(holder: ViewHolder) {
         super.onViewAttachedToWindow(holder)
         // # Synchronize scroll initialization
@@ -33,11 +33,11 @@ class RecipeGridOuterRVAdapter(
     fun createInnerRV(j: Int): RecyclerView {
         return RecyclerView(context)
             .apply {
-                adapter = RecipeGridInnerRVAdapter(context, viewItemRecipe2D, j)
+                adapter = RecipeGridInnerRVAdapter(context, recipeGrid, j)
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 addItemDecoration(Decoration(context, Decoration.HORIZONTAL))
                 addOnScrollListener(myScrollListener)
-                layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, intrinsicHeight2)
+                layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, recipeGrid.getRowHeight(j))
             }
     }
 }
