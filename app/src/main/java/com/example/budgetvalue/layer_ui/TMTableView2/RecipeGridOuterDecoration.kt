@@ -35,10 +35,8 @@ class RecipeGridOuterDecoration(
         val j = parent.getChildAdapterPosition(view) + rowFreezeCount
         when (j) {
             in dividerMap.keys -> outRect.apply { top = dividerMap[j]!!.intrinsicHeight }
-            else -> {
-                if (j==0) return // The first item does not implicitly get a divider above it.
-                outRect.apply { top = defaultDividerHeight }
-            }
+            0 -> return // The first item does not implicitly get a divider above it.
+            else -> outRect.apply { top = defaultDividerHeight }
         }
     }
 
