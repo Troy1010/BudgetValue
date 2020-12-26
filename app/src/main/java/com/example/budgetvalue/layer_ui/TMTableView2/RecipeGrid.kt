@@ -7,7 +7,6 @@ import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 import com.tminus1010.tmcommonkotlin.logz.logz
 import kotlin.math.max
 
-// assume recipe2d[12][6]
 // assume recipe2d[y][x]
 // assume recipe2d[j][i]
 class RecipeGrid(
