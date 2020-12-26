@@ -2,6 +2,8 @@ package com.example.budgetvalue.extensions
 
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.time.temporal.TemporalAdjusters
 
 
@@ -18,4 +20,9 @@ fun LocalDate.next(dayOfWeek: DayOfWeek): LocalDate {
 
 fun LocalDate.nextOrSame(dayOfWeek: DayOfWeek): LocalDate {
     return this.with(TemporalAdjusters.nextOrSame(dayOfWeek))
+}
+
+fun LocalDate.toDisplayStr(): String {
+    return DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
+        .format(this)
 }

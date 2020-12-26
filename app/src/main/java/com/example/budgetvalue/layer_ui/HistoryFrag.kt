@@ -3,7 +3,9 @@ package com.example.budgetvalue.layer_ui
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.budgetvalue.*
@@ -54,6 +56,13 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
     private fun setupObservers() {
         val cellRecipeFactory = ViewItemRecipeFactory.createCellRecipeFactory(requireContext())
         val headerRecipeFactory = ViewItemRecipeFactory.createHeaderRecipeFactory(requireContext())
+        val doubleHeaderRecipeFactory = ViewItemRecipeFactory<LinearLayout, Pair<Any, Any?>>(
+            { View.inflate(context, R.layout.tableview_header_with_subtitle, null) as LinearLayout },
+            { v, pair ->
+                (v.children.first() as TextView).text = pair.first.toString()
+                if (pair.second!=null) (v.children.last() as TextView).text = pair.second.toString()
+            },
+        )
         val titledDividerRecipeFactory = ViewItemRecipeFactory<TextView, String>(
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
@@ -69,7 +78,7 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
                     ).apply {
                         addAll(
                             historyColumnDatas.map {
-                                headerRecipeFactory.createOne2(it.title) +
+                                doubleHeaderRecipeFactory.createOne2(Pair(it.title, it.subTitle)) +
                                         cellRecipeFactory.createMany(activeCategories.map { k ->
                                             it.categoryAmounts[k]?.toString() ?: ""
                                         })

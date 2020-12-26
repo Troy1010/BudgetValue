@@ -3,6 +3,7 @@ package com.example.budgetvalue.layer_ui
 import androidx.lifecycle.ViewModel
 import com.example.budgetvalue.SourceArrayList
 import com.example.budgetvalue.combineLatestImpatient
+import com.example.budgetvalue.extensions.toDisplayStr
 import com.example.budgetvalue.model_app.*
 import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
@@ -39,8 +40,9 @@ class HistoryVM(val transactionsVM: TransactionsVM, val reconcileVM: ReconcileVM
                             ?.also {
                                 logz("Adding Plan..")
                                 historyColumnDatas.add(HistoryColumnData(
+                                    it.planCategoryAmounts,
                                     "Plan",
-                                    it.planCategoryAmounts
+                                    it.localDatePeriod.blockingFirst().toDisplayStr(),
                                 ))
                             }
                     // ## Add Actual
@@ -50,8 +52,9 @@ class HistoryVM(val transactionsVM: TransactionsVM, val reconcileVM: ReconcileVM
                             ?.also {
                                 logz("Adding Actual.. blockPeriod:${blockPeriod.startDate}")
                                 historyColumnDatas.add(HistoryColumnData(
+                                    it.categoryAmounts,
                                     "Actual",
-                                    it.categoryAmounts
+                                    it.localDatePeriod.toDisplayStr(),
                                 ))
                             }
                     // ## Add Reconciliations
@@ -60,8 +63,9 @@ class HistoryVM(val transactionsVM: TransactionsVM, val reconcileVM: ReconcileVM
                         for (reconciliation in reconciliations.filter { it.localDate in blockPeriod }) {
                             logz("Adding Reconciliation..")
                             historyColumnDatas.add(HistoryColumnData(
+                                reconciliation.categoryAmounts,
                                 "Reconciliation",
-                                reconciliation.categoryAmounts
+                                reconciliation.localDate.toDisplayStr()
                             ))
                         }
                 }
