@@ -58,7 +58,7 @@ class TMTableView2 @JvmOverloads constructor(
         // # Cells
         recyclerview_tier1.adapter = RecipeGridOuterRVAdapter(context, recipeGrid, rowFreezeCount, myScrollListener)
         recyclerview_tier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
-        recyclerview_tier1.addItemDecoration(TableViewDecorationTier1(context, Decoration.VERTICAL, dividerMap, recipeGrid, colFreezeCount, rowFreezeCount))
+        recyclerview_tier1.addItemDecoration(RecipeGridOuterDecoration(context, Decoration.VERTICAL, dividerMap, recipeGrid, colFreezeCount, rowFreezeCount))
         // ## Synchronize scrolling
         disposable?.dispose()
         disposable = myScrollListener.scrollObservable

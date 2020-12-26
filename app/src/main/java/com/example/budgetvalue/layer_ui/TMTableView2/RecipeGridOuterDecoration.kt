@@ -12,7 +12,7 @@ import com.example.budgetvalue.R
 import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 import com.tminus1010.tmcommonkotlin.logz.logz
 
-class TableViewDecorationTier1(
+class RecipeGridOuterDecoration(
     val context: Context,
     val orientation: Int = VERTICAL,
     val separatorMap: Map<Int, IViewItemRecipe>,
