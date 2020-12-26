@@ -62,6 +62,7 @@ fun Iterable<Transaction>.getBlocks(numOfWeeks: Int): HashMap<LocalDate, java.ut
 }
 
 
+@Suppress("UNCHECKED_CAST")
 fun <A, B, C, D, E> combineLatestAsTuple(
     a: ObservableSource<A>,
     b: ObservableSource<B>,
@@ -82,6 +83,7 @@ fun <A, B, C, D, E> combineLatestAsTuple(
     }
 }
 
+@Suppress("UNCHECKED_CAST")
 fun <A, B, C, D> combineLatestAsTuple(
     a: ObservableSource<A>,
     b: ObservableSource<B>,
@@ -100,6 +102,7 @@ fun <A, B, C, D> combineLatestAsTuple(
     }
 }
 
+@Suppress("UNCHECKED_CAST")
 fun <A, B, C> combineLatestAsTuple(
     a: ObservableSource<A>,
     b: ObservableSource<B>,
@@ -116,6 +119,7 @@ fun <A, B, C> combineLatestAsTuple(
     }
 }
 
+@Suppress("UNCHECKED_CAST")
 fun <A, B> combineLatestAsTuple(
     a: ObservableSource<A>,
     b: ObservableSource<B>,
@@ -130,6 +134,7 @@ fun <A, B> combineLatestAsTuple(
     }
 }
 
+@Suppress("UNCHECKED_CAST")
 fun <A> combineLatestAsTuple(a: ObservableSource<A>): Observable<Box<A>> {
     return Observable.combineLatest(
         listOf(a)
@@ -219,6 +224,7 @@ fun PublishSubject<Unit>.emit() {
     this.onNext(Unit)
 }
 
+@Suppress("USELESS_CAST")
 @SuppressLint("CheckResult")
 fun <T> Observable<T>.logSubscribe2(
     msgPrefix: String? = null,
