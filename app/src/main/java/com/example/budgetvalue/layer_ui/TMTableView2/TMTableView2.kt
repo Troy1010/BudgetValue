@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
+import com.example.budgetvalue.Orientation
 import com.example.budgetvalue.R
 import com.example.budgetvalue.extensions.children
 import com.example.budgetvalue.layer_ui.TMTableView.Decoration
@@ -34,7 +35,7 @@ class TMTableView2 @JvmOverloads constructor(
             dividerMap,
             colFreezeCount,
             rowFreezeCount,
-            SynchronizedScrollListener(SynchronizedScrollListener.Orientation.HORIZONTAL),
+            SynchronizedScrollListener(Orientation.HORIZONTAL),
         )
     }
 
