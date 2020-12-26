@@ -4,24 +4,34 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.updateLayoutParams
 import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
-import com.tminus1010.tmcommonkotlin.logz.logz
 import kotlin.math.max
 
-// assume recipe2d[y][x]
-// assume recipe2d[j][i]
+/**
+ * This class keeps data that depends on the entire grid, such as rowHeight and columnWidth
+ * For now, the class requires the assumptions:
+ *      assume heights and widths do not change
+ *      assume recipe2d[y][x]
+ *      assume recipe2d[j][i]
+ */
 class RecipeGrid(
     private val recipes2d: List<List<IViewItemRecipe>>,
-): List<List<IViewItemRecipe>> by recipes2d {
+) : List<List<IViewItemRecipe>> by recipes2d {
+    private val colHeights = HashMap<Int, Int>()
+    private val rowHeights = HashMap<Int, Int>()
     fun getRowHeight(j: Int): Int {
-        return recipes2d[j]
+        return rowHeights[j] ?: recipes2d[j]
             .map { it.intrinsicHeight }
             .fold(0) { acc, v -> max(acc, v) }
+            .also { rowHeights[j] = it }
     }
+
     fun getColumnWidth(i: Int): Int {
-        return recipes2d
+        return colHeights[i] ?: recipes2d
             .map { it[i].intrinsicWidth }
             .fold(0) { acc, v -> max(acc, v) }
+            .also { colHeights[i] = it }
     }
+
     fun createResizedView(i: Int, j: Int): View {
         return recipes2d[j][i].createView().apply {
             if (layoutParams == null)
