@@ -12,13 +12,13 @@ android {
     kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
 
     defaultConfig {
-        applicationId "com.example.budgetvalue"
+        applicationId "com.tminus1010.budgetvalue"
         minSdkVersion 26
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "com.example.budgetvalue.CustomTestRunner"
+        testInstrumentationRunner "com.tminus1010.budgetvalue.CustomTestRunner"
 
         multiDexEnabled true
 

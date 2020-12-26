@@ -6,22 +6,22 @@
 
     <fragment
         android:id="@+id/categorizeFrag"
-        android:name="com.example.budgetvalue.layer_ui.CategorizeFrag"
+        android:name="com.tminus1010.budgetvalue.layer_ui.CategorizeFrag"
         android:label="Categorize" />
     <fragment
         android:id="@+id/importFrag"
-        android:name="com.example.budgetvalue.layer_ui.ImportFrag"
+        android:name="com.tminus1010.budgetvalue.layer_ui.ImportFrag"
         android:label="Import" />
     <fragment
         android:id="@+id/reconcileFrag"
-        android:name="com.example.budgetvalue.layer_ui.ReconcileFrag"
+        android:name="com.tminus1010.budgetvalue.layer_ui.ReconcileFrag"
         android:label="Reconcile" />
     <fragment
         android:id="@+id/planFrag"
-        android:name="com.example.budgetvalue.layer_ui.PlanFrag"
+        android:name="com.tminus1010.budgetvalue.layer_ui.PlanFrag"
         android:label="Plan" />
     <fragment
         android:id="@+id/historyFrag"
-        android:name="com.example.budgetvalue.layer_ui.HistoryFrag"
+        android:name="com.tminus1010.budgetvalue.layer_ui.HistoryFrag"
         android:label="History" />
 </navigation>
