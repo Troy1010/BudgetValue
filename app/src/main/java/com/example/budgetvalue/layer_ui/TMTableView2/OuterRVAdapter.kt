@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.budgetvalue.Orientation
 import com.example.budgetvalue.extensions.scrollTo
 import com.example.budgetvalue.layer_ui.TMTableView.Decoration
 import com.example.budgetvalue.measureUnspecified
@@ -34,7 +35,7 @@ class OuterRVAdapter(
             .apply {
                 adapter = InnerRVAdapter(context, recipeGrid, j)
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                addItemDecoration(Decoration(context, Decoration.HORIZONTAL))
+                addItemDecoration(Decoration(context, Orientation.HORIZONTAL))
                 addOnScrollListener(synchronizedScrollListener)
                 layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, recipeGrid.getRowHeight(j))
             }

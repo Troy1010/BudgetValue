@@ -1,3 +1,3 @@
 package com.example.budgetvalue
 
-enum class Orientation { VERTICAL, HORIZONTAL }
+enum class Orientation { HORIZONTAL, VERTICAL }

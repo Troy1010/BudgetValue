@@ -8,22 +8,18 @@ import android.view.View.MeasureSpec
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
+import com.example.budgetvalue.Orientation
 import com.example.budgetvalue.R
 import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 
 class OuterDecoration(
     val context: Context,
-    val orientation: Int = VERTICAL,
+    val orientation: Orientation = Orientation.VERTICAL,
     val dividerMap: Map<Int, IViewItemRecipe>,
     val recipeGrid: RecipeGrid,
     val rowFreezeCount: Int = 0,
     val colFreezeCount: Int = 0,
 ) : RecyclerView.ItemDecoration() {
-    companion object {
-        const val HORIZONTAL = 0
-        const val VERTICAL = 1
-    }
-
     val defaultDividerDrawable by lazy { ContextCompat.getDrawable(context, R.drawable.divider)!! }
 
     override fun getItemOffsets(
@@ -32,6 +28,7 @@ class OuterDecoration(
         parent: RecyclerView,
         state: RecyclerView.State,
     ) {
+        if (orientation == Orientation.HORIZONTAL) TODO()
         val j = parent.getChildAdapterPosition(view) + rowFreezeCount
         when (j) {
             in dividerMap.keys -> outRect.apply { top = dividerMap[j]!!.intrinsicHeight }
@@ -64,8 +61,8 @@ class OuterDecoration(
             } else {
                 if (j == 0) continue // The first item does not implicitly get a divider above it.
                 when (orientation) {
-                    HORIZONTAL -> TODO()
-                    else -> {
+                    Orientation.HORIZONTAL -> TODO()
+                    Orientation.VERTICAL -> {
                         val top =
                             child.top - layoutParams.topMargin - defaultDividerDrawable.intrinsicHeight
                         defaultDividerDrawable.setBounds(0,
@@ -80,7 +77,7 @@ class OuterDecoration(
         // # Frozen Columns
         if (colFreezeCount > 1) TODO()
         if (colFreezeCount == 1) {
-            if (orientation == HORIZONTAL) TODO()
+            if (orientation == Orientation.HORIZONTAL) TODO()
             val width = recipeGrid.getColumnWidth(0)
             for (child in parent.children) {
                 val j = parent.getChildAdapterPosition(child) + rowFreezeCount

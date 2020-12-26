@@ -53,13 +53,13 @@ class TMTableView2 @JvmOverloads constructor(
         if (rowFreezeCount==1) {
             recyclerview_columnheaders.adapter = InnerRVAdapter(context, recipeGrid, 0)
             recyclerview_columnheaders.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
-            recyclerview_columnheaders.addItemDecoration(InnerFrozenRowDecoration(context, HORIZONTAL, recipeGrid, rowFreezeCount))
+            recyclerview_columnheaders.addItemDecoration(InnerFrozenRowDecoration(context, Orientation.HORIZONTAL, recipeGrid, rowFreezeCount))
             recyclerview_columnheaders.addOnScrollListener(synchronizedScrollListener)
         }
         // # Cells
         recyclerview_tier1.adapter = OuterRVAdapter(context, recipeGrid, rowFreezeCount, synchronizedScrollListener)
         recyclerview_tier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
-        recyclerview_tier1.addItemDecoration(OuterDecoration(context, Decoration.VERTICAL, dividerMap, recipeGrid, colFreezeCount, rowFreezeCount))
+        recyclerview_tier1.addItemDecoration(OuterDecoration(context, Orientation.VERTICAL, dividerMap, recipeGrid, colFreezeCount, rowFreezeCount))
         // ## Synchronize scrolling
         disposable?.dispose()
         disposable = synchronizedScrollListener.scrollObservable

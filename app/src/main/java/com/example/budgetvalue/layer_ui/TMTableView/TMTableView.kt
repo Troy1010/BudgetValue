@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
+import com.example.budgetvalue.Orientation
 import com.example.budgetvalue.R
 import com.example.budgetvalue.combineLatestAsTuple
 import com.example.budgetvalue.layer_ui.TMTableView.ColumnWidthCalculator.generateColumnWidths
@@ -56,7 +57,7 @@ class TMTableView @JvmOverloads constructor(
             columnWidths
         )
         recyclerview_tier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
-        recyclerview_tier1.addItemDecoration(Decoration(context, Decoration.VERTICAL))
+        recyclerview_tier1.addItemDecoration(Decoration(context, Orientation.VERTICAL))
     }
 }
 
