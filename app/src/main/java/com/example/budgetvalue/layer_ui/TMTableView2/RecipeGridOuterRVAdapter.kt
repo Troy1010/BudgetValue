@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.extensions.scrollTo
-import com.example.budgetvalue.intrinsicHeight2
 import com.example.budgetvalue.layer_ui.TMTableView.Decoration
 import com.example.budgetvalue.measureUnspecified
 
@@ -14,7 +13,7 @@ class RecipeGridOuterRVAdapter(
     val context: Context,
     val recipeGrid: RecipeGrid,
     val rowFreezeCount: Int,
-    val myScrollListener: MyScrollListener
+    val synchronizedScrollListener: SynchronizedScrollListener
 ) : RecyclerView.Adapter<RecipeGridOuterRVAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
     //
@@ -27,7 +26,7 @@ class RecipeGridOuterRVAdapter(
     override fun onViewAttachedToWindow(holder: ViewHolder) {
         super.onViewAttachedToWindow(holder)
         // # Synchronize scroll initialization
-        ((holder.itemView as RecyclerView).layoutManager as LinearLayoutManager).scrollTo(myScrollListener.scrollPosObservable.value)
+        ((holder.itemView as RecyclerView).layoutManager as LinearLayoutManager).scrollTo(synchronizedScrollListener.scrollPosObservable.value)
         holder.itemView.measureUnspecified()
     }
     fun createInnerRV(j: Int): RecyclerView {
@@ -36,7 +35,7 @@ class RecipeGridOuterRVAdapter(
                 adapter = RecipeGridInnerRVAdapter(context, recipeGrid, j)
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 addItemDecoration(Decoration(context, Decoration.HORIZONTAL))
-                addOnScrollListener(myScrollListener)
+                addOnScrollListener(synchronizedScrollListener)
                 layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, recipeGrid.getRowHeight(j))
             }
     }

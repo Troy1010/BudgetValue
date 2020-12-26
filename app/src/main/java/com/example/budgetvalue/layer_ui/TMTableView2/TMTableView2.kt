@@ -34,7 +34,7 @@ class TMTableView2 @JvmOverloads constructor(
             dividerMap,
             colFreezeCount,
             rowFreezeCount,
-            MyScrollListener(MyScrollListener.Orientation.HORIZONTAL),
+            SynchronizedScrollListener(SynchronizedScrollListener.Orientation.HORIZONTAL),
         )
     }
 
@@ -43,7 +43,7 @@ class TMTableView2 @JvmOverloads constructor(
         dividerMap: Map<Int, IViewItemRecipe>,
         colFreezeCount: Int,
         rowFreezeCount: Int,
-        myScrollListener: MyScrollListener,
+        synchronizedScrollListener: SynchronizedScrollListener,
     ) {
         // # Inflate tableView
         if (tableView == null) tableView = View.inflate(context, R.layout.tableview_layout2, this)
@@ -53,26 +53,26 @@ class TMTableView2 @JvmOverloads constructor(
             recyclerview_columnheaders.adapter = RecipeGridInnerRVAdapter(context, recipeGrid, 0)
             recyclerview_columnheaders.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
             recyclerview_columnheaders.addItemDecoration(FrozenRowDecoration(context, HORIZONTAL, recipeGrid, rowFreezeCount))
-            recyclerview_columnheaders.addOnScrollListener(myScrollListener)
+            recyclerview_columnheaders.addOnScrollListener(synchronizedScrollListener)
         }
         // # Cells
-        recyclerview_tier1.adapter = RecipeGridOuterRVAdapter(context, recipeGrid, rowFreezeCount, myScrollListener)
+        recyclerview_tier1.adapter = RecipeGridOuterRVAdapter(context, recipeGrid, rowFreezeCount, synchronizedScrollListener)
         recyclerview_tier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
         recyclerview_tier1.addItemDecoration(RecipeGridOuterDecoration(context, Decoration.VERTICAL, dividerMap, recipeGrid, colFreezeCount, rowFreezeCount))
         // ## Synchronize scrolling
         disposable?.dispose()
-        disposable = myScrollListener.scrollObservable
+        disposable = synchronizedScrollListener.scrollObservable
             .subscribe { (v, dx) ->
                 // ### Scroll children in recyclerview_tier1
                 recyclerview_tier1.layoutManager!!.children
                     .filter { it != v }
                     .forEach {
                         (it as? RecyclerView)
-                            ?.also { myScrollListener.ignoredScrollBy(it, dx, 0) }
+                            ?.also { synchronizedScrollListener.ignoredScrollBy(it, dx, 0) }
                     }
                 // ### Scroll frozen row
                 if (recyclerview_columnheaders != v) {
-                    myScrollListener.ignoredScrollBy(recyclerview_columnheaders, dx, 0)
+                    synchronizedScrollListener.ignoredScrollBy(recyclerview_columnheaders, dx, 0)
                 }
             }
     }

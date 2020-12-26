@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
-class MyScrollListener(val orientation: Orientation) : RecyclerView.OnScrollListener() {
+class SynchronizedScrollListener(val orientation: Orientation) : RecyclerView.OnScrollListener() {
     enum class Orientation { HORIZONTAL, VERTICAL }
     /**
      * Here are my possible solution groups for the requirement: Scroll without listening
