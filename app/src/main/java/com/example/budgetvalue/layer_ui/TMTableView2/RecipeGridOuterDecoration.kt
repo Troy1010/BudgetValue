@@ -10,12 +10,11 @@ import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetvalue.R
 import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
-import com.tminus1010.tmcommonkotlin.logz.logz
 
 class RecipeGridOuterDecoration(
     val context: Context,
     val orientation: Int = VERTICAL,
-    val separatorMap: Map<Int, IViewItemRecipe>,
+    val dividerMap: Map<Int, IViewItemRecipe>,
     val recipeGrid: RecipeGrid,
     val rowFreezeCount: Int = 0,
     val colFreezeCount: Int = 0,
@@ -35,7 +34,7 @@ class RecipeGridOuterDecoration(
     ) {
         val j = parent.getChildAdapterPosition(view) + rowFreezeCount
         when (j) {
-            in separatorMap.keys -> outRect.apply { top = separatorMap[j]!!.intrinsicHeight }
+            in dividerMap.keys -> outRect.apply { top = dividerMap[j]!!.intrinsicHeight }
             else -> {
                 if (j==0) return // The first item does not implicitly get a divider above it.
                 outRect.apply { top = defaultDividerHeight }
@@ -49,11 +48,11 @@ class RecipeGridOuterDecoration(
             val j = parent.getChildAdapterPosition(child) + rowFreezeCount
             val layoutParams = child.layoutParams as RecyclerView.LayoutParams
 
-            if (j in separatorMap.keys) {
-                val view = separatorMap[j]!!.createBoundView()
+            if (j in dividerMap.keys) {
+                val view = dividerMap[j]!!.createBoundView()
 
-                val top = child.top - layoutParams.topMargin - separatorMap[j]!!.intrinsicHeight
-                val rect = Rect(0, top, parent.width, top + separatorMap[j]!!.intrinsicHeight)
+                val top = child.top - layoutParams.topMargin - dividerMap[j]!!.intrinsicHeight
+                val rect = Rect(0, top, parent.width, top + dividerMap[j]!!.intrinsicHeight)
 
                 val widthSpec = MeasureSpec.makeMeasureSpec(rect.width(), MeasureSpec.EXACTLY)
                 val heightSpec = MeasureSpec.makeMeasureSpec(rect.height(), MeasureSpec.EXACTLY)
