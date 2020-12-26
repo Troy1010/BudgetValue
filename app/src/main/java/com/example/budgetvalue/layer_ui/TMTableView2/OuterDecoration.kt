@@ -23,8 +23,8 @@ class OuterDecoration(
         const val HORIZONTAL = 0
         const val VERTICAL = 1
     }
+
     val defaultDividerDrawable by lazy { ContextCompat.getDrawable(context, R.drawable.divider)!! }
-    val defaultDividerHeight by lazy { defaultDividerDrawable.intrinsicHeight }
 
     override fun getItemOffsets(
         outRect: Rect,
@@ -36,12 +36,12 @@ class OuterDecoration(
         when (j) {
             in dividerMap.keys -> outRect.apply { top = dividerMap[j]!!.intrinsicHeight }
             0 -> return // The first item does not implicitly get a divider above it.
-            else -> outRect.apply { top = defaultDividerHeight }
+            else -> outRect.apply { top = defaultDividerDrawable.intrinsicHeight }
         }
     }
 
     override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
-        // # Dividers
+        // # Horizontal Dividers
         for (child in parent.children) {
             val j = parent.getChildAdapterPosition(child) + rowFreezeCount
             val layoutParams = child.layoutParams as RecyclerView.LayoutParams
@@ -62,21 +62,25 @@ class OuterDecoration(
                 view.draw(canvas)
                 canvas.restore()
             } else {
-                if (j==0) continue // The first item does not implicitly get a divider above it.
+                if (j == 0) continue // The first item does not implicitly get a divider above it.
                 when (orientation) {
                     HORIZONTAL -> TODO()
                     else -> {
-                        val top = child.top - layoutParams.topMargin - defaultDividerHeight
-                        defaultDividerDrawable.setBounds(0, top, parent.width, top + defaultDividerHeight)
+                        val top =
+                            child.top - layoutParams.topMargin - defaultDividerDrawable.intrinsicHeight
+                        defaultDividerDrawable.setBounds(0,
+                            top,
+                            parent.width,
+                            top + defaultDividerDrawable.intrinsicHeight)
                     }
                 }
                 defaultDividerDrawable.draw(canvas)
             }
         }
         // # Frozen Columns
-        if (colFreezeCount>1) TODO()
-        if (colFreezeCount==1) {
-            if (orientation== HORIZONTAL) TODO()
+        if (colFreezeCount > 1) TODO()
+        if (colFreezeCount == 1) {
+            if (orientation == HORIZONTAL) TODO()
             val width = recipeGrid.getColumnWidth(0)
             for (child in parent.children) {
                 val j = parent.getChildAdapterPosition(child) + rowFreezeCount
@@ -98,7 +102,10 @@ class OuterDecoration(
                 canvas.restore()
 
                 // ## vertical divider
-                defaultDividerDrawable.setBounds(width, top, width+defaultDividerHeight, top + height)
+                defaultDividerDrawable.setBounds(width,
+                    top,
+                    width + defaultDividerDrawable.intrinsicHeight,
+                    top + height)
                 defaultDividerDrawable.draw(canvas)
             }
         }
