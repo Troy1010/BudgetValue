@@ -14,6 +14,7 @@ class RecipeGridOuterRVAdapter(
     val context: Context,
     val viewItemRecipe2D: RecipeGrid,
     val rowFreezeCount: Int,
+    val myScrollListener: MyScrollListener
 ) : RecyclerView.Adapter<RecipeGridOuterRVAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
     //
@@ -26,10 +27,8 @@ class RecipeGridOuterRVAdapter(
     override fun onViewAttachedToWindow(holder: ViewHolder) {
         super.onViewAttachedToWindow(holder)
         // # Synchronize scroll initialization
-        ignoreScroll = true
-        ((holder.itemView as RecyclerView).layoutManager as LinearLayoutManager).scrollTo(scrollPosObservable.value)
+        ((holder.itemView as RecyclerView).layoutManager as LinearLayoutManager).scrollTo(myScrollListener.scrollPosObservable.value)
         holder.itemView.measureUnspecified()
-        ignoreScroll = false
     }
     fun createInnerRV(j: Int): RecyclerView {
         return RecyclerView(context)
@@ -37,13 +36,7 @@ class RecipeGridOuterRVAdapter(
                 adapter = RecipeGridInnerRVAdapter(context, viewItemRecipe2D, j)
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 addItemDecoration(Decoration(context, Decoration.HORIZONTAL))
-                addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                        if (!ignoreScroll)
-                            scrollObservable.onNext(Pair(recyclerView, dx))
-                        super.onScrolled(recyclerView, dx, dy)
-                    }
-                })
+                addOnScrollListener(myScrollListener)
                 layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, intrinsicHeight2)
             }
     }
