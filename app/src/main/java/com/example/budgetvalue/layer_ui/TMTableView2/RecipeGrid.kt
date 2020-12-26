@@ -4,6 +4,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.updateLayoutParams
 import com.example.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlin.math.max
 
 /**
@@ -18,6 +20,18 @@ class RecipeGrid(
 ) : List<List<IViewItemRecipe>> by recipes2d {
     private val colHeights = HashMap<Int, Int>()
     private val rowHeights = HashMap<Int, Int>()
+
+    init {
+        // # Calculate height and widths
+        Observable.just(Unit)
+            .subscribeOn(Schedulers.computation())
+            .observeOn(Schedulers.computation())
+            .subscribe {
+                for (j in recipes2d.indices) getRowHeight(j)
+                for (i in recipes2d[0].indices) getColumnWidth(i)
+            }
+    }
+
     fun getRowHeight(j: Int): Int {
         return rowHeights[j] ?: recipes2d[j]
             .map { it.intrinsicHeight }
@@ -33,17 +47,18 @@ class RecipeGrid(
     }
 
     fun createResizedView(i: Int, j: Int): View {
-        return recipes2d[j][i].createView().apply {
-            if (layoutParams == null)
-                layoutParams = ViewGroup.LayoutParams(
-                    getColumnWidth(i),
-                    getRowHeight(j)
-                )
-            else
-                updateLayoutParams {
-                    width = getColumnWidth(i)
-                    height = getRowHeight(j)
-                }
-        }
+        return recipes2d[j][i].createView()
+            .also {
+                if (it.layoutParams == null)
+                    it.layoutParams = ViewGroup.LayoutParams(
+                        getColumnWidth(i),
+                        getRowHeight(j)
+                    )
+                else
+                    it.updateLayoutParams {
+                        width = getColumnWidth(i)
+                        height = getRowHeight(j)
+                    }
+            }
     }
 }
