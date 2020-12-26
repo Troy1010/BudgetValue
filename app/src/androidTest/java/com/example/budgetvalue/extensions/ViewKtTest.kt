@@ -8,7 +8,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Test
 
-class ViewExtensionsKtTest {
+class ViewKtTest {
     val app by lazy { InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as AppMock }
 
     @Test

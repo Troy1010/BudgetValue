@@ -7,7 +7,7 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.Month
 
-class LocalDateExtensionsKtTest {
+class LocalDateKtTest {
 
     @Test
     fun previous() {

@@ -3,7 +3,7 @@ package com.example.budgetvalue.extensions
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class MapExtensionsKtTest {
+class MapKtTest {
 
     @Test
     fun toSourceHashMap() {

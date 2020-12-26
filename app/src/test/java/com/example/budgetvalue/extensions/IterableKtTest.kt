@@ -7,7 +7,7 @@ import org.junit.Test
 import org.junit.Assert.*
 import java.math.BigDecimal
 
-class IterableExtensionsKtTest {
+class IterableKtTest {
 
     @Test
     fun total() {

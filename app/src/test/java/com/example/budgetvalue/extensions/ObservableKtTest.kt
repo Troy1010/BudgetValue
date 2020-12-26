@@ -6,7 +6,7 @@ import org.junit.Test
 
 import org.junit.Assert.*
 
-class ObservableExtensionsKtTest {
+class ObservableKtTest {
     @Test
     fun pairwise() {
         // # Given
