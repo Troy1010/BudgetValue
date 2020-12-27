@@ -18,7 +18,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize), GenericRecyclerViewAd
     val app by lazy { requireActivity().application as App }
     val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
     val transactionsVM: TransactionsVM by activityViewModels { createVmFactory { TransactionsVM(app.appComponent.getRepo()) } }
-    val categorizeVM: CategorizeVM by viewModels { createVmFactory { CategorizeVM(app.appComponent.getRepo(), transactionsVM) }}
+    val categorizeVM: CategorizeVM by viewModels { createVmFactory { CategorizeVM(app.appComponent.getRepo(), transactionsVM) } }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -28,26 +28,34 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize), GenericRecyclerViewAd
 
     private fun setupBinds() {
         textview_date.bindIncoming(categorizeVM.dateAsString)
-        textview_amount.bindIncoming(categorizeVM.transactionBox) { it.first?.amount?.toString()?:"" }
-        textview_description.bindIncoming(categorizeVM.transactionBox) { it.first?.description?:"" }
+        textview_amount.bindIncoming(categorizeVM.transactionBox) {
+            it.first?.amount?.toString() ?: ""
+        }
+        textview_description.bindIncoming(categorizeVM.transactionBox) {
+            it.first?.description ?: ""
+        }
         textview_amount_left.bindIncoming(transactionsVM.uncategorizedSpendsSize)
     }
 
     private fun setupViews() {
-        // recyclerview
-        recyclerview_categories.layoutManager = GridLayoutManager(requireActivity(), 3,
-            GridLayoutManager.VERTICAL, true)
-        recyclerview_categories.adapter = GenericRecyclerViewAdapter(requireActivity(), this, R.layout.item_category_btn)
-    }
-
-    override fun bindRecyclerItem(holder: GenericRecyclerViewAdapter.ViewHolder, view: View) {
-        view.btn_category.text = categoriesAppVM.choosableCategories.value[holder.adapterPosition].name
-        view.btn_category.setOnClickListener {
-            categorizeVM.setTransactionCategory(categoriesAppVM.choosableCategories.value[holder.adapterPosition])
+        recyclerview_categories.apply {
+            layoutManager =
+                GridLayoutManager(requireActivity(), 3, GridLayoutManager.VERTICAL, true)
+            adapter =
+                GenericRecyclerViewAdapter(requireActivity(),
+                    this@CategorizeFrag,
+                    R.layout.item_category_btn)
         }
     }
 
-    override fun getRecyclerDataSize(): Int {
-        return categoriesAppVM.choosableCategories.value.size
+    override fun bindRecyclerItem(holder: GenericRecyclerViewAdapter.ViewHolder, view: View) {
+        view.btn_category.apply {
+            text = categoriesAppVM.choosableCategories.value[holder.adapterPosition].name
+            setOnClickListener {
+                categorizeVM.setTransactionCategory(categoriesAppVM.choosableCategories.value[holder.adapterPosition])
+            }
+        }
     }
+
+    override fun getRecyclerDataSize() = categoriesAppVM.choosableCategories.value.size
 }
