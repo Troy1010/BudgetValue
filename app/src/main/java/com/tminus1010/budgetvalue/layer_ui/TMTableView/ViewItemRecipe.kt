@@ -9,6 +9,7 @@ data class ViewItemRecipe<V : View, D : Any>(
     private val bindAction: (V, D) -> Unit,
 ) : IViewItemRecipe {
     // This cast allows IViewItemRecipe of different view types to be stored together
+    @Suppress("UNCHECKED_CAST")
     private val bindAction_ = bindAction as (View, Any) -> Unit
     override val intrinsicWidth
         get() = createBoundView().apply { measureUnspecified() }.measuredWidth

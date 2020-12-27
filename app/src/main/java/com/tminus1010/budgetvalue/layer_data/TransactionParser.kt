@@ -60,7 +60,7 @@ class TransactionParser @Inject constructor() : ITransactionParser {
             for (item in row) {
                 rowCharCount.add(Regex("""[A-z]""").findAll(item).count())
             }
-            val i = rowCharCount.indices.maxBy { rowCharCount[it] }
+            val i = rowCharCount.indices.maxByOrNull { rowCharCount[it] }
             i?.apply {
                 description = row[i]
                 row.removeAt(i)

@@ -53,13 +53,13 @@ class ImportFrag: Fragment(R.layout.frag_import), GenericRecyclerViewAdapter.Cal
         view.editText_amount?.setText(account.amount.toString())
 
         view.btn_delete_account.clicks().map { account }.subscribe(accountsVM.intentDeleteAccount)
-        view.editText_amount.setOnFocusChangeListener { v, b ->
+        view.editText_amount.setOnFocusChangeListener { _, b ->
             if (!b) {
                 account.amount = view.editText_amount.text.toString().toBigDecimal()
                 accountsVM.updateAccount(account)
             }
         }
-        view.editText_name.setOnFocusChangeListener { v, b ->
+        view.editText_name.setOnFocusChangeListener { _, b ->
             if (!b) {
                 account.name = view.editText_name.text.toString()
                 accountsVM.updateAccount(account)
