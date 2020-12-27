@@ -29,7 +29,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize), GenericRecyclerViewAd
     private fun setupBinds() {
         textview_date.bindIncoming(categorizeVM.dateAsString)
         textview_amount.bindIncoming(categorizeVM.transactionBox) { it.first?.amount?.toString()?:"" }
-        tv_description.bindIncoming(categorizeVM.transactionBox) { it.first?.description?:"" }
+        textview_description.bindIncoming(categorizeVM.transactionBox) { it.first?.description?:"" }
         textview_amount_left.bindIncoming(transactionsVM.uncategorizedSpendsSize)
     }
 

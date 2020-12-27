@@ -40,7 +40,7 @@
                 tools:text="AMOUNT" />
 
             <TextView
-                android:id="@+id/tv_description"
+                android:id="@+id/textview_description"
                 style="@style/AppTheme.StandardTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
