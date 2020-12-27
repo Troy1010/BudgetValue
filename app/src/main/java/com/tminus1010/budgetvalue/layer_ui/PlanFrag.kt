@@ -47,6 +47,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
         )
         combineLatestAsTuple(planVM.statePlanCAs, planVM.stateExpectedIncome)
             .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(AndroidSchedulers.mainThread())
             //*Without distinctUntilChanged, state changes are needlessly pushed to
             // ui when user uses an edit text.
             .distinctUntilChanged()
