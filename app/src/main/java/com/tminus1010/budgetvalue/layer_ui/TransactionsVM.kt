@@ -30,6 +30,7 @@ class TransactionsVM(private val repo: Repo):ViewModel() {
     fun getBlocksFromTransactions(transactions: List<Transaction>): List<Block> {
         val transactionsRedefined = transactions.sortedBy { it.date }
         val returning = ArrayList<Block>()
+        if (0 !in transactionsRedefined.indices) return returning
         var datePeriod = LocalDatePeriod(transactionsRedefined[0].date, Period.ofDays(13))
         while (datePeriod.startDate <= transactionsRedefined.last().date) {
             val transactionSet = transactions
