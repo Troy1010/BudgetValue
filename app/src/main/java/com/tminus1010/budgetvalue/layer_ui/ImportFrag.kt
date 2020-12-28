@@ -21,16 +21,21 @@ class ImportFrag : Fragment(R.layout.frag_import) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupViews()
-        setupBinds()
+        setupOutgoingBinds()
+        setupIncomingBinds()
     }
 
-    private fun setupBinds() {
-        btn_add_account.clicks().subscribe(accountsVM.intentAddAccount)
+    private fun setupIncomingBinds() {
+        // # Refresh RecyclerView whenever its items change
         accountsVM.intentAddAccount.mergeWith(accountsVM.intentDeleteAccount.map { Unit })
             .flatMap { accountsVM.accounts.take(2).skip(1) }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) { recyclerview_accounts.adapter?.notifyDataSetChanged() }
+    }
+
+    private fun setupOutgoingBinds() {
+        btn_add_account.clicks().subscribe(accountsVM.intentAddAccount)
     }
 
     private fun setupViews() {
