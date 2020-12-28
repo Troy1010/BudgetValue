@@ -2,30 +2,25 @@ package com.tminus1010.budgetvalue.layer_ui
 
 import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.tminus1010.budgetvalue.*
-import com.tminus1010.budgetvalue.getBlocks
-import com.tminus1010.budgetvalue.reflectXY
-import com.tminus1010.tmcommonkotlin.misc.toast
+import com.tminus1010.budgetvalue.extensions.viewModels2
 import com.tminus1010.tmcommonkotlin.logz.logz
-import com.tminus1010.tmcommonkotlin.misc.createVmFactory
+import com.tminus1010.tmcommonkotlin.misc.toast
 import kotlinx.android.synthetic.main.activity_host.*
 import java.math.BigDecimal
-import kotlin.collections.HashMap
 import kotlin.time.ExperimentalTime
 
 class HostActivity : AppCompatActivity() {
     val app by lazy { application as App }
-    val transactionsVM: TransactionsVM by viewModels { createVmFactory { TransactionsVM(app.appComponent.getRepo()) } }
+    val transactionsVM: TransactionsVM by viewModels2 { TransactionsVM(app.appComponent.getRepo()) }
     val navController by lazy { findNavController(R.id.fragNavHost) }
     val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
     val repo by lazy { app.appComponent.getRepo() }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,7 +116,6 @@ class HostActivity : AppCompatActivity() {
                 logz("spendsString:${spendsString}")
             }
             R.id.menu_save_reconciliation -> {
-
                 toast("Reconciliation Saved")
             }
             R.id.menu_debug_do_something -> {

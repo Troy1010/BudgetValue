@@ -6,15 +6,14 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import com.tminus1010.budgetvalue.App
 import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue.extensions.activityViewModels2
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.*
 import com.tminus1010.budgetvalue.layer_ui.misc.bind
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import com.tminus1010.budgetvalue.reflectXY
 import com.tminus1010.budgetvalue.toBigDecimalSafe
-import com.tminus1010.tmcommonkotlin.misc.createVmFactory
 import com.tminus1010.tmcommonkotlin_rx.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -26,18 +25,18 @@ import java.math.BigDecimal
 class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
     val app by lazy { requireActivity().application as App }
     val repo by lazy { app.appComponent.getRepo() }
-    val transactionsVM: TransactionsVM by activityViewModels { createVmFactory { TransactionsVM(repo) } }
-    val accountsVM: AccountsVM by activityViewModels{ createVmFactory { AccountsVM(repo) }}
+    val transactionsVM: TransactionsVM by activityViewModels2 { TransactionsVM(repo) }
+    val accountsVM: AccountsVM by activityViewModels2 { AccountsVM(repo) }
     val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
-    val planVM: PlanVM by activityViewModels{ createVmFactory { PlanVM(repo, categoriesAppVM) }}
-    val reconcileVM: ReconcileVM by activityViewModels { createVmFactory { ReconcileVM(repo, transactionsVM.spends, accountsVM.accountsTotal, planVM) } }
+    val planVM: PlanVM by activityViewModels2 { PlanVM(repo, categoriesAppVM) }
+    val reconcileVM: ReconcileVM by activityViewModels2 { ReconcileVM(repo, transactionsVM.spends, accountsVM.accountsTotal, planVM) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupTableDataObserver()
+        setupBinds()
     }
 
-    fun setupTableDataObserver() {
+    fun setupBinds() {
         val cellRecipeFactory = ViewItemRecipeFactory.createCellRecipeFactory(requireContext())
         val headerRecipeFactory = ViewItemRecipeFactory.createHeaderRecipeFactory(requireContext())
         val headerRecipeFactory_numbered = ViewItemRecipeFactory<LinearLayout, Pair<String, Observable<BigDecimal>>>(
