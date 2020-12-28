@@ -45,9 +45,7 @@ class ReconcileVM(
                             .filter { it !in acc.keys }
                             .associate { it to BigDecimal.ZERO })
                 }
-                1 -> { activeReconcileCA!!
-                    activeReconcileCA.also { (k, v) -> acc[k] = v }
-                }
+                1 -> { activeReconcileCA!!.also { (k, v) -> acc[k] = v } }
                 2 -> { activeCategories!!
                     acc.putAll(activeCategories
                         .filter { it !in acc.keys }

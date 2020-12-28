@@ -31,7 +31,7 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
                             .filter { it !in acc.keys }
                             .associate { it to BigDecimal.ZERO })
                 }
-                1 -> { intentPushPlanCA!!; acc[intentPushPlanCA.first] = intentPushPlanCA.second }
+                1 -> { intentPushPlanCA!!.also { (k, v) -> acc[k] = v } }
                 2 -> { chooseableCategories!!
                     acc.putAll(chooseableCategories
                         .filter { it !in acc.keys }
