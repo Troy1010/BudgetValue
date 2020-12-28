@@ -21,19 +21,19 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
         intentPushPlanCategoryAmount,
         categoriesAppVM.choosableCategories,
     )
-        .scan(SourceHashMap<Category, BigDecimal>()) { acc, (i, responsePlanCAs, intentPushPlanCA, stateChooseableCategories) ->
+        .scan(SourceHashMap<Category, BigDecimal>()) { acc, (i, responsePlanCAs, intentPushPlanCA, chooseableCategories) ->
             when (i) {
                 0 -> { responsePlanCAs!!
                     acc.clear()
                     acc.putAll(responsePlanCAs)
-                    if (stateChooseableCategories!=null)
-                        acc.putAll(stateChooseableCategories
+                    if (chooseableCategories!=null)
+                        acc.putAll(chooseableCategories
                             .associate { it to BigDecimal.ZERO }
                             .filter { kv -> kv.key !in acc.keys })
                 }
                 1 -> { intentPushPlanCA!!; acc[intentPushPlanCA.first] = intentPushPlanCA.second }
-                2 -> { stateChooseableCategories!!
-                    acc.putAll(stateChooseableCategories
+                2 -> { chooseableCategories!!
+                    acc.putAll(chooseableCategories
                         .associate { it to BigDecimal.ZERO }
                         .filter { kv -> kv.key !in acc.keys })
                 }
