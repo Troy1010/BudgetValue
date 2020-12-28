@@ -14,11 +14,11 @@ import java.math.BigDecimal
 class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
     val intentPushExpectedIncome = PublishSubject.create<BigDecimal>()
         .also { it.subscribe(repo::pushExpectedIncome) }
-    val intentPushPlanCategoryAmount = PublishSubject.create<Pair<Category, BigDecimal>>()
+    val intentPushPlanCA = PublishSubject.create<Pair<Category, BigDecimal>>()
         .also { it.flatMapCompletable(repo::pushPlanCategoryAmount).subscribe() }
     val planCAs = combineLatestImpatientWithIndex(
         repo.planCategoryAmounts,
-        intentPushPlanCategoryAmount,
+        intentPushPlanCA,
         categoriesAppVM.choosableCategories,
     )
         .scan(SourceHashMap<Category, BigDecimal>()) { acc, (i, responsePlanCAs, intentPushPlanCA, chooseableCategories) ->

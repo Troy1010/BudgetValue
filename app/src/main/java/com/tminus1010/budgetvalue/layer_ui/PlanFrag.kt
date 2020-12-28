@@ -36,9 +36,12 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
             { v, (state, actionSubject) -> v.setText("$state"); v.bindOutgoing(actionSubject, { it.toBigDecimalSafe() } ) }
         )
-        val inputRecipeFactory2 = ViewItemRecipeFactory<EditText, Pair<Map.Entry<Category, BigDecimal>, Subject<Pair<Category, BigDecimal>>>>(
+        val planCAsRecipeFactory2 = ViewItemRecipeFactory<EditText, Pair<Category, Observable<BigDecimal>>>(
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
-            { v, (kv, actionSubject) -> v.setText("${kv.value}"); v.bindOutgoing(actionSubject, { Pair(kv.key, it.toBigDecimalSafe()) } ) }
+            { view, (k, v) ->
+                view.bindIncoming(v)
+                view.bindOutgoing(planVM.intentPushPlanCA, { s -> Pair(k, s.toBigDecimalSafe()) } )
+            }
         )
         val oneWayCellRecipeBuilder = ViewItemRecipeFactory<TextView, Observable<BigDecimal>>(
             { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
@@ -60,8 +63,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
                             + inputRecipeFactory.createOne2(Pair(expectedIncome,
                         planVM.intentPushExpectedIncome))
                             + oneWayCellRecipeBuilder.createOne2(planVM.difference)
-                            + inputRecipeFactory2.createMany(planCAs.map { kv -> Pair(kv,
-                        planVM.intentPushPlanCategoryAmount)})
+                            + planCAsRecipeFactory2.createMany(planCAs.observableMap.map { Pair(it.key, it.value) })
                 ).reflectXY()
             }
             .observe(this) { myTableView_plan.setRecipes(it) }
