@@ -482,7 +482,7 @@ fun <A, B, C> mergeWithType(
     ) { type, value -> TypeAndValue(type, value) }
 }
 
-fun <A, B, C> mergeWithIndex(
+fun <A, B, C> combineLatestImpatientWithIndex(
     a: Observable<A>,
     b: Observable<B>,
     c: Observable<C>,
