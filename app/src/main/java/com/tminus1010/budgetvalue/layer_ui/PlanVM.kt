@@ -16,11 +16,14 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
         .also { it.subscribe(repo::pushExpectedIncome) }
     val intentPushPlanCategoryAmount = PublishSubject.create<Pair<Category, BigDecimal>>()
         .also { it.flatMapCompletable(repo::pushPlanCategoryAmount).subscribe() }
-    val planCAs = combineLatestImpatientWithIndex(intentPushPlanCategoryAmount, repo.planCategoryAmounts, categoriesAppVM.choosableCategories)
-        .scan(SourceHashMap<Category, BigDecimal>()) { acc, (i, intentPushPlanCA, responsePlanCAs, stateChooseableCategories) ->
+    val planCAs = combineLatestImpatientWithIndex(
+        repo.planCategoryAmounts,
+        intentPushPlanCategoryAmount,
+        categoriesAppVM.choosableCategories,
+    )
+        .scan(SourceHashMap<Category, BigDecimal>()) { acc, (i, responsePlanCAs, intentPushPlanCA, stateChooseableCategories) ->
             when (i) {
-                0 -> { intentPushPlanCA!!; acc[intentPushPlanCA.first] = intentPushPlanCA.second }
-                1 -> { responsePlanCAs!!
+                0 -> { responsePlanCAs!!
                     acc.clear()
                     acc.putAll(responsePlanCAs)
                     if (stateChooseableCategories!=null)
@@ -28,6 +31,7 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
                             .associate { it to BigDecimal.ZERO }
                             .filter { kv -> kv.key !in acc.keys })
                 }
+                1 -> { intentPushPlanCA!!; acc[intentPushPlanCA.first] = intentPushPlanCA.second }
                 2 -> { stateChooseableCategories!!
                     acc.putAll(stateChooseableCategories
                         .associate { it to BigDecimal.ZERO }
