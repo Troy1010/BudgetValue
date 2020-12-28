@@ -61,8 +61,8 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                         headerRecipeFactory.createOne2("Category")
                                 + cellRecipeFactory.createOne2("Default")
                                 + cellRecipeFactory.createMany(rowDatas.map { it.category.name }),
-                        headerRecipeFactory_numbered.createOne2(Pair("Plan", planVM.stateExpectedIncome))
-                                + oneWayRecipeFactory.createOne2(planVM.stateDifference)
+                        headerRecipeFactory_numbered.createOne2(Pair("Plan", planVM.expectedIncome))
+                                + oneWayRecipeFactory.createOne2(planVM.difference)
                                 + oneWayRecipeFactory.createMany(rowDatas.map { it.plan }),
                         headerRecipeFactory.createOne2("Actual")
                                 + cellRecipeFactory.createOne2("")

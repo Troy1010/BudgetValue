@@ -16,7 +16,7 @@ class HistoryVM(val transactionsVM: TransactionsVM, val reconcileVM: ReconcileVM
         .flatMap { it.observable }
 //    val plans = SourceArrayList<PlanAndActual>()
 
-    val plans = planVM.statePlanCAs
+    val plans = planVM.planCAs
         .map { SourceArrayList<Plan>().apply { add(Plan(datePeriodGetter.getDatePeriod(LocalDate.now()), it)) } }
     // Plan comes from "saves", but there can only be 1 save per block
     // Reconciliations come from "saves"

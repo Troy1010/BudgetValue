@@ -44,7 +44,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
             { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
             { v, bs -> v.bindIncoming(bs) }
         )
-        combineLatestAsTuple(planVM.statePlanCAs, planVM.stateExpectedIncome)
+        combineLatestAsTuple(planVM.planCAs, planVM.expectedIncome)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(AndroidSchedulers.mainThread())
             //*Without distinctUntilChanged, state changes are needlessly pushed to
@@ -59,7 +59,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
                     headerRecipeFactory.createOne2("Plan")
                             + inputRecipeFactory.createOne2(Pair(expectedIncome,
                         planVM.intentPushExpectedIncome))
-                            + oneWayCellRecipeBuilder.createOne2(planVM.stateDifference)
+                            + oneWayCellRecipeBuilder.createOne2(planVM.difference)
                             + inputRecipeFactory2.createMany(planCAs.map { kv -> Pair(kv,
                         planVM.intentPushPlanCategoryAmount)})
                 ).reflectXY()

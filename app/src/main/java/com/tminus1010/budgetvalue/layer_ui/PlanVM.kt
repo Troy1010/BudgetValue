@@ -16,7 +16,7 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
         .also { it.subscribe(repo::pushExpectedIncome) }
     val intentPushPlanCategoryAmount = PublishSubject.create<Pair<Category, BigDecimal>>()
         .also { it.flatMapCompletable(repo::pushPlanCategoryAmount).subscribe() }
-    val statePlanCAs = mergeWithIndex(intentPushPlanCategoryAmount, repo.planCategoryAmounts, categoriesAppVM.choosableCategories)
+    val planCAs = mergeWithIndex(intentPushPlanCategoryAmount, repo.planCategoryAmounts, categoriesAppVM.choosableCategories)
         .scan(SourceHashMap<Category, BigDecimal>()) { acc, (i, intentPushPlanCA, responsePlanCAs, stateChooseableCategories) ->
             when (i) {
                 0 -> { intentPushPlanCA!!; acc[intentPushPlanCA.first] = intentPushPlanCA.second }
@@ -37,12 +37,12 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
             acc
         }
         .toBehaviorSubject()
-    val statePlanUncategorized = statePlanCAs
+    val planUncategorized = planCAs
         .switchMap { it.observable }
         .flatMap { it.values.total() }
         .replay(1).refCount()
-    val stateExpectedIncome = intentPushExpectedIncome
+    val expectedIncome = intentPushExpectedIncome
         .startWithItem(repo.fetchExpectedIncome())
-    val stateDifference = combineLatestAsTuple(stateExpectedIncome, statePlanUncategorized)
+    val difference = combineLatestAsTuple(expectedIncome, planUncategorized)
         .map { it.first - it.second }
 }
