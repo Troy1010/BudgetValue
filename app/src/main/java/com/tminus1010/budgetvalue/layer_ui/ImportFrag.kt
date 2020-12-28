@@ -47,7 +47,7 @@ class ImportFrag : Fragment(R.layout.frag_import) {
 
     val rvAdapterParams = object : GenericRecyclerViewAdapter6.Params {
         override val itemLayout = R.layout.item_account
-        override val size get() = accountsVM.accounts.value?.size ?: 0
+        override fun getItemCount() = accountsVM.accounts.value?.size ?: 0
         override fun bindRecyclerItem(holder: GenericRecyclerViewAdapter6.ViewHolder, view: View) {
             val account = accountsVM.accounts.value?.get(holder.adapterPosition)!!
             view.btn_delete_account.clicks()

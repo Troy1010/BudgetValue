@@ -13,18 +13,18 @@ open class GenericRecyclerViewAdapter6(
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(params.itemLayout, parent, false)
-        return ViewHolder(view)
+        return LayoutInflater.from(context).inflate(params.itemLayout, parent, false)
+            .let { ViewHolder(it) }
     }
 
-    override fun getItemCount() = params.size
+    override fun getItemCount() = params.getItemCount()
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         params.bindRecyclerItem(holder, holder.itemView)
     }
 
     interface Params {
         val itemLayout: Int
-        val size: Int
+        fun getItemCount(): Int
         fun bindRecyclerItem(holder: ViewHolder, view: View)
     }
 }
