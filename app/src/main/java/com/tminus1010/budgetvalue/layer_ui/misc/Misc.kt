@@ -32,13 +32,14 @@ fun <T> EditText.bind(
     bindOutgoing(outgoing, toT, validate, toDisplayable)
 }
 
+// TODO("This will push unchanged incoming values")
 fun <T> EditText.bindOutgoing(
     subject:Subject<T>,
     toT:(String)->T,
     validate: ((T)->T)? = null,
     toDisplayable: ((T) -> Any)? = null
 ) {
-    val observable = this.focusChanges()
+    this.focusChanges()
         .observeOn(AndroidSchedulers.mainThread())
         .subscribeOn(AndroidSchedulers.mainThread())
         .skip(1) //*focusChanges always starts with false, for some reason.
@@ -46,8 +47,8 @@ fun <T> EditText.bindOutgoing(
         .withLatestFrom(this.textChanges()) { _, x -> x.toString() }
         .map { toT(it) }
         .map { if (validate==null) it else validate(it) }
-    if (toDisplayable!=null) this.bindIncoming(observable, toDisplayable)
-    observable
+        .publish().refCount()
+        .also { if (toDisplayable!=null) this.bindIncoming(it, toDisplayable) }
         .distinctUntilChanged()
         .subscribe(subject)
 }
