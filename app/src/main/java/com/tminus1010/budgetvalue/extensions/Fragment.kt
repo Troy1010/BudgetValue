@@ -6,10 +6,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import com.tminus1010.tmcommonkotlin.misc.createVmFactory
 
-fun <VM> Fragment.activityViewModels2(function: () -> VM): Lazy<VM> {
-    return this.activityViewModels { createVmFactory { function() as ViewModel } }
+// * Must be inlined to support different VMs
+inline fun <reified VM : ViewModel> Fragment.activityViewModels2(noinline function: () -> VM): Lazy<VM> {
+    return this.activityViewModels { createVmFactory(function) }
 }
 
-fun <VM> Fragment.viewModels2(function: () -> VM): Lazy<VM> {
-    return this.viewModels { createVmFactory { function() as ViewModel } }
+// * Must be inlined to support different VMs
+inline fun <reified VM : ViewModel> Fragment.viewModels2(noinline function: () -> VM): Lazy<VM> {
+    return this.viewModels { createVmFactory(function) }
 }
