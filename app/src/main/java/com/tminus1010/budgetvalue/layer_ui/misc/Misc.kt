@@ -21,6 +21,17 @@ fun <T> EditText.bind(
     bindOutgoing(subject, toT, validate)
 }
 
+fun <T> EditText.bind(
+    incoming:Observable<T>,
+    outgoing:Subject<T>,
+    toT:(String)->T,
+    validate: ((T)->T)? = null,
+    toDisplayable:((T)->Any)? = null
+) {
+    bindIncoming(incoming, toDisplayable)
+    bindOutgoing(outgoing, toT, validate)
+}
+
 fun <T> EditText.bindOutgoing(
     subject:Subject<T>,
     toT:(String)->T,
