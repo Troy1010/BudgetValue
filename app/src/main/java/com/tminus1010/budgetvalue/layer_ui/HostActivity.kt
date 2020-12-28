@@ -123,7 +123,7 @@ class HostActivity : AppCompatActivity() {
 //                repo.fetchReconcileCategoryAmounts().take(1).subscribe {
 //                    logz("fetchedReconcileCA:$it")
 //                }
-                repo.pushReconcileCategoryAmounts(null)
+                repo.pushActiveReconcileCategoryAmounts(null)
             }
         }
         return super.onOptionsItemSelected(item)

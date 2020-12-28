@@ -6,8 +6,8 @@ import io.reactivex.rxjava3.core.Observable
 import java.math.BigDecimal
 
 interface ISharedPrefWrapper {
-    val reconcileCategoryAmounts: Observable<SourceHashMap<Category, BigDecimal>>
-    fun pushReconcileCategoryAmounts(reconcileCategoryAmounts: Map<Category, BigDecimal>?)
+    val activeReconcileCategoryAmounts: Observable<SourceHashMap<Category, BigDecimal>>
+    fun pushActiveReconcileCategoryAmounts(reconcileCategoryAmounts: Map<Category, BigDecimal>?)
     fun fetchExpectedIncome(): BigDecimal
     fun pushExpectedIncome(expectedIncome: BigDecimal?)
     fun fetchAnchorDateOffset(): Observable<Long>

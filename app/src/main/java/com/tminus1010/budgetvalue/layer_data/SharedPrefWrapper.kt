@@ -28,7 +28,7 @@ class SharedPrefWrapper @Inject constructor(
 
     // # ReconcileCategoryAmounts
 
-    override val reconcileCategoryAmounts = Observable.just(fetchReconcileCategoryAmounts())
+    override val activeReconcileCategoryAmounts = Observable.just(fetchReconcileCategoryAmounts())
         .map { it.toSourceHashMap() }
         .doOnNext(::bindToReconcileCategoryAmounts)
         .noEnd().replay(1).refCount()
@@ -38,7 +38,7 @@ class SharedPrefWrapper @Inject constructor(
             .let { typeConverter.categoryAmounts(it) }
     }
 
-    override fun pushReconcileCategoryAmounts(reconcileCategoryAmounts: Map<Category, BigDecimal>?) {
+    override fun pushActiveReconcileCategoryAmounts(reconcileCategoryAmounts: Map<Category, BigDecimal>?) {
         val s = typeConverter.string(reconcileCategoryAmounts)
         if (s == null) editor.remove(KEY_RECONCILE_CATEGORY_AMOUNTS) else {
             editor.putString(KEY_RECONCILE_CATEGORY_AMOUNTS, s)
@@ -52,7 +52,7 @@ class SharedPrefWrapper @Inject constructor(
                 kv.value
                     .distinctUntilChanged()
                     .skip(1)
-                    .doOnNext { pushReconcileCategoryAmounts(map) }
+                    .doOnNext { pushActiveReconcileCategoryAmounts(map) }
             }
             .subscribe()
     }
