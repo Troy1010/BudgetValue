@@ -35,7 +35,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
 
     val rvAdapterParams = object : GenericRecyclerViewAdapter6.Params {
         override val itemLayout = R.layout.item_category_btn
-        override val size = categoriesAppVM.choosableCategories.value.size
+        override val size get() = categoriesAppVM.choosableCategories.value.size
         override fun bindRecyclerItem(holder: GenericRecyclerViewAdapter6.ViewHolder, view: View) {
             view.btn_category.apply {
                 text = categoriesAppVM.choosableCategories.value[holder.adapterPosition].name
