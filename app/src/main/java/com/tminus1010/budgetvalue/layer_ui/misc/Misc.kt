@@ -44,6 +44,7 @@ fun <T> TextView.bindIncoming(
 ): Disposable {
     return observable
         .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(AndroidSchedulers.mainThread())
         .filter { this.layoutParams!=null } // *An error happens if you try to set text while layoutParams is null. But perhaps this filter should be moved elsewhere.
         .map { if (toDisplayable==null) it.toString() else toDisplayable(it).toString() }
         .distinctUntilChanged()
