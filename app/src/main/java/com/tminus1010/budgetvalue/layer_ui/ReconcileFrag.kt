@@ -12,6 +12,8 @@ import com.tminus1010.budgetvalue.extensions.activityViewModels2
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.*
 import com.tminus1010.budgetvalue.layer_ui.misc.bind
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
+import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
+import com.tminus1010.budgetvalue.model_app.Category
 import com.tminus1010.budgetvalue.reflectXY
 import com.tminus1010.budgetvalue.toBigDecimalSafe
 import com.tminus1010.tmcommonkotlin_rx.observe
@@ -45,9 +47,12 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                 v.textview_header.text = d.first
                 v.textview_number.bindIncoming(d.second)
             })
-        val twoWayRecipeFactory = ViewItemRecipeFactory<EditText, BehaviorSubject<BigDecimal>>(
+        val reconcileCARecipeFactory = ViewItemRecipeFactory<EditText, Pair<Category, Observable<BigDecimal>>>(
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
-            { v, bs -> v.bind(bs, { it.toBigDecimalSafe() } )}
+            { v, pair ->
+                v.bindIncoming(pair.second)
+                v.bindOutgoing(reconcileVM.intentPushActiveReconcileCA, { s -> pair.first to s.toBigDecimalSafe() })
+            }
         )
         val oneWayRecipeFactory = ViewItemRecipeFactory<TextView, Observable<BigDecimal>>(
             { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
@@ -69,7 +74,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                                 + oneWayRecipeFactory.createMany(rowDatas.map { it.actual }),
                         headerRecipeFactory.createOne2("Reconcile")
                                 + oneWayRecipeFactory.createOne2(reconcileVM.reconcileUncategorized)
-                                + twoWayRecipeFactory.createMany(rowDatas.map { it.reconcile }),
+                                + reconcileCARecipeFactory.createMany(rowDatas.map { it.category to it.reconcile }),
                         headerRecipeFactory_numbered.createOne2(Pair("Budgeted",accountsVM.accountsTotal))
                                 + oneWayRecipeFactory.createOne2(reconcileVM.budgetedUncategorized)
                                 + oneWayRecipeFactory.createMany(rowDatas.map { it.budgeted })
