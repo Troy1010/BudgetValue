@@ -38,14 +38,14 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
             { view, bs ->
                 view.bindIncoming(bs)
-                view.bindOutgoing(planVM.intentPushExpectedIncome, { it.toBigDecimalSafe() })
+                view.bindOutgoing(planVM.intentPushExpectedIncome, { it.toBigDecimalSafe() }) { it }
             }
         )
         val planCAsRecipeFactory = ViewItemRecipeFactory<EditText, Pair<Category, Observable<BigDecimal>>>(
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
             { view, (category, bs) ->
                 view.bindIncoming(bs)
-                view.bindOutgoing(planVM.intentPushPlanCA, { Pair(category, it.toBigDecimalSafe()) })
+                view.bindOutgoing(planVM.intentPushPlanCA, { Pair(category, it.toBigDecimalSafe()) }) { it.second }
             }
         )
         val oneWayRecipeBuilder = ViewItemRecipeFactory<TextView, Observable<BigDecimal>>(
