@@ -38,7 +38,7 @@ fun <T> EditText.bindOutgoing(
     validate: ((T)->T)? = null,
     toDisplayable: ((T) -> Any)? = null
 ) {
-    this.focusChanges()
+    val observable = this.focusChanges()
         .observeOn(AndroidSchedulers.mainThread())
         .subscribeOn(AndroidSchedulers.mainThread())
         .skip(1) //*focusChanges always starts with false, for some reason.
@@ -46,7 +46,8 @@ fun <T> EditText.bindOutgoing(
         .withLatestFrom(this.textChanges()) { _, x -> x.toString() }
         .map { toT(it) }
         .map { if (validate==null) it else validate(it) }
-        .also { if (toDisplayable!=null) this.bindIncoming(it, toDisplayable) }
+    if (toDisplayable!=null) this.bindIncoming(observable, toDisplayable)
+    observable
         .distinctUntilChanged()
         .subscribe(subject)
 }
