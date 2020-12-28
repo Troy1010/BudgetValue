@@ -1,12 +1,8 @@
 package com.tminus1010.budgetvalue.layer_data
 
 import android.content.SharedPreferences
-import com.tminus1010.budgetvalue.SourceHashMap
-import com.tminus1010.budgetvalue.extensions.noEnd
-import com.tminus1010.budgetvalue.extensions.toSourceHashMap
 import com.tminus1010.budgetvalue.model_app.Category
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -27,18 +23,12 @@ class SharedPrefWrapper @Inject constructor(
     val editor = sharedPreferences.edit()
 
     // # ReconcileCategoryAmounts
-
-    override val activeReconcileCategoryAmounts = Observable.just(fetchReconcileCategoryAmounts())
-        .map { it.toSourceHashMap() }
-        .doOnNext(::bindToReconcileCategoryAmounts)
-        .noEnd().replay(1).refCount()
-
-    fun fetchReconcileCategoryAmounts(): Map<Category, BigDecimal> {
+    override fun fetchActiveReconcileCAs(): Map<Category, BigDecimal> {
         return sharedPreferences.getString(KEY_RECONCILE_CATEGORY_AMOUNTS, null)
             .let { typeConverter.categoryAmounts(it) }
     }
 
-    override fun pushActiveReconcileCategoryAmounts(reconcileCategoryAmounts: Map<Category, BigDecimal>?) {
+    override fun pushActiveReconcileCAs(reconcileCategoryAmounts: Map<Category, BigDecimal>?) {
         val s = typeConverter.string(reconcileCategoryAmounts)
         if (s == null) editor.remove(KEY_RECONCILE_CATEGORY_AMOUNTS) else {
             editor.putString(KEY_RECONCILE_CATEGORY_AMOUNTS, s)
@@ -46,15 +36,11 @@ class SharedPrefWrapper @Inject constructor(
         editor.apply()
     }
 
-    private fun bindToReconcileCategoryAmounts(map: SourceHashMap<Category, BigDecimal>) {
-        map.additions.observeOn(Schedulers.io())
-            .flatMap { kv ->
-                kv.value
-                    .distinctUntilChanged()
-                    .skip(1)
-                    .doOnNext { pushActiveReconcileCategoryAmounts(map) }
-            }
-            .subscribe()
+    override fun pushActiveReconcileCA(kv: Pair<Category, BigDecimal?>) {
+        fetchActiveReconcileCAs()
+            .toMutableMap()
+            .also { val (k,v) = kv; if (v==null) it.remove(k) else it[k] = v }
+            .also { pushActiveReconcileCAs(it) }
     }
 
     //

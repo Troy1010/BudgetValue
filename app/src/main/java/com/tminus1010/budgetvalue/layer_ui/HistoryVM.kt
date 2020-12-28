@@ -11,7 +11,7 @@ import java.time.LocalDate
 
 class HistoryVM(val transactionsVM: TransactionsVM, val reconcileVM: ReconcileVM, val planVM: PlanVM, val datePeriodGetter: DatePeriodGetter) : ViewModel() {
 //    val reconciliations = SourceArrayList<Reconciliation>()
-    val reconciliations = reconcileVM.reconcileCategoryAmounts
+    val reconciliations = reconcileVM.activeReconcileCAs
         .map { SourceArrayList<Reconciliation>().apply { add(Reconciliation(LocalDate.now(), it) ) } }
         .flatMap { it.observable }
 //    val plans = SourceArrayList<PlanAndActual>()
