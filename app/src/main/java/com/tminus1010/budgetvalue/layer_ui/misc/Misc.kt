@@ -39,6 +39,8 @@ fun <T> EditText.bindOutgoing(
     toDisplayable: ((T) -> Any)? = null
 ) {
     this.focusChanges()
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(AndroidSchedulers.mainThread())
         .skip(1) //*focusChanges always starts with false, for some reason.
         .filter { !it }
         .withLatestFrom(this.textChanges()) { _, x -> x.toString() }
