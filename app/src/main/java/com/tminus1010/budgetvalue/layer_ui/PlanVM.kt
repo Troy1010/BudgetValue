@@ -28,14 +28,14 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
                     acc.putAll(responsePlanCAs)
                     if (chooseableCategories!=null)
                         acc.putAll(chooseableCategories
-                            .associate { it to BigDecimal.ZERO }
-                            .filter { kv -> kv.key !in acc.keys })
+                            .filter { it !in acc.keys }
+                            .associate { it to BigDecimal.ZERO })
                 }
                 1 -> { intentPushPlanCA!!; acc[intentPushPlanCA.first] = intentPushPlanCA.second }
                 2 -> { chooseableCategories!!
                     acc.putAll(chooseableCategories
-                        .associate { it to BigDecimal.ZERO }
-                        .filter { kv -> kv.key !in acc.keys })
+                        .filter { it !in acc.keys }
+                        .associate { it to BigDecimal.ZERO })
                 }
             }
             acc
