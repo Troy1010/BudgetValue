@@ -29,13 +29,14 @@ fun <T> EditText.bind(
     toDisplayable:((T)->Any)? = null
 ) {
     bindIncoming(incoming, toDisplayable)
-    bindOutgoing(outgoing, toT, validate)
+    bindOutgoing(outgoing, toT, validate, toDisplayable)
 }
 
 fun <T> EditText.bindOutgoing(
     subject:Subject<T>,
     toT:(String)->T,
-    validate: ((T)->T)? = null
+    validate: ((T)->T)? = null,
+    toDisplayable: ((T) -> Any)? = null
 ) {
     this.focusChanges()
         .skip(1) //*focusChanges always starts with false, for some reason.
@@ -46,6 +47,7 @@ fun <T> EditText.bindOutgoing(
         .map { if (validate==null) it else validate(it) }
         .distinctUntilChanged()
         .skip(1) // starting with current text triggers distinctUntilChanged, but must be skipped.
+        .also { if (toDisplayable!=null) this.bindIncoming(it, toDisplayable) }
         .subscribe(subject)
 }
 
