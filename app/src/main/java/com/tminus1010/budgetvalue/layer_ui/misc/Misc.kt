@@ -44,12 +44,10 @@ fun <T> EditText.bindOutgoing(
         .skip(1) //*focusChanges always starts with false, for some reason.
         .filter { !it }
         .withLatestFrom(this.textChanges()) { _, x -> x.toString() }
-        .startWithItem(this.text.toString()) // starting with current text triggers distinctUntilChanged
         .map { toT(it) }
         .map { if (validate==null) it else validate(it) }
-        .distinctUntilChanged()
-        .skip(1) // starting with current text triggers distinctUntilChanged, but must be skipped.
         .also { if (toDisplayable!=null) this.bindIncoming(it, toDisplayable) }
+        .distinctUntilChanged()
         .subscribe(subject)
 }
 
@@ -62,7 +60,6 @@ fun <T> TextView.bindIncoming(
         .subscribeOn(AndroidSchedulers.mainThread())
         .filter { this.layoutParams!=null } // *An error happens if you try to set text while layoutParams is null. But perhaps this filter should be moved elsewhere.
         .map { if (toDisplayable==null) it.toString() else toDisplayable(it).toString() }
-        .distinctUntilChanged()
         .subscribe { this.text = it }
 }
 
