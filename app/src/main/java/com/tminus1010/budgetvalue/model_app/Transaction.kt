@@ -10,9 +10,9 @@ data class Transaction(
     var description: String,
     var amount: BigDecimal,
     val categoryAmounts: Map<Category, BigDecimal> = hashMapOf(),
-    val id: Int = 0
+    val id: Int = 0,
 ) {
-    constructor(transactionReceived: TransactionReceived, categoryParser: ICategoryParser): this(
+    constructor(transactionReceived: TransactionReceived, categoryParser: ICategoryParser) : this(
         transactionReceived.date,
         transactionReceived.description,
         transactionReceived.amount,
@@ -20,14 +20,9 @@ data class Transaction(
         transactionReceived.id
     )
 
-    val isUncategorized: Boolean
-        get() = categoryAmounts.isNullOrEmpty()
-    val isSpend:Boolean
-        get() = amount < BigDecimal.ZERO
-    val uncategorizedAmount: BigDecimal
-        get() {
-            return amount - categoryAmounts.values.sum()
-        }
+    val isUncategorized get() = categoryAmounts.isNullOrEmpty()
+    val isSpend get() = amount < BigDecimal.ZERO
+    val uncategorizedAmount get() = amount - categoryAmounts.values.sum()
     fun toTransactionReceived(): TransactionReceived {
         return TransactionReceived(this)
     }

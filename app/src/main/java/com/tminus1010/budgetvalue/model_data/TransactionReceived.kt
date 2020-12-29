@@ -16,23 +16,16 @@ data class TransactionReceived(
     var amount: BigDecimal,
     val categoryAmounts: HashMap<String, BigDecimal> = hashMapOf(),
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0
+    val id: Int = 0,
 ) {
-    constructor(transaction: Transaction): this(
+    constructor(transaction: Transaction) : this(
         transaction.date,
         transaction.description,
         transaction.amount,
         transaction.categoryAmounts.mapKeys { it.key.name }.toHashMap(),
         transaction.id
     )
-    val isUncategorized: Boolean
-        get() = categoryAmounts.isNullOrEmpty()
-    val isSpend:Boolean
-        get() = amount < BigDecimal.ZERO
-    val uncategorizedAmount: BigDecimal
-        get() {
-            return amount - categoryAmounts.values.sum()
-        }
+
     fun toTransaction(categoryParser: ICategoryParser): Transaction {
         return Transaction(this, categoryParser)
     }
