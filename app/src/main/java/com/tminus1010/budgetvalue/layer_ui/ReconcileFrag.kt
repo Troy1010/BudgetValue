@@ -43,20 +43,20 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
         val headerRecipeFactory = ViewItemRecipeFactory.createHeaderRecipeFactory(requireContext())
         val headerRecipeFactory_numbered = ViewItemRecipeFactory<LinearLayout, Pair<String, Observable<BigDecimal>>>(
             { View.inflate(requireContext(), R.layout.tableview_header_income, null) as LinearLayout },
-            { v, d ->
-                v.textview_header.text = d.first
-                v.textview_number.bindIncoming(d.second)
+            { view, d ->
+                view.textview_header.text = d.first
+                view.textview_number.bindIncoming(d.second)
             })
         val reconcileCARecipeFactory = ViewItemRecipeFactory<EditText, Pair<Category, Observable<BigDecimal>>>(
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
-            { v, (category, d) ->
-                v.bindIncoming(d)
-                v.bindOutgoing(reconcileVM.intentPushActiveReconcileCA, { s -> category to s.toBigDecimalSafe() }) { it.second }
+            { view, (category, d) ->
+                view.bindIncoming(d)
+                view.bindOutgoing(reconcileVM.intentPushActiveReconcileCA, { s -> category to s.toBigDecimalSafe() }) { it.second }
             }
         )
         val oneWayRecipeFactory = ViewItemRecipeFactory<TextView, Observable<BigDecimal>>(
             { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
-            { v, d -> v.bindIncoming(d)}
+            { view, d -> view.bindIncoming(d)}
         )
         reconcileVM.rowDatas
             .observeOn(AndroidSchedulers.mainThread())
