@@ -482,23 +482,25 @@ fun <A, B, C> mergeWithType(
     ) { type, value -> TypeAndValue(type, value) }
 }
 
-fun <A, B, C> combineLatestImpatientWithIndex(
+fun <A, B, C> mergeCombineWithIndex(
     a: Observable<A>,
     b: Observable<B>,
     c: Observable<C>,
 ): Observable<Quadruple<Int, A?, B?, C?>> {
     return Observable.zip(
         Observable.merge(a.map { 0 }, b.map { 1 }, c.map { 2 }),
-        combineLatestAsTuple(a.boxStartNull(), b.boxStartNull(), c.boxStartNull()).skip(1)
-    ) { index, tuple -> IndexAndTuple(index, tuple) }
-        .map {
-            Quadruple(it.index,
-                it.tuple.first.unbox(),
-                it.tuple.second.unbox(),
-                it.tuple.third.unbox())
+        Observable.merge(a, b, c)
+    ) { i, v -> Pair(i, v) }
+        .scan(Quadruple<Int, A?, B?, C?>(-1, null, null, null)) { acc, (i, v) ->
+            when (i) {
+                0 -> acc.copy(first = 0, second = v as A?)
+                1 -> acc.copy(first = 1, third = v as B?)
+                2 -> acc.copy(first = 2, fourth = v as C?)
+                else -> error("Unhandled i:$i")
+            }
         }
+        .skip(1)
 }
-
 
 fun <A, B, C> combineLatestImpatient(
     a: Observable<A>,

@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue.SourceHashMap
 import com.tminus1010.budgetvalue.combineLatestAsTuple
 import com.tminus1010.budgetvalue.extensions.total
 import com.tminus1010.budgetvalue.layer_data.Repo
-import com.tminus1010.budgetvalue.combineLatestImpatientWithIndex
+import com.tminus1010.budgetvalue.mergeCombineWithIndex
 import com.tminus1010.budgetvalue.model_app.Category
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -16,7 +16,7 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
         .also { it.subscribe(repo::pushExpectedIncome) }
     val intentPushPlanCA = PublishSubject.create<Pair<Category, BigDecimal>>()
         .also { it.flatMapCompletable(repo::pushPlanCategoryAmount).subscribe() }
-    val planCAs = combineLatestImpatientWithIndex(
+    val planCAs = mergeCombineWithIndex(
         repo.planCategoryAmounts,
         intentPushPlanCA,
         categoriesAppVM.choosableCategories,

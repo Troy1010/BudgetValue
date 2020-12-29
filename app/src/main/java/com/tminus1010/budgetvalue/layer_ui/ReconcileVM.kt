@@ -1,9 +1,7 @@
 package com.tminus1010.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.SourceHashMap
-import com.tminus1010.budgetvalue.combineLatestAsTuple
-import com.tminus1010.budgetvalue.combineLatestImpatientWithIndex
+import com.tminus1010.budgetvalue.*
 import com.tminus1010.budgetvalue.extensions.total
 import com.tminus1010.budgetvalue.extensions.withLatestFrom
 import com.tminus1010.budgetvalue.layer_data.Repo
@@ -12,7 +10,6 @@ import com.tminus1010.budgetvalue.model_app.ReconcileRowData
 import com.tminus1010.budgetvalue.model_app.Transaction
 import com.tminus1010.budgetvalue.extensions.sum
 import com.tminus1010.budgetvalue.extensions.toSourceHashMap
-import com.tminus1010.budgetvalue.zip
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -30,7 +27,7 @@ class ReconcileVM(
     val activeCategories = transactionSet
         .map(::getActiveCategories)
         .toBehaviorSubject()
-    val activeReconcileCAs = combineLatestImpatientWithIndex(
+    val activeReconcileCAs = mergeCombineWithIndex(
         Observable.just(repo.fetchActiveReconcileCAs()),
         intentPushActiveReconcileCA,
         activeCategories,
