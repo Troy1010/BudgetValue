@@ -52,6 +52,7 @@ class SourceHashMap<K, V>(): HashMap<K, V>() {
         super.putAll(from)
         val fromRedefined = from.mapValues { createItemObservable(it.key, it.value) }
         observableMap.putAll(fromRedefined)
+        // # Publish
         fromRedefined.entries.forEach { additionsObservablePublisher.onNext(it) }
         observableMapPublisher.onNext(observableMap)
     }
@@ -61,29 +62,9 @@ class SourceHashMap<K, V>(): HashMap<K, V>() {
         val x = super.put(key, value)
         val valueRedefined = createItemObservable(key, value)
         observableMap.put(key, valueRedefined)
-        additionsObservablePublisher.onNext(object: Map.Entry<K, BehaviorSubject<V>> {
-            override val key: K
-                get() = key
-            override val value: BehaviorSubject<V>
-                get() = valueRedefined
-        })
+        // # Publish
+        additionsObservablePublisher.onNext(createMapEntry(key, valueRedefined))
         observableMapPublisher.onNext(observableMap)
-        return x
-    }
-
-    override fun putIfAbsent(key: K, value: V): V? {
-        val x = super.putIfAbsent(key, value)
-        val valueRedefined = createItemObservable(key, value)
-        observableMap.putIfAbsent(key, valueRedefined)
-        if (x!=null) {
-            additionsObservablePublisher.onNext(object: Map.Entry<K, BehaviorSubject<V>> {
-                override val key: K
-                    get() = key
-                override val value: BehaviorSubject<V>
-                    get() = valueRedefined
-            })
-            observableMapPublisher.onNext(observableMap)
-        }
         return x
     }
 
@@ -99,6 +80,10 @@ class SourceHashMap<K, V>(): HashMap<K, V>() {
         if (x) observableMap.remove(key)
         observableMapPublisher.onNext(observableMap)
         return x
+    }
+
+    override fun putIfAbsent(key: K, value: V): V? {
+        TODO()
     }
 
     override fun replace(key: K, value: V): V? {
