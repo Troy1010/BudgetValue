@@ -482,6 +482,7 @@ fun <A, B, C> mergeWithType(
     ) { type, value -> TypeAndValue(type, value) }
 }
 
+@Suppress("UNCHECKED_CAST")
 fun <A, B, C> mergeCombineWithIndex(
     a: Observable<A>,
     b: Observable<B>,
