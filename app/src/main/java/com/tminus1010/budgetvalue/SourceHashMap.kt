@@ -74,10 +74,7 @@ class SourceHashMap<K, V>(): HashMap<K, V>() {
     }
 
     override fun remove(key: K, value: V): Boolean {
-        val x = super.remove(key, value)
-        if (x) observableMap.remove(key)
-        observableMapPublisher.onNext(observableMap)
-        return x
+        TODO()
     }
 
     override fun putIfAbsent(key: K, value: V): V? {
