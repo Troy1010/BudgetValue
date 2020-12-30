@@ -8,7 +8,7 @@ import com.tminus1010.budgetvalue.model_data.PlanCategoryAmount
 import com.tminus1010.budgetvalue.model_data.TransactionReceived
 
 @Database(entities = [TransactionReceived::class, Account::class, PlanCategoryAmount::class], version = 17)
-@TypeConverters(RoomTypeConverters::class)
+@TypeConverters(TypeConverterForRoom::class)
 abstract class BudgetValueDB : RoomDatabase() {
     abstract fun myDao(): MyDao
 }
