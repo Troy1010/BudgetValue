@@ -21,7 +21,7 @@ class SourceHashMapTest {
     @Test
     fun putAll() {
         // # Given
-        val sourceHashMap = SourceHashMap<Int, Int>(exitValue = 0)
+        val sourceHashMap = SourceHashMap<Int, Int>()
         val feedingMap = hashMapOf(0 to 10, 3 to 30, 9 to 90)
         // # Stimulate
         sourceHashMap.putAll(feedingMap)
