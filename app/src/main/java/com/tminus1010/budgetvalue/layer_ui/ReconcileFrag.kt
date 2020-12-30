@@ -6,6 +6,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.jakewharton.rxbinding4.view.clicks
 import com.tminus1010.budgetvalue.App
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.extensions.activityViewModels2
@@ -39,6 +40,9 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
     }
 
     fun setupBinds() {
+        // # Save Button
+        btn_save.clicks().subscribe(reconcileVM.intentSaveReconciliation)
+        // # Table
         val cellRecipeFactory = ViewItemRecipeFactory.createCellRecipeFactory(requireContext())
         val headerRecipeFactory = ViewItemRecipeFactory.createHeaderRecipeFactory(requireContext())
         val headerRecipeFactory_numbered = ViewItemRecipeFactory<LinearLayout, Pair<String, Observable<BigDecimal>>>(
