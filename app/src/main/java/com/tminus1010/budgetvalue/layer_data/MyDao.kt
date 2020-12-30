@@ -82,11 +82,14 @@ interface MyDao {
     // # Reconciliations
 
     @Query("select * from ReconciliationReceived")
-    fun getReconciliationReceived(): Observable<List<ReconciliationReceived>>
+    fun fetchReconciliationReceived(): Observable<List<ReconciliationReceived>>
 
     @Insert
     fun add(reconciliationReceived: ReconciliationReceived): Completable
 
     @Update
     fun update(reconciliationReceived: ReconciliationReceived): Completable
+
+    @Query("DELETE FROM ReconciliationReceived")
+    fun clearReconciliations(): Completable
 }

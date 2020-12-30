@@ -13,4 +13,5 @@ interface IMyDaoWrapper: MyDao {
     val planCategoryAmounts: Observable<Map<Category, BigDecimal>>
     fun pushPlanCategoryAmount(categoryAmount: Pair<Category, BigDecimal>): Completable
     fun pushReconciliation(reconciliation: Reconciliation): Completable
+    fun fetchReconciliations(): Observable<List<Reconciliation>>
 }

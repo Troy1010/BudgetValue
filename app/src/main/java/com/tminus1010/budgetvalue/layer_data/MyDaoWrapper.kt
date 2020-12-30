@@ -6,6 +6,7 @@ import com.tminus1010.budgetvalue.model_app.Reconciliation
 import com.tminus1010.budgetvalue.model_data.Account
 import com.tminus1010.budgetvalue.model_data.PlanCategoryAmount
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -43,6 +44,11 @@ class MyDaoWrapper @Inject constructor(
                 myDao.add(it)
                     .subscribeOn(Schedulers.io())
             }
+    }
+
+    override fun fetchReconciliations(): Observable<List<Reconciliation>> {
+        return myDao.fetchReconciliationReceived()
+            .map { it.map { it.toReconciliation(typeConverter) } }
     }
 
     override fun update(account: Account): Completable {
