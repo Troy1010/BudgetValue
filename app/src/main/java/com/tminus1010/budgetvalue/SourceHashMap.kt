@@ -41,20 +41,27 @@ class SourceHashMap<K, V>(): HashMap<K, V>() {
 
     override fun putAll(from: Map<out K, V>) {
         super.putAll(from)
-        val fromRedefined = from.mapValues { createItemObservable(it.key, it.value) }
-        observableMap.putAll(fromRedefined)
-        // # Publish
-        fromRedefined.entries.forEach { additionsObservablePublisher.onNext(it) }
+        for ((key, value) in from) {
+            if (key in observableMap.keys) {
+                observableMap[key]!!.onNext(value)
+            } else {
+                createItemObservable(key, value)
+                    .also { observableMap.put(key, it) }
+                    .also { additionsObservablePublisher.onNext(createMapEntry(key, it)) }
+            }
+        }
         observableMapPublisher.onNext(observableMap)
     }
 
-    // TODO("might just need to onNext, not create a new observable every time")
     override fun put(key: K, value: V): V? {
         val x = super.put(key, value)
-        val valueRedefined = createItemObservable(key, value)
-        observableMap.put(key, valueRedefined)
-        // # Publish
-        additionsObservablePublisher.onNext(createMapEntry(key, valueRedefined))
+        if (key in observableMap.keys) {
+            observableMap[key]!!.onNext(value)
+        } else {
+            createItemObservable(key, value)
+                .also { observableMap.put(key, it) }
+                .also { additionsObservablePublisher.onNext(createMapEntry(key, it)) }
+        }
         observableMapPublisher.onNext(observableMap)
         return x
     }
