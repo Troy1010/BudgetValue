@@ -11,9 +11,9 @@ import java.time.LocalDate
 
 @Entity
 data class TransactionReceived(
-    var date: LocalDate,
-    var description: String,
-    var amount: BigDecimal,
+    val date: LocalDate,
+    val description: String,
+    val amount: BigDecimal,
     val categoryAmounts: HashMap<String, BigDecimal> = hashMapOf(),
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
