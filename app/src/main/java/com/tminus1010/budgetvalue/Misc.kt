@@ -503,6 +503,29 @@ fun <A, B, C> mergeCombineWithIndex(
         .skip(1)
 }
 
+@Suppress("UNCHECKED_CAST")
+fun <A, B, C, D> mergeCombineWithIndex(
+    a: Observable<A>,
+    b: Observable<B>,
+    c: Observable<C>,
+    d: Observable<D>,
+): Observable<Quintuple<Int, A?, B?, C?, D?>> {
+    return Observable.zip(
+        Observable.merge(a.map { 0 }, b.map { 1 }, c.map { 2 }, d.map { 3 }),
+        Observable.merge(a, b, c, d)
+    ) { i, v -> Pair(i, v) }
+        .scan(Quintuple<Int, A?, B?, C?, D?>(-1, null, null, null, null)) { acc, (i, v) ->
+            when (i) {
+                0 -> acc.copy(first = 0, second = v as A?)
+                1 -> acc.copy(first = 1, third = v as B?)
+                2 -> acc.copy(first = 2, fourth = v as C?)
+                3 -> acc.copy(first = 3, fifth = v as D?)
+                else -> error("Unhandled i:$i")
+            }
+        }
+        .skip(1)
+}
+
 fun <A, B, C> combineLatestImpatient(
     a: Observable<A>,
     b: Observable<B>,
