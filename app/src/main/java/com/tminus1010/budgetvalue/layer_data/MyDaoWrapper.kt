@@ -2,6 +2,7 @@ package com.tminus1010.budgetvalue.layer_data
 
 import com.tminus1010.budgetvalue.extensions.noEnd
 import com.tminus1010.budgetvalue.model_app.Category
+import com.tminus1010.budgetvalue.model_app.Reconciliation
 import com.tminus1010.budgetvalue.model_data.Account
 import com.tminus1010.budgetvalue.model_data.PlanCategoryAmount
 import io.reactivex.rxjava3.core.Completable
@@ -33,6 +34,15 @@ class MyDaoWrapper @Inject constructor(
                     myDao.add(PlanCategoryAmount(categoryAmount))
             }
             .subscribeOn(Schedulers.io())
+    }
+
+    override fun pushReconciliation(reconciliation: Reconciliation): Completable {
+        return reconciliation
+            .toReconciliationReceived(typeConverter, BigDecimal(0))
+            .let {
+                myDao.add(it)
+                    .subscribeOn(Schedulers.io())
+            }
     }
 
     override fun update(account: Account): Completable {

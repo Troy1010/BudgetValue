@@ -9,43 +9,41 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class TypeConverterForRoom {
-    companion object {
-        @TypeConverter
-        @JvmStatic
-        fun fromBigDecimalToString(x: BigDecimal): String {
-            return x.toString()
-        }
+object TypeConverterForRoom {
+    @TypeConverter
+    @JvmStatic
+    fun fromBigDecimalToString(x: BigDecimal): String {
+        return x.toString()
+    }
 
-        @TypeConverter
-        @JvmStatic
-        fun toBigDecimal(s: String): BigDecimal {
-            return s.toBigDecimal()
-        }
+    @TypeConverter
+    @JvmStatic
+    fun toBigDecimal(s: String): BigDecimal {
+        return s.toBigDecimal()
+    }
 
-        @TypeConverter
-        @JvmStatic
-        fun fromCategoryAmountsToString(x: HashMap<String, BigDecimal>): String {
-            return Gson().toJson(x)
-        }
+    @TypeConverter
+    @JvmStatic
+    fun fromCategoryAmountsToString(x: HashMap<String, BigDecimal>): String {
+        return Gson().toJson(x)
+    }
 
-        @TypeConverter
-        @JvmStatic
-        fun toCategoryAmounts(s: String): HashMap<String, BigDecimal> {
-            val type: Type = object : TypeToken<HashMap<String, BigDecimal>>() {}.type
-            return Gson().fromJson<HashMap<String, BigDecimal>>(s, type)
-        }
+    @TypeConverter
+    @JvmStatic
+    fun toCategoryAmounts(s: String): HashMap<String, BigDecimal> {
+        val type: Type = object : TypeToken<HashMap<String, BigDecimal>>() {}.type
+        return Gson().fromJson<HashMap<String, BigDecimal>>(s, type)
+    }
 
-        @TypeConverter
-        @JvmStatic
-        fun fromDateToString(x: LocalDate): String {
-            return x.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))
-        }
+    @TypeConverter
+    @JvmStatic
+    fun fromDateToString(x: LocalDate): String {
+        return x.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))
+    }
 
-        @TypeConverter
-        @JvmStatic
-        fun fromStringToDate(s: String): LocalDate {
-            return LocalDate.parse(s, DateTimeFormatter.ofPattern("MM/dd/yyyy"))
-        }
+    @TypeConverter
+    @JvmStatic
+    fun fromStringToDate(s: String): LocalDate {
+        return LocalDate.parse(s, DateTimeFormatter.ofPattern("MM/dd/yyyy"))
     }
 }

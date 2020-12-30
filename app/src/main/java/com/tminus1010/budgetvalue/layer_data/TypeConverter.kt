@@ -18,9 +18,17 @@ class TypeConverter @Inject constructor(
         return transactionsReceived.map { it.toTransaction(categoryParser) }
     }
 
+    fun bigDecimal(s: String): BigDecimal {
+        return s.toBigDecimal()
+    }
+
+    fun string(bigDecimal: BigDecimal): String {
+        return bigDecimal.toString()
+    }
+
     fun categoryAmounts(categoryAmountsReceived: Iterable<ICategoryAmountReceived>): Map<Category, BigDecimal> {
         return categoryAmountsReceived
-            .associate { categoryParser.parseCategory(it.categoryName) to it.amount }
+            .associate { categoryParser.parseCategory(it.categoryName) to it.amount } as HashMap
     }
 
     fun categoryAmounts(s: String?): Map<Category, BigDecimal> {

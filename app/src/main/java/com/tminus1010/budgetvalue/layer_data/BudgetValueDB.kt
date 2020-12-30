@@ -5,10 +5,11 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.tminus1010.budgetvalue.model_data.Account
 import com.tminus1010.budgetvalue.model_data.PlanCategoryAmount
+import com.tminus1010.budgetvalue.model_data.ReconciliationReceived
 import com.tminus1010.budgetvalue.model_data.TransactionReceived
 
-@Database(entities = [TransactionReceived::class, Account::class, PlanCategoryAmount::class], version = 17)
 @TypeConverters(TypeConverterForRoom::class)
+@Database(entities = [TransactionReceived::class, Account::class, ReconciliationReceived::class, PlanCategoryAmount::class], version = 18)
 abstract class BudgetValueDB : RoomDatabase() {
     abstract fun myDao(): MyDao
 }

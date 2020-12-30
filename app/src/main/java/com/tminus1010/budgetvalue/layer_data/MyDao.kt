@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.layer_data
 import androidx.room.*
 import com.tminus1010.budgetvalue.model_data.Account
 import com.tminus1010.budgetvalue.model_data.PlanCategoryAmount
+import com.tminus1010.budgetvalue.model_data.ReconciliationReceived
 import com.tminus1010.budgetvalue.model_data.TransactionReceived
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -77,4 +78,15 @@ interface MyDao {
 
     @Update
     fun update(planCategoryAmount: PlanCategoryAmount): Completable
+
+    // # Reconciliations
+
+    @Query("select * from ReconciliationReceived")
+    fun getReconciliationReceived(): Observable<List<ReconciliationReceived>>
+
+    @Insert
+    fun add(reconciliationReceived: ReconciliationReceived): Completable
+
+    @Update
+    fun update(reconciliationReceived: ReconciliationReceived): Completable
 }
