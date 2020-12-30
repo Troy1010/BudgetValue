@@ -6,11 +6,11 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.function.BiFunction
 import java.util.function.Function
 
-class SourceHashMap<K, V>(): HashMap<K, V>() {
-    constructor(map: Map<K, V>): this() { putAll(map) }
+class SourceHashMap<K, V>(map: Map<K, V> = emptyMap()): HashMap<K, V>() {
     private val observableMapPublisher = PublishSubject.create<MutableMap<K, BehaviorSubject<V>>>()
     val additionsObservablePublisher = PublishSubject.create<Map.Entry<K, BehaviorSubject<V>>>()
     val observableMap = mutableMapOf<K, BehaviorSubject<V>>()
+    init { putAll(map) }
     /**
      * this observable emits whenever SourceHashMap is added to.
      * It emits a K : BehaviorSubject<V> pair
