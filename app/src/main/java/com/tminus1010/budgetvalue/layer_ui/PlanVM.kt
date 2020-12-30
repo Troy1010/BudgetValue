@@ -21,7 +21,7 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
         intentPushPlanCA,
         categoriesAppVM.choosableCategories,
     )
-        .scan(SourceHashMap<Category, BigDecimal>()) { acc, (i, responsePlanCAs, intentPushPlanCA, chooseableCategories) ->
+        .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (i, responsePlanCAs, intentPushPlanCA, chooseableCategories) ->
             when (i) {
                 0 -> { responsePlanCAs!!
                     acc.clear()

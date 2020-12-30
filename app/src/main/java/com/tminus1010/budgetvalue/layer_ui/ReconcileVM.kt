@@ -48,7 +48,7 @@ class ReconcileVM(
         activeCategories,
         clearActiveReconciliation,
     )
-        .scan(SourceHashMap<Category, BigDecimal>()) { acc, (i, activeReconcileCAs, activeReconcileCA, activeCategories, _) ->
+        .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (i, activeReconcileCAs, activeReconcileCA, activeCategories, _) ->
             when (i) {
                 0 -> { activeReconcileCAs!!
                     acc.clear()

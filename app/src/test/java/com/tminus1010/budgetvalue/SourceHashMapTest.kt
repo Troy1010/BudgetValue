@@ -9,7 +9,7 @@ class SourceHashMapTest {
     @Test
     fun put() {
         // # Given
-        val sourceHashMap = SourceHashMap<Int, Int>()
+        val sourceHashMap = SourceHashMap<Int, Int>(exitValue = 0)
         // # Stimulate
         sourceHashMap[0] = 10
         // # Verify
@@ -21,7 +21,7 @@ class SourceHashMapTest {
     @Test
     fun putAll() {
         // # Given
-        val sourceHashMap = SourceHashMap<Int, Int>()
+        val sourceHashMap = SourceHashMap<Int, Int>(exitValue = 0)
         val feedingMap = hashMapOf(0 to 10, 3 to 30, 9 to 90)
         // # Stimulate
         sourceHashMap.putAll(feedingMap)
@@ -36,11 +36,11 @@ class SourceHashMapTest {
     }
 
     @Test
-    fun putAll_WhenApplied() {
+    fun putAll_GivenInitMap() {
         // # Given
-        val feedingMap = hashMapOf(0 to 10, 3 to 30, 9 to 90)
+        val initMap = hashMapOf(0 to 10, 3 to 30, 9 to 90)
         // # Stimulate
-        val sourceHashMap = SourceHashMap<Int, Int>().apply { putAll(feedingMap) }
+        val sourceHashMap = SourceHashMap(initMap, exitValue = 0)
         // # Verify
         assertEquals(sourceHashMap[0], 10)
         assertEquals(sourceHashMap[3], 30)

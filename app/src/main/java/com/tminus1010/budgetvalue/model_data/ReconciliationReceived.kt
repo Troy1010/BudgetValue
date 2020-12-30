@@ -17,6 +17,6 @@ data class ReconciliationReceived(
     val id: Int = 0
 ) {
     fun toReconciliation(typeConverter: TypeConverter): Reconciliation {
-        return Reconciliation(localDate, SourceHashMap(typeConverter.categoryAmounts(categoryAmounts)))
+        return Reconciliation(localDate, SourceHashMap(typeConverter.categoryAmounts(categoryAmounts), BigDecimal(0)))
     }
 }

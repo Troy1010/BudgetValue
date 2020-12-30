@@ -1,12 +1,15 @@
 package com.tminus1010.budgetvalue
 
+import com.tminus1010.tmcommonkotlin.tuple.Box
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.function.BiFunction
 import java.util.function.Function
 
-class SourceHashMap<K, V>(map: Map<K, V> = emptyMap()): HashMap<K, V>() {
+class SourceHashMap<K, V> private constructor(map: Map<K, V> = emptyMap()): HashMap<K, V>() {
+    var exitValueBox: Box<V>? = null
+    constructor(map: Map<K, V> = emptyMap(), exitValue: V): this(map) { exitValueBox = Box(exitValue) }
     private val observableMapPublisher = PublishSubject.create<MutableMap<K, BehaviorSubject<V>>>()
     val additionsObservablePublisher = PublishSubject.create<Map.Entry<K, BehaviorSubject<V>>>()
     val observableMap = mutableMapOf<K, BehaviorSubject<V>>()
@@ -35,6 +38,7 @@ class SourceHashMap<K, V>(map: Map<K, V> = emptyMap()): HashMap<K, V>() {
 
     override fun clear() {
         super.clear()
+        exitValueBox?.also { v -> observableMap.forEach { it.value.onNext(v.unbox()) } }
         observableMap.clear()
         observableMapPublisher.onNext(observableMap)
     }
@@ -68,6 +72,7 @@ class SourceHashMap<K, V>(map: Map<K, V> = emptyMap()): HashMap<K, V>() {
 
     override fun remove(key: K): V? {
         val x = super.remove(key)
+        exitValueBox?.also { v -> observableMap[key]!!.onNext(v.unbox()) }
         observableMap.remove(key)
         observableMapPublisher.onNext(observableMap)
         return x
