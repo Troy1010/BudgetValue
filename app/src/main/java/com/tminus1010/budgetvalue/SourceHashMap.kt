@@ -31,15 +31,6 @@ class SourceHashMap<K, V>(): HashMap<K, V>() {
             .also { it.skip(1).subscribe { super.put(key, it) } } // TODO("dispose")
     }
 
-    // this logic could be improved in the next iteration
-    fun prepareKey(key: K) {
-        val value = BehaviorSubject.create<V>()
-            .also { it.skip(1).subscribe { super.put(key, it) } } // TODO("dispose")
-        observableMap.put(key, value)
-        additionsObservablePublisher.onNext(createMapEntry(key, value))
-        observableMapPublisher.onNext(observableMap)
-    }
-
     // # Override HashMap functions
 
     override fun clear() {
