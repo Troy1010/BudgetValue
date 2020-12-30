@@ -3,14 +3,13 @@ package com.tminus1010.budgetvalue.layer_data
 import androidx.test.platform.app.InstrumentationRegistry
 import com.tminus1010.budgetvalue.AppMock
 import com.tminus1010.budgetvalue.model_app.Category
-import com.tminus1010.tmcommonkotlin.logz.logz
 import org.junit.Test
 
 import org.junit.Assert.*
 import org.junit.Before
 import java.math.BigDecimal
 
-class ReconcileCATests {
+class ActiveReconciliationTests {
     val app by lazy { InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as AppMock }
     val repo by lazy { app.appComponent.getRepo() }
     val a by lazy { Category("SomeCategoryA", Category.Type.Always) }
@@ -39,7 +38,6 @@ class ReconcileCATests {
         // # Stimulate
         repo.pushActiveReconcileCA(a to BigDecimal(123))
         // # Verify
-        logz("uuu:${repo.fetchActiveReconcileCAs()}")
         assertEquals(BigDecimal(123), repo.fetchActiveReconcileCAs()[a])
         assertEquals(BigDecimal(90), repo.fetchActiveReconcileCAs()[b])
         assertEquals(BigDecimal(3), repo.fetchActiveReconcileCAs()[c])
