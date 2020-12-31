@@ -8,6 +8,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.tminus1010.budgetvalue.*
+import com.tminus1010.budgetvalue.extensions.logzz
 import com.tminus1010.budgetvalue.extensions.viewModels2
 import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin.misc.toast
@@ -120,9 +121,7 @@ class HostActivity : AppCompatActivity() {
             }
             R.id.menu_debug_do_something -> {
                 toast("Debug Do Something")
-//                repo.fetchReconcileCategoryAmounts().take(1).subscribe {
-//                    logz("fetchedReconcileCA:$it")
-//                }
+                repo.fetchReconciliations().take(1).logzz("ppp").subscribe()
             }
         }
         return super.onOptionsItemSelected(item)
