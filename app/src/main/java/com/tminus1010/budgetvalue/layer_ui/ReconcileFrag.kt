@@ -11,7 +11,6 @@ import com.tminus1010.budgetvalue.App
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.extensions.activityViewModels2
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.*
-import com.tminus1010.budgetvalue.layer_ui.misc.bind
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
 import com.tminus1010.budgetvalue.model_app.Category
@@ -20,7 +19,6 @@ import com.tminus1010.budgetvalue.toBigDecimalSafe
 import com.tminus1010.tmcommonkotlin_rx.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.frag_reconcile.*
 import kotlinx.android.synthetic.main.tableview_header_income.view.*
 import java.math.BigDecimal
@@ -32,7 +30,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
     val accountsVM: AccountsVM by activityViewModels2 { AccountsVM(repo) }
     val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
     val planVM: PlanVM by activityViewModels2 { PlanVM(repo, categoriesAppVM) }
-    val reconcileVM: ReconcileVM by activityViewModels2 { ReconcileVM(repo, transactionsVM.spends, accountsVM.accountsTotal, planVM) }
+    val activeReconciliationVM: ActiveReconciliationVM by activityViewModels2 { ActiveReconciliationVM(repo, transactionsVM.spends, accountsVM.accountsTotal, planVM) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,7 +39,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
 
     fun setupBinds() {
         // # Save Button
-        btn_save.clicks().subscribe(reconcileVM.intentSaveReconciliation)
+        btn_save.clicks().subscribe(activeReconciliationVM.intentSaveReconciliation)
         // # Table
         val cellRecipeFactory = ViewItemRecipeFactory.createCellRecipeFactory(requireContext())
         val headerRecipeFactory = ViewItemRecipeFactory.createHeaderRecipeFactory(requireContext())
@@ -55,14 +53,14 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
             { view, (category, d) ->
                 view.bindIncoming(d)
-                view.bindOutgoing(reconcileVM.intentPushActiveReconcileCA, { s -> category to s.toBigDecimalSafe() }) { it.second }
+                view.bindOutgoing(activeReconciliationVM.intentPushActiveReconcileCA, { s -> category to s.toBigDecimalSafe() }) { it.second }
             }
         )
         val oneWayRecipeFactory = ViewItemRecipeFactory<TextView, Observable<BigDecimal>>(
             { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
             { view, d -> view.bindIncoming(d)}
         )
-        reconcileVM.rowDatas
+        activeReconciliationVM.rowDatas
             .observeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) { rowDatas ->
                 myTableView_1.setRecipes(
@@ -77,10 +75,10 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                                 + cellRecipeFactory.createOne2("")
                                 + oneWayRecipeFactory.createMany(rowDatas.map { it.actual }),
                         headerRecipeFactory.createOne2("Reconcile")
-                                + oneWayRecipeFactory.createOne2(reconcileVM.reconcileUncategorized)
+                                + oneWayRecipeFactory.createOne2(activeReconciliationVM.reconcileUncategorized)
                                 + reconcileCARecipeFactory.createMany(rowDatas.map { it.category to it.reconcile }),
                         headerRecipeFactory_numbered.createOne2(Pair("Budgeted",accountsVM.accountsTotal))
-                                + oneWayRecipeFactory.createOne2(reconcileVM.budgetedUncategorized)
+                                + oneWayRecipeFactory.createOne2(activeReconciliationVM.budgetedUncategorized)
                                 + oneWayRecipeFactory.createMany(rowDatas.map { it.budgeted })
                     ).reflectXY()
                 )

@@ -20,7 +20,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 import java.time.LocalDate
 
-class ReconcileVM(
+class ActiveReconciliationVM(
     private val repo: Repo,
     private val transactionSet: Observable<List<Transaction>>,
     private val accountsTotal: Observable<BigDecimal>,

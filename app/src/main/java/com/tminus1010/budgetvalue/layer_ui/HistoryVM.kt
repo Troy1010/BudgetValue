@@ -9,9 +9,9 @@ import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import java.time.LocalDate
 
-class HistoryVM(val transactionsVM: TransactionsVM, val reconcileVM: ReconcileVM, val planVM: PlanVM, val datePeriodGetter: DatePeriodGetter) : ViewModel() {
+class HistoryVM(val transactionsVM: TransactionsVM, val activeReconciliationVM: ActiveReconciliationVM, val planVM: PlanVM, val datePeriodGetter: DatePeriodGetter) : ViewModel() {
 //    val reconciliations = SourceArrayList<Reconciliation>()
-    val reconciliations = reconcileVM.activeReconcileCAs
+    val reconciliations = activeReconciliationVM.activeReconcileCAs
         .map { SourceArrayList<Reconciliation>().apply { add(Reconciliation(LocalDate.now(), it) ) } }
         .flatMap { it.observable }
 //    val plans = SourceArrayList<PlanAndActual>()
