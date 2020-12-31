@@ -31,7 +31,7 @@ class ReconcileVM(
             it
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
-                .map { Reconciliation(LocalDate.now(), activeReconcileCAs.value) }
+                .map { Reconciliation(LocalDate.now(), activeReconcileCAs.value.filter { it.value != BigDecimal(0) }) }
                 .doOnNext(repo::pushReconciliation)
                 .doOnNext { clearActiveReconciliation.onNext(Unit) }
                 .subscribe()
@@ -64,7 +64,13 @@ class ReconcileVM(
                         .filter { it !in acc.keys }
                         .associate { it to BigDecimal.ZERO })
                 }
-                3 -> acc.clear()
+                3 -> {
+                    acc.clear()
+                    if (activeCategories!=null)
+                        acc.putAll(activeCategories
+                            .filter { it !in acc.keys }
+                            .associate { it to BigDecimal.ZERO })
+                }
             }
             acc
         }
