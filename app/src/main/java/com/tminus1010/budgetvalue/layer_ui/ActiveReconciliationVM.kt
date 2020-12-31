@@ -83,7 +83,7 @@ class ActiveReconciliationVM(
             acc
         }
         .toBehaviorSubject()
-    val rowDatas = zip(activeCategories, activeReconcileCAs, planVM.planCAs, transactionSet) // TODO("Is this zipping correctly..?")
+    val rowDatas = combineLatestAsTuple(activeCategories, activeReconcileCAs, planVM.planCAs, transactionSet)
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
     val reconcileUncategorized = activeReconcileCAs
         .switchMap { it.observable }
