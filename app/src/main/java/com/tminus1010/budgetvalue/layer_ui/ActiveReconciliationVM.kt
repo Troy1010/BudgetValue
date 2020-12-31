@@ -32,7 +32,7 @@ class ActiveReconciliationVM(
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .map { Reconciliation(LocalDate.now(), activeReconcileCAs.value.filter { it.value != BigDecimal(0) }) }
-                .doOnNext(repo::pushReconciliation)
+                .doOnNext { repo.pushReconciliation(it).blockingAwait() }
                 .doOnNext { clearActiveReconciliation.onNext(Unit) }
                 .subscribe()
         }
