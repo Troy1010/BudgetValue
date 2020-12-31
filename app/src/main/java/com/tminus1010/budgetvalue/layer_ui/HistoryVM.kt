@@ -22,7 +22,6 @@ class HistoryVM(
 //    val reconciliations = activeReconciliationVM.activeReconcileCAs
 //        .map { SourceArrayList<Reconciliation>().apply { add(Reconciliation(LocalDate.now(), it) ) } }
 //        .flatMap { it.observable }
-    val reconciliations = repo.fetchReconciliations()
 //    val plans = SourceArrayList<PlanAndActual>()
 
     val plans = planVM.planCAs
@@ -30,9 +29,9 @@ class HistoryVM(
     // Plan comes from "saves", but there can only be 1 save per block
     // Reconciliations come from "saves"
     // Actuals comes from transactions
-    val stateHistoryColumnDatas =
-        combineLatestImpatient(reconciliations, plans, transactionsVM.transactionBlocks)
-            .map { (reconciliations, plans, transactionBlocks) ->
+    val historyColumnDatas =
+        combineLatestImpatient(repo.fetchReconciliations(), activeReconciliationVM.activeReconcileCAs, plans, transactionsVM.transactionBlocks)
+            .map { (reconciliations, activeReconciliationCAs, plans, transactionBlocks) ->
                 logz("!*!*! start historyColumnDatas")
                 // # Define blocks
                 val blockPeriodsUnsorted = mutableSetOf<LocalDatePeriod>()
@@ -81,13 +80,20 @@ class HistoryVM(
                             ))
                         }
                 }
+                // ## Add Active Reconciliation
+                if (activeReconciliationCAs != null) {
+                    historyColumnDatas.add(HistoryColumnData(
+                        activeReconciliationCAs,
+                        "Reconciliation",
+                        "Current"
+                    ))
+                }
                 historyColumnDatas
             }
-            .doOnNext { logz("historyColumnData:${it}") }
             .toBehaviorSubject()
 
     // # Active Categories
-    val activeCategories = stateHistoryColumnDatas
+    val activeCategories = historyColumnDatas
         .map { it.fold(HashSet<Category>()) { acc, v -> acc.apply { addAll(v.categoryAmounts.map{ it.key }) } } }
         .map { it.sortedBy { it.type } }
 }

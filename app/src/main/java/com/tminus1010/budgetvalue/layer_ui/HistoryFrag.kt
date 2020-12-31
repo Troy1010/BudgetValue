@@ -55,7 +55,7 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        combineLatestAsTuple(historyVM.stateHistoryColumnDatas, historyVM.activeCategories)
+        combineLatestAsTuple(historyVM.historyColumnDatas, historyVM.activeCategories)
             .observeOn(AndroidSchedulers.mainThread())
             .distinctUntilChanged() //*idk why this emitted a copy without distinctUntilChanged
             .observe(viewLifecycleOwner) { (historyColumnDatas, activeCategories) ->
