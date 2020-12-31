@@ -2,11 +2,9 @@ package com.tminus1010.budgetvalue.extensions
 
 import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin.tuple.Box
-import io.reactivex.rxjava3.annotations.NonNull
+import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.ObservableSource
 import io.reactivex.rxjava3.functions.BiFunction
-import java.math.BigDecimal
 
 
 fun <T : Any> Observable<T>.pairwise(initialValue: T): Observable<Pair<T, T>> {
@@ -62,6 +60,12 @@ fun <T> Observable<T>.boxStartNull(): Observable<Box<T?>> {
     return this
         .boxNull()
         .startWithItem(Box(null))
+}
+
+fun <T> Observable<T>.isCold(): Boolean {
+    return this
+        .toBehaviorSubject()
+        .value != null
 }
 
 

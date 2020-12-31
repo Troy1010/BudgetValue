@@ -2,9 +2,10 @@ package com.tminus1010.budgetvalue.extensions
 
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
-import org.junit.Test
-
+import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 import org.junit.Assert.*
+import org.junit.Test
 
 class ObservableKtTest {
     @Test
@@ -84,5 +85,33 @@ class ObservableKtTest {
         observable.subscribe()
         // # Verify
         assertEquals(1, count)
+    }
+
+    @Test
+    fun isCold_GivenCold() {
+        // # Given
+        val observable = Observable.just(1, 6, 7)
+        // # Stimulate & Verify
+        assertTrue(observable.isCold())
+    }
+
+    @Test
+    fun isCold_GivenHot() {
+        // # Given
+        val subject = PublishSubject.create<Int>()
+        subject.onNext(2)
+        subject.onNext(9)
+        // # Stimulate & Verify
+        assertFalse(subject.isCold())
+    }
+
+    @Test
+    fun isCold_GivenBehaviorSubject() {
+        // # Given
+        val subject = BehaviorSubject.create<Int>()
+        subject.onNext(2)
+        subject.onNext(9)
+        // # Stimulate & Verify
+        assertTrue(subject.isCold())
     }
 }
