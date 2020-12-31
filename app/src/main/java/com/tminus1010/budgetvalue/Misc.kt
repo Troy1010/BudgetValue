@@ -14,6 +14,7 @@ import com.tminus1010.budgetvalue.extensions.boxStartNull
 import com.tminus1010.budgetvalue.extensions.previous
 import com.tminus1010.budgetvalue.model_app.Transaction
 import com.google.gson.reflect.TypeToken
+import com.tminus1010.budgetvalue.extensions.isCold
 import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import com.tminus1010.tmcommonkotlin.tuple.Quadruple
@@ -532,8 +533,37 @@ fun <A, B, C> combineLatestImpatient(
     c: Observable<C>,
 ): Observable<Triple<A?, B?, C?>> {
     return combineLatestAsTuple(a.boxStartNull(), b.boxStartNull(), c.boxStartNull())
-        .skip(1)
+        .compose { observable ->
+            // # If no observables are cold, then skip the first emission
+            // * The observables start with null so that combineLatest is impatient.
+            //   However, we cannot assume that the first emission will be that initial skippable
+            //   tuple of nulls, because cold observables will emit their latest value even at the
+            //   first emission.
+            if (listOf(a, b, c).none { it.isCold() }) {
+                observable.skip(1)
+            } else observable
+        }
         .map { Triple(it.first.unbox(), it.second.unbox(), it.third.unbox()) }
+}
+
+fun <A, B, C, D> combineLatestImpatient(
+    a: Observable<A>,
+    b: Observable<B>,
+    c: Observable<C>,
+    d: Observable<D>,
+): Observable<Quadruple<A?, B?, C?, D?>> {
+    return combineLatestAsTuple(a.boxStartNull(), b.boxStartNull(), c.boxStartNull(), d.boxStartNull())
+        .compose { observable ->
+            // # If no observables are cold, then skip the first emission
+            // * The observables start with null so that combineLatest is impatient.
+            //   However, we cannot assume that the first emission will be that initial skippable
+            //   tuple of nulls, because cold observables will emit their latest value even at the
+            //   first emission.
+            if (listOf(a, b, c, d).none { it.isCold() }) {
+                observable.skip(1)
+            } else observable
+        }
+        .map { Quadruple(it.first.unbox(), it.second.unbox(), it.third.unbox(), it.fourth.unbox()) }
 }
 
 fun <T> Box<T>.unbox(): T {
