@@ -38,7 +38,15 @@ class ReconcileVM(
         }
     val intentPushActiveReconcileCA = PublishSubject.create<Pair<Category, BigDecimal>>()
         .also { it.subscribeOn(Schedulers.io()).subscribe(repo::pushActiveReconcileCA) }
+    // *Normally, doing pushActiveReconcileCAs would trigger fetchActiveReconcileCAs.. but since
+    // sharedPrefs does not support Observables, fetchActiveReconcileCAs is cold, so this subject is a workaround.
     val clearActiveReconciliation = PublishSubject.create<Unit>()
+        .also {
+            it
+                .subscribeOn(Schedulers.io())
+                .subscribe { repo.pushActiveReconcileCAs(null) }
+        }
+    // # State
     val activeCategories = transactionSet
         .map(::getActiveCategories)
         .toBehaviorSubject()
@@ -84,7 +92,8 @@ class ReconcileVM(
         .map { it.second - it.first } // TODO("Should subtract previous accountsTotal")
     val budgetedUncategorized = combineLatestAsTuple(accountsTotal, rowDatas.flatMap { it.map { it.budgeted }.total() })
         .map { it.first - it.second }
-
+    
+    //
     fun getRowDatas(
         activeCategories: Iterable<Category>,
         reconcileCA: SourceHashMap<Category, BigDecimal>,
