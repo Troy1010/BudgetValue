@@ -4,16 +4,25 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.SourceArrayList
 import com.tminus1010.budgetvalue.combineLatestImpatient
 import com.tminus1010.budgetvalue.extensions.toDisplayStr
+import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.budgetvalue.model_app.*
 import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import java.time.LocalDate
 
-class HistoryVM(val transactionsVM: TransactionsVM, val activeReconciliationVM: ActiveReconciliationVM, val planVM: PlanVM, val datePeriodGetter: DatePeriodGetter) : ViewModel() {
+class HistoryVM(
+    private val repo: Repo,
+    val transactionsVM: TransactionsVM,
+    val activeReconciliationVM: ActiveReconciliationVM,
+    val planVM: PlanVM,
+    val datePeriodGetter: DatePeriodGetter,
+) : ViewModel() {
+
 //    val reconciliations = SourceArrayList<Reconciliation>()
-    val reconciliations = activeReconciliationVM.activeReconcileCAs
-        .map { SourceArrayList<Reconciliation>().apply { add(Reconciliation(LocalDate.now(), it) ) } }
-        .flatMap { it.observable }
+//    val reconciliations = activeReconciliationVM.activeReconcileCAs
+//        .map { SourceArrayList<Reconciliation>().apply { add(Reconciliation(LocalDate.now(), it) ) } }
+//        .flatMap { it.observable }
+    val reconciliations = repo.fetchReconciliations()
 //    val plans = SourceArrayList<PlanAndActual>()
 
     val plans = planVM.planCAs
@@ -24,16 +33,19 @@ class HistoryVM(val transactionsVM: TransactionsVM, val activeReconciliationVM: 
     val stateHistoryColumnDatas =
         combineLatestImpatient(reconciliations, plans, transactionsVM.transactionBlocks)
             .map { (reconciliations, plans, transactionBlocks) ->
+                logz("!*!*! start historyColumnDatas")
                 // # Define blocks
-                val blockPeriodsUnsorted = ArrayList<LocalDatePeriod>()
+                val blockPeriodsUnsorted = mutableSetOf<LocalDatePeriod>()
                 plans?.forEach { blockPeriodsUnsorted.add(it.localDatePeriod.blockingFirst()) }
                 transactionBlocks?.forEach { blockPeriodsUnsorted.add(it.localDatePeriod) }
                 reconciliations?.forEach { blockPeriodsUnsorted.add(datePeriodGetter.getDatePeriod(it.localDate).blockingFirst()) }
                 val blockPeriods = blockPeriodsUnsorted.sortedBy { it.startDate }
-                logz("blockPeriods:${blockPeriodsUnsorted}")
+                logz("zzz blockPeriodsUnsorted:${blockPeriodsUnsorted}")
+                logz("zzz blockPeriods:${blockPeriods}")
                 // # Define historyColumnDatas
                 val historyColumnDatas = arrayListOf<HistoryColumnData>()
                 for (blockPeriod in blockPeriods) {
+                    logz("blockPeriod:${blockPeriod}")
                     // ## Add Plan
                     if (plans != null)
                         plans.find { it.localDatePeriod.blockingFirst() == blockPeriod }
@@ -61,7 +73,7 @@ class HistoryVM(val transactionsVM: TransactionsVM, val activeReconciliationVM: 
                     logz("reconciliations:${reconciliations}")
                     if (reconciliations != null)
                         for (reconciliation in reconciliations.filter { it.localDate in blockPeriod }) {
-                            logz("Adding Reconciliation..")
+                            logz("Adding Reconciliation.. TTT:${reconciliation.categoryAmounts.entries.first()}")
                             historyColumnDatas.add(HistoryColumnData(
                                 reconciliation.categoryAmounts,
                                 "Reconciliation",

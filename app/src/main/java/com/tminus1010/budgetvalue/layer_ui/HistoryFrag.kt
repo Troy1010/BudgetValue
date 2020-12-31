@@ -30,7 +30,7 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
     }
     val datePeriodGetter by lazy { app.appComponent.getDatePeriodGetter() }
     val historyVM: HistoryVM by activityViewModels2 {
-        HistoryVM(transactionsVM, activeReconciliationVM, planVM, datePeriodGetter)
+        HistoryVM(repo, transactionsVM, activeReconciliationVM, planVM, datePeriodGetter)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
