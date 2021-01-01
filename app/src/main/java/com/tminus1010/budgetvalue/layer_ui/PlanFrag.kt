@@ -67,7 +67,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
                     headerRecipeFactory.createOne2("Plan")
                             + expectedIncomeRecipeFactory.createOne2(planVM.expectedIncome)
                             + oneWayRecipeBuilder.createOne2(planVM.difference)
-                            + planCAsRecipeFactory.createMany(planCAs.observableMap.map { Pair(it.key, it.value) })
+                            + planCAsRecipeFactory.createMany(planCAs.itemObservableMap.map { Pair(it.key, it.value) })
                 ).reflectXY()
             }
             .observe(this) { myTableView_plan.setRecipes(it) }
