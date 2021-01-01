@@ -13,7 +13,7 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap()): HashMap<K, V
     constructor(map: Map<K, V> = emptyMap(), exitValue: V): this(map) { exitValueBox = Box(exitValue) }
     private val observableMapPublisher = PublishSubject.create<MutableMap<K, BehaviorSubject<V>>>()
     val changePublisher = PublishSubject.create<Change<K, V>>()
-    private val itemObservableMap = mutableMapOf<K, BehaviorSubject<V>>()
+    private val _itemObservableMap = mutableMapOf<K, BehaviorSubject<V>>()
     init { putAll(map) }
     /**
      * this observable emits a Change every time an entry is added, removed, or edited.
@@ -23,9 +23,9 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap()): HashMap<K, V
      * this observable emits whenever SourceHashMap is edited.
      * It exposes item observables.
      */
-    val observable: BehaviorSubject<Map<K, BehaviorSubject<V>>> = observableMapPublisher
-        .startWithItem(itemObservableMap)
-        .map { itemObservableMap.toMap() }
+    val itemObservableMap: BehaviorSubject<Map<K, BehaviorSubject<V>>> = observableMapPublisher
+        .startWithItem(_itemObservableMap)
+        .map { _itemObservableMap.toMap() }
         .toBehaviorSubject()
 
     private fun createItemObservable(key: K, value: V): BehaviorSubject<V> {
@@ -38,53 +38,53 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap()): HashMap<K, V
     override fun putAll(from: Map<out K, V>) {
         super.putAll(from)
         from.forEach { (key, value) ->
-            itemObservableMap[key]?.also { subject ->
+            _itemObservableMap[key]?.also { subject ->
                 changePublisher.onNext(Change(ChangeType.EDIT, key, value))
                 subject.onNext(value)
             } ?: run {
                 changePublisher.onNext(Change(ChangeType.ADD, key, value))
-                itemObservableMap[key] = createItemObservable(key, value)
+                _itemObservableMap[key] = createItemObservable(key, value)
             }
         }
-        observableMapPublisher.onNext(itemObservableMap)
+        observableMapPublisher.onNext(_itemObservableMap)
     }
 
     override fun put(key: K, value: V): V? {
         val x = super.put(key, value)
-        itemObservableMap[key]?.also { subject ->
+        _itemObservableMap[key]?.also { subject ->
             changePublisher.onNext(Change(ChangeType.EDIT, key, value))
             subject.onNext(value)
         } ?: run {
             changePublisher.onNext(Change(ChangeType.ADD, key, value))
-            itemObservableMap[key] = createItemObservable(key, value)
+            _itemObservableMap[key] = createItemObservable(key, value)
         }
-        observableMapPublisher.onNext(itemObservableMap)
+        observableMapPublisher.onNext(_itemObservableMap)
         return x
     }
 
     override fun clear() {
         super.clear()
-        itemObservableMap.forEach { (key, subject) ->
+        _itemObservableMap.forEach { (key, subject) ->
             exitValueBox?.also { (exitValue) ->
                 changePublisher.onNext(Change(ChangeType.EDIT, key, exitValue))
                 subject.onNext(exitValue)
             }
             changePublisher.onNext(Change(ChangeType.REMOVE, key, subject.value))
         }
-        itemObservableMap.clear()
-        observableMapPublisher.onNext(itemObservableMap)
+        _itemObservableMap.clear()
+        observableMapPublisher.onNext(_itemObservableMap)
     }
 
     override fun remove(key: K): V? {
         val x = super.remove(key)
-        itemObservableMap[key]?.also { subject ->
+        _itemObservableMap[key]?.also { subject ->
             exitValueBox?.also { (exitValue) ->
                 changePublisher.onNext(Change(ChangeType.EDIT, key, exitValue))
                 subject.onNext(exitValue)
             }
             changePublisher.onNext(Change(ChangeType.REMOVE, key, subject.value))
-            itemObservableMap.remove(key)
-            observableMapPublisher.onNext(itemObservableMap)
+            _itemObservableMap.remove(key)
+            observableMapPublisher.onNext(_itemObservableMap)
         }
         return x
     }

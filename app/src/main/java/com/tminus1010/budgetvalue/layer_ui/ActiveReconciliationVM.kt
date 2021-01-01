@@ -85,7 +85,7 @@ class ActiveReconciliationVM(
     val rowDatas = combineLatestAsTuple(activeCategories, activeReconcileCAs, planVM.planCAs, transactionSet)
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
     val reconcileUncategorized = activeReconcileCAs
-        .switchMap { it.observable }
+        .switchMap { it.itemObservableMap }
         .flatMap { it.values.total() }
         .withLatestFrom(accountsTotal)
         .map { it.second - it.first } // TODO("Should subtract previous accountsTotal")
@@ -102,9 +102,9 @@ class ActiveReconciliationVM(
         return activeCategories.map { category ->
             ReconcileRowData(
                 category,
-                planCA.observable.value[category] ?: Observable.just(BigDecimal.ZERO),
+                planCA.itemObservableMap.value[category] ?: Observable.just(BigDecimal.ZERO),
                 Observable.just(transactionSet.map { it.categoryAmounts[category] ?: BigDecimal.ZERO }.sum()),
-                reconcileCA.observable.value[category]!!,
+                reconcileCA.itemObservableMap.value[category]!!,
             )
         }
     }

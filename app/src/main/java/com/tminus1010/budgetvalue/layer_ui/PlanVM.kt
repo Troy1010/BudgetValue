@@ -42,7 +42,7 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
         }
         .toBehaviorSubject()
     val planUncategorized = planCAs
-        .switchMap { it.observable }
+        .switchMap { it.itemObservableMap }
         .flatMap { it.values.total() }
         .replay(1).refCount()
     val expectedIncome = intentPushExpectedIncome
