@@ -15,6 +15,7 @@ import com.tminus1010.budgetvalue.model_app.Transaction
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -82,7 +83,7 @@ class ActiveReconciliationVM(
             acc
         }
         .toBehaviorSubject()
-    val rowDatas = combineLatestAsTuple(activeCategories, activeReconcileCAs, planVM.planCAs, transactionSet)
+    val rowDatas = combineLatestAsTuple(activeCategories, activeReconcileCAs.value.itemObservableMap2, planVM.planCAs, transactionSet)
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
     val reconcileUncategorized = activeReconcileCAs
         .switchMap { it.itemObservableMap }
@@ -95,7 +96,7 @@ class ActiveReconciliationVM(
     //
     fun getRowDatas(
         activeCategories: Iterable<Category>,
-        reconcileCA: SourceHashMap<Category, BigDecimal>,
+        reconcileCA: Map<Category, BehaviorSubject<BigDecimal>>,
         planCA: SourceHashMap<Category, BigDecimal>,
         transactionSet: List<Transaction>
     ): Iterable<ReconcileRowData> {
@@ -104,7 +105,7 @@ class ActiveReconciliationVM(
                 category,
                 planCA.itemObservableMap.value[category] ?: Observable.just(BigDecimal.ZERO),
                 Observable.just(transactionSet.map { it.categoryAmounts[category] ?: BigDecimal.ZERO }.sum()),
-                reconcileCA.itemObservableMap.value[category]!!,
+                reconcileCA[category] ?: Observable.just(BigDecimal.ZERO),
             )
         }
     }

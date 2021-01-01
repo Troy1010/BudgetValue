@@ -63,7 +63,6 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
         activeReconciliationVM.rowDatas
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(AndroidSchedulers.mainThread())
-            .distinctUntilChanged()
             .observe(viewLifecycleOwner) { rowDatas ->
                 myTableView_1.setRecipes(
                     listOf(
