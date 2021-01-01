@@ -13,7 +13,7 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap()): HashMap<K, V
     constructor(map: Map<K, V> = emptyMap(), exitValue: V): this(map) { exitValueBox = Box(exitValue) }
     private val observableMapPublisher = PublishSubject.create<MutableMap<K, BehaviorSubject<V>>>()
     val changePublisher = PublishSubject.create<Change<K, V>>()
-    val itemObservableMap = mutableMapOf<K, BehaviorSubject<V>>()
+    private val itemObservableMap = mutableMapOf<K, BehaviorSubject<V>>()
     init { putAll(map) }
     /**
      * this observable emits a Change every time an entry is added, removed, or edited.
