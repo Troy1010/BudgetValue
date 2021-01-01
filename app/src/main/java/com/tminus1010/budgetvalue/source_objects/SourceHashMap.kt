@@ -15,6 +15,9 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap()): HashMap<K, V
     private val changePublisher = PublishSubject.create<Change<K, V>>()
     private val _itemObservableMap = mutableMapOf<K, BehaviorSubject<V>>()
     init { putAll(map) }
+    // Currently, there are two patterns available here (I am deciding which one is better):
+    //  > subscribe to itemObservableMap for edits, and additionOrRemovals for additions/removals
+    //  > subscribe to changeSet for everything, but you'll need to filter for exactly what you need.
     /**
      * this observable emits a Change every time an entry is added, removed, or edited.
      */
