@@ -26,9 +26,9 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap()): HashMap<K, V
      * this observable emits an AdditionOrRemoval every time an entry is added or removed.
      */
     val additionOrRemovals: Observable<AdditionOrRemoval<K, V>> = changeSet
-        .filter { it.changeType == ChangeType.ADD || it.changeType == ChangeType.REMOVE }
+        .filter { it.type == ChangeType.ADD || it.type == ChangeType.REMOVE }
         .map {
-            val additionOrRemovalType = when (it.changeType) {
+            val additionOrRemovalType = when (it.type) {
                 ChangeType.ADD -> AdditionOrRemovalType.ADD
                 ChangeType.REMOVE -> AdditionOrRemovalType.REMOVE
                 else -> error("Unexpected ChangeType:$it")
@@ -46,14 +46,14 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap()): HashMap<K, V
 
     val allEdits =
         changeSet
-            .filter { it.changeType == ChangeType.EDIT }
+            .filter { it.type == ChangeType.EDIT }
             .publish().refCount()
     
     fun getEdits(key: K) =
         changeSet
             .filter { it.key == key }
-            .takeUntil { it.changeType == ChangeType.REMOVE }
-            .filter { it.changeType == ChangeType.EDIT }
+            .takeUntil { it.type == ChangeType.REMOVE }
+            .filter { it.type == ChangeType.EDIT }
 
     private fun createItemObservable(key: K, value: V): BehaviorSubject<V> {
         return BehaviorSubject.createDefault(value)
