@@ -12,7 +12,7 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap()): HashMap<K, V
     var exitValueBox: Box<V>? = null
     constructor(map: Map<K, V> = emptyMap(), exitValue: V): this(map) { exitValueBox = Box(exitValue) }
     private val observableMapPublisher = PublishSubject.create<MutableMap<K, BehaviorSubject<V>>>()
-    val changePublisher = PublishSubject.create<Change<K, V>>()
+    private val changePublisher = PublishSubject.create<Change<K, V>>()
     private val _itemObservableMap = mutableMapOf<K, BehaviorSubject<V>>()
     init { putAll(map) }
     /**
