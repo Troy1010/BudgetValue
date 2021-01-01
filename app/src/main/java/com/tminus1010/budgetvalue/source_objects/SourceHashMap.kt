@@ -16,11 +16,12 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap()): HashMap<K, V
     val observableMap = mutableMapOf<K, BehaviorSubject<V>>()
     init { putAll(map) }
     /**
-     * this observable emits a Change every time the map is added to, removed from, or edited.
+     * this observable emits a Change every time an entry is added, removed, or edited.
      */
     val changeSet: Observable<Change<K, V>> = changePublisher
     /**
      * this observable emits whenever SourceHashMap is edited.
+     * It exposes item observables.
      */
     val observable: BehaviorSubject<Map<K, BehaviorSubject<V>>> = observableMapPublisher
         .startWithItem(observableMap)
