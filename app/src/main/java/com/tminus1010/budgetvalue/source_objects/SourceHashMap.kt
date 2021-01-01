@@ -43,17 +43,6 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap()): HashMap<K, V
 
     // # Override HashMap functions
 
-    override fun clear() {
-        super.clear()
-        exitValueBox?.also { exitValueBox ->
-            observableMap.forEach { changePublisher.onNext(Change(ChangeType.EDIT, it.key, exitValueBox.unbox())) }
-            observableMap.forEach { it.value.onNext(exitValueBox.unbox()) }
-        }
-        observableMap.forEach { changePublisher.onNext(Change(ChangeType.REMOVE, it.key, it.value.value)) }
-        observableMap.clear()
-        observableMapPublisher.onNext(observableMap)
-    }
-
     override fun putAll(from: Map<out K, V>) {
         super.putAll(from)
         for ((key, value) in from) {
@@ -85,12 +74,25 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap()): HashMap<K, V
         return x
     }
 
+    override fun clear() {
+        super.clear()
+        observableMap.forEach { (key, value) ->
+            exitValueBox?.also { (exitValue) ->
+                changePublisher.onNext(Change(ChangeType.EDIT, key, exitValue))
+                value.onNext(exitValue)
+            }
+            changePublisher.onNext(Change(ChangeType.REMOVE, key, value.value))
+        }
+        observableMap.clear()
+        observableMapPublisher.onNext(observableMap)
+    }
+
     override fun remove(key: K): V? {
         val x = super.remove(key)
         if (key in observableMap.keys) {
-            exitValueBox?.also { exitValueBox ->
-                changePublisher.onNext(Change(ChangeType.EDIT, key, exitValueBox.unbox()))
-                observableMap[key]!!.onNext(exitValueBox.unbox())
+            exitValueBox?.also { (exitValue) ->
+                changePublisher.onNext(Change(ChangeType.EDIT, key, exitValue))
+                observableMap[key]!!.onNext(exitValue)
             }
             changePublisher.onNext(Change(ChangeType.REMOVE, key, observableMap[key]!!.value))
             observableMap.remove(key)
