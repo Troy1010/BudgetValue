@@ -1,7 +1,5 @@
 package com.tminus1010.budgetvalue.source_objects
 
-import com.tminus1010.budgetvalue.createMapEntry
-import com.tminus1010.budgetvalue.unbox
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
@@ -14,7 +12,6 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap()): HashMap<K, V
     var exitValueBox: Box<V>? = null
     constructor(map: Map<K, V> = emptyMap(), exitValue: V): this(map) { exitValueBox = Box(exitValue) }
     private val observableMapPublisher = PublishSubject.create<MutableMap<K, BehaviorSubject<V>>>()
-    val additionsObservablePublisher = PublishSubject.create<Map.Entry<K, BehaviorSubject<V>>>()
     val changePublisher = PublishSubject.create<Change<K, V>>()
     val observableMap = mutableMapOf<K, BehaviorSubject<V>>()
     init { putAll(map) }
@@ -22,12 +19,6 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap()): HashMap<K, V
      * this observable emits a Change every time the map is added to, removed from, or edited.
      */
     val changeSet: Observable<Change<K, V>> = changePublisher
-    /**
-     * this observable emits whenever SourceHashMap is added to.
-     * It emits a K : BehaviorSubject<V> pair
-     */
-    val additions = additionsObservablePublisher
-        .startWithIterable(observableMap.entries)
     /**
      * this observable emits whenever SourceHashMap is edited.
      */
@@ -51,9 +42,7 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap()): HashMap<K, V
                 subject.onNext(value)
             } ?: run {
                 changePublisher.onNext(Change(ChangeType.ADD, key, value))
-                createItemObservable(key, value)
-                    .also { observableMap[key] = it }
-                    .also { additionsObservablePublisher.onNext(createMapEntry(key, it)) }
+                observableMap[key] = createItemObservable(key, value)
             }
         }
         observableMapPublisher.onNext(observableMap)
@@ -66,9 +55,7 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap()): HashMap<K, V
             subject.onNext(value)
         } ?: run {
             changePublisher.onNext(Change(ChangeType.ADD, key, value))
-            createItemObservable(key, value)
-                .also { observableMap[key] = it }
-                .also { additionsObservablePublisher.onNext(createMapEntry(key, it)) }
+            observableMap[key] = createItemObservable(key, value)
         }
         observableMapPublisher.onNext(observableMap)
         return x
