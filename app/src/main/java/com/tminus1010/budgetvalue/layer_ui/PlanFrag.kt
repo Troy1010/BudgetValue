@@ -52,22 +52,19 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
             { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
             { v, bs -> v.bindIncoming(bs) }
         )
-        planVM.planCAs
+        planVM.planCAs.value.itemObservableMap2
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(AndroidSchedulers.mainThread())
-            //*Without distinctUntilChanged, state changes are needlessly pushed to
-            // ui when user uses an edit text.
-            .distinctUntilChanged()
-            .map { planCAs ->
+            .map { planCAsItemObservableMap ->
                 listOf(
                     headerRecipeFactory.createOne2("Category")
                             + cellRecipeFactory.createOne2("Expected Income")
                             + cellRecipeFactory.createOne2("Default")
-                            + cellRecipeFactory.createMany(planCAs.keys.map { it.name }),
+                            + cellRecipeFactory.createMany(planCAsItemObservableMap.keys.map { it.name }),
                     headerRecipeFactory.createOne2("Plan")
                             + expectedIncomeRecipeFactory.createOne2(planVM.expectedIncome)
                             + oneWayRecipeBuilder.createOne2(planVM.difference)
-                            + planCAsRecipeFactory.createMany(planCAs.itemObservableMap.value.map { Pair(it.key, it.value) })
+                            + planCAsRecipeFactory.createMany(planCAsItemObservableMap.map { Pair(it.key, it.value) })
                 ).reflectXY()
             }
             .observe(this) { myTableView_plan.setRecipes(it) }
