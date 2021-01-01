@@ -1,9 +1,7 @@
-package com.tminus1010.budgetvalue
-
-import com.tminus1010.budgetvalue.source_objects.SourceHashMap
-import org.junit.Test
+package com.tminus1010.budgetvalue.source_objects
 
 import org.junit.Assert.*
+import org.junit.Test
 
 class SourceHashMapTest {
 
@@ -50,5 +48,25 @@ class SourceHashMapTest {
         assertEquals(10, sourceHashMap.observable.value[0]!!.value)
         assertEquals(30, sourceHashMap.observable.value[3]!!.value)
         assertEquals(90, sourceHashMap.observable.value[9]!!.value)
+    }
+
+    @Test
+    fun changeSet() {
+        // # Given
+        val initMap = hashMapOf(0 to 10, 3 to 30, 9 to 90)
+        val sourceHashMap = SourceHashMap(initMap, exitValue = 0)
+        // # Stimulate
+        val results = sourceHashMap.changeSet.test()
+        sourceHashMap[0] = 3
+        sourceHashMap[1] = 20
+        sourceHashMap.remove(3)
+        // # Verify
+        results
+            .assertValues(
+                Change(ChangeType.EDIT, 0, 3),
+                Change(ChangeType.ADD, 1, 20),
+                Change(ChangeType.EDIT, 3, 0),
+                Change(ChangeType.REMOVE, 3, 0),
+            )
     }
 }
