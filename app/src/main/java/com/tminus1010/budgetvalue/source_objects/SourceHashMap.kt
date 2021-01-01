@@ -43,6 +43,11 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap()): HashMap<K, V
         .startWithItem(_itemObservableMap)
         .map { _itemObservableMap.toMap() }
         .toBehaviorSubject()
+
+    val allEdits =
+        changeSet
+            .filter { it.changeType == ChangeType.EDIT }
+            .publish().refCount()
     
     fun getEdits(key: K) =
         changeSet
