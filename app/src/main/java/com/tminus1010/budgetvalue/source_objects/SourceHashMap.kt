@@ -41,6 +41,14 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue
         .startWithItem(_itemObservableMap)
         .map { _itemObservableMap.toMap() }
         .toBehaviorSubject()
+    /**
+     * this observable emits every time an entry is added or removed. (only once per transaction)
+     * It exposes item observables.
+     */
+    val itemObservableMap2: Observable<Map<K, BehaviorSubject<V>>> = additionOrRemovals
+        .map { _itemObservableMap }
+        .startWithItem(_itemObservableMap)
+        .map { it.toMap() }
 
     val allEdits =
         changeSet
