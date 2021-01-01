@@ -20,6 +20,19 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap()): HashMap<K, V
      */
     val changeSet: Observable<Change<K, V>> = changePublisher
     /**
+     * this observable emits an AdditionOrRemoval every time an entry is added or removed.
+     */
+    val additionOrRemovals: Observable<AdditionOrRemoval<K, V>> = changeSet
+        .filter { it.changeType == ChangeType.ADD || it.changeType == ChangeType.REMOVE }
+        .map {
+            val additionOrRemovalType = when (it.changeType) {
+                ChangeType.ADD -> AdditionOrRemovalType.ADD
+                ChangeType.REMOVE -> AdditionOrRemovalType.REMOVE
+                else -> error("Unexpected ChangeType:$it")
+            }
+            AdditionOrRemoval(additionOrRemovalType, it.key, it.value)
+        }
+    /**
      * this observable emits whenever SourceHashMap is edited.
      * It exposes item observables.
      */
