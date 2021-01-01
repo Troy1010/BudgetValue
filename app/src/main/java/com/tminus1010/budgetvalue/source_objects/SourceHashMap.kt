@@ -43,6 +43,12 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap()): HashMap<K, V
         .startWithItem(_itemObservableMap)
         .map { _itemObservableMap.toMap() }
         .toBehaviorSubject()
+    
+    fun getEdits(key: K) =
+        changeSet
+            .filter { it.key == key }
+            .takeUntil { it.changeType == ChangeType.REMOVE }
+            .filter { it.changeType == ChangeType.EDIT }
 
     private fun createItemObservable(key: K, value: V): BehaviorSubject<V> {
         return BehaviorSubject.createDefault(value)
