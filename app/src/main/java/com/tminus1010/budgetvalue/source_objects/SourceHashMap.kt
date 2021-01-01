@@ -17,7 +17,8 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap()): HashMap<K, V
     init { putAll(map) }
     // Currently, there are two patterns available here (I am deciding which one is better):
     //  > subscribe to itemObservableMap for edits, and additionOrRemovals for additions/removals
-    //  > subscribe to changeSet for everything, but you'll need to filter for exactly what you need.
+    //  > subscribe to changeSet for everything, but you'll need to filter for exactly what you
+    //    need, and pairwise/two-way-binding requires extra logic.
     /**
      * this observable emits a Change every time an entry is added, removed, or edited.
      */
@@ -36,7 +37,7 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap()): HashMap<K, V
             AdditionOrRemoval(additionOrRemovalType, it.key, it.value)
         }
     /**
-     * this observable emits whenever SourceHashMap is edited.
+     * this observable emits whenever SourceHashMap is changed. (only once per transaction)
      * It exposes item observables.
      */
     val itemObservableMap: BehaviorSubject<Map<K, BehaviorSubject<V>>> = observableMapPublisher
