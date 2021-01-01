@@ -30,9 +30,8 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap()): HashMap<K, V
         .startWithIterable(observableMap.entries)
     /**
      * this observable emits whenever SourceHashMap is edited.
-     * It emits a map of K : BehaviorSubject<V>
      */
-    val observable = observableMapPublisher
+    val observable: BehaviorSubject<Map<K, BehaviorSubject<V>>> = observableMapPublisher
         .startWithItem(observableMap)
         .map { observableMap.toMap() }
         .toBehaviorSubject()
