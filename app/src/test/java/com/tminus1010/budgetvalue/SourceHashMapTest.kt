@@ -1,5 +1,6 @@
 package com.tminus1010.budgetvalue
 
+import com.tminus1010.budgetvalue.source_objects.SourceHashMap
 import org.junit.Test
 
 import org.junit.Assert.*

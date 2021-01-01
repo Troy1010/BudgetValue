@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.model_data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.tminus1010.budgetvalue.SourceHashMap
+import com.tminus1010.budgetvalue.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.layer_data.TypeConverter
 import com.tminus1010.budgetvalue.model_app.Reconciliation
 import java.math.BigDecimal
