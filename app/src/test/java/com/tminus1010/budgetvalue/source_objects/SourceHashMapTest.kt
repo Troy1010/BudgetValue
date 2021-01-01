@@ -69,4 +69,22 @@ class SourceHashMapTest {
                 Change(ChangeType.REMOVE, 3, 0),
             )
     }
+
+    @Test
+    fun changeSet_WhenClear() {
+        // # Given
+        val initMap = hashMapOf(0 to 10, 2 to 22)
+        val sourceHashMap = SourceHashMap(initMap, exitValue = 77)
+        // # Stimulate
+        val results = sourceHashMap.changeSet.test()
+        sourceHashMap.clear()
+        // # Verify
+        results
+            .assertValues(
+                Change(ChangeType.EDIT, 0, 77),
+                Change(ChangeType.EDIT, 2, 77),
+                Change(ChangeType.REMOVE, 0, 77),
+                Change(ChangeType.REMOVE, 2, 77),
+            )
+    }
 }
