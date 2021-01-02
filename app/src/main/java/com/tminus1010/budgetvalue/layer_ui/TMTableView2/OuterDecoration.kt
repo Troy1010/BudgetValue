@@ -29,8 +29,7 @@ class OuterDecoration(
         state: RecyclerView.State,
     ) {
         if (orientation == Orientation.HORIZONTAL) TODO()
-        val j = parent.getChildAdapterPosition(view) + rowFreezeCount
-        when (j) {
+        when (val j = parent.getChildAdapterPosition(view) + rowFreezeCount) {
             in dividerMap.keys -> outRect.apply { top = dividerMap[j]!!.intrinsicHeight }
             0 -> return // The first item does not implicitly get a divider above it.
             else -> outRect.apply { top = defaultDividerDrawable.intrinsicHeight }
