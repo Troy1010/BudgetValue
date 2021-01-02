@@ -62,11 +62,13 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
                 val recipe2D =
                     arrayListOf<Iterable<IViewItemRecipe>>(
                         headerRecipeFactory.createOne2("Categories") +
+                                cellRecipeFactory.createOne("Default") +
                                 cellRecipeFactory.createMany(activeCategories.map { it.name })
                     ).apply {
                         addAll(
                             historyColumnDatas.map {
                                 doubleHeaderRecipeFactory.createOne2(Pair(it.title, it.subTitle)) +
+                                        cellRecipeFactory.createOne(it.defaultAmount.toString()) +
                                         cellRecipeFactory.createMany(activeCategories.map { k ->
                                             it.categoryAmounts[k]?.toString() ?: ""
                                         })
