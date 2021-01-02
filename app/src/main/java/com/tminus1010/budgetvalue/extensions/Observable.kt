@@ -26,6 +26,11 @@ fun <T : Any, G : Any> Observable<T>.withLatestFrom(x: Observable<G>): Observabl
     return this.withLatestFrom(x, BiFunction { t1: T, t2: G -> Pair(t1, t2) })
 }
 
+fun <A : Any, B : Any, C: Any> Observable<A>.withLatestFrom(b: Observable<B>, c: Observable<C>): Observable<Triple<A, B, C>> {
+    return this.withLatestFrom(b, BiFunction { a: A, b: B -> Pair(a, b) })
+        .withLatestFrom(c, BiFunction { pair:Pair<A, B>, c: C -> Triple(pair.first, pair.second, c) })
+}
+
 fun <T : Any, G : Any, R:Any> Observable<T>.withLatestFrom(x: Observable<G>, action: (T, G)->R): Observable<R> {
     return this.withLatestFrom(x, BiFunction { t1: T, t2: G -> action(t1, t2) })
 }
