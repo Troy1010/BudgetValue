@@ -90,12 +90,12 @@ class ActiveReconciliationVM(
         .toBehaviorSubject()
     val rowDatas = combineLatestAsTuple(activeCategories, activeReconcileCAs.value.itemObservableMap2, planVM.planCAs, transactionSet)
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
-    val defaultAmount = activeReconcileCAs.value.itemObservableMap2
+    val activeReconcileTotal = activeReconcileCAs.value.itemObservableMap2
         .switchMap { it.values.total() }
-        .withLatestFrom(accountsTotal)
-        .map { it.second - it.first } // TODO("Should subtract previous accountsTotal")
     val budgetedUncategorized = combineLatestAsTuple(accountsTotal, rowDatas.flatMap { it.map { it.budgeted }.total() })
         .map { it.first - it.second }
+    val defaultAmount = combineLatestAsTuple(accountsTotal, activeReconcileTotal, budgetedUncategorized)
+        .map { it.first - it.second - it.third } // TODO("This might not be right, but first the budgeted column should be fixed")
     
     //
     fun getRowDatas(
