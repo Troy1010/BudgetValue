@@ -7,7 +7,8 @@ import java.time.LocalDate
 
 data class Reconciliation(
     val localDate: LocalDate,
-    val categoryAmounts: Map<Category, BigDecimal>
+    val categoryAmounts: Map<Category, BigDecimal>,
+    val amount: BigDecimal
 ) {
     fun toReconciliationReceived(typeConverter: TypeConverter, amount: BigDecimal): ReconciliationReceived {
         return ReconciliationReceived(

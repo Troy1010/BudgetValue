@@ -40,7 +40,8 @@ class ReconciliationTests {
         val localDate = LocalDate.now()
         val reconciliation = Reconciliation(
             LocalDate.now(),
-            SourceHashMap(mapOf(a to BigDecimal(8), b to BigDecimal(90), c to BigDecimal(3)))
+            SourceHashMap(mapOf(a to BigDecimal(8), b to BigDecimal(90), c to BigDecimal(3))),
+            BigDecimal(50),
         )
         // # Stimulate
         repo.pushReconciliation(reconciliation).blockingAwait()
