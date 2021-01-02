@@ -1,19 +1,14 @@
 package com.tminus1010.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.combineLatestAsTuple
 import com.tminus1010.budgetvalue.combineLatestImpatient
 import com.tminus1010.budgetvalue.extensions.toDisplayStr
 import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.budgetvalue.model_app.Category
 import com.tminus1010.budgetvalue.model_app.HistoryColumnData
 import com.tminus1010.budgetvalue.model_app.LocalDatePeriod
-import com.tminus1010.budgetvalue.model_app.Plan
-import com.tminus1010.budgetvalue.source_objects.SourceArrayList
-import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import java.time.LocalDate
 import java.util.concurrent.TimeUnit
 
 class HistoryVM(
@@ -32,24 +27,18 @@ class HistoryVM(
             .subscribeOn(AndroidSchedulers.mainThread())
             .throttleLast(500, TimeUnit.MILLISECONDS)
             .map { (reconciliations, activeReconciliationDefaultAmount, activeReconciliationCAs, planDefaultAmount, planCAs, transactionBlocks) ->
-                logz("!*!*! start historyColumnDatas")
                 // # Define blocks
                 val blockPeriodsUnsorted = mutableSetOf<LocalDatePeriod>()
                 transactionBlocks?.forEach { blockPeriodsUnsorted.add(it.localDatePeriod) }
                 reconciliations?.forEach { blockPeriodsUnsorted.add(datePeriodGetter.getDatePeriod(it.localDate).blockingFirst()) }
                 val blockPeriods = blockPeriodsUnsorted.sortedBy { it.startDate }
-                logz("zzz blockPeriodsUnsorted:${blockPeriodsUnsorted}")
-                logz("zzz blockPeriods:${blockPeriods}")
                 // # Define historyColumnDatas
                 val historyColumnDatas = arrayListOf<HistoryColumnData>()
                 for (blockPeriod in blockPeriods) {
-                    logz("blockPeriod:${blockPeriod}")
                     // ## Add Actual
-                    logz("actuals:${transactionBlocks}")
                     if (transactionBlocks != null)
                         transactionBlocks.find { it.localDatePeriod == blockPeriod }
                             ?.also {
-                                logz("Adding Actual.. blockPeriod:${blockPeriod.startDate}")
                                 historyColumnDatas.add(HistoryColumnData(
                                     "Actual",
                                     it.localDatePeriod.toDisplayStr(),
@@ -58,10 +47,8 @@ class HistoryVM(
                                 ))
                             }
                     // ## Add Reconciliations
-                    logz("reconciliations:${reconciliations}")
                     if (reconciliations != null)
                         for (reconciliation in reconciliations.filter { it.localDate in blockPeriod }) {
-                            logz("Adding Reconciliation.. TTT:${reconciliation.categoryAmounts.entries.first()}")
                             historyColumnDatas.add(HistoryColumnData(
                                 "Reconciliation",
                                 reconciliation.localDate.toDisplayStr(),
