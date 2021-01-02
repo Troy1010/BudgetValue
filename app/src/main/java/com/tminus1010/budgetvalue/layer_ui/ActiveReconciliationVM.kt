@@ -32,10 +32,10 @@ class ActiveReconciliationVM(
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .flatMap { accountsTotal }
-                .map {
+                .map { accountsTotal ->
                     Reconciliation(LocalDate.now(),
-                        activeReconcileCAs.value.filter { it.value != BigDecimal(0) },
-                        it)
+                        accountsTotal,
+                        activeReconcileCAs.value.filter { it.value != BigDecimal(0) },)
                 }
                 .doOnNext { repo.pushReconciliation(it).blockingAwait() }
                 .doOnNext { clearActiveReconciliation.onNext(Unit) }
@@ -90,9 +90,8 @@ class ActiveReconciliationVM(
         .toBehaviorSubject()
     val rowDatas = combineLatestAsTuple(activeCategories, activeReconcileCAs.value.itemObservableMap2, planVM.planCAs, transactionSet)
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
-    val reconcileUncategorized = activeReconcileCAs
-        .switchMap { it.itemObservableMap }
-        .flatMap { it.values.total() }
+    val defaultAmount = activeReconcileCAs.value.itemObservableMap2
+        .switchMap { it.values.total() }
         .withLatestFrom(accountsTotal)
         .map { it.second - it.first } // TODO("Should subtract previous accountsTotal")
     val budgetedUncategorized = combineLatestAsTuple(accountsTotal, rowDatas.flatMap { it.map { it.budgeted }.total() })

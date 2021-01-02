@@ -63,7 +63,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
                             + cellRecipeFactory.createMany(planCAsItemObservableMap.keys.map { it.name }),
                     headerRecipeFactory.createOne2("Plan")
                             + expectedIncomeRecipeFactory.createOne2(planVM.expectedIncome)
-                            + oneWayRecipeBuilder.createOne2(planVM.difference)
+                            + oneWayRecipeBuilder.createOne2(planVM.defaultAmount)
                             + planCAsRecipeFactory.createMany(planCAsItemObservableMap.map { Pair(it.key, it.value) })
                 ).reflectXY()
             }

@@ -566,6 +566,27 @@ fun <A, B, C, D> combineLatestImpatient(
         .map { Quadruple(it.first.unbox(), it.second.unbox(), it.third.unbox(), it.fourth.unbox()) }
 }
 
+fun <A, B, C, D, E> combineLatestImpatient(
+    a: Observable<A>,
+    b: Observable<B>,
+    c: Observable<C>,
+    d: Observable<D>,
+    e: Observable<E>,
+): Observable<Quintuple<A?, B?, C?, D?, E?>> {
+    return combineLatestAsTuple(a.boxStartNull(), b.boxStartNull(), c.boxStartNull(), d.boxStartNull(), e.boxStartNull())
+        .compose { observable ->
+            // # If no observables are cold, then skip the first emission
+            // * The observables start with null so that combineLatest is impatient.
+            //   However, we cannot assume that the first emission will be that initial skippable
+            //   tuple of nulls, because cold observables will emit their latest value even at the
+            //   first emission.
+            if (listOf(a, b, c, d, e).none { it.isCold() }) {
+                observable.skip(1)
+            } else observable
+        }
+        .map { Quintuple(it.first.unbox(), it.second.unbox(), it.third.unbox(), it.fourth.unbox(), it.fifth.unbox()) }
+}
+
 fun <T> Box<T>.unbox(): T {
     return this.first
 }

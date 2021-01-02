@@ -41,12 +41,11 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
             acc
         }
         .toBehaviorSubject()
-    val planUncategorized = planCAs
-        .switchMap { it.itemObservableMap }
-        .flatMap { it.values.total() }
+    val planUncategorized = planCAs.value.itemObservableMap2
+        .switchMap { it.values.total() }
         .replay(1).refCount()
     val expectedIncome = intentPushExpectedIncome
         .startWithItem(repo.fetchExpectedIncome())
-    val difference = combineLatestAsTuple(expectedIncome, planUncategorized)
+    val defaultAmount = combineLatestAsTuple(expectedIncome, planUncategorized)
         .map { it.first - it.second }
 }
