@@ -57,6 +57,7 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
         )
         combineLatestAsTuple(historyVM.historyColumnDatas, historyVM.activeCategories)
             .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(AndroidSchedulers.mainThread())
             .distinctUntilChanged() //*idk why this emitted a copy without distinctUntilChanged
             .observe(viewLifecycleOwner) { (historyColumnDatas, activeCategories) ->
                 val recipe2D =
