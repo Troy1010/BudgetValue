@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.tminus1010.budgetvalue.Orientation
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.extensions.children
+import com.tminus1010.budgetvalue.extensions.clearItemDecorations
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.Decoration
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 import io.reactivex.rxjava3.disposables.Disposable
@@ -53,12 +54,15 @@ class TMTableView2 @JvmOverloads constructor(
         if (rowFreezeCount==1) {
             recyclerview_columnheaders.adapter = InnerRVAdapter(context, recipeGrid, 0)
             recyclerview_columnheaders.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
+            recyclerview_columnheaders.clearItemDecorations()
             recyclerview_columnheaders.addItemDecoration(InnerFrozenRowDecoration(context, Orientation.HORIZONTAL, recipeGrid, rowFreezeCount))
+            recyclerview_columnheaders.clearOnScrollListeners()
             recyclerview_columnheaders.addOnScrollListener(synchronizedScrollListener)
         }
         // # Cells
         recyclerview_tier1.adapter = OuterRVAdapter(context, recipeGrid, rowFreezeCount, synchronizedScrollListener)
         recyclerview_tier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
+        recyclerview_tier1.clearItemDecorations()
         recyclerview_tier1.addItemDecoration(OuterDecoration(context, Orientation.VERTICAL, dividerMap, recipeGrid, colFreezeCount, rowFreezeCount))
         // ## Synchronize scrolling
         disposable?.dispose()
