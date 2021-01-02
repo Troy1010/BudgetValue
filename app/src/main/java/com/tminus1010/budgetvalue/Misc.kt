@@ -19,6 +19,7 @@ import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import com.tminus1010.tmcommonkotlin.tuple.Quadruple
 import com.tminus1010.tmcommonkotlin.tuple.Quintuple
+import com.tminus1010.tmcommonkotlin.tuple.Sextuple
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableSource
 import io.reactivex.rxjava3.functions.BiFunction
@@ -60,6 +61,30 @@ fun Iterable<Transaction>.getBlocks(numOfWeeks: Int): HashMap<LocalDate, java.ut
         transactionBlocks.remove(key)
     }
     return transactionBlocks
+}
+
+
+@Suppress("UNCHECKED_CAST")
+fun <A, B, C, D, E, F> combineLatestAsTuple(
+    a: ObservableSource<A>,
+    b: ObservableSource<B>,
+    c: ObservableSource<C>,
+    d: ObservableSource<D>,
+    e: ObservableSource<E>,
+    f: ObservableSource<F>
+): Observable<Sextuple<A, B, C, D, E, F>> {
+    return Observable.combineLatest(
+        listOf(a, b, c, d, e, f)
+    ) {
+        Sextuple(
+            it[0] as A,
+            it[1] as B,
+            it[2] as C,
+            it[3] as D,
+            it[4] as E,
+            it[5] as F
+        )
+    }
 }
 
 
@@ -585,6 +610,28 @@ fun <A, B, C, D, E> combineLatestImpatient(
             } else observable
         }
         .map { Quintuple(it.first.unbox(), it.second.unbox(), it.third.unbox(), it.fourth.unbox(), it.fifth.unbox()) }
+}
+
+fun <A, B, C, D, E, F> combineLatestImpatient(
+    a: Observable<A>,
+    b: Observable<B>,
+    c: Observable<C>,
+    d: Observable<D>,
+    e: Observable<E>,
+    f: Observable<F>,
+): Observable<Sextuple<A?, B?, C?, D?, E?, F?>> {
+    return combineLatestAsTuple(a.boxStartNull(), b.boxStartNull(), c.boxStartNull(), d.boxStartNull(), e.boxStartNull(), f.boxStartNull())
+        .compose { observable ->
+            // # If no observables are cold, then skip the first emission
+            // * The observables start with null so that combineLatest is impatient.
+            //   However, we cannot assume that the first emission will be that initial skippable
+            //   tuple of nulls, because cold observables will emit their latest value even at the
+            //   first emission.
+            if (listOf(a, b, c, d, e, f).none { it.isCold() }) {
+                observable.skip(1)
+            } else observable
+        }
+        .map { Sextuple(it.first.unbox(), it.second.unbox(), it.third.unbox(), it.fourth.unbox(), it.fifth.unbox(), it.sixth.unbox()) }
 }
 
 fun <T> Box<T>.unbox(): T {
