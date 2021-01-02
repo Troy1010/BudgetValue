@@ -31,10 +31,12 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
     val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
     val planVM: PlanVM by activityViewModels2 { PlanVM(repo, categoriesAppVM) }
     val activeReconciliationVM: ActiveReconciliationVM by activityViewModels2 { ActiveReconciliationVM(repo, transactionsVM.spends, accountsVM.accountsTotal, planVM) }
+    val budgetedVM: BudgetedVM by activityViewModels2 { BudgetedVM(repo, transactionsVM, activeReconciliationVM) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupBinds()
+        budgetedVM
     }
 
     fun setupBinds() {
