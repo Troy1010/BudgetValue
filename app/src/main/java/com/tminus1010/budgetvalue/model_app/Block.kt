@@ -4,7 +4,7 @@ import com.tminus1010.budgetvalue.extensions.sum
 import java.math.BigDecimal
 
 data class Block(
-    val localDatePeriod: LocalDatePeriod,
+    val datePeriod: LocalDatePeriod,
     val amount: BigDecimal,
     val categoryAmounts: Map<Category, BigDecimal>
 ) {

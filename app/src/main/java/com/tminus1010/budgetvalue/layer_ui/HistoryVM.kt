@@ -29,7 +29,7 @@ class HistoryVM(
             .map { (reconciliations, activeReconciliationDefaultAmount, activeReconciliationCAs, planDefaultAmount, planCAs, transactionBlocks) ->
                 // # Define blocks
                 val blockPeriodsUnsorted = mutableSetOf<LocalDatePeriod>()
-                transactionBlocks?.forEach { blockPeriodsUnsorted.add(it.localDatePeriod) }
+                transactionBlocks?.forEach { blockPeriodsUnsorted.add(it.datePeriod) }
                 reconciliations?.forEach { blockPeriodsUnsorted.add(datePeriodGetter.getDatePeriod(it.localDate).blockingFirst()) }
                 val blockPeriods = blockPeriodsUnsorted.sortedBy { it.startDate }
                 // # Define historyColumnDatas
@@ -37,11 +37,11 @@ class HistoryVM(
                 for (blockPeriod in blockPeriods) {
                     // ## Add Actuals
                     if (transactionBlocks != null)
-                        transactionBlocks.find { it.localDatePeriod == blockPeriod }
+                        transactionBlocks.find { it.datePeriod == blockPeriod }
                             ?.also {
                                 historyColumnDatas.add(HistoryColumnData(
                                     "Actual",
-                                    it.localDatePeriod.toDisplayStr(),
+                                    it.datePeriod.toDisplayStr(),
                                     it.defaultAmount,
                                     it.categoryAmounts,
                                 ))
