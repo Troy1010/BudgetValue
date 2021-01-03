@@ -40,4 +40,42 @@ class DatePeriodGetterTest {
             datePeriodGetter.getDatePeriod(date2)
         )
     }
+
+    @Test
+    fun getDatePeriod_GivenValueNearAnchorDate() {
+        // # Given
+        val date1 = LocalDate.of(2020, Month.JULY, 6)
+        val date2 = LocalDate.of(2020, Month.JULY, 15)
+        val date3 = LocalDate.of(2020, Month.JULY, 27)
+        val date4 = LocalDate.of(2020, Month.AUGUST, 5)
+        // # Stimulate & Verify
+        assertEquals(
+            LocalDatePeriod(
+                LocalDate.of(2020, Month.JULY, 1),
+                LocalDate.of(2020, Month.JULY, 14),
+            ),
+            datePeriodGetter.getDatePeriod(date1)
+        )
+        assertEquals(
+            LocalDatePeriod(
+                LocalDate.of(2020, Month.JULY, 15),
+                LocalDate.of(2020, Month.JULY, 28),
+            ),
+            datePeriodGetter.getDatePeriod(date2)
+        )
+        assertEquals(
+            LocalDatePeriod(
+                LocalDate.of(2020, Month.JULY, 15),
+                LocalDate.of(2020, Month.JULY, 28),
+            ),
+            datePeriodGetter.getDatePeriod(date3)
+        )
+        assertEquals(
+            LocalDatePeriod(
+                LocalDate.of(2020, Month.JULY, 29),
+                LocalDate.of(2020, Month.AUGUST, 11),
+            ),
+            datePeriodGetter.getDatePeriod(date4)
+        )
+    }
 }

@@ -21,8 +21,8 @@ class DatePeriodGetter @Inject constructor(repo: Repo) {
             }
     }
     // TODO("This is pretty hacky..")
-    val blockSizeBS = repo.fetchBlockSize().toBehaviorSubject()
-    val anchorDateOffsetBS = repo.fetchAnchorDateOffset().toBehaviorSubject()
+    val blockSizeBS = blockSize.toBehaviorSubject()
+    val anchorDateOffsetBS = anchorDateOffset.toBehaviorSubject()
 
     fun isDatePeriodValid(datePeriod: LocalDatePeriod): Boolean {
         return getDatePeriod(datePeriod.startDate, anchorDateOffsetBS.value!!, blockSizeBS.value!!) == datePeriod
