@@ -15,7 +15,10 @@ import java.time.Month
 class TransactionsVMTest {
     val repo = mockk<Repo>()
         .also { every { it.transactions } returns Observable.just(listOf()) }
-    val transactionsVM = TransactionsVM(repo)
+        .also { every { it.fetchAnchorDateOffset() } returns Observable.just(0) }
+        .also { every { it.fetchBlockSize() } returns Observable.just(14) }
+    val datePeriodGetter = DatePeriodGetter(repo)
+    val transactionsVM = TransactionsVM(repo, datePeriodGetter)
 
     @Test
     fun getBlocksFromTransactions() {
