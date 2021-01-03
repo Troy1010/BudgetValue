@@ -35,7 +35,7 @@ class HistoryVM(
                 // # Define historyColumnDatas
                 val historyColumnDatas = arrayListOf<HistoryColumnData>()
                 for (blockPeriod in blockPeriods) {
-                    // ## Add Actual
+                    // ## Add Actuals
                     if (transactionBlocks != null)
                         transactionBlocks.find { it.localDatePeriod == blockPeriod }
                             ?.also {
