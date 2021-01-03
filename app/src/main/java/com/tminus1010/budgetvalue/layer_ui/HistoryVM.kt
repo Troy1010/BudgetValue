@@ -29,8 +29,9 @@ class HistoryVM(
             .map { (reconciliations, activeReconciliationDefaultAmount, activeReconciliationCAs, planDefaultAmount, planCAs, transactionBlocks) ->
                 // # Define blocks
                 val blockPeriods = sortedSetOf<LocalDatePeriod>(compareBy { it.startDate })
+                transactionBlocks?.forEach { if (!datePeriodGetter.isDatePeriodValid(it.datePeriod)) error("datePeriod was not valid:${it.datePeriod}") }
                 transactionBlocks?.forEach { blockPeriods.add(it.datePeriod) }
-                reconciliations?.forEach { blockPeriods.add(datePeriodGetter.getDatePeriodObservable(it.localDate).blockingFirst()) }
+                reconciliations?.forEach { blockPeriods.add(datePeriodGetter.getDatePeriod(it.localDate)) }
                 // # Define historyColumnDatas
                 val historyColumnDatas = arrayListOf<HistoryColumnData>()
                 for (blockPeriod in blockPeriods) {

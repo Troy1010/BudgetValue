@@ -18,7 +18,7 @@ import kotlin.time.ExperimentalTime
 
 class HostActivity : AppCompatActivity() {
     val app by lazy { application as App }
-    val transactionsVM: TransactionsVM by viewModels2 { TransactionsVM(app.appComponent.getRepo()) }
+    val transactionsVM: TransactionsVM by viewModels2 { TransactionsVM(app.appComponent.getRepo(), app.appComponent.getDatePeriodGetter()) }
     val navController by lazy { findNavController(R.id.fragNavHost) }
     val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
     val repo by lazy { app.appComponent.getRepo() }

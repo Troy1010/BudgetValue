@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.item_category_btn.view.*
 class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     val app by lazy { requireActivity().application as App }
     val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
-    val transactionsVM: TransactionsVM by activityViewModels2 { TransactionsVM(app.appComponent.getRepo()) }
+    val transactionsVM: TransactionsVM by activityViewModels2 { TransactionsVM(app.appComponent.getRepo(), app.appComponent.getDatePeriodGetter()) }
     val categorizeVM: CategorizeVM by viewModels2 { CategorizeVM(app.appComponent.getRepo(), transactionsVM) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

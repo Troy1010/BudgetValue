@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.frag_history.*
 class HistoryFrag : Fragment(R.layout.frag_history) {
     val app by lazy { requireActivity().application as App }
     val repo by lazy { app.appComponent.getRepo() }
-    val transactionsVM: TransactionsVM by activityViewModels2 { TransactionsVM(repo) }
+    val transactionsVM: TransactionsVM by activityViewModels2 { TransactionsVM(repo, app.appComponent.getDatePeriodGetter()) }
     val accountsVM: AccountsVM by activityViewModels2 { AccountsVM(repo) }
     val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
     val planVM: PlanVM by activityViewModels2 { PlanVM(repo, categoriesAppVM) }
