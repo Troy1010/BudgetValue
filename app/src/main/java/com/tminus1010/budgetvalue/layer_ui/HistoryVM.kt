@@ -28,10 +28,9 @@ class HistoryVM(
             .throttleLast(500, TimeUnit.MILLISECONDS)
             .map { (reconciliations, activeReconciliationDefaultAmount, activeReconciliationCAs, planDefaultAmount, planCAs, transactionBlocks) ->
                 // # Define blocks
-                val blockPeriodsUnsorted = mutableSetOf<LocalDatePeriod>()
-                transactionBlocks?.forEach { blockPeriodsUnsorted.add(it.datePeriod) }
-                reconciliations?.forEach { blockPeriodsUnsorted.add(datePeriodGetter.getDatePeriod(it.localDate).blockingFirst()) }
-                val blockPeriods = blockPeriodsUnsorted.sortedBy { it.startDate }
+                val blockPeriods = sortedSetOf<LocalDatePeriod>(compareBy { it.startDate })
+                transactionBlocks?.forEach { blockPeriods.add(it.datePeriod) }
+                reconciliations?.forEach { blockPeriods.add(datePeriodGetter.getDatePeriod(it.localDate).blockingFirst()) }
                 // # Define historyColumnDatas
                 val historyColumnDatas = arrayListOf<HistoryColumnData>()
                 for (blockPeriod in blockPeriods) {
