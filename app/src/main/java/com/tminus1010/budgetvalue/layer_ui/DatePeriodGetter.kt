@@ -7,7 +7,7 @@ import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
 import java.time.LocalDate
 import java.time.Month
-import java.time.Period
+import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
 class DatePeriodGetter @Inject constructor(repo: Repo) {
@@ -32,8 +32,9 @@ class DatePeriodGetter @Inject constructor(repo: Repo) {
     }
 
     private fun getDatePeriod(date: LocalDate, anchorDateOffset:Long, blockSize:Long): LocalDatePeriod {
-        val startDate = (Period.between(anchorDay.plusDays(anchorDateOffset), date).days.toLong() % blockSize)
-            .let { if (anchorDay.isAfter(date)) it else -it }
+        val startDate = ChronoUnit.DAYS.between(anchorDay.plusDays(anchorDateOffset), date)
+            .let { it % blockSize }
+            .let { if (anchorDay.plusDays(anchorDateOffset).isAfter(date)) it else -it }
             .let { date.plusDays(it) }
         val endDate = startDate.plusDays(blockSize - 1)
         return LocalDatePeriod(startDate, endDate)
