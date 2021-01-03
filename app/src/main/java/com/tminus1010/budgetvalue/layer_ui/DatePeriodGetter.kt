@@ -16,10 +16,9 @@ class DatePeriodGetter @Inject constructor(repo: Repo) {
     fun getDatePeriod(date: LocalDate): Observable<LocalDatePeriod> {
         return combineLatestAsTuple(anchorDateOffset, blockSize)
             .map { (anchorDateOffset, blockSize) ->
-                var offset =
-                    Period.between(anchorDay.plusDays(anchorDateOffset), date).days % blockSize
-                offset *= if (anchorDay.isAfter(date)) 1 else -1
-                val startDate = date.plusDays(offset)
+                val startDate = (Period.between(anchorDay.plusDays(anchorDateOffset), date).days.toLong() % blockSize)
+                    .let { if (anchorDay.isAfter(date)) it else -it }
+                    .let { date.plusDays(it) }
                 val endDate = startDate.plusDays(blockSize - 1)
                 LocalDatePeriod(startDate, endDate)
             }
