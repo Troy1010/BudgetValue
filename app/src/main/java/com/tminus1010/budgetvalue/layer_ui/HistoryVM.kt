@@ -30,7 +30,7 @@ class HistoryVM(
                 // # Define blocks
                 val blockPeriods = sortedSetOf<LocalDatePeriod>(compareBy { it.startDate })
                 transactionBlocks?.forEach { blockPeriods.add(it.datePeriod) }
-                reconciliations?.forEach { blockPeriods.add(datePeriodGetter.getDatePeriod(it.localDate).blockingFirst()) }
+                reconciliations?.forEach { blockPeriods.add(datePeriodGetter.getDatePeriodObservable(it.localDate).blockingFirst()) }
                 // # Define historyColumnDatas
                 val historyColumnDatas = arrayListOf<HistoryColumnData>()
                 for (blockPeriod in blockPeriods) {

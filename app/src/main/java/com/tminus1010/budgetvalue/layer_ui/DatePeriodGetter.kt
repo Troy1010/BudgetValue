@@ -13,7 +13,7 @@ class DatePeriodGetter @Inject constructor(repo: Repo) {
     val blockSize = repo.fetchBlockSize()
     val anchorDateOffset = repo.fetchAnchorDateOffset()
     val anchorDay = LocalDate.of(2020, Month.JULY, 1)
-    fun getDatePeriod(date: LocalDate): Observable<LocalDatePeriod> {
+    fun getDatePeriodObservable(date: LocalDate): Observable<LocalDatePeriod> {
         return combineLatestAsTuple(anchorDateOffset, blockSize)
             .map { (anchorDateOffset, blockSize) ->
                 val startDate = (Period.between(anchorDay.plusDays(anchorDateOffset), date).days.toLong() % blockSize)

@@ -23,21 +23,21 @@ class DatePeriodGetterTest {
         val date1 = LocalDate.of(2020, Month.MARCH, 15)
         val date2 = LocalDate.of(2020, Month.MAY, 21)
         // # Stimulate & Verify
-        assertTrue(date1 in datePeriodGetter.getDatePeriod(date1).blockingFirst())
+        assertTrue(date1 in datePeriodGetter.getDatePeriodObservable(date1).blockingFirst())
         assertEquals(
             LocalDatePeriod(
                 LocalDate.of(2020, Month.MARCH, 12),
                 LocalDate.of(2020, Month.MARCH, 25)
             ),
-            datePeriodGetter.getDatePeriod(date1).blockingFirst()
+            datePeriodGetter.getDatePeriodObservable(date1).blockingFirst()
         )
-        assertTrue(date2 in datePeriodGetter.getDatePeriod(date2).blockingFirst())
+        assertTrue(date2 in datePeriodGetter.getDatePeriodObservable(date2).blockingFirst())
         assertEquals(
             LocalDatePeriod(
                 LocalDate.of(2020, Month.MAY, 10),
                 LocalDate.of(2020, Month.MAY, 23)
             ),
-            datePeriodGetter.getDatePeriod(date2).blockingFirst()
+            datePeriodGetter.getDatePeriodObservable(date2).blockingFirst()
         )
     }
 }
