@@ -26,31 +26,19 @@ class DatePeriodGetterTest {
         val date4 = LocalDate.of(2020, Month.AUGUST, 5)
         // # Stimulate & Verify
         assertEquals(
-            LocalDatePeriod(
-                LocalDate.of(2020, Month.JULY, 1),
-                LocalDate.of(2020, Month.JULY, 14),
-            ),
+            LocalDatePeriod(LocalDate.parse("2020-07-01"), LocalDate.parse("2020-07-14")),
             datePeriodGetter.getDatePeriod(date1)
         )
         assertEquals(
-            LocalDatePeriod(
-                LocalDate.of(2020, Month.JULY, 15),
-                LocalDate.of(2020, Month.JULY, 28),
-            ),
+            LocalDatePeriod(LocalDate.parse("2020-07-15"), LocalDate.parse("2020-07-28")),
             datePeriodGetter.getDatePeriod(date2)
         )
         assertEquals(
-            LocalDatePeriod(
-                LocalDate.of(2020, Month.JULY, 15),
-                LocalDate.of(2020, Month.JULY, 28),
-            ),
+            LocalDatePeriod(LocalDate.parse("2020-07-15"), LocalDate.parse("2020-07-28")),
             datePeriodGetter.getDatePeriod(date3)
         )
         assertEquals(
-            LocalDatePeriod(
-                LocalDate.of(2020, Month.JULY, 29),
-                LocalDate.of(2020, Month.AUGUST, 11),
-            ),
+            LocalDatePeriod(LocalDate.parse("2020-07-29"), LocalDate.parse("2020-08-11")),
             datePeriodGetter.getDatePeriod(date4)
         )
     }
