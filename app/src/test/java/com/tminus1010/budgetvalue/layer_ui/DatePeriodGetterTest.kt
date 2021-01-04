@@ -18,7 +18,7 @@ class DatePeriodGetterTest {
     val datePeriodGetter = DatePeriodGetter(repo)
 
     @Test
-    fun getDatePeriod_GivenValueNearAnchorDate() {
+    fun getDatePeriod_GivenValuesNearAnchorDate() {
         // # Given
         val date1 = LocalDate.of(2020, Month.JULY, 6)
         val date2 = LocalDate.of(2020, Month.JULY, 15)
