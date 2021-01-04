@@ -25,48 +25,58 @@ class TransactionsVMTest {
         // # Given
         val transactions = listOf(
             Transaction(
-                LocalDate.of(2020, Month.JANUARY, 22),
+                LocalDate.of(2020, Month.JULY, 22),
                 "",
                 14.52.toBigDecimal(),
                 hashMapOf(),
                 1
             ),
             Transaction(
-                LocalDate.of(2020, Month.JANUARY, 1),
+                LocalDate.of(2020, Month.JULY, 1),
                 "",
                 5.toBigDecimal(),
                 hashMapOf(),
                 2
             ),
             Transaction(
-                LocalDate.of(2020, Month.JANUARY, 1),
+                LocalDate.of(2020, Month.JULY, 1),
                 "",
                 10.toBigDecimal(),
                 hashMapOf(),
                 3
             ),
             Transaction(
-                LocalDate.of(2020, Month.FEBRUARY, 22),
+                LocalDate.of(2020, Month.AUGUST, 22),
                 "",
                 111.11.toBigDecimal(),
                 hashMapOf(),
                 4
-            )
+            ),
+            Transaction(
+                LocalDate.of(2020, Month.AUGUST, 3),
+                "",
+                222.toBigDecimal(),
+                hashMapOf(),
+                5
+            ),
         )
         // # Stimulate
         val result = transactionsVM.getBlocksFromTransactions(transactions)
         // # Verify
         assertEquals(
             listOf(
-                Block(LocalDatePeriod(LocalDate.parse("2020-01-01"), LocalDate.parse("2020-01-14")),
+                Block(LocalDatePeriod(LocalDate.parse("2020-07-01"), LocalDate.parse("2020-07-14")),
                     15.toBigDecimal(),
                     hashMapOf()),
-                Block(LocalDatePeriod(LocalDate.parse("2020-01-15"), LocalDate.parse("2020-01-29")),
+                Block(LocalDatePeriod(LocalDate.parse("2020-07-15"), LocalDate.parse("2020-07-28")),
                     14.52.toBigDecimal(),
                     hashMapOf()),
-                Block(LocalDatePeriod(LocalDate.parse("2020-02-14"), LocalDate.parse("2020-02-28")),
+                Block(LocalDatePeriod(LocalDate.parse("2020-07-29"), LocalDate.parse("2020-08-11")),
+                    222.toBigDecimal(),
+                    hashMapOf()),
+                Block(LocalDatePeriod(LocalDate.parse("2020-08-12"), LocalDate.parse("2020-08-25")),
                     111.11.toBigDecimal(),
-                    hashMapOf())
+                    hashMapOf()),
             ),
             result
         )
