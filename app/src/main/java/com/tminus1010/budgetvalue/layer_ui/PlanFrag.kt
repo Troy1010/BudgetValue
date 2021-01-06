@@ -9,6 +9,7 @@ import com.tminus1010.budgetvalue.App
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.extensions.activityViewModels2
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
+import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
 import com.tminus1010.budgetvalue.model_app.Category
@@ -56,7 +57,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(AndroidSchedulers.mainThread())
             .map { planCAsItemObservableMap ->
-                listOf(
+                RecipeGrid(listOf(
                     headerRecipeFactory.createOne2("Category")
                             + cellRecipeFactory.createOne2("Expected Income")
                             + cellRecipeFactory.createOne2("Default")
@@ -65,7 +66,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
                             + expectedIncomeRecipeFactory.createOne2(planVM.expectedIncome)
                             + oneWayRecipeBuilder.createOne2(planVM.defaultAmount)
                             + planCAsRecipeFactory.createMany(planCAsItemObservableMap.map { Pair(it.key, it.value) })
-                ).reflectXY()
+                ).reflectXY())
             }
             .observe(this) { myTableView_plan.setRecipes(it) }
     }

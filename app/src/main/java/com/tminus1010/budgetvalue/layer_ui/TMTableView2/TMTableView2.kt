@@ -26,13 +26,13 @@ class TMTableView2 @JvmOverloads constructor(
     var disposable: Disposable? = null
 
     fun initialize(
-        recipes2D_: Iterable<Iterable<IViewItemRecipe>>,
+        recipeGrid: RecipeGrid,
         dividerMap: Map<Int, IViewItemRecipe> = emptyMap(),
         colFreezeCount: Int = 0,
         rowFreezeCount: Int = 0,
     ) {
         inflateAndBind(
-            RecipeGrid(recipes2D_.map { it.toList() }),
+            recipeGrid,
             dividerMap,
             colFreezeCount,
             rowFreezeCount,

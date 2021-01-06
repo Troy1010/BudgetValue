@@ -13,6 +13,7 @@ import com.tminus1010.budgetvalue.extensions.activityViewModels2
 import com.tminus1010.budgetvalue.extensions.distinctUntilChangedBy
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
+import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.reflectXY
 import com.tminus1010.tmcommonkotlin_rx.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -60,8 +61,8 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
             .subscribeOn(AndroidSchedulers.mainThread())
             .distinctUntilChanged() //*idk why this emitted a copy without distinctUntilChanged
             .observe(viewLifecycleOwner) { (historyColumnDatas, activeCategories) ->
-                val recipe2D =
-                    arrayListOf<Iterable<IViewItemRecipe>>(
+                val recipe2D = RecipeGrid(
+                    arrayListOf<List<IViewItemRecipe>>(
                         headerRecipeFactory.createOne2("Categories") +
                                 cellRecipeFactory.createOne("Default") +
                                 cellRecipeFactory.createMany(activeCategories.map { it.name })
@@ -75,7 +76,7 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
                                         })
                             }
                         )
-                    }.reflectXY()
+                    }.reflectXY())
                 val dividerMap = activeCategories
                     .withIndex()
                     .distinctUntilChangedBy { it.value.type }
