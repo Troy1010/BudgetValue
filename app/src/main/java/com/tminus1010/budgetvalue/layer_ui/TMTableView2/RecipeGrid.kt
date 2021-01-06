@@ -18,6 +18,13 @@ import kotlin.math.max
 class RecipeGrid(
     private val recipes2d: List<List<IViewItemRecipe>>,
 ) : List<List<IViewItemRecipe>> by recipes2d {
+    init {
+        recipes2d.fold(null) { acc: Int?, v ->
+            v.size
+                .also { if (acc != null && acc != it) error("All sub-lists must be equal size. acc:$acc") }
+        }
+    }
+    
     private val colHeights = HashMap<Int, Int>()
     private val rowHeights = HashMap<Int, Int>()
 
