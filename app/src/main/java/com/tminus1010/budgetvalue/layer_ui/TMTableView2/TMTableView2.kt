@@ -12,7 +12,6 @@ import com.tminus1010.budgetvalue.Orientation
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.extensions.children
 import com.tminus1010.budgetvalue.extensions.clearItemDecorations
-import com.tminus1010.budgetvalue.layer_ui.TMTableView.Decoration
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.tableview_layout2.view.*
