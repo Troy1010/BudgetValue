@@ -17,8 +17,8 @@ class OuterDecoration(
     val orientation: Orientation = Orientation.VERTICAL,
     val dividerMap: Map<Int, IViewItemRecipe>,
     val recipeGrid: RecipeGrid,
-    val rowFreezeCount: Int = 0,
     val colFreezeCount: Int = 0,
+    val rowFreezeCount: Int = 0,
 ) : RecyclerView.ItemDecoration() {
     val defaultDividerDrawable by lazy { ContextCompat.getDrawable(context, R.drawable.divider)!! }
 

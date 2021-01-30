@@ -34,5 +34,5 @@ fun <T> Iterable<T>.distinctUntilChangedBy(function: (T)->Any): Iterable<T> {
         .filter { function(it.first) != function(it.second) }
         .map { it.second }
         .toMutableList()
-        .also { it.add(0, this.first()) }
+        .also { this.firstOrNull()?.also { item -> it.add(0, item) } }
 }
