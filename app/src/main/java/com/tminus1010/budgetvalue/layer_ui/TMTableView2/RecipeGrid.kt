@@ -4,6 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.updateLayoutParams
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlin.math.max
@@ -30,13 +31,10 @@ class RecipeGrid(
 
     init {
         // # Calculate height and widths
-        Observable.just(Unit)
-            .subscribeOn(Schedulers.computation())
-            .observeOn(Schedulers.computation())
-            .subscribe {
-                for (j in recipes2d.indices) getRowHeight(j)
-                for (i in recipes2d[0].indices) getColumnWidth(i)
-            }
+        Completable.fromCallable {
+            for (j in recipes2d.indices) getRowHeight(j)
+            for (i in recipes2d[0].indices) getColumnWidth(i)
+        }.subscribeOn(Schedulers.computation()).subscribe()
     }
 
     fun getRowHeight(j: Int): Int {
