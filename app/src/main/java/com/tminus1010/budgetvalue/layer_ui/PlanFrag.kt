@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.App
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.extensions.activityViewModels2
+import com.tminus1010.budgetvalue.extensions.distinctUntilChangedBy
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
@@ -53,11 +54,18 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
             { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
             { v, bs -> v.bindIncoming(bs) }
         )
+        val titledDividerRecipeFactory = ViewItemRecipeFactory<TextView, String>(
+            { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
+            { v, s -> v.text = s }
+        )
         planVM.planCAs.value.itemObservableMap2
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(AndroidSchedulers.mainThread())
-            .map { planCAsItemObservableMap ->
-                RecipeGrid(listOf(
+            .observe(this) { planCAsItemObservableMap ->
+                val activeCategories = planCAsItemObservableMap
+                    .keys
+                    .sortedBy { it.type }
+                val recipes2D = RecipeGrid(listOf(
                     headerRecipeFactory.createOne2("Category")
                             + cellRecipeFactory.createOne2("Expected Income")
                             + cellRecipeFactory.createOne2("Default")
@@ -65,9 +73,13 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
                     headerRecipeFactory.createOne2("Plan")
                             + expectedIncomeRecipeFactory.createOne2(planVM.expectedIncome)
                             + oneWayRecipeBuilder.createOne2(planVM.defaultAmount)
-                            + planCAsRecipeFactory.createMany(planCAsItemObservableMap.map { Pair(it.key, it.value) })
-                ).reflectXY())
-            }
-            .observe(this) { myTableView_plan.setRecipes(it) }
+                            + planCAsRecipeFactory.createMany(planCAsItemObservableMap.map { Pair(it.key, it.value) }))
+                    .reflectXY())
+                val dividerMap = activeCategories
+                    .withIndex()
+                    .distinctUntilChangedBy { it.value.type }
+                    .associate { it.index to titledDividerRecipeFactory.createOne(it.value.type.name) }
+                    .mapKeys { it.key + 3 } // header row, expected income row, and default row
+                myTableView_plan.initialize(recipes2D, dividerMap, 0, 1) }
     }
 }
