@@ -60,7 +60,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
         )
         val oneWayRecipeFactory = ViewItemRecipeFactory<TextView, Observable<BigDecimal>>(
             { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
-            { view, d -> view.bindIncoming(d)}
+            { view, d -> view.bindIncoming(d) }
         )
         activeReconciliationVM.rowDatas
             .observeOn(AndroidSchedulers.mainThread())
