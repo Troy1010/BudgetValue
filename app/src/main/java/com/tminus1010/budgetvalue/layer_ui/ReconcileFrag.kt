@@ -10,7 +10,8 @@ import com.jakewharton.rxbinding4.view.clicks
 import com.tminus1010.budgetvalue.App
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.extensions.activityViewModels2
-import com.tminus1010.budgetvalue.layer_ui.TMTableView.*
+import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
+import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
 import com.tminus1010.budgetvalue.model_app.Category
@@ -65,8 +66,8 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
         activeReconciliationVM.rowDatas
             .observeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) { rowDatas ->
-                myTableView_1.setRecipes(
-                    listOf(
+                myTableView_1.initialize(
+                    recipeGrid = RecipeGrid(listOf(
                         headerRecipeFactory.createOne2("Category")
                                 + cellRecipeFactory.createOne2("Default")
                                 + cellRecipeFactory.createMany(rowDatas.map { it.category.name }),
@@ -82,7 +83,10 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                         headerRecipeFactory_numbered.createOne2(Pair("Budgeted",accountsVM.accountsTotal))
                                 + oneWayRecipeFactory.createOne2(activeReconciliationVM.budgetedUncategorized)
                                 + oneWayRecipeFactory.createMany(rowDatas.map { it.budgeted })
-                    ).reflectXY()
+                    ).reflectXY(), fixedWidth = myTableView_1.widthObservable),
+                    dividerMap = emptyMap(),
+                    colFreezeCount = 0,
+                    rowFreezeCount = 1
                 )
             }
     }
