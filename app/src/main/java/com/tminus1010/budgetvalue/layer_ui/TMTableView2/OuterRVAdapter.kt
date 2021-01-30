@@ -18,9 +18,7 @@ class OuterRVAdapter(
 ) : RecyclerView.Adapter<OuterRVAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
     //
-    override fun onCreateViewHolder(parent: ViewGroup, j: Int): ViewHolder {
-        return ViewHolder(createInnerRV(j))
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, j: Int) = ViewHolder(createInnerRV(j))
     override fun getItemViewType(position: Int) = position + rowFreezeCount
     override fun onBindViewHolder(holder: ViewHolder, position: Int) { }
     override fun getItemCount() = recipeGrid.size - rowFreezeCount
