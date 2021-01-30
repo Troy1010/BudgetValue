@@ -14,6 +14,7 @@ import com.tminus1010.budgetvalue.extensions.children
 import com.tminus1010.budgetvalue.extensions.clearItemDecorations
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.tableview_layout2.view.*
 
 class TMTableView2 @JvmOverloads constructor(
@@ -80,5 +81,17 @@ class TMTableView2 @JvmOverloads constructor(
                 }
             }
     }
+
+    init {
+        // * A view needs to be inflated to trigger onSizeChanged
+        View.inflate(context, R.layout.blank_view, this)
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        if (w != oldw) widthObservable.onNext(w)
+    }
+
+    val widthObservable = BehaviorSubject.create<Int>()
 }
 

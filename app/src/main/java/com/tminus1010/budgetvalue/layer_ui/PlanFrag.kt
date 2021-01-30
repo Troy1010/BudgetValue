@@ -74,7 +74,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
                             + expectedIncomeRecipeFactory.createOne2(planVM.expectedIncome)
                             + oneWayRecipeBuilder.createOne2(planVM.defaultAmount)
                             + planCAsRecipeFactory.createMany(planCAsItemObservableMap.map { Pair(it.key, it.value) }))
-                    .reflectXY())
+                    .reflectXY(), fixedWidth = myTableView_plan.widthObservable )
                 val dividerMap = activeCategories
                     .withIndex()
                     .distinctUntilChangedBy { it.value.type }
