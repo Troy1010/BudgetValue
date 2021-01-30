@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.core.view.updateLayoutParams
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlin.math.max
 
@@ -26,7 +25,7 @@ class RecipeGrid(
         }
     }
     
-    private val colHeights = HashMap<Int, Int>()
+    private val colWidths = HashMap<Int, Int>()
     private val rowHeights = HashMap<Int, Int>()
 
     init {
@@ -45,10 +44,10 @@ class RecipeGrid(
     }
 
     fun getColumnWidth(i: Int): Int {
-        return colHeights[i] ?: recipes2d
+        return colWidths[i] ?: recipes2d
             .map { it[i].intrinsicWidth }
             .fold(0) { acc, v -> max(acc, v) }
-            .also { colHeights[i] = it }
+            .also { colWidths[i] = it }
     }
 
     fun createResizedView(i: Int, j: Int): View {
