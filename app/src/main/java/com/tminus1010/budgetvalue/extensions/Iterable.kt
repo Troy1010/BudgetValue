@@ -2,6 +2,7 @@ package com.tminus1010.budgetvalue.extensions
 
 import io.reactivex.rxjava3.core.Observable
 import java.math.BigDecimal
+import java.util.Comparator
 
 
 fun Iterable<BigDecimal>.sum(): BigDecimal {
@@ -28,10 +29,10 @@ fun <T> Iterable<T>.startWith(item: T): Iterable<T> {
     return this.toMutableList().apply { add(0, item) }
 }
 
-fun <T> Iterable<T>.distinctUntilChangedBy(function: (T)->Any): Iterable<T> {
+fun <T> Iterable<T>.distinctUntilChangedWith(comparator: Comparator<T>): Iterable<T> {
     return this
         .pairwise()
-        .filter { function(it.first) != function(it.second) }
+        .filter { comparator.compare(it.first, it.second) != 0 }
         .map { it.second }
         .toMutableList()
         .also { this.firstOrNull()?.also { item -> it.add(0, item) } }
