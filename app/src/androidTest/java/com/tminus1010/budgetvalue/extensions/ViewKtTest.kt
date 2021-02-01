@@ -17,7 +17,7 @@ class ViewKtTest {
         val view = LayoutInflater.from(app).inflate(R.layout.blank_view, null, false)
         assertNotEquals(50, view.layoutParams?.width)
         // # Stimulate
-        view.setWidth(50)
+        view.easySetWidth(50)
         // # Verify
         assertEquals(50, view.layoutParams?.width)
     }
