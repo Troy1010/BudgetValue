@@ -34,21 +34,21 @@ class ReconciliationTests {
         x
     }
 
-    @Test
-    fun pushActiveReconcileCA() {
-        // # Given
-        val localDate = LocalDate.now()
-        val reconciliation = Reconciliation(
-            LocalDate.now(),
-            SourceHashMap(mapOf(a to BigDecimal(8), b to BigDecimal(90), c to BigDecimal(3))),
-            BigDecimal(50),
-        )
-        // # Stimulate
-        repo.pushReconciliation(reconciliation).blockingAwait()
-        // # Verify
-        assertEquals(BigDecimal(8), repo.fetchReconciliations().blockingFirst()[0].categoryAmounts[a])
-        assertEquals(BigDecimal(90), repo.fetchReconciliations().blockingFirst()[0].categoryAmounts[b])
-        assertEquals(BigDecimal(3), repo.fetchReconciliations().blockingFirst()[0].categoryAmounts[c])
-        assertEquals(localDate, repo.fetchReconciliations().blockingFirst()[0].localDate)
-    }
+//    @Test
+//    fun pushActiveReconcileCA() {
+//        // # Given
+//        val localDate = LocalDate.now()
+//        val reconciliation = Reconciliation(
+//            LocalDate.now(),
+//            SourceHashMap(mapOf(a to BigDecimal(8), b to BigDecimal(90), c to BigDecimal(3))),
+//            BigDecimal(50),
+//        )
+//        // # Stimulate
+//        repo.pushReconciliation(reconciliation).blockingAwait()
+//        // # Verify
+//        assertEquals(BigDecimal(8), repo.fetchReconciliations().blockingFirst()[0].categoryAmounts[a])
+//        assertEquals(BigDecimal(90), repo.fetchReconciliations().blockingFirst()[0].categoryAmounts[b])
+//        assertEquals(BigDecimal(3), repo.fetchReconciliations().blockingFirst()[0].categoryAmounts[c])
+//        assertEquals(localDate, repo.fetchReconciliations().blockingFirst()[0].localDate)
+//    }
 }
