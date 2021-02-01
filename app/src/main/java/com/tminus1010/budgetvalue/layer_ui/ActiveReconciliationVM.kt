@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
+import com.tminus1010.budgetvalue.categoryComparator
 import com.tminus1010.budgetvalue.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.combineLatestAsTuple
 import com.tminus1010.budgetvalue.extensions.sum
@@ -114,8 +115,9 @@ class ActiveReconciliationVM(
         }
     }
 
-    fun getActiveCategories(transactionSet: Iterable<Transaction>): HashSet<Category> {
+    fun getActiveCategories(transactionSet: Iterable<Transaction>): List<Category> {
         return transactionSet
-            .fold(HashSet()) { acc, transaction -> acc.addAll(transaction.categoryAmounts.keys); acc }
+            .fold(HashSet<Category>()) { acc, transaction -> acc.addAll(transaction.categoryAmounts.keys); acc }
+            .sortedWith(categoryComparator)
     }
 }

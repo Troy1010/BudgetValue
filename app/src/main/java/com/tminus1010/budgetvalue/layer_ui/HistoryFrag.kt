@@ -10,7 +10,7 @@ import com.tminus1010.budgetvalue.App
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.combineLatestAsTuple
 import com.tminus1010.budgetvalue.extensions.activityViewModels2
-import com.tminus1010.budgetvalue.extensions.distinctUntilChangedBy
+import com.tminus1010.budgetvalue.extensions.distinctUntilChangedWith
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
@@ -79,7 +79,7 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
                     }.reflectXY())
                 val dividerMap = activeCategories
                     .withIndex()
-                    .distinctUntilChangedBy { it.value.type }
+                    .distinctUntilChangedWith(compareBy { it.value.type })
                     .associate { it.index to titledDividerRecipeFactory.createOne(it.value.type.name) }
                     .mapKeys { it.key + 2 } // header row and default row
                 tmTableView_history.initialize(recipe2D, dividerMap, 1, 1)

@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
+import com.tminus1010.budgetvalue.categoryComparator
 import com.tminus1010.budgetvalue.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.combineLatestAsTuple
 import com.tminus1010.budgetvalue.extensions.total
@@ -48,4 +49,7 @@ class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
         .startWithItem(repo.fetchExpectedIncome())
     val defaultAmount = combineLatestAsTuple(expectedIncome, planUncategorized)
         .map { it.first - it.second }
+    val activeCategories = planCAs
+        .map { it.keys }
+        .map { it.sortedWith(categoryComparator) }
 }

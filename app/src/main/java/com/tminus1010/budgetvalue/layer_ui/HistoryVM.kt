@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
+import com.tminus1010.budgetvalue.categoryComparator
 import com.tminus1010.budgetvalue.combineLatestImpatient
 import com.tminus1010.budgetvalue.extensions.toDisplayStr
 import com.tminus1010.budgetvalue.layer_data.Repo
@@ -82,5 +83,5 @@ class HistoryVM(
     // # Active Categories
     val activeCategories = historyColumnDatas
         .map { it.fold(HashSet<Category>()) { acc, v -> acc.apply { addAll(v.categoryAmounts.map{ it.key }) } } }
-        .map { it.sortedBy { it.type } }
+        .map { it.sortedWith(categoryComparator) }
 }
