@@ -13,9 +13,12 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.extensions.children
 import com.tminus1010.budgetvalue.extensions.clearItemDecorations
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.tableview_layout2.view.*
+import java.util.concurrent.TimeUnit
 
 class TMTableView2 @JvmOverloads constructor(
     context: Context,
@@ -31,13 +34,20 @@ class TMTableView2 @JvmOverloads constructor(
         colFreezeCount: Int = 0,
         rowFreezeCount: Int = 0,
     ) {
-        inflateAndBind(
-            recipeGrid,
-            dividerMap,
-            colFreezeCount,
-            rowFreezeCount,
-            SynchronizedScrollListener(Orientation.HORIZONTAL),
-        )
+        // * I was experiencing race conditions, so I am awaiting widthObservable before using the main thread to render views.
+        widthObservable
+            .take(1)
+            .timeout(5, TimeUnit.SECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                inflateAndBind(
+                    recipeGrid,
+                    dividerMap,
+                    colFreezeCount,
+                    rowFreezeCount,
+                    SynchronizedScrollListener(Orientation.HORIZONTAL),
+                )
+            }
     }
 
     private fun inflateAndBind(
