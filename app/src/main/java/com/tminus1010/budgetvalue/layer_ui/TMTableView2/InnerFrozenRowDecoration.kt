@@ -28,7 +28,7 @@ class InnerFrozenRowDecoration(
             val child = parent
             val layoutParams = child.layoutParams as ConstraintLayout.LayoutParams
             val view = recipeGrid[0][0].createBoundView()
-            val width = recipeGrid.getColumnWidth(0)
+            val width = recipeGrid.getColumnWidth(0).blockingFirst() // TODO(blockingFirst)
             val height = recipeGrid.getRowHeight(0)
 
             val top = child.top - layoutParams.topMargin

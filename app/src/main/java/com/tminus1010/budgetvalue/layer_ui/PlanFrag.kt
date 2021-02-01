@@ -5,22 +5,21 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.tminus1010.budgetvalue.App
-import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue.*
 import com.tminus1010.budgetvalue.extensions.activityViewModels2
-import com.tminus1010.budgetvalue.extensions.distinctUntilChangedBy
+import com.tminus1010.budgetvalue.extensions.distinctUntilChangedWith
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
 import com.tminus1010.budgetvalue.model_app.Category
-import com.tminus1010.budgetvalue.reflectXY
-import com.tminus1010.budgetvalue.toBigDecimalSafe
 import com.tminus1010.tmcommonkotlin_rx.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.frag_plan.*
 import java.math.BigDecimal
+import java.util.concurrent.TimeUnit
 
 class PlanFrag: Fragment(R.layout.frag_plan) {
     val app by lazy { requireActivity().application as App }
@@ -58,28 +57,30 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        planVM.planCAs.value.itemObservableMap2
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(AndroidSchedulers.mainThread())
-            .observe(this) { planCAsItemObservableMap ->
-                val activeCategories = planCAsItemObservableMap
-                    .keys
-                    .sortedBy { it.type }
+        combineLatestAsTuple(planVM.planCAs.value.itemObservableMap2, planVM.activeCategories, myTableView_plan.widthObservable)
+            .debounce(100, TimeUnit.MILLISECONDS)
+            .observeOn(Schedulers.computation())
+            .map { (planCAsItemObservableMap, activeCategories, width) ->
                 val recipes2D = RecipeGrid(listOf(
                     headerRecipeFactory.createOne2("Category")
                             + cellRecipeFactory.createOne2("Expected Income")
                             + cellRecipeFactory.createOne2("Default")
-                            + cellRecipeFactory.createMany(planCAsItemObservableMap.keys.map { it.name }),
+                            + cellRecipeFactory.createMany(activeCategories.map { it.name }),
                     headerRecipeFactory.createOne2("Plan")
                             + expectedIncomeRecipeFactory.createOne2(planVM.expectedIncome)
                             + oneWayRecipeBuilder.createOne2(planVM.defaultAmount)
-                            + planCAsRecipeFactory.createMany(planCAsItemObservableMap.map { Pair(it.key, it.value) }))
-                    .reflectXY(), fixedWidth = myTableView_plan.widthObservable )
+                            + planCAsRecipeFactory.createMany(activeCategories.map { Pair(it, planCAsItemObservableMap[it]!!) }))
+                    .reflectXY(), fixedWidth = Observable.just(width))
                 val dividerMap = activeCategories
                     .withIndex()
-                    .distinctUntilChangedBy { it.value.type }
+                    .distinctUntilChangedWith(compareBy { it.value.type })
                     .associate { it.index to titledDividerRecipeFactory.createOne(it.value.type.name) }
                     .mapKeys { it.key + 3 } // header row, expected income row, and default row
-                myTableView_plan.initialize(recipes2D, dividerMap, 0, 1) }
+                Pair(recipes2D, dividerMap)
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .observe(this) { (recipes2D, dividerMap) ->
+                myTableView_plan?.initialize(recipes2D, dividerMap, 0, 1)
+            }
     }
 }

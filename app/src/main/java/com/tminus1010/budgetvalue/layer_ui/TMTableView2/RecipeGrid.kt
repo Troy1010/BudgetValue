@@ -1,13 +1,18 @@
 package com.tminus1010.budgetvalue.layer_ui.TMTableView2
 
 import android.view.View
-import android.view.ViewGroup
-import androidx.core.view.updateLayoutParams
+import com.tminus1010.budgetvalue.extensions.easySetHeight
+import com.tminus1010.budgetvalue.extensions.easySetWidth
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ColumnWidthCalculator
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
+import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.ReplaySubject
+import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
 /**
@@ -30,8 +35,29 @@ class RecipeGrid(
                 .also { if (acc != null && acc != it) error("All sub-lists must be equal size. acc:$acc") }
         }
     }
-    
-    private val colWidths = HashMap<Int, Int>()
+
+    val fixedWidthRedefined = fixedWidth?.toBehaviorSubject()
+
+    private val colWidths: Single<List<Observable<Int>>> =
+        Single.just(Unit)
+            .observeOn(Schedulers.newThread())
+            .compose { upstream ->
+                if (fixedWidthRedefined==null)
+                    upstream.map { recipes2d[0].indices.map { calcColumnWidthWithoutFixedWidth(it).let { Observable.just(it) } } }
+                else {
+                    Single.create<List<Observable<Int>>> { downstream ->
+                        val list = mutableListOf<ReplaySubject<Int>>()
+                            .apply { repeat(recipes2d[0].size) { add(ReplaySubject.create()) } }
+                        fixedWidthRedefined
+                            .map { ColumnWidthCalculator.generateColumnWidths(recipes2d, it) }
+                            .subscribe { it.withIndex().forEach { (i, v) -> list[i].onNext(v) } } // TODO("Disposable. If it continues from downstream, a race condition happens")
+                        downstream.onSuccess(list)
+                    }
+                        .subscribeOn(Schedulers.computation())
+                }
+            }
+            .timeout(5, TimeUnit.SECONDS)
+            .cache()
     private val rowHeights = HashMap<Int, Int>()
 
     init {
@@ -40,11 +66,7 @@ class RecipeGrid(
             for (j in recipes2d.indices) getRowHeight(j)
             if (fixedWidth==null)
                 for (i in recipes2d[0].indices) getColumnWidth(i)
-            else
-                fixedWidth.take(1).subscribe { // TODO("Handle take all")
-                    colWidths.putAll(ColumnWidthCalculator.generateColumnWidths(recipes2d, it).withIndex().associate { it.index to it.value })
-                }
-        }.subscribeOn(Schedulers.computation()).subscribe()
+        }.subscribeOn(AndroidSchedulers.mainThread()).subscribe()
     }
 
     fun getRowHeight(j: Int): Int {
@@ -54,30 +76,20 @@ class RecipeGrid(
             .also { rowHeights[j] = it }
     }
 
-    fun getColumnWidth(i: Int): Int {
-        return if (fixedWidth==null) colWidths[i] ?: recipes2d
+    fun getColumnWidth(i: Int): Observable<Int> {
+        return colWidths.observeOn(Schedulers.newThread()).flatMapObservable { it[i] }.timeout(5, TimeUnit.SECONDS)
+    }
+
+    private fun calcColumnWidthWithoutFixedWidth(i: Int): Int {
+        return recipes2d
             .map { it[i].intrinsicWidth }
             .fold(0) { acc, v -> max(acc, v) }
-            .also { colWidths[i] = it }
-        else {
-            while (colWidths[i] == null) Thread.sleep(10) // TODO("Handle fixedWidth take all")
-            colWidths[i]!!
-        }
     }
+
 
     fun createResizedView(i: Int, j: Int): View {
         return recipes2d[j][i].createView()
-            .also {
-                if (it.layoutParams == null)
-                    it.layoutParams = ViewGroup.LayoutParams(
-                        getColumnWidth(i),
-                        getRowHeight(j)
-                    )
-                else
-                    it.updateLayoutParams {
-                        width = getColumnWidth(i)
-                        height = getRowHeight(j)
-                    }
-            }
+            .apply { easySetWidth(getColumnWidth(i).blockingFirst()) }
+            .apply { easySetHeight(getRowHeight(j)) }
     }
 }

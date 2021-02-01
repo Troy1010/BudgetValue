@@ -77,7 +77,7 @@ class OuterDecoration(
         if (colFreezeCount > 1) TODO()
         if (colFreezeCount == 1) {
             if (orientation == Orientation.HORIZONTAL) TODO()
-            val width = recipeGrid.getColumnWidth(0)
+            val width = recipeGrid.getColumnWidth(0).blockingFirst() // TODO(blockingFirst)
             for (child in parent.children) {
                 val j = parent.getChildAdapterPosition(child) + rowFreezeCount
                 val layoutParams = child.layoutParams as RecyclerView.LayoutParams
