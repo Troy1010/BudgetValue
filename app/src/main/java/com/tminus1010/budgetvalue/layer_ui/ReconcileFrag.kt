@@ -84,7 +84,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                                 + oneWayRecipeFactory.createOne2(activeReconciliationVM.budgetedUncategorized)
                                 + oneWayRecipeFactory.createMany(rowDatas.map { it.budgeted })
                     ).reflectXY(), fixedWidth = myTableView_1.widthObservable),
-                    dividerMap = emptyMap(),
+                    dividerMap = emptyMap(), // TODO()
                     colFreezeCount = 0,
                     rowFreezeCount = 1
                 )
