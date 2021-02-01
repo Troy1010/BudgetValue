@@ -70,7 +70,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
                             + expectedIncomeRecipeFactory.createOne2(planVM.expectedIncome)
                             + oneWayRecipeBuilder.createOne2(planVM.defaultAmount)
                             + planCAsRecipeFactory.createMany(activeCategories.map { Pair(it, planCAsItemObservableMap[it]!!) }))
-                    .reflectXY(), fixedWidth = Observable.just(width))
+                    .reflectXY(), fixedWidth = width)
                 val dividerMap = activeCategories
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })

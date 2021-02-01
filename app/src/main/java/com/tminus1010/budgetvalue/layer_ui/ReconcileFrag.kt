@@ -7,16 +7,13 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding4.view.clicks
-import com.tminus1010.budgetvalue.App
-import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue.*
 import com.tminus1010.budgetvalue.extensions.activityViewModels2
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
 import com.tminus1010.budgetvalue.model_app.Category
-import com.tminus1010.budgetvalue.reflectXY
-import com.tminus1010.budgetvalue.toBigDecimalSafe
 import com.tminus1010.tmcommonkotlin_rx.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -63,9 +60,9 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
             { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
             { view, d -> view.bindIncoming(d) }
         )
-        activeReconciliationVM.rowDatas
+        combineLatestAsTuple(activeReconciliationVM.rowDatas, myTableView_1.widthObservable)
             .observeOn(AndroidSchedulers.mainThread())
-            .observe(viewLifecycleOwner) { rowDatas ->
+            .observe(viewLifecycleOwner) { (rowDatas, width) ->
                 myTableView_1.initialize(
                     recipeGrid = RecipeGrid(listOf(
                         headerRecipeFactory.createOne2("Category")
@@ -83,7 +80,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                         headerRecipeFactory_numbered.createOne2(Pair("Budgeted",accountsVM.accountsTotal))
                                 + oneWayRecipeFactory.createOne2(activeReconciliationVM.budgetedUncategorized)
                                 + oneWayRecipeFactory.createMany(rowDatas.map { it.budgeted })
-                    ).reflectXY(), fixedWidth = myTableView_1.widthObservable),
+                    ).reflectXY(), fixedWidth = width),
                     dividerMap = emptyMap(), // TODO()
                     colFreezeCount = 0,
                     rowFreezeCount = 1

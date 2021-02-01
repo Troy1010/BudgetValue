@@ -26,7 +26,7 @@ import kotlin.math.max
  */
 class RecipeGrid(
     private val recipes2d: List<List<IViewItemRecipe>>,
-    private val fixedWidth: Observable<Int>? = null,
+    private val fixedWidth: Int? = null,
 ) : List<List<IViewItemRecipe>> by recipes2d {
     init {
         // # Assert that all inner lists have equal size
@@ -36,28 +36,11 @@ class RecipeGrid(
         }
     }
 
-    val fixedWidthRedefined = fixedWidth?.toBehaviorSubject()
-
-    private val colWidths: Single<List<Observable<Int>>> =
-        Single.just(Unit)
-            .observeOn(Schedulers.newThread())
-            .compose { upstream ->
-                if (fixedWidthRedefined==null)
-                    upstream.map { recipes2d[0].indices.map { calcColumnWidthWithoutFixedWidth(it).let { Observable.just(it) } } }
-                else {
-                    Single.create<List<Observable<Int>>> { downstream ->
-                        val list = mutableListOf<ReplaySubject<Int>>()
-                            .apply { repeat(recipes2d[0].size) { add(ReplaySubject.create()) } }
-                        fixedWidthRedefined
-                            .map { ColumnWidthCalculator.generateColumnWidths(recipes2d, it) }
-                            .subscribe { it.withIndex().forEach { (i, v) -> list[i].onNext(v) } } // TODO("Disposable. If it continues from downstream, a race condition happens")
-                        downstream.onSuccess(list)
-                    }
-                        .subscribeOn(Schedulers.computation())
-                }
-            }
-            .timeout(5, TimeUnit.SECONDS)
-            .cache()
+    private val colWidths: List<Int> =
+        if (fixedWidth == null)
+            recipes2d[0].indices.map { calcColumnWidthWithoutFixedWidth(it) }
+        else
+            ColumnWidthCalculator.generateColumnWidths(recipes2d, fixedWidth)
     private val rowHeights = HashMap<Int, Int>()
 
     init {
@@ -76,8 +59,8 @@ class RecipeGrid(
             .also { rowHeights[j] = it }
     }
 
-    fun getColumnWidth(i: Int): Observable<Int> {
-        return colWidths.observeOn(Schedulers.newThread()).flatMapObservable { it[i] }.timeout(5, TimeUnit.SECONDS)
+    fun getColumnWidth(i: Int): Int {
+        return colWidths[i]
     }
 
     private fun calcColumnWidthWithoutFixedWidth(i: Int): Int {
@@ -89,7 +72,7 @@ class RecipeGrid(
 
     fun createResizedView(i: Int, j: Int): View {
         return recipes2d[j][i].createView()
-            .apply { easySetWidth(getColumnWidth(i).blockingFirst()) }
+            .apply { easySetWidth(getColumnWidth(i)) }
             .apply { easySetHeight(getRowHeight(j)) }
     }
 }
