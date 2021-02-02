@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding4.view.clicks
 import com.tminus1010.budgetvalue.*
 import com.tminus1010.budgetvalue.extensions.activityViewModels2
+import com.tminus1010.budgetvalue.extensions.distinctUntilChangedWith
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
@@ -60,9 +61,18 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
             { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
             { view, d -> view.bindIncoming(d) }
         )
-        combineLatestAsTuple(activeReconciliationVM.rowDatas, myTableView_1.widthObservable)
+        val titledDividerRecipeFactory = ViewItemRecipeFactory<TextView, String>(
+            { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
+            { v, s -> v.text = s }
+        )
+        combineLatestAsTuple(activeReconciliationVM.rowDatas, activeReconciliationVM.activeCategories, myTableView_1.widthObservable)
             .observeOn(AndroidSchedulers.mainThread())
-            .observe(viewLifecycleOwner) { (rowDatas, width) ->
+            .observe(viewLifecycleOwner) { (rowDatas, activeCategories, width) ->
+                val dividerMap = activeCategories
+                    .withIndex()
+                    .distinctUntilChangedWith(compareBy { it.value.type })
+                    .associate { it.index to titledDividerRecipeFactory.createOne(it.value.type.name) }
+                    .mapKeys { it.key + 2 } // header row, default row
                 myTableView_1.initialize(
                     recipeGrid = RecipeGrid(listOf(
                         headerRecipeFactory.createOne2("Category")
@@ -81,7 +91,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                                 + oneWayRecipeFactory.createOne2(activeReconciliationVM.budgetedUncategorized)
                                 + oneWayRecipeFactory.createMany(rowDatas.map { it.budgeted })
                     ).reflectXY(), fixedWidth = width),
-                    dividerMap = emptyMap(), // TODO()
+                    dividerMap = dividerMap,
                     colFreezeCount = 0,
                     rowFreezeCount = 1
                 )
