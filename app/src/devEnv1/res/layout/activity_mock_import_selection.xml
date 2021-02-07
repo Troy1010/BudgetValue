@@ -3,18 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="bottom"
     android:padding="16dp">
 
-    <Button
-        android:id="@+id/btn_import_transactions_1"
-        android:text="Import Transactions 1"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview_select_mock_import"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <Button
-        android:id="@+id/btn_import_transactions_2"
-        android:text="Import Transactions 2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"/>
 </LinearLayout>
