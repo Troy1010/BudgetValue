@@ -16,14 +16,14 @@ class HistoryVM(
     private val repo: Repo,
     val transactionsVM: TransactionsVM,
     val activeReconciliationVM: ActiveReconciliationVM,
-    val planVM: PlanVM,
+    val activePlanVM: ActivePlanVM,
     val datePeriodGetter: DatePeriodGetter,
 ) : ViewModel() {
     // Plans comes from "saves", but there can only be 1 save per block
     // Reconciliations come from "saves"
     // Actuals comes from transactions
     val historyColumnDatas =
-        combineLatestImpatient(repo.fetchReconciliations(), activeReconciliationVM.defaultAmount, activeReconciliationVM.activeReconcileCAs, planVM.defaultAmount, planVM.planCAs, transactionsVM.transactionBlocks)
+        combineLatestImpatient(repo.fetchReconciliations(), activeReconciliationVM.defaultAmount, activeReconciliationVM.activeReconcileCAs, activePlanVM.defaultAmount, activePlanVM.planCAs, transactionsVM.transactionBlocks)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(AndroidSchedulers.mainThread())
             .throttleLast(500, TimeUnit.MILLISECONDS)

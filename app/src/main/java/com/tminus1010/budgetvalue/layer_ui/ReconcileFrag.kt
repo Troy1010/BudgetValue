@@ -28,8 +28,8 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
     val transactionsVM: TransactionsVM by activityViewModels2 { TransactionsVM(repo, app.appComponent.getDatePeriodGetter()) }
     val accountsVM: AccountsVM by activityViewModels2 { AccountsVM(repo) }
     val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
-    val planVM: PlanVM by activityViewModels2 { PlanVM(repo, categoriesAppVM) }
-    val activeReconciliationVM: ActiveReconciliationVM by activityViewModels2 { ActiveReconciliationVM(repo, transactionsVM.spends, accountsVM.accountsTotal, planVM) }
+    val activePlanVM: ActivePlanVM by activityViewModels2 { ActivePlanVM(repo, categoriesAppVM) }
+    val activeReconciliationVM: ActiveReconciliationVM by activityViewModels2 { ActiveReconciliationVM(repo, transactionsVM.spends, accountsVM.accountsTotal, activePlanVM) }
     val budgetedVM: BudgetedVM by activityViewModels2 { BudgetedVM(repo, transactionsVM, activeReconciliationVM) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -78,8 +78,8 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                         headerRecipeFactory.createOne2("Category")
                                 + cellRecipeFactory.createOne2("Default")
                                 + cellRecipeFactory.createMany(rowDatas.map { it.category.name }),
-                        headerRecipeFactory_numbered.createOne2(Pair("Plan", planVM.expectedIncome))
-                                + oneWayRecipeFactory.createOne2(planVM.defaultAmount)
+                        headerRecipeFactory_numbered.createOne2(Pair("Plan", activePlanVM.expectedIncome))
+                                + oneWayRecipeFactory.createOne2(activePlanVM.defaultAmount)
                                 + oneWayRecipeFactory.createMany(rowDatas.map { it.plan }),
                         headerRecipeFactory.createOne2("Actual")
                                 + cellRecipeFactory.createOne2("")

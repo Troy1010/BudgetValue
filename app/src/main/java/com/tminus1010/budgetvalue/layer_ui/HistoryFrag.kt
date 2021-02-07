@@ -25,13 +25,13 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
     val transactionsVM: TransactionsVM by activityViewModels2 { TransactionsVM(repo, app.appComponent.getDatePeriodGetter()) }
     val accountsVM: AccountsVM by activityViewModels2 { AccountsVM(repo) }
     val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
-    val planVM: PlanVM by activityViewModels2 { PlanVM(repo, categoriesAppVM) }
+    val activePlanVM: ActivePlanVM by activityViewModels2 { ActivePlanVM(repo, categoriesAppVM) }
     val activeReconciliationVM: ActiveReconciliationVM by activityViewModels2 {
-        ActiveReconciliationVM(repo, transactionsVM.spends, accountsVM.accountsTotal, planVM)
+        ActiveReconciliationVM(repo, transactionsVM.spends, accountsVM.accountsTotal, activePlanVM)
     }
     val datePeriodGetter by lazy { app.appComponent.getDatePeriodGetter() }
     val historyVM: HistoryVM by activityViewModels2 {
-        HistoryVM(repo, transactionsVM, activeReconciliationVM, planVM, datePeriodGetter)
+        HistoryVM(repo, transactionsVM, activeReconciliationVM, activePlanVM, datePeriodGetter)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -12,7 +12,7 @@ import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 
-class PlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
+class ActivePlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
     val intentPushExpectedIncome = PublishSubject.create<BigDecimal>()
         .also { it.subscribe(repo::pushExpectedIncome) }
     val intentPushPlanCA = PublishSubject.create<Pair<Category, BigDecimal>>()

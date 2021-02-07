@@ -6,7 +6,6 @@ import com.tminus1010.budgetvalue.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.combineLatestAsTuple
 import com.tminus1010.budgetvalue.extensions.sum
 import com.tminus1010.budgetvalue.extensions.total
-import com.tminus1010.budgetvalue.extensions.withLatestFrom
 import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.budgetvalue.mergeCombineWithIndex
 import com.tminus1010.budgetvalue.model_app.Category
@@ -25,7 +24,7 @@ class ActiveReconciliationVM(
     private val repo: Repo,
     private val transactionSet: Observable<List<Transaction>>,
     private val accountsTotal: Observable<BigDecimal>,
-    private val planVM: PlanVM,
+    private val activePlanVM: ActivePlanVM,
 ) : ViewModel() {
     val intentSaveReconciliation:PublishSubject<Unit> = PublishSubject.create<Unit>()
         .also {
@@ -89,7 +88,7 @@ class ActiveReconciliationVM(
             acc
         }
         .toBehaviorSubject()
-    val rowDatas = combineLatestAsTuple(activeCategories, activeReconcileCAs.value.itemObservableMap2, planVM.planCAs, transactionSet)
+    val rowDatas = combineLatestAsTuple(activeCategories, activeReconcileCAs.value.itemObservableMap2, activePlanVM.planCAs, transactionSet)
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
     val activeReconcileTotal = activeReconcileCAs.value.itemObservableMap2
         .switchMap { it.values.total() }

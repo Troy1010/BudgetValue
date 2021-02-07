@@ -25,7 +25,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
     val app by lazy { requireActivity().application as App }
     val repo by lazy { app.appComponent.getRepo() }
     val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
-    val planVM : PlanVM by activityViewModels2 { PlanVM(repo, categoriesAppVM) }
+    val activePlanVM : ActivePlanVM by activityViewModels2 { ActivePlanVM(repo, categoriesAppVM) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,14 +39,14 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
             { view, bs ->
                 view.bindIncoming(bs)
-                view.bindOutgoing(planVM.intentPushExpectedIncome, { it.toBigDecimalSafe() }) { it }
+                view.bindOutgoing(activePlanVM.intentPushExpectedIncome, { it.toBigDecimalSafe() }) { it }
             }
         )
         val planCAsRecipeFactory = ViewItemRecipeFactory<EditText, Pair<Category, Observable<BigDecimal>>>(
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
             { view, (category, bs) ->
                 view.bindIncoming(bs)
-                view.bindOutgoing(planVM.intentPushPlanCA, { Pair(category, it.toBigDecimalSafe()) }) { it.second }
+                view.bindOutgoing(activePlanVM.intentPushPlanCA, { Pair(category, it.toBigDecimalSafe()) }) { it.second }
             }
         )
         val oneWayRecipeBuilder = ViewItemRecipeFactory<TextView, Observable<BigDecimal>>(
@@ -57,7 +57,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        combineLatestAsTuple(planVM.planCAs.value.itemObservableMap2, planVM.activeCategories, myTableView_plan.widthObservable)
+        combineLatestAsTuple(activePlanVM.planCAs.value.itemObservableMap2, activePlanVM.activeCategories, myTableView_plan.widthObservable)
             .debounce(100, TimeUnit.MILLISECONDS)
             .observeOn(Schedulers.computation())
             .map { (planCAsItemObservableMap, activeCategories, width) ->
@@ -67,8 +67,8 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
                             + cellRecipeFactory.createOne2("Default")
                             + cellRecipeFactory.createMany(activeCategories.map { it.name }),
                     headerRecipeFactory.createOne2("Plan")
-                            + expectedIncomeRecipeFactory.createOne2(planVM.expectedIncome)
-                            + oneWayRecipeBuilder.createOne2(planVM.defaultAmount)
+                            + expectedIncomeRecipeFactory.createOne2(activePlanVM.expectedIncome)
+                            + oneWayRecipeBuilder.createOne2(activePlanVM.defaultAmount)
                             + planCAsRecipeFactory.createMany(activeCategories.map { Pair(it, planCAsItemObservableMap[it]!!) }))
                     .reflectXY(), fixedWidth = width)
                 val dividerMap = activeCategories
