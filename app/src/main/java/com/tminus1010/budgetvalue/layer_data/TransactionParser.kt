@@ -14,7 +14,7 @@ import javax.inject.Inject
  * read/write methods.. but I do not yet know the best way to get ActivityResults from the repo.
  */
 class TransactionParser @Inject constructor() : ITransactionParser {
-    override fun parseToTransactions(inputStream: InputStream) : List<TransactionReceived> {
+    override fun parseToTransactions(inputStream: InputStream): List<TransactionReceived> {
         val transactions = ArrayList<TransactionReceived>()
         val reader = BufferedReader(InputStreamReader(inputStream))
         val iterator = reader.lineSequence().iterator()
@@ -24,7 +24,8 @@ class TransactionParser @Inject constructor() : ITransactionParser {
             var date: LocalDate? = null
             for ((i, item) in row.withIndex()) {
                 if (Regex("""^[0-9]{13}${'$'}""").matches(item)) {
-                    date = LocalDate.parse(row[i].substring(0,8), DateTimeFormatter.ofPattern("yyyyMMdd"))
+                    date = LocalDate.parse(row[i].substring(0, 8),
+                        DateTimeFormatter.ofPattern("yyyyMMdd"))
                     row.removeAt(i)
                     break
                 }
@@ -32,31 +33,26 @@ class TransactionParser @Inject constructor() : ITransactionParser {
             if (date == null) {
                 continue
             }
-            // find amount
-            var amount:String? = null
-            for ((i, item) in row.withIndex()) {
-                // This will not match 1003 b/c it doesn't have a comma. Does that matter..?
-                if (Regex("""^(-?)([0-9]{0,3},)*[0-9]{1,3}(\.[0-9]*)?${'$'}""")
-                        .matches(item)) {
-                    amount = item
+            // # Determine amount
+            var amount: String? = null
+            // from left to right, see if any are valid amounts
+            for ((i, s) in row.withIndex())
+                if (s.matches(Regex("""^(-?)([0-9]{0,3},)*[0-9]{1,3}(\.[0-9]*)?${'$'}"""))) {
+                    amount = s
                     row.removeAt(i)
                     break
                 }
-            }
             if (amount == null) continue
-            for ((i, item) in row.withIndex()) {
-                if (Regex("""^Debit${'$'}""")
-                        .matches(item)) {
+            // from left to right, see if any denote the fact that this should be a negative value
+            for ((i, s) in row.withIndex())
+                if (s.matches(Regex("""^Debit${'$'}"""))) {
                     amount = "-$amount"
                     row.removeAt(i)
                     break
                 }
-            }
-            if (amount == null) {
-                continue
-            }
+            if (amount == null) continue
             // find description
-            var description:String?=null
+            var description: String? = null
             val rowCharCount = ArrayList<Int>()
             for (item in row) {
                 rowCharCount.add(Regex("""[A-z]""").findAll(item).count())
