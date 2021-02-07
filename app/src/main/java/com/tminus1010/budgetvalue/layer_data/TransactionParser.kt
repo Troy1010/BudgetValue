@@ -43,6 +43,7 @@ class TransactionParser @Inject constructor() : ITransactionParser {
                     break
                 }
             }
+            if (amount == null) continue
             for ((i, item) in row.withIndex()) {
                 if (Regex("""^Debit${'$'}""")
                         .matches(item)) {
