@@ -35,6 +35,20 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    flavorDimensions "devEnvs"
+    productFlavors {
+        real {
+            dimension "devEnvs"
+            applicationIdSuffix ".real"
+            versionNameSuffix "-real"
+        }
+        devEnv1 {
+            dimension "devEnvs"
+            applicationIdSuffix ".devEnv1"
+            versionNameSuffix "-devEnv1"
+        }
+    }
 }
 
 configurations.all {
