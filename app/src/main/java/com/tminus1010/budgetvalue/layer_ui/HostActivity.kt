@@ -51,13 +51,12 @@ class HostActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_import_transactions -> {
-                val intent = Intent()
-                intent.type = "*/*"
-                intent.action = Intent.ACTION_GET_CONTENT
-                startActivityForResult(
-                    Intent.createChooser(intent, "Select transactions csv"),
-                    CODE_PICK_TRANSACTIONS_FILE
-                )
+                Intent().apply { type = "*/*"; action = Intent.ACTION_GET_CONTENT }.also {
+                    startActivityForResult(
+                        Intent.createChooser(it, "Select transactions csv"),
+                        CODE_PICK_TRANSACTIONS_FILE
+                    )
+                }
             }
             R.id.menu_import_debug_transactions -> {
                 val inputStream = assets.open("transactions_2013487188.csv").buffered()

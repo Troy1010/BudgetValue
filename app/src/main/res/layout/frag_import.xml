@@ -9,7 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Add Account"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <Button
+        android:id="@+id/btn_import"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Import"
+        app:layout_constraintBottom_toTopOf="@id/btn_add_account" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_accounts"

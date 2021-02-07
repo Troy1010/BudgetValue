@@ -1,11 +1,13 @@
 package com.tminus1010.budgetvalue.layer_ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding4.view.clicks
 import com.tminus1010.budgetvalue.App
+import com.tminus1010.budgetvalue.CODE_PICK_TRANSACTIONS_FILE
 import com.tminus1010.budgetvalue.GenericRecyclerViewAdapter6
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.extensions.viewModels2
@@ -21,8 +23,17 @@ class ImportFrag : Fragment(R.layout.frag_import) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupViews()
-        setupOutgoingBinds()
         setupIncomingBinds()
+        // # Clicks
+        btn_import.clicks().subscribe {
+            Intent().apply { type = "*/*"; action = Intent.ACTION_GET_CONTENT }.also {
+                startActivityForResult(
+                    Intent.createChooser(it, "Select transactions csv"),
+                    CODE_PICK_TRANSACTIONS_FILE
+                )
+            }
+        }
+        btn_add_account.clicks().subscribe(accountsVM.intentAddAccount)
     }
 
     private fun setupIncomingBinds() {
@@ -32,10 +43,6 @@ class ImportFrag : Fragment(R.layout.frag_import) {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) { recyclerview_accounts.adapter?.notifyDataSetChanged() }
-    }
-
-    private fun setupOutgoingBinds() {
-        btn_add_account.clicks().subscribe(accountsVM.intentAddAccount)
     }
 
     private fun setupViews() {
