@@ -35,7 +35,6 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupBinds()
-        budgetedVM
     }
 
     fun setupBinds() {
@@ -65,9 +64,9 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        combineLatestAsTuple(activeReconciliationVM.rowDatas, activeReconciliationVM.activeCategories, myTableView_1.widthObservable)
+        combineLatestAsTuple(activeReconciliationVM.rowDatas, activeReconciliationVM.activeCategories, myTableView_1.widthObservable, budgetedVM.categoryAmounts)
             .observeOn(AndroidSchedulers.mainThread())
-            .observe(viewLifecycleOwner) { (rowDatas, activeCategories, width) ->
+            .observe(viewLifecycleOwner) { (rowDatas, activeCategories, width, budgetedCA) ->
                 val dividerMap = activeCategories
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
@@ -88,8 +87,8 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                                 + oneWayRecipeFactory.createOne2(activeReconciliationVM.defaultAmount)
                                 + reconcileCARecipeFactory.createMany(rowDatas.map { it.category to it.reconcile }),
                         headerRecipeFactory_numbered.createOne2(Pair("Budgeted",accountsVM.accountsTotal))
-                                + oneWayRecipeFactory.createOne2(activeReconciliationVM.budgetedUncategorized)
-                                + oneWayRecipeFactory.createMany(rowDatas.map { it.budgeted })
+                                + oneWayRecipeFactory.createOne2(budgetedVM.defaultAmount)
+                                + oneWayRecipeFactory.createMany(activeCategories.map { budgetedCA[it] }.map { Observable.just(it) }) //TODO("Should just pass the observable itself.")
                     ).reflectXY(), fixedWidth = width),
                     dividerMap = dividerMap,
                     colFreezeCount = 0,
