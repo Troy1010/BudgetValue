@@ -5,7 +5,7 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.2"
+    buildToolsVersion "30.0.3"
 
     compileOptions.sourceCompatibility JavaVersion.VERSION_1_8
     compileOptions.targetCompatibility JavaVersion.VERSION_1_8
@@ -39,7 +39,7 @@ android {
 
 configurations.all {
     // *Without this, androidx.test causes junit 4.12 to be used.
-    resolutionStrategy.force "junit:junit:4.13"
+    resolutionStrategy.force "junit:junit:4.13.1"
 }
 
 dependencies {
@@ -52,7 +52,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 
     // # JUnit
-    testImplementation 'junit:junit:4.13'
+    testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
 
     // # Espresso
@@ -97,8 +97,8 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
 
     // # Navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:2.3.2"
-    implementation "androidx.navigation:navigation-ui-ktx:2.3.2"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.3.3"
+    implementation "androidx.navigation:navigation-ui-ktx:2.3.3"
 
     // # GSon
     implementation 'com.google.code.gson:gson:2.8.6'
