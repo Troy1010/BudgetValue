@@ -18,5 +18,10 @@ class MockImportSelectionActivity: AppCompatActivity(R.layout.activity_mock_impo
                 .also { transactionsVM.importTransactions(it) }
             finish()
         }
+        btn_import_transactions_2.setOnClickListener {
+            assets.open("transactions_12065949.csv").buffered()
+                .also { transactionsVM.importTransactions(it) }
+            finish()
+        }
     }
 }
