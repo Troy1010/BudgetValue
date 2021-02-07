@@ -58,10 +58,6 @@ class HostActivity : AppCompatActivity() {
                     )
                 }
             }
-            R.id.menu_import_debug_transactions -> {
-                val inputStream = assets.open("transactions_2013487188.csv").buffered()
-                transactionsVM.importTransactions(inputStream)
-            }
             R.id.menu_print_transactions -> {
                 transactionsVM.transactions.take(1).subscribe {
                     logz("transactions:${it?.joinToString(",")}")

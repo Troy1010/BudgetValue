@@ -6,10 +6,6 @@ import com.tminus1010.budgetvalue.CODE_PICK_TRANSACTIONS_FILE
 import com.tminus1010.budgetvalue.MockImportSelectionActivity
 
 fun launchImport(activity: Activity) {
-    Intent(activity, MockImportSelectionActivity::class.java).also {
-        activity.startActivityForResult(
-            it,
-            CODE_PICK_TRANSACTIONS_FILE
-        )
-    }
+    Intent(activity, MockImportSelectionActivity::class.java)
+        .also { activity.startActivity(it) }
 }
