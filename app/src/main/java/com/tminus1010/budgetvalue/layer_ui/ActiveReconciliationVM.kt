@@ -29,7 +29,6 @@ class ActiveReconciliationVM(
     val intentSaveReconciliation:PublishSubject<Unit> = PublishSubject.create<Unit>()
         .also {
             it
-                .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .flatMap { accountsTotal }
                 .map { accountsTotal ->
