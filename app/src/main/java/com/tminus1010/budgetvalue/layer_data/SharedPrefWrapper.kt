@@ -19,6 +19,7 @@ class SharedPrefWrapper @Inject constructor(
             ANCHOR_DATE_OFFSET,
             BLOCK_SIZE
         }
+
         const val ANCHOR_DATE_OFFSET_DEFAULT: Long = 0
         const val BLOCK_SIZE_DEFAULT: Long = 14
     }
@@ -73,28 +74,27 @@ class SharedPrefWrapper @Inject constructor(
     }
 
     override fun pushExpectedIncome(expectedIncome: BigDecimal?) {
-        if (expectedIncome == null) editor.remove(Key.EXPECTED_INCOME.name) else {
-            editor.putString(Key.EXPECTED_INCOME.name, expectedIncome.toString())
-        }
+        expectedIncome
+            ?.also { editor.putString(Key.EXPECTED_INCOME.name, it.toString()) }
+            ?: editor.remove(Key.EXPECTED_INCOME.name)
         editor.apply()
     }
 
     private val anchorDateOffsetPublisher = PublishSubject.create<Long>()
     override fun fetchAnchorDateOffset(): Observable<Long> {
         return anchorDateOffsetPublisher
-            .startWithItem(sharedPreferences
-                .getLong(Key.ANCHOR_DATE_OFFSET.name, ANCHOR_DATE_OFFSET_DEFAULT))
+            .startWithItem(
+                sharedPreferences.getLong(Key.ANCHOR_DATE_OFFSET.name, ANCHOR_DATE_OFFSET_DEFAULT))
     }
 
     override fun pushAnchorDateOffset(anchorDateOffset: Long?) {
-        if (anchorDateOffset == null) editor.remove(Key.ANCHOR_DATE_OFFSET.name) else {
-            editor.putLong(Key.ANCHOR_DATE_OFFSET.name, anchorDateOffset)
-        }
+        anchorDateOffset
+            ?.also { editor.putString(Key.ANCHOR_DATE_OFFSET.name, it.toString()) }
+            ?: editor.remove(Key.ANCHOR_DATE_OFFSET.name)
         editor.apply()
         anchorDateOffsetPublisher.onNext(anchorDateOffset ?: ANCHOR_DATE_OFFSET_DEFAULT)
     }
-
-
+    
     private val blockSizePublisher = PublishSubject.create<Long>()
     override fun fetchBlockSize(): Observable<Long> {
         return blockSizePublisher
@@ -102,9 +102,9 @@ class SharedPrefWrapper @Inject constructor(
     }
 
     override fun pushBlockSize(blockSize: Long?) {
-        if (blockSize == null) editor.remove(Key.BLOCK_SIZE.name) else {
-            editor.putLong(Key.BLOCK_SIZE.name, blockSize)
-        }
+        blockSize
+            ?.also { editor.putLong(Key.BLOCK_SIZE.name, it) }
+            ?: editor.remove(Key.BLOCK_SIZE.name)
         editor.apply()
         anchorDateOffsetPublisher.onNext(blockSize ?: BLOCK_SIZE_DEFAULT)
     }
