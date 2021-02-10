@@ -67,7 +67,7 @@ class SharedPrefWrapper @Inject constructor(
             .also { pushActivePlanCAs(it) }
     }
 
-    //
+    // # ExpectedIncome
 
     override fun fetchExpectedIncome(): BigDecimal {
         return sharedPreferences.getString(Key.EXPECTED_INCOME.name, null)?.toBigDecimal()
@@ -80,6 +80,8 @@ class SharedPrefWrapper @Inject constructor(
             ?: editor.remove(Key.EXPECTED_INCOME.name)
         editor.apply()
     }
+
+    // # AnchorDateOffset
 
     private val anchorDateOffsetPublisher = PublishSubject.create<Long>()
     override fun fetchAnchorDateOffset(): Observable<Long> {
@@ -96,6 +98,8 @@ class SharedPrefWrapper @Inject constructor(
         anchorDateOffsetPublisher.onNext(anchorDateOffset ?: ANCHOR_DATE_OFFSET_DEFAULT)
     }
 
+    // # BlockSizePublisher
+
     private val blockSizePublisher = PublishSubject.create<Long>()
     override fun fetchBlockSize(): Observable<Long> {
         return blockSizePublisher
@@ -107,6 +111,6 @@ class SharedPrefWrapper @Inject constructor(
             ?.also { editor.putLong(Key.BLOCK_SIZE.name, it) }
             ?: editor.remove(Key.BLOCK_SIZE.name)
         editor.apply()
-        anchorDateOffsetPublisher.onNext(blockSize ?: BLOCK_SIZE_DEFAULT)
+        blockSizePublisher.onNext(blockSize ?: BLOCK_SIZE_DEFAULT)
     }
 }
