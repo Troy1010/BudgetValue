@@ -36,6 +36,7 @@ class SharedPrefWrapper @Inject constructor(
         typeConverter.string(categoryAmounts)
             ?.also { editor.putString(Key.RECONCILE_CATEGORY_AMOUNTS.name, it) }
             ?: editor.remove(Key.RECONCILE_CATEGORY_AMOUNTS.name)
+        editor.apply()
     }
 
     override fun pushActiveReconcileCA(kv: Pair<Category, BigDecimal?>) {
@@ -94,7 +95,7 @@ class SharedPrefWrapper @Inject constructor(
         editor.apply()
         anchorDateOffsetPublisher.onNext(anchorDateOffset ?: ANCHOR_DATE_OFFSET_DEFAULT)
     }
-    
+
     private val blockSizePublisher = PublishSubject.create<Long>()
     override fun fetchBlockSize(): Observable<Long> {
         return blockSizePublisher

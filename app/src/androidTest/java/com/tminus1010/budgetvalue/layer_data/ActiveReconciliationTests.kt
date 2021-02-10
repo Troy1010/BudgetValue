@@ -34,10 +34,12 @@ class ActiveReconciliationTests {
     @Test
     fun pushActiveReconcileCA() {
         // # Given
-        repo.pushActiveReconcileCAs(mapOf(a to BigDecimal(8), b to BigDecimal(90), c to BigDecimal(3)))
-        // # Stimulate
-        repo.pushActiveReconcileCA(a to BigDecimal(123))
-        // # Verify
+        val input1 = mapOf(a to BigDecimal(8), b to BigDecimal(90), c to BigDecimal(3))
+        val input2 = a to BigDecimal(123)
+        // # Stimulate & Verify
+        repo.pushActiveReconcileCAs(input1)
+        assertEquals(BigDecimal(8), repo.fetchActiveReconcileCAs()[a])
+        repo.pushActiveReconcileCA(input2)
         assertEquals(BigDecimal(123), repo.fetchActiveReconcileCAs()[a])
         assertEquals(BigDecimal(90), repo.fetchActiveReconcileCAs()[b])
         assertEquals(BigDecimal(3), repo.fetchActiveReconcileCAs()[c])
