@@ -46,6 +46,8 @@ class SharedPrefWrapper @Inject constructor(
             .also { pushActiveReconcileCAs(it) }
     }
 
+    override fun clearActiveReconcileCAs() = pushActiveReconcileCAs(null)
+
     // # PlanCategoryAmounts
 
     override fun fetchActivePlanCAs(): Map<Category, BigDecimal> {
@@ -66,6 +68,8 @@ class SharedPrefWrapper @Inject constructor(
             .also { kv.also { (k, v) -> if (v == null) it.remove(k) else it[k] = v } }
             .also { pushActivePlanCAs(it) }
     }
+
+    override fun clearActivePlanCAs() = pushActivePlanCAs(null)
 
     // # ExpectedIncome
 
