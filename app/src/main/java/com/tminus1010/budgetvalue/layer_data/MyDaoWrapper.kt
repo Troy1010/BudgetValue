@@ -1,10 +1,9 @@
 package com.tminus1010.budgetvalue.layer_data
 
 import com.tminus1010.budgetvalue.extensions.noEnd
-import com.tminus1010.budgetvalue.model_app.Category
+import com.tminus1010.budgetvalue.model_app.Plan
 import com.tminus1010.budgetvalue.model_app.Reconciliation
 import com.tminus1010.budgetvalue.model_data.Account
-import com.tminus1010.budgetvalue.model_data.PlanCategoryAmount
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -25,20 +24,8 @@ class MyDaoWrapper @Inject constructor(
         .map { it.map { it.toPlan(typeConverter) } }
         .noEnd().replay(1).refCount()
 
-    override fun pushPlanCategoryAmount(categoryAmount: Pair<Category, BigDecimal>): Completable {
-        TODO()
-//        return myDao.has(categoryAmount.first.name)
-//            .flatMapCompletable {
-//                if (it)
-//                    myDao.update(PlanCategoryAmount(categoryAmount))
-//                else
-//                    myDao.add(PlanCategoryAmount(categoryAmount))
-//            }
-//            .subscribeOn(Schedulers.io())
-    }
-
-    override fun pushPlanCAs(categoryAmounts: Map<Category, BigDecimal>) {
-
+    override fun pushPlan(plan: Plan) {
+        myDao.add(plan.toPlanReceived(typeConverter)).subscribeOn(Schedulers.io()).subscribe()
     }
 
     override fun pushReconciliation(reconciliation: Reconciliation): Completable {
@@ -53,6 +40,11 @@ class MyDaoWrapper @Inject constructor(
     override fun fetchReconciliations(): Observable<List<Reconciliation>> {
         return myDao.fetchReconciliationReceived()
             .map { it.map { it.toReconciliation(typeConverter) } }
+    }
+
+    override fun fetchPlans(): Observable<List<Plan>> {
+        return myDao.fetchPlanReceived()
+            .map { it.map { it.toPlan(typeConverter) } }
     }
 
     override fun update(account: Account): Completable {

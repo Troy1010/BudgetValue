@@ -16,12 +16,8 @@ class ActivePlanVM(val repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel
     val intentPushExpectedIncome = PublishSubject.create<BigDecimal>()
         .also { it.subscribe(repo::pushExpectedIncome) }
     val intentPushPlanCA = PublishSubject.create<Pair<Category, BigDecimal>>()
-        .also { it.flatMapCompletable(repo::pushPlanCategoryAmount).subscribe() }
+        .also { it.subscribe { repo.pushActivePlanCA(it) } }
 
-    fun saveActivePlanCAs() {
-        repo.pushPlanCAs(repo.fetchActivePlanCAs())
-        repo.pushActivePlanCAs(null)
-    }
     val planCAs = mergeCombineWithIndex(
         repo.planCategoryAmounts,
         intentPushPlanCA,
