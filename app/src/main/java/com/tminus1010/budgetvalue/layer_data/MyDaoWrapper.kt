@@ -20,21 +20,25 @@ class MyDaoWrapper @Inject constructor(
         .replay(1).refCount()
 
     override val planCategoryAmounts = myDao
-        .getPlanCategoryAmountsReceived()
-        .take(1)
+        .fetchPlanReceived()
         .subscribeOn(Schedulers.io())
-        .map(typeConverter::categoryAmounts)
+        .map { it.map { it.toPlan(typeConverter) } }
         .noEnd().replay(1).refCount()
 
     override fun pushPlanCategoryAmount(categoryAmount: Pair<Category, BigDecimal>): Completable {
-        return myDao.has(categoryAmount.first.name)
-            .flatMapCompletable {
-                if (it)
-                    myDao.update(PlanCategoryAmount(categoryAmount))
-                else
-                    myDao.add(PlanCategoryAmount(categoryAmount))
-            }
-            .subscribeOn(Schedulers.io())
+        TODO()
+//        return myDao.has(categoryAmount.first.name)
+//            .flatMapCompletable {
+//                if (it)
+//                    myDao.update(PlanCategoryAmount(categoryAmount))
+//                else
+//                    myDao.add(PlanCategoryAmount(categoryAmount))
+//            }
+//            .subscribeOn(Schedulers.io())
+    }
+
+    override fun pushPlanCAs(categoryAmounts: Map<Category, BigDecimal>) {
+
     }
 
     override fun pushReconciliation(reconciliation: Reconciliation): Completable {

@@ -12,11 +12,16 @@ import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 
-class ActivePlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
+class ActivePlanVM(val repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
     val intentPushExpectedIncome = PublishSubject.create<BigDecimal>()
         .also { it.subscribe(repo::pushExpectedIncome) }
     val intentPushPlanCA = PublishSubject.create<Pair<Category, BigDecimal>>()
         .also { it.flatMapCompletable(repo::pushPlanCategoryAmount).subscribe() }
+
+    fun saveActivePlanCAs() {
+        repo.pushPlanCAs(repo.fetchActivePlanCAs())
+        repo.pushActivePlanCAs(null)
+    }
     val planCAs = mergeCombineWithIndex(
         repo.planCategoryAmounts,
         intentPushPlanCA,
@@ -24,14 +29,14 @@ class ActivePlanVM(repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
     )
         .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (i, responsePlanCAs, intentPushPlanCA, chooseableCategories) ->
             when (i) {
-                0 -> { responsePlanCAs!!
-                    acc.clear()
-                    acc.putAll(responsePlanCAs)
-                    if (chooseableCategories!=null)
-                        acc.putAll(chooseableCategories
-                            .filter { it !in acc.keys }
-                            .associate { it to BigDecimal.ZERO })
-                }
+//                0 -> { responsePlanCAs!!
+//                    acc.clear()
+//                    acc.putAll(responsePlanCAs.map { it.categoryAmounts })
+//                    if (chooseableCategories!=null)
+//                        acc.putAll(chooseableCategories
+//                            .filter { it !in acc.keys }
+//                            .associate { it to BigDecimal.ZERO })
+//                }
                 1 -> { intentPushPlanCA!!.also { (k, v) -> acc[k] = v } }
                 2 -> { chooseableCategories!!
                     acc.putAll(chooseableCategories

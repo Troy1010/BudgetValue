@@ -1,13 +1,9 @@
 package com.tminus1010.budgetvalue.layer_data
 
 import androidx.room.*
-import com.tminus1010.budgetvalue.model_data.Account
-import com.tminus1010.budgetvalue.model_data.PlanCategoryAmount
-import com.tminus1010.budgetvalue.model_data.ReconciliationReceived
-import com.tminus1010.budgetvalue.model_data.TransactionReceived
+import com.tminus1010.budgetvalue.model_data.*
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
 import java.math.BigDecimal
 
 @Dao
@@ -64,20 +60,17 @@ interface MyDao {
 
     // # PlanCategoryAmounts
 
-    @Query("select * from PlanCategoryAmount")
-    fun getPlanCategoryAmountsReceived(): Observable<List<PlanCategoryAmount>>
-
-    @Query("SELECT EXISTS (SELECT 1 FROM PlanCategoryAmount WHERE categoryName = :categoryName)")
-    fun has(categoryName: String): Single<Boolean>
+    @Query("select * from PlanReceived")
+    fun fetchPlanReceived(): Observable<List<PlanReceived>>
 
     @Insert
-    fun add(planCategoryAmount: PlanCategoryAmount): Completable
-
-    @Query("DELETE FROM PlanCategoryAmount")
-    fun clearPlanCategoryAmounts(): Completable
+    fun add(PlanReceived: PlanReceived): Completable
 
     @Update
-    fun update(planCategoryAmount: PlanCategoryAmount): Completable
+    fun update(PlanReceived: PlanReceived): Completable
+
+    @Query("DELETE FROM PlanReceived")
+    fun clearPlans(): Completable
 
     // # Reconciliations
 
