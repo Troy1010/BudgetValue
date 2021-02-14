@@ -26,12 +26,8 @@ class MyDaoWrapper @Inject constructor(
     override fun pushPlan(plan: Plan) = myDao.add(plan.toPlanReceived(typeConverter)).subscribeOn(Schedulers.io())
 
     override fun pushReconciliation(reconciliation: Reconciliation): Completable {
-        return reconciliation
-            .toReconciliationReceived(typeConverter, BigDecimal(0))
-            .let {
-                myDao.add(it)
-                    .subscribeOn(Schedulers.io())
-            }
+        return reconciliation.toReconciliationReceived(typeConverter, BigDecimal(0))
+            .let { myDao.add(it).subscribeOn(Schedulers.io()) }
     }
 
     override fun fetchReconciliations(): Observable<List<Reconciliation>> {
