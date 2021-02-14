@@ -16,18 +16,17 @@ class HistoryVM(
     private val repo: Repo,
     val transactionsVM: TransactionsVM,
     val activeReconciliationVM: ActiveReconciliationVM,
-    val activePlanVM: ActivePlanVM,
     val datePeriodGetter: DatePeriodGetter,
 ) : ViewModel() {
     // Plans comes from "saves", but there can only be 1 save per block
     // Reconciliations come from "saves"
     // Actuals comes from transactions
     val historyColumnDatas =
-        combineLatestImpatient(repo.fetchReconciliations(), activeReconciliationVM.defaultAmount, activeReconciliationVM.activeReconcileCAs, activePlanVM.defaultAmount, activePlanVM.activePlan, transactionsVM.transactionBlocks)
+        combineLatestImpatient(repo.fetchReconciliations(), activeReconciliationVM.defaultAmount, activeReconciliationVM.activeReconcileCAs, transactionsVM.transactionBlocks)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(AndroidSchedulers.mainThread())
             .throttleLast(500, TimeUnit.MILLISECONDS)
-            .map { (reconciliations, activeReconciliationDefaultAmount, activeReconciliationCAs, planDefaultAmount, planCAs, transactionBlocks) ->
+            .map { (reconciliations, activeReconciliationDefaultAmount, activeReconciliationCAs, transactionBlocks) ->
                 // # Define blocks
                 val blockPeriods = sortedSetOf<LocalDatePeriod>(compareBy { it.startDate })
                 transactionBlocks?.forEach { if (!datePeriodGetter.isDatePeriodValid(it.datePeriod)) error("datePeriod was not valid:${it.datePeriod}") }
@@ -65,15 +64,6 @@ class HistoryVM(
                         "Current",
                         activeReconciliationDefaultAmount,
                         activeReconciliationCAs,
-                    ))
-                }
-                // ## Add Active Plan
-                if (planCAs != null && planDefaultAmount != null) {
-                    historyColumnDatas.add(HistoryColumnData(
-                        "Plan",
-                        "Current",
-                        planDefaultAmount,
-                        planCAs,
                     ))
                 }
                 historyColumnDatas
