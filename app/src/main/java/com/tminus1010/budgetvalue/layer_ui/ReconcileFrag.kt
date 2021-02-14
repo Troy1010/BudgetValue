@@ -39,7 +39,10 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
 
     fun setupBinds() {
         // # Save Button
-        btn_save.clicks().subscribe(activeReconciliationVM.intentSaveReconciliation)
+        btn_save.clicks().subscribe {
+            activeReconciliationVM.intentSaveReconciliation.onNext(Unit)
+            activePlanVM.intentSaveActivePlan.onNext(Unit)
+        }
         // # Table
         val cellRecipeFactory = ViewItemRecipeFactory.createCellRecipeFactory(requireContext())
         val headerRecipeFactory = ViewItemRecipeFactory.createHeaderRecipeFactory(requireContext())
