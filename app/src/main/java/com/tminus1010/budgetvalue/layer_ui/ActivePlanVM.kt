@@ -18,7 +18,7 @@ class ActivePlanVM(val repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel
     val intentPushPlanCA = PublishSubject.create<Pair<Category, BigDecimal>>()
         .also { it.subscribe { repo.pushActivePlanCA(it) } }
 
-    val planCAs = mergeCombineWithIndex(
+    val activePlan = mergeCombineWithIndex(
         repo.activePlan,
         intentPushPlanCA,
         categoriesAppVM.choosableCategories,
@@ -43,14 +43,14 @@ class ActivePlanVM(val repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel
             acc
         }
         .toBehaviorSubject()
-    val planUncategorized = planCAs.value.itemObservableMap2
+    val planUncategorized = activePlan.value.itemObservableMap2
         .switchMap { it.values.total() }
         .replay(1).refCount()
     val expectedIncome = intentPushExpectedIncome
         .startWithItem(repo.fetchExpectedIncome())
     val defaultAmount = combineLatestAsTuple(expectedIncome, planUncategorized)
         .map { it.first - it.second }
-    val activeCategories = planCAs
+    val activeCategories = activePlan
         .map { it.keys }
         .map { it.sortedWith(categoryComparator) }
 }

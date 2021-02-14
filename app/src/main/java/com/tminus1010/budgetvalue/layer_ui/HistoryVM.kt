@@ -23,7 +23,7 @@ class HistoryVM(
     // Reconciliations come from "saves"
     // Actuals comes from transactions
     val historyColumnDatas =
-        combineLatestImpatient(repo.fetchReconciliations(), activeReconciliationVM.defaultAmount, activeReconciliationVM.activeReconcileCAs, activePlanVM.defaultAmount, activePlanVM.planCAs, transactionsVM.transactionBlocks)
+        combineLatestImpatient(repo.fetchReconciliations(), activeReconciliationVM.defaultAmount, activeReconciliationVM.activeReconcileCAs, activePlanVM.defaultAmount, activePlanVM.activePlan, transactionsVM.transactionBlocks)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(AndroidSchedulers.mainThread())
             .throttleLast(500, TimeUnit.MILLISECONDS)

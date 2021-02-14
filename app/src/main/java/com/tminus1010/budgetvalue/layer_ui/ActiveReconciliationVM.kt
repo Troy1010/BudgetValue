@@ -87,7 +87,7 @@ class ActiveReconciliationVM(
             acc
         }
         .toBehaviorSubject()
-    val rowDatas = combineLatestAsTuple(activeCategories, activeReconcileCAs.value.itemObservableMap2, activePlanVM.planCAs, transactionSet)
+    val rowDatas = combineLatestAsTuple(activeCategories, activeReconcileCAs.value.itemObservableMap2, activePlanVM.activePlan, transactionSet)
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
     val activeReconcileTotal = activeReconcileCAs.value.itemObservableMap2
         .switchMap { it.values.total() }
