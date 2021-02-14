@@ -18,8 +18,7 @@ class MyDaoWrapper @Inject constructor(
         .map(typeConverter::transactions)
         .replay(1).refCount()
 
-    override val planCategoryAmounts = myDao
-        .fetchPlanReceived()
+    override val plans = myDao.fetchPlanReceived()
         .subscribeOn(Schedulers.io())
         .map { it.map { it.toPlan(typeConverter) } }
         .noEnd().replay(1).refCount()
@@ -40,11 +39,6 @@ class MyDaoWrapper @Inject constructor(
     override fun fetchReconciliations(): Observable<List<Reconciliation>> {
         return myDao.fetchReconciliationReceived()
             .map { it.map { it.toReconciliation(typeConverter) } }
-    }
-
-    override fun fetchPlans(): Observable<List<Plan>> {
-        return myDao.fetchPlanReceived()
-            .map { it.map { it.toPlan(typeConverter) } }
     }
 
     override fun update(account: Account): Completable {

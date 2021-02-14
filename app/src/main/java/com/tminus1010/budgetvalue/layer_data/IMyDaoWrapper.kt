@@ -8,9 +8,8 @@ import io.reactivex.rxjava3.core.Observable
 
 interface IMyDaoWrapper: MyDao {
     val transactions: Observable<List<Transaction>>
-    val planCategoryAmounts: Observable<List<Plan>>
+    val plans: Observable<List<Plan>>
     fun pushReconciliation(reconciliation: Reconciliation): Completable
     fun fetchReconciliations(): Observable<List<Reconciliation>>
     fun pushPlan(plan: Plan)
-    fun fetchPlans(): Observable<List<Plan>>
 }

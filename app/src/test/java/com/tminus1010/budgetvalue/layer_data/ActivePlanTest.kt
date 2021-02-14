@@ -2,11 +2,13 @@ package com.tminus1010.budgetvalue.layer_data
 
 import com.tminus1010.budgetvalue.App
 import com.tminus1010.budgetvalue.appComponent
+import io.reactivex.rxjava3.subjects.PublishSubject
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import java.util.concurrent.TimeUnit
 
 @RunWith(RobolectricTestRunner::class)
 @Config(application = App::class, manifest = "src/main/AndroidManifest.xml")
@@ -23,13 +25,15 @@ class ActivePlanTest {
         val givenPlanCA0 = category0 to 15.toBigDecimal()
         val givenPlanCA1 = category1 to 30.toBigDecimal()
         val givenPlanCA2 = category2 to 45.toBigDecimal()
-        // # Stimulate & Verify
-        assertEquals(0, repo.fetchActivePlanCAs().size)
+        // # Stimulate
+        val stopObservable = PublishSubject.create<Unit>()
+        val testObserver = repo.activePlan.map { it.size }.takeUntil(stopObservable).test()
         repo.pushActivePlanCA(givenPlanCA0)
         repo.pushActivePlanCA(givenPlanCA1)
         repo.pushActivePlanCA(givenPlanCA2)
-        assertEquals(3, repo.fetchActivePlanCAs().size)
         repo.clearActivePlanCAs()
-        assertEquals(0, repo.fetchActivePlanCAs().size)
+        stopObservable.onNext(Unit)
+        // # Verify
+        testObserver.assertResult(0, 1, 2, 3, 0)
     }
 }

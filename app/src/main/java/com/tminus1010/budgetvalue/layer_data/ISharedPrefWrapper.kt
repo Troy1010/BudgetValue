@@ -9,7 +9,6 @@ interface ISharedPrefWrapper {
     fun pushActiveReconcileCAs(categoryAmounts: Map<Category, BigDecimal>?)
     fun pushActiveReconcileCA(kv: Pair<Category, BigDecimal?>)
     fun clearActiveReconcileCAs()
-    fun fetchActivePlanCAs(): Map<Category, BigDecimal>
     fun pushActivePlanCAs(categoryAmounts: Map<Category, BigDecimal>?)
     fun pushActivePlanCA(kv: Pair<Category, BigDecimal?>)
     fun clearActivePlanCAs()
@@ -19,4 +18,5 @@ interface ISharedPrefWrapper {
     fun pushAnchorDateOffset(anchorDateOffset: Long?)
     fun fetchBlockSize(): Observable<Long>
     fun pushBlockSize(blockSize: Long?)
+    val activePlan: Observable<Map<Category, BigDecimal>>
 }

@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.layer_data
 
 import android.content.SharedPreferences
+import com.tminus1010.budgetvalue.extensions.noEnd
 import com.tminus1010.budgetvalue.model_app.Category
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -50,20 +51,25 @@ class SharedPrefWrapper @Inject constructor(
 
     // # PlanCategoryAmounts
 
-    override fun fetchActivePlanCAs(): Map<Category, BigDecimal> {
-        return sharedPreferences.getString(Key.PLAN_CATEGORY_AMOUNTS.name, null)
-            .let { typeConverter.categoryAmounts(it) }
-    }
+    private val activePlanPublisher = PublishSubject.create<Map<Category, BigDecimal>?>()
+    override val activePlan: Observable<Map<Category, BigDecimal>> =
+        activePlanPublisher
+            .startWithItem(
+                sharedPreferences.getString(Key.PLAN_CATEGORY_AMOUNTS.name, null)
+                    .let { typeConverter.categoryAmounts(it) }
+            )
+            .noEnd().replay(1).refCount()
 
     override fun pushActivePlanCAs(categoryAmounts: Map<Category, BigDecimal>?) {
         typeConverter.string(categoryAmounts)
             ?.also { editor.putString(Key.PLAN_CATEGORY_AMOUNTS.name, it) }
             ?: editor.remove(Key.PLAN_CATEGORY_AMOUNTS.name)
         editor.apply()
+        activePlanPublisher.onNext(categoryAmounts ?: emptyMap())
     }
 
     override fun pushActivePlanCA(kv: Pair<Category, BigDecimal?>) {
-        fetchActivePlanCAs()
+        activePlan.blockingFirst()
             .toMutableMap()
             .also { kv.also { (k, v) -> if (v == null) it.remove(k) else it[k] = v } }
             .also { pushActivePlanCAs(it) }

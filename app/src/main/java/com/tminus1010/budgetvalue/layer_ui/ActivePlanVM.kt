@@ -19,7 +19,7 @@ class ActivePlanVM(val repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel
         .also { it.subscribe { repo.pushActivePlanCA(it) } }
 
     val planCAs = mergeCombineWithIndex(
-        repo.planCategoryAmounts,
+        repo.activePlan,
         intentPushPlanCA,
         categoriesAppVM.choosableCategories,
     )
