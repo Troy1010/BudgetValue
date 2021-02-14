@@ -16,10 +16,7 @@ import com.tminus1010.budgetvalue.model_app.Transaction
 import com.google.gson.reflect.TypeToken
 import com.tminus1010.budgetvalue.extensions.isCold
 import com.tminus1010.tmcommonkotlin.logz.logz
-import com.tminus1010.tmcommonkotlin.tuple.Box
-import com.tminus1010.tmcommonkotlin.tuple.Quadruple
-import com.tminus1010.tmcommonkotlin.tuple.Quintuple
-import com.tminus1010.tmcommonkotlin.tuple.Sextuple
+import com.tminus1010.tmcommonkotlin.tuple.*
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableSource
 import io.reactivex.rxjava3.functions.BiFunction
@@ -82,7 +79,33 @@ fun <A, B, C, D, E, F> combineLatestAsTuple(
             it[2] as C,
             it[3] as D,
             it[4] as E,
-            it[5] as F
+            it[5] as F,
+        )
+    }
+}
+
+
+@Suppress("UNCHECKED_CAST")
+fun <A, B, C, D, E, F, G> combineLatestAsTuple(
+    a: ObservableSource<A>,
+    b: ObservableSource<B>,
+    c: ObservableSource<C>,
+    d: ObservableSource<D>,
+    e: ObservableSource<E>,
+    f: ObservableSource<F>,
+    g: ObservableSource<G>,
+): Observable<Septuple<A, B, C, D, E, F, G>> {
+    return Observable.combineLatest(
+        listOf(a, b, c, d, e, f, g)
+    ) {
+        Septuple(
+            it[0] as A,
+            it[1] as B,
+            it[2] as C,
+            it[3] as D,
+            it[4] as E,
+            it[5] as F,
+            it[6] as G,
         )
     }
 }
@@ -632,6 +655,29 @@ fun <A, B, C, D, E, F> combineLatestImpatient(
             } else observable
         }
         .map { Sextuple(it.first.unbox(), it.second.unbox(), it.third.unbox(), it.fourth.unbox(), it.fifth.unbox(), it.sixth.unbox()) }
+}
+
+fun <A, B, C, D, E, F, G> combineLatestImpatient(
+    a: Observable<A>,
+    b: Observable<B>,
+    c: Observable<C>,
+    d: Observable<D>,
+    e: Observable<E>,
+    f: Observable<F>,
+    g: Observable<G>,
+): Observable<Septuple<A?, B?, C?, D?, E?, F?, G?>> {
+    return combineLatestAsTuple(a.boxStartNull(), b.boxStartNull(), c.boxStartNull(), d.boxStartNull(), e.boxStartNull(), f.boxStartNull(), g.boxStartNull())
+        .compose { observable ->
+            // # If no observables are cold, then skip the first emission
+            // * The observables start with null so that combineLatest is impatient.
+            //   However, we cannot assume that the first emission will be that initial skippable
+            //   tuple of nulls, because cold observables will emit their latest value even at the
+            //   first emission.
+            if (listOf(a, b, c, d, e, f, g).none { it.isCold() }) {
+                observable.skip(1)
+            } else observable
+        }
+        .map { Septuple(it.first.unbox(), it.second.unbox(), it.third.unbox(), it.fourth.unbox(), it.fifth.unbox(), it.sixth.unbox(), it.seventh.unbox()) }
 }
 
 fun <T> Box<T>.unbox(): T {
