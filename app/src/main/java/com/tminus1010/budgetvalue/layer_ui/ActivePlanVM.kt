@@ -33,7 +33,7 @@ class ActivePlanVM(val repo: Repo, categoriesAppVM: CategoriesAppVM, datePeriodG
         }
 
     val activePlan = mergeCombineWithIndex(
-        repo.activePlan,
+        repo.activePlan.take(1),
         intentPushPlanCA,
         categoriesAppVM.choosableCategories,
     )
