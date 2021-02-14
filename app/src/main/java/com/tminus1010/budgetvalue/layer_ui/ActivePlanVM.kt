@@ -17,8 +17,6 @@ import java.time.LocalDate
 class ActivePlanVM(val repo: Repo, categoriesAppVM: CategoriesAppVM, datePeriodGetter: DatePeriodGetter) : ViewModel() {
     val intentPushExpectedIncome = PublishSubject.create<BigDecimal>()
         .also { it.subscribe(repo::pushExpectedIncome) }
-    val intentPushPlanCA = PublishSubject.create<Pair<Category, BigDecimal>>()
-        .also { it.subscribe { repo.pushActivePlanCA(it) } }
     val intentSaveActivePlan = PublishSubject.create<Unit>()
         .also {
             it
@@ -30,6 +28,16 @@ class ActivePlanVM(val repo: Repo, categoriesAppVM: CategoriesAppVM, datePeriodG
                 }
                 .flatMapCompletable { repo.pushPlan(it) }
                 .subscribe()
+        }
+    val intentPushPlanCA = PublishSubject.create<Pair<Category, BigDecimal>>()
+        .also {
+            it.subscribe { repo.pushActivePlanCA(it) }
+            it
+                .withLatestFrom(repo.plans) { _, b -> b }
+                .map { it.last() }
+                .filter { LocalDate.now() in it.localDatePeriod.blockingFirst() }
+                .map { Unit }
+                .subscribe(intentSaveActivePlan)
         }
 
     val activePlan = mergeCombineWithIndex(
