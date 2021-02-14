@@ -12,12 +12,11 @@ import java.time.LocalDate
 
 @Entity
 data class PlanReceived(
+    @PrimaryKey
     val startDate: LocalDate,
     val endDate: LocalDate,
     val amount: BigDecimal,
     val categoryAmounts: String?,
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
 ) {
     fun toPlan(typeConverter: TypeConverter) =
         Plan(Observable.just(LocalDatePeriod(startDate, endDate)),
