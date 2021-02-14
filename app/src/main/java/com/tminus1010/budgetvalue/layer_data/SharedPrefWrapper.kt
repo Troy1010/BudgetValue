@@ -1,9 +1,10 @@
 package com.tminus1010.budgetvalue.layer_data
 
 import android.content.SharedPreferences
-import com.tminus1010.budgetvalue.extensions.noEnd
 import com.tminus1010.budgetvalue.model_app.Category
+import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -52,13 +53,13 @@ class SharedPrefWrapper @Inject constructor(
     // # PlanCategoryAmounts
 
     private val activePlanPublisher = PublishSubject.create<Map<Category, BigDecimal>?>()
-    override val activePlan: Observable<Map<Category, BigDecimal>> =
+    override val activePlan: BehaviorSubject<Map<Category, BigDecimal>> =
         activePlanPublisher
             .startWithItem(
                 sharedPreferences.getString(Key.PLAN_CATEGORY_AMOUNTS.name, null)
                     .let { typeConverter.categoryAmounts(it) }
             )
-            .noEnd().replay(1).refCount()
+            .toBehaviorSubject()
 
     override fun pushActivePlanCAs(categoryAmounts: Map<Category, BigDecimal>?) {
         typeConverter.string(categoryAmounts)
@@ -69,9 +70,9 @@ class SharedPrefWrapper @Inject constructor(
     }
 
     override fun pushActivePlanCA(kv: Pair<Category, BigDecimal?>) {
-        activePlan.blockingFirst()
+        activePlan.value
             .toMutableMap()
-            .also { kv.also { (k, v) -> if (v == null) it.remove(k) else it[k] = v } }
+            .also { kv.also { (k, v) -> if (v == null || v == 0.toBigDecimal()) it.remove(k) else it[k] = v } }
             .also { pushActivePlanCAs(it) }
     }
 
