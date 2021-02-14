@@ -35,7 +35,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
             override fun onBindViewHolder(holder: GenViewHolder, position: Int) {
                 holder.itemView.btn_category.apply {
                     text = categoriesAppVM.choosableCategories.value[holder.adapterPosition].name
-                    setOnClickListener { categorizeVM.setTransactionCategory(categoriesAppVM.choosableCategories.value[holder.adapterPosition]) }
+                    setOnClickListener { categorizeVM.finishTransactionWithCategory(categoriesAppVM.choosableCategories.value[holder.adapterPosition]) }
                 }
             }
 
