@@ -15,7 +15,7 @@ class CategorizeVM(val repo: Repo, transactionsVM: TransactionsVM): ViewModel() 
             .observeOn(Schedulers.io())
             .take(1)
             .unbox()
-            .map { Pair(it.id, hashMapOf(category.name to it.amount)) }
+            .map { Pair(it.id, mapOf(category.name to it.amount)) }
             .flatMapCompletable { (id, categoryAmounts) -> repo.updateTransactionCategoryAmounts(id, categoryAmounts) }
             .subscribe()
     }

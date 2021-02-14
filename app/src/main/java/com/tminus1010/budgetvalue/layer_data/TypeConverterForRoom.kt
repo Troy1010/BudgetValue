@@ -24,7 +24,7 @@ object TypeConverterForRoom {
 
     @TypeConverter
     @JvmStatic
-    fun fromCategoryAmountsToString(x: HashMap<String, BigDecimal>): String {
+    fun fromCategoryAmountsToString(x: Map<String, BigDecimal>): String {
         return Gson().toJson(x)
     }
 

@@ -36,7 +36,7 @@ interface MyDao {
     fun updateTransactionDate(id: Int, date: String): Completable
 
     @Query("UPDATE `TransactionReceived` SET categoryAmounts=:categoryAmounts WHERE id=:id")
-    fun updateTransactionCategoryAmounts(id: Int, categoryAmounts: HashMap<String, BigDecimal>): Completable
+    fun updateTransactionCategoryAmounts(id: Int, categoryAmounts: Map<String, BigDecimal>): Completable
 
     // # Accounts
 
