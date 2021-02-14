@@ -7,10 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tminus1010.budgetvalue.App
-import com.tminus1010.budgetvalue.GenericRecyclerViewAdapter6
-import com.tminus1010.budgetvalue.GenViewHolder
-import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue.*
 import com.tminus1010.budgetvalue.extensions.activityViewModels2
 import com.tminus1010.budgetvalue.extensions.viewModels2
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
@@ -46,9 +43,9 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         // # Views
         textview_date.bindIncoming(categorizeVM.dateAsString)
         textview_amount.bindIncoming(categorizeVM.transactionBox)
-        { it.first?.amount?.toString() ?: "" }
+        { it.unbox?.amount?.toString() ?: "" }
         textview_description.bindIncoming(categorizeVM.transactionBox)
-        { it.first?.description ?: "" }
+        { it.unbox?.description ?: "" }
         textview_amount_left.bindIncoming(transactionsVM.uncategorizedSpendsSize)
     }
 }

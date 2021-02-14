@@ -684,6 +684,9 @@ fun <T> Box<T>.unbox(): T {
     return this.first
 }
 
+val <T> Box<T>.unbox
+    get() = this.first
+
 // untested
 fun <K, V> createMapEntry(key: K, value: V): Map.Entry<K, V> {
     return object: Map.Entry<K, V> {
