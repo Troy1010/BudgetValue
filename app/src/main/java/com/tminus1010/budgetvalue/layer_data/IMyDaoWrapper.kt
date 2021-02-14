@@ -11,5 +11,5 @@ interface IMyDaoWrapper: MyDao {
     fun pushReconciliation(reconciliation: Reconciliation): Completable
     fun fetchReconciliations(): Observable<List<Reconciliation>>
     val plans: Observable<List<Plan>>
-    fun pushPlan(plan: Plan)
+    fun pushPlan(plan: Plan): Completable
 }

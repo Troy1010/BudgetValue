@@ -3,12 +3,10 @@ package com.tminus1010.budgetvalue.layer_data
 import com.tminus1010.budgetvalue.App
 import com.tminus1010.budgetvalue.appComponent
 import io.reactivex.rxjava3.subjects.PublishSubject
-import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import java.util.concurrent.TimeUnit
 
 @RunWith(RobolectricTestRunner::class)
 @Config(application = App::class, manifest = "src/main/AndroidManifest.xml")
@@ -31,7 +29,7 @@ class ActivePlanTest {
         repo.pushActivePlanCA(givenPlanCA0)
         repo.pushActivePlanCA(givenPlanCA1)
         repo.pushActivePlanCA(givenPlanCA2)
-        repo.clearActivePlanCAs()
+        repo.clearActivePlan()
         stopObservable.onNext(Unit)
         // # Verify
         testObserver.assertResult(0, 1, 2, 3, 0)

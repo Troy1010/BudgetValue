@@ -23,9 +23,7 @@ class MyDaoWrapper @Inject constructor(
         .map { it.map { it.toPlan(typeConverter) } }
         .noEnd().replay(1).refCount()
 
-    override fun pushPlan(plan: Plan) {
-        myDao.add(plan.toPlanReceived(typeConverter)).subscribeOn(Schedulers.io()).subscribe()
-    }
+    override fun pushPlan(plan: Plan) = myDao.add(plan.toPlanReceived(typeConverter)).subscribeOn(Schedulers.io())
 
     override fun pushReconciliation(reconciliation: Reconciliation): Completable {
         return reconciliation

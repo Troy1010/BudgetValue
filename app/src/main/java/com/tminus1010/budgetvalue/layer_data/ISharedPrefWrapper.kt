@@ -11,7 +11,7 @@ interface ISharedPrefWrapper {
     fun clearActiveReconcileCAs()
     fun pushActivePlanCAs(categoryAmounts: Map<Category, BigDecimal>?)
     fun pushActivePlanCA(kv: Pair<Category, BigDecimal?>)
-    fun clearActivePlanCAs()
+    fun clearActivePlan()
     fun fetchExpectedIncome(): BigDecimal
     fun pushExpectedIncome(expectedIncome: BigDecimal?)
     fun fetchAnchorDateOffset(): Observable<Long>

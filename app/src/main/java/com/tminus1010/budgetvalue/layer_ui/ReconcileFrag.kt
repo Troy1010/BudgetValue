@@ -28,7 +28,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
     val transactionsVM: TransactionsVM by activityViewModels2 { TransactionsVM(repo, app.appComponent.getDatePeriodGetter()) }
     val accountsVM: AccountsVM by activityViewModels2 { AccountsVM(repo) }
     val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
-    val activePlanVM: ActivePlanVM by activityViewModels2 { ActivePlanVM(repo, categoriesAppVM) }
+    val activePlanVM: ActivePlanVM by activityViewModels2 { ActivePlanVM(repo, categoriesAppVM, app.appComponent.getDatePeriodGetter()) }
     val activeReconciliationVM: ActiveReconciliationVM by activityViewModels2 { ActiveReconciliationVM(repo, transactionsVM.spends, accountsVM.accountsTotal, activePlanVM) }
     val budgetedVM: BudgetedVM by activityViewModels2 { BudgetedVM(repo, transactionsVM, activeReconciliationVM) }
 

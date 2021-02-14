@@ -2,21 +2,35 @@ package com.tminus1010.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.categoryComparator
-import com.tminus1010.budgetvalue.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.combineLatestAsTuple
 import com.tminus1010.budgetvalue.extensions.total
 import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.budgetvalue.mergeCombineWithIndex
 import com.tminus1010.budgetvalue.model_app.Category
+import com.tminus1010.budgetvalue.model_app.Plan
+import com.tminus1010.budgetvalue.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
+import java.time.LocalDate
 
-class ActivePlanVM(val repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel() {
+class ActivePlanVM(val repo: Repo, categoriesAppVM: CategoriesAppVM, datePeriodGetter: DatePeriodGetter) : ViewModel() {
     val intentPushExpectedIncome = PublishSubject.create<BigDecimal>()
         .also { it.subscribe(repo::pushExpectedIncome) }
     val intentPushPlanCA = PublishSubject.create<Pair<Category, BigDecimal>>()
         .also { it.subscribe { repo.pushActivePlanCA(it) } }
+    val intentSaveActivePlan = PublishSubject.create<Unit>()
+        .also {
+            it
+                .map {
+                    Plan(datePeriodGetter.getDatePeriodObservable(LocalDate.now()),
+                        expectedIncome.value,
+                        repo.activePlan.blockingFirst()
+                    )
+                }
+                .flatMapCompletable { repo.pushPlan(it) }
+                .subscribe { repo.clearActivePlan() }
+        }
 
     val activePlan = mergeCombineWithIndex(
         repo.activePlan,
@@ -48,6 +62,7 @@ class ActivePlanVM(val repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel
         .replay(1).refCount()
     val expectedIncome = intentPushExpectedIncome
         .startWithItem(repo.fetchExpectedIncome())
+        .toBehaviorSubject()
     val defaultAmount = combineLatestAsTuple(expectedIncome, planUncategorized)
         .map { it.first - it.second }
     val activeCategories = activePlan

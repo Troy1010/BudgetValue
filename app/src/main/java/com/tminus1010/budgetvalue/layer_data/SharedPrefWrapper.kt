@@ -75,7 +75,7 @@ class SharedPrefWrapper @Inject constructor(
             .also { pushActivePlanCAs(it) }
     }
 
-    override fun clearActivePlanCAs() = pushActivePlanCAs(null)
+    override fun clearActivePlan() = pushActivePlanCAs(null)
 
     // # ExpectedIncome
 
