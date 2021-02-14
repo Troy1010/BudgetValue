@@ -9,7 +9,7 @@ import com.tminus1010.budgetvalue.model_app.Category
 import com.tminus1010.budgetvalue.model_app.HistoryColumnData
 import com.tminus1010.budgetvalue.model_app.LocalDatePeriod
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
 class HistoryVM(
@@ -23,8 +23,7 @@ class HistoryVM(
     // Actuals comes from transactions
     val historyColumnDatas =
         combineLatestImpatient(repo.fetchReconciliations(), activeReconciliationVM.defaultAmount, activeReconciliationVM.activeReconcileCAs, transactionsVM.transactionBlocks)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(AndroidSchedulers.mainThread())
+            .observeOn(Schedulers.computation())
             .throttleLast(500, TimeUnit.MILLISECONDS)
             .map { (reconciliations, activeReconciliationDefaultAmount, activeReconciliationCAs, transactionBlocks) ->
                 // # Define blocks
