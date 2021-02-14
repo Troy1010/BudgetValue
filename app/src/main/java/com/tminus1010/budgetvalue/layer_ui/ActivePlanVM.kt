@@ -29,7 +29,7 @@ class ActivePlanVM(val repo: Repo, categoriesAppVM: CategoriesAppVM, datePeriodG
                     )
                 }
                 .flatMapCompletable { repo.pushPlan(it) }
-                .subscribe { repo.clearActivePlan() }
+                .subscribe()
         }
 
     val activePlan = mergeCombineWithIndex(
