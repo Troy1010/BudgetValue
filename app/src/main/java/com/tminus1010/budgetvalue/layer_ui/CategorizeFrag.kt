@@ -25,11 +25,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupViews()
-        setupBinds()
-    }
-
-    private fun setupViews() {
+        // # RecyclerView
         recyclerview_categories.layoutManager =
             GridLayoutManager(requireActivity(), 3, GridLayoutManager.VERTICAL, true)
         recyclerview_categories.adapter = object : RecyclerView.Adapter<GenViewHolder>() {
@@ -47,16 +43,12 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
 
             override fun getItemCount() = categoriesAppVM.choosableCategories.value.size
         }
-    }
-
-    private fun setupBinds() {
+        // # Views
         textview_date.bindIncoming(categorizeVM.dateAsString)
-        textview_amount.bindIncoming(categorizeVM.transactionBox) {
-            it.first?.amount?.toString() ?: ""
-        }
-        textview_description.bindIncoming(categorizeVM.transactionBox) {
-            it.first?.description ?: ""
-        }
+        textview_amount.bindIncoming(categorizeVM.transactionBox)
+        { it.first?.amount?.toString() ?: "" }
+        textview_description.bindIncoming(categorizeVM.transactionBox)
+        { it.first?.description ?: "" }
         textview_amount_left.bindIncoming(transactionsVM.uncategorizedSpendsSize)
     }
 }
