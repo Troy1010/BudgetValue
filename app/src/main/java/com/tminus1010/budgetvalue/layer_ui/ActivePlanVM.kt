@@ -23,16 +23,16 @@ class ActivePlanVM(val repo: Repo, categoriesAppVM: CategoriesAppVM) : ViewModel
         intentPushPlanCA,
         categoriesAppVM.choosableCategories,
     )
-        .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (i, responsePlanCAs, intentPushPlanCA, chooseableCategories) ->
+        .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (i, activePlan, intentPushPlanCA, chooseableCategories) ->
             when (i) {
-//                0 -> { responsePlanCAs!!
-//                    acc.clear()
-//                    acc.putAll(responsePlanCAs.map { it.categoryAmounts })
-//                    if (chooseableCategories!=null)
-//                        acc.putAll(chooseableCategories
-//                            .filter { it !in acc.keys }
-//                            .associate { it to BigDecimal.ZERO })
-//                }
+                0 -> { activePlan!!
+                    acc.clear()
+                    acc.putAll(activePlan)
+                    if (chooseableCategories!=null)
+                        acc.putAll(chooseableCategories
+                            .filter { it !in acc.keys }
+                            .associate { it to BigDecimal.ZERO })
+                }
                 1 -> { intentPushPlanCA!!.also { (k, v) -> acc[k] = v } }
                 2 -> { chooseableCategories!!
                     acc.putAll(chooseableCategories
