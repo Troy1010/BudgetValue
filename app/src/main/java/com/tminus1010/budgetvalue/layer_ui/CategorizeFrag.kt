@@ -13,6 +13,7 @@ import com.tminus1010.budgetvalue.extensions.viewModels2
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import kotlinx.android.synthetic.main.frag_categorize.*
 import kotlinx.android.synthetic.main.item_category_btn.view.*
+import java.time.format.DateTimeFormatter
 
 class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     val app by lazy { requireActivity().application as App }
@@ -41,7 +42,8 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
             override fun getItemCount() = categoriesAppVM.choosableCategories.value.size
         }
         // # Views
-        textview_date.bindIncoming(categorizeVM.dateAsString)
+        textview_date.bindIncoming(categorizeVM.transactionBox)
+        { it.unbox?.date?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))?:"" }
         textview_amount.bindIncoming(categorizeVM.transactionBox)
         { it.unbox?.amount?.toString() ?: "" }
         textview_description.bindIncoming(categorizeVM.transactionBox)
