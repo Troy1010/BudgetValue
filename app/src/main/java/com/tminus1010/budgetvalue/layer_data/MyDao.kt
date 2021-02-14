@@ -63,7 +63,7 @@ interface MyDao {
     @Query("select * from PlanReceived")
     fun fetchPlanReceived(): Observable<List<PlanReceived>>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun add(PlanReceived: PlanReceived): Completable
 
     @Update
