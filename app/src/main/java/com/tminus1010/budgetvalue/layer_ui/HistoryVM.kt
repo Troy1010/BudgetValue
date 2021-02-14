@@ -22,10 +22,10 @@ class HistoryVM(
     // Reconciliations come from "saves"
     // Actuals comes from transactions
     val historyColumnDatas =
-        combineLatestImpatient(repo.fetchReconciliations(), activeReconciliationVM.defaultAmount, activeReconciliationVM.activeReconcileCAs, transactionsVM.transactionBlocks)
+        combineLatestImpatient(repo.fetchReconciliations(), repo.plans, activeReconciliationVM.defaultAmount, activeReconciliationVM.activeReconcileCAs, transactionsVM.transactionBlocks)
             .observeOn(Schedulers.computation())
             .throttleLast(500, TimeUnit.MILLISECONDS)
-            .map { (reconciliations, activeReconciliationDefaultAmount, activeReconciliationCAs, transactionBlocks) ->
+            .map { (reconciliations, plans, activeReconciliationDefaultAmount, activeReconciliationCAs, transactionBlocks) ->
                 // # Define blocks
                 val blockPeriods = sortedSetOf<LocalDatePeriod>(compareBy { it.startDate })
                 transactionBlocks?.forEach { if (!datePeriodGetter.isDatePeriodValid(it.datePeriod)) error("datePeriod was not valid:${it.datePeriod}") }
@@ -53,6 +53,16 @@ class HistoryVM(
                                 reconciliation.localDate.toDisplayStr(),
                                 reconciliation.defaultAmount,
                                 reconciliation.categoryAmounts,
+                            ))
+                        }
+                    // ## Add Plans
+                    if (plans != null)
+                        for (plan in plans.filter { it.localDatePeriod.blockingFirst().startDate in blockPeriod }) {
+                            historyColumnDatas.add(HistoryColumnData(
+                                "Plan",
+                                plan.localDatePeriod.blockingFirst().startDate.toDisplayStr(),
+                                plan.defaultAmount,
+                                plan.categoryAmounts
                             ))
                         }
                 }
