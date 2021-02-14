@@ -17,15 +17,13 @@ class HistoryVM(
     val transactionsVM: TransactionsVM,
     val activeReconciliationVM: ActiveReconciliationVM,
     val datePeriodGetter: DatePeriodGetter,
+    val budgetedVM: BudgetedVM,
 ) : ViewModel() {
-    // Plans comes from "saves", but there can only be 1 save per block
-    // Reconciliations come from "saves"
-    // Actuals comes from transactions
     val historyColumnDatas =
-        combineLatestImpatient(repo.fetchReconciliations(), repo.plans, activeReconciliationVM.defaultAmount, activeReconciliationVM.activeReconcileCAs, transactionsVM.transactionBlocks)
+        combineLatestImpatient(repo.fetchReconciliations(), repo.plans, activeReconciliationVM.defaultAmount, activeReconciliationVM.activeReconcileCAs, transactionsVM.transactionBlocks, budgetedVM.defaultAmount, budgetedVM.categoryAmounts)
             .observeOn(Schedulers.computation())
             .throttleLast(500, TimeUnit.MILLISECONDS)
-            .map { (reconciliations, plans, activeReconciliationDefaultAmount, activeReconciliationCAs, transactionBlocks) ->
+            .map { (reconciliations, plans, activeReconciliationDefaultAmount, activeReconciliationCAs, transactionBlocks, budgetedDefaultAmount, budgetedCAs) ->
                 // # Define blocks
                 val blockPeriods = sortedSetOf<LocalDatePeriod>(compareBy { it.startDate })
                 transactionBlocks?.forEach { if (!datePeriodGetter.isDatePeriodValid(it.datePeriod)) error("datePeriod was not valid:${it.datePeriod}") }
@@ -73,6 +71,14 @@ class HistoryVM(
                         "Current",
                         activeReconciliationDefaultAmount,
                         activeReconciliationCAs,
+                    ))
+                }
+                // ## Add Budgeted
+                if (budgetedCAs != null && budgetedDefaultAmount != null) {
+                    historyColumnDatas.add(HistoryColumnData(
+                        "Budgeted",
+                        defaultAmount = budgetedDefaultAmount,
+                        categoryAmounts = budgetedCAs,
                     ))
                 }
                 historyColumnDatas
