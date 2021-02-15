@@ -1,12 +1,15 @@
 package com.tminus1010.budgetvalue.layer_ui
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding4.view.clicks
 import com.tminus1010.budgetvalue.App
-import com.tminus1010.budgetvalue.GenericRecyclerViewAdapter6
+import com.tminus1010.budgetvalue.GenViewHolder
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.extensions.viewModels2
 import com.tminus1010.tmcommonkotlin_rx.observe
@@ -20,52 +23,44 @@ class ImportFrag : Fragment(R.layout.frag_import) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupViews()
-        setupIncomingBinds()
         // # Clicks
         btn_import.clicks().subscribe { launchImport(this.requireActivity()) }
         btn_add_account.clicks().subscribe(accountsVM.intentAddAccount)
-    }
-
-    private fun setupIncomingBinds() {
-        // # Refresh RecyclerView whenever its items change
+        // # RecyclerView
         accountsVM.intentAddAccount.mergeWith(accountsVM.intentDeleteAccount.map { Unit })
             .flatMap { accountsVM.accounts.take(2).skip(1) }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) { recyclerview_accounts.adapter?.notifyDataSetChanged() }
-    }
-
-    private fun setupViews() {
         recyclerview_accounts.apply {
             layoutManager = LinearLayoutManager(requireActivity())
-            adapter = GenericRecyclerViewAdapter6(requireContext(), rvAdapterParams)
-        }
-    }
-
-    val rvAdapterParams = object : GenericRecyclerViewAdapter6.Params {
-        override val itemLayout = R.layout.item_account
-        override fun getItemCount() = accountsVM.accounts.value?.size ?: 0
-        override fun bindRecyclerItem(holder: GenericRecyclerViewAdapter6.ViewHolder, view: View) {
-            val account = accountsVM.accounts.value?.get(holder.adapterPosition)!!
-            view.btn_delete_account.clicks()
-                .map { account }
-                .subscribe(accountsVM.intentDeleteAccount)
-            view.editText_name.apply {
-                setText(account.name)
-                setOnFocusChangeListener { _, b ->
-                    if (!b) {
-                        account.name = view.editText_name.text.toString()
-                        accountsVM.updateAccount(account)
+            adapter = object : RecyclerView.Adapter<GenViewHolder>() {
+                override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+                    LayoutInflater.from(requireContext()).inflate(R.layout.item_account, parent, false)
+                        .let { GenViewHolder(it) }
+                override fun getItemCount() = accountsVM.accounts.value?.size ?: 0
+                override fun onBindViewHolder(holder: GenViewHolder, position: Int) {
+                    val account = accountsVM.accounts.value?.get(holder.adapterPosition)!!
+                    holder.itemView.btn_delete_account.clicks()
+                        .map { account }
+                        .subscribe(accountsVM.intentDeleteAccount)
+                    holder.itemView.editText_name.apply {
+                        setText(account.name)
+                        setOnFocusChangeListener { _, b ->
+                            if (!b) {
+                                account.name = holder.itemView.editText_name.text.toString()
+                                accountsVM.updateAccount(account)
+                            }
+                        }
                     }
-                }
-            }
-            view.editText_amount.apply {
-                setText(account.amount.toString())
-                setOnFocusChangeListener { _, b ->
-                    if (!b) {
-                        account.amount = view.editText_amount.text.toString().toBigDecimal()
-                        accountsVM.updateAccount(account)
+                    holder.itemView.editText_amount.apply {
+                        setText(account.amount.toString())
+                        setOnFocusChangeListener { _, b ->
+                            if (!b) {
+                                account.amount = holder.itemView.editText_amount.text.toString().toBigDecimal()
+                                accountsVM.updateAccount(account)
+                            }
+                        }
                     }
                 }
             }
