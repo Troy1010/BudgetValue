@@ -47,7 +47,7 @@ class AdvancedCategorizeFrag : Fragment(R.layout.frag_advanced_categorize) {
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
                     .associate { it.index to titledDividerRecipeFactory.createOne(it.value.type.name) }
-                    .mapKeys { it.key + 3 } // header row, expected income row, and default row
+                    .mapKeys { it.key + 2 } // header row, and default row
                 Pair(recipes2D, dividerMap)
             }
             .observeOn(AndroidSchedulers.mainThread())
