@@ -9,7 +9,7 @@ import java.math.BigDecimal
 
 class AdvancedCategorizeVM(private val categoriesAppVM: CategoriesAppVM) : ViewModel() {
     val intentRememberCA = PublishSubject.create<Pair<Category, BigDecimal>>()
-    var intentRememberAmount = BehaviorSubject.createDefault(BigDecimal.ZERO)
+    val intentRememberAmount = BehaviorSubject.createDefault(BigDecimal.ZERO)
     val categoryAmounts = categoriesAppVM.choosableCategories
         .map { it.associateWith { BigDecimal.ZERO } }
         .toBehaviorSubject()
