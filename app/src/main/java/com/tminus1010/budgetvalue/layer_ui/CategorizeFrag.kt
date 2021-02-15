@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue.*
@@ -20,6 +21,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
     val transactionsVM: TransactionsVM by activityViewModels2 { TransactionsVM(app.appComponent.getRepo(), app.appComponent.getDatePeriodGetter()) }
     val categorizeVM: CategorizeVM by viewModels2 { CategorizeVM(app.appComponent.getRepo(), transactionsVM) }
+    val navController by lazy { findNavController() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,6 +46,10 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         // # Views
         textview_date.bindIncoming(categorizeVM.transactionBox)
         { it.unbox?.date?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))?:"" }
+        textview_date.setOnLongClickListener {
+            navController.navigate(R.id.action_categorizeFrag_to_advancedCategorizeVM)
+            true
+        }
         textview_amount.bindIncoming(categorizeVM.transactionBox)
         { it.unbox?.amount?.toString() ?: "" }
         textview_description.bindIncoming(categorizeVM.transactionBox)

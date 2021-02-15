@@ -7,7 +7,12 @@
     <fragment
         android:id="@+id/categorizeFrag"
         android:name="com.tminus1010.budgetvalue.layer_ui.CategorizeFrag"
-        android:label="Categorize" />
+        android:label="Categorize" >
+        <action
+            android:id="@+id/action_categorizeFrag_to_advancedCategorizeVM"
+            app:destination="@id/advancedCategorizeVM"
+            app:popUpTo="@id/categorizeFrag" />
+    </fragment>
     <fragment
         android:id="@+id/importFrag"
         android:name="com.tminus1010.budgetvalue.layer_ui.ImportFrag"
@@ -24,4 +29,8 @@
         android:id="@+id/historyFrag"
         android:name="com.tminus1010.budgetvalue.layer_ui.HistoryFrag"
         android:label="History" />
+    <fragment
+        android:id="@+id/advancedCategorizeVM"
+        android:name="com.tminus1010.budgetvalue.layer_ui.AdvancedCategorizeFrag"
+        android:label="AdvancedCategorizeFrag" />
 </navigation>
