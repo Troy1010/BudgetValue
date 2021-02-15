@@ -76,8 +76,8 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue
                 changePublisher.onNext(Change(ChangeType.EDIT, key, value))
                 subject.onNext(value)
             } ?: run {
-                changePublisher.onNext(Change(ChangeType.ADD, key, value))
                 _itemObservableMap[key] = createItemObservable(key, value)
+                changePublisher.onNext(Change(ChangeType.ADD, key, value))
             }
         }
         observableMapPublisher.onNext(_itemObservableMap)
@@ -89,8 +89,8 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue
             changePublisher.onNext(Change(ChangeType.EDIT, key, value))
             subject.onNext(value)
         } ?: run {
-            changePublisher.onNext(Change(ChangeType.ADD, key, value))
             _itemObservableMap[key] = createItemObservable(key, value)
+            changePublisher.onNext(Change(ChangeType.ADD, key, value))
         }
         observableMapPublisher.onNext(_itemObservableMap)
         return x

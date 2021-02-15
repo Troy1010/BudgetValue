@@ -17,11 +17,16 @@ class BudgetedVM(
     activeReconciliationVM: ActiveReconciliationVM,
 ): ViewModel() {
     val defaultAmount =
-        combineLatestImpatient(repo.fetchReconciliations(), transactionsVM.transactionBlocks, activeReconciliationVM.defaultAmount)
-            .map { (reconciliations, transactionBlocks, activeReconcileDefaultAmount) ->
+        combineLatestImpatient(repo.fetchReconciliations(), repo.plans, transactionsVM.transactionBlocks, activeReconciliationVM.defaultAmount)
+            .map { (reconciliations, plans, transactionBlocks, activeReconcileDefaultAmount) ->
                 var returning = BigDecimal(0)
                 if (reconciliations != null) {
                     reconciliations.forEach {
+                        returning += it.defaultAmount
+                    }
+                }
+                if (plans != null) {
+                    plans.forEach {
                         returning += it.defaultAmount
                     }
                 }
@@ -36,14 +41,20 @@ class BudgetedVM(
                 returning
             }
             .throttleLast(1, TimeUnit.SECONDS)
-            .logzz("sss")
             .toBehaviorSubject()
     val categoryAmounts =
-        combineLatestImpatient(repo.fetchReconciliations(), transactionsVM.transactionBlocks, activeReconciliationVM.activeReconcileCAs)
-            .map { (reconciliations, transactionBlocks, activeReconcileCAs) ->
+        combineLatestImpatient(repo.fetchReconciliations(), repo.plans, transactionsVM.transactionBlocks, activeReconciliationVM.activeReconcileCAs)
+            .map { (reconciliations, plans, transactionBlocks, activeReconcileCAs) ->
                 val x = SourceHashMap<Category, BigDecimal>()
                 if (reconciliations != null) {
                     reconciliations.forEach {
+                        it.categoryAmounts.forEach { (category, amount) ->
+                            x[category] = (x[category]?:BigDecimal(0)) + amount
+                        }
+                    }
+                }
+                if (plans != null) {
+                    plans.forEach {
                         it.categoryAmounts.forEach { (category, amount) ->
                             x[category] = (x[category]?:BigDecimal(0)) + amount
                         }
@@ -64,6 +75,5 @@ class BudgetedVM(
                 x
             }
             .throttleLast(1, TimeUnit.SECONDS)
-            .logzz("yyy")
             .toBehaviorSubject()
 }

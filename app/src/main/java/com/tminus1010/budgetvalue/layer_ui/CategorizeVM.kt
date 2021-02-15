@@ -6,20 +6,20 @@ import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.budgetvalue.model_app.Category
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.schedulers.Schedulers
-import java.time.format.DateTimeFormatter
+import java.math.BigDecimal
 
 class CategorizeVM(val repo: Repo, transactionsVM: TransactionsVM): ViewModel() {
     val transactionBox = transactionsVM.uncategorizedSpends
         .map { Box(it.getOrNull(0)) }
-    val dateAsString = transactionBox
-        .map { it.first?.date?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))?:"" }
-    fun setTransactionCategory(category: Category) {
+    fun finishTransactionWithCategory(category: Category) {
         transactionBox
             .observeOn(Schedulers.io())
             .take(1)
             .unbox()
-            .map { Pair(it.id, hashMapOf(category.name to it.amount)) }
-            .flatMapCompletable { (id, categoryAmounts) -> repo.updateTransactionCategoryAmounts(id, categoryAmounts) }
+            .doOnNext { activeCA[category] = it.amount - activeCA.map{ it.value }.fold(0.toBigDecimal()) { acc, v -> acc + v } }
+            .flatMapCompletable { repo.updateTransactionCategoryAmounts(it.id, activeCA.mapKeys { it.key.name }) }
+            .doOnComplete { activeCA.clear() }
             .subscribe()
     }
+    var activeCA = mutableMapOf<Category, BigDecimal>()
 }

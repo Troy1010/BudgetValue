@@ -9,25 +9,21 @@ import com.tminus1010.budgetvalue.model_app.Category
 import com.tminus1010.budgetvalue.model_app.HistoryColumnData
 import com.tminus1010.budgetvalue.model_app.LocalDatePeriod
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
 class HistoryVM(
     private val repo: Repo,
     val transactionsVM: TransactionsVM,
     val activeReconciliationVM: ActiveReconciliationVM,
-    val activePlanVM: ActivePlanVM,
     val datePeriodGetter: DatePeriodGetter,
+    val budgetedVM: BudgetedVM,
 ) : ViewModel() {
-    // Plans comes from "saves", but there can only be 1 save per block
-    // Reconciliations come from "saves"
-    // Actuals comes from transactions
     val historyColumnDatas =
-        combineLatestImpatient(repo.fetchReconciliations(), activeReconciliationVM.defaultAmount, activeReconciliationVM.activeReconcileCAs, activePlanVM.defaultAmount, activePlanVM.planCAs, transactionsVM.transactionBlocks)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(AndroidSchedulers.mainThread())
+        combineLatestImpatient(repo.fetchReconciliations(), repo.plans, activeReconciliationVM.defaultAmount, activeReconciliationVM.activeReconcileCAs, transactionsVM.transactionBlocks, budgetedVM.defaultAmount, budgetedVM.categoryAmounts)
+            .observeOn(Schedulers.computation())
             .throttleLast(500, TimeUnit.MILLISECONDS)
-            .map { (reconciliations, activeReconciliationDefaultAmount, activeReconciliationCAs, planDefaultAmount, planCAs, transactionBlocks) ->
+            .map { (reconciliations, plans, activeReconciliationDefaultAmount, activeReconciliationCAs, transactionBlocks, budgetedDefaultAmount, budgetedCAs) ->
                 // # Define blocks
                 val blockPeriods = sortedSetOf<LocalDatePeriod>(compareBy { it.startDate })
                 transactionBlocks?.forEach { if (!datePeriodGetter.isDatePeriodValid(it.datePeriod)) error("datePeriod was not valid:${it.datePeriod}") }
@@ -57,6 +53,16 @@ class HistoryVM(
                                 reconciliation.categoryAmounts,
                             ))
                         }
+                    // ## Add Plans
+                    if (plans != null)
+                        for (plan in plans.filter { it.localDatePeriod.blockingFirst().startDate in blockPeriod }) {
+                            historyColumnDatas.add(HistoryColumnData(
+                                "Plan",
+                                plan.localDatePeriod.blockingFirst().startDate.toDisplayStr(),
+                                plan.defaultAmount,
+                                plan.categoryAmounts
+                            ))
+                        }
                 }
                 // ## Add Active Reconciliation
                 if (activeReconciliationCAs != null && activeReconciliationDefaultAmount != null) {
@@ -67,13 +73,12 @@ class HistoryVM(
                         activeReconciliationCAs,
                     ))
                 }
-                // ## Add Active Plan
-                if (planCAs != null && planDefaultAmount != null) {
+                // ## Add Budgeted
+                if (budgetedCAs != null && budgetedDefaultAmount != null) {
                     historyColumnDatas.add(HistoryColumnData(
-                        "Plan",
-                        "Current",
-                        planDefaultAmount,
-                        planCAs,
+                        "Budgeted",
+                        defaultAmount = budgetedDefaultAmount,
+                        categoryAmounts = budgetedCAs,
                     ))
                 }
                 historyColumnDatas

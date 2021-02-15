@@ -2,7 +2,9 @@ package com.tminus1010.budgetvalue.layer_data
 
 import android.content.SharedPreferences
 import com.tminus1010.budgetvalue.model_app.Category
+import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -46,26 +48,35 @@ class SharedPrefWrapper @Inject constructor(
             .also { pushActiveReconcileCAs(it) }
     }
 
+    override fun clearActiveReconcileCAs() = pushActiveReconcileCAs(null)
+
     // # PlanCategoryAmounts
 
-    override fun fetchActivePlanCAs(): Map<Category, BigDecimal> {
-        return sharedPreferences.getString(Key.PLAN_CATEGORY_AMOUNTS.name, null)
-            .let { typeConverter.categoryAmounts(it) }
-    }
+    private val activePlanPublisher = PublishSubject.create<Map<Category, BigDecimal>?>()
+    override val activePlan: BehaviorSubject<Map<Category, BigDecimal>> =
+        activePlanPublisher
+            .startWithItem(
+                sharedPreferences.getString(Key.PLAN_CATEGORY_AMOUNTS.name, null)
+                    .let { typeConverter.categoryAmounts(it) }
+            )
+            .toBehaviorSubject()
 
     override fun pushActivePlanCAs(categoryAmounts: Map<Category, BigDecimal>?) {
         typeConverter.string(categoryAmounts)
             ?.also { editor.putString(Key.PLAN_CATEGORY_AMOUNTS.name, it) }
             ?: editor.remove(Key.PLAN_CATEGORY_AMOUNTS.name)
         editor.apply()
+        activePlanPublisher.onNext(categoryAmounts ?: emptyMap())
     }
 
     override fun pushActivePlanCA(kv: Pair<Category, BigDecimal?>) {
-        fetchActivePlanCAs()
+        activePlan.value
             .toMutableMap()
-            .also { kv.also { (k, v) -> if (v == null) it.remove(k) else it[k] = v } }
+            .also { kv.also { (k, v) -> if (v == null || v == 0.toBigDecimal()) it.remove(k) else it[k] = v } }
             .also { pushActivePlanCAs(it) }
     }
+
+    override fun clearActivePlan() = pushActivePlanCAs(null)
 
     // # ExpectedIncome
 

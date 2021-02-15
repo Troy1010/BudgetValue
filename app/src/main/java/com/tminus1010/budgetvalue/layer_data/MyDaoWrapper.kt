@@ -1,10 +1,9 @@
 package com.tminus1010.budgetvalue.layer_data
 
 import com.tminus1010.budgetvalue.extensions.noEnd
-import com.tminus1010.budgetvalue.model_app.Category
+import com.tminus1010.budgetvalue.model_app.Plan
 import com.tminus1010.budgetvalue.model_app.Reconciliation
 import com.tminus1010.budgetvalue.model_data.Account
-import com.tminus1010.budgetvalue.model_data.PlanCategoryAmount
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -19,31 +18,16 @@ class MyDaoWrapper @Inject constructor(
         .map(typeConverter::transactions)
         .replay(1).refCount()
 
-    override val planCategoryAmounts = myDao
-        .getPlanCategoryAmountsReceived()
-        .take(1)
+    override val plans = myDao.fetchPlanReceived()
         .subscribeOn(Schedulers.io())
-        .map(typeConverter::categoryAmounts)
+        .map { it.map { it.toPlan(typeConverter) } }
         .noEnd().replay(1).refCount()
 
-    override fun pushPlanCategoryAmount(categoryAmount: Pair<Category, BigDecimal>): Completable {
-        return myDao.has(categoryAmount.first.name)
-            .flatMapCompletable {
-                if (it)
-                    myDao.update(PlanCategoryAmount(categoryAmount))
-                else
-                    myDao.add(PlanCategoryAmount(categoryAmount))
-            }
-            .subscribeOn(Schedulers.io())
-    }
+    override fun pushPlan(plan: Plan) = myDao.add(plan.toPlanReceived(typeConverter)).subscribeOn(Schedulers.io())
 
     override fun pushReconciliation(reconciliation: Reconciliation): Completable {
-        return reconciliation
-            .toReconciliationReceived(typeConverter, BigDecimal(0))
-            .let {
-                myDao.add(it)
-                    .subscribeOn(Schedulers.io())
-            }
+        return reconciliation.toReconciliationReceived(typeConverter, BigDecimal(0))
+            .let { myDao.add(it).subscribeOn(Schedulers.io()) }
     }
 
     override fun fetchReconciliations(): Observable<List<Reconciliation>> {

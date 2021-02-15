@@ -3,13 +3,10 @@ package com.tminus1010.budgetvalue.layer_data
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.tminus1010.budgetvalue.model_data.Account
-import com.tminus1010.budgetvalue.model_data.PlanCategoryAmount
-import com.tminus1010.budgetvalue.model_data.ReconciliationReceived
-import com.tminus1010.budgetvalue.model_data.TransactionReceived
+import com.tminus1010.budgetvalue.model_data.*
 
 @TypeConverters(TypeConverterForRoom::class)
-@Database(entities = [TransactionReceived::class, Account::class, ReconciliationReceived::class, PlanCategoryAmount::class], version = 18)
+@Database(entities = [TransactionReceived::class, Account::class, ReconciliationReceived::class, PlanCategoryAmount::class, PlanReceived::class], version = 21)
 abstract class BudgetValueDB : RoomDatabase() {
     abstract fun myDao(): MyDao
 }

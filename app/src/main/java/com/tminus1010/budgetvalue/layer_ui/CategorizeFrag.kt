@@ -1,17 +1,19 @@
 package com.tminus1010.budgetvalue.layer_ui
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import com.tminus1010.budgetvalue.App
-import com.tminus1010.budgetvalue.GenericRecyclerViewAdapter6
-import com.tminus1010.budgetvalue.R
+import androidx.recyclerview.widget.RecyclerView
+import com.tminus1010.budgetvalue.*
 import com.tminus1010.budgetvalue.extensions.activityViewModels2
 import com.tminus1010.budgetvalue.extensions.viewModels2
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import kotlinx.android.synthetic.main.frag_categorize.*
 import kotlinx.android.synthetic.main.item_category_btn.view.*
+import java.time.format.DateTimeFormatter
 
 class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     val app by lazy { requireActivity().application as App }
@@ -21,37 +23,31 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupViews()
-        setupBinds()
-    }
+        // # RecyclerView
+        recyclerview_categories.layoutManager =
+            GridLayoutManager(requireActivity(), 3, GridLayoutManager.VERTICAL, true)
+        recyclerview_categories.adapter = object : RecyclerView.Adapter<GenViewHolder>() {
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+                LayoutInflater.from(requireActivity())
+                    .inflate(R.layout.item_category_btn, parent, false)
+                    .let { GenViewHolder(it) }
 
-    private fun setupViews() {
-        recyclerview_categories.apply {
-            layoutManager =
-                GridLayoutManager(requireActivity(), 3, GridLayoutManager.VERTICAL, true)
-            adapter = GenericRecyclerViewAdapter6(requireActivity(), rvAdapterParams)
-        }
-    }
-
-    val rvAdapterParams = object : GenericRecyclerViewAdapter6.Params {
-        override val itemLayout = R.layout.item_category_btn
-        override fun getItemCount() = categoriesAppVM.choosableCategories.value.size
-        override fun bindRecyclerItem(holder: GenericRecyclerViewAdapter6.ViewHolder, view: View) {
-            view.btn_category.apply {
-                text = categoriesAppVM.choosableCategories.value[holder.adapterPosition].name
-                setOnClickListener { categorizeVM.setTransactionCategory(categoriesAppVM.choosableCategories.value[holder.adapterPosition]) }
+            override fun onBindViewHolder(holder: GenViewHolder, position: Int) {
+                holder.itemView.btn_category.apply {
+                    text = categoriesAppVM.choosableCategories.value[holder.adapterPosition].name
+                    setOnClickListener { categorizeVM.finishTransactionWithCategory(categoriesAppVM.choosableCategories.value[holder.adapterPosition]) }
+                }
             }
-        }
-    }
 
-    private fun setupBinds() {
-        textview_date.bindIncoming(categorizeVM.dateAsString)
-        textview_amount.bindIncoming(categorizeVM.transactionBox) {
-            it.first?.amount?.toString() ?: ""
+            override fun getItemCount() = categoriesAppVM.choosableCategories.value.size
         }
-        textview_description.bindIncoming(categorizeVM.transactionBox) {
-            it.first?.description ?: ""
-        }
+        // # Views
+        textview_date.bindIncoming(categorizeVM.transactionBox)
+        { it.unbox?.date?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))?:"" }
+        textview_amount.bindIncoming(categorizeVM.transactionBox)
+        { it.unbox?.amount?.toString() ?: "" }
+        textview_description.bindIncoming(categorizeVM.transactionBox)
+        { it.unbox?.description ?: "" }
         textview_amount_left.bindIncoming(transactionsVM.uncategorizedSpendsSize)
     }
 }

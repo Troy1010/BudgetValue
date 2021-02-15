@@ -28,13 +28,13 @@ class MockImportSelectionActivity : AppCompatActivity(R.layout.activity_mock_imp
         recyclerview_select_mock_import.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
         recyclerview_select_mock_import.adapter =
-            object : RecyclerView.Adapter<GenericViewHolder<Button>>() {
+            object : RecyclerView.Adapter<GenViewHolder>() {
                 override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
                     LayoutInflater.from(this@MockImportSelectionActivity)
                         .inflate(R.layout.button, parent, false)
-                        .let { GenericViewHolder(it as Button) }
+                        .let { GenViewHolder(it as Button) }
 
-                override fun onBindViewHolder(holder: GenericViewHolder<Button>, position: Int) {
+                override fun onBindViewHolder(holder: GenViewHolder, position: Int) {
                     holder.itemView as Button
                     holder.itemView.text = "Import Transactions ${holder.adapterPosition}"
                     holder.itemView.setOnClickListener {

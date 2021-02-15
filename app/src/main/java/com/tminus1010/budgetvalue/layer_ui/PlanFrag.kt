@@ -25,7 +25,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
     val app by lazy { requireActivity().application as App }
     val repo by lazy { app.appComponent.getRepo() }
     val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
-    val activePlanVM : ActivePlanVM by activityViewModels2 { ActivePlanVM(repo, categoriesAppVM) }
+    val activePlanVM : ActivePlanVM by activityViewModels2 { ActivePlanVM(repo, categoriesAppVM, app.appComponent.getDatePeriodGetter()) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -57,7 +57,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        combineLatestAsTuple(activePlanVM.planCAs.value.itemObservableMap2, activePlanVM.activeCategories, myTableView_plan.widthObservable)
+        combineLatestAsTuple(activePlanVM.activePlan.value.itemObservableMap2, activePlanVM.activeCategories, myTableView_plan.widthObservable)
             .debounce(100, TimeUnit.MILLISECONDS)
             .observeOn(Schedulers.computation())
             .map { (planCAsItemObservableMap, activeCategories, width) ->
@@ -69,7 +69,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
                     headerRecipeFactory.createOne2("Plan")
                             + expectedIncomeRecipeFactory.createOne2(activePlanVM.expectedIncome)
                             + oneWayRecipeBuilder.createOne2(activePlanVM.defaultAmount)
-                            + planCAsRecipeFactory.createMany(activeCategories.map { Pair(it, planCAsItemObservableMap[it]!!) }))
+                            + planCAsRecipeFactory.createMany(activeCategories.map { Pair(it, planCAsItemObservableMap[it] ?: error("not found:$it")) }))
                     .reflectXY(), fixedWidth = width)
                 val dividerMap = activeCategories
                     .withIndex()
