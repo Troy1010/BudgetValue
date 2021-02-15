@@ -46,14 +46,11 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         // # Views
         textview_date.bindIncoming(categorizeVM.transactionBox)
         { it.unbox?.date?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))?:"" }
-        textview_date.setOnLongClickListener {
-            navController.navigate(R.id.action_categorizeFrag_to_advancedCategorizeVM)
-            true
-        }
         textview_amount.bindIncoming(categorizeVM.transactionBox)
         { it.unbox?.amount?.toString() ?: "" }
         textview_description.bindIncoming(categorizeVM.transactionBox)
         { it.unbox?.description ?: "" }
         textview_amount_left.bindIncoming(transactionsVM.uncategorizedSpendsSize)
+        btn_fc_advanced.setOnClickListener { navController.navigate(R.id.action_categorizeFrag_to_advancedCategorizeVM) }
     }
 }
