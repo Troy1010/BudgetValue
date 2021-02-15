@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.layer_ui
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.tminus1010.budgetvalue.App
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.combineLatestAsTuple
@@ -22,28 +23,33 @@ class AdvancedCategorizeFrag : Fragment(R.layout.frag_advanced_categorize) {
     val repo by lazy { app.appComponent.getRepo() }
     val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
     val viewRecipeFactories by lazy { ViewRecipeFactories(requireContext()) }
-    val advancedCategorizeVM by activityViewModels2 { AdvancedCategorizeVM(categoriesAppVM) }
+    val advancedCategorizeVM by activityViewModels2 { AdvancedCategorizeVM() }
+    val nav by lazy { findNavController() }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // # Btn Done
+        btn_ac_done.setOnClickListener {
+            nav.navigateUp()
+        }
+        // # TMTableView
         val cellRecipeFactory = viewRecipeFactories.cellRecipeFactory
         val headerRecipeFactory = viewRecipeFactories.headerRecipeFactory
         val amountRecipeFactory = viewRecipeFactories.outgoingBigDecimalRecipeFactory(advancedCategorizeVM.intentRememberAmount)
         val categoryAmountRecipeFactory = viewRecipeFactories.outgoingCARecipeFactory(advancedCategorizeVM.intentRememberCA)
         val titledDividerRecipeFactory = viewRecipeFactories.titledDividerRecipeFactory
-        // # TMTableView
-        combineLatestAsTuple(tmTableView_ac.widthObservable, advancedCategorizeVM.categoryAmounts)
+        combineLatestAsTuple(tmTableView_ac.widthObservable, categoriesAppVM.choosableCategories)
             .debounce(100, TimeUnit.MILLISECONDS)
             .observeOn(Schedulers.computation())
-            .map { (width, ca) ->
+            .map { (width, categories) ->
                 val recipes2D = RecipeGrid(listOf(
                     headerRecipeFactory.createOne2("Category")
                             + cellRecipeFactory.createOne2("Default")
-                            + cellRecipeFactory.createMany(ca.map { it.key.name }),
+                            + cellRecipeFactory.createMany(categories.map { it.name }),
                     headerRecipeFactory.createOne2("Amount")
                             + amountRecipeFactory.createOne2(BigDecimal.ZERO)
-                            + categoryAmountRecipeFactory.createMany(ca.map { it.key to it.value }))
+                            + categoryAmountRecipeFactory.createMany(categories.map { it to BigDecimal.ZERO }))
                     .reflectXY(), fixedWidth = width)
-                val dividerMap = ca.keys
+                val dividerMap = categories
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
                     .associate { it.index to titledDividerRecipeFactory.createOne(it.value.type.name) }
