@@ -32,9 +32,13 @@ class AdvancedCategorizeFrag : Fragment(R.layout.frag_advanced_categorize) {
         super.onViewCreated(view, savedInstanceState)
         // # Btn Done
         btn_ac_done.setOnClickListener {
-            if (advancedCategorizeVM.defaultAmount.value != BigDecimal.ZERO)
+            if (advancedCategorizeVM.defaultAmount.value.compareTo(BigDecimal.ZERO)!=0) {
                 toast("Default must be 0")
-            else {
+            } else {
+                repo.updateTransactionCategoryAmounts(
+                    advancedCategorizeVM.transactionToPush.value.id,
+                    advancedCategorizeVM.transactionToPush.value.categoryAmounts.mapKeys { it.key.name }
+                ).subscribeOn(Schedulers.io()).subscribe()
                 nav.navigateUp()
             }
         }
