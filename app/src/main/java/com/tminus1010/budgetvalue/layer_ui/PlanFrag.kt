@@ -80,7 +80,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
             }
             .observeOn(AndroidSchedulers.mainThread())
             .observe(this) { (recipes2D, dividerMap) ->
-                myTableView_plan?.initialize(recipes2D, dividerMap, 0, 1)
+                myTableView_plan.initialize(recipes2D, dividerMap, 0, 1)
             }
     }
 }
