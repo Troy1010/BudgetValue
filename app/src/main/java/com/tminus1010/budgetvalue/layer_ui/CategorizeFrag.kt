@@ -47,7 +47,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         textview_date.bindIncoming(categorizeVM.transactionBox)
         { it.unbox?.date?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))?:"" }
         textview_amount.bindIncoming(categorizeVM.transactionBox)
-        { it.unbox?.amount?.toString() ?: "" }
+        { it.unbox?.defaultAmount?.toString() ?: "" }
         textview_description.bindIncoming(categorizeVM.transactionBox)
         { it.unbox?.description ?: "" }
         textview_amount_left.bindIncoming(transactionsVM.uncategorizedSpendsSize)
