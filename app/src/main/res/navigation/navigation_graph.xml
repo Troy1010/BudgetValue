@@ -9,8 +9,8 @@
         android:name="com.tminus1010.budgetvalue.layer_ui.CategorizeFrag"
         android:label="Categorize" >
         <action
-            android:id="@+id/action_categorizeFrag_to_advancedCategorizeVM"
-            app:destination="@id/advancedCategorizeVM"
+            android:id="@+id/action_categorizeFrag_to_advancedCategorizeFrag"
+            app:destination="@id/advancedCategorizeFrag"
             app:popUpTo="@id/categorizeFrag" />
     </fragment>
     <fragment
@@ -30,7 +30,7 @@
         android:name="com.tminus1010.budgetvalue.layer_ui.HistoryFrag"
         android:label="History" />
     <fragment
-        android:id="@+id/advancedCategorizeVM"
+        android:id="@+id/advancedCategorizeFrag"
         android:name="com.tminus1010.budgetvalue.layer_ui.AdvancedCategorizeFrag"
         android:label="AdvancedCategorizeFrag" />
 </navigation>
