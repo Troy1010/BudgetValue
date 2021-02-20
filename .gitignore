@@ -22,3 +22,5 @@ app/schemas/com.tminus1010.budgetvalue.layers.data_layer.BudgetValueDB/9.json
 app/schemas/com.tminus1010.budgetvalue.layer_data.BudgetValueDB/9.json
 
 app/schemas/com.tminus1010.budgetvalue.layer_data.BudgetValueDB/
+
+*.csv#
