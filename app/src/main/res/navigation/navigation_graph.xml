@@ -12,6 +12,10 @@
             android:id="@+id/action_categorizeFrag_to_advancedCategorizeFrag"
             app:destination="@id/advancedCategorizeFrag"
             app:popUpTo="@id/categorizeFrag" />
+        <action
+            android:id="@+id/action_categorizeFrag_to_categoryCustomizationFrag"
+            app:destination="@id/categoryCustomizationFrag"
+            app:popUpTo="@id/categorizeFrag" />
     </fragment>
     <fragment
         android:id="@+id/importFrag"
@@ -33,4 +37,8 @@
         android:id="@+id/advancedCategorizeFrag"
         android:name="com.tminus1010.budgetvalue.layer_ui.AdvancedCategorizeFrag"
         android:label="AdvancedCategorizeFrag" />
+    <fragment
+        android:id="@+id/categoryCustomizationFrag"
+        android:name="com.tminus1010.budgetvalue.layer_ui.CategoryCustomizationFrag"
+        android:label="CategoryCustomizationFrag" />
 </navigation>

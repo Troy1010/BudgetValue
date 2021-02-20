@@ -60,6 +60,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         { it.unbox?.description ?: "" }
         textview_amount_left.bindIncoming(transactionsVM.uncategorizedSpendsSize)
         btn_fc_advanced.setOnClickListener { navController.navigate(R.id.action_categorizeFrag_to_advancedCategorizeFrag) }
+        btn_fc_customize.setOnClickListener { navController.navigate(R.id.action_categorizeFrag_to_categoryCustomizationFrag) }
         categorizeVM.hasUncategorizedTransaction.observe(viewLifecycleOwner) { btn_fc_advanced.isEnabled = it }
     }
 }
