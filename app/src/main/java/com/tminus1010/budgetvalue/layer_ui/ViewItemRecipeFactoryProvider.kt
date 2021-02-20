@@ -42,6 +42,10 @@ class ViewItemRecipeFactoryProvider(val context: Context) {
         { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
         { v, bs -> v.bindIncoming(bs) }
     )
+    fun <T> incomingFactory() = ViewItemRecipeFactory<TextView, Observable<T>>(
+        { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
+        { v, bs -> v.bindIncoming(bs) }
+    )
     val titledDividerRecipeFactory = ViewItemRecipeFactory<TextView, String>(
         { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
         { v, s -> v.text = s }
