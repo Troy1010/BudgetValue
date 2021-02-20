@@ -14,11 +14,11 @@ interface MyDao {
     @Query("DELETE FROM `TransactionReceived`")
     fun clearTransactions(): Completable
 
-    @Insert
-    fun add(transactionReceived: TransactionReceived): Completable
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun tryAdd(transactionReceived: TransactionReceived): Completable
 
-    @Insert
-    fun add(transactionsReceived: List<TransactionReceived>): Completable
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun tryAdd(transactionsReceived: List<TransactionReceived>): Completable
 
     @Query("select * from `TransactionReceived`")
     fun getTransactionsReceived(): Observable<List<TransactionReceived>>
@@ -36,7 +36,7 @@ interface MyDao {
     fun updateTransactionDate(id: Int, date: String): Completable
 
     @Query("UPDATE `TransactionReceived` SET categoryAmounts=:categoryAmounts WHERE id=:id")
-    fun updateTransactionCategoryAmounts(id: Int, categoryAmounts: Map<String, BigDecimal>): Completable
+    fun updateTransactionCategoryAmounts(id: String, categoryAmounts: Map<String, BigDecimal>): Completable
 
     // # Accounts
 

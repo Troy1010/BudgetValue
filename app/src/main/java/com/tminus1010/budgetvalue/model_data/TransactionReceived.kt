@@ -13,8 +13,8 @@ data class TransactionReceived(
     val description: String,
     val amount: BigDecimal,
     val categoryAmounts: HashMap<String, BigDecimal> = hashMapOf(),
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    @PrimaryKey
+    val id: String,
 ) {
     fun toTransaction(categoryParser: ICategoryParser): Transaction {
         return Transaction(

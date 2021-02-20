@@ -4,12 +4,10 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.budgetvalue.model_app.Block
 import com.tminus1010.budgetvalue.model_app.Category
-import com.tminus1010.budgetvalue.model_app.LocalDatePeriod
 import com.tminus1010.budgetvalue.model_app.Transaction
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.io.InputStream
 import java.math.BigDecimal
-import java.time.Period
 
 class TransactionsVM(private val repo: Repo, val datePeriodGetter: DatePeriodGetter):ViewModel() {
     val transactions = repo.transactions
@@ -22,8 +20,7 @@ class TransactionsVM(private val repo: Repo, val datePeriodGetter: DatePeriodGet
     val uncategorizedSpendsSize = uncategorizedSpends
         .map { it.size.toString() }
     fun importTransactions(inputStream: InputStream) {
-        repo.clearTransactions()
-            .andThen(repo.add(repo.parseToTransactions(inputStream)))
+        repo.tryAdd(repo.parseToTransactions(inputStream))
             .subscribeOn(Schedulers.io())
             .subscribe()
     }
