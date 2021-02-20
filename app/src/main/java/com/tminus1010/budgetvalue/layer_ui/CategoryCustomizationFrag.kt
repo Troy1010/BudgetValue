@@ -11,6 +11,6 @@ import kotlinx.android.synthetic.main.frag_category_customization.view.*
 class CategoryCustomizationFrag: Fragment(R.layout.frag_category_customization) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        v.btn_cc_done.setOnClickListener { nav.navigateUp() }
+        v.btn_done.setOnClickListener { nav.navigateUp() }
     }
 }

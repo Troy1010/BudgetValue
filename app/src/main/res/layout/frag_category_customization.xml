@@ -8,11 +8,11 @@
         android:id="@+id/tmTableView_cc"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/btn_cc_done"
+        app:layout_constraintBottom_toTopOf="@id/btn_done"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/btn_cc_done"
+        android:id="@+id/btn_done"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Done"
