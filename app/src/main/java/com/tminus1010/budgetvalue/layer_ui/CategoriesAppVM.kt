@@ -13,10 +13,9 @@ import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
  */
 class CategoriesAppVM : ICategoryParser {
     val defaultCategory = Category("Default", Category.Type.Default)
-    val incomeCategory = Category("Income", Category.Type.Income)
     val userAddedCategories = SourceArrayList<Category>()
     val categories = userAddedCategories.observable
-        .map { ArrayList(userAddedCategories + defaultCategory + incomeCategory) }
+        .map { ArrayList(userAddedCategories + defaultCategory) }
         .toBehaviorSubject()
     val choosableCategories = userAddedCategories.observable
         .toBehaviorSubject()
