@@ -22,17 +22,14 @@ class TransactionParser @Inject constructor() : ITransactionParser {
             val row = ArrayList(iterator.next().split(","))
             // find date
             var date: LocalDate? = null
-            for ((i, item) in row.withIndex()) {
+            for ((i, item) in row.withIndex())
                 if (Regex("""^[0-9]{13}${'$'}""").matches(item)) {
                     date = LocalDate.parse(row[i].substring(0, 8),
                         DateTimeFormatter.ofPattern("yyyyMMdd"))
                     row.removeAt(i)
                     break
                 }
-            }
-            if (date == null) {
-                continue
-            }
+            if (date == null) continue
             // # Determine amount
             var amount: String? = null
             // from left to right, see if any are valid amounts
@@ -54,17 +51,14 @@ class TransactionParser @Inject constructor() : ITransactionParser {
             // find description
             var description: String? = null
             val rowCharCount = ArrayList<Int>()
-            for (item in row) {
+            for (item in row)
                 rowCharCount.add(Regex("""[A-z]""").findAll(item).count())
-            }
             val i = rowCharCount.indices.maxByOrNull { rowCharCount[it] }
             i?.apply {
                 description = row[i]
                 row.removeAt(i)
             }
-            if (description == null) {
-                continue
-            }
+            if (description == null) continue
             //
             transactions.add(TransactionReceived(date, description!!, amount.toBigDecimal()))
         }
