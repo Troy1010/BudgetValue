@@ -11,7 +11,7 @@ data class Transaction(
     val description: String,
     override val amount: BigDecimal,
     override val categoryAmounts: Map<Category, BigDecimal>,
-    val id: Int = 0,
+    val id: String,
 ) : IAmountAndCA {
     val isUncategorized get() = categoryAmounts.isNullOrEmpty()
     val isSpend get() = amount < BigDecimal.ZERO

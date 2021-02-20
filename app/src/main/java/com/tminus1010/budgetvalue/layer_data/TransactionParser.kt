@@ -19,7 +19,8 @@ class TransactionParser @Inject constructor() : ITransactionParser {
         val reader = BufferedReader(InputStreamReader(inputStream))
         val iterator = reader.lineSequence().iterator()
         while (iterator.hasNext()) {
-            val row = ArrayList(iterator.next().split(","))
+            val entireString = iterator.next()
+            val row = ArrayList(entireString.split(","))
             // find date
             var date: LocalDate? = null
             for ((i, item) in row.withIndex())
@@ -60,7 +61,7 @@ class TransactionParser @Inject constructor() : ITransactionParser {
             }
             if (description == null) continue
             //
-            transactions.add(TransactionReceived(date, description!!, amount.toBigDecimal()))
+            transactions.add(TransactionReceived(date, description!!, amount.toBigDecimal(), hashMapOf(), entireString))
         }
         return transactions.toList()
     }
