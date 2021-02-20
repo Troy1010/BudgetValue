@@ -14,7 +14,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.Subject
 import java.math.BigDecimal
 
-class ViewRecipeFactories(val context: Context) {
+class ViewItemRecipeFactoryProvider(val context: Context) {
     val cellRecipeFactory = ViewItemRecipeFactory.createCellRecipeFactory(context)
     val headerRecipeFactory = ViewItemRecipeFactory.createHeaderRecipeFactory(context)
     fun twoWayBigDecimalRecipeFactory(publisher: Subject<BigDecimal>) = ViewItemRecipeFactory<EditText, Observable<BigDecimal>>(

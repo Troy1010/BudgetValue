@@ -23,7 +23,7 @@ class AdvancedCategorizeFrag : Fragment(R.layout.frag_advanced_categorize) {
     val app by lazy { requireActivity().application as App }
     val repo by lazy { app.appComponent.getRepo() }
     val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
-    val viewRecipeFactories by lazy { ViewRecipeFactories(requireContext()) }
+    val viewRecipeFactories by lazy { ViewItemRecipeFactoryProvider(requireContext()) }
     val transactionsVM by activityViewModels2 { TransactionsVM(repo, DatePeriodGetter(repo)) }
     val categorizeVM by activityViewModels2 { CategorizeVM(repo, transactionsVM) }
     val advancedCategorizeVM by activityViewModels2 { AdvancedCategorizeVM(categorizeVM) }
