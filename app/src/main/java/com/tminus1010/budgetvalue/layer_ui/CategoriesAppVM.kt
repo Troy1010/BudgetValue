@@ -5,6 +5,7 @@ import com.tminus1010.budgetvalue.source_objects.SourceArrayList
 import com.tminus1010.budgetvalue.model_app.ICategoryParser
 import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 
 /**
  * CategoriesAppVM is the viewModel for the categories themselves.
@@ -12,7 +13,7 @@ import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
  * be provided by dagger, not activityViewModels().
  */
 class CategoriesAppVM : ICategoryParser {
-    val defaultCategory = Category("Default", Category.Type.Default)
+    val defaultCategory = Category("Default", Category.Type.Default, true)
     val userAddedCategories = SourceArrayList<Category>()
     val categories = userAddedCategories.observable
         .map { ArrayList(userAddedCategories + defaultCategory) }
@@ -22,6 +23,8 @@ class CategoriesAppVM : ICategoryParser {
     private val nameToCategoryMap = categories
         .map { it.associateBy { it.name } as HashMap<String, Category> }
         .toBehaviorSubject()
+
+    val intentDeleteCategory = PublishSubject.create<Category>()
 
     init {
         userAddedCategories.addAll(listOf(

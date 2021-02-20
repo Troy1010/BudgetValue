@@ -1,8 +1,9 @@
 package com.tminus1010.budgetvalue.model_app
 
 data class Category (
-    var name: String,
-    var type: Type
+    val name: String,
+    val type: Type,
+    val isRequired: Boolean = false
 ) {
     enum class Type { Income, Always, Reservoir, Default }
 }
