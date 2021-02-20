@@ -25,6 +25,7 @@ class CategoriesAppVM : ICategoryParser {
         .toBehaviorSubject()
 
     val intentDeleteCategory = PublishSubject.create<Category>()
+        .also { it.subscribe { userAddedCategories.remove(it) } }
 
     init {
         userAddedCategories.addAll(listOf(

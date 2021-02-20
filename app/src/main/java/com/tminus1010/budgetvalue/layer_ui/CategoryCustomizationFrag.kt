@@ -19,7 +19,9 @@ import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
 import com.tminus1010.budgetvalue.model_app.Category
 import com.tminus1010.budgetvalue.reflectXY
+import com.tminus1010.tmcommonkotlin_rx.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.frag_category_customization.view.*
 
 class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization) {
@@ -41,10 +43,15 @@ class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization)
                 v.clicks().subscribeOn(AndroidSchedulers.mainThread()).map { d }.subscribe(categoriesAppVM.intentDeleteCategory)
             }
         )
-        val recipeGrid = RecipeGrid(listOf(
-            factory1.createMany(categoriesAppVM.categories.value).toList(),
-            factory2.createMany(categoriesAppVM.categories.value).toList(),
-        ).reflectXY())
-        v.tmTableView.initialize(recipeGrid = recipeGrid)
+        categoriesAppVM.categories
+            .observeOn(Schedulers.computation())
+            .map {
+                RecipeGrid(listOf(
+                    factory1.createMany(categoriesAppVM.categories.value).toList(),
+                    factory2.createMany(categoriesAppVM.categories.value).toList(),
+                ).reflectXY())
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .observe(viewLifecycleOwner) { v.tmTableView.initialize(recipeGrid = it) }
     }
 }
