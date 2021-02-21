@@ -1,8 +1,10 @@
 package com.tminus1010.budgetvalue.layer_data
 
 import com.tminus1010.budgetvalue.extensions.noEnd
+import com.tminus1010.budgetvalue.model_app.Category
 import com.tminus1010.budgetvalue.model_app.Plan
 import com.tminus1010.budgetvalue.model_app.Reconciliation
+import com.tminus1010.budgetvalue.model_app.Transaction
 import com.tminus1010.budgetvalue.model_data.Account
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -18,6 +20,13 @@ class MyDaoWrapper @Inject constructor(
         myDao.getTransactionsReceived()
             .map(typeConverter::transactions)
             .replay(1).refCount()
+
+    override fun pushTransactionCA(transaction: Transaction, category: Category, amount: BigDecimal?) {
+        transaction.categoryAmounts
+            .toMutableMap()
+            .apply { if (amount==null) remove(category) else put(category, amount) }
+            .also { updateTransactionCategoryAmounts(transaction.id, it.mapKeys { it.key.name }) }
+    }
 
     override val plans = myDao.fetchPlanReceived()
         .subscribeOn(Schedulers.io())
