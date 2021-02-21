@@ -76,7 +76,6 @@ class ActiveReconciliationVM(
                     acc.putAll(activeCategories
                         .filter { it !in acc.keys }
                         .associate { it to BigDecimal.ZERO })
-                    acc.removeIf { it.key !in activeCategories }
                 }
                 3 -> {
                     acc.clear()

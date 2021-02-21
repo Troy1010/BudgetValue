@@ -61,7 +61,6 @@ class ActivePlanVM(val repo: Repo, categoriesAppVM: CategoriesAppVM, datePeriodG
                     acc.putAll(chooseableCategories
                         .filter { it !in acc.keys }
                         .associate { it to BigDecimal.ZERO })
-                    acc.removeIf { it.key !in chooseableCategories }
                 }
             }
             acc
