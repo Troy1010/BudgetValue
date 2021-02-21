@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.layer_data
 
 import androidx.room.*
-import com.tminus1010.budgetvalue.model_app.Plan
+import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.model_data.*
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -29,6 +29,23 @@ interface MyDao {
 
     @Update
     fun update(account: Account): Completable
+
+    // # ActiveCategories
+
+    @Query("select * from `Category`")
+    fun getActiveCategories(): Observable<List<Category>>
+
+    @Query("select * from `Category` where name=:name")
+    fun getActiveCategory(name: String): Observable<Category>
+
+    @Insert
+    fun add(category: Category): Completable
+
+    @Delete
+    fun delete(category: Category): Completable
+
+    @Update
+    fun update(category: Category): Completable
 
     // # Transactions
 
