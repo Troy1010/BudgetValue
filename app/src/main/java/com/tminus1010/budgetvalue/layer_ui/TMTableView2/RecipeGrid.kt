@@ -23,7 +23,7 @@ class RecipeGrid(
     IColumnWidthsProvider by if (fixedWidth==null) ColWidthsProvider(recipes2d) else ColWidthsProviderFixedWidth(recipes2d, fixedWidth) {
     init {
         // # Assert that all inner lists have equal size
-        recipes2d.pairwise().forEach { if (it.first.size != it.second.size) error("All sub-lists must be equal size.") }
+        recipes2d.pairwise().forEach { require (it.first.size == it.second.size) { "All sub-lists must be equal size." } }
     }
 
     fun createResizedView(i: Int, j: Int): View {
