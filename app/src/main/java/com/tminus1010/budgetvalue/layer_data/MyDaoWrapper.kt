@@ -18,7 +18,7 @@ class MyDaoWrapper @Inject constructor(
 ) : MyDao by myDao, IMyDaoWrapper {
     override val transactions =
         myDao.getTransactionsReceived()
-            .map(typeConverter::transactions)
+            .map { it.map { it.toTransaction(typeConverter) } }
             .replay(1).refCount()
 
     override fun pushTransactionCA(transaction: Transaction, category: Category, amount: BigDecimal?) {

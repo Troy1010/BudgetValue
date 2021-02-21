@@ -14,22 +14,15 @@ import javax.inject.Inject
 class TypeConverter @Inject constructor(
     val categoryParser: ICategoryParser
 ) {
-    fun transactions(transactionsReceived: Iterable<TransactionReceived>): List<Transaction> {
-        return transactionsReceived.map { it.toTransaction(this) }
-    }
+    fun bigDecimal(s: String): BigDecimal =
+        s.toBigDecimal()
 
-    fun bigDecimal(s: String): BigDecimal {
-        return s.toBigDecimal()
-    }
+    fun string(bigDecimal: BigDecimal): String =
+        bigDecimal.toString()
 
-    fun string(bigDecimal: BigDecimal): String {
-        return bigDecimal.toString()
-    }
-
-    fun categoryAmounts(categoryAmountsReceived: Iterable<ICategoryAmountReceived>): Map<Category, BigDecimal> {
-        return categoryAmountsReceived
+    fun categoryAmounts(categoryAmountsReceived: Iterable<ICategoryAmountReceived>): Map<Category, BigDecimal> =
+        categoryAmountsReceived
             .associate { categoryParser.parseCategory(it.categoryName) to it.amount } as HashMap
-    }
 
     fun categoryAmounts(s: String?): Map<Category, BigDecimal> {
         val reconcileCategoryAmountsReceived: Map<String, String> =
