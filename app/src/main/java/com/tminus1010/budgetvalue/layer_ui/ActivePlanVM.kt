@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.layer_ui
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.categoryComparator
 import com.tminus1010.budgetvalue.combineLatestAsTuple
+import com.tminus1010.budgetvalue.extensions.removeIf
 import com.tminus1010.budgetvalue.extensions.total
 import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.budgetvalue.mergeCombineWithIndex
@@ -60,6 +61,7 @@ class ActivePlanVM(val repo: Repo, categoriesAppVM: CategoriesAppVM, datePeriodG
                     acc.putAll(chooseableCategories
                         .filter { it !in acc.keys }
                         .associate { it to BigDecimal.ZERO })
+                    acc.removeIf { it.key !in chooseableCategories }
                 }
             }
             acc

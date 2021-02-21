@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.categoryComparator
 import com.tminus1010.budgetvalue.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.combineLatestAsTuple
+import com.tminus1010.budgetvalue.extensions.removeIf
 import com.tminus1010.budgetvalue.extensions.sum
 import com.tminus1010.budgetvalue.extensions.total
 import com.tminus1010.budgetvalue.layer_data.Repo
@@ -75,6 +76,7 @@ class ActiveReconciliationVM(
                     acc.putAll(activeCategories
                         .filter { it !in acc.keys }
                         .associate { it to BigDecimal.ZERO })
+                    acc.removeIf { it.key !in activeCategories }
                 }
                 3 -> {
                     acc.clear()
