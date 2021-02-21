@@ -27,7 +27,10 @@ class CategoriesAppVM : ICategoryParser {
         .map { it.associateBy { it.name } as HashMap<String, Category> }
         .toBehaviorSubject()
 
+    // Some of the delete category logic is handled in HostActivity, but it does not belong there.. it should be moved.
     val intentDeleteCategoryFromActive = PublishSubject.create<Category>()
+        .also { it.subscribe { userAddedCategories.remove(it) } }
+    val intentDeleteCategoryFromEverywhere = PublishSubject.create<Category>()
         .also { it.subscribe { userAddedCategories.remove(it) } }
 
     init {

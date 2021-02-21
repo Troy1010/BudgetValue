@@ -24,9 +24,11 @@ class HostActivity : AppCompatActivity() {
     val repo by lazy { app.appComponent.getRepo() }
 
     init {
-        // Delete category logic is handled here, but perhaps it should be moved somewhere else..
+        // Some of the delete category logic is handled here, but it does not belong here.. it should be moved.
         categoriesAppVM.intentDeleteCategoryFromActive
             .also { it.subscribe { repo.deleteFromActive(it) } }
+        categoriesAppVM.intentDeleteCategoryFromEverywhere
+            .also { it.subscribe { repo.deleteFromEverywhere(it) } }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
