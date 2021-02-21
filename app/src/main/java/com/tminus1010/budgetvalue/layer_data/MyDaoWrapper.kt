@@ -40,10 +40,10 @@ class MyDaoWrapper @Inject constructor(
             .let { myDao.add(it).subscribeOn(Schedulers.io()) }
     }
 
-    override fun fetchReconciliations(): Observable<List<Reconciliation>> {
-        return myDao.fetchReconciliationReceived()
+    override val reconciliations: Observable<List<Reconciliation>> =
+        myDao.fetchReconciliationReceived()
             .map { it.map { it.toReconciliation(typeConverter) } }
-    }
+            .replay(1).refCount()
 
     override fun update(account: Account): Completable {
         return myDao

@@ -116,7 +116,7 @@ class HostActivity : AppCompatActivity() {
             }
             R.id.menu_debug_do_something -> {
                 toast("Debug Do Something")
-                repo.fetchReconciliations().take(1).logzz("ppp").subscribe()
+                repo.reconciliations.take(1).logzz("ppp").subscribe()
             }
         }
         return super.onOptionsItemSelected(item)

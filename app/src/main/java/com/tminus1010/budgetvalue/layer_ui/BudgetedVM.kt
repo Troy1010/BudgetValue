@@ -17,7 +17,7 @@ class BudgetedVM(
     activeReconciliationVM: ActiveReconciliationVM,
 ): ViewModel() {
     val defaultAmount =
-        combineLatestImpatient(repo.fetchReconciliations(), repo.plans, transactionsVM.transactionBlocks, activeReconciliationVM.defaultAmount)
+        combineLatestImpatient(repo.reconciliations, repo.plans, transactionsVM.transactionBlocks, activeReconciliationVM.defaultAmount)
             .map { (reconciliations, plans, transactionBlocks, activeReconcileDefaultAmount) ->
                 var returning = BigDecimal(0)
                 if (reconciliations != null) {
@@ -43,7 +43,7 @@ class BudgetedVM(
             .throttleLast(1, TimeUnit.SECONDS)
             .toBehaviorSubject()
     val categoryAmounts =
-        combineLatestImpatient(repo.fetchReconciliations(), repo.plans, transactionsVM.transactionBlocks, activeReconciliationVM.activeReconcileCAs)
+        combineLatestImpatient(repo.reconciliations, repo.plans, transactionsVM.transactionBlocks, activeReconciliationVM.activeReconcileCAs)
             .map { (reconciliations, plans, transactionBlocks, activeReconcileCAs) ->
                 val x = SourceHashMap<Category, BigDecimal>()
                 if (reconciliations != null) {
