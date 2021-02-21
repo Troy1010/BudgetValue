@@ -15,13 +15,9 @@ data class ViewItemRecipe<V : View, D : Any>(
         get() = createBoundView().apply { measureUnspecified() }.measuredWidth
     override val intrinsicHeight
         get() = createBoundView().apply { measureUnspecified() }.measuredHeight
-    override fun createView(): View {
-        return viewProvider()
-    }
 
-    override fun createBoundView(): View {
-        return createView().also { bindAction_(it, data) }
-    }
+    override fun createView(): View = viewProvider()
+    override fun createBoundView(): View = createView().also { bindAction_(it, data) }
 
     override fun bindView(view: View) {
         bindAction_(view, data)
