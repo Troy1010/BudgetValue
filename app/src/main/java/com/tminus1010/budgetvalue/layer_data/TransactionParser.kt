@@ -61,7 +61,7 @@ class TransactionParser @Inject constructor() : ITransactionParser {
             }
             if (description == null) continue
             //
-            transactions.add(TransactionReceived(date, description!!, amount.toBigDecimal(), hashMapOf(), entireString))
+            transactions.add(TransactionReceived(date, description!!, amount.toBigDecimal(), "", entireString))
         }
         return transactions.toList()
     }

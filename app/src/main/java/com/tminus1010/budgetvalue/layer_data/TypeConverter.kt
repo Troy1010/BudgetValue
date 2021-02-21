@@ -15,7 +15,7 @@ class TypeConverter @Inject constructor(
     val categoryParser: ICategoryParser
 ) {
     fun transactions(transactionsReceived: Iterable<TransactionReceived>): List<Transaction> {
-        return transactionsReceived.map { it.toTransaction(categoryParser) }
+        return transactionsReceived.map { it.toTransaction(this) }
     }
 
     fun bigDecimal(s: String): BigDecimal {

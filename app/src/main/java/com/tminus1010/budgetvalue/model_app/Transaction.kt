@@ -2,6 +2,7 @@ package com.tminus1010.budgetvalue.model_app
 
 import com.tminus1010.budgetvalue.extensions.sum
 import com.tminus1010.budgetvalue.extensions.toHashMap
+import com.tminus1010.budgetvalue.layer_data.TypeConverter
 import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.model_data.TransactionReceived
 import java.math.BigDecimal
@@ -17,12 +18,12 @@ data class Transaction(
     val isUncategorized get() = categoryAmounts.isNullOrEmpty()
     val isSpend get() = amount < BigDecimal.ZERO
     override val defaultAmount get() = amount - categoryAmounts.values.sum()
-    fun toTransactionReceived(): TransactionReceived {
+    fun toTransactionReceived(typeConverter: TypeConverter): TransactionReceived {
         return TransactionReceived(
             date,
             description,
             amount,
-            categoryAmounts.mapKeys { it.key.name }.toHashMap(),
+            typeConverter.string(categoryAmounts),
             id,
         )
     }
