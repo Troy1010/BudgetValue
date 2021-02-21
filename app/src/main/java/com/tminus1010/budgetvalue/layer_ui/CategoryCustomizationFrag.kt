@@ -41,6 +41,7 @@ class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization)
             { v: Button, d: Category ->
                 v.text = "Delete"
                 v.clicks().subscribeOn(AndroidSchedulers.mainThread()).map { d }.subscribe(categoriesAppVM.intentDeleteCategory)
+                v.isEnabled = !d.isRequired
             }
         )
         categoriesAppVM.categories
