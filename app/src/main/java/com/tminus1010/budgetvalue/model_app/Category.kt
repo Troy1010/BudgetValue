@@ -5,5 +5,5 @@ data class Category (
     val type: Type,
     val isRequired: Boolean = false
 ) {
-    enum class Type { Income, Always, Reservoir, Default }
+    enum class Type { Default, Always, Reservoir }
 }

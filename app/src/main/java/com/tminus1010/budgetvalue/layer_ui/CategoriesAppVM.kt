@@ -1,5 +1,6 @@
 package com.tminus1010.budgetvalue.layer_ui
 
+import com.tminus1010.budgetvalue.categoryComparator
 import com.tminus1010.budgetvalue.model_app.Category
 import com.tminus1010.budgetvalue.source_objects.SourceArrayList
 import com.tminus1010.budgetvalue.model_app.ICategoryParser
@@ -16,7 +17,7 @@ class CategoriesAppVM : ICategoryParser {
     val defaultCategory = Category("Default", Category.Type.Default, true)
     val userAddedCategories = SourceArrayList<Category>()
     val categories = userAddedCategories.observable
-        .map { ArrayList(userAddedCategories + defaultCategory) }
+        .map { ArrayList(userAddedCategories + defaultCategory).sortedWith(categoryComparator) }
         .toBehaviorSubject()
     val choosableCategories = userAddedCategories.observable
         .toBehaviorSubject()
