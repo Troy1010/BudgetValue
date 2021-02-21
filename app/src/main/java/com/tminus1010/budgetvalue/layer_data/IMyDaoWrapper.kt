@@ -11,8 +11,8 @@ import java.math.BigDecimal
 interface IMyDaoWrapper: MyDao {
     val transactions: Observable<List<Transaction>>
     fun pushTransactionCA(transaction: Transaction, category: Category, amount: BigDecimal?)
-    fun pushReconciliation(reconciliation: Reconciliation): Completable
     val reconciliations: Observable<List<Reconciliation>>
+    fun pushReconciliation(reconciliation: Reconciliation): Completable
     val plans: Observable<List<Plan>>
     fun pushPlan(plan: Plan): Completable
 }
