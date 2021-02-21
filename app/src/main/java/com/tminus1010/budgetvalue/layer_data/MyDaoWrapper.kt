@@ -14,9 +14,10 @@ class MyDaoWrapper @Inject constructor(
     val myDao: MyDao,
     val typeConverter: TypeConverter,
 ) : MyDao by myDao, IMyDaoWrapper {
-    override val transactions = myDao.getTransactionsReceived()
-        .map(typeConverter::transactions)
-        .replay(1).refCount()
+    override val transactions =
+        myDao.getTransactionsReceived()
+            .map(typeConverter::transactions)
+            .replay(1).refCount()
 
     override val plans = myDao.fetchPlanReceived()
         .subscribeOn(Schedulers.io())
