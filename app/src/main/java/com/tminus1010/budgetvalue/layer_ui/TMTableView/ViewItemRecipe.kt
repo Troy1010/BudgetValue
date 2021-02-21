@@ -2,6 +2,8 @@ package com.tminus1010.budgetvalue.layer_ui.TMTableView
 
 import android.view.View
 import com.tminus1010.budgetvalue.measureUnspecified
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Completable
 
 data class ViewItemRecipe<V : View, D : Any>(
     private val viewProvider: () -> V,
@@ -17,9 +19,14 @@ data class ViewItemRecipe<V : View, D : Any>(
         get() = createBoundView().apply { measureUnspecified() }.measuredHeight
 
     override fun createView(): View = viewProvider()
-    override fun createBoundView(): View = createView().also { bindAction_(it, data) }
+    override fun createBoundView(): View = createView().also { bindView(it) }
 
-    override fun bindView(view: View) {
-        bindAction_(view, data)
-    }
+    override fun bindView(view: View) =
+        try {
+            bindAction_(view, data)
+        } catch (e:android.util.AndroidRuntimeException) { // maybe mainThread is required
+            Completable.fromAction { bindAction_(view, data) }
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .blockingAwait()
+        }
 }
