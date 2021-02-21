@@ -25,7 +25,7 @@ class MyDaoWrapper @Inject constructor(
         transaction.categoryAmounts
             .toMutableMap()
             .apply { if (amount==null) remove(category) else put(category, amount) }
-            .also { updateTransactionCategoryAmounts(transaction.id, it.mapKeys { it.key.name }) }
+            .also { updateTransactionCategoryAmounts(transaction.id, it.mapKeys { it.key.name }).subscribe() }
     }
 
     override val plans = myDao.fetchPlanReceived()
@@ -34,10 +34,27 @@ class MyDaoWrapper @Inject constructor(
         .noEnd().replay(1).refCount()
 
     override fun pushPlan(plan: Plan) = myDao.add(plan.toPlanReceived(typeConverter)).subscribeOn(Schedulers.io())
+    override fun pushPlanCA(plan: Plan, category: Category, amount: BigDecimal?) {
+        plan.categoryAmounts
+            .toMutableMap()
+            .apply { if (amount==null) remove(category) else put(category, amount) }
+            .also { updatePlanCategoryAmounts(plan.toPlanReceived(typeConverter).startDate, it.mapKeys { it.key.name }).subscribe() }
+    }
 
     override fun pushReconciliation(reconciliation: Reconciliation): Completable =
         reconciliation.toReconciliationReceived(typeConverter, BigDecimal(0))
             .let { myDao.add(it).subscribeOn(Schedulers.io()) }
+
+    override fun pushReconciliationCA(
+        reconciliation: Reconciliation,
+        category: Category,
+        amount: BigDecimal?,
+    ) {
+        reconciliation.categoryAmounts
+            .toMutableMap()
+            .apply { if (amount==null) remove(category) else put(category, amount) }
+            .also { updateReconciliationCategoryAmounts(reconciliation.id, it.mapKeys { it.key.name }).subscribe() }
+    }
 
     override val reconciliations: Observable<List<Reconciliation>> =
         myDao.fetchReconciliationReceived()

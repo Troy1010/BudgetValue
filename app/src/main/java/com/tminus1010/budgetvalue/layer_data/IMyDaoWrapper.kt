@@ -13,6 +13,8 @@ interface IMyDaoWrapper: MyDao {
     fun pushTransactionCA(transaction: Transaction, category: Category, amount: BigDecimal?)
     val reconciliations: Observable<List<Reconciliation>>
     fun pushReconciliation(reconciliation: Reconciliation): Completable
+    fun pushReconciliationCA(reconciliation: Reconciliation, category: Category, amount: BigDecimal?)
     val plans: Observable<List<Plan>>
     fun pushPlan(plan: Plan): Completable
+    fun pushPlanCA(plan: Plan, category: Category, amount: BigDecimal?)
 }

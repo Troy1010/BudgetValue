@@ -1,10 +1,12 @@
 package com.tminus1010.budgetvalue.layer_data
 
 import androidx.room.*
+import com.tminus1010.budgetvalue.model_app.Plan
 import com.tminus1010.budgetvalue.model_data.*
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import java.math.BigDecimal
+import java.time.LocalDate
 
 @Dao
 interface MyDao {
@@ -71,6 +73,9 @@ interface MyDao {
     @Query("DELETE FROM PlanReceived")
     fun clearPlans(): Completable
 
+    @Query("UPDATE `PlanReceived` SET categoryAmounts=:categoryAmounts WHERE startDate=:startDate")
+    fun updatePlanCategoryAmounts(startDate: LocalDate, categoryAmounts: Map<String, BigDecimal>): Completable
+
     // # Reconciliations
 
     @Query("select * from ReconciliationReceived")
@@ -84,4 +89,7 @@ interface MyDao {
 
     @Query("DELETE FROM ReconciliationReceived")
     fun clearReconciliations(): Completable
+
+    @Query("UPDATE `ReconciliationReceived` SET categoryAmounts=:categoryAmounts WHERE id=:id")
+    fun updateReconciliationCategoryAmounts(id: Int, categoryAmounts: Map<String, BigDecimal>): Completable
 }
