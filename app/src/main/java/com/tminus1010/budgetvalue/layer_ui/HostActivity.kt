@@ -12,8 +12,10 @@ import com.tminus1010.budgetvalue.extensions.logzz
 import com.tminus1010.budgetvalue.extensions.viewModels2
 import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin.misc.toast
+import io.reactivex.rxjava3.core.Completable
 import kotlinx.android.synthetic.main.activity_host.*
 import java.math.BigDecimal
+import java.util.concurrent.TimeUnit
 import kotlin.time.ExperimentalTime
 
 class HostActivity : AppCompatActivity() {
@@ -25,8 +27,13 @@ class HostActivity : AppCompatActivity() {
 
     init {
         // Some of the delete category logic is handled here, but it does not belong here.. it should be moved.
-        categoriesAppVM.intentDeleteCategoryFromActive.subscribe { repo.deleteFromActive(it) }
-        categoriesAppVM.intentDeleteCategoryFromEverywhere.subscribe { repo.deleteFromEverywhere(it) }
+        // TODO("very hacky..")
+        Completable.complete()
+            .delay(100, TimeUnit.MILLISECONDS)
+            .subscribe {
+                categoriesAppVM.intentDeleteCategoryFromActive.subscribe { repo.deleteFromActive(it) }
+                categoriesAppVM.intentDeleteCategoryFromEverywhere.subscribe { repo.deleteFromEverywhere(it) }
+            }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
