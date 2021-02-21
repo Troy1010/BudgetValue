@@ -9,11 +9,13 @@ data class Reconciliation(
     val localDate: LocalDate,
     val defaultAmount: BigDecimal,
     val categoryAmounts: Map<Category, BigDecimal>,
+    val id: Int
 ) {
     fun toReconciliationReceived(typeConverter: TypeConverter, amount: BigDecimal): ReconciliationReceived {
         return ReconciliationReceived(
             localDate = localDate,
             categoryAmounts = typeConverter.string(categoryAmounts),
-            amount = amount,)
+            amount = amount,
+            id = id,)
     }
 }
