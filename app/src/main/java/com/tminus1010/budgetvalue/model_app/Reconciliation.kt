@@ -10,7 +10,7 @@ data class Reconciliation(
     val localDate: LocalDate,
     val defaultAmount: BigDecimal,
     val categoryAmounts: Map<Category, BigDecimal>,
-    val id: Int
+    val id: Int = 0
 ) {
     fun toReconciliationReceived(typeConverter: TypeConverter, amount: BigDecimal): ReconciliationReceived {
         return ReconciliationReceived(

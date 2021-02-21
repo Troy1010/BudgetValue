@@ -13,7 +13,7 @@ data class ReconciliationReceived(
     val amount: BigDecimal,
     val categoryAmounts: String?,
     @PrimaryKey(autoGenerate = true)
-    val id: Int
+    val id: Int = 0
 ) {
     fun toReconciliation(typeConverter: TypeConverter): Reconciliation {
         return Reconciliation(localDate, amount, typeConverter.categoryAmounts(categoryAmounts), id)
