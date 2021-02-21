@@ -8,6 +8,25 @@ import java.math.BigDecimal
 
 @Dao
 interface MyDao {
+    // # Accounts
+
+    @Query("DELETE FROM `Account`")
+    fun clearAccounts(): Completable
+
+    @Query("select * from `Account`")
+    fun getAccounts(): Observable<List<Account>>
+
+    @Query("select * from `Account` where id=:id")
+    fun getAccount(id: Int): Observable<Account>
+
+    @Insert
+    fun add(account: Account): Completable
+
+    @Delete
+    fun delete(account: Account): Completable
+
+    @Update
+    fun update(account: Account): Completable
 
     // # Transactions
 
@@ -37,26 +56,6 @@ interface MyDao {
 
     @Query("UPDATE `TransactionReceived` SET categoryAmounts=:categoryAmounts WHERE id=:id")
     fun updateTransactionCategoryAmounts(id: String, categoryAmounts: Map<String, BigDecimal>): Completable
-
-    // # Accounts
-
-    @Query("DELETE FROM `Account`")
-    fun clearAccounts(): Completable
-
-    @Query("select * from `Account`")
-    fun getAccounts(): Observable<List<Account>>
-
-    @Query("select * from `Account` where id=:id")
-    fun getAccount(id: Int): Observable<Account>
-
-    @Insert
-    fun add(account: Account): Completable
-
-    @Delete
-    fun delete(account: Account): Completable
-
-    @Update
-    fun update(account: Account): Completable
 
     // # PlanCategoryAmounts
 
