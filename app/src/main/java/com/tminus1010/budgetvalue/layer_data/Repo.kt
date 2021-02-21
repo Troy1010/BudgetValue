@@ -1,5 +1,6 @@
 package com.tminus1010.budgetvalue.layer_data
 
+import com.tminus1010.budgetvalue.model_app.Category
 import javax.inject.Inject
 
 /**
@@ -13,3 +14,21 @@ class Repo @Inject constructor(
 ) : ITransactionParser by transactionParser,
     ISharedPrefWrapper by sharedPrefWrapper,
     IMyDaoWrapper by myDaoWrapper
+{
+    fun deleteFromActive(category: Category) {
+        pushActivePlanCA(Pair(category, null))
+        pushActiveReconcileCA(Pair(category, null))
+    }
+    fun deleteFromEverywhere(category: Category) {
+        deleteFromActive(category)
+        transactions
+            .take(1)
+            .subscribe { it.forEach { pushTransactionCA(it, category, null) } }
+        reconciliations
+            .take(1)
+            .subscribe { it.forEach { pushReconciliationCA(it, category, null) } }
+        plans
+            .take(1)
+            .subscribe { it.forEach { pushPlanCA(it, category, null) } }
+    }
+}
