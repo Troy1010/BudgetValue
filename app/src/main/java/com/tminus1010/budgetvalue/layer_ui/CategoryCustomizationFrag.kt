@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue.layer_ui
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -12,12 +11,8 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.extensions.distinctUntilChangedWith
 import com.tminus1010.budgetvalue.extensions.nav
 import com.tminus1010.budgetvalue.extensions.v
-import com.tminus1010.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
-import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipe
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
-import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
-import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
 import com.tminus1010.budgetvalue.model_app.Category
 import com.tminus1010.budgetvalue.reflectXY
 import com.tminus1010.tmcommonkotlin_rx.observe
@@ -41,7 +36,7 @@ class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization)
             { View.inflate(requireContext(), R.layout.button, null) as Button },
             { v: Button, d: Category ->
                 v.text = "Delete"
-                v.clicks().subscribeOn(AndroidSchedulers.mainThread()).map { d }.subscribe(categoriesAppVM.intentDeleteCategory)
+                v.clicks().subscribeOn(AndroidSchedulers.mainThread()).map { d }.subscribe(categoriesAppVM.intentDeleteCategoryFromActive)
                 v.isEnabled = !d.isRequired
             }
         )

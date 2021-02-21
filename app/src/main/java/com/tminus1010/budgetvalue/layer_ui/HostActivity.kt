@@ -23,6 +23,12 @@ class HostActivity : AppCompatActivity() {
     val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
     val repo by lazy { app.appComponent.getRepo() }
 
+    init {
+        // Delete category logic is handled here, but perhaps it should be moved somewhere else..
+        categoriesAppVM.intentDeleteCategoryFromActive
+            .also { it.subscribe { repo.deleteFromActive(it) } }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_host)

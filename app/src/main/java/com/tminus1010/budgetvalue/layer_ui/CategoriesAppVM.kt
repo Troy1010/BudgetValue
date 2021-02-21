@@ -27,7 +27,7 @@ class CategoriesAppVM : ICategoryParser {
         .map { it.associateBy { it.name } as HashMap<String, Category> }
         .toBehaviorSubject()
 
-    val intentDeleteCategory = PublishSubject.create<Category>()
+    val intentDeleteCategoryFromActive = PublishSubject.create<Category>()
         .also { it.subscribe { userAddedCategories.remove(it) } }
 
     init {
