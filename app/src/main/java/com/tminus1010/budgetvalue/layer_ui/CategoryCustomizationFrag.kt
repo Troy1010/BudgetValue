@@ -45,10 +45,10 @@ class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization)
         )
         categoriesAppVM.categories
             .observeOn(Schedulers.computation())
-            .map {
+            .map { categories ->
                 RecipeGrid(listOf(
-                    factory1.createMany(categoriesAppVM.categories.value).toList(),
-                    factory2.createMany(categoriesAppVM.categories.value).toList(),
+                    factory1.createMany(categories),
+                    factory2.createMany(categories),
                 ).reflectXY())
             }
             .observeOn(AndroidSchedulers.mainThread())
