@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding4.view.clicks
 import com.tminus1010.budgetvalue.App
 import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue.extensions.distinctUntilChangedWith
 import com.tminus1010.budgetvalue.extensions.nav
 import com.tminus1010.budgetvalue.extensions.v
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
@@ -44,15 +45,25 @@ class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization)
                 v.isEnabled = !d.isRequired
             }
         )
-        categoriesAppVM.categories
+        val titledDividerRecipeFactory = ViewItemRecipeFactory<TextView, String>(
+            { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
+            { v, s -> v.text = s }
+        )
+        categoriesAppVM.choosableCategories
             .observeOn(Schedulers.computation())
             .map { categories ->
-                RecipeGrid(listOf(
+                val recipeGrid = RecipeGrid(listOf(
                     factory1.createMany(categories),
                     factory2.createMany(categories),
                 ).reflectXY())
+                val dividerMap = categories
+                    .withIndex()
+                    .distinctUntilChangedWith(compareBy { it.value.type })
+                    .associate { it.index to titledDividerRecipeFactory.createOne(it.value.type.name) }
+                    .mapKeys { it.key }
+                Pair(recipeGrid, dividerMap)
             }
             .observeOn(AndroidSchedulers.mainThread())
-            .observe(viewLifecycleOwner) { v.tmTableView.initialize(recipeGrid = it) }
+            .observe(viewLifecycleOwner) { v.tmTableView.initialize(recipeGrid = it.first, dividerMap = it.second) }
     }
 }
