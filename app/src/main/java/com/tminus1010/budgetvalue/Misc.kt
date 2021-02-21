@@ -430,6 +430,9 @@ fun <T> List<List<T>>.reflectXY(): ArrayList<ArrayList<T>> {
     return returning
 }
 
+fun logThread(prefix: Any?) =
+    logz("$prefix. Thread:${Thread.currentThread().name}")
+
 fun <T, V> List<HashMap<T, V>>.reflectXY(): HashMap<T, ArrayList<V>> {
     val returning = HashMap<T, ArrayList<V>>()
     for (yPos in this.indices) {
