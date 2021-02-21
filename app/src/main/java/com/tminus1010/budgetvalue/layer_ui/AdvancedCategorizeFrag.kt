@@ -68,7 +68,7 @@ class AdvancedCategorizeFrag : Fragment(R.layout.frag_advanced_categorize) {
                 Pair(recipes2D, dividerMap)
             }
             .observeOn(AndroidSchedulers.mainThread())
-            .observe(this) { (recipes2D, dividerMap) ->
+            .observe(viewLifecycleOwner) { (recipes2D, dividerMap) ->
                 tmTableView_ac.initialize(recipes2D, dividerMap, 0, 1)
             }
     }
