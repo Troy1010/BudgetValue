@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 class TypeConverter @Inject constructor(
     val categoryParser: ICategoryParser
-): ICategoryParser by categoryParser {
+) {
     fun transactions(transactionsReceived: Iterable<TransactionReceived>): List<Transaction> {
         return transactionsReceived.map { it.toTransaction(categoryParser) }
     }
