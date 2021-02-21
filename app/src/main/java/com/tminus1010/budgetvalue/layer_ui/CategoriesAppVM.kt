@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.layer_ui
 
 import com.tminus1010.budgetvalue.categoryComparator
-import com.tminus1010.budgetvalue.model_app.Category
+import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.source_objects.SourceArrayList
 import com.tminus1010.budgetvalue.model_app.ICategoryParser
 import com.tminus1010.tmcommonkotlin.logz.logz

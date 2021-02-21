@@ -2,12 +2,10 @@ package com.tminus1010.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.combineLatestImpatient
-import com.tminus1010.budgetvalue.extensions.logzz
 import com.tminus1010.budgetvalue.layer_data.Repo
-import com.tminus1010.budgetvalue.model_app.Category
+import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 

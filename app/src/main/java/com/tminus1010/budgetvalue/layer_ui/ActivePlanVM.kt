@@ -3,11 +3,10 @@ package com.tminus1010.budgetvalue.layer_ui
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.categoryComparator
 import com.tminus1010.budgetvalue.combineLatestAsTuple
-import com.tminus1010.budgetvalue.extensions.removeIf
 import com.tminus1010.budgetvalue.extensions.total
 import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.budgetvalue.mergeCombineWithIndex
-import com.tminus1010.budgetvalue.model_app.Category
+import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.model_app.Plan
 import com.tminus1010.budgetvalue.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject

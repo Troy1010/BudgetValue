@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.layer_ui
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.extensions.unbox
 import com.tminus1010.budgetvalue.layer_data.Repo
-import com.tminus1010.budgetvalue.model_app.Category
+import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.unbox
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.schedulers.Schedulers

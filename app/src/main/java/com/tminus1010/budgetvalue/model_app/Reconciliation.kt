@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.model_app
 
 import com.tminus1010.budgetvalue.layer_data.TypeConverter
+import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.model_data.ReconciliationReceived
 import java.math.BigDecimal
 import java.time.LocalDate

@@ -3,14 +3,7 @@ package com.tminus1010.budgetvalue.layer_data
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.tminus1010.budgetvalue.AppMock
-import com.tminus1010.budgetvalue.model_app.Category
-import com.tminus1010.budgetvalue.model_data.PlanCategoryAmount
-import io.reactivex.rxjava3.schedulers.Schedulers
-import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
 import org.junit.runner.RunWith
-import java.math.BigDecimal
 
 @RunWith(AndroidJUnit4::class)
 class PlanCategoryAmountTest {

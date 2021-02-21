@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.layer_data
 
-import com.tminus1010.budgetvalue.model_app.Category
+import com.tminus1010.budgetvalue.model_data.Category
 import io.reactivex.rxjava3.core.Observable
 import java.math.BigDecimal
 
