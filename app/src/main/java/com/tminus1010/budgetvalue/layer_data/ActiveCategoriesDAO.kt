@@ -10,9 +10,6 @@ interface ActiveCategoriesDAO {
     @Query("select * from `Category`")
     fun fetchActiveCategories(): Observable<List<Category>>
 
-    @Query("select * from `Category` where name=:name")
-    fun fetchActiveCategory(name: String): Observable<Category>
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun push(category: Category): Completable
 
