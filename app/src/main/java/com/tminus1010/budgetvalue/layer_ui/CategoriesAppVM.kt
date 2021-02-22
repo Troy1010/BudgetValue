@@ -17,7 +17,7 @@ class CategoriesAppVM : ICategoryParser {
     val defaultCategory = Category("Default", Category.Type.Default, true)
     val userAddedCategories = SourceArrayList<Category>()
     val categories = userAddedCategories.observable
-        .map { ArrayList(userAddedCategories + defaultCategory) }
+        .map { ArrayList(it + defaultCategory) }
         .map { it.sortedWith(categoryComparator) }
         .toBehaviorSubject()
     val choosableCategories = userAddedCategories.observable
