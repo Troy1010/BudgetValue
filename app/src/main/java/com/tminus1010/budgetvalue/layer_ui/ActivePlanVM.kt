@@ -49,19 +49,19 @@ class ActivePlanVM(val repo: Repo, datePeriodGetter: DatePeriodGetter) : ViewMod
         intentPushPlanCA,
         repo.activeCategories
     )
-        .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (i, activePlan, intentPushPlanCA, chooseableCategories) ->
+        .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (i, activePlan, intentPushPlanCA, activeCategories) ->
             when (i) {
                 0 -> { activePlan!!
                     acc.clear()
                     acc.putAll(activePlan)
-                    if (chooseableCategories!=null)
-                        acc.putAll(chooseableCategories
+                    if (activeCategories!=null)
+                        acc.putAll(activeCategories
                             .filter { it !in acc.keys }
                             .associate { it to BigDecimal.ZERO })
                 }
                 1 -> { intentPushPlanCA!!.also { (k, v) -> acc[k] = v } }
-                2 -> { chooseableCategories!!
-                    acc.putAll(chooseableCategories
+                2 -> { activeCategories!!
+                    acc.putAll(activeCategories
                         .filter { it !in acc.keys }
                         .associate { it to BigDecimal.ZERO })
                 }
