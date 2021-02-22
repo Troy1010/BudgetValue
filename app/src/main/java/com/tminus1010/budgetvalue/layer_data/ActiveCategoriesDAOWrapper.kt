@@ -18,7 +18,7 @@ class ActiveCategoriesDAOWrapper @Inject constructor(
     override val activeCategories: BehaviorSubject<List<Category>> =
         fetchActiveCategories()
             .map { it.sortedWith(categoryComparator) }
-            .toBehaviorSubject()
+            .toBehaviorSubject(emptyList())
 
     override val categories = activeCategories
         .map { it + defaultCategory }
@@ -30,7 +30,7 @@ class ActiveCategoriesDAOWrapper @Inject constructor(
         .toBehaviorSubject()
 
     override fun parseCategory(categoryName: String): Category {
-        val category = nameToCategoryMap.blockingFirst()[categoryName]
+        val category = nameToCategoryMap.skip(1).blockingFirst()[categoryName]
         if (category == null) logz("parseCategory`WARNING:had to return default for category name:$categoryName")
         return category ?: defaultCategory
     }
