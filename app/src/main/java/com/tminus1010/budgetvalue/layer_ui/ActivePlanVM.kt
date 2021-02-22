@@ -45,7 +45,7 @@ class ActivePlanVM(val repo: Repo, datePeriodGetter: DatePeriodGetter) : ViewMod
         }
 
     val activePlan = mergeCombineWithIndex(
-        repo.activePlan.take(1),
+        repo.activePlan,
         intentPushPlanCA,
         repo.activeCategories
     )
