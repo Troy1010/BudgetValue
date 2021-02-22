@@ -111,7 +111,7 @@ class SharedPrefWrapper @Inject constructor(
         anchorDateOffsetPublisher.onNext(anchorDateOffset ?: ANCHOR_DATE_OFFSET_DEFAULT)
     }
 
-    // # BlockSizePublisher
+    // # BlockSize
 
     private val blockSizePublisher = PublishSubject.create<Long>()
     override fun fetchBlockSize(): Observable<Long> {
