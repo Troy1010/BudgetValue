@@ -19,7 +19,8 @@ class SharedPrefWrapper @Inject constructor(
             PLAN_CATEGORY_AMOUNTS,
             EXPECTED_INCOME,
             ANCHOR_DATE_OFFSET,
-            BLOCK_SIZE
+            BLOCK_SIZE,
+            APP_INIT_BOOL,
         }
 
         const val ANCHOR_DATE_OFFSET_DEFAULT: Long = 0
@@ -125,5 +126,15 @@ class SharedPrefWrapper @Inject constructor(
             ?: editor.remove(Key.BLOCK_SIZE.name)
         editor.apply()
         blockSizePublisher.onNext(blockSize ?: BLOCK_SIZE_DEFAULT)
+    }
+
+    // # AppInitBool
+
+    override fun fetchAppInitBool(): Boolean =
+        sharedPreferences.getBoolean(Key.APP_INIT_BOOL.name, false)
+
+    override fun pushAppInitBool(boolean: Boolean) {
+        editor.putBoolean(Key.APP_INIT_BOOL.name, boolean)
+        editor.apply()
     }
 }

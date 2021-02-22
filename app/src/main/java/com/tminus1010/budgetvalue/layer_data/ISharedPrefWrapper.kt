@@ -20,4 +20,6 @@ interface ISharedPrefWrapper {
     fun pushAnchorDateOffset(anchorDateOffset: Long?)
     fun fetchBlockSize(): Observable<Long>
     fun pushBlockSize(blockSize: Long?)
+    fun fetchAppInitBool(): Boolean
+    fun pushAppInitBool(boolean: Boolean = true)
 }

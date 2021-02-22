@@ -7,7 +7,7 @@ import javax.inject.Singleton
 
 /**
  * A Repo is the facade to the data layer.
- * If you ever change how the data is written/retrieved, you don't need to change the ui_layer.
+ * If you ever change how the data is written/retrieved, all other layers will not require updates.
  */
 @Singleton
 class Repo @Inject constructor(

@@ -20,9 +20,12 @@ class HostActivity : AppCompatActivity() {
     val transactionsVM: TransactionsVM by viewModels2 { TransactionsVM(app.appComponent.getRepo(), app.appComponent.getDatePeriodGetter()) }
     val nav by lazy { findNavController(R.id.fragNavHost) }
     val repo by lazy { app.appComponent.getRepo() }
+    val domain by lazy { app.appComponent.getDomain() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        domain.appInit()
+
         setContentView(R.layout.activity_host)
         bottom_navigation.setOnNavigationItemSelectedListener {
             var bSuccessfulNavigation = true
@@ -109,8 +112,9 @@ class HostActivity : AppCompatActivity() {
                 val spendsString = column.joinToString("\n")
                 logz("spendsString:${spendsString}")
             }
-            R.id.menu_save_reconciliation -> {
-                toast("Reconciliation Saved")
+            R.id.menu_push_app_init_bool_false -> {
+                repo.pushAppInitBool(false)
+                toast("AppInitBool = false")
             }
             R.id.menu_debug_do_something -> {
                 toast("Debug Do Something")
