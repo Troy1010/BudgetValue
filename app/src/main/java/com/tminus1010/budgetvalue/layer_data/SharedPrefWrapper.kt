@@ -35,7 +35,7 @@ class SharedPrefWrapper @Inject constructor(
     override val activeReconciliationCAs: BehaviorSubject<Map<Category, BigDecimal>> =
         activeReconciliationCAsPublisher
             .startWithItem(sharedPreferences.getString(Key.RECONCILE_CATEGORY_AMOUNTS.name, null)
-                    .let { typeConverter.categoryAmounts(it) })
+                .let { typeConverter.categoryAmounts(it) })
             .toBehaviorSubject()
 
     override fun pushActiveReconciliationCAs(categoryAmounts: Map<Category, BigDecimal>?) {
@@ -61,7 +61,7 @@ class SharedPrefWrapper @Inject constructor(
     override val activePlanCAs: BehaviorSubject<Map<Category, BigDecimal>> =
         activePlanCAsPublisher
             .startWithItem(sharedPreferences.getString(Key.PLAN_CATEGORY_AMOUNTS.name, null)
-                    .let { typeConverter.categoryAmounts(it) })
+                .let { typeConverter.categoryAmounts(it) })
             .toBehaviorSubject()
 
     override fun pushActivePlanCAs(categoryAmounts: Map<Category, BigDecimal>?) {
