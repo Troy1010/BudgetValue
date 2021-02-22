@@ -20,10 +20,6 @@ class TypeConverter @Inject constructor(
     fun string(bigDecimal: BigDecimal): String =
         bigDecimal.toString()
 
-    fun categoryAmounts(categoryAmountsReceived: Iterable<ICategoryAmountReceived>): Map<Category, BigDecimal> =
-        categoryAmountsReceived
-            .associate { categoryParser.parseCategory(it.categoryName) to it.amount } as HashMap
-
     fun categoryAmounts(s: String?): Map<Category, BigDecimal> {
         val reconcileCategoryAmountsReceived: Map<String, String> =
             if (s == null) emptyMap() else {
