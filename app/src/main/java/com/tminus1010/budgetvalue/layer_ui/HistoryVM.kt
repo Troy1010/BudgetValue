@@ -11,8 +11,11 @@ import com.tminus1010.budgetvalue.model_app.LocalDatePeriod
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class HistoryVM(
+@Singleton
+class HistoryVM @Inject constructor(
     private val repo: Repo,
     val transactionsVM: TransactionsVM,
     val activeReconciliationVM: ActiveReconciliationVM,

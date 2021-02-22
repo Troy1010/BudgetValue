@@ -11,6 +11,8 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.combineLatestAsTuple
 import com.tminus1010.budgetvalue.extensions.activityViewModels2
 import com.tminus1010.budgetvalue.extensions.distinctUntilChangedWith
+import com.tminus1010.budgetvalue.extensions_intersecting.app
+import com.tminus1010.budgetvalue.extensions_intersecting.historyVM
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
@@ -20,20 +22,6 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.frag_history.*
 
 class HistoryFrag : Fragment(R.layout.frag_history) {
-    val app by lazy { requireActivity().application as App }
-    val repo by lazy { app.appComponent.getRepo() }
-    val transactionsVM: TransactionsVM by activityViewModels2 { TransactionsVM(repo, app.appComponent.getDatePeriodGetter()) }
-    val accountsVM: AccountsVM by activityViewModels2 { AccountsVM(repo) }
-    val activePlanVM: ActivePlanVM by activityViewModels2 { ActivePlanVM(repo, app.appComponent.getDatePeriodGetter()) }
-    val activeReconciliationVM: ActiveReconciliationVM by activityViewModels2 {
-        ActiveReconciliationVM(repo, transactionsVM.spends, accountsVM.accountsTotal, activePlanVM)
-    }
-    val datePeriodGetter by lazy { app.appComponent.getDatePeriodGetter() }
-    val budgetedVM by activityViewModels2 { BudgetedVM(repo, transactionsVM, activeReconciliationVM) }
-    val historyVM: HistoryVM by activityViewModels2 {
-        HistoryVM(repo, transactionsVM, activeReconciliationVM, datePeriodGetter, budgetedVM)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupBinds()

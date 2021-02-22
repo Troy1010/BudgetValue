@@ -7,8 +7,11 @@ import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class AccountsVM(private val repo: Repo): ViewModel() {
+@Singleton
+class AccountsVM @Inject constructor(private val repo: Repo): ViewModel() {
     val accounts = repo.getAccounts().toBehaviorSubject()
     val intentAddAccount = PublishSubject.create<Unit>()
         .also { it.observeOn(Schedulers.io()).flatMapCompletable { repo.add(Account("", BigDecimal.ZERO)) }.subscribe() }

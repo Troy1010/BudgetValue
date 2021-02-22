@@ -8,8 +8,11 @@ import com.tminus1010.budgetvalue.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class BudgetedVM(
+@Singleton
+class BudgetedVM @Inject constructor(
     repo: Repo,
     transactionsVM: TransactionsVM,
     activeReconciliationVM: ActiveReconciliationVM,

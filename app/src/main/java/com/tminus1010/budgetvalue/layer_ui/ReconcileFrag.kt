@@ -10,6 +10,7 @@ import com.jakewharton.rxbinding4.view.clicks
 import com.tminus1010.budgetvalue.*
 import com.tminus1010.budgetvalue.extensions.activityViewModels2
 import com.tminus1010.budgetvalue.extensions.distinctUntilChangedWith
+import com.tminus1010.budgetvalue.extensions_intersecting.*
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
@@ -23,14 +24,6 @@ import kotlinx.android.synthetic.main.tableview_header_income.view.*
 import java.math.BigDecimal
 
 class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
-    val app by lazy { requireActivity().application as App }
-    val repo by lazy { app.appComponent.getRepo() }
-    val transactionsVM: TransactionsVM by activityViewModels2 { TransactionsVM(repo, app.appComponent.getDatePeriodGetter()) }
-    val accountsVM: AccountsVM by activityViewModels2 { AccountsVM(repo) }
-    val activePlanVM: ActivePlanVM by activityViewModels2 { ActivePlanVM(repo, app.appComponent.getDatePeriodGetter()) }
-    val activeReconciliationVM: ActiveReconciliationVM by activityViewModels2 { ActiveReconciliationVM(repo, transactionsVM.spends, accountsVM.accountsTotal, activePlanVM) }
-    val budgetedVM: BudgetedVM by activityViewModels2 { BudgetedVM(repo, transactionsVM, activeReconciliationVM) }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupBinds()
@@ -88,7 +81,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                         headerRecipeFactory.createOne2("Reconcile")
                                 + oneWayRecipeFactory.createOne2(activeReconciliationVM.defaultAmount)
                                 + reconcileCARecipeFactory.createMany(rowDatas.map { it.category to it.reconcile }),
-                        headerRecipeFactory_numbered.createOne2(Pair("Budgeted",accountsVM.accountsTotal))
+                        headerRecipeFactory_numbered.createOne2(Pair("Budgeted", accountsVM.accountsTotal))
                                 + oneWayRecipeFactory.createOne2(budgetedVM.defaultAmount)
                                 + oneWayRecipeFactory.createMany(activeCategories.map { budgetedCA[it] }.map { Observable.just(it) }) //TODO("Should just pass the observable itself.")
                     ).reflectXY(), fixedWidth = width),

@@ -10,10 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue.App
 import com.tminus1010.budgetvalue.GenViewHolder
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.extensions.activityViewModels2
-import com.tminus1010.budgetvalue.extensions.nav
-import com.tminus1010.budgetvalue.extensions.v
-import com.tminus1010.budgetvalue.extensions.viewModels2
+import com.tminus1010.budgetvalue.extensions.*
+import com.tminus1010.budgetvalue.extensions_intersecting.categorizeVM
+import com.tminus1010.budgetvalue.extensions_intersecting.repo
+import com.tminus1010.budgetvalue.extensions_intersecting.transactionsVM
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import com.tminus1010.budgetvalue.unbox
 import com.tminus1010.tmcommonkotlin_rx.observe
@@ -23,18 +23,6 @@ import kotlinx.android.synthetic.main.item_category_btn.view.*
 import java.time.format.DateTimeFormatter
 
 class CategorizeFrag : Fragment(R.layout.frag_categorize) {
-    val app by lazy { requireActivity().application as App }
-    val repo by lazy { app.appComponent.getRepo() }
-    val transactionsVM: TransactionsVM by activityViewModels2 {
-        TransactionsVM(app.appComponent.getRepo(),
-            app.appComponent.getDatePeriodGetter())
-    }
-    val categorizeVM: CategorizeVM by viewModels2 {
-        CategorizeVM(app.appComponent.getRepo(),
-            transactionsVM)
-    }
-    val advancedCategorizeVM by activityViewModels2 { AdvancedCategorizeVM(categorizeVM) }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # RecyclerView

@@ -8,8 +8,11 @@ import com.tminus1010.budgetvalue.unbox
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.math.BigDecimal
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class CategorizeVM(private val repo: Repo, transactionsVM: TransactionsVM): ViewModel() {
+@Singleton
+class CategorizeVM @Inject constructor(private val repo: Repo, transactionsVM: TransactionsVM): ViewModel() {
     val transactionBox = transactionsVM.uncategorizedSpends
         .map { Box(it.getOrNull(0)) }
     fun finishTransactionWithCategory(category: Category) {
