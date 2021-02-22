@@ -8,7 +8,7 @@ import java.math.BigDecimal
 import javax.inject.Inject
 
 class TypeConverter @Inject constructor(
-    val categoryParser: ICategoryParser
+    val categoryParser: ICategoryParser,
 ) {
     fun bigDecimal(s: String): BigDecimal =
         s.toBigDecimal()
@@ -16,20 +16,13 @@ class TypeConverter @Inject constructor(
     fun string(bigDecimal: BigDecimal): String =
         bigDecimal.toString()
 
-    fun categoryAmounts(s: String?): Map<Category, BigDecimal> {
-        val reconcileCategoryAmountsReceived: Map<String, String> =
-            if (s == null) emptyMap() else {
-                Gson().fromJson(s, getTypeForGson<HashMap<String, String>>())
-            }
-        return reconcileCategoryAmountsReceived
-            .associate { categoryParser.parseCategory(it.key) to it.value.toBigDecimal() }
-    }
+    fun categoryAmounts(s: String?): Map<Category, BigDecimal> =
+        if (s == null) emptyMap() else
+            Gson().fromJson<Map<String, String>>(s, getTypeForGson<HashMap<String, String>>())
+                .associate { categoryParser.parseCategory(it.key) to it.value.toBigDecimal() }
 
-    fun string(categoryAmounts: Map<Category, BigDecimal>?): String? {
-        val reconcileCategoryAmountsReceived =
-            categoryAmounts?.associate { it.key.name to it.value.toString() }
-        return if (reconcileCategoryAmountsReceived == null) null else {
-            Gson().toJson(reconcileCategoryAmountsReceived)
-        }
-    }
+    fun string(categoryAmounts: Map<Category, BigDecimal>?): String? =
+        categoryAmounts
+            ?.associate { it.key.name to it.value.toString() }
+            ?.let { Gson().toJson(it) }
 }
