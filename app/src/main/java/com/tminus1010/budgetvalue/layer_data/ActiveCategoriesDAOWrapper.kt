@@ -6,6 +6,7 @@ import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import javax.inject.Inject
 
@@ -40,4 +41,7 @@ class ActiveCategoriesDAOWrapper @Inject constructor(
         if (category == null) logz("parseCategory`WARNING:had to return default for category name:$categoryName")
         return category ?: defaultCategory
     }
+
+    override fun push(category: Category) =
+        add(category).subscribeOn(Schedulers.io()).subscribe()
 }

@@ -24,7 +24,7 @@ class NewCategoryFrag : Fragment(R.layout.frag_new_category) {
                 require(name.isNotEmpty())
                 val type = v.spinner_type.selectedItem as Category.Type
                 Category(name, type)
-                    .also { repo.add(it) }
+                    .also { repo.push(it) }
                 nav.navigateUp()
             } catch (e: IllegalArgumentException) {
                 toast("Invalid name")

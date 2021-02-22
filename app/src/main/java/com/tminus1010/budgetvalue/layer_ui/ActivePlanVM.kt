@@ -77,7 +77,4 @@ class ActivePlanVM(val repo: Repo, datePeriodGetter: DatePeriodGetter) : ViewMod
         .toBehaviorSubject()
     val defaultAmount = combineLatestAsTuple(expectedIncome, planUncategorized)
         .map { it.first - it.second }
-    val activeCategories = activePlan
-        .map { it.keys }
-        .map { it.sortedWith(categoryComparator) }
 }
