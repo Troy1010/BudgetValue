@@ -9,5 +9,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class Domain @Inject constructor(
-    private val appInitializer: AppInitializer
-) : IAppInitializer by appInitializer
+    private val appInitializer: AppInitializer,
+    private val datePeriodGetter: DatePeriodGetter,
+) : IAppInitializer by appInitializer,
+    IDatePeriodGetter by datePeriodGetter

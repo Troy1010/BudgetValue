@@ -2,6 +2,8 @@ package com.tminus1010.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.layer_data.Repo
+import com.tminus1010.budgetvalue.layer_domain.DatePeriodGetter
+import com.tminus1010.budgetvalue.layer_domain.Domain
 import com.tminus1010.budgetvalue.model_app.Block
 import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.model_app.Transaction
@@ -12,7 +14,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class TransactionsVM @Inject constructor(private val repo: Repo, val datePeriodGetter: DatePeriodGetter):ViewModel() {
+class TransactionsVM @Inject constructor(private val repo: Repo, val domain: Domain):ViewModel() {
     val transactions = repo.transactions
     val transactionBlocks = transactions
         .map(::getBlocksFromTransactions)
@@ -31,7 +33,7 @@ class TransactionsVM @Inject constructor(private val repo: Repo, val datePeriodG
         val transactionsRedefined = transactions.sortedBy { it.date }.toMutableList()
         val returning = ArrayList<Block>()
         if (0 !in transactionsRedefined.indices) return returning
-        var datePeriod = datePeriodGetter.getDatePeriod(transactionsRedefined[0].date)
+        var datePeriod = domain.getDatePeriod(transactionsRedefined[0].date)
         while (datePeriod.startDate <= transactionsRedefined.last().date) {
             val transactionSet = transactionsRedefined
                 .filter { it.date in datePeriod }
@@ -44,7 +46,7 @@ class TransactionsVM @Inject constructor(private val repo: Repo, val datePeriodG
                     }
                     .let { Block(datePeriod, it.first, it.second) }
             if (transactionsRedefined.isEmpty()) break
-            datePeriod = datePeriodGetter.getDatePeriod(transactionsRedefined[0].date)
+            datePeriod = domain.getDatePeriod(transactionsRedefined[0].date)
         }
         return returning
     }

@@ -5,6 +5,8 @@ import com.tminus1010.budgetvalue.categoryComparator
 import com.tminus1010.budgetvalue.combineLatestImpatient
 import com.tminus1010.budgetvalue.extensions.toDisplayStr
 import com.tminus1010.budgetvalue.layer_data.Repo
+import com.tminus1010.budgetvalue.layer_domain.DatePeriodGetter
+import com.tminus1010.budgetvalue.layer_domain.Domain
 import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.model_app.HistoryColumnData
 import com.tminus1010.budgetvalue.model_app.LocalDatePeriod
@@ -19,7 +21,7 @@ class HistoryVM @Inject constructor(
     private val repo: Repo,
     val transactionsVM: TransactionsVM,
     val activeReconciliationVM: ActiveReconciliationVM,
-    val datePeriodGetter: DatePeriodGetter,
+    val domain: Domain,
     val budgetedVM: BudgetedVM,
 ) : ViewModel() {
     val historyColumnDatas =
@@ -29,9 +31,9 @@ class HistoryVM @Inject constructor(
             .map { (reconciliations, plans, activeReconciliationDefaultAmount, activeReconciliationCAs, transactionBlocks, budgetedDefaultAmount, budgetedCAs) ->
                 // # Define blocks
                 val blockPeriods = sortedSetOf<LocalDatePeriod>(compareBy { it.startDate })
-                transactionBlocks?.forEach { if (!datePeriodGetter.isDatePeriodValid(it.datePeriod)) error("datePeriod was not valid:${it.datePeriod}") }
+                transactionBlocks?.forEach { if (!domain.isDatePeriodValid(it.datePeriod)) error("datePeriod was not valid:${it.datePeriod}") }
                 transactionBlocks?.forEach { blockPeriods.add(it.datePeriod) }
-                reconciliations?.forEach { blockPeriods.add(datePeriodGetter.getDatePeriod(it.localDate)) }
+                reconciliations?.forEach { blockPeriods.add(domain.getDatePeriod(it.localDate)) }
                 // # Define historyColumnDatas
                 val historyColumnDatas = arrayListOf<HistoryColumnData>()
                 for (blockPeriod in blockPeriods) {

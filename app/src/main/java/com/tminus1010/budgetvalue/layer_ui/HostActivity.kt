@@ -7,8 +7,13 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
-import com.tminus1010.budgetvalue.*
-import com.tminus1010.budgetvalue.extensions.viewModels2
+import com.tminus1010.budgetvalue.CODE_PICK_TRANSACTIONS_FILE
+import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue.extensions_intersecting.domain
+import com.tminus1010.budgetvalue.extensions_intersecting.repo
+import com.tminus1010.budgetvalue.extensions_intersecting.transactionsVM
+import com.tminus1010.budgetvalue.getBlocks
+import com.tminus1010.budgetvalue.reflectXY
 import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin.misc.toast
 import kotlinx.android.synthetic.main.activity_host.*
@@ -16,11 +21,7 @@ import java.math.BigDecimal
 import kotlin.time.ExperimentalTime
 
 class HostActivity : AppCompatActivity() {
-    val app by lazy { application as App }
-    val transactionsVM: TransactionsVM by viewModels2 { TransactionsVM(app.appComponent.getRepo(), app.appComponent.getDatePeriodGetter()) }
     val nav by lazy { findNavController(R.id.fragNavHost) }
-    val repo by lazy { app.appComponent.getRepo() }
-    val domain by lazy { app.appComponent.getDomain() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

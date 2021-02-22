@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.combineLatestAsTuple
 import com.tminus1010.budgetvalue.extensions.total
 import com.tminus1010.budgetvalue.layer_data.Repo
+import com.tminus1010.budgetvalue.layer_domain.DatePeriodGetter
+import com.tminus1010.budgetvalue.layer_domain.Domain
 import com.tminus1010.budgetvalue.mergeCombineWithIndex
 import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.model_app.Plan
@@ -16,14 +18,14 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ActivePlanVM @Inject constructor(val repo: Repo, datePeriodGetter: DatePeriodGetter) : ViewModel() {
+class ActivePlanVM @Inject constructor(val repo: Repo, domain: Domain) : ViewModel() {
     val intentPushExpectedIncome = PublishSubject.create<BigDecimal>()
         .also { it.subscribe(repo::pushExpectedIncome) }
     val intentSaveActivePlan = PublishSubject.create<Unit>()
         .also {
             it
                 .map {
-                    Plan(datePeriodGetter.getDatePeriodObservable(LocalDate.now()),
+                    Plan(domain.getDatePeriodObservable(LocalDate.now()),
                         expectedIncome.value,
                         repo.activePlanCAs.blockingFirst()
                     )

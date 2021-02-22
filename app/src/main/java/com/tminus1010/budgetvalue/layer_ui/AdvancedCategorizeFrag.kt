@@ -3,12 +3,12 @@ package com.tminus1010.budgetvalue.layer_ui
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import com.tminus1010.budgetvalue.App
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.combineLatestAsTuple
-import com.tminus1010.budgetvalue.extensions.activityViewModels2
 import com.tminus1010.budgetvalue.extensions.distinctUntilChangedWith
+import com.tminus1010.budgetvalue.extensions.nav
+import com.tminus1010.budgetvalue.extensions_intersecting.advancedCategorizeVM
+import com.tminus1010.budgetvalue.extensions_intersecting.repo
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.toast
@@ -20,13 +20,7 @@ import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
 class AdvancedCategorizeFrag : Fragment(R.layout.frag_advanced_categorize) {
-    val app by lazy { requireActivity().application as App }
-    val repo by lazy { app.appComponent.getRepo() }
     val viewRecipeFactories by lazy { ViewItemRecipeFactoryProvider(requireContext()) }
-    val transactionsVM by activityViewModels2 { TransactionsVM(repo, DatePeriodGetter(repo)) }
-    val categorizeVM by activityViewModels2 { CategorizeVM(repo, transactionsVM) }
-    val advancedCategorizeVM by activityViewModels2 { AdvancedCategorizeVM(categorizeVM) }
-    val nav by lazy { findNavController() }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Btn Done
