@@ -19,18 +19,21 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 import java.time.LocalDate
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ActiveReconciliationVM(
+@Singleton
+class ActiveReconciliationVM @Inject constructor(
     private val repo: Repo,
-    private val transactionSet: Observable<List<Transaction>>,
-    private val accountsTotal: Observable<BigDecimal>,
+    private val transactionsVM: TransactionsVM,
+    private val accountsVM: AccountsVM,
     private val activePlanVM: ActivePlanVM,
 ) : ViewModel() {
     val intentSaveReconciliation:PublishSubject<Unit> = PublishSubject.create<Unit>()
         .also {
             it
                 .observeOn(Schedulers.io())
-                .flatMap { accountsTotal }
+                .flatMap { accountsVM.accountsTotal }
                 .map { accountsTotal ->
                     Reconciliation(LocalDate.now(),
                         accountsTotal,
@@ -84,13 +87,13 @@ class ActiveReconciliationVM(
             acc
         }
         .toBehaviorSubject()
-    val rowDatas = combineLatestAsTuple(repo.activeCategories, activeReconcileCAs.value.itemObservableMap2, activePlanVM.activePlan, transactionSet)
+    val rowDatas = combineLatestAsTuple(repo.activeCategories, activeReconcileCAs.value.itemObservableMap2, activePlanVM.activePlan, transactionsVM.spends)
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
     val activeReconcileTotal = activeReconcileCAs.value.itemObservableMap2
         .switchMap { it.values.total() }
-    val budgetedUncategorized = combineLatestAsTuple(accountsTotal, rowDatas.flatMap { it.map { it.budgeted }.total() })
+    val budgetedUncategorized = combineLatestAsTuple(accountsVM.accountsTotal, rowDatas.flatMap { it.map { it.budgeted }.total() })
         .map { it.first - it.second }
-    val defaultAmount = combineLatestAsTuple(accountsTotal, activeReconcileTotal, budgetedUncategorized)
+    val defaultAmount = combineLatestAsTuple(accountsVM.accountsTotal, activeReconcileTotal, budgetedUncategorized)
         .map { it.first - it.second - it.third } // TODO("This might not be right, but first the budgeted column should be fixed")
     
     //

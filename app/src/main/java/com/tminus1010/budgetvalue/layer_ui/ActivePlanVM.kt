@@ -12,8 +12,11 @@ import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 import java.time.LocalDate
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ActivePlanVM(val repo: Repo, datePeriodGetter: DatePeriodGetter) : ViewModel() {
+@Singleton
+class ActivePlanVM @Inject constructor(val repo: Repo, datePeriodGetter: DatePeriodGetter) : ViewModel() {
     val intentPushExpectedIncome = PublishSubject.create<BigDecimal>()
         .also { it.subscribe(repo::pushExpectedIncome) }
     val intentSaveActivePlan = PublishSubject.create<Unit>()
