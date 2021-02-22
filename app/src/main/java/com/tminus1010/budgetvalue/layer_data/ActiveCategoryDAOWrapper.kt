@@ -12,14 +12,14 @@ class ActiveCategoryDAOWrapper @Inject constructor(
 ) : IActiveCategoryDAOWrapper,
     ICategoryParser,
     ActiveCategoryDAO by activeCategoryDAO {
-    val defaultCategory = Category("Default", Category.Type.Default, true)
+    override val defaultCategory = Category("Default", Category.Type.Default, true)
 
-    val activeCategories =
+    override val activeCategories =
         fetchActiveCategories()
             .map { it.sortedWith(categoryComparator) }
             .replay(1).refCount()
 
-    val categories = activeCategories
+    override val categories = activeCategories
         .map { it + defaultCategory }
         .map { it.sortedWith(categoryComparator) }
         .toBehaviorSubject()
