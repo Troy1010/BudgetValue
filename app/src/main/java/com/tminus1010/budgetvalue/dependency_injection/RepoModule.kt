@@ -7,7 +7,7 @@ import com.tminus1010.budgetvalue.SHARED_PREF_FILE_NAME
 import com.tminus1010.budgetvalue.layer_data.ActiveCategoryDAO
 import com.tminus1010.budgetvalue.layer_data.ActiveCategoryDAOWrapper
 import com.tminus1010.budgetvalue.layer_data.BudgetValueDB
-import com.tminus1010.budgetvalue.layer_data.MyDao
+import com.tminus1010.budgetvalue.layer_data.MiscDAO
 import com.tminus1010.budgetvalue.model_app.ICategoryParser
 import dagger.Module
 import dagger.Provides
@@ -32,7 +32,7 @@ class RepoModule {
 
     @Provides
     @Singleton
-    fun providesMyDao(roomDatabase: BudgetValueDB): MyDao {
+    fun providesMyDao(roomDatabase: BudgetValueDB): MiscDAO {
         return roomDatabase.myDao()
     }
 

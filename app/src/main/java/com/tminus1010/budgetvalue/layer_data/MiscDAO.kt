@@ -9,7 +9,7 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 @Dao
-interface MyDao {
+interface MiscDAO {
     // # Accounts
 
     @Query("DELETE FROM `Account`")

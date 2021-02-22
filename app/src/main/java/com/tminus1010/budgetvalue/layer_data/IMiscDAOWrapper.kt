@@ -8,7 +8,7 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import java.math.BigDecimal
 
-interface IMyDaoWrapper: MyDao {
+interface IMiscDAOWrapper: MiscDAO {
     val transactions: Observable<List<Transaction>>
     fun pushTransactionCA(transaction: Transaction, category: Category, amount: BigDecimal?)
     val reconciliations: Observable<List<Reconciliation>>
