@@ -25,7 +25,7 @@ class ActivePlanTest {
         val givenPlanCA2 = category2 to 45.toBigDecimal()
         // # Stimulate
         val stopObservable = PublishSubject.create<Unit>()
-        val testObserver = repo.activePlan.map { it.size }.takeUntil(stopObservable).test()
+        val testObserver = repo.activePlanCAs.map { it.size }.takeUntil(stopObservable).test()
         repo.pushActivePlanCA(givenPlanCA0)
         repo.pushActivePlanCA(givenPlanCA1)
         repo.pushActivePlanCA(givenPlanCA2)

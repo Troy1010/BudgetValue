@@ -91,21 +91,28 @@
         android:id="@+id/recyclerview_categories"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/btn_fc_customize"
+        app:layout_constraintBottom_toTopOf="@id/btn_new_category"
         app:layout_constraintTop_toBottomOf="@id/barrier"
         tools:layoutManager="GridLayoutManager"
         tools:listitem="@layout/item_category_btn"
         tools:spanCount="3" />
 
     <Button
-        android:id="@+id/btn_fc_customize"
+        android:id="@+id/btn_new_category"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Customize"
-        app:layout_constraintBottom_toTopOf="@id/btn_fc_advanced" />
+        android:text="Make New Category"
+        app:layout_constraintBottom_toTopOf="@id/btn_delete_category" />
 
     <Button
-        android:id="@+id/btn_fc_advanced"
+        android:id="@+id/btn_delete_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Delete Category"
+        app:layout_constraintBottom_toTopOf="@id/btn_advanced" />
+
+    <Button
+        android:id="@+id/btn_advanced"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Advanced"

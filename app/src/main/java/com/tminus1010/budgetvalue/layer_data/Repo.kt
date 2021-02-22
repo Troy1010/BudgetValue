@@ -1,12 +1,15 @@
 package com.tminus1010.budgetvalue.layer_data
 
+import com.tminus1010.budgetvalue.extensions.onIO
 import com.tminus1010.budgetvalue.model_data.Category
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * A Repo is the facade to the data layer.
- * If you ever change how the data is written/retrieved, you don't need to change the ui_layer.
+ * If you ever change how the data is written/retrieved, all other layers will not require updates.
  */
+@Singleton
 class Repo @Inject constructor(
     transactionParser: TransactionParser,
     sharedPrefWrapper: SharedPrefWrapper,
@@ -18,7 +21,8 @@ class Repo @Inject constructor(
     IActiveCategoriesDAOWrapper by activeCategoryDAOWrapper {
     fun deleteFromActive(category: Category) {
         pushActivePlanCA(Pair(category, null))
-        pushActiveReconcileCA(Pair(category, null))
+        pushActiveReconciliationCA(Pair(category, null))
+        delete(category).onIO()
     }
 
     fun deleteFromEverywhere(category: Category) {

@@ -19,7 +19,8 @@ class SharedPrefWrapper @Inject constructor(
             PLAN_CATEGORY_AMOUNTS,
             EXPECTED_INCOME,
             ANCHOR_DATE_OFFSET,
-            BLOCK_SIZE
+            BLOCK_SIZE,
+            APP_INIT_BOOL,
         }
 
         const val ANCHOR_DATE_OFFSET_DEFAULT: Long = 0
@@ -28,37 +29,39 @@ class SharedPrefWrapper @Inject constructor(
 
     val editor = sharedPreferences.edit()
 
-    // # ReconcileCategoryAmounts
-    override fun fetchActiveReconcileCAs(): Map<Category, BigDecimal> {
-        return sharedPreferences.getString(Key.RECONCILE_CATEGORY_AMOUNTS.name, null)
-            .let { typeConverter.categoryAmounts(it) }
-    }
+    // # ActiveReconciliation
 
-    override fun pushActiveReconcileCAs(categoryAmounts: Map<Category, BigDecimal>?) {
+    private val activeReconciliationCAsPublisher = PublishSubject.create<Map<Category, BigDecimal>?>()
+    override val activeReconciliationCAs: BehaviorSubject<Map<Category, BigDecimal>> =
+        activeReconciliationCAsPublisher
+            .startWithItem(sharedPreferences.getString(Key.RECONCILE_CATEGORY_AMOUNTS.name, null)
+                    .let { typeConverter.categoryAmounts(it) })
+            .toBehaviorSubject()
+
+    override fun pushActiveReconciliationCAs(categoryAmounts: Map<Category, BigDecimal>?) {
         typeConverter.string(categoryAmounts)
             ?.also { editor.putString(Key.RECONCILE_CATEGORY_AMOUNTS.name, it) }
             ?: editor.remove(Key.RECONCILE_CATEGORY_AMOUNTS.name)
         editor.apply()
+        activeReconciliationCAsPublisher.onNext(categoryAmounts ?: emptyMap())
     }
 
-    override fun pushActiveReconcileCA(kv: Pair<Category, BigDecimal?>) {
-        fetchActiveReconcileCAs()
+    override fun pushActiveReconciliationCA(kv: Pair<Category, BigDecimal?>) {
+        activeReconciliationCAs.value
             .toMutableMap()
             .also { kv.also { (k, v) -> if (v == null) it.remove(k) else it[k] = v } }
-            .also { pushActiveReconcileCAs(it) }
+            .also { pushActiveReconciliationCAs(it) }
     }
 
-    override fun clearActiveReconcileCAs() = pushActiveReconcileCAs(null)
+    override fun clearActiveReconcileCAs() = pushActiveReconciliationCAs(null)
 
-    // # PlanCategoryAmounts
+    // # ActivePlan
 
-    private val activePlanPublisher = PublishSubject.create<Map<Category, BigDecimal>?>()
-    override val activePlan: BehaviorSubject<Map<Category, BigDecimal>> =
-        activePlanPublisher
-            .startWithItem(
-                sharedPreferences.getString(Key.PLAN_CATEGORY_AMOUNTS.name, null)
-                    .let { typeConverter.categoryAmounts(it) }
-            )
+    private val activePlanCAsPublisher = PublishSubject.create<Map<Category, BigDecimal>?>()
+    override val activePlanCAs: BehaviorSubject<Map<Category, BigDecimal>> =
+        activePlanCAsPublisher
+            .startWithItem(sharedPreferences.getString(Key.PLAN_CATEGORY_AMOUNTS.name, null)
+                    .let { typeConverter.categoryAmounts(it) })
             .toBehaviorSubject()
 
     override fun pushActivePlanCAs(categoryAmounts: Map<Category, BigDecimal>?) {
@@ -66,11 +69,11 @@ class SharedPrefWrapper @Inject constructor(
             ?.also { editor.putString(Key.PLAN_CATEGORY_AMOUNTS.name, it) }
             ?: editor.remove(Key.PLAN_CATEGORY_AMOUNTS.name)
         editor.apply()
-        activePlanPublisher.onNext(categoryAmounts ?: emptyMap())
+        activePlanCAsPublisher.onNext(categoryAmounts ?: emptyMap())
     }
 
     override fun pushActivePlanCA(kv: Pair<Category, BigDecimal?>) {
-        activePlan.value
+        activePlanCAs.value
             .toMutableMap()
             .also { kv.also { (k, v) -> if (v == null || v == 0.toBigDecimal()) it.remove(k) else it[k] = v } }
             .also { pushActivePlanCAs(it) }
@@ -109,7 +112,7 @@ class SharedPrefWrapper @Inject constructor(
         anchorDateOffsetPublisher.onNext(anchorDateOffset ?: ANCHOR_DATE_OFFSET_DEFAULT)
     }
 
-    // # BlockSizePublisher
+    // # BlockSize
 
     private val blockSizePublisher = PublishSubject.create<Long>()
     override fun fetchBlockSize(): Observable<Long> {
@@ -123,5 +126,15 @@ class SharedPrefWrapper @Inject constructor(
             ?: editor.remove(Key.BLOCK_SIZE.name)
         editor.apply()
         blockSizePublisher.onNext(blockSize ?: BLOCK_SIZE_DEFAULT)
+    }
+
+    // # AppInitBool
+
+    override fun fetchAppInitBool(): Boolean =
+        sharedPreferences.getBoolean(Key.APP_INIT_BOOL.name, false)
+
+    override fun pushAppInitBool(boolean: Boolean) {
+        editor.putBoolean(Key.APP_INIT_BOOL.name, boolean)
+        editor.apply()
     }
 }

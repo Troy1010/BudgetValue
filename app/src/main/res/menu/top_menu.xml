@@ -11,8 +11,8 @@
         android:id="@+id/menu_print_spends"
         android:title="Print Spends" />
     <item
-        android:id="@+id/menu_save_reconciliation"
-        android:title="Save Reconciliation" />
+        android:id="@+id/menu_push_app_init_bool_false"
+        android:title="AppInitBool = false" />
     <item
         android:id="@+id/menu_debug_do_something"
         android:title="Debug Do Something" />

@@ -66,7 +66,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        combineLatestAsTuple(activeReconciliationVM.rowDatas, activeReconciliationVM.activeCategories, myTableView_1.widthObservable, budgetedVM.categoryAmounts)
+        combineLatestAsTuple(activeReconciliationVM.rowDatas, repo.activeCategories, myTableView_1.widthObservable, budgetedVM.categoryAmounts)
             .observeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) { (rowDatas, activeCategories, width, budgetedCA) ->
                 val dividerMap = activeCategories
