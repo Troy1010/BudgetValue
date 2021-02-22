@@ -19,6 +19,11 @@ class ActiveCategoryDAOWrapper @Inject constructor(
             .map { it.sortedWith(categoryComparator) }
             .replay(1).refCount()
 
+    val categories = activeCategories
+        .map { it + defaultCategory }
+        .map { it.sortedWith(categoryComparator) }
+        .toBehaviorSubject()
+
     private val nameToCategoryMap = activeCategories
         .map { it.associateBy { it.name } as HashMap<String, Category> }
         .toBehaviorSubject()
