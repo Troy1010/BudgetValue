@@ -21,7 +21,7 @@ class Repo @Inject constructor(
     IActiveCategoriesDAOWrapper by activeCategoryDAOWrapper {
     fun deleteFromActive(category: Category) {
         pushActivePlanCA(Pair(category, null))
-        pushActiveReconcileCA(Pair(category, null))
+        pushActiveReconciliationCA(Pair(category, null))
         delete(category).onIO()
     }
 

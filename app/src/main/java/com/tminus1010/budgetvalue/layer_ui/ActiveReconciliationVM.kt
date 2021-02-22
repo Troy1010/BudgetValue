@@ -41,21 +41,21 @@ class ActiveReconciliationVM(
                 .subscribe()
         }
     val intentPushActiveReconcileCA = PublishSubject.create<Pair<Category, BigDecimal>>()
-        .also { it.subscribeOn(Schedulers.io()).subscribe(repo::pushActiveReconcileCA) }
+        .also { it.subscribeOn(Schedulers.io()).subscribe(repo::pushActiveReconciliationCA) }
     // *Normally, doing pushActiveReconcileCAs would trigger fetchActiveReconcileCAs.. but since
     // sharedPrefs does not support Observables, fetchActiveReconcileCAs is cold, so this subject is a workaround.
     val clearActiveReconciliation = PublishSubject.create<Unit>()
         .also {
             it
                 .subscribeOn(Schedulers.io())
-                .subscribe { repo.pushActiveReconcileCAs(null) }
+                .subscribe { repo.pushActiveReconciliationCAs(null) }
         }
     // # State
     val activeCategories = transactionSet
         .map(::getActiveCategories)
         .toBehaviorSubject()
     val activeReconcileCAs = mergeCombineWithIndex(
-        Observable.just(repo.fetchActiveReconcileCAs()),
+        repo.activeReconciliationCAs,
         intentPushActiveReconcileCA,
         activeCategories,
         clearActiveReconciliation,

@@ -2,13 +2,15 @@ package com.tminus1010.budgetvalue.layer_data
 
 import com.tminus1010.budgetvalue.model_data.Category
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
 
 interface ISharedPrefWrapper {
-    fun fetchActiveReconcileCAs(): Map<Category, BigDecimal>
-    fun pushActiveReconcileCAs(categoryAmounts: Map<Category, BigDecimal>?)
-    fun pushActiveReconcileCA(kv: Pair<Category, BigDecimal?>)
+    val activeReconciliationCAs: BehaviorSubject<Map<Category, BigDecimal>>
+    fun pushActiveReconciliationCAs(categoryAmounts: Map<Category, BigDecimal>?)
+    fun pushActiveReconciliationCA(kv: Pair<Category, BigDecimal?>)
     fun clearActiveReconcileCAs()
+    val activePlanCAs: Observable<Map<Category, BigDecimal>>
     fun pushActivePlanCAs(categoryAmounts: Map<Category, BigDecimal>?)
     fun pushActivePlanCA(kv: Pair<Category, BigDecimal?>)
     fun clearActivePlan()
@@ -18,5 +20,4 @@ interface ISharedPrefWrapper {
     fun pushAnchorDateOffset(anchorDateOffset: Long?)
     fun fetchBlockSize(): Observable<Long>
     fun pushBlockSize(blockSize: Long?)
-    val activePlan: Observable<Map<Category, BigDecimal>>
 }
