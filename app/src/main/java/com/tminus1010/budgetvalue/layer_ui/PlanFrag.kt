@@ -25,8 +25,7 @@ import java.util.concurrent.TimeUnit
 class PlanFrag: Fragment(R.layout.frag_plan) {
     val app by lazy { requireActivity().application as App }
     val repo by lazy { app.appComponent.getRepo() }
-    val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
-    val activePlanVM : ActivePlanVM by activityViewModels2 { ActivePlanVM(repo, categoriesAppVM, app.appComponent.getDatePeriodGetter()) }
+    val activePlanVM : ActivePlanVM by activityViewModels2 { ActivePlanVM(repo, app.appComponent.getDatePeriodGetter()) }
 
     override fun onStart() {
         super.onStart()

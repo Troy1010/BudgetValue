@@ -22,19 +22,7 @@ class HostActivity : AppCompatActivity() {
     val app by lazy { application as App }
     val transactionsVM: TransactionsVM by viewModels2 { TransactionsVM(app.appComponent.getRepo(), app.appComponent.getDatePeriodGetter()) }
     val navController by lazy { findNavController(R.id.fragNavHost) }
-    val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
     val repo by lazy { app.appComponent.getRepo() }
-
-    init {
-        // Some of the delete category logic is handled here, but it does not belong here.. it should be moved.
-        // TODO("very hacky..")
-        Completable.complete()
-            .delay(100, TimeUnit.MILLISECONDS)
-            .subscribe {
-                categoriesAppVM.intentDeleteCategoryFromActive.subscribe { repo.deleteFromActive(it) }
-                categoriesAppVM.intentDeleteCategoryFromEverywhere.subscribe { repo.deleteFromEverywhere(it) }
-            }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,7 +72,7 @@ class HostActivity : AppCompatActivity() {
                 for (transactionBlock in transactionBlocks) {
                     val curStringBlock = HashMap<String, String>()
                     stringBlocks.add(curStringBlock)
-                    for (category in categoriesAppVM.categories.value) {
+                    for (category in repo.activeCategories.value) {
                         curStringBlock[category.name] = transactionBlock.value
                             .map { it.categoryAmounts[category] ?: BigDecimal.ZERO }
                             .fold(BigDecimal.ZERO, BigDecimal::add)

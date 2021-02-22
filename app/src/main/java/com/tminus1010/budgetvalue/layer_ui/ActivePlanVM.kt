@@ -14,7 +14,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 import java.time.LocalDate
 
-class ActivePlanVM(val repo: Repo, categoriesAppVM: CategoriesAppVM, datePeriodGetter: DatePeriodGetter) : ViewModel() {
+class ActivePlanVM(val repo: Repo, datePeriodGetter: DatePeriodGetter) : ViewModel() {
     val intentPushExpectedIncome = PublishSubject.create<BigDecimal>()
         .also { it.subscribe(repo::pushExpectedIncome) }
     val intentSaveActivePlan = PublishSubject.create<Unit>()
@@ -43,7 +43,7 @@ class ActivePlanVM(val repo: Repo, categoriesAppVM: CategoriesAppVM, datePeriodG
     val activePlan = mergeCombineWithIndex(
         repo.activePlan.take(1),
         intentPushPlanCA,
-        categoriesAppVM.choosableCategories,
+        repo.activeCategories
     )
         .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (i, activePlan, intentPushPlanCA, chooseableCategories) ->
             when (i) {
