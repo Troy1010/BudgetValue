@@ -5,6 +5,7 @@ import com.tminus1010.budgetvalue.model_app.ICategoryParser
 import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import javax.inject.Inject
 
 class ActiveCategoryDAOWrapper @Inject constructor(
@@ -14,10 +15,10 @@ class ActiveCategoryDAOWrapper @Inject constructor(
     ActiveCategoryDAO by activeCategoryDAO {
     override val defaultCategory = Category("Default", Category.Type.Default, true)
 
-    override val activeCategories =
+    override val activeCategories: BehaviorSubject<List<Category>> =
         fetchActiveCategories()
             .map { it.sortedWith(categoryComparator) }
-            .replay(1).refCount()
+            .toBehaviorSubject()
 
     override val categories = activeCategories
         .map { it + defaultCategory }
