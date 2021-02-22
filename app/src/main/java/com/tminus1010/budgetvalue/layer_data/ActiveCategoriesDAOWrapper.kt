@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue.layer_data
 
 import com.tminus1010.budgetvalue.categoryComparator
-import com.tminus1010.budgetvalue.model_app.ICategoryParser
 import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject

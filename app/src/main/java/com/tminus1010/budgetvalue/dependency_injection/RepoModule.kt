@@ -8,7 +8,7 @@ import com.tminus1010.budgetvalue.layer_data.ActiveCategoriesDAO
 import com.tminus1010.budgetvalue.layer_data.ActiveCategoriesDAOWrapper
 import com.tminus1010.budgetvalue.layer_data.BudgetValueDB
 import com.tminus1010.budgetvalue.layer_data.MiscDAO
-import com.tminus1010.budgetvalue.model_app.ICategoryParser
+import com.tminus1010.budgetvalue.layer_data.ICategoryParser
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

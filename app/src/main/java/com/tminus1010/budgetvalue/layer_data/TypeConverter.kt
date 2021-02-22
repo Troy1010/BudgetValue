@@ -3,10 +3,6 @@ package com.tminus1010.budgetvalue.layer_data
 import com.tminus1010.budgetvalue.extensions.associate
 import com.tminus1010.budgetvalue.getTypeForGson
 import com.tminus1010.budgetvalue.model_data.Category
-import com.tminus1010.budgetvalue.model_app.ICategoryParser
-import com.tminus1010.budgetvalue.model_app.Transaction
-import com.tminus1010.budgetvalue.model_data.ICategoryAmountReceived
-import com.tminus1010.budgetvalue.model_data.TransactionReceived
 import com.google.gson.Gson
 import java.math.BigDecimal
 import javax.inject.Inject
