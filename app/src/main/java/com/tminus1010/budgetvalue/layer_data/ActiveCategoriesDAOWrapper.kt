@@ -26,14 +26,16 @@ class ActiveCategoriesDAOWrapper @Inject constructor(
             .map { it.sortedWith(categoryComparator) }
             .toBehaviorSubject(emptyList())
 
-    override val categories = activeCategories
-        .map { it + defaultCategory }
-        .map { it.sortedWith(categoryComparator) }
-        .toBehaviorSubject()
+    override val categories =
+        activeCategories
+            .map { it + defaultCategory }
+            .map { it.sortedWith(categoryComparator) }
+            .toBehaviorSubject()
 
-    private val nameToCategoryMap = activeCategories_
-        .map { it.associateBy { it.name } as HashMap<String, Category> }
-        .replay(1).apply { connect() }
+    private val nameToCategoryMap =
+        activeCategories_
+            .map { it.associateBy { it.name } as HashMap<String, Category> }
+            .replay(1).apply { connect() }
 
     override fun parseCategory(categoryName: String): Category {
         require(categoryName != defaultCategory.name) { "Should never have to parse \"${defaultCategory.name}\"" }
