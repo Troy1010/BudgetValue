@@ -65,7 +65,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         textview_amount_left.bindIncoming(transactionsVM.uncategorizedSpendsSize)
         v.btn_advanced.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_advancedCategorizeFrag) }
         v.btn_delete_category.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_categoryCustomizationFrag) }
-        v.btn_new_category.setOnClickListener {  }
+        v.btn_new_category.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) }
         categorizeVM.hasUncategorizedTransaction.observe(viewLifecycleOwner) { btn_advanced.isEnabled = it }
     }
 }
