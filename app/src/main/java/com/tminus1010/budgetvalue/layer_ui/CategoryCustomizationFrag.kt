@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.frag_category_customization.view.*
 
 class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization) {
     val app by lazy { requireActivity().application as App }
-    val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
+    val repo by lazy { app.appComponent.getRepo() }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
@@ -36,7 +36,7 @@ class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization)
             { View.inflate(requireContext(), R.layout.button, null) as Button },
             { v: Button, d: Category ->
                 v.text = "Delete"
-                v.clicks().subscribeOn(AndroidSchedulers.mainThread()).map { d }.subscribe(categoriesAppVM.intentDeleteCategoryFromActive)
+                v.setOnClickListener { repo.deleteFromActive(d) }
                 v.isEnabled = !d.isRequired
             }
         )
@@ -44,7 +44,7 @@ class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization)
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        categoriesAppVM.choosableCategories
+        repo.activeCategories
             .observeOn(Schedulers.computation())
             .map { categories ->
                 val recipeGrid = RecipeGrid(listOf(

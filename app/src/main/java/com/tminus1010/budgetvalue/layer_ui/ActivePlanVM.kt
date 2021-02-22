@@ -10,11 +10,12 @@ import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.model_app.Plan
 import com.tminus1010.budgetvalue.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 import java.time.LocalDate
 
-class ActivePlanVM(val repo: Repo, categoriesAppVM: CategoriesAppVM, datePeriodGetter: DatePeriodGetter) : ViewModel() {
+class ActivePlanVM(val repo: Repo, datePeriodGetter: DatePeriodGetter) : ViewModel() {
     val intentPushExpectedIncome = PublishSubject.create<BigDecimal>()
         .also { it.subscribe(repo::pushExpectedIncome) }
     val intentSaveActivePlan = PublishSubject.create<Unit>()
@@ -32,8 +33,11 @@ class ActivePlanVM(val repo: Repo, categoriesAppVM: CategoriesAppVM, datePeriodG
     val intentPushPlanCA = PublishSubject.create<Pair<Category, BigDecimal>>()
         .also {
             it.subscribe { repo.pushActivePlanCA(it) }
+            // The last plan might be the active plan, if it contains the current date.
+            // push to there as well.
             it
                 .withLatestFrom(repo.plans) { _, b -> b }
+                .filter { it.isNotEmpty() }
                 .map { it.last() }
                 .filter { LocalDate.now() in it.localDatePeriod.blockingFirst() }
                 .map { Unit }
@@ -43,7 +47,7 @@ class ActivePlanVM(val repo: Repo, categoriesAppVM: CategoriesAppVM, datePeriodG
     val activePlan = mergeCombineWithIndex(
         repo.activePlan.take(1),
         intentPushPlanCA,
-        categoriesAppVM.choosableCategories,
+        repo.activeCategories
     )
         .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (i, activePlan, intentPushPlanCA, chooseableCategories) ->
             when (i) {

@@ -19,7 +19,7 @@ import java.time.format.DateTimeFormatter
 
 class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     val app by lazy { requireActivity().application as App }
-    val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
+    val repo by lazy { app.appComponent.getRepo() }
     val transactionsVM: TransactionsVM by activityViewModels2 {
         TransactionsVM(app.appComponent.getRepo(),
             app.appComponent.getDatePeriodGetter())
@@ -44,12 +44,12 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
 
             override fun onBindViewHolder(holder: GenViewHolder, position: Int) {
                 holder.itemView.btn_category.apply {
-                    text = categoriesAppVM.choosableCategories.value[holder.adapterPosition].name
-                    setOnClickListener { categorizeVM.finishTransactionWithCategory(categoriesAppVM.choosableCategories.value[holder.adapterPosition]) }
+                    text = repo.activeCategories.value[holder.adapterPosition].name
+                    setOnClickListener { categorizeVM.finishTransactionWithCategory(repo.activeCategories.value[holder.adapterPosition]) }
                 }
             }
 
-            override fun getItemCount() = categoriesAppVM.choosableCategories.value.size
+            override fun getItemCount() = repo.activeCategories.value.size
         }
         // # Views
         textview_date.bindIncoming(categorizeVM.transactionBox)

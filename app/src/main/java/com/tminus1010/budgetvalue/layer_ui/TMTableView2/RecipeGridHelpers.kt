@@ -18,7 +18,7 @@ class ColWidthsProvider(val recipes2d: List<List<IViewItemRecipe>>): IColumnWidt
     private val colWidths = HashMap<Int, Int>()
     init {
         Completable.fromCallable {
-            recipes2d[0].indices.forEach { getColumnWidth(it) }
+            recipes2d.getOrNull(0)?.indices?.forEach { getColumnWidth(it) }
         }.subscribeOn(Schedulers.computation()).subscribe()
     }
     override fun getColumnWidth(i: Int): Int {

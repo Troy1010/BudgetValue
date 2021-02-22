@@ -12,12 +12,12 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import java.math.BigDecimal
 import javax.inject.Inject
 
-class MyDaoWrapper @Inject constructor(
-    val myDao: MyDao,
+class MiscDAOWrapper @Inject constructor(
+    val miscDAO: MiscDAO,
     val typeConverter: TypeConverter,
-) : MyDao by myDao, IMyDaoWrapper {
+) : MiscDAO by miscDAO, IMiscDAOWrapper {
     override val transactions =
-        myDao.getTransactionsReceived()
+        miscDAO.getTransactionsReceived()
             .map { it.map { it.toTransaction(typeConverter) } }
             .replay(1).refCount()
 
@@ -28,12 +28,12 @@ class MyDaoWrapper @Inject constructor(
             .also { updateTransactionCategoryAmounts(transaction.id, it.mapKeys { it.key.name }).subscribe() }
     }
 
-    override val plans = myDao.fetchPlanReceived()
+    override val plans = miscDAO.fetchPlanReceived()
         .subscribeOn(Schedulers.io())
         .map { it.map { it.toPlan(typeConverter) } }
         .noEnd().replay(1).refCount()
 
-    override fun pushPlan(plan: Plan) = myDao.add(plan.toPlanReceived(typeConverter)).subscribeOn(Schedulers.io())
+    override fun pushPlan(plan: Plan) = miscDAO.add(plan.toPlanReceived(typeConverter)).subscribeOn(Schedulers.io())
     override fun pushPlanCA(plan: Plan, category: Category, amount: BigDecimal?) {
         plan.categoryAmounts
             .toMutableMap()
@@ -43,7 +43,7 @@ class MyDaoWrapper @Inject constructor(
 
     override fun pushReconciliation(reconciliation: Reconciliation): Completable =
         reconciliation.toReconciliationReceived(typeConverter, BigDecimal(0))
-            .let { myDao.add(it).subscribeOn(Schedulers.io()) }
+            .let { miscDAO.add(it).subscribeOn(Schedulers.io()) }
 
     override fun pushReconciliationCA(
         reconciliation: Reconciliation,
@@ -57,16 +57,16 @@ class MyDaoWrapper @Inject constructor(
     }
 
     override val reconciliations: Observable<List<Reconciliation>> =
-        myDao.fetchReconciliationReceived()
+        miscDAO.fetchReconciliationReceived()
             .map { it.map { it.toReconciliation(typeConverter) } }
             .replay(1).refCount()
 
     override fun update(account: Account): Completable {
-        return myDao
+        return miscDAO
             .getAccount(account.id)
             .take(1)
             .filter { it != account }
-            .flatMapCompletable { myDao.update(account) }
+            .flatMapCompletable { miscDAO.update(account) }
             .subscribeOn(Schedulers.io())
     }
 }

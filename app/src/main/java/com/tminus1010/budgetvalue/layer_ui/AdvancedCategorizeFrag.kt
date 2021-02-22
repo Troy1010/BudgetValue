@@ -22,7 +22,6 @@ import java.util.concurrent.TimeUnit
 class AdvancedCategorizeFrag : Fragment(R.layout.frag_advanced_categorize) {
     val app by lazy { requireActivity().application as App }
     val repo by lazy { app.appComponent.getRepo() }
-    val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
     val viewRecipeFactories by lazy { ViewItemRecipeFactoryProvider(requireContext()) }
     val transactionsVM by activityViewModels2 { TransactionsVM(repo, DatePeriodGetter(repo)) }
     val categorizeVM by activityViewModels2 { CategorizeVM(repo, transactionsVM) }
@@ -48,7 +47,7 @@ class AdvancedCategorizeFrag : Fragment(R.layout.frag_advanced_categorize) {
         val amountRecipeFactory = viewRecipeFactories.incomingBigDecimalRecipeFactory
         val categoryAmountRecipeFactory = viewRecipeFactories.outgoingCARecipeFactory(advancedCategorizeVM.intentRememberCA)
         val titledDividerRecipeFactory = viewRecipeFactories.titledDividerRecipeFactory
-        combineLatestAsTuple(tmTableView_ac.widthObservable, categoriesAppVM.choosableCategories)
+        combineLatestAsTuple(tmTableView_ac.widthObservable, repo.activeCategories)
             .debounce(100, TimeUnit.MILLISECONDS)
             .observeOn(Schedulers.computation())
             .map { (width, categories) ->

@@ -9,16 +9,18 @@ import javax.inject.Inject
  */
 class Repo @Inject constructor(
     transactionParser: TransactionParser,
-    sharedPrefWrapper: ISharedPrefWrapper,
-    myDaoWrapper: IMyDaoWrapper
+    sharedPrefWrapper: SharedPrefWrapper,
+    miscDAOWrapper: MiscDAOWrapper,
+    activeCategoryDAOWrapper: ActiveCategoriesDAOWrapper,
 ) : ITransactionParser by transactionParser,
     ISharedPrefWrapper by sharedPrefWrapper,
-    IMyDaoWrapper by myDaoWrapper
-{
+    IMiscDAOWrapper by miscDAOWrapper,
+    IActiveCategoriesDAOWrapper by activeCategoryDAOWrapper {
     fun deleteFromActive(category: Category) {
         pushActivePlanCA(Pair(category, null))
         pushActiveReconcileCA(Pair(category, null))
     }
+
     fun deleteFromEverywhere(category: Category) {
         deleteFromActive(category)
         transactions
