@@ -9,5 +9,5 @@ import com.tminus1010.budgetvalue.model_data.*
 @Database(entities = [TransactionReceived::class, Account::class, ReconciliationReceived::class, PlanCategoryAmount::class, PlanReceived::class, Category::class], version = 27)
 abstract class BudgetValueDB : RoomDatabase() {
     abstract fun myDao(): MiscDAO
-    abstract fun activeCategoryDAO(): ActiveCategoryDAO
+    abstract fun activeCategoryDAO(): ActiveCategoriesDAO
 }

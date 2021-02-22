@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.tminus1010.budgetvalue.App
 import com.tminus1010.budgetvalue.SHARED_PREF_FILE_NAME
-import com.tminus1010.budgetvalue.layer_data.ActiveCategoryDAO
-import com.tminus1010.budgetvalue.layer_data.ActiveCategoryDAOWrapper
+import com.tminus1010.budgetvalue.layer_data.ActiveCategoriesDAO
+import com.tminus1010.budgetvalue.layer_data.ActiveCategoriesDAOWrapper
 import com.tminus1010.budgetvalue.layer_data.BudgetValueDB
 import com.tminus1010.budgetvalue.layer_data.MiscDAO
 import com.tminus1010.budgetvalue.model_app.ICategoryParser
@@ -17,7 +17,7 @@ import javax.inject.Singleton
 class RepoModule {
     @Provides
     @Singleton
-    fun providesCategoryParser(activeCategoryDAOWrapper: ActiveCategoryDAOWrapper): ICategoryParser {
+    fun providesCategoryParser(activeCategoryDAOWrapper: ActiveCategoriesDAOWrapper): ICategoryParser {
         return activeCategoryDAOWrapper
     }
 
@@ -38,7 +38,7 @@ class RepoModule {
 
     @Provides
     @Singleton
-    fun providesActiveCategoryDAO(roomDatabase: BudgetValueDB): ActiveCategoryDAO {
+    fun providesActiveCategoryDAO(roomDatabase: BudgetValueDB): ActiveCategoriesDAO {
         return roomDatabase.activeCategoryDAO()
     }
 }

@@ -8,11 +8,11 @@ import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import javax.inject.Inject
 
-class ActiveCategoryDAOWrapper @Inject constructor(
-    val activeCategoryDAO: ActiveCategoryDAO,
-) : IActiveCategoryDAOWrapper,
+class ActiveCategoriesDAOWrapper @Inject constructor(
+    val activeCategoriesDAO: ActiveCategoriesDAO,
+) : IActiveCategoriesDAOWrapper,
     ICategoryParser,
-    ActiveCategoryDAO by activeCategoryDAO {
+    ActiveCategoriesDAO by activeCategoriesDAO {
     override val defaultCategory = Category("Default", Category.Type.Default, true)
 
     override val activeCategories: BehaviorSubject<List<Category>> =

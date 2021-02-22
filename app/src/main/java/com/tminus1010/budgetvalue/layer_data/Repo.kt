@@ -11,11 +11,11 @@ class Repo @Inject constructor(
     transactionParser: TransactionParser,
     sharedPrefWrapper: SharedPrefWrapper,
     miscDAOWrapper: MiscDAOWrapper,
-    activeCategoryDAOWrapper: ActiveCategoryDAOWrapper,
+    activeCategoryDAOWrapper: ActiveCategoriesDAOWrapper,
 ) : ITransactionParser by transactionParser,
     ISharedPrefWrapper by sharedPrefWrapper,
     IMiscDAOWrapper by miscDAOWrapper,
-    IActiveCategoryDAOWrapper by activeCategoryDAOWrapper {
+    IActiveCategoriesDAOWrapper by activeCategoryDAOWrapper {
     fun deleteFromActive(category: Category) {
         pushActivePlanCA(Pair(category, null))
         pushActiveReconcileCA(Pair(category, null))
