@@ -8,26 +8,26 @@ import org.junit.Assert.*
 import org.junit.Before
 
 class ReconciliationTests {
-    val app by lazy { InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as AppMock }
-    val repo by lazy { app.appComponent.getRepo() }
-    val a by lazy { Category("SomeCategoryA", Category.Type.Always) }
-    val b by lazy { Category("SomeCategoryB", Category.Type.Always) }
-    val c by lazy { Category("SomeCategoryC", Category.Type.Always) }
-    val x by lazy {
-        app.appComponent.getCategoriesAppVM()
-            .userAddedCategories
-            .addAll(listOf(
-                a,
-                b,
-                c,
-            ))
-    }
-
-    @Before
-    fun before() {
-        repo.clearReconciliations()
-        x
-    }
+//    val app by lazy { InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as AppMock }
+//    val repo by lazy { app.appComponent.getRepo() }
+//    val a by lazy { Category("SomeCategoryA", Category.Type.Always) }
+//    val b by lazy { Category("SomeCategoryB", Category.Type.Always) }
+//    val c by lazy { Category("SomeCategoryC", Category.Type.Always) }
+//    val x by lazy {
+//        app.appComponent.getCategoriesAppVM()
+//            .userAddedCategories
+//            .addAll(listOf(
+//                a,
+//                b,
+//                c,
+//            ))
+//    }
+//
+//    @Before
+//    fun before() {
+//        repo.clearReconciliations()
+//        x
+//    }
 
 //    @Test
 //    fun pushActiveReconcileCA() {
