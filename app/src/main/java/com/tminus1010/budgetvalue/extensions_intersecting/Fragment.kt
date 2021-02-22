@@ -2,6 +2,7 @@ package com.tminus1010.budgetvalue.extensions_intersecting
 
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.App
+import com.tminus1010.budgetvalue.extensions.activityViewModels2
 
 
 val Fragment.app
@@ -17,25 +18,25 @@ val Fragment.domain
     get() = appComponent.getDomain()
 
 val Fragment.accountsVM
-    get() = appComponent.getAccountsVM()
+    get() = activityViewModels2 { appComponent.getAccountsVM() }.value
 
 val Fragment.activePlanVM
-    get() = appComponent.getActivePlanVM()
+    get() = activityViewModels2 { appComponent.getActivePlanVM() }.value
 
 val Fragment.activeReconciliationVM
-    get() = appComponent.getActiveReconciliationVM()
+    get() = activityViewModels2 { appComponent.getActiveReconciliationVM() }.value
 
 val Fragment.advancedCategorizeVM
-    get() = appComponent.getAdvancedCategorizeVM()
+    get() = activityViewModels2 { appComponent.getAdvancedCategorizeVM() }.value
 
 val Fragment.budgetedVM
-    get() = appComponent.getBudgetedVM()
+    get() = activityViewModels2 { appComponent.getBudgetedVM() }.value
 
 val Fragment.categorizeVM
-    get() = appComponent.getCategorizeVM()
+    get() = activityViewModels2 { appComponent.getCategorizeVM() }.value
 
 val Fragment.historyVM
-    get() = appComponent.getHistoryVM()
+    get() = activityViewModels2 { appComponent.getHistoryVM() }.value
 
 val Fragment.transactionsVM
-    get() = appComponent.getTransactionsVM()
+    get() = activityViewModels2 { appComponent.getTransactionsVM() }.value
