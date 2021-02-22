@@ -5,15 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tminus1010.budgetvalue.*
+import com.tminus1010.budgetvalue.App
+import com.tminus1010.budgetvalue.GenViewHolder
+import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.extensions.activityViewModels2
+import com.tminus1010.budgetvalue.extensions.nav
+import com.tminus1010.budgetvalue.extensions.v
 import com.tminus1010.budgetvalue.extensions.viewModels2
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
+import com.tminus1010.budgetvalue.unbox
 import com.tminus1010.tmcommonkotlin_rx.observe
 import kotlinx.android.synthetic.main.frag_categorize.*
+import kotlinx.android.synthetic.main.frag_categorize.view.*
 import kotlinx.android.synthetic.main.item_category_btn.view.*
 import java.time.format.DateTimeFormatter
 
@@ -28,7 +33,6 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         CategorizeVM(app.appComponent.getRepo(),
             transactionsVM)
     }
-    val navController by lazy { findNavController() }
     val advancedCategorizeVM by activityViewModels2 { AdvancedCategorizeVM(categorizeVM) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,8 +63,9 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         textview_description.bindIncoming(categorizeVM.transactionBox)
         { it.unbox?.description ?: "" }
         textview_amount_left.bindIncoming(transactionsVM.uncategorizedSpendsSize)
-        btn_fc_advanced.setOnClickListener { navController.navigate(R.id.action_categorizeFrag_to_advancedCategorizeFrag) }
-        btn_fc_customize.setOnClickListener { navController.navigate(R.id.action_categorizeFrag_to_categoryCustomizationFrag) }
-        categorizeVM.hasUncategorizedTransaction.observe(viewLifecycleOwner) { btn_fc_advanced.isEnabled = it }
+        v.btn_advanced.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_advancedCategorizeFrag) }
+        v.btn_delete_category.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_categoryCustomizationFrag) }
+        v.btn_new_category.setOnClickListener {  }
+        categorizeVM.hasUncategorizedTransaction.observe(viewLifecycleOwner) { btn_advanced.isEnabled = it }
     }
 }
