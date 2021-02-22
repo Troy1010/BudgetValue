@@ -1,13 +1,11 @@
 package com.tminus1010.budgetvalue.layer_data
 
 import com.tminus1010.budgetvalue.categoryComparator
-import com.tminus1010.budgetvalue.extensions.onIO
 import com.tminus1010.budgetvalue.model_app.ICategoryParser
 import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import javax.inject.Inject
 
@@ -38,8 +36,9 @@ class ActiveCategoriesDAOWrapper @Inject constructor(
         .replay(1).apply { connect() }
 
     override fun parseCategory(categoryName: String): Category {
+        require(categoryName != defaultCategory.name) { "Should never have to parse \"${defaultCategory.name}\"" }
         return nameToCategoryMap.blockingFirst()[categoryName]
-            .also { if (it==null) logz("parseCategory`WARNING:had to return default for category name:$categoryName") }
+            .also { if (it == null) logz("parseCategory`WARNING:had to return default for category name:$categoryName") }
             ?: defaultCategory
     }
 }
