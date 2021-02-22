@@ -23,7 +23,7 @@ class AdvancedCategorizeFrag : Fragment(R.layout.frag_advanced_categorize) {
     val viewRecipeFactories by lazy { ViewItemRecipeFactoryProvider(requireContext()) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // # Btn Done
+        // # Clicks
         btn_ac_done.setOnClickListener {
             if (advancedCategorizeVM.defaultAmount.value.compareTo(BigDecimal.ZERO)!=0) {
                 toast("Default must be 0")

@@ -12,15 +12,13 @@ import com.tminus1010.budgetvalue.App
 import com.tminus1010.budgetvalue.GenViewHolder
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.extensions.viewModels2
+import com.tminus1010.budgetvalue.extensions_intersecting.accountsVM
 import com.tminus1010.tmcommonkotlin_rx.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.frag_import.*
 import kotlinx.android.synthetic.main.item_account.view.*
 
 class ImportFrag : Fragment(R.layout.frag_import) {
-    val app by lazy { requireActivity().application as App }
-    val accountsVM: AccountsVM by viewModels2 { AccountsVM(app.appComponent.getRepo()) }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks

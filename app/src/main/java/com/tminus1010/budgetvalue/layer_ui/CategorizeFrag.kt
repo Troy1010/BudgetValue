@@ -19,6 +19,7 @@ import com.tminus1010.budgetvalue.unbox
 import com.tminus1010.tmcommonkotlin_rx.observe
 import kotlinx.android.synthetic.main.frag_categorize.*
 import kotlinx.android.synthetic.main.frag_categorize.view.*
+import kotlinx.android.synthetic.main.frag_reconcile.*
 import kotlinx.android.synthetic.main.item_category_btn.view.*
 import java.time.format.DateTimeFormatter
 
@@ -43,7 +44,11 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
 
             override fun getItemCount() = repo.activeCategories.value.size
         }
-        // # Views
+        // # Clicks
+        v.btn_advanced.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_advancedCategorizeFrag) }
+        v.btn_delete_category.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_categoryCustomizationFrag) }
+        v.btn_new_category.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) }
+        //
         textview_date.bindIncoming(categorizeVM.transactionBox)
         { it.unbox?.date?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")) ?: "" }
         textview_amount.bindIncoming(categorizeVM.transactionBox)
@@ -51,9 +56,6 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         textview_description.bindIncoming(categorizeVM.transactionBox)
         { it.unbox?.description ?: "" }
         textview_amount_left.bindIncoming(transactionsVM.uncategorizedSpendsSize)
-        v.btn_advanced.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_advancedCategorizeFrag) }
-        v.btn_delete_category.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_categoryCustomizationFrag) }
-        v.btn_new_category.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) }
         categorizeVM.hasUncategorizedTransaction.observe(viewLifecycleOwner) { btn_advanced.isEnabled = it }
     }
 }

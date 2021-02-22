@@ -11,6 +11,7 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.extensions.distinctUntilChangedWith
 import com.tminus1010.budgetvalue.extensions.nav
 import com.tminus1010.budgetvalue.extensions.v
+import com.tminus1010.budgetvalue.extensions_intersecting.repo
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.model_data.Category
@@ -21,8 +22,6 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.frag_category_customization.view.*
 
 class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization) {
-    val app by lazy { requireActivity().application as App }
-    val repo by lazy { app.appComponent.getRepo() }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks

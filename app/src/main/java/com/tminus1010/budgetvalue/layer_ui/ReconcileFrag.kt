@@ -26,16 +26,12 @@ import java.math.BigDecimal
 class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupBinds()
-    }
-
-    fun setupBinds() {
-        // # Save Button
+        // # Clicks
         btn_save.clicks().subscribe {
             activeReconciliationVM.intentSaveReconciliation.onNext(Unit)
             activePlanVM.intentSaveActivePlan.onNext(Unit)
         }
-        // # Table
+        // # TMTableView
         val cellRecipeFactory = ViewItemRecipeFactory.createCellRecipeFactory(requireContext())
         val headerRecipeFactory = ViewItemRecipeFactory.createHeaderRecipeFactory(requireContext())
         val headerRecipeFactory_numbered = ViewItemRecipeFactory<LinearLayout, Pair<String, Observable<BigDecimal>>>(
