@@ -30,7 +30,7 @@ class ActiveCategoryDAOWrapper @Inject constructor(
         .toBehaviorSubject()
 
     override fun parseCategory(categoryName: String): Category {
-        val category = nameToCategoryMap.value[categoryName]
+        val category = nameToCategoryMap.blockingFirst()[categoryName]
         if (category == null) logz("parseCategory`WARNING:had to return default for category name:$categoryName")
         return category ?: defaultCategory
     }
