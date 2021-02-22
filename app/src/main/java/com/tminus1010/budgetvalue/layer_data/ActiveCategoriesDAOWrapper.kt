@@ -5,6 +5,7 @@ import com.tminus1010.budgetvalue.model_app.ICategoryParser
 import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import javax.inject.Inject
 
@@ -15,8 +16,13 @@ class ActiveCategoriesDAOWrapper @Inject constructor(
     ActiveCategoriesDAO by activeCategoriesDAO {
     override val defaultCategory = Category("Default", Category.Type.Default, true)
 
-    override val activeCategories: BehaviorSubject<List<Category>> =
+    private val activeCategories_: Observable<List<Category>> =
         fetchActiveCategories()
+
+    // activeCategories needs to start with an empty list, but
+    // nameToCategoryMap must not start with an empty list.
+    override val activeCategories: BehaviorSubject<List<Category>> =
+        activeCategories_
             .map { it.sortedWith(categoryComparator) }
             .toBehaviorSubject(emptyList())
 
@@ -25,12 +31,12 @@ class ActiveCategoriesDAOWrapper @Inject constructor(
         .map { it.sortedWith(categoryComparator) }
         .toBehaviorSubject()
 
-    private val nameToCategoryMap = activeCategories
+    private val nameToCategoryMap = activeCategories_
         .map { it.associateBy { it.name } as HashMap<String, Category> }
-        .toBehaviorSubject()
+        .replay(1).apply { connect() }
 
     override fun parseCategory(categoryName: String): Category {
-        val category = nameToCategoryMap.skip(1).blockingFirst()[categoryName]
+        val category = nameToCategoryMap.blockingFirst()[categoryName]
         if (category == null) logz("parseCategory`WARNING:had to return default for category name:$categoryName")
         return category ?: defaultCategory
     }
