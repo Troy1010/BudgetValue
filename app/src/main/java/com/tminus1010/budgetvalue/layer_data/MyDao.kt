@@ -30,23 +30,6 @@ interface MyDao {
     @Update
     fun update(account: Account): Completable
 
-    // # ActiveCategories
-
-    @Query("select * from `Category`")
-    fun getActiveCategories(): Observable<List<Category>>
-
-    @Query("select * from `Category` where name=:name")
-    fun getActiveCategory(name: String): Observable<Category>
-
-    @Insert
-    fun add(category: Category): Completable
-
-    @Delete
-    fun delete(category: Category): Completable
-
-    @Update
-    fun update(category: Category): Completable
-
     // # Transactions
 
     @Query("DELETE FROM `TransactionReceived`")

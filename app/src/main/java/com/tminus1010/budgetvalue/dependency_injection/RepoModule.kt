@@ -21,8 +21,8 @@ class RepoModule {
 
     @Provides
     @Singleton
-    fun providesParseCategory(categoriesAppVM: CategoriesAppVM): ICategoryParser {
-        return categoriesAppVM
+    fun providesParseCategory(activeCategoryDAOWrapper: ActiveCategoryDAOWrapper): ICategoryParser {
+        return activeCategoryDAOWrapper
     }
 
     @Provides
@@ -42,11 +42,18 @@ class RepoModule {
 
     @Provides
     @Singleton
-    fun providesRepo(myDaoWrapper: MyDaoWrapper, sharedPrefWrapper: SharedPrefWrapper, transactionParser: TransactionParser): Repo {
+    fun providesActiveCategoryDAO(roomDatabase: BudgetValueDB): ActiveCategoryDAO {
+        return roomDatabase.activeCategoryDAO()
+    }
+
+    @Provides
+    @Singleton
+    fun providesRepo(myDaoWrapper: MyDaoWrapper, sharedPrefWrapper: SharedPrefWrapper, transactionParser: TransactionParser, activeCategoryDAOWrapper: ActiveCategoryDAOWrapper): Repo {
         return Repo(
             transactionParser,
             sharedPrefWrapper,
-            myDaoWrapper
+            myDaoWrapper,
+            activeCategoryDAOWrapper
         )
     }
 }

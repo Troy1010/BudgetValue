@@ -14,6 +14,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
  * be provided by dagger, not activityViewModels().
  */
 class CategoriesAppVM : ICategoryParser {
+    // TODO("There are 2 defaultCategories..")
     val defaultCategory = Category("Default", Category.Type.Default, true)
     val userAddedCategories = SourceArrayList<Category>()
     val categories = userAddedCategories.observable
