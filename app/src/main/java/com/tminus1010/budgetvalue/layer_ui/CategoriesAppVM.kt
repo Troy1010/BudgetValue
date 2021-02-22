@@ -7,13 +7,14 @@ import com.tminus1010.budgetvalue.model_app.ICategoryParser
 import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
+import javax.inject.Inject
 
 /**
  * CategoriesAppVM is the viewModel for the categories themselves.
  * Because this is used by the repo, it must be an AppVM; ie - it must
  * be provided by dagger, not activityViewModels().
  */
-class CategoriesAppVM : ICategoryParser {
+class CategoriesAppVM @Inject constructor() : ICategoryParser {
     // TODO("There are 2 defaultCategories..")
     val defaultCategory = Category("Default", Category.Type.Default, true)
     val userAddedCategories = SourceArrayList<Category>()
