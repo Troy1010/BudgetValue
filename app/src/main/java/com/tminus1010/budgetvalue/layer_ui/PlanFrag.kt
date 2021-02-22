@@ -1,6 +1,5 @@
 package com.tminus1010.budgetvalue.layer_ui
 
-import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -8,31 +7,28 @@ import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.*
 import com.tminus1010.budgetvalue.extensions.activityViewModels2
 import com.tminus1010.budgetvalue.extensions.distinctUntilChangedWith
+import com.tminus1010.budgetvalue.extensions.v
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
-import com.tminus1010.budgetvalue.model_app.Category
+import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.tmcommonkotlin_rx.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.frag_plan.*
+import kotlinx.android.synthetic.main.frag_plan.view.*
 import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
 class PlanFrag: Fragment(R.layout.frag_plan) {
     val app by lazy { requireActivity().application as App }
     val repo by lazy { app.appComponent.getRepo() }
-    val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
-    val activePlanVM : ActivePlanVM by activityViewModels2 { ActivePlanVM(repo, categoriesAppVM, app.appComponent.getDatePeriodGetter()) }
+    val activePlanVM : ActivePlanVM by activityViewModels2 { ActivePlanVM(repo, app.appComponent.getDatePeriodGetter()) }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupBinds()
-    }
-
-    private fun setupBinds() {
+    override fun onStart() {
+        super.onStart()
         val cellRecipeFactory = ViewItemRecipeFactory.createCellRecipeFactory(requireContext())
         val headerRecipeFactory = ViewItemRecipeFactory.createHeaderRecipeFactory(requireContext())
         val expectedIncomeRecipeFactory = ViewItemRecipeFactory<EditText, Observable<BigDecimal>>(
@@ -57,7 +53,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        combineLatestAsTuple(activePlanVM.activePlan.value.itemObservableMap2, activePlanVM.activeCategories, myTableView_plan.widthObservable)
+        combineLatestAsTuple(activePlanVM.activePlan.value.itemObservableMap2, repo.activeCategories, myTableView_plan.widthObservable)
             .debounce(100, TimeUnit.MILLISECONDS)
             .observeOn(Schedulers.computation())
             .map { (planCAsItemObservableMap, activeCategories, width) ->
@@ -79,8 +75,8 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
                 Pair(recipes2D, dividerMap)
             }
             .observeOn(AndroidSchedulers.mainThread())
-            .observe(this) { (recipes2D, dividerMap) ->
-                myTableView_plan.initialize(recipes2D, dividerMap, 0, 1)
+            .observe(viewLifecycleOwner) { (recipes2D, dividerMap) ->
+                v.myTableView_plan.initialize(recipes2D, dividerMap, 0, 1)
             }
     }
 }

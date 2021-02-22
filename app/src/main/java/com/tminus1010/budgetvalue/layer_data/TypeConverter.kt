@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.layer_data
 
 import com.tminus1010.budgetvalue.extensions.associate
 import com.tminus1010.budgetvalue.getTypeForGson
-import com.tminus1010.budgetvalue.model_app.Category
+import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.model_app.ICategoryParser
 import com.tminus1010.budgetvalue.model_app.Transaction
 import com.tminus1010.budgetvalue.model_data.ICategoryAmountReceived
@@ -13,23 +13,16 @@ import javax.inject.Inject
 
 class TypeConverter @Inject constructor(
     val categoryParser: ICategoryParser
-): ICategoryParser by categoryParser {
-    fun transactions(transactionsReceived: Iterable<TransactionReceived>): List<Transaction> {
-        return transactionsReceived.map { it.toTransaction(categoryParser) }
-    }
+) {
+    fun bigDecimal(s: String): BigDecimal =
+        s.toBigDecimal()
 
-    fun bigDecimal(s: String): BigDecimal {
-        return s.toBigDecimal()
-    }
+    fun string(bigDecimal: BigDecimal): String =
+        bigDecimal.toString()
 
-    fun string(bigDecimal: BigDecimal): String {
-        return bigDecimal.toString()
-    }
-
-    fun categoryAmounts(categoryAmountsReceived: Iterable<ICategoryAmountReceived>): Map<Category, BigDecimal> {
-        return categoryAmountsReceived
+    fun categoryAmounts(categoryAmountsReceived: Iterable<ICategoryAmountReceived>): Map<Category, BigDecimal> =
+        categoryAmountsReceived
             .associate { categoryParser.parseCategory(it.categoryName) to it.amount } as HashMap
-    }
 
     fun categoryAmounts(s: String?): Map<Category, BigDecimal> {
         val reconcileCategoryAmountsReceived: Map<String, String> =

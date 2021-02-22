@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.layer_data
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.tminus1010.budgetvalue.model_data.Category
 import java.lang.reflect.Type
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -10,6 +11,16 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 object TypeConverterForRoom {
+    @TypeConverter
+    @JvmStatic
+    fun fromCategoryTypeToInt(x: Category.Type): Int =
+        x.ordinal
+
+    @TypeConverter
+    @JvmStatic
+    fun fromIntToCategoryType(i: Int): Category.Type =
+        Category.Type.values()[i]
+
     @TypeConverter
     @JvmStatic
     fun fromBigDecimalToString(x: BigDecimal): String {

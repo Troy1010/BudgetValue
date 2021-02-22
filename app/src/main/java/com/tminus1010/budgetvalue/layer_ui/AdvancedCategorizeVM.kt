@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.extensions.unbox
-import com.tminus1010.budgetvalue.model_app.Category
+import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal

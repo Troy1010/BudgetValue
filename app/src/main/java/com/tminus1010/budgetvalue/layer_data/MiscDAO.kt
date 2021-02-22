@@ -1,13 +1,34 @@
 package com.tminus1010.budgetvalue.layer_data
 
 import androidx.room.*
+import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.model_data.*
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import java.math.BigDecimal
+import java.time.LocalDate
 
 @Dao
-interface MyDao {
+interface MiscDAO {
+    // # Accounts
+
+    @Query("DELETE FROM `Account`")
+    fun clearAccounts(): Completable
+
+    @Query("select * from `Account`")
+    fun getAccounts(): Observable<List<Account>>
+
+    @Query("select * from `Account` where id=:id")
+    fun getAccount(id: Int): Observable<Account>
+
+    @Insert
+    fun add(account: Account): Completable
+
+    @Delete
+    fun delete(account: Account): Completable
+
+    @Update
+    fun update(account: Account): Completable
 
     // # Transactions
 
@@ -38,26 +59,6 @@ interface MyDao {
     @Query("UPDATE `TransactionReceived` SET categoryAmounts=:categoryAmounts WHERE id=:id")
     fun updateTransactionCategoryAmounts(id: String, categoryAmounts: Map<String, BigDecimal>): Completable
 
-    // # Accounts
-
-    @Query("DELETE FROM `Account`")
-    fun clearAccounts(): Completable
-
-    @Query("select * from `Account`")
-    fun getAccounts(): Observable<List<Account>>
-
-    @Query("select * from `Account` where id=:id")
-    fun getAccount(id: Int): Observable<Account>
-
-    @Insert
-    fun add(account: Account): Completable
-
-    @Delete
-    fun delete(account: Account): Completable
-
-    @Update
-    fun update(account: Account): Completable
-
     // # PlanCategoryAmounts
 
     @Query("select * from PlanReceived")
@@ -72,6 +73,9 @@ interface MyDao {
     @Query("DELETE FROM PlanReceived")
     fun clearPlans(): Completable
 
+    @Query("UPDATE `PlanReceived` SET categoryAmounts=:categoryAmounts WHERE startDate=:startDate")
+    fun updatePlanCategoryAmounts(startDate: LocalDate, categoryAmounts: Map<String, BigDecimal>): Completable
+
     // # Reconciliations
 
     @Query("select * from ReconciliationReceived")
@@ -85,4 +89,7 @@ interface MyDao {
 
     @Query("DELETE FROM ReconciliationReceived")
     fun clearReconciliations(): Completable
+
+    @Query("UPDATE `ReconciliationReceived` SET categoryAmounts=:categoryAmounts WHERE id=:id")
+    fun updateReconciliationCategoryAmounts(id: Int, categoryAmounts: Map<String, BigDecimal>): Completable
 }

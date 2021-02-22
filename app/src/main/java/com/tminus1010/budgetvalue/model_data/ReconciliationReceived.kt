@@ -15,7 +15,6 @@ data class ReconciliationReceived(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0
 ) {
-    fun toReconciliation(typeConverter: TypeConverter): Reconciliation {
-        return Reconciliation(localDate, amount, typeConverter.categoryAmounts(categoryAmounts))
-    }
+    fun toReconciliation(typeConverter: TypeConverter): Reconciliation =
+        Reconciliation(localDate, amount, typeConverter.categoryAmounts(categoryAmounts), id)
 }

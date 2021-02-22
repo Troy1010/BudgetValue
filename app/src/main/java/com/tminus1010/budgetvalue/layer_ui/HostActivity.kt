@@ -8,7 +8,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.tminus1010.budgetvalue.*
-import com.tminus1010.budgetvalue.extensions.logzz
 import com.tminus1010.budgetvalue.extensions.viewModels2
 import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin.misc.toast
@@ -19,21 +18,23 @@ import kotlin.time.ExperimentalTime
 class HostActivity : AppCompatActivity() {
     val app by lazy { application as App }
     val transactionsVM: TransactionsVM by viewModels2 { TransactionsVM(app.appComponent.getRepo(), app.appComponent.getDatePeriodGetter()) }
-    val navController by lazy { findNavController(R.id.fragNavHost) }
-    val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
+    val nav by lazy { findNavController(R.id.fragNavHost) }
     val repo by lazy { app.appComponent.getRepo() }
+    val domain by lazy { app.appComponent.getDomain() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        domain.appInit()
+
         setContentView(R.layout.activity_host)
         bottom_navigation.setOnNavigationItemSelectedListener {
             var bSuccessfulNavigation = true
             when (it.itemId) {
-                R.id.menu_import -> navController.navigate(R.id.importFrag)
-                R.id.menu_plan -> navController.navigate(R.id.planFrag)
-                R.id.menu_categorize -> navController.navigate(R.id.categorizeFrag)
-                R.id.menu_reconcile -> navController.navigate(R.id.reconcileFrag)
-                R.id.menu_history -> navController.navigate(R.id.historyFrag)
+                R.id.menu_import -> nav.navigate(R.id.importFrag)
+                R.id.menu_plan -> nav.navigate(R.id.planFrag)
+                R.id.menu_categorize -> nav.navigate(R.id.categorizeFrag)
+                R.id.menu_reconcile -> nav.navigate(R.id.reconcileFrag)
+                R.id.menu_history -> nav.navigate(R.id.historyFrag)
                 else -> bSuccessfulNavigation = false
             }
             bSuccessfulNavigation
@@ -71,7 +72,7 @@ class HostActivity : AppCompatActivity() {
                 for (transactionBlock in transactionBlocks) {
                     val curStringBlock = HashMap<String, String>()
                     stringBlocks.add(curStringBlock)
-                    for (category in categoriesAppVM.categories.value) {
+                    for (category in repo.activeCategories.value) {
                         curStringBlock[category.name] = transactionBlock.value
                             .map { it.categoryAmounts[category] ?: BigDecimal.ZERO }
                             .fold(BigDecimal.ZERO, BigDecimal::add)
@@ -111,12 +112,13 @@ class HostActivity : AppCompatActivity() {
                 val spendsString = column.joinToString("\n")
                 logz("spendsString:${spendsString}")
             }
-            R.id.menu_save_reconciliation -> {
-                toast("Reconciliation Saved")
+            R.id.menu_push_app_init_bool_false -> {
+                repo.pushAppInitBool(false)
+                toast("AppInitBool = false")
             }
             R.id.menu_debug_do_something -> {
                 toast("Debug Do Something")
-                repo.fetchReconciliations().take(1).logzz("ppp").subscribe()
+                repo.reconciliations.take(1).subscribe()
             }
         }
         return super.onOptionsItemSelected(item)

@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.model_app
 
 import com.tminus1010.budgetvalue.extensions.sum
+import com.tminus1010.budgetvalue.model_data.Category
 import java.math.BigDecimal
 
 data class Block(

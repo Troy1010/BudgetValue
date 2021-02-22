@@ -14,7 +14,7 @@ import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
-import com.tminus1010.budgetvalue.model_app.Category
+import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.tmcommonkotlin_rx.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -27,8 +27,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
     val repo by lazy { app.appComponent.getRepo() }
     val transactionsVM: TransactionsVM by activityViewModels2 { TransactionsVM(repo, app.appComponent.getDatePeriodGetter()) }
     val accountsVM: AccountsVM by activityViewModels2 { AccountsVM(repo) }
-    val categoriesAppVM by lazy { app.appComponent.getCategoriesAppVM() }
-    val activePlanVM: ActivePlanVM by activityViewModels2 { ActivePlanVM(repo, categoriesAppVM, app.appComponent.getDatePeriodGetter()) }
+    val activePlanVM: ActivePlanVM by activityViewModels2 { ActivePlanVM(repo, app.appComponent.getDatePeriodGetter()) }
     val activeReconciliationVM: ActiveReconciliationVM by activityViewModels2 { ActiveReconciliationVM(repo, transactionsVM.spends, accountsVM.accountsTotal, activePlanVM) }
     val budgetedVM: BudgetedVM by activityViewModels2 { BudgetedVM(repo, transactionsVM, activeReconciliationVM) }
 
@@ -67,7 +66,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        combineLatestAsTuple(activeReconciliationVM.rowDatas, activeReconciliationVM.activeCategories, myTableView_1.widthObservable, budgetedVM.categoryAmounts)
+        combineLatestAsTuple(activeReconciliationVM.rowDatas, repo.activeCategories, myTableView_1.widthObservable, budgetedVM.categoryAmounts)
             .observeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) { (rowDatas, activeCategories, width, budgetedCA) ->
                 val dividerMap = activeCategories

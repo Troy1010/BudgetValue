@@ -2,6 +2,7 @@ package com.tminus1010.budgetvalue.model_data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.tminus1010.budgetvalue.layer_data.TypeConverter
 import com.tminus1010.budgetvalue.model_app.ICategoryParser
 import com.tminus1010.budgetvalue.model_app.Transaction
 import java.math.BigDecimal
@@ -12,16 +13,16 @@ data class TransactionReceived(
     val date: LocalDate,
     val description: String,
     val amount: BigDecimal,
-    val categoryAmounts: HashMap<String, BigDecimal> = hashMapOf(),
+    val categoryAmounts: String?,
     @PrimaryKey
     val id: String,
 ) {
-    fun toTransaction(categoryParser: ICategoryParser): Transaction {
+    fun toTransaction(typeConverter: TypeConverter): Transaction {
         return Transaction(
             date,
             description,
             amount,
-            categoryAmounts.mapKeys { categoryParser.parseCategory(it.key) },
+            typeConverter.categoryAmounts(categoryAmounts),
             id,
         )
     }

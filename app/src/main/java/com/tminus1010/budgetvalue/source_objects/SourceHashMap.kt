@@ -97,12 +97,14 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue
     }
 
     override fun clear() {
-        super.clear()
         _itemObservableMap.forEach { (key, subject) ->
             if (exitValue != null) {
                 changePublisher.onNext(Change(ChangeType.EDIT, key, exitValue))
                 subject.onNext(exitValue)
             }
+        }
+        super.clear()
+        _itemObservableMap.forEach { (key, subject) ->
             changePublisher.onNext(Change(ChangeType.REMOVE, key, subject.value))
         }
         _itemObservableMap.clear()
@@ -110,12 +112,14 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue
     }
 
     override fun remove(key: K): V? {
-        val x = super.remove(key)
         _itemObservableMap[key]?.also { subject ->
             if (exitValue != null) {
                 changePublisher.onNext(Change(ChangeType.EDIT, key, exitValue))
                 subject.onNext(exitValue)
             }
+        }
+        val x = super.remove(key)
+        _itemObservableMap[key]?.also { subject ->
             changePublisher.onNext(Change(ChangeType.REMOVE, key, subject.value))
             _itemObservableMap.remove(key)
             observableMapPublisher.onNext(_itemObservableMap)

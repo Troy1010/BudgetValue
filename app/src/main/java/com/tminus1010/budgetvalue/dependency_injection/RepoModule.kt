@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.tminus1010.budgetvalue.App
 import com.tminus1010.budgetvalue.SHARED_PREF_FILE_NAME
-import com.tminus1010.budgetvalue.layer_data.*
-import com.tminus1010.budgetvalue.layer_ui.CategoriesAppVM
+import com.tminus1010.budgetvalue.layer_data.ActiveCategoriesDAO
+import com.tminus1010.budgetvalue.layer_data.ActiveCategoriesDAOWrapper
+import com.tminus1010.budgetvalue.layer_data.BudgetValueDB
+import com.tminus1010.budgetvalue.layer_data.MiscDAO
 import com.tminus1010.budgetvalue.model_app.ICategoryParser
 import dagger.Module
 import dagger.Provides
@@ -15,14 +17,8 @@ import javax.inject.Singleton
 class RepoModule {
     @Provides
     @Singleton
-    fun providesCategoriesAppVM(): CategoriesAppVM {
-        return CategoriesAppVM()
-    }
-
-    @Provides
-    @Singleton
-    fun providesParseCategory(categoriesAppVM: CategoriesAppVM): ICategoryParser {
-        return categoriesAppVM
+    fun providesCategoryParser(activeCategoryDAOWrapper: ActiveCategoriesDAOWrapper): ICategoryParser {
+        return activeCategoryDAOWrapper
     }
 
     @Provides
@@ -36,17 +32,13 @@ class RepoModule {
 
     @Provides
     @Singleton
-    fun providesMyDao(roomDatabase: BudgetValueDB): MyDao {
+    fun providesMyDao(roomDatabase: BudgetValueDB): MiscDAO {
         return roomDatabase.myDao()
     }
 
     @Provides
     @Singleton
-    fun providesRepo(myDaoWrapper: MyDaoWrapper, sharedPrefWrapper: SharedPrefWrapper, transactionParser: TransactionParser): Repo {
-        return Repo(
-            transactionParser,
-            sharedPrefWrapper,
-            myDaoWrapper
-        )
+    fun providesActiveCategoryDAO(roomDatabase: BudgetValueDB): ActiveCategoriesDAO {
+        return roomDatabase.activeCategoryDAO()
     }
 }

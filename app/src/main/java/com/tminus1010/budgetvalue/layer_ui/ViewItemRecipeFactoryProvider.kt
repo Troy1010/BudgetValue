@@ -8,13 +8,13 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
-import com.tminus1010.budgetvalue.model_app.Category
+import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.toBigDecimalSafe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.Subject
 import java.math.BigDecimal
 
-class ViewRecipeFactories(val context: Context) {
+class ViewItemRecipeFactoryProvider(val context: Context) {
     val cellRecipeFactory = ViewItemRecipeFactory.createCellRecipeFactory(context)
     val headerRecipeFactory = ViewItemRecipeFactory.createHeaderRecipeFactory(context)
     fun twoWayBigDecimalRecipeFactory(publisher: Subject<BigDecimal>) = ViewItemRecipeFactory<EditText, Observable<BigDecimal>>(
@@ -39,6 +39,10 @@ class ViewRecipeFactories(val context: Context) {
         }
     )
     val incomingBigDecimalRecipeFactory = ViewItemRecipeFactory<TextView, Observable<BigDecimal>>(
+        { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
+        { v, bs -> v.bindIncoming(bs) }
+    )
+    fun <T> incomingFactory() = ViewItemRecipeFactory<TextView, Observable<T>>(
         { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
         { v, bs -> v.bindIncoming(bs) }
     )

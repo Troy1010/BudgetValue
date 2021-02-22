@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue.categoryComparator
 import com.tminus1010.budgetvalue.combineLatestImpatient
 import com.tminus1010.budgetvalue.extensions.toDisplayStr
 import com.tminus1010.budgetvalue.layer_data.Repo
-import com.tminus1010.budgetvalue.model_app.Category
+import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.model_app.HistoryColumnData
 import com.tminus1010.budgetvalue.model_app.LocalDatePeriod
 import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
@@ -20,7 +20,7 @@ class HistoryVM(
     val budgetedVM: BudgetedVM,
 ) : ViewModel() {
     val historyColumnDatas =
-        combineLatestImpatient(repo.fetchReconciliations(), repo.plans, activeReconciliationVM.defaultAmount, activeReconciliationVM.activeReconcileCAs, transactionsVM.transactionBlocks, budgetedVM.defaultAmount, budgetedVM.categoryAmounts)
+        combineLatestImpatient(repo.reconciliations, repo.plans, activeReconciliationVM.defaultAmount, activeReconciliationVM.activeReconcileCAs, transactionsVM.transactionBlocks, budgetedVM.defaultAmount, budgetedVM.categoryAmounts)
             .observeOn(Schedulers.computation())
             .throttleLast(500, TimeUnit.MILLISECONDS)
             .map { (reconciliations, plans, activeReconciliationDefaultAmount, activeReconciliationCAs, transactionBlocks, budgetedDefaultAmount, budgetedCAs) ->

@@ -2,7 +2,6 @@ package com.tminus1010.budgetvalue.model_data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.tminus1010.budgetvalue.model_app.Category
 import java.math.BigDecimal
 
 @Entity
