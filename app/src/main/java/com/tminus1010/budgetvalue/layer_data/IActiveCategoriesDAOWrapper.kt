@@ -9,5 +9,4 @@ interface IActiveCategoriesDAOWrapper: ActiveCategoriesDAO {
     val defaultCategory: Category
     val activeCategories: BehaviorSubject<List<Category>>
     val categories: BehaviorSubject<List<Category>>
-    fun push(category: Category): Disposable
 }

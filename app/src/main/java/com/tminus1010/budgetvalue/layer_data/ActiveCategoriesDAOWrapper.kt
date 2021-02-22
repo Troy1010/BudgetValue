@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.layer_data
 
 import com.tminus1010.budgetvalue.categoryComparator
+import com.tminus1010.budgetvalue.extensions.onIO
 import com.tminus1010.budgetvalue.model_app.ICategoryParser
 import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.tmcommonkotlin.logz.logz
@@ -41,7 +42,4 @@ class ActiveCategoriesDAOWrapper @Inject constructor(
         if (category == null) logz("parseCategory`WARNING:had to return default for category name:$categoryName")
         return category ?: defaultCategory
     }
-
-    override fun push(category: Category) =
-        add(category).subscribeOn(Schedulers.io()).subscribe()
 }

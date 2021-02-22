@@ -14,7 +14,7 @@ interface ActiveCategoriesDAO {
     fun fetchActiveCategory(name: String): Observable<Category>
 
     @Insert
-    fun add(category: Category): Completable
+    fun push(category: Category): Completable
 
     @Delete
     fun delete(category: Category): Completable

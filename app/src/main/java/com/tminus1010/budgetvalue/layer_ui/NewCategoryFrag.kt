@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.App
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.extensions.nav
+import com.tminus1010.budgetvalue.extensions.onIO
 import com.tminus1010.budgetvalue.extensions.v
 import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.tmcommonkotlin.misc.toast
@@ -24,7 +25,7 @@ class NewCategoryFrag : Fragment(R.layout.frag_new_category) {
                 require(name.isNotEmpty())
                 val type = v.spinner_type.selectedItem as Category.Type
                 Category(name, type)
-                    .also { repo.push(it) }
+                    .also { repo.push(it).onIO() }
                 nav.navigateUp()
             } catch (e: IllegalArgumentException) {
                 toast("Invalid name")
