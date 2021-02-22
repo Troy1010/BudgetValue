@@ -38,8 +38,8 @@ class ActiveCategoriesDAOWrapper @Inject constructor(
         .replay(1).apply { connect() }
 
     override fun parseCategory(categoryName: String): Category {
-        val category = nameToCategoryMap.blockingFirst()[categoryName]
-        if (category == null) logz("parseCategory`WARNING:had to return default for category name:$categoryName")
-        return category ?: defaultCategory
+        return nameToCategoryMap.blockingFirst()[categoryName]
+            .also { if (it==null) logz("parseCategory`WARNING:had to return default for category name:$categoryName") }
+            ?: defaultCategory
     }
 }
