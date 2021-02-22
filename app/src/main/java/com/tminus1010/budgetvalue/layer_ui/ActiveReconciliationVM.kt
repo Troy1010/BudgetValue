@@ -51,13 +51,10 @@ class ActiveReconciliationVM(
                 .subscribe { repo.pushActiveReconciliationCAs(null) }
         }
     // # State
-    val activeCategories = transactionSet
-        .map(::getActiveCategories)
-        .toBehaviorSubject()
     val activeReconcileCAs = mergeCombineWithIndex(
         repo.activeReconciliationCAs,
         intentPushActiveReconcileCA,
-        activeCategories,
+        repo.activeCategories,
         clearActiveReconciliation,
     )
         .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (i, activeReconcileCAs, activeReconcileCA, activeCategories, _) ->
@@ -87,7 +84,7 @@ class ActiveReconciliationVM(
             acc
         }
         .toBehaviorSubject()
-    val rowDatas = combineLatestAsTuple(activeCategories, activeReconcileCAs.value.itemObservableMap2, activePlanVM.activePlan, transactionSet)
+    val rowDatas = combineLatestAsTuple(repo.activeCategories, activeReconcileCAs.value.itemObservableMap2, activePlanVM.activePlan, transactionSet)
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
     val activeReconcileTotal = activeReconcileCAs.value.itemObservableMap2
         .switchMap { it.values.total() }
