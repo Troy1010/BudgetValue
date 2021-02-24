@@ -8,12 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding4.view.clicks
-import com.tminus1010.budgetvalue.App
 import com.tminus1010.budgetvalue.GenViewHolder
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.extensions.viewModels2
 import com.tminus1010.budgetvalue.extensions_intersecting.accountsVM
-import com.tminus1010.tmcommonkotlin_rx.observe
+import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.frag_import.*
 import kotlinx.android.synthetic.main.item_account.view.*

@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.layer_data
 
-import com.tminus1010.budgetvalue.extensions.onIO
 import com.tminus1010.budgetvalue.model_data.Category
+import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,7 +22,7 @@ class Repo @Inject constructor(
     fun deleteFromActive(category: Category) {
         pushActivePlanCA(Pair(category, null))
         pushActiveReconciliationCA(Pair(category, null))
-        delete(category).onIO()
+        delete(category).launch()
     }
 
     fun deleteFromEverywhere(category: Category) {

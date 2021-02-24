@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue.Orientation
-import com.tminus1010.budgetvalue.extensions.scrollTo
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.Decoration
 import com.tminus1010.budgetvalue.measureUnspecified
+import com.tminus1010.tmcommonkotlin.rx.extensions.scrollTo
 
 class OuterRVAdapter(
     val context: Context,

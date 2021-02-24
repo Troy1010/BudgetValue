@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.extensions_intersecting
 
 import androidx.appcompat.app.AppCompatActivity
 import com.tminus1010.budgetvalue.App
-import com.tminus1010.budgetvalue.extensions.viewModels2
+import com.tminus1010.tmcommonkotlin.view.extensions.viewModels2
 
 
 val AppCompatActivity.app

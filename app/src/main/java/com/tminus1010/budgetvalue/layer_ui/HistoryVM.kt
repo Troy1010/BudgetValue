@@ -3,14 +3,13 @@ package com.tminus1010.budgetvalue.layer_ui
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.categoryComparator
 import com.tminus1010.budgetvalue.combineLatestImpatient
-import com.tminus1010.budgetvalue.extensions.toDisplayStr
 import com.tminus1010.budgetvalue.layer_data.Repo
-import com.tminus1010.budgetvalue.layer_domain.DatePeriodGetter
 import com.tminus1010.budgetvalue.layer_domain.Domain
 import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.model_app.HistoryColumnData
 import com.tminus1010.budgetvalue.model_app.LocalDatePeriod
-import com.tminus1010.tmcommonkotlin_rx.toBehaviorSubject
+import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
+import com.tminus1010.tmcommonkotlin.rx.extensions.toDisplayStr
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject

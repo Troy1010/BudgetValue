@@ -5,9 +5,6 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.*
-import com.tminus1010.budgetvalue.extensions.activityViewModels2
-import com.tminus1010.budgetvalue.extensions.distinctUntilChangedWith
-import com.tminus1010.budgetvalue.extensions.v
 import com.tminus1010.budgetvalue.extensions_intersecting.activePlanVM
 import com.tminus1010.budgetvalue.extensions_intersecting.repo
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
@@ -15,7 +12,9 @@ import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
 import com.tminus1010.budgetvalue.model_data.Category
-import com.tminus1010.tmcommonkotlin_rx.observe
+import com.tminus1010.tmcommonkotlin.rx.extensions.distinctUntilChangedWith
+import com.tminus1010.tmcommonkotlin.rx.extensions.observe
+import com.tminus1010.tmcommonkotlin.view.extensions.v
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers

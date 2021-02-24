@@ -10,12 +10,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tminus1010.budgetvalue.extensions.boxStartNull
-import com.tminus1010.budgetvalue.extensions.previous
 import com.tminus1010.budgetvalue.model_app.Transaction
 import com.google.gson.reflect.TypeToken
-import com.tminus1010.budgetvalue.extensions.isCold
 import com.tminus1010.tmcommonkotlin.logz.logz
+import com.tminus1010.tmcommonkotlin.rx.extensions.boxStartNull
+import com.tminus1010.tmcommonkotlin.rx.extensions.isCold
+import com.tminus1010.tmcommonkotlin.rx.extensions.previous
 import com.tminus1010.tmcommonkotlin.tuple.*
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableSource

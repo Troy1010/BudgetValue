@@ -7,19 +7,18 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tminus1010.budgetvalue.App
 import com.tminus1010.budgetvalue.GenViewHolder
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.extensions.*
 import com.tminus1010.budgetvalue.extensions_intersecting.categorizeVM
 import com.tminus1010.budgetvalue.extensions_intersecting.repo
 import com.tminus1010.budgetvalue.extensions_intersecting.transactionsVM
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import com.tminus1010.budgetvalue.unbox
-import com.tminus1010.tmcommonkotlin_rx.observe
+import com.tminus1010.tmcommonkotlin.rx.extensions.observe
+import com.tminus1010.tmcommonkotlin.view.extensions.nav
+import com.tminus1010.tmcommonkotlin.view.extensions.v
 import kotlinx.android.synthetic.main.frag_categorize.*
 import kotlinx.android.synthetic.main.frag_categorize.view.*
-import kotlinx.android.synthetic.main.frag_reconcile.*
 import kotlinx.android.synthetic.main.item_category_btn.view.*
 import java.time.format.DateTimeFormatter
 

@@ -4,14 +4,13 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
-import com.tminus1010.budgetvalue.App
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.extensions.nav
-import com.tminus1010.budgetvalue.extensions.onIO
-import com.tminus1010.budgetvalue.extensions.v
 import com.tminus1010.budgetvalue.extensions_intersecting.repo
 import com.tminus1010.budgetvalue.model_data.Category
-import com.tminus1010.tmcommonkotlin.misc.toast
+import com.tminus1010.tmcommonkotlin.rx.extensions.launch
+import com.tminus1010.tmcommonkotlin.view.extensions.nav
+import com.tminus1010.tmcommonkotlin.view.extensions.toast
+import com.tminus1010.tmcommonkotlin.view.extensions.v
 import kotlinx.android.synthetic.main.frag_new_category.view.*
 
 class NewCategoryFrag : Fragment(R.layout.frag_new_category) {
@@ -24,7 +23,7 @@ class NewCategoryFrag : Fragment(R.layout.frag_new_category) {
                 require(name.isNotEmpty())
                 val type = v.spinner_type.selectedItem as Category.Type
                 Category(name, type)
-                    .also { repo.push(it).onIO() }
+                    .also { repo.push(it).launch() }
                 nav.navigateUp()
             } catch (e: IllegalArgumentException) {
                 toast("Invalid name")
