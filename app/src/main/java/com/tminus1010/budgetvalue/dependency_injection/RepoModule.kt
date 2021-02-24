@@ -33,7 +33,7 @@ class RepoModule {
     @Provides
     @Singleton
     fun providesMyDao(roomDatabase: BudgetValueDB): MiscDAO {
-        return roomDatabase.myDao()
+        return roomDatabase.miscDAO()
     }
 
     @Provides
