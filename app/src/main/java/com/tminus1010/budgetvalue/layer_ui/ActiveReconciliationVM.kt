@@ -45,32 +45,16 @@ class ActiveReconciliationVM @Inject constructor(
     val intentPushActiveReconcileCA = PublishSubject.create<Pair<Category, BigDecimal>>()
         .also { it.observeOn(Schedulers.io()).subscribe(repo::pushActiveReconciliationCA) }
     // # State
-    val activeReconcileCAs = mergeCombineWithIndex(
-        repo.activeReconciliationCAs,
-        intentPushActiveReconcileCA,
-        repo.activeCategories,
-    )
-        .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (i, activeReconcileCAs, activeReconcileCA, activeCategories) ->
-            when (i) {
-                0 -> { activeReconcileCAs!!
-                    acc.clear()
-                    acc.putAll(activeReconcileCAs)
-                    activeCategories
-                        ?.filter { it !in acc.keys }
-                        ?.associateWith { BigDecimal.ZERO }
-                        ?.also { acc.putAll(it) }
-                }
-                1 -> activeReconcileCA!!.also { (k, v) -> acc[k] = v }
-                2 -> { activeCategories!!
-                    activeCategories
-                        .filter { it !in acc.keys }
-                        .associateWith { BigDecimal.ZERO }
-                        .also { acc.putAll(it) }
-                }
+    val activeReconcileCAs =
+        combineLatestAsTuple(repo.activeReconciliationCAs, repo.activeCategories)
+            .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (activeReconcileCAs, activeCategories) ->
+                activeCategories
+                    .associateWith { BigDecimal.ZERO }
+                    .let { it + activeReconcileCAs }
+                    .also { acc.adjustTo(it) }
+                acc
             }
-            acc
-        }
-        .toBehaviorSubject()
+            .toBehaviorSubject()
     val rowDatas = combineLatestAsTuple(repo.activeCategories, activeReconcileCAs.value.itemObservableMap2, activePlanVM.activePlan, transactionsVM.spends)
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
     val caTotal = activeReconcileCAs.value.itemObservableMap2
