@@ -18,11 +18,11 @@ import javax.inject.Singleton
 @Singleton
 class HistoryVM @Inject constructor(
     private val repo: Repo,
-    val transactionsVM: TransactionsVM,
-    val activeReconciliationVM: ActiveReconciliationVM,
-    val activeReconciliationVM2: ActiveReconciliationVM2,
-    val domain: Domain,
-    val budgetedVM: BudgetedVM,
+    private val transactionsVM: TransactionsVM,
+    private val activeReconciliationVM: ActiveReconciliationVM,
+    private val activeReconciliationVM2: ActiveReconciliationVM2,
+    private val domain: Domain,
+    private val budgetedVM: BudgetedVM,
 ) : ViewModel() {
     val historyColumnDatas =
         combineLatestImpatient(repo.reconciliations, repo.plans, activeReconciliationVM2.defaultAmount, activeReconciliationVM.activeReconcileCAs, transactionsVM.transactionBlocks, budgetedVM.defaultAmount, budgetedVM.categoryAmounts)
