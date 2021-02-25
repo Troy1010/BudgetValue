@@ -36,6 +36,7 @@ class SharedPrefWrapper @Inject constructor(
         activeReconciliationCAsPublisher
             .startWithItem(sharedPreferences.getString(Key.RECONCILE_CATEGORY_AMOUNTS.name, null)
                 .let { typeConverter.categoryAmounts(it) })
+            .distinctUntilChanged()
             .toBehaviorSubject()
 
     override fun pushActiveReconciliationCAs(categoryAmounts: Map<Category, BigDecimal>?) {
@@ -49,8 +50,7 @@ class SharedPrefWrapper @Inject constructor(
     override fun pushActiveReconciliationCA(kv: Pair<Category, BigDecimal?>) {
         activeReconciliationCAs.value
             .toMutableMap()
-            .also { kv.also { (k, v) -> if (v == null) it.remove(k) else it[k] = v } }
-            .filter { it != activeReconciliationCAs.value } // TODO("Make sure this works, use it elsewhere.")
+            .also { kv.also { (k, v) -> if (v == null || v == BigDecimal.ZERO) it.remove(k) else it[k] = v } }
             .also { pushActiveReconciliationCAs(it) }
     }
 
@@ -63,6 +63,7 @@ class SharedPrefWrapper @Inject constructor(
         activePlanCAsPublisher
             .startWithItem(sharedPreferences.getString(Key.PLAN_CATEGORY_AMOUNTS.name, null)
                 .let { typeConverter.categoryAmounts(it) })
+            .distinctUntilChanged()
             .toBehaviorSubject()
 
     override fun pushActivePlanCAs(categoryAmounts: Map<Category, BigDecimal>?) {
@@ -76,7 +77,7 @@ class SharedPrefWrapper @Inject constructor(
     override fun pushActivePlanCA(kv: Pair<Category, BigDecimal?>) {
         activePlanCAs.value
             .toMutableMap()
-            .also { kv.also { (k, v) -> if (v == null || v == 0.toBigDecimal()) it.remove(k) else it[k] = v } }
+            .also { kv.also { (k, v) -> if (v == null || v == BigDecimal.ZERO) it.remove(k) else it[k] = v } }
             .also { pushActivePlanCAs(it) }
     }
 
