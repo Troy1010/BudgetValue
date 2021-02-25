@@ -39,27 +39,18 @@ class ActiveReconciliationVM @Inject constructor(
                         activeReconcileCAs.value.filter { it.value != BigDecimal(0) },)
                 }
                 .doOnNext { repo.pushReconciliation(it).blockingAwait() }
-                .doOnNext { clearActiveReconciliation.onNext(Unit) }
+                .doOnNext { repo.clearActiveReconcileCAs() }
                 .subscribe()
         }
     val intentPushActiveReconcileCA = PublishSubject.create<Pair<Category, BigDecimal>>()
-        .also { it.subscribeOn(Schedulers.io()).subscribe(repo::pushActiveReconciliationCA) }
-    // *Normally, doing pushActiveReconcileCAs would trigger fetchActiveReconcileCAs.. but since
-    // sharedPrefs does not support Observables, fetchActiveReconcileCAs is cold, so this subject is a workaround.
-    val clearActiveReconciliation = PublishSubject.create<Unit>()
-        .also {
-            it
-                .subscribeOn(Schedulers.io())
-                .subscribe { repo.pushActiveReconciliationCAs(null) }
-        }
+        .also { it.observeOn(Schedulers.io()).subscribe(repo::pushActiveReconciliationCA) }
     // # State
     val activeReconcileCAs = mergeCombineWithIndex(
         repo.activeReconciliationCAs,
         intentPushActiveReconcileCA,
         repo.activeCategories,
-        clearActiveReconciliation,
     )
-        .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (i, activeReconcileCAs, activeReconcileCA, activeCategories, _) ->
+        .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (i, activeReconcileCAs, activeReconcileCA, activeCategories) ->
             when (i) {
                 0 -> { activeReconcileCAs!!
                     acc.clear()
@@ -69,18 +60,11 @@ class ActiveReconciliationVM @Inject constructor(
                             .filter { it !in acc.keys }
                             .associate { it to BigDecimal.ZERO })
                 }
-                1 -> { activeReconcileCA!!.also { (k, v) -> acc[k] = v } }
+                1 -> activeReconcileCA!!.also { (k, v) -> acc[k] = v }
                 2 -> { activeCategories!!
                     acc.putAll(activeCategories
                         .filter { it !in acc.keys }
                         .associate { it to BigDecimal.ZERO })
-                }
-                3 -> {
-                    acc.clear()
-                    if (activeCategories!=null)
-                        acc.putAll(activeCategories
-                            .filter { it !in acc.keys }
-                            .associate { it to BigDecimal.ZERO })
                 }
             }
             acc
@@ -91,7 +75,7 @@ class ActiveReconciliationVM @Inject constructor(
     val caTotal = activeReconcileCAs.value.itemObservableMap2
         .switchMap { it.values.total() }
         .replay(1).refCount()
-    
+
     //
     fun getRowDatas(
         activeCategories: Iterable<Category>,
