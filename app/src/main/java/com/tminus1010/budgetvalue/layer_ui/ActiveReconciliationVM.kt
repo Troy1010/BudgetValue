@@ -112,10 +112,4 @@ class ActiveReconciliationVM @Inject constructor(
             )
         }
     }
-
-    fun getActiveCategories(transactionSet: Iterable<Transaction>): List<Category> {
-        return transactionSet
-            .fold(HashSet<Category>()) { acc, transaction -> acc.addAll(transaction.categoryAmounts.keys); acc }
-            .sortedWith(categoryComparator)
-    }
 }
