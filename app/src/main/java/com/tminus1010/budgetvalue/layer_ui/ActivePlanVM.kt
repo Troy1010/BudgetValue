@@ -45,32 +45,16 @@ class ActivePlanVM @Inject constructor(val repo: Repo, domain: Domain) : ViewMod
                 .map { Unit }
                 .subscribe(intentSaveActivePlan)
         }
-
-    val activePlan = mergeCombineWithIndex(
-        repo.activePlanCAs,
-        intentPushPlanCA,
-        repo.activeCategories
-    )
-        .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (i, activePlan, intentPushPlanCA, activeCategories) ->
-            when (i) {
-                0 -> { activePlan!!
-                    acc.clear()
-                    acc.putAll(activePlan)
-                    if (activeCategories!=null)
-                        acc.putAll(activeCategories
-                            .filter { it !in acc.keys }
-                            .associate { it to BigDecimal.ZERO })
-                }
-                1 -> { intentPushPlanCA!!.also { (k, v) -> acc[k] = v } }
-                2 -> { activeCategories!!
-                    acc.putAll(activeCategories
-                        .filter { it !in acc.keys }
-                        .associate { it to BigDecimal.ZERO })
-                }
+    val activePlan =
+        combineLatestAsTuple(repo.activePlanCAs, repo.activeCategories)
+            .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (activeReconcileCAs, activeCategories) ->
+                activeCategories
+                    .associateWith { BigDecimal.ZERO }
+                    .let { it + activeReconcileCAs }
+                    .also { acc.adjustTo(it) }
+                acc
             }
-            acc
-        }
-        .toBehaviorSubject()
+            .toBehaviorSubject()
     val planUncategorized = activePlan.value.itemObservableMap2
         .switchMap { it.values.total() }
         .replay(1).refCount()
