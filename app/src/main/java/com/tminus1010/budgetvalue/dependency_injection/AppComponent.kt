@@ -25,4 +25,5 @@ interface AppComponent {
     fun getCategorizeVM(): CategorizeVM
     fun getHistoryVM(): HistoryVM
     fun getTransactionsVM(): TransactionsVM
+    fun getActiveReconciliationVM2(): ActiveReconciliationVM2
 }

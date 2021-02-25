@@ -74,7 +74,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                                 + cellRecipeFactory.createOne2("")
                                 + oneWayRecipeFactory.createMany(rowDatas.map { it.actual }),
                         headerRecipeFactory.createOne2("Reconcile")
-                                + oneWayRecipeFactory.createOne2(activeReconciliationVM.defaultAmount)
+                                + oneWayRecipeFactory.createOne2(activeReconciliationVM2.defaultAmount)
                                 + reconcileCARecipeFactory.createMany(rowDatas.map { it.category to it.reconcile }),
                         headerRecipeFactory_numbered.createOne2(Pair("Budgeted", accountsVM.accountsTotal))
                                 + oneWayRecipeFactory.createOne2(budgetedVM.defaultAmount)

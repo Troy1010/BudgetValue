@@ -40,3 +40,6 @@ val Fragment.historyVM
 
 val Fragment.transactionsVM
     get() = activityViewModels2 { appComponent.getTransactionsVM() }.value
+
+val Fragment.activeReconciliationVM2
+    get() = activityViewModels2 { appComponent.getActiveReconciliationVM2() }.value

@@ -1,7 +1,9 @@
 package com.tminus1010.budgetvalue.extensions_intersecting
 
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.App
+import com.tminus1010.tmcommonkotlin.view.extensions.activityViewModels2
 import com.tminus1010.tmcommonkotlin.view.extensions.viewModels2
 
 
@@ -40,3 +42,6 @@ val AppCompatActivity.historyVM
 
 val AppCompatActivity.transactionsVM
     get() = viewModels2 { appComponent.getTransactionsVM() }.value
+
+val AppCompatActivity.activeReconciliationVM2
+    get() = viewModels2 { appComponent.getActiveReconciliationVM2() }.value

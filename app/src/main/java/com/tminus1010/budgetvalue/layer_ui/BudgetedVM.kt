@@ -1,11 +1,15 @@
 package com.tminus1010.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
+import com.tminus1010.budgetvalue.combineLatestAsTuple
 import com.tminus1010.budgetvalue.combineLatestImpatient
+import com.tminus1010.budgetvalue.extensions_intersecting.accountsVM
 import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
+import com.tminus1010.tmcommonkotlin.rx.extensions.total
+import io.reactivex.rxjava3.core.Observable
 import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -16,33 +20,8 @@ class BudgetedVM @Inject constructor(
     repo: Repo,
     transactionsVM: TransactionsVM,
     activeReconciliationVM: ActiveReconciliationVM,
+    accountsVM: AccountsVM,
 ): ViewModel() {
-    val defaultAmount =
-        combineLatestImpatient(repo.reconciliations, repo.plans, transactionsVM.transactionBlocks, activeReconciliationVM.defaultAmount)
-            .map { (reconciliations, plans, transactionBlocks, activeReconcileDefaultAmount) ->
-                var returning = BigDecimal(0)
-                if (reconciliations != null) {
-                    reconciliations.forEach {
-                        returning += it.defaultAmount
-                    }
-                }
-                if (plans != null) {
-                    plans.forEach {
-                        returning += it.defaultAmount
-                    }
-                }
-                if (transactionBlocks != null) {
-                    transactionBlocks.forEach {
-                        returning += it.defaultAmount
-                    }
-                }
-                if (activeReconcileDefaultAmount != null) {
-                    returning += activeReconcileDefaultAmount
-                }
-                returning
-            }
-            .throttleLast(1, TimeUnit.SECONDS)
-            .toBehaviorSubject()
     val categoryAmounts =
         combineLatestImpatient(repo.reconciliations, repo.plans, transactionsVM.transactionBlocks, activeReconciliationVM.activeReconcileCAs)
             .map { (reconciliations, plans, transactionBlocks, activeReconcileCAs) ->
@@ -75,6 +54,19 @@ class BudgetedVM @Inject constructor(
                 }
                 x
             }
-            .throttleLast(1, TimeUnit.SECONDS)
+            .compose { upstream -> // Without this, categoryAmounts.value fails. TODO("simplify")
+                Observable.merge(
+                    upstream.take(1),
+                    upstream.skip(1).throttleLast(1, TimeUnit.SECONDS)
+                )
+            }
+            .toBehaviorSubject()
+    val caTotal =
+        categoryAmounts.value.itemObservableMap2
+            .switchMap { it.values.total() }
+            .replay(1).refCount()
+    val defaultAmount =
+        combineLatestAsTuple(accountsVM.accountsTotal, caTotal)
+            .map { it.first - it.second }
             .toBehaviorSubject()
 }

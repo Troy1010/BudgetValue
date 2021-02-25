@@ -1,15 +1,14 @@
 package com.tminus1010.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.categoryComparator
-import com.tminus1010.budgetvalue.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.combineLatestAsTuple
 import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.budgetvalue.mergeCombineWithIndex
-import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.model_app.ReconcileRowData
 import com.tminus1010.budgetvalue.model_app.Reconciliation
 import com.tminus1010.budgetvalue.model_app.Transaction
+import com.tminus1010.budgetvalue.model_data.Category
+import com.tminus1010.budgetvalue.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin.rx.extensions.sum
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.rx.extensions.total
@@ -89,12 +88,9 @@ class ActiveReconciliationVM @Inject constructor(
         .toBehaviorSubject()
     val rowDatas = combineLatestAsTuple(repo.activeCategories, activeReconcileCAs.value.itemObservableMap2, activePlanVM.activePlan, transactionsVM.spends)
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
-    val activeReconcileTotal = activeReconcileCAs.value.itemObservableMap2
+    val caTotal = activeReconcileCAs.value.itemObservableMap2
         .switchMap { it.values.total() }
-    val budgetedUncategorized = combineLatestAsTuple(accountsVM.accountsTotal, rowDatas.flatMap { it.map { it.budgeted }.total() })
-        .map { it.first - it.second }
-    val defaultAmount = combineLatestAsTuple(accountsVM.accountsTotal, activeReconcileTotal, budgetedUncategorized)
-        .map { it.first - it.second - it.third } // TODO("This might not be right, but first the budgeted column should be fixed")
+        .replay(1).refCount()
     
     //
     fun getRowDatas(
