@@ -50,6 +50,7 @@ class SharedPrefWrapper @Inject constructor(
         activeReconciliationCAs.value
             .toMutableMap()
             .also { kv.also { (k, v) -> if (v == null) it.remove(k) else it[k] = v } }
+            .filter { it != activeReconciliationCAs.value } // TODO("Make sure this works, use it elsewhere.")
             .also { pushActiveReconciliationCAs(it) }
     }
 
