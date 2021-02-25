@@ -1,5 +1,6 @@
 package com.tminus1010.budgetvalue.source_objects
 
+import com.tminus1010.tmcommonkotlin.rx.extensions.removeIf
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -65,6 +66,13 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue
     private fun createItemObservable(key: K, value: V): BehaviorSubject<V> {
         return BehaviorSubject.createDefault(value)
             .also { it.skip(1).subscribe { super.put(key, it) } } // TODO("dispose")
+    }
+
+    fun adjustTo(map: Map<K, V>) {
+        // If any keys should be removed, remove them.
+        this.removeIf { it.key !in map }
+        // If any values do not match, update them.
+        map.filter { (k, v) -> k !in this || v != this[k] }.forEach { (k, v) -> this[k] = v }
     }
 
     // # Override HashMap functions
