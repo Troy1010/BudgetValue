@@ -15,8 +15,8 @@ import javax.inject.Singleton
 class DatePeriodGetter @Inject constructor(
     repo: Repo
 ): IDatePeriodGetter {
-    private val blockSize = repo.fetchBlockSize()
-    private val anchorDateOffset = repo.fetchAnchorDateOffset()
+    private val blockSize = repo.blockSize
+    private val anchorDateOffset = repo.anchorDateOffset
     private val anchorDay = LocalDate.of(2020, Month.JULY, 1)
     override fun getDatePeriodObservable(date: LocalDate): Observable<LocalDatePeriod> {
         return combineLatestAsTuple(anchorDateOffset, blockSize)

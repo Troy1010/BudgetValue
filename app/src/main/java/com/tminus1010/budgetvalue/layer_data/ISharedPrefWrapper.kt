@@ -16,9 +16,9 @@ interface ISharedPrefWrapper {
     fun clearActivePlan()
     fun fetchExpectedIncome(): BigDecimal
     fun pushExpectedIncome(expectedIncome: BigDecimal?)
-    fun fetchAnchorDateOffset(): Observable<Long>
+    val anchorDateOffset: Observable<Long>
     fun pushAnchorDateOffset(anchorDateOffset: Long?)
-    fun fetchBlockSize(): Observable<Long>
+    val blockSize: Observable<Long>
     fun pushBlockSize(blockSize: Long?)
     fun fetchAppInitBool(): Boolean
     fun pushAppInitBool(boolean: Boolean = true)

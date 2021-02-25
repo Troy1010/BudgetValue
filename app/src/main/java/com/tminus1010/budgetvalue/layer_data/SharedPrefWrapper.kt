@@ -86,7 +86,8 @@ class SharedPrefWrapper @Inject constructor(
     // # ExpectedIncome
 
     override fun fetchExpectedIncome(): BigDecimal {
-        return sharedPreferences.getString(Key.EXPECTED_INCOME.name, null)?.toBigDecimal()
+        return sharedPreferences.getString(Key.EXPECTED_INCOME.name, null)
+            ?.toBigDecimal()
             ?: BigDecimal.ZERO
     }
 
@@ -100,11 +101,11 @@ class SharedPrefWrapper @Inject constructor(
     // # AnchorDateOffset
 
     private val anchorDateOffsetPublisher = PublishSubject.create<Long>()
-    override fun fetchAnchorDateOffset(): Observable<Long> {
-        return anchorDateOffsetPublisher
-            .startWithItem(
-                sharedPreferences.getLong(Key.ANCHOR_DATE_OFFSET.name, ANCHOR_DATE_OFFSET_DEFAULT))
-    }
+    override val anchorDateOffset: Observable<Long> =
+        anchorDateOffsetPublisher
+            .startWithItem(sharedPreferences.getLong(Key.ANCHOR_DATE_OFFSET.name, ANCHOR_DATE_OFFSET_DEFAULT))
+            .distinctUntilChanged()
+            .toBehaviorSubject()
 
     override fun pushAnchorDateOffset(anchorDateOffset: Long?) {
         anchorDateOffset
@@ -117,10 +118,11 @@ class SharedPrefWrapper @Inject constructor(
     // # BlockSize
 
     private val blockSizePublisher = PublishSubject.create<Long>()
-    override fun fetchBlockSize(): Observable<Long> {
-        return blockSizePublisher
+    override val blockSize: Observable<Long> =
+        blockSizePublisher
             .startWithItem(sharedPreferences.getLong(Key.BLOCK_SIZE.name, BLOCK_SIZE_DEFAULT))
-    }
+            .distinctUntilChanged()
+            .toBehaviorSubject()
 
     override fun pushBlockSize(blockSize: Long?) {
         blockSize
