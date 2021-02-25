@@ -3,13 +3,11 @@ package com.tminus1010.budgetvalue.layer_ui
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.combineLatestAsTuple
 import com.tminus1010.budgetvalue.combineLatestImpatient
-import com.tminus1010.budgetvalue.extensions_intersecting.accountsVM
 import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.rx.extensions.total
-import io.reactivex.rxjava3.core.Observable
 import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -54,12 +52,7 @@ class BudgetedVM @Inject constructor(
                 }
                 x
             }
-            .compose { upstream -> // Without this, categoryAmounts.value fails. TODO("simplify")
-                Observable.merge(
-                    upstream.take(1),
-                    upstream.skip(1).throttleLast(1, TimeUnit.SECONDS)
-                )
-            }
+            .throttleLatest(1, TimeUnit.SECONDS)
             .toBehaviorSubject()
     val caTotal =
         categoryAmounts.value.itemObservableMap2
