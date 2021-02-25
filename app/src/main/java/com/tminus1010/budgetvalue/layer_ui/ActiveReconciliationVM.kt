@@ -55,16 +55,17 @@ class ActiveReconciliationVM @Inject constructor(
                 0 -> { activeReconcileCAs!!
                     acc.clear()
                     acc.putAll(activeReconcileCAs)
-                    if (activeCategories!=null)
-                        acc.putAll(activeCategories
-                            .filter { it !in acc.keys }
-                            .associate { it to BigDecimal.ZERO })
+                    activeCategories
+                        ?.filter { it !in acc.keys }
+                        ?.associateWith { BigDecimal.ZERO }
+                        ?.also { acc.putAll(it) }
                 }
                 1 -> activeReconcileCA!!.also { (k, v) -> acc[k] = v }
                 2 -> { activeCategories!!
-                    acc.putAll(activeCategories
+                    activeCategories
                         .filter { it !in acc.keys }
-                        .associate { it to BigDecimal.ZERO })
+                        .associateWith { BigDecimal.ZERO }
+                        .also { acc.putAll(it) }
                 }
             }
             acc
