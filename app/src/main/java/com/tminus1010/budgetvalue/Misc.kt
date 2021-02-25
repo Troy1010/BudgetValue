@@ -535,6 +535,25 @@ fun <A, B, C> mergeWithType(
 }
 
 @Suppress("UNCHECKED_CAST")
+fun <A, B> mergeCombineWithIndex(
+    a: Observable<A>,
+    b: Observable<B>,
+): Observable<Triple<Int, A?, B?>> {
+    return Observable.zip(
+        Observable.merge(a.map { 0 }, b.map { 1 }),
+        Observable.merge(a, b)
+    ) { i, v -> Pair(i, v) }
+        .scan(Triple<Int, A?, B?>(-1, null, null)) { acc, (i, v) ->
+            when (i) {
+                0 -> acc.copy(first = 0, second = v as A?)
+                1 -> acc.copy(first = 1, third = v as B?)
+                else -> error("Unhandled i:$i")
+            }
+        }
+        .skip(1)
+}
+
+@Suppress("UNCHECKED_CAST")
 fun <A, B, C> mergeCombineWithIndex(
     a: Observable<A>,
     b: Observable<B>,
