@@ -5,8 +5,8 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.*
-import com.tminus1010.budgetvalue.extensions_intersecting.activePlanVM
-import com.tminus1010.budgetvalue.extensions_intersecting.repo
+import com.tminus1010.budgetvalue.dependency_injection.extensions.activePlanVM
+import com.tminus1010.budgetvalue.dependency_injection.extensions.repo
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming

@@ -9,9 +9,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue.GenViewHolder
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.extensions_intersecting.categorizeVM
-import com.tminus1010.budgetvalue.extensions_intersecting.repo
-import com.tminus1010.budgetvalue.extensions_intersecting.transactionsVM
+import com.tminus1010.budgetvalue.dependency_injection.extensions.categorizeVM
+import com.tminus1010.budgetvalue.dependency_injection.extensions.repo
+import com.tminus1010.budgetvalue.dependency_injection.extensions.transactionsVM
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import com.tminus1010.budgetvalue.unbox
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe

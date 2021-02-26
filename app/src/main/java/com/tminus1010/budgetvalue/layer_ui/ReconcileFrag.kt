@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding4.view.clicks
 import com.tminus1010.budgetvalue.*
-import com.tminus1010.budgetvalue.extensions_intersecting.*
+import com.tminus1010.budgetvalue.dependency_injection.extensions.*
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
