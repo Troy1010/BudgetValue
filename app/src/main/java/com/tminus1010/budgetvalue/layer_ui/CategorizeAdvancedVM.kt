@@ -18,7 +18,6 @@ class CategorizeAdvancedVM(repo: Repo, categorizeVM: CategorizeVM) : ViewModel()
                 .launch { repo.updateTransactionCategoryAmounts(it.id,
                         it.categoryAmounts.mapKeys { it.key.name }) }
         }
-    val activeCategories = repo.activeCategories
     val transactionToPush = categorizeVM.transactionBox
         .unbox()
         .switchMap {
