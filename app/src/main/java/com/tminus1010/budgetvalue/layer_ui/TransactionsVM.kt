@@ -13,7 +13,7 @@ import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
 
-class TransactionsVM constructor(private val repo: Repo, val domain: Domain):ViewModel() {
+class TransactionsVM(private val repo: Repo, val domain: Domain):ViewModel() {
     val transactions = repo.transactions
     val transactionBlocks = transactions
         .map(::getBlocksFromTransactions)

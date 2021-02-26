@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
-class BudgetedVM constructor(
+class BudgetedVM(
     repo: Repo,
     transactionsVM: TransactionsVM,
     activeReconciliationVM: ActiveReconciliationVM,

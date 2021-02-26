@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
+import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
@@ -9,7 +10,7 @@ import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
 
-class ActiveCategoriesVM constructor(categorizeVM: CategorizeVM) : ViewModel() {
+class ActiveCategoriesVM(categorizeVM: CategorizeVM) : ViewModel() {
     val intentRememberCA = PublishSubject.create<Pair<Category, BigDecimal>>()
     val transactionToPush = categorizeVM.transactionBox
         .unbox()

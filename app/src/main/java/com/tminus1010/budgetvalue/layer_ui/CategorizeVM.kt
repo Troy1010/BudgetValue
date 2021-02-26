@@ -12,7 +12,7 @@ import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
 
-class CategorizeVM constructor(private val repo: Repo, transactionsVM: TransactionsVM): ViewModel() {
+class CategorizeVM(private val repo: Repo, transactionsVM: TransactionsVM): ViewModel() {
     val transactionBox = transactionsVM.uncategorizedSpends
         .map { Box(it.getOrNull(0)) }
     fun finishTransactionWithCategory(category: Category) {

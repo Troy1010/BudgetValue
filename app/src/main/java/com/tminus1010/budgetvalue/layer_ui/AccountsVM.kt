@@ -9,7 +9,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 import javax.inject.Inject
 
-class AccountsVM constructor(repo: Repo) : ViewModel() {
+class AccountsVM(repo: Repo) : ViewModel() {
     val intentAddAccount = PublishSubject.create<Unit>()
         .also { it.io().flatMapCompletable { repo.add(Account("", BigDecimal.ZERO)) }.subscribe() }
     val intentDeleteAccount = PublishSubject.create<Account>()
