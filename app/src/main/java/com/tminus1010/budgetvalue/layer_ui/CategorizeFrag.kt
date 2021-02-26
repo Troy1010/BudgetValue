@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue.GenViewHolder
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.dependency_injection.IViewModelFactories
+import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.repo
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
@@ -20,7 +20,8 @@ import kotlinx.android.synthetic.main.frag_categorize.*
 import kotlinx.android.synthetic.main.item_category_btn.view.*
 import java.time.format.DateTimeFormatter
 
-class CategorizeFrag : Fragment(R.layout.frag_categorize), IViewModelFactories {
+class CategorizeFrag : Fragment(R.layout.frag_categorize) {
+    val vmps by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # RecyclerView
@@ -35,7 +36,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize), IViewModelFactories {
             override fun onBindViewHolder(holder: GenViewHolder, position: Int) {
                 holder.itemView.btn_category.apply {
                     text = repo.activeCategories.value[holder.adapterPosition].name
-                    setOnClickListener { categorizeVM.finishTransactionWithCategory(repo.activeCategories.value[holder.adapterPosition]) }
+                    setOnClickListener { vmps.categorizeVM.finishTransactionWithCategory(repo.activeCategories.value[holder.adapterPosition]) }
                 }
             }
 
@@ -46,15 +47,13 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize), IViewModelFactories {
         btn_delete_category.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_categoryCustomizationFrag) }
         btn_new_category.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) }
         //
-        textview_date.bindIncoming(categorizeVM.transactionBox)
+        textview_date.bindIncoming(vmps.categorizeVM.transactionBox)
         { it.unbox?.date?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")) ?: "" }
-        textview_amount.bindIncoming(categorizeVM.transactionBox)
+        textview_amount.bindIncoming(vmps.categorizeVM.transactionBox)
         { it.unbox?.defaultAmount?.toString() ?: "" }
-        textview_description.bindIncoming(categorizeVM.transactionBox)
+        textview_description.bindIncoming(vmps.categorizeVM.transactionBox)
         { it.unbox?.description ?: "" }
-        textview_amount_left.bindIncoming(transactionsVM.uncategorizedSpendsSize)
-        categorizeVM.hasUncategorizedTransaction.observe(viewLifecycleOwner) { btn_advanced.isEnabled = it }
+        textview_amount_left.bindIncoming(vmps.transactionsVM.uncategorizedSpendsSize)
+        vmps.categorizeVM.hasUncategorizedTransaction.observe(viewLifecycleOwner) { btn_advanced.isEnabled = it }
     }
-
-    override val viewModelFactoriesHelper by lazy { ViewModelFactoriesHelper(requireActivity(), appComponent) }
 }

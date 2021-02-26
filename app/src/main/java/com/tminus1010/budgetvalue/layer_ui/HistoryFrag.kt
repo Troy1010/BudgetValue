@@ -8,7 +8,7 @@ import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.combineLatestAsTuple
-import com.tminus1010.budgetvalue.dependency_injection.IViewModelFactories
+import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
@@ -19,7 +19,8 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.frag_history.*
 
-class HistoryFrag : Fragment(R.layout.frag_history), IViewModelFactories {
+class HistoryFrag : Fragment(R.layout.frag_history) {
+    val vmps by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # TMTableView
@@ -39,7 +40,7 @@ class HistoryFrag : Fragment(R.layout.frag_history), IViewModelFactories {
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        combineLatestAsTuple(historyVM.historyColumnDatas, historyVM.activeCategories)
+        combineLatestAsTuple(vmps.historyVM.historyColumnDatas, vmps.historyVM.activeCategories)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(AndroidSchedulers.mainThread())
             .distinctUntilChanged() //*idk why this emitted a copy without distinctUntilChanged
@@ -68,6 +69,4 @@ class HistoryFrag : Fragment(R.layout.frag_history), IViewModelFactories {
                 tmTableView_history.initialize(recipe2D, dividerMap, 1, 1)
             }
     }
-
-    override val viewModelFactoriesHelper by lazy { ViewModelFactoriesHelper(requireActivity(), appComponent) }
 }

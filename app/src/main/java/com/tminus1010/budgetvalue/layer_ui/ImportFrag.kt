@@ -10,22 +10,23 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding4.view.clicks
 import com.tminus1010.budgetvalue.GenViewHolder
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.dependency_injection.IViewModelFactories
+import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.frag_import.*
 import kotlinx.android.synthetic.main.item_account.view.*
 
-class ImportFrag : Fragment(R.layout.frag_import), IViewModelFactories {
+class ImportFrag : Fragment(R.layout.frag_import) {
+    val vmps by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
         btn_import.clicks().subscribe { launchImport(this.requireActivity()) }
-        btn_add_account.clicks().subscribe(accountsVM.intentAddAccount)
+        btn_add_account.clicks().subscribe(vmps.accountsVM.intentAddAccount)
         // # RecyclerView
-        accountsVM.intentAddAccount.mergeWith(accountsVM.intentDeleteAccount.map { Unit })
-            .flatMap { accountsVM.accounts.take(2).skip(1) }
+        vmps.accountsVM.intentAddAccount.mergeWith(vmps.accountsVM.intentDeleteAccount.map { Unit })
+            .flatMap { vmps.accountsVM.accounts.take(2).skip(1) }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) { recyclerview_accounts.adapter?.notifyDataSetChanged() }
@@ -35,19 +36,19 @@ class ImportFrag : Fragment(R.layout.frag_import), IViewModelFactories {
                 override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
                     LayoutInflater.from(requireContext()).inflate(R.layout.item_account, parent, false)
                         .let { GenViewHolder(it) }
-                override fun getItemCount() = accountsVM.accounts.value?.size ?: 0
+                override fun getItemCount() = vmps.accountsVM.accounts.value?.size ?: 0
                 override fun onBindViewHolder(holder: GenViewHolder, position: Int) {
-                    val account = accountsVM.accounts.value?.get(holder.adapterPosition)!!
+                    val account = vmps.accountsVM.accounts.value?.get(holder.adapterPosition)!!
                     holder.itemView.btn_delete_account.clicks()
                         .map { account }
-                        .subscribe(accountsVM.intentDeleteAccount)
+                        .subscribe(vmps.accountsVM.intentDeleteAccount)
                     holder.itemView.editText_name.apply {
                         setText(account.name)
                         setOnFocusChangeListener { _, b ->
                             if (!b)
                                 account
                                     .apply { name = holder.itemView.editText_name.text.toString() }
-                                    .also { accountsVM.intentUpdateAmmount.onNext(it) }
+                                    .also { vmps.accountsVM.intentUpdateAmmount.onNext(it) }
                         }
                     }
                     holder.itemView.editText_amount.apply {
@@ -56,13 +57,11 @@ class ImportFrag : Fragment(R.layout.frag_import), IViewModelFactories {
                             if (!b)
                                 account
                                     .apply { name = holder.itemView.editText_name.text.toString() }
-                                    .also { accountsVM.intentUpdateAmmount.onNext(it) }
+                                    .also { vmps.accountsVM.intentUpdateAmmount.onNext(it) }
                         }
                     }
                 }
             }
         }
     }
-
-    override val viewModelFactoriesHelper by lazy { ViewModelFactoriesHelper(requireActivity(), appComponent) }
 }

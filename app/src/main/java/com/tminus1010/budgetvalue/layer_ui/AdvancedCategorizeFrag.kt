@@ -5,7 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.combineLatestAsTuple
-import com.tminus1010.budgetvalue.dependency_injection.IViewModelFactories
+import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.repo
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
@@ -20,19 +20,20 @@ import kotlinx.android.synthetic.main.frag_advanced_categorize.*
 import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
-class AdvancedCategorizeFrag : Fragment(R.layout.frag_advanced_categorize), IViewModelFactories {
+class AdvancedCategorizeFrag : Fragment(R.layout.frag_advanced_categorize) {
     val viewRecipeFactories by lazy { ViewItemRecipeFactoryProvider(requireContext()) }
+    val vmps by lazy { ViewModelProviders(requireActivity(), appComponent) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
         btn_ac_done.setOnClickListener {
-            if (advancedCategorizeVM.defaultAmount.value.compareTo(BigDecimal.ZERO)!=0) {
+            if (vmps.advancedCategorizeVM.defaultAmount.value.compareTo(BigDecimal.ZERO)!=0) {
                 toast("Default must be 0")
             } else {
                 repo.updateTransactionCategoryAmounts(
-                    advancedCategorizeVM.transactionToPush.value.id,
-                    advancedCategorizeVM.transactionToPush.value.categoryAmounts.mapKeys { it.key.name }
+                    vmps.advancedCategorizeVM.transactionToPush.value.id,
+                    vmps.advancedCategorizeVM.transactionToPush.value.categoryAmounts.mapKeys { it.key.name }
                 ).subscribeOn(Schedulers.io()).subscribe()
                 nav.navigateUp()
             }
@@ -41,7 +42,7 @@ class AdvancedCategorizeFrag : Fragment(R.layout.frag_advanced_categorize), IVie
         val cellRecipeFactory = viewRecipeFactories.cellRecipeFactory
         val headerRecipeFactory = viewRecipeFactories.headerRecipeFactory
         val amountRecipeFactory = viewRecipeFactories.incomingBigDecimalRecipeFactory
-        val categoryAmountRecipeFactory = viewRecipeFactories.outgoingCARecipeFactory(advancedCategorizeVM.intentRememberCA)
+        val categoryAmountRecipeFactory = viewRecipeFactories.outgoingCARecipeFactory(vmps.advancedCategorizeVM.intentRememberCA)
         val titledDividerRecipeFactory = viewRecipeFactories.titledDividerRecipeFactory
         combineLatestAsTuple(tmTableView_ac.widthObservable, repo.activeCategories)
             .debounce(100, TimeUnit.MILLISECONDS)
@@ -52,7 +53,7 @@ class AdvancedCategorizeFrag : Fragment(R.layout.frag_advanced_categorize), IVie
                             + cellRecipeFactory.createOne2("Default")
                             + cellRecipeFactory.createMany(categories.map { it.name }),
                     headerRecipeFactory.createOne2("Amount")
-                            + amountRecipeFactory.createOne2(advancedCategorizeVM.defaultAmount)
+                            + amountRecipeFactory.createOne2(vmps.advancedCategorizeVM.defaultAmount)
                             + categoryAmountRecipeFactory.createMany(categories.map { it to BigDecimal.ZERO }))
                     .reflectXY(), fixedWidth = width)
                 val dividerMap = categories
@@ -67,6 +68,4 @@ class AdvancedCategorizeFrag : Fragment(R.layout.frag_advanced_categorize), IVie
                 tmTableView_ac.initialize(recipes2D, dividerMap, 0, 1)
             }
     }
-
-    override val viewModelFactoriesHelper by lazy { ViewModelFactoriesHelper(requireActivity(), appComponent) }
 }

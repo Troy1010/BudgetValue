@@ -7,11 +7,12 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tminus1010.budgetvalue.dependency_injection.IViewModelFactories
+import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import kotlinx.android.synthetic.devEnv1.activity_mock_import_selection.*
 
-class MockImportSelectionActivity : AppCompatActivity(R.layout.activity_mock_import_selection), IViewModelFactories {
+class MockImportSelectionActivity : AppCompatActivity(R.layout.activity_mock_import_selection) {
+    val vmps by lazy { ViewModelProviders(this, appComponent) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // # RecyclerView
@@ -33,7 +34,7 @@ class MockImportSelectionActivity : AppCompatActivity(R.layout.activity_mock_imp
                     holder.itemView.text = "Import Transactions ${holder.adapterPosition}"
                     holder.itemView.setOnClickListener {
                         assets.open(transactionPathNames[holder.adapterPosition]).buffered()
-                            .also { transactionsVM.importTransactions(it) }
+                            .also { vmps.transactionsVM.importTransactions(it) }
                         finish()
                     }
                 }
@@ -41,6 +42,4 @@ class MockImportSelectionActivity : AppCompatActivity(R.layout.activity_mock_imp
                 override fun getItemCount() = transactionPathNames.size
             }
     }
-
-    override val viewModelFactoriesHelper by lazy { ViewModelFactoriesHelper(this, appComponent) }
 }

@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.tminus1010.budgetvalue.CODE_PICK_TRANSACTIONS_FILE
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.dependency_injection.IViewModelFactories
+import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.repo
@@ -21,7 +21,8 @@ import kotlinx.android.synthetic.main.activity_host.*
 import java.math.BigDecimal
 import kotlin.time.ExperimentalTime
 
-class HostActivity : AppCompatActivity(), IViewModelFactories {
+class HostActivity : AppCompatActivity() {
+    val vmps by lazy { ViewModelProviders(this, appComponent) }
     val nav by lazy { findNavController(R.id.fragNavHost) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,13 +63,13 @@ class HostActivity : AppCompatActivity(), IViewModelFactories {
                 }
             }
             R.id.menu_print_transactions -> {
-                transactionsVM.transactions.take(1).subscribe {
+                vmps.transactionsVM.transactions.take(1).subscribe {
                     logz("transactions:${it?.joinToString(",")}")
                 }
             }
             R.id.menu_print_spends -> {
                 // define transactionBlocks
-                val transactionBlocks = transactionsVM.transactions.blockingFirst().getBlocks(2)
+                val transactionBlocks = vmps.transactionsVM.transactions.blockingFirst().getBlocks(2)
                 // define stringBlocks
                 val stringBlocks = arrayListOf<HashMap<String, String>>()
                 for (transactionBlock in transactionBlocks) {
@@ -130,7 +131,7 @@ class HostActivity : AppCompatActivity(), IViewModelFactories {
         if (requestCode == CODE_PICK_TRANSACTIONS_FILE && resultCode == Activity.RESULT_OK) {
             try {
                 val inputStream = contentResolver.openInputStream(intent!!.data!!)!!
-                transactionsVM.importTransactions(inputStream)
+                vmps.transactionsVM.importTransactions(inputStream)
                 toast("Import successful")
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -139,6 +140,4 @@ class HostActivity : AppCompatActivity(), IViewModelFactories {
         }
         super.onActivityResult(requestCode, resultCode, intent)
     }
-
-    override val viewModelFactoriesHelper by lazy { ViewModelFactoriesHelper(this, appComponent) }
 }

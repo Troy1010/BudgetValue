@@ -6,7 +6,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.combineLatestAsTuple
-import com.tminus1010.budgetvalue.dependency_injection.IViewModelFactories
+import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.repo
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
@@ -25,7 +25,8 @@ import kotlinx.android.synthetic.main.frag_plan.*
 import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
-class PlanFrag: Fragment(R.layout.frag_plan), IViewModelFactories {
+class PlanFrag: Fragment(R.layout.frag_plan) {
+    val vmps by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onStart() {
         super.onStart()
         // # TMTableView
@@ -35,14 +36,14 @@ class PlanFrag: Fragment(R.layout.frag_plan), IViewModelFactories {
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
             { view, bs ->
                 view.bindIncoming(bs)
-                view.bindOutgoing(activePlanVM.intentPushExpectedIncome, { it.toBigDecimalSafe() }) { it }
+                view.bindOutgoing(vmps.activePlanVM.intentPushExpectedIncome, { it.toBigDecimalSafe() }) { it }
             }
         )
         val planCAsRecipeFactory = ViewItemRecipeFactory<EditText, Pair<Category, Observable<BigDecimal>>>(
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
             { view, (category, bs) ->
                 view.bindIncoming(bs)
-                view.bindOutgoing(activePlanVM.intentPushPlanCA, { Pair(category, it.toBigDecimalSafe()) }) { it.second }
+                view.bindOutgoing(vmps.activePlanVM.intentPushPlanCA, { Pair(category, it.toBigDecimalSafe()) }) { it.second }
             }
         )
         val oneWayRecipeBuilder = ViewItemRecipeFactory<TextView, Observable<BigDecimal>>(
@@ -53,7 +54,7 @@ class PlanFrag: Fragment(R.layout.frag_plan), IViewModelFactories {
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        combineLatestAsTuple(activePlanVM.activePlan.value.itemObservableMap2, repo.activeCategories, myTableView_plan.widthObservable)
+        combineLatestAsTuple(vmps.activePlanVM.activePlan.value.itemObservableMap2, repo.activeCategories, myTableView_plan.widthObservable)
             .debounce(100, TimeUnit.MILLISECONDS)
             .observeOn(Schedulers.computation())
             .map { (planCAsItemObservableMap, activeCategories, width) ->
@@ -63,8 +64,8 @@ class PlanFrag: Fragment(R.layout.frag_plan), IViewModelFactories {
                             + cellRecipeFactory.createOne2("Default")
                             + cellRecipeFactory.createMany(activeCategories.map { it.name }),
                     headerRecipeFactory.createOne2("Plan")
-                            + expectedIncomeRecipeFactory.createOne2(activePlanVM.expectedIncome)
-                            + oneWayRecipeBuilder.createOne2(activePlanVM.defaultAmount)
+                            + expectedIncomeRecipeFactory.createOne2(vmps.activePlanVM.expectedIncome)
+                            + oneWayRecipeBuilder.createOne2(vmps.activePlanVM.defaultAmount)
                             + planCAsRecipeFactory.createMany(activeCategories.map { Pair(it, planCAsItemObservableMap[it] ?: error("not found:$it")) }))
                     .reflectXY(), fixedWidth = width)
                 val dividerMap = activeCategories
@@ -79,6 +80,4 @@ class PlanFrag: Fragment(R.layout.frag_plan), IViewModelFactories {
                 myTableView_plan.initialize(recipes2D, dividerMap, 0, 1)
             }
     }
-
-    override val viewModelFactoriesHelper by lazy { ViewModelFactoriesHelper(requireActivity(), appComponent) }
 }
