@@ -10,18 +10,17 @@ import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
-import com.tminus1010.tmcommonkotlin.view.extensions.v
-import kotlinx.android.synthetic.main.frag_new_category.view.*
+import kotlinx.android.synthetic.main.frag_new_category.*
 
 class NewCategoryFrag : Fragment(R.layout.frag_new_category) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
-        v.btn_done.setOnClickListener {
+        btn_done.setOnClickListener {
             try {
-                val name = v.edittext_name.text.toString()
+                val name = edittext_name.text.toString()
                 require(name.isNotEmpty())
-                val type = v.spinner_type.selectedItem as Category.Type
+                val type = spinner_type.selectedItem as Category.Type
                 Category(name, type)
                     .also { repo.push(it).launch() }
                 nav.navigateUp()
@@ -30,6 +29,6 @@ class NewCategoryFrag : Fragment(R.layout.frag_new_category) {
             }
         }
         //
-        v.spinner_type.adapter = ArrayAdapter(requireContext(), R.layout.text_view, Category.Type.values().drop(1))
+        spinner_type.adapter = ArrayAdapter(requireContext(), R.layout.text_view, Category.Type.values().drop(1))
     }
 }

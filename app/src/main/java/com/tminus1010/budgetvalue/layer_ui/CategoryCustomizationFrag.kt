@@ -14,16 +14,15 @@ import com.tminus1010.budgetvalue.reflectXY
 import com.tminus1010.tmcommonkotlin.rx.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
-import com.tminus1010.tmcommonkotlin.view.extensions.v
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlinx.android.synthetic.main.frag_category_customization.view.*
+import kotlinx.android.synthetic.main.frag_category_customization.*
 
 class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
-        v.btn_done.setOnClickListener { nav.navigateUp() }
+        btn_done.setOnClickListener { nav.navigateUp() }
         // # TMTableView
         val factory1 = ViewItemRecipeFactory(
             { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
@@ -56,6 +55,6 @@ class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization)
                 Pair(recipeGrid, dividerMap)
             }
             .observeOn(AndroidSchedulers.mainThread())
-            .observe(viewLifecycleOwner) { v.tmTableView.initialize(recipeGrid = it.first, dividerMap = it.second) }
+            .observe(viewLifecycleOwner) { tmTableView.initialize(recipeGrid = it.first, dividerMap = it.second) }
     }
 }

@@ -4,7 +4,8 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.tminus1010.budgetvalue.*
+import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue.combineLatestAsTuple
 import com.tminus1010.budgetvalue.dependency_injection.extensions.activePlanVM
 import com.tminus1010.budgetvalue.dependency_injection.extensions.repo
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
@@ -12,14 +13,14 @@ import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
 import com.tminus1010.budgetvalue.model_data.Category
+import com.tminus1010.budgetvalue.reflectXY
+import com.tminus1010.budgetvalue.toBigDecimalSafe
 import com.tminus1010.tmcommonkotlin.rx.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
-import com.tminus1010.tmcommonkotlin.view.extensions.v
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.frag_plan.*
-import kotlinx.android.synthetic.main.frag_plan.view.*
 import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
@@ -74,7 +75,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
             }
             .observeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) { (recipes2D, dividerMap) ->
-                v.myTableView_plan.initialize(recipes2D, dividerMap, 0, 1)
+                myTableView_plan.initialize(recipes2D, dividerMap, 0, 1)
             }
     }
 }
