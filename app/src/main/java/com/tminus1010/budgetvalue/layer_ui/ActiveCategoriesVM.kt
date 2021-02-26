@@ -10,8 +10,9 @@ import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
 
-class ActiveCategoriesVM(categorizeVM: CategorizeVM) : ViewModel() {
+class ActiveCategoriesVM(repo: Repo, categorizeVM: CategorizeVM) : ViewModel() {
     val intentRememberCA = PublishSubject.create<Pair<Category, BigDecimal>>()
+    val activeCategories = repo.activeCategories
     val transactionToPush = categorizeVM.transactionBox
         .unbox()
         .switchMap {
