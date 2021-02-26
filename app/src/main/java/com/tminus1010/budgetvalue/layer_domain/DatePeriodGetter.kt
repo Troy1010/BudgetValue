@@ -18,22 +18,19 @@ class DatePeriodGetter @Inject constructor(
     private val blockSize = repo.blockSize
     private val anchorDateOffset = repo.anchorDateOffset
     private val anchorDay = LocalDate.of(2020, Month.JULY, 1)
-    override fun getDatePeriodObservable(date: LocalDate): Observable<LocalDatePeriod> {
-        return combineLatestAsTuple(anchorDateOffset, blockSize)
+    override fun getDatePeriodObservable(date: LocalDate): Observable<LocalDatePeriod> =
+        combineLatestAsTuple(anchorDateOffset, blockSize)
             .map { (anchorDateOffset, blockSize) ->
                 getDatePeriod(date, anchorDateOffset, blockSize)
             }
-    }
     // TODO("This is pretty hacky..")
     private val blockSizeBS = blockSize.toBehaviorSubject()
     private val anchorDateOffsetBS = anchorDateOffset.toBehaviorSubject()
 
-    override fun isDatePeriodValid(datePeriod: LocalDatePeriod): Boolean {
-        return getDatePeriod(datePeriod.startDate, anchorDateOffsetBS.value!!, blockSizeBS.value!!) == datePeriod
-    }
-    override fun getDatePeriod(date: LocalDate): LocalDatePeriod {
-        return getDatePeriod(date, anchorDateOffsetBS.value!!, blockSizeBS.value!!)
-    }
+    override fun isDatePeriodValid(datePeriod: LocalDatePeriod): Boolean =
+        getDatePeriod(datePeriod.startDate, anchorDateOffsetBS.value!!, blockSizeBS.value!!) == datePeriod
+    override fun getDatePeriod(date: LocalDate): LocalDatePeriod =
+        getDatePeriod(date, anchorDateOffsetBS.value!!, blockSizeBS.value!!)
 
     private fun getDatePeriod(date: LocalDate, anchorDateOffset:Long, blockSize:Long): LocalDatePeriod {
         val startDate = ChronoUnit.DAYS.between(anchorDay.plusDays(anchorDateOffset), date)
