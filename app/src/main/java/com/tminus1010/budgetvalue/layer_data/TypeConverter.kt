@@ -11,12 +11,6 @@ import javax.inject.Inject
 class TypeConverter @Inject constructor(
     val categoryParser: ICategoryParser,
 ) {
-    fun bigDecimal(s: String): BigDecimal =
-        s.toBigDecimal()
-
-    fun string(bigDecimal: BigDecimal): String =
-        bigDecimal.toString()
-
     fun categoryAmounts(s: String?): Map<Category, BigDecimal> =
         if (s == null) emptyMap() else
             Gson().fromJson<Map<String, String>>(s, getTypeForGson<HashMap<String, String>>())
