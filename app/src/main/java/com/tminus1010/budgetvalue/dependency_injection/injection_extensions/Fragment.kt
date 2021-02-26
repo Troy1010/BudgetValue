@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.dependency_injection.extensions
+package com.tminus1010.budgetvalue.dependency_injection.injection_extensions
 
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.App

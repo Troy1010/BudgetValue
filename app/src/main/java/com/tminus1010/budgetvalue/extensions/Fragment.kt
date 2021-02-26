@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.dependency_injection.extensions.appComponent
+import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.dependency_injection.view_model_provision.IVMComponent
 import com.tminus1010.budgetvalue.dependency_injection.view_model_provision.getVMProvisionMethod
 import com.tminus1010.tmcommonkotlin.view.createViewModelFactory

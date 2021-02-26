@@ -9,9 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.tminus1010.budgetvalue.CODE_PICK_TRANSACTIONS_FILE
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.dependency_injection.extensions.domain
-import com.tminus1010.budgetvalue.dependency_injection.extensions.repo
-import com.tminus1010.budgetvalue.dependency_injection.extensions.transactionsVM
+import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
+import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.repo
+import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.transactionsVM
 import com.tminus1010.budgetvalue.getBlocks
 import com.tminus1010.budgetvalue.reflectXY
 import com.tminus1010.tmcommonkotlin.logz.logz
