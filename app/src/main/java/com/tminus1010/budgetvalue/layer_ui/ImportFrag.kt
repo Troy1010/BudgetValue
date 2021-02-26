@@ -43,19 +43,19 @@ class ImportFrag : Fragment(R.layout.frag_import) {
                     holder.itemView.editText_name.apply {
                         setText(account.name)
                         setOnFocusChangeListener { _, b ->
-                            if (!b) {
-                                account.name = holder.itemView.editText_name.text.toString()
-                                accountsVM.updateAccount(account)
-                            }
+                            if (!b)
+                                account
+                                    .apply { name = holder.itemView.editText_name.text.toString() }
+                                    .also { accountsVM.intentUpdateAmmount.onNext(it) }
                         }
                     }
                     holder.itemView.editText_amount.apply {
                         setText(account.amount.toString())
                         setOnFocusChangeListener { _, b ->
-                            if (!b) {
-                                account.amount = holder.itemView.editText_amount.text.toString().toBigDecimal()
-                                accountsVM.updateAccount(account)
-                            }
+                            if (!b)
+                                account
+                                    .apply { name = holder.itemView.editText_name.text.toString() }
+                                    .also { accountsVM.intentUpdateAmmount.onNext(it) }
                         }
                     }
                 }
