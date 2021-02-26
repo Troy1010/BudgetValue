@@ -16,7 +16,7 @@ import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
 
-class ActivePlanVM @Inject constructor(repo: Repo, domain: Domain) : ViewModel() {
+class ActivePlanVM constructor(repo: Repo, domain: Domain) : ViewModel() {
     val intentPushExpectedIncome = PublishSubject.create<BigDecimal>()
         .also { it.subscribe(repo::pushExpectedIncome) }
     val intentSaveActivePlan = PublishSubject.create<Unit>()
