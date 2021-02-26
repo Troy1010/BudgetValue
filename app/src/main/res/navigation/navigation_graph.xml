@@ -41,7 +41,7 @@
         android:label="History" />
     <fragment
         android:id="@+id/advancedCategorizeFrag"
-        android:name="com.tminus1010.budgetvalue.layer_ui.ActiveCategoriesFrag"
+        android:name="com.tminus1010.budgetvalue.layer_ui.CategorizeAdvancedFrag"
         android:label="AdvancedCategorizeFrag"
         tools:layout="@layout/frag_advanced_categorize" />
     <fragment

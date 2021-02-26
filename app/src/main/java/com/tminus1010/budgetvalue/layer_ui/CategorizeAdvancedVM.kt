@@ -9,7 +9,7 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 
-class ActiveCategoriesVM(repo: Repo, categorizeVM: CategorizeVM) : ViewModel() {
+class CategorizeAdvancedVM(repo: Repo, categorizeVM: CategorizeVM) : ViewModel() {
     val intentRememberCA = PublishSubject.create<Pair<Category, BigDecimal>>()
     val intentPushActiveCategories = PublishSubject.create<Unit>()
         .also {

@@ -11,7 +11,6 @@ import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.repo
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.reflectXY
 import com.tminus1010.tmcommonkotlin.rx.extensions.distinctUntilChangedWith
-import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
@@ -21,7 +20,7 @@ import kotlinx.android.synthetic.main.frag_advanced_categorize.*
 import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
-class ActiveCategoriesFrag : Fragment(R.layout.frag_advanced_categorize) {
+class CategorizeAdvancedFrag : Fragment(R.layout.frag_advanced_categorize) {
     val viewRecipeFactories by lazy { ViewItemRecipeFactoryProvider(requireContext()) }
     val vmps by lazy { ViewModelProviders(requireActivity(), appComponent) }
 
@@ -29,10 +28,10 @@ class ActiveCategoriesFrag : Fragment(R.layout.frag_advanced_categorize) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
         btn_ac_done.setOnClickListener {
-            if (vmps.activeCategoriesVM.defaultAmount.value.compareTo(BigDecimal.ZERO)!=0) {
+            if (vmps.categorizeAdvancedVM.defaultAmount.value.compareTo(BigDecimal.ZERO)!=0) {
                 toast("Default must be 0")
             } else {
-                vmps.activeCategoriesVM.intentPushActiveCategories.onNext(Unit)
+                vmps.categorizeAdvancedVM.intentPushActiveCategories.onNext(Unit)
                 nav.navigateUp()
             }
         }
@@ -40,7 +39,7 @@ class ActiveCategoriesFrag : Fragment(R.layout.frag_advanced_categorize) {
         val cellRecipeFactory = viewRecipeFactories.cellRecipeFactory
         val headerRecipeFactory = viewRecipeFactories.headerRecipeFactory
         val amountRecipeFactory = viewRecipeFactories.incomingBigDecimalRecipeFactory
-        val categoryAmountRecipeFactory = viewRecipeFactories.outgoingCARecipeFactory(vmps.activeCategoriesVM.intentRememberCA)
+        val categoryAmountRecipeFactory = viewRecipeFactories.outgoingCARecipeFactory(vmps.categorizeAdvancedVM.intentRememberCA)
         val titledDividerRecipeFactory = viewRecipeFactories.titledDividerRecipeFactory
         combineLatestAsTuple(tmTableView_ac.widthObservable, repo.activeCategories)
             .debounce(100, TimeUnit.MILLISECONDS)
@@ -51,7 +50,7 @@ class ActiveCategoriesFrag : Fragment(R.layout.frag_advanced_categorize) {
                             + cellRecipeFactory.createOne2("Default")
                             + cellRecipeFactory.createMany(categories.map { it.name }),
                     headerRecipeFactory.createOne2("Amount")
-                            + amountRecipeFactory.createOne2(vmps.activeCategoriesVM.defaultAmount)
+                            + amountRecipeFactory.createOne2(vmps.categorizeAdvancedVM.defaultAmount)
                             + categoryAmountRecipeFactory.createMany(categories.map { it to BigDecimal.ZERO }))
                     .reflectXY(), fixedWidth = width)
                 val dividerMap = categories
