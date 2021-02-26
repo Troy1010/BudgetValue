@@ -5,8 +5,8 @@ import android.view.View
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.dependency_injection.DirtyInjectionCache
-import com.tminus1010.budgetvalue.dependency_injection.IDirtyInjection
+import com.tminus1010.budgetvalue.dependency_injection.ViewModelFactoriesHelper
+import com.tminus1010.budgetvalue.dependency_injection.IViewModelFactories
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.repo
 import com.tminus1010.budgetvalue.model_data.Category
@@ -15,7 +15,7 @@ import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
 import kotlinx.android.synthetic.main.frag_new_category.*
 
-class NewCategoryFrag : Fragment(R.layout.frag_new_category), IDirtyInjection {
+class NewCategoryFrag : Fragment(R.layout.frag_new_category), IViewModelFactories {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
@@ -35,5 +35,5 @@ class NewCategoryFrag : Fragment(R.layout.frag_new_category), IDirtyInjection {
         spinner_type.adapter = ArrayAdapter(requireContext(), R.layout.text_view, Category.Type.values().drop(1))
     }
 
-    override val dirtyInjectionCache by lazy { DirtyInjectionCache(requireActivity(), appComponent) }
+    override val viewModelFactoriesHelper by lazy { ViewModelFactoriesHelper(requireActivity(), appComponent) }
 }

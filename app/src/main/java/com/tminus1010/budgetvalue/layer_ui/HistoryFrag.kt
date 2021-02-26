@@ -8,8 +8,8 @@ import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.combineLatestAsTuple
-import com.tminus1010.budgetvalue.dependency_injection.DirtyInjectionCache
-import com.tminus1010.budgetvalue.dependency_injection.IDirtyInjection
+import com.tminus1010.budgetvalue.dependency_injection.ViewModelFactoriesHelper
+import com.tminus1010.budgetvalue.dependency_injection.IViewModelFactories
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
@@ -20,7 +20,7 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.frag_history.*
 
-class HistoryFrag : Fragment(R.layout.frag_history), IDirtyInjection {
+class HistoryFrag : Fragment(R.layout.frag_history), IViewModelFactories {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # TMTableView
@@ -70,5 +70,5 @@ class HistoryFrag : Fragment(R.layout.frag_history), IDirtyInjection {
             }
     }
 
-    override val dirtyInjectionCache by lazy { DirtyInjectionCache(requireActivity(), appComponent) }
+    override val viewModelFactoriesHelper by lazy { ViewModelFactoriesHelper(requireActivity(), appComponent) }
 }

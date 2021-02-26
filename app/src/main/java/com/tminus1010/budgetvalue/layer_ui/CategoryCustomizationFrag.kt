@@ -6,8 +6,8 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.dependency_injection.DirtyInjectionCache
-import com.tminus1010.budgetvalue.dependency_injection.IDirtyInjection
+import com.tminus1010.budgetvalue.dependency_injection.ViewModelFactoriesHelper
+import com.tminus1010.budgetvalue.dependency_injection.IViewModelFactories
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.repo
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
@@ -21,7 +21,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.frag_category_customization.*
 
-class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization), IDirtyInjection {
+class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization), IViewModelFactories {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
@@ -61,5 +61,5 @@ class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization)
             .observe(viewLifecycleOwner) { tmTableView.initialize(recipeGrid = it.first, dividerMap = it.second) }
     }
 
-    override val dirtyInjectionCache by lazy { DirtyInjectionCache(requireActivity(), appComponent) }
+    override val viewModelFactoriesHelper by lazy { ViewModelFactoriesHelper(requireActivity(), appComponent) }
 }
