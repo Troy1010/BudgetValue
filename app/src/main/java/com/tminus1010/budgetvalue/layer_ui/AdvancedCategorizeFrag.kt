@@ -11,6 +11,7 @@ import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.repo
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.reflectXY
 import com.tminus1010.tmcommonkotlin.rx.extensions.distinctUntilChangedWith
+import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
@@ -34,7 +35,7 @@ class AdvancedCategorizeFrag : Fragment(R.layout.frag_advanced_categorize) {
                 repo.updateTransactionCategoryAmounts(
                     vmps.advancedCategorizeVM.transactionToPush.value.id,
                     vmps.advancedCategorizeVM.transactionToPush.value.categoryAmounts.mapKeys { it.key.name }
-                ).subscribeOn(Schedulers.io()).subscribe()
+                ).launch()
                 nav.navigateUp()
             }
         }
