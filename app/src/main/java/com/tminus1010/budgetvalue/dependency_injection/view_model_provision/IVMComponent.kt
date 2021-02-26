@@ -10,7 +10,7 @@ import kotlin.reflect.jvm.kotlinFunction
  */
 interface IVMComponent
 
-// Must be extension method to use reified.
+// Must be extension method to avoid dagger compilation.
 inline fun <reified VM : ViewModel> IVMComponent.getVMProvisionMethod(): Method {
     return this::class.java.declaredMethods
         .find { it.returnType == VM::class.java }
@@ -23,3 +23,8 @@ inline fun <reified VM : ViewModel> IVMComponent.getVMProvisionMethod(): Method 
             """.trimMargin())
         }
 }
+
+// Must be extension method to avoid dagger compilation.
+fun IVMComponent.getVMProvisionMethods(): List<Method> =
+    this::class.java.declaredMethods
+        .filter { ViewModel::class.java.isInstance(it.returnType) }

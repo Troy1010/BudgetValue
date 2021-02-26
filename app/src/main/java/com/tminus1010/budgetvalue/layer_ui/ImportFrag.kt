@@ -10,13 +10,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding4.view.clicks
 import com.tminus1010.budgetvalue.GenViewHolder
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.accountsVM
+import com.tminus1010.budgetvalue.dependency_injection.DirtyInjectionCache
+import com.tminus1010.budgetvalue.dependency_injection.IDirtyInjection
+import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.frag_import.*
 import kotlinx.android.synthetic.main.item_account.view.*
 
-class ImportFrag : Fragment(R.layout.frag_import) {
+class ImportFrag : Fragment(R.layout.frag_import), IDirtyInjection {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
@@ -62,4 +64,6 @@ class ImportFrag : Fragment(R.layout.frag_import) {
             }
         }
     }
+
+    override val dirtyInjectionCache by lazy { DirtyInjectionCache(requireActivity(), appComponent) }
 }

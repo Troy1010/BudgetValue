@@ -8,6 +8,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding4.view.clicks
 import com.tminus1010.budgetvalue.*
+import com.tminus1010.budgetvalue.dependency_injection.DirtyInjectionCache
+import com.tminus1010.budgetvalue.dependency_injection.IDirtyInjection
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.*
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
@@ -22,7 +24,7 @@ import kotlinx.android.synthetic.main.frag_reconcile.*
 import kotlinx.android.synthetic.main.tableview_header_income.view.*
 import java.math.BigDecimal
 
-class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
+class ReconcileFrag : Fragment(R.layout.frag_reconcile), IDirtyInjection {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
@@ -86,4 +88,6 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                 )
             }
     }
+
+    override val dirtyInjectionCache by lazy { DirtyInjectionCache(requireActivity(), appComponent) }
 }

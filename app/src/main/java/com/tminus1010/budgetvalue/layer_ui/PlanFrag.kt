@@ -6,7 +6,9 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.combineLatestAsTuple
-import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.activePlanVM
+import com.tminus1010.budgetvalue.dependency_injection.DirtyInjectionCache
+import com.tminus1010.budgetvalue.dependency_injection.IDirtyInjection
+import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.repo
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
@@ -24,7 +26,7 @@ import kotlinx.android.synthetic.main.frag_plan.*
 import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
-class PlanFrag: Fragment(R.layout.frag_plan) {
+class PlanFrag: Fragment(R.layout.frag_plan), IDirtyInjection {
     override fun onStart() {
         super.onStart()
         // # TMTableView
@@ -78,4 +80,6 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
                 myTableView_plan.initialize(recipes2D, dividerMap, 0, 1)
             }
     }
+
+    override val dirtyInjectionCache by lazy { DirtyInjectionCache(requireActivity(), appComponent) }
 }

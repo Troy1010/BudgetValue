@@ -5,7 +5,9 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.combineLatestAsTuple
-import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.advancedCategorizeVM
+import com.tminus1010.budgetvalue.dependency_injection.DirtyInjectionCache
+import com.tminus1010.budgetvalue.dependency_injection.IDirtyInjection
+import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.repo
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.reflectXY
@@ -19,8 +21,9 @@ import kotlinx.android.synthetic.main.frag_advanced_categorize.*
 import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
-class AdvancedCategorizeFrag : Fragment(R.layout.frag_advanced_categorize) {
+class AdvancedCategorizeFrag : Fragment(R.layout.frag_advanced_categorize), IDirtyInjection {
     val viewRecipeFactories by lazy { ViewItemRecipeFactoryProvider(requireContext()) }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
@@ -65,4 +68,6 @@ class AdvancedCategorizeFrag : Fragment(R.layout.frag_advanced_categorize) {
                 tmTableView_ac.initialize(recipes2D, dividerMap, 0, 1)
             }
     }
+
+    override val dirtyInjectionCache by lazy { DirtyInjectionCache(requireActivity(), appComponent) }
 }

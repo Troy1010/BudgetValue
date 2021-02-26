@@ -8,7 +8,9 @@ import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.combineLatestAsTuple
-import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.historyVM
+import com.tminus1010.budgetvalue.dependency_injection.DirtyInjectionCache
+import com.tminus1010.budgetvalue.dependency_injection.IDirtyInjection
+import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
@@ -18,7 +20,7 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.frag_history.*
 
-class HistoryFrag : Fragment(R.layout.frag_history) {
+class HistoryFrag : Fragment(R.layout.frag_history), IDirtyInjection {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # TMTableView
@@ -67,4 +69,6 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
                 tmTableView_history.initialize(recipe2D, dividerMap, 1, 1)
             }
     }
+
+    override val dirtyInjectionCache by lazy { DirtyInjectionCache(requireActivity(), appComponent) }
 }

@@ -9,9 +9,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.tminus1010.budgetvalue.CODE_PICK_TRANSACTIONS_FILE
 import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue.dependency_injection.DirtyInjectionCache
+import com.tminus1010.budgetvalue.dependency_injection.IDirtyInjection
+import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.repo
-import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.transactionsVM
 import com.tminus1010.budgetvalue.getBlocks
 import com.tminus1010.budgetvalue.reflectXY
 import com.tminus1010.tmcommonkotlin.logz.logz
@@ -20,7 +22,7 @@ import kotlinx.android.synthetic.main.activity_host.*
 import java.math.BigDecimal
 import kotlin.time.ExperimentalTime
 
-class HostActivity : AppCompatActivity() {
+class HostActivity : AppCompatActivity(), IDirtyInjection {
     val nav by lazy { findNavController(R.id.fragNavHost) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -138,4 +140,6 @@ class HostActivity : AppCompatActivity() {
         }
         super.onActivityResult(requestCode, resultCode, intent)
     }
+
+    override val dirtyInjectionCache by lazy { DirtyInjectionCache(this, appComponent) }
 }

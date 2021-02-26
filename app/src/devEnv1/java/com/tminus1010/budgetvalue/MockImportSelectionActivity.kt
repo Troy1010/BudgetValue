@@ -7,10 +7,12 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.transactionsVM
+import com.tminus1010.budgetvalue.dependency_injection.DirtyInjectionCache
+import com.tminus1010.budgetvalue.dependency_injection.IDirtyInjection
+import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import kotlinx.android.synthetic.devEnv1.activity_mock_import_selection.*
 
-class MockImportSelectionActivity : AppCompatActivity(R.layout.activity_mock_import_selection) {
+class MockImportSelectionActivity : AppCompatActivity(R.layout.activity_mock_import_selection), IDirtyInjection {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // # RecyclerView
@@ -40,4 +42,6 @@ class MockImportSelectionActivity : AppCompatActivity(R.layout.activity_mock_imp
                 override fun getItemCount() = transactionPathNames.size
             }
     }
+
+    override val dirtyInjectionCache by lazy { DirtyInjectionCache(this, appComponent) }
 }
