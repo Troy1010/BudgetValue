@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.dependency_injection.ViewModelFactoriesHelper
 import com.tminus1010.budgetvalue.dependency_injection.IViewModelFactories
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.repo
