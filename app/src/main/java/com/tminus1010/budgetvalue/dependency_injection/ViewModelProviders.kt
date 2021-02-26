@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentActivity
 import com.tminus1010.budgetvalue.layer_ui.*
 import com.tminus1010.tmcommonkotlin.view.createViewModelFactory
 
-class ViewModelFactories(val activity: FragmentActivity, val c: AppComponent) {
+class ViewModelProviders(val activity: FragmentActivity, val c: AppComponent) {
     val accountsVM: AccountsVM
             by { AccountsVM(c.getRepo()) }
                 .let { activity.viewModels { createViewModelFactory(it) } }
