@@ -32,10 +32,7 @@ class ActiveCategoriesFrag : Fragment(R.layout.frag_advanced_categorize) {
             if (vmps.activeCategoriesVM.defaultAmount.value.compareTo(BigDecimal.ZERO)!=0) {
                 toast("Default must be 0")
             } else {
-                repo.updateTransactionCategoryAmounts(
-                    vmps.activeCategoriesVM.transactionToPush.value.id,
-                    vmps.activeCategoriesVM.transactionToPush.value.categoryAmounts.mapKeys { it.key.name }
-                ).launch()
+                vmps.activeCategoriesVM.intentPushActiveCategories.onNext(Unit)
                 nav.navigateUp()
             }
         }
