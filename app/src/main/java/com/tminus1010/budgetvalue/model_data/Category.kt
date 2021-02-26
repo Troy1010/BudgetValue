@@ -11,5 +11,5 @@ data class Category (
     val isRequired: Boolean = false
 ) {
     override fun toString() = name
-    enum class Type { Default, Always, Reservoir }
+    enum class Type { Misc, Always, Reservoir }
 }

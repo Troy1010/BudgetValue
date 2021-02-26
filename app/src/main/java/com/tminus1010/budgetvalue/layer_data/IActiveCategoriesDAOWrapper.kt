@@ -9,4 +9,5 @@ interface IActiveCategoriesDAOWrapper: ActiveCategoriesDAO {
     val defaultCategory: Category
     val activeCategories: BehaviorSubject<List<Category>>
     val categories: BehaviorSubject<List<Category>>
+    val unknownCategory: Category
 }

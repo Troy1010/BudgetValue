@@ -2,24 +2,25 @@ package com.tminus1010.budgetvalue.layer_data
 
 import com.tminus1010.budgetvalue.categoryComparator
 import com.tminus1010.budgetvalue.model_data.Category
-import com.tminus1010.tmcommonkotlin.logz.logz
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import javax.inject.Inject
+import com.tminus1010.tmcommonkotlin.logz.logz
 
 class ActiveCategoriesDAOWrapper @Inject constructor(
     val activeCategoriesDAO: ActiveCategoriesDAO,
 ) : IActiveCategoriesDAOWrapper,
     ICategoryParser,
     ActiveCategoriesDAO by activeCategoriesDAO {
-    override val defaultCategory = Category("Default", Category.Type.Default, true)
-
-    private val activeCategories_: Observable<List<Category>> =
-        fetchActiveCategories()
+    override val defaultCategory = Category("Default", Category.Type.Misc, true)
+    override val unknownCategory = Category("Unknown", Category.Type.Misc, true)
 
     // activeCategories needs to start with an empty list, but
     // nameToCategoryMap must not start with an empty list.
+    private val activeCategories_: Observable<List<Category>> =
+        fetchActiveCategories()
+
     override val activeCategories: BehaviorSubject<List<Category>> =
         activeCategories_
             .map { it.sortedWith(categoryComparator) }
@@ -27,7 +28,7 @@ class ActiveCategoriesDAOWrapper @Inject constructor(
 
     override val categories =
         activeCategories
-            .map { it + defaultCategory }
+            .map { it + defaultCategory + unknownCategory }
             .map { it.sortedWith(categoryComparator) }
             .toBehaviorSubject()
 
@@ -39,7 +40,6 @@ class ActiveCategoriesDAOWrapper @Inject constructor(
     override fun parseCategory(categoryName: String): Category {
         require(categoryName != defaultCategory.name) { "Should never have to parse \"${defaultCategory.name}\"" }
         return nameToCategoryMap.blockingFirst()[categoryName]
-            .also { if (it == null) logz("parseCategory`WARNING:had to return default for category name:$categoryName") }
-            ?: defaultCategory
+            ?: unknownCategory.also { logz("Warning: returning category Unknown for unknown name:$categoryName") }
     }
 }
