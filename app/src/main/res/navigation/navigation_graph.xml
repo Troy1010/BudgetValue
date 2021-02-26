@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/historyFrag">
+
+    <fragment
+        android:id="@+id/categorizeFrag"
+        android:name="com.tminus1010.budgetvalue.layer_ui.CategorizeFrag"
+        android:label="Categorize"
+        tools:layout="@layout/frag_categorize">
+        <action
+            android:id="@+id/action_categorizeFrag_to_advancedCategorizeFrag"
+            app:destination="@id/advancedCategorizeFrag"
+            app:popUpTo="@id/categorizeFrag" />
+        <action
+            android:id="@+id/action_categorizeFrag_to_categoryCustomizationFrag"
+            app:destination="@id/categoryCustomizationFrag"
+            app:popUpTo="@id/categorizeFrag" />
+        <action
+            android:id="@+id/action_categorizeFrag_to_newCategoryFrag"
+            app:destination="@id/newCategoryFrag"
+            app:popUpTo="@id/categorizeFrag" />
+    </fragment>
+    <fragment
+        android:id="@+id/importFrag"
+        android:name="com.tminus1010.budgetvalue.layer_ui.ImportFrag"
+        android:label="Import" />
+    <fragment
+        android:id="@+id/reconcileFrag"
+        android:name="com.tminus1010.budgetvalue.layer_ui.ReconcileFrag"
+        android:label="Reconcile" />
+    <fragment
+        android:id="@+id/planFrag"
+        android:name="com.tminus1010.budgetvalue.layer_ui.PlanFrag"
+        android:label="Plan" />
+    <fragment
+        android:id="@+id/historyFrag"
+        android:name="com.tminus1010.budgetvalue.layer_ui.HistoryFrag"
+        android:label="History" />
+    <fragment
+        android:id="@+id/advancedCategorizeFrag"
+        android:name="com.tminus1010.budgetvalue.layer_ui.CategorizeAdvancedFrag"
+        android:label="AdvancedCategorizeFrag"
+        tools:layout="@layout/frag_advanced_categorize" />
+    <fragment
+        android:id="@+id/categoryCustomizationFrag"
+        android:name="com.tminus1010.budgetvalue.layer_ui.CategoryCustomizationFrag"
+        android:label="CategoryCustomizationFrag"
+        tools:layout="@layout/frag_category_customization" />
+    <fragment
+        android:id="@+id/newCategoryFrag"
+        android:name="com.tminus1010.budgetvalue.layer_ui.NewCategoryFrag"
+        android:label="NewCategoryFrag"
+        tools:layout="@layout/frag_new_category" />
+</navigation>
