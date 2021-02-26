@@ -20,8 +20,8 @@ class BudgetedVM @Inject constructor(
     accountsVM: AccountsVM,
 ): ViewModel() {
     val categoryAmounts =
-        combineLatestImpatient(repo.reconciliations, repo.plans, transactionsVM.transactionBlocks, activeReconciliationVM.activeReconcileCAs)
-            .map { (reconciliations, plans, transactionBlocks, activeReconcileCAs) ->
+        combineLatestImpatient(repo.reconciliations, repo.plans, transactionsVM.transactionBlocks, activeReconciliationVM.activeReconcileCAs, repo.activeCategories)
+            .map { (reconciliations, plans, transactionBlocks, activeReconcileCAs, activeCategories) ->
                 val x = SourceHashMap<Category, BigDecimal>()
                 if (reconciliations != null) {
                     reconciliations.forEach {
@@ -49,6 +49,11 @@ class BudgetedVM @Inject constructor(
                         x[category] = (x[category]?:BigDecimal(0)) + amount
                     }
                 }
+                if (activeCategories != null)
+                    activeCategories
+                        .filter { it in x }
+                        .associateWith { BigDecimal.ZERO }
+                        .also { x.putAll(it) }
                 x
             }
             .throttleLatest(1, TimeUnit.SECONDS)
