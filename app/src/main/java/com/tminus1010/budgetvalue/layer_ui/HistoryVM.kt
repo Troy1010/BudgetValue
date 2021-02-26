@@ -15,7 +15,6 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 class HistoryVM @Inject constructor(
     private val repo: Repo,
     private val transactionsVM: TransactionsVM,

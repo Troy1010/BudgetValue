@@ -20,7 +20,6 @@ import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 class ActiveReconciliationVM @Inject constructor(
     private val repo: Repo,
     private val transactionsVM: TransactionsVM,

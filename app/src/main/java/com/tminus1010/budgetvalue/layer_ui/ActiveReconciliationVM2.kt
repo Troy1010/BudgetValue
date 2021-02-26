@@ -6,7 +6,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 // Must be separate from ActiveReconciliationVM to avoid circular dependency graph
-@Singleton
 class ActiveReconciliationVM2 @Inject constructor(
     activeReconciliationVM: ActiveReconciliationVM,
     budgetedVM: BudgetedVM,

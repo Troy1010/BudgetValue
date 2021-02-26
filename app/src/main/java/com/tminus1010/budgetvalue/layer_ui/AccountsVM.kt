@@ -10,7 +10,6 @@ import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 class AccountsVM @Inject constructor(private val repo: Repo): ViewModel() {
     val accounts = repo.getAccounts().toBehaviorSubject()
     val intentAddAccount = PublishSubject.create<Unit>()

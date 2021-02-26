@@ -9,7 +9,6 @@ import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 class AdvancedCategorizeVM @Inject constructor(categorizeVM: CategorizeVM) : ViewModel() {
     val intentRememberCA = PublishSubject.create<Pair<Category, BigDecimal>>()
     val transactionToPush = categorizeVM.transactionBox
