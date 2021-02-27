@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.model_app
+package com.tminus1010.budgetvalue.model_domain
 
 import org.junit.Test
 

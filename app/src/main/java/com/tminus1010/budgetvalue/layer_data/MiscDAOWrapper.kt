@@ -2,9 +2,9 @@ package com.tminus1010.budgetvalue.layer_data
 
 
 import com.tminus1010.budgetvalue.model_data.Category
-import com.tminus1010.budgetvalue.model_app.Plan
-import com.tminus1010.budgetvalue.model_app.Reconciliation
-import com.tminus1010.budgetvalue.model_app.Transaction
+import com.tminus1010.budgetvalue.model_domain.Plan
+import com.tminus1010.budgetvalue.model_domain.Reconciliation
+import com.tminus1010.budgetvalue.model_domain.Transaction
 import com.tminus1010.budgetvalue.model_data.AccountDTO
 import com.tminus1010.tmcommonkotlin.rx.extensions.noEnd
 import io.reactivex.rxjava3.core.Completable

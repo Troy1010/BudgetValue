@@ -2,16 +2,13 @@ package com.tminus1010.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.layer_data.Repo
-import com.tminus1010.budgetvalue.layer_domain.DatePeriodGetter
 import com.tminus1010.budgetvalue.layer_domain.Domain
-import com.tminus1010.budgetvalue.model_app.Block
+import com.tminus1010.budgetvalue.model_domain.Block
 import com.tminus1010.budgetvalue.model_data.Category
-import com.tminus1010.budgetvalue.model_app.Transaction
+import com.tminus1010.budgetvalue.model_domain.Transaction
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.io.InputStream
 import java.math.BigDecimal
-import javax.inject.Inject
-import javax.inject.Singleton
 
 class TransactionsVM(private val repo: Repo, val domain: Domain):ViewModel() {
     val transactions = repo.transactions

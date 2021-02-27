@@ -4,17 +4,14 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.combineLatestAsTuple
 import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.budgetvalue.layer_domain.Domain
-import com.tminus1010.budgetvalue.mergeCombineWithIndex
 import com.tminus1010.budgetvalue.model_data.Category
-import com.tminus1010.budgetvalue.model_app.Plan
+import com.tminus1010.budgetvalue.model_domain.Plan
 import com.tminus1010.budgetvalue.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.rx.extensions.total
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 import java.time.LocalDate
-import javax.inject.Inject
-import javax.inject.Singleton
 
 class ActivePlanVM(repo: Repo, domain: Domain) : ViewModel() {
     val intentPushExpectedIncome = PublishSubject.create<BigDecimal>()
