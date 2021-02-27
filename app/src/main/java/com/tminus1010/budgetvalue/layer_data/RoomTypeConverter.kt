@@ -4,13 +4,8 @@ import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 import com.tminus1010.budgetvalue.extensions.fromJson
 import com.tminus1010.budgetvalue.extensions.toJson
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.tminus1010.budgetvalue.extensions.toJson
 import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.moshi
-import com.tminus1010.budgetvalue.moshi
-import java.lang.reflect.Type
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
