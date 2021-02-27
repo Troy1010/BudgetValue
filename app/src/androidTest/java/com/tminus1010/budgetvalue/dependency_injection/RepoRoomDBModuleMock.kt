@@ -8,7 +8,7 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class BudgetValueDBModuleMock {
+class RepoRoomDBModuleMock {
     @Provides
     @Singleton
     fun providesDatabase(app: App): BudgetValueDB {
