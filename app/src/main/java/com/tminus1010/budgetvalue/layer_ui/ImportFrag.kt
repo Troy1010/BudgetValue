@@ -56,7 +56,7 @@ class ImportFrag : Fragment(R.layout.frag_import) {
                         setOnFocusChangeListener { _, b ->
                             if (!b)
                                 account
-                                    .apply { name = holder.itemView.editText_name.text.toString() }
+                                    .apply { amount = holder.itemView.editText_amount.text.toString().toBigDecimal() }
                                     .also { vmps.accountsVM.intentUpdateAmmount.onNext(it) }
                         }
                     }
