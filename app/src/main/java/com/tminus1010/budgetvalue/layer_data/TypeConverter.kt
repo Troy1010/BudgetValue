@@ -16,8 +16,8 @@ class TypeConverter @Inject constructor(
             Gson().fromJson<Map<String, String>>(s, getTypeForGson<HashMap<String, String>>())
                 .associate { categoryParser.parseCategory(it.key) to (it.value as Any).toString().toBigDecimal() }
 
-    fun string(categoryAmounts: Map<Category, BigDecimal>?): String? =
+    fun string(categoryAmounts: Map<Category, BigDecimal>): String =
         categoryAmounts
-            ?.associate { it.key.name to it.value.toString() }
-            ?.let { Gson().toJson(it) }
+            .associate { it.key.name to it.value.toString() }
+            .let { Gson().toJson(it) }
 }
