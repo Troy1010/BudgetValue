@@ -148,4 +148,7 @@ dependencies {
     // # Mockk
     testImplementation "io.mockk:mockk:1.10.2"
     androidTestImplementation "io.mockk:mockk-android:1.10.2"
+
+    // # Moshi
+    implementation "com.squareup.moshi:moshi-kotlin:1.11.0"
 }
