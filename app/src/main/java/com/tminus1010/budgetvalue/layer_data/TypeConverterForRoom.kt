@@ -22,14 +22,12 @@ class TypeConverterForRoom {
         Category.Type.values()[i]
 
     @TypeConverter
-    fun fromBigDecimalToString(x: BigDecimal): String {
-        return x.toString()
-    }
+    fun fromBigDecimalToString(x: BigDecimal): String =
+        x.toString()
 
     @TypeConverter
-    fun toBigDecimal(s: String): BigDecimal {
-        return s.toBigDecimal()
-    }
+    fun toBigDecimal(s: String): BigDecimal =
+        s.toBigDecimal()
 
     @TypeConverter
     fun fromCategoryAmountsToString(x: Map<String, BigDecimal>): String {
@@ -43,12 +41,10 @@ class TypeConverterForRoom {
     }
 
     @TypeConverter
-    fun fromDateToString(x: LocalDate): String {
-        return x.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))
-    }
+    fun fromDateToString(x: LocalDate): String =
+        x.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))
 
     @TypeConverter
-    fun fromStringToDate(s: String): LocalDate {
-        return LocalDate.parse(s, DateTimeFormatter.ofPattern("MM/dd/yyyy"))
-    }
+    fun fromStringToDate(s: String): LocalDate =
+        LocalDate.parse(s, DateTimeFormatter.ofPattern("MM/dd/yyyy"))
 }
