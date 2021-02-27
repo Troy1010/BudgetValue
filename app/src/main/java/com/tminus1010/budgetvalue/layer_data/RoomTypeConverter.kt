@@ -2,10 +2,10 @@ package com.tminus1010.budgetvalue.layer_data
 
 import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.tminus1010.budgetvalue.extensions.fromJson
+import com.tminus1010.budgetvalue.extensions.toJson
 import com.tminus1010.budgetvalue.model_data.Category
-import java.lang.reflect.Type
+import com.tminus1010.budgetvalue.moshi
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -30,15 +30,12 @@ class RoomTypeConverter {
         s.toBigDecimal()
 
     @TypeConverter
-    fun fromCategoryAmountsToString(x: Map<String, BigDecimal>): String {
-        return Gson().toJson(x)
-    }
+    fun fromCategoryAmountsToString(x: Map<String, BigDecimal>): String =
+        moshi.toJson(x)
 
     @TypeConverter
-    fun toCategoryAmounts(s: String): HashMap<String, BigDecimal> {
-        val type: Type = object : TypeToken<HashMap<String, BigDecimal>>() {}.type
-        return Gson().fromJson<HashMap<String, BigDecimal>>(s, type)
-    }
+    fun toCategoryAmounts(s: String): HashMap<String, BigDecimal> =
+        moshi.fromJson(s)
 
     @TypeConverter
     fun fromDateToString(x: LocalDate): String =

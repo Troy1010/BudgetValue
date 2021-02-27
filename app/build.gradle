@@ -51,6 +51,11 @@ android {
     }
 }
 
+// *Without this, there is a warning that -Xopt-in=kotlin.RequiresOptIn is required
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions.freeCompilerArgs += ["-Xopt-in=kotlin.RequiresOptIn"]
+}
+
 configurations.all {
     // *Without this, androidx.test causes junit 4.12 to be used.
     resolutionStrategy.force "junit:junit:4.13.1"
@@ -121,9 +126,6 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:2.3.3"
     implementation "androidx.navigation:navigation-ui-ktx:2.3.3"
 
-    // # GSon
-    implementation 'com.google.code.gson:gson:2.8.6'
-
     // # Rx
     implementation 'io.reactivex.rxjava3:rxjava:3.0.7'
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
@@ -148,4 +150,7 @@ dependencies {
     // # Mockk
     testImplementation "io.mockk:mockk:1.10.2"
     androidTestImplementation "io.mockk:mockk-android:1.10.2"
+
+    // # Moshi
+    implementation "com.squareup.moshi:moshi-kotlin:1.11.0"
 }
