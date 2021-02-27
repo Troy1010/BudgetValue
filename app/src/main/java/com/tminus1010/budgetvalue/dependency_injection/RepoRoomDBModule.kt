@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.dependency_injection
 
 import androidx.room.Room
 import com.tminus1010.budgetvalue.App
-import com.tminus1010.budgetvalue.layer_data.BudgetValueDB
+import com.tminus1010.budgetvalue.layer_data.DB
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -11,8 +11,8 @@ import javax.inject.Singleton
 class RepoRoomDBModule {
     @Provides
     @Singleton
-    fun providesDatabase(app: App): BudgetValueDB {
-        return Room.databaseBuilder(app, BudgetValueDB::class.java, "BudgetValueDB")
+    fun providesDatabase(app: App): DB {
+        return Room.databaseBuilder(app, DB::class.java, "BudgetValueDB")
             .fallbackToDestructiveMigration()
             .build()
     }
