@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.model_app.Plan
 import com.tminus1010.budgetvalue.model_app.Reconciliation
 import com.tminus1010.budgetvalue.model_app.Transaction
-import com.tminus1010.budgetvalue.model_data.Account
+import com.tminus1010.budgetvalue.model_data.AccountDTO
 import com.tminus1010.tmcommonkotlin.rx.extensions.noEnd
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -62,12 +62,12 @@ class MiscDAOWrapper @Inject constructor(
             .map { it.map { it.toReconciliation(typeConverter) } }
             .replay(1).refCount()
 
-    override fun update(account: Account): Completable {
+    override fun update(accountDTO: AccountDTO): Completable {
         return miscDAO
-            .getAccount(account.id)
+            .getAccount(accountDTO.id)
             .take(1)
-            .filter { it != account }
-            .flatMapCompletable { miscDAO.update(account) }
+            .filter { it != accountDTO }
+            .flatMapCompletable { miscDAO.update(accountDTO) }
             .subscribeOn(Schedulers.io())
     }
 }
