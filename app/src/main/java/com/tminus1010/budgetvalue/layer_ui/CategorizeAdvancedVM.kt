@@ -11,13 +11,6 @@ import java.math.BigDecimal
 
 class CategorizeAdvancedVM(repo: Repo, categorizeVM: CategorizeVM) : ViewModel() {
     val intentRememberCA = PublishSubject.create<Pair<Category, BigDecimal>>()
-    val intentPushActiveCategories = PublishSubject.create<Unit>()
-        .also {
-            it
-                .withLatestFrom(transactionToPush) { _, b -> b }
-                .launch { repo.updateTransactionCategoryAmounts(it.id,
-                        it.categoryAmounts.mapKeys { it.key.name }) }
-        }
     val transactionToPush = categorizeVM.transactionBox
         .unbox()
         .switchMap {
@@ -27,6 +20,13 @@ class CategorizeAdvancedVM(repo: Repo, categorizeVM: CategorizeVM) : ViewModel()
                 }
         }
         .toBehaviorSubject()
+    val intentPushActiveCategories = PublishSubject.create<Unit>()
+        .also {
+            it
+                .withLatestFrom(transactionToPush) { _, b -> b }
+                .launch { repo.updateTransactionCategoryAmounts(it.id,
+                    it.categoryAmounts.mapKeys { it.key.name }) }
+        }
     val defaultAmount = transactionToPush
         .map { it.defaultAmount }
         .toBehaviorSubject()
