@@ -9,7 +9,7 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [
     MiscModule::class,
-    BudgetValueDBModule::class,
+    RepoRoomDBModule::class,
     RepoModule::class
 ])
 interface AppComponent {

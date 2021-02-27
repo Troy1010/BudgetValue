@@ -40,7 +40,8 @@ class SharedPrefWrapper @Inject constructor(
             .toBehaviorSubject()
 
     override fun pushActiveReconciliationCAs(categoryAmounts: Map<Category, BigDecimal>?) {
-        typeConverter.string(categoryAmounts)
+        categoryAmounts
+            ?.let { typeConverter.string(it) }
             ?.also { editor.putString(Key.RECONCILE_CATEGORY_AMOUNTS.name, it) }
             ?: editor.remove(Key.RECONCILE_CATEGORY_AMOUNTS.name)
         editor.apply()
@@ -67,7 +68,8 @@ class SharedPrefWrapper @Inject constructor(
             .toBehaviorSubject()
 
     override fun pushActivePlanCAs(categoryAmounts: Map<Category, BigDecimal>?) {
-        typeConverter.string(categoryAmounts)
+        categoryAmounts
+            ?.let { typeConverter.string(it) }
             ?.also { editor.putString(Key.PLAN_CATEGORY_AMOUNTS.name, it) }
             ?: editor.remove(Key.PLAN_CATEGORY_AMOUNTS.name)
         editor.apply()
