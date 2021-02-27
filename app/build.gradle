@@ -51,6 +51,11 @@ android {
     }
 }
 
+// *Without this, there is a warning that -Xopt-in=kotlin.RequiresOptIn is required
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions.freeCompilerArgs += ["-Xopt-in=kotlin.RequiresOptIn"]
+}
+
 configurations.all {
     // *Without this, androidx.test causes junit 4.12 to be used.
     resolutionStrategy.force "junit:junit:4.13.1"
