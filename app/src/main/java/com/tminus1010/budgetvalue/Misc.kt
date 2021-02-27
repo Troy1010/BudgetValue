@@ -521,19 +521,6 @@ fun <A, B, C> combineLatestWithIndex(
         .map { Quadruple(it.index, it.tuple.first, it.tuple.second, it.tuple.third) }
 }
 
-fun <A, B, C> mergeWithType(
-    a: Observable<A>,
-    b: Observable<B>,
-    c: Observable<C>,
-): Observable<TypeAndValue> {
-    return Observable.zip(
-        Observable.merge(a.map { getTypeForGson<A>() },
-            b.map { getTypeForGson<B>() },
-            c.map { getTypeForGson<C>() }),
-        Observable.merge(a, b, c)
-    ) { type, value -> TypeAndValue(type, value) }
-}
-
 @Suppress("UNCHECKED_CAST")
 fun <A, B> mergeCombineWithIndex(
     a: Observable<A>,
