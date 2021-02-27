@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 @ProvidedTypeConverter
-class TypeConverterForRoom {
+class RoomTypeConverter {
     @TypeConverter
     fun fromCategoryTypeToInt(x: Category.Type): Int =
         x.ordinal
