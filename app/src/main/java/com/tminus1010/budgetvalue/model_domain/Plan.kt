@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue.model_domain
 
 import com.tminus1010.budgetvalue.layer_domain.TypeConverter
-import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.model_data.PlanReceived
 import com.tminus1010.tmcommonkotlin.rx.extensions.sum
 import io.reactivex.rxjava3.core.Observable

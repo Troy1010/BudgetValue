@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue.layer_data
 
 import android.content.SharedPreferences
-import com.squareup.moshi.Moshi
 import com.tminus1010.budgetvalue.extensions.fromJson
 import com.tminus1010.budgetvalue.extensions.toJson
 import com.tminus1010.budgetvalue.moshi
@@ -38,7 +37,7 @@ class SharedPrefWrapper @Inject constructor(
     private val activeReconciliationCAsPublisher = PublishSubject.create<Map<String, String>>()
     override val activeReconciliationCAs: BehaviorSubject<Map<String, String>> =
         activeReconciliationCAsPublisher
-            .startWithItem(moshi.fromJson(sharedPreferences.getString(Key.RECONCILE_CATEGORY_AMOUNTS.name, null)?:""))
+            .startWithItem(moshi.fromJson(sharedPreferences.getString(Key.RECONCILE_CATEGORY_AMOUNTS.name, null)?:"{}"))
             .distinctUntilChanged()
             .toBehaviorSubject()
 
@@ -68,7 +67,7 @@ class SharedPrefWrapper @Inject constructor(
     private val activePlanCAsPublisher = PublishSubject.create<Map<String, String>>()
     override val activePlanCAs: BehaviorSubject<Map<String, String>> =
         activePlanCAsPublisher
-            .startWithItem(moshi.fromJson(sharedPreferences.getString(Key.PLAN_CATEGORY_AMOUNTS.name, null)?:""))
+            .startWithItem(moshi.fromJson(sharedPreferences.getString(Key.PLAN_CATEGORY_AMOUNTS.name, null)?:"{}"))
             .distinctUntilChanged()
             .toBehaviorSubject()
 

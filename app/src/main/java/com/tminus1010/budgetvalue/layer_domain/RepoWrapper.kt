@@ -4,7 +4,7 @@ import com.tminus1010.budgetvalue.extensions.fromJson
 import com.tminus1010.budgetvalue.extensions.toJson
 import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.budgetvalue.model_data.AccountDTO
-import com.tminus1010.budgetvalue.model_data.Category
+import com.tminus1010.budgetvalue.model_domain.Category
 import com.tminus1010.budgetvalue.model_domain.Plan
 import com.tminus1010.budgetvalue.model_domain.Reconciliation
 import com.tminus1010.budgetvalue.model_domain.Transaction
@@ -28,7 +28,7 @@ class RepoWrapper @Inject constructor(
     override fun pushTransactionCA(transaction: Transaction, category: Category, amount: BigDecimal?): Completable =
         transaction.categoryAmounts
             .toMutableMap()
-            .apply { if (amount==null) remove(category) else put(category, amount) }
+            .apply { if (amount==null) remove(moshi.fromJson(moshi.toJson(category))) else put(moshi.fromJson(moshi.toJson(category)), amount) }
             .let { repo.updateTransactionCategoryAmounts(transaction.id, it.mapKeys { it.key.name }) }
 
     override val plans =
@@ -54,7 +54,7 @@ class RepoWrapper @Inject constructor(
     override fun pushReconciliationCA(reconciliation: Reconciliation, category: Category, amount: BigDecimal?, ) =
         reconciliation.categoryAmounts
             .toMutableMap()
-            .apply { if (amount==null) remove(category) else put(category, amount) }
+            .apply { if (amount==null) remove(moshi.fromJson(moshi.toJson(category))) else put(moshi.fromJson(moshi.toJson(category)), amount) }
             .let { repo.updateReconciliationCategoryAmounts(reconciliation.id, it.mapKeys { it.key.name }) }
 
     override val reconciliations: Observable<List<Reconciliation>> =

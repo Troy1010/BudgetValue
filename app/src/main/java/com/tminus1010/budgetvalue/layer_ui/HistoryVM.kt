@@ -5,9 +5,9 @@ import com.tminus1010.budgetvalue.categoryComparator
 import com.tminus1010.budgetvalue.combineLatestImpatient
 import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.budgetvalue.layer_domain.Domain
+import com.tminus1010.budgetvalue.model_domain.Category
 import com.tminus1010.budgetvalue.model_domain.HistoryColumnData
 import com.tminus1010.budgetvalue.model_domain.LocalDatePeriod
-import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.rx.extensions.toDisplayStr
 import io.reactivex.rxjava3.schedulers.Schedulers

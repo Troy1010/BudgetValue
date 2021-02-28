@@ -1,6 +1,5 @@
 package com.tminus1010.budgetvalue.model_domain
 
-import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.tmcommonkotlin.rx.extensions.sum
 import java.math.BigDecimal
 

@@ -1,8 +1,8 @@
 package com.tminus1010.budgetvalue.layer_domain
 
 import com.tminus1010.budgetvalue.model_data.AccountDTO
-import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.model_domain.Account
+import com.tminus1010.budgetvalue.model_domain.Category
 import java.math.BigDecimal
 
 interface ITypeConverter {

@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue.layer_data
 
-import com.tminus1010.budgetvalue.model_data.Category
-import com.tminus1010.tmcommonkotlin.rx.extensions.launch
+import com.tminus1010.budgetvalue.model_domain.Category
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,11 +13,11 @@ class Repo @Inject constructor(
     transactionParser: TransactionParser,
     sharedPrefWrapper: SharedPrefWrapper,
     miscDAO: MiscDAO,
-    activeCategoryDAOWrapper: ActiveCategoriesDAOWrapper,
+    activeCategoriesDAO: ActiveCategoriesDAO,
 ) : ITransactionParser by transactionParser,
     ISharedPrefWrapper by sharedPrefWrapper,
     MiscDAO by miscDAO,
-    IActiveCategoriesDAOWrapper by activeCategoryDAOWrapper {
+    ActiveCategoriesDAO by activeCategoriesDAO {
     fun deleteFromActive(category: Category) {
 //        pushActivePlanCA(Pair(category, null))
 //        pushActiveReconciliationCA(Pair(category, null))

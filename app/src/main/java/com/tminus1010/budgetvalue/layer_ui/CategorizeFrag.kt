@@ -11,7 +11,7 @@ import com.tminus1010.budgetvalue.GenViewHolder
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
-import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.repo
+import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import com.tminus1010.budgetvalue.unbox
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -35,12 +35,12 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
 
             override fun onBindViewHolder(holder: GenViewHolder, position: Int) {
                 holder.itemView.btn_category.apply {
-                    text = repo.activeCategories.value[holder.adapterPosition].name
-                    setOnClickListener { vmps.categorizeVM.finishTransactionWithCategory(repo.activeCategories.value[holder.adapterPosition]) }
+                    text = domain.activeCategories.value[holder.adapterPosition].name
+                    setOnClickListener { vmps.categorizeVM.finishTransactionWithCategory(domain.activeCategories.value[holder.adapterPosition]) }
                 }
             }
 
-            override fun getItemCount() = repo.activeCategories.value.size
+            override fun getItemCount() = domain.activeCategories.value.size
         }
         // # Clicks
         btn_advanced.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_advancedCategorizeFrag) }

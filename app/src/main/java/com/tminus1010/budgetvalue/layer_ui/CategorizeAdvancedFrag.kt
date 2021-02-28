@@ -7,7 +7,7 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.combineLatestAsTuple
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
-import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.repo
+import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.reflectXY
 import com.tminus1010.tmcommonkotlin.rx.extensions.distinctUntilChangedWith
@@ -41,7 +41,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_advanced_categorize) {
         val amountRecipeFactory = viewRecipeFactories.incomingBigDecimalRecipeFactory
         val categoryAmountRecipeFactory = viewRecipeFactories.outgoingCARecipeFactory(vmps.categorizeAdvancedVM.intentRememberCA)
         val titledDividerRecipeFactory = viewRecipeFactories.titledDividerRecipeFactory
-        combineLatestAsTuple(tmTableView_ac.widthObservable, repo.activeCategories)
+        combineLatestAsTuple(tmTableView_ac.widthObservable, domain.activeCategories)
             .debounce(100, TimeUnit.MILLISECONDS)
             .observeOn(Schedulers.computation())
             .map { (width, categories) ->

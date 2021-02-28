@@ -75,7 +75,7 @@ class HostActivity : AppCompatActivity() {
                 for (transactionBlock in transactionBlocks) {
                     val curStringBlock = HashMap<String, String>()
                     stringBlocks.add(curStringBlock)
-                    for (category in repo.activeCategories.value) {
+                    for (category in domain.activeCategories.value) {
                         curStringBlock[category.name] = transactionBlock.value
                             .map { it.categoryAmounts[category] ?: BigDecimal.ZERO }
                             .fold(BigDecimal.ZERO, BigDecimal::add)

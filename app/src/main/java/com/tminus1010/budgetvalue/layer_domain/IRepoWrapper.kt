@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.layer_domain
 
 import com.tminus1010.budgetvalue.model_data.AccountDTO
-import com.tminus1010.budgetvalue.model_data.Category
+import com.tminus1010.budgetvalue.model_domain.Category
 import com.tminus1010.budgetvalue.model_domain.Plan
 import com.tminus1010.budgetvalue.model_domain.Reconciliation
 import com.tminus1010.budgetvalue.model_domain.Transaction
@@ -19,7 +19,6 @@ interface IRepoWrapper {
     val reconciliations: Observable<List<Reconciliation>>
     fun pushReconciliationCA(reconciliation: Reconciliation, category: Category, amount: BigDecimal?): Completable
     fun update(accountDTO: AccountDTO): Completable
-    //
     val activeReconciliationCAs: Observable<Map<Category, BigDecimal>>
     fun pushActiveReconciliationCAs(categoryAmounts: Map<Category, BigDecimal>?): Completable
     fun pushActiveReconciliationCA(kv: Pair<Category, BigDecimal?>): Completable
