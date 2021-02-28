@@ -2,6 +2,7 @@ package com.tminus1010.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.combineLatestAsTuple
+import com.tminus1010.budgetvalue.extensions.launch
 import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.budgetvalue.layer_domain.Domain
 import com.tminus1010.budgetvalue.model_domain.ReconcileRowData
@@ -41,10 +42,10 @@ class ActiveReconciliationVM(
                 .subscribe()
         }
     val intentPushActiveReconcileCA = PublishSubject.create<Pair<Category, BigDecimal>>()
-        .also { it.observeOn(Schedulers.io()).subscribe(repo::pushActiveReconciliationCA) }
+        .also { it.launch { domain.pushActiveReconciliationCA(it) } }
     // # State
     val activeReconcileCAs =
-        combineLatestAsTuple(repo.activeReconciliationCAs, repo.activeCategories)
+        combineLatestAsTuple(domain.activeReconciliationCAs, repo.activeCategories)
             .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (activeReconcileCAs, activeCategories) ->
                 activeCategories
                     .associateWith { BigDecimal.ZERO }

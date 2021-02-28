@@ -1,25 +1,23 @@
 package com.tminus1010.budgetvalue.layer_data
 
-import com.tminus1010.budgetvalue.model_data.Category
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.subjects.BehaviorSubject
-import java.math.BigDecimal
 
 interface ISharedPrefWrapper {
-    val activeReconciliationCAs: BehaviorSubject<Map<Category, BigDecimal>>
-    fun pushActiveReconciliationCAs(categoryAmounts: Map<Category, BigDecimal>?)
-    fun pushActiveReconciliationCA(kv: Pair<Category, BigDecimal?>)
-    fun clearActiveReconcileCAs()
-    val activePlanCAs: Observable<Map<Category, BigDecimal>>
-    fun pushActivePlanCAs(categoryAmounts: Map<Category, BigDecimal>?)
-    fun pushActivePlanCA(kv: Pair<Category, BigDecimal?>)
-    fun clearActivePlan()
-    fun fetchExpectedIncome(): BigDecimal
-    fun pushExpectedIncome(expectedIncome: BigDecimal?)
+    val activeReconciliationCAs: Observable<Map<String, String>>
+    fun pushActiveReconciliationCAs(categoryAmounts: Map<String, String>?): Completable
+    fun pushActiveReconciliationCA(kv: Pair<String, String?>): Completable
+    fun clearActiveReconcileCAs(): Completable
+    val activePlanCAs: Observable<Map<String, String>>
+    fun pushActivePlanCAs(categoryAmounts: Map<String, String>?): Completable
+    fun pushActivePlanCA(kv: Pair<String, String?>): Completable
+    fun clearActivePlanCAs(): Completable
+    fun fetchExpectedIncome(): String
+    fun pushExpectedIncome(expectedIncome: String?): Completable
     val anchorDateOffset: Observable<Long>
-    fun pushAnchorDateOffset(anchorDateOffset: Long?)
+    fun pushAnchorDateOffset(anchorDateOffset: Long?): Completable
     val blockSize: Observable<Long>
-    fun pushBlockSize(blockSize: Long?)
+    fun pushBlockSize(blockSize: Long?): Completable
     fun fetchAppInitBool(): Boolean
-    fun pushAppInitBool(boolean: Boolean = true)
+    fun pushAppInitBool(boolean: Boolean = true): Completable
 }

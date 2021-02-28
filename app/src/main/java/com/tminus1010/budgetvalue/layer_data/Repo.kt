@@ -20,9 +20,9 @@ class Repo @Inject constructor(
     MiscDAO by miscDAO,
     IActiveCategoriesDAOWrapper by activeCategoryDAOWrapper {
     fun deleteFromActive(category: Category) {
-        pushActivePlanCA(Pair(category, null))
-        pushActiveReconciliationCA(Pair(category, null))
-        delete(category).launch()
+//        pushActivePlanCA(Pair(category, null))
+//        pushActiveReconciliationCA(Pair(category, null))
+//        delete(category).launch()
     }
 
 //    fun deleteFromEverywhere(category: Category) {
