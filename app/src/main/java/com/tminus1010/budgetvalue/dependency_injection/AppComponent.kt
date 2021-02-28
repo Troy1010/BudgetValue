@@ -15,5 +15,4 @@ import javax.inject.Singleton
 interface AppComponent {
     fun getRepo(): Repo
     fun getDomain(): Domain
-    fun getDatePeriodGetter(): DatePeriodGetter
 }
