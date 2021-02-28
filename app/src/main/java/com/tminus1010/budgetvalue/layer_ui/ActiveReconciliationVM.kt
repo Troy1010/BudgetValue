@@ -3,9 +3,9 @@ package com.tminus1010.budgetvalue.layer_ui
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.combineLatestAsTuple
 import com.tminus1010.budgetvalue.layer_data.Repo
-import com.tminus1010.budgetvalue.model_app.ReconcileRowData
-import com.tminus1010.budgetvalue.model_app.Reconciliation
-import com.tminus1010.budgetvalue.model_app.Transaction
+import com.tminus1010.budgetvalue.model_domain.ReconcileRowData
+import com.tminus1010.budgetvalue.model_domain.Reconciliation
+import com.tminus1010.budgetvalue.model_domain.Transaction
 import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin.rx.extensions.sum
@@ -17,8 +17,6 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 import java.time.LocalDate
-import javax.inject.Inject
-import javax.inject.Singleton
 
 class ActiveReconciliationVM(
     private val repo: Repo,

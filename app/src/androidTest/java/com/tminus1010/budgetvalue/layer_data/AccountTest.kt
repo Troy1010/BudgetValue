@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.layer_data
 
 import androidx.test.platform.app.InstrumentationRegistry
 import com.tminus1010.budgetvalue.AppMock
-import com.tminus1010.budgetvalue.model_data.Account
+import com.tminus1010.budgetvalue.model_data.AccountDTO
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -21,7 +21,7 @@ class AccountTest {
     @Test
     fun update() {
         // # Given
-        repo.add(Account("Bank", BigDecimal.ONE)).blockingAwait()
+        repo.add(AccountDTO("Bank", BigDecimal.ONE)).blockingAwait()
         val account = repo.getAccounts().blockingFirst()[0]
         assertEquals(1, repo.getAccounts().blockingFirst().size)
         assertEquals(BigDecimal.ONE, repo.getAccounts().blockingFirst()[0].amount)
@@ -35,8 +35,8 @@ class AccountTest {
     @Test
     fun getAccounts_MultipleTimes() {
         // # Given
-        repo.add(Account("bank", BigDecimal.ONE)).blockingAwait()
-        repo.add(Account("paypal", BigDecimal.TEN)).blockingAwait()
+        repo.add(AccountDTO("bank", BigDecimal.ONE)).blockingAwait()
+        repo.add(AccountDTO("paypal", BigDecimal.TEN)).blockingAwait()
         // # Stimulate & Verify
         assertEquals(2, repo.getAccounts().blockingFirst().size)
         assertEquals(2, repo.getAccounts().blockingFirst().size)
@@ -52,11 +52,11 @@ class AccountTest {
         repo.getAccounts().subscribeOn(Schedulers.trampoline()).subscribe { observationCount += 1 } // TODO("handle disposables")
         assertEquals(0, repo.getAccounts().blockingFirst().size)
         // # Stimulate
-        repo.add(Account("bank", BigDecimal.ONE)).blockingAwait()
+        repo.add(AccountDTO("bank", BigDecimal.ONE)).blockingAwait()
         Thread.sleep(10)
-        repo.add(Account("paypal", BigDecimal.TEN)).blockingAwait()
+        repo.add(AccountDTO("paypal", BigDecimal.TEN)).blockingAwait()
         Thread.sleep(10)
-        repo.add(Account("cash", BigDecimal.ZERO)).blockingAwait()
+        repo.add(AccountDTO("cash", BigDecimal.ZERO)).blockingAwait()
         Thread.sleep(10)
         // # Verify
         assertEquals(4, observationCount)
@@ -65,7 +65,7 @@ class AccountTest {
     @Test
     fun update_ObservationCount() {
         // # Given
-        repo.add(Account("bank", BigDecimal.ONE)).blockingAwait()
+        repo.add(AccountDTO("bank", BigDecimal.ONE)).blockingAwait()
         Thread.sleep(10)
         var observationCount = 0
         repo.getAccounts().subscribeOn(Schedulers.trampoline()).subscribe { observationCount += 1 }

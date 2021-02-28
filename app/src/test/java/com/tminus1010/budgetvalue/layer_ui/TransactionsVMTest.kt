@@ -2,9 +2,9 @@ package com.tminus1010.budgetvalue.layer_ui
 
 import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.budgetvalue.layer_domain.DatePeriodGetter
-import com.tminus1010.budgetvalue.model_app.Block
-import com.tminus1010.budgetvalue.model_app.LocalDatePeriod
-import com.tminus1010.budgetvalue.model_app.Transaction
+import com.tminus1010.budgetvalue.model_domain.Block
+import com.tminus1010.budgetvalue.model_domain.LocalDatePeriod
+import com.tminus1010.budgetvalue.model_domain.Transaction
 import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Observable

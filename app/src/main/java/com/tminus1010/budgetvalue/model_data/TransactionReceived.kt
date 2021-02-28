@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.model_data
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.tminus1010.budgetvalue.layer_data.TypeConverter
-import com.tminus1010.budgetvalue.model_app.Transaction
+import com.tminus1010.budgetvalue.model_domain.Transaction
 import java.math.BigDecimal
 import java.time.LocalDate
 

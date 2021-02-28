@@ -11,5 +11,7 @@ import javax.inject.Singleton
 class Domain @Inject constructor(
     private val appInitializer: AppInitializer,
     private val datePeriodGetter: DatePeriodGetter,
+    private val typeConverter: TypeConverter,
 ) : IAppInitializer by appInitializer,
-    IDatePeriodGetter by datePeriodGetter
+    IDatePeriodGetter by datePeriodGetter,
+    ITypeConverter by typeConverter

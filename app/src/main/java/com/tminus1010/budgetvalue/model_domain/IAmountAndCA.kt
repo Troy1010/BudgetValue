@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.model_app
+package com.tminus1010.budgetvalue.model_domain
 
 import com.tminus1010.budgetvalue.model_data.Category
 import java.math.BigDecimal

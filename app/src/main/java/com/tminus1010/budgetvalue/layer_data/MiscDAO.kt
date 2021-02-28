@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue.layer_data
 
 import androidx.room.*
-import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.model_data.*
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -12,23 +11,23 @@ import java.time.LocalDate
 interface MiscDAO {
     // # Accounts
 
-    @Query("DELETE FROM `Account`")
+    @Query("DELETE FROM AccountDTO")
     fun clearAccounts(): Completable
 
-    @Query("select * from `Account`")
-    fun getAccounts(): Observable<List<Account>>
+    @Query("select * from AccountDTO")
+    fun getAccounts(): Observable<List<AccountDTO>>
 
-    @Query("select * from `Account` where id=:id")
-    fun getAccount(id: Int): Observable<Account>
+    @Query("select * from AccountDTO where id=:id")
+    fun getAccount(id: Int): Observable<AccountDTO>
 
     @Insert
-    fun add(account: Account): Completable
+    fun add(accountDTO: AccountDTO): Completable
 
     @Delete
-    fun delete(account: Account): Completable
+    fun delete(accountDTO: AccountDTO): Completable
 
     @Update
-    fun update(account: Account): Completable
+    fun update(accountDTO: AccountDTO): Completable
 
     // # Transactions
 
