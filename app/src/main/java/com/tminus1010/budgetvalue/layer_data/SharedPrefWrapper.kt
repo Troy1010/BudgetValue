@@ -14,7 +14,6 @@ import javax.inject.Inject
 
 class SharedPrefWrapper @Inject constructor(
     val sharedPreferences: SharedPreferences,
-    val typeConverter: TypeConverter,
 ) : ISharedPrefWrapper {
     companion object {
         enum class Key {

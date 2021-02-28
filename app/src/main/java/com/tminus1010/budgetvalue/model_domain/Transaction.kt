@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.model_domain
 
 
-import com.tminus1010.budgetvalue.layer_data.TypeConverter
+import com.tminus1010.budgetvalue.layer_domain.TypeConverter
 import com.tminus1010.budgetvalue.model_data.TransactionReceived
 import com.tminus1010.tmcommonkotlin.rx.extensions.sum
 import java.math.BigDecimal
@@ -22,7 +22,7 @@ data class Transaction(
             date,
             description,
             amount,
-            typeConverter.string(categoryAmounts),
+            typeConverter.toString(categoryAmounts),
             id,
         )
     }
