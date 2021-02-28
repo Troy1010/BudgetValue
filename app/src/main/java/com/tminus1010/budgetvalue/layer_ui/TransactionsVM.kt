@@ -11,7 +11,7 @@ import java.io.InputStream
 import java.math.BigDecimal
 
 class TransactionsVM(private val repo: Repo, val domain: Domain):ViewModel() {
-    val transactions = repo.transactions
+    val transactions = domain.transactions
     val transactionBlocks = transactions
         .map(::getBlocksFromTransactions)
     val spends = transactions

@@ -3,13 +3,17 @@ package com.tminus1010.budgetvalue.layer_ui
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.extensions.launch
 import com.tminus1010.budgetvalue.layer_data.Repo
+import com.tminus1010.budgetvalue.layer_domain.Domain
 import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 
-class CategorizeAdvancedVM(repo: Repo, categorizeVM: CategorizeVM) : ViewModel() {
+class CategorizeAdvancedVM(
+    repo: Repo,
+    categorizeVM: CategorizeVM,
+) : ViewModel() {
     val intentRememberCA = PublishSubject.create<Pair<Category, BigDecimal>>()
     val transactionToPush = categorizeVM.transactionBox
         .unbox()

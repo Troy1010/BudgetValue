@@ -14,7 +14,7 @@ class ViewModelProviders(val activity: FragmentActivity, val appComponent: AppCo
             by { ActivePlanVM(c.getRepo(), c.getDomain()) }
                 .let { activity.viewModels { createViewModelFactory(it) } }
     val activeReconciliationVM: ActiveReconciliationVM
-            by { ActiveReconciliationVM(c.getRepo(), transactionsVM, accountsVM, activePlanVM) }
+            by { ActiveReconciliationVM(c.getRepo(), c.getDomain(), transactionsVM, accountsVM, activePlanVM) }
                 .let { activity.viewModels { createViewModelFactory(it) } }
     val activeReconciliationVM2: ActiveReconciliationVM2
             by { ActiveReconciliationVM2(activeReconciliationVM, budgetedVM) }
@@ -23,7 +23,7 @@ class ViewModelProviders(val activity: FragmentActivity, val appComponent: AppCo
             by { CategorizeAdvancedVM(c.getRepo(), categorizeVM) }
                 .let { activity.viewModels { createViewModelFactory(it) } }
     val budgetedVM: BudgetedVM
-            by { BudgetedVM(c.getRepo(), transactionsVM, activeReconciliationVM, accountsVM) }
+            by { BudgetedVM(c.getRepo(), c.getDomain(), transactionsVM, activeReconciliationVM, accountsVM) }
                 .let { activity.viewModels { createViewModelFactory(it) } }
     val categorizeVM: CategorizeVM
             by { CategorizeVM(c.getRepo(), transactionsVM) }

@@ -121,7 +121,7 @@ class HostActivity : AppCompatActivity() {
             }
             R.id.menu_debug_do_something -> {
                 toast("Debug Do Something")
-                repo.reconciliations.take(1).subscribe()
+                domain.reconciliations.take(1).subscribe()
             }
         }
         return super.onOptionsItemSelected(item)

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.combineLatestAsTuple
 import com.tminus1010.budgetvalue.combineLatestImpatient
 import com.tminus1010.budgetvalue.layer_data.Repo
+import com.tminus1010.budgetvalue.layer_domain.Domain
 import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
@@ -15,12 +16,13 @@ import javax.inject.Singleton
 
 class BudgetedVM(
     repo: Repo,
+    domain: Domain,
     transactionsVM: TransactionsVM,
     activeReconciliationVM: ActiveReconciliationVM,
     accountsVM: AccountsVM,
 ): ViewModel() {
     val categoryAmounts =
-        combineLatestImpatient(repo.reconciliations, repo.plans, transactionsVM.transactionBlocks, activeReconciliationVM.activeReconcileCAs, repo.activeCategories)
+        combineLatestImpatient(domain.reconciliations, domain.plans, transactionsVM.transactionBlocks, activeReconciliationVM.activeReconcileCAs, repo.activeCategories)
             .map { (reconciliations, plans, transactionBlocks, activeReconcileCAs, activeCategories) ->
                 val x = SourceHashMap<Category, BigDecimal>()
                 if (reconciliations != null) {

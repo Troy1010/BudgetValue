@@ -22,7 +22,7 @@ class HistoryVM(
     private val budgetedVM: BudgetedVM,
 ) : ViewModel() {
     val historyColumnDatas =
-        combineLatestImpatient(repo.reconciliations, repo.plans, activeReconciliationVM2.defaultAmount, activeReconciliationVM.activeReconcileCAs, transactionsVM.transactionBlocks, budgetedVM.defaultAmount, budgetedVM.categoryAmounts)
+        combineLatestImpatient(domain.reconciliations, domain.plans, activeReconciliationVM2.defaultAmount, activeReconciliationVM.activeReconcileCAs, transactionsVM.transactionBlocks, budgetedVM.defaultAmount, budgetedVM.categoryAmounts)
             .observeOn(Schedulers.computation())
             .throttleLatest(500, TimeUnit.MILLISECONDS)
             .map { (reconciliations, plans, activeReconciliationDefaultAmount, activeReconciliationCAs, transactionBlocks, budgetedDefaultAmount, budgetedCAs) ->

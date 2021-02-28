@@ -1,11 +1,11 @@
-package com.tminus1010.budgetvalue.layer_data
+package com.tminus1010.budgetvalue.layer_domain
 
-
+import com.tminus1010.budgetvalue.layer_data.Repo
+import com.tminus1010.budgetvalue.model_data.AccountDTO
 import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.model_domain.Plan
 import com.tminus1010.budgetvalue.model_domain.Reconciliation
 import com.tminus1010.budgetvalue.model_domain.Transaction
-import com.tminus1010.budgetvalue.model_data.AccountDTO
 import com.tminus1010.tmcommonkotlin.rx.extensions.noEnd
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -13,12 +13,12 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import java.math.BigDecimal
 import javax.inject.Inject
 
-class MiscDAOWrapper @Inject constructor(
-    val miscDAO: MiscDAO,
+class RepoWrapper @Inject constructor(
+    val repo: Repo,
     val typeConverter: TypeConverter,
-) : MiscDAO by miscDAO, IMiscDAOWrapper {
+) : IRepoWrapper {
     override val transactions =
-        miscDAO.getTransactionsReceived()
+        repo.getTransactionsReceived()
             .map { it.map { it.toTransaction(typeConverter) } }
             .replay(1).refCount()
 
@@ -26,25 +26,28 @@ class MiscDAOWrapper @Inject constructor(
         transaction.categoryAmounts
             .toMutableMap()
             .apply { if (amount==null) remove(category) else put(category, amount) }
-            .also { updateTransactionCategoryAmounts(transaction.id, it.mapKeys { it.key.name }).subscribe() }
+            .also { repo.updateTransactionCategoryAmounts(transaction.id, it.mapKeys { it.key.name }).subscribe() }
     }
 
-    override val plans = miscDAO.fetchPlanReceived()
+    override val plans = repo.fetchPlanReceived()
         .subscribeOn(Schedulers.io())
         .map { it.map { it.toPlan(typeConverter) } }
         .noEnd().replay(1).refCount()
 
-    override fun pushPlan(plan: Plan) = miscDAO.add(plan.toPlanReceived(typeConverter)).subscribeOn(Schedulers.io())
+    override fun pushPlan(plan: Plan) =
+        repo.add(plan.toPlanReceived(typeConverter))
+            .subscribeOn(Schedulers.io())
+
     override fun pushPlanCA(plan: Plan, category: Category, amount: BigDecimal?) {
         plan.categoryAmounts
             .toMutableMap()
             .apply { if (amount==null) remove(category) else put(category, amount) }
-            .also { updatePlanCategoryAmounts(plan.toPlanReceived(typeConverter).startDate, it.mapKeys { it.key.name }).subscribe() }
+            .also { repo.updatePlanCategoryAmounts(plan.toPlanReceived(typeConverter).startDate, it.mapKeys { it.key.name }).subscribe() }
     }
 
     override fun pushReconciliation(reconciliation: Reconciliation): Completable =
         reconciliation.toReconciliationReceived(typeConverter, BigDecimal(0))
-            .let { miscDAO.add(it).subscribeOn(Schedulers.io()) }
+            .let { repo.add(it).subscribeOn(Schedulers.io()) }
 
     override fun pushReconciliationCA(
         reconciliation: Reconciliation,
@@ -54,20 +57,19 @@ class MiscDAOWrapper @Inject constructor(
         reconciliation.categoryAmounts
             .toMutableMap()
             .apply { if (amount==null) remove(category) else put(category, amount) }
-            .also { updateReconciliationCategoryAmounts(reconciliation.id, it.mapKeys { it.key.name }).subscribe() }
+            .also { repo.updateReconciliationCategoryAmounts(reconciliation.id, it.mapKeys { it.key.name }).subscribe() }
     }
 
     override val reconciliations: Observable<List<Reconciliation>> =
-        miscDAO.fetchReconciliationReceived()
+        repo.fetchReconciliationReceived()
             .map { it.map { it.toReconciliation(typeConverter) } }
             .replay(1).refCount()
 
-    override fun update(accountDTO: AccountDTO): Completable {
-        return miscDAO
+    override fun update(accountDTO: AccountDTO): Completable =
+        repo
             .getAccount(accountDTO.id)
             .take(1)
             .filter { it != accountDTO }
-            .flatMapCompletable { miscDAO.update(accountDTO) }
+            .flatMapCompletable { repo.update(accountDTO) }
             .subscribeOn(Schedulers.io())
-    }
 }

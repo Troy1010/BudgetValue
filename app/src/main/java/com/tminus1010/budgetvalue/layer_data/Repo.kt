@@ -13,11 +13,11 @@ import javax.inject.Singleton
 class Repo @Inject constructor(
     transactionParser: TransactionParser,
     sharedPrefWrapper: SharedPrefWrapper,
-    miscDAOWrapper: MiscDAOWrapper,
+    miscDAO: MiscDAO,
     activeCategoryDAOWrapper: ActiveCategoriesDAOWrapper,
 ) : ITransactionParser by transactionParser,
     ISharedPrefWrapper by sharedPrefWrapper,
-    IMiscDAOWrapper by miscDAOWrapper,
+    MiscDAO by miscDAO,
     IActiveCategoriesDAOWrapper by activeCategoryDAOWrapper {
     fun deleteFromActive(category: Category) {
         pushActivePlanCA(Pair(category, null))
@@ -25,16 +25,16 @@ class Repo @Inject constructor(
         delete(category).launch()
     }
 
-    fun deleteFromEverywhere(category: Category) {
-        deleteFromActive(category)
-        transactions
-            .take(1)
-            .subscribe { it.forEach { pushTransactionCA(it, category, null) } }
-        reconciliations
-            .take(1)
-            .subscribe { it.forEach { pushReconciliationCA(it, category, null) } }
-        plans
-            .take(1)
-            .subscribe { it.forEach { pushPlanCA(it, category, null) } }
-    }
+//    fun deleteFromEverywhere(category: Category) {
+//        deleteFromActive(category)
+//        transactions
+//            .take(1)
+//            .subscribe { it.forEach { pushTransactionCA(it, category, null) } }
+//        reconciliations
+//            .take(1)
+//            .subscribe { it.forEach { pushReconciliationCA(it, category, null) } }
+//        plans
+//            .take(1)
+//            .subscribe { it.forEach { pushPlanCA(it, category, null) } }
+//    }
 }

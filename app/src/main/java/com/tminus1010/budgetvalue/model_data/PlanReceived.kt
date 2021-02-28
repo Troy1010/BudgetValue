@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.model_data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.tminus1010.budgetvalue.layer_data.TypeConverter
+import com.tminus1010.budgetvalue.layer_domain.TypeConverter
 import com.tminus1010.budgetvalue.model_domain.LocalDatePeriod
 import com.tminus1010.budgetvalue.model_domain.Plan
 import io.reactivex.rxjava3.core.Observable
@@ -20,5 +20,5 @@ data class PlanReceived(
     fun toPlan(typeConverter: TypeConverter) =
         Plan(Observable.just(LocalDatePeriod(startDate, endDate)),
             amount,
-            typeConverter.categoryAmounts(categoryAmounts))
+            typeConverter.toCategoryAmount(categoryAmounts))
 }

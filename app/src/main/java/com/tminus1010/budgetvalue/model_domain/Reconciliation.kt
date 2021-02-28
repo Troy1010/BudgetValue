@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.model_domain
 
-import com.tminus1010.budgetvalue.layer_data.TypeConverter
+import com.tminus1010.budgetvalue.layer_domain.TypeConverter
 import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.model_data.ReconciliationReceived
 import java.math.BigDecimal
@@ -15,7 +15,7 @@ data class Reconciliation(
     fun toReconciliationReceived(typeConverter: TypeConverter, amount: BigDecimal): ReconciliationReceived {
         return ReconciliationReceived(
             localDate = localDate,
-            categoryAmounts = typeConverter.string(categoryAmounts),
+            categoryAmounts = typeConverter.toString(categoryAmounts),
             amount = amount,
             id = id,)
     }

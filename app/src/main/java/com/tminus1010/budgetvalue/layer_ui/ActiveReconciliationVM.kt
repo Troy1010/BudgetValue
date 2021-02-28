@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.layer_ui
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.combineLatestAsTuple
 import com.tminus1010.budgetvalue.layer_data.Repo
+import com.tminus1010.budgetvalue.layer_domain.Domain
 import com.tminus1010.budgetvalue.model_domain.ReconcileRowData
 import com.tminus1010.budgetvalue.model_domain.Reconciliation
 import com.tminus1010.budgetvalue.model_domain.Transaction
@@ -20,6 +21,7 @@ import java.time.LocalDate
 
 class ActiveReconciliationVM(
     private val repo: Repo,
+    private val domain: Domain,
     private val transactionsVM: TransactionsVM,
     private val accountsVM: AccountsVM,
     private val activePlanVM: ActivePlanVM,
@@ -34,7 +36,7 @@ class ActiveReconciliationVM(
                         accountsTotal,
                         activeReconcileCAs.value.filter { it.value != BigDecimal(0) },)
                 }
-                .doOnNext { repo.pushReconciliation(it).blockingAwait() }
+                .doOnNext { domain.pushReconciliation(it).blockingAwait() }
                 .doOnNext { repo.clearActiveReconcileCAs() }
                 .subscribe()
         }

@@ -12,6 +12,8 @@ class Domain @Inject constructor(
     private val appInitializer: AppInitializer,
     private val datePeriodGetter: DatePeriodGetter,
     private val typeConverter: TypeConverter,
+    private val repoWrapper: RepoWrapper,
 ) : IAppInitializer by appInitializer,
     IDatePeriodGetter by datePeriodGetter,
-    ITypeConverter by typeConverter
+    ITypeConverter by typeConverter,
+    IRepoWrapper by repoWrapper

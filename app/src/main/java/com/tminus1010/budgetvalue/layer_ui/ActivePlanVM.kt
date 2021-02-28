@@ -25,7 +25,7 @@ class ActivePlanVM(repo: Repo, domain: Domain) : ViewModel() {
                         repo.activePlanCAs.blockingFirst()
                     )
                 }
-                .flatMapCompletable { repo.pushPlan(it) }
+                .flatMapCompletable { domain.pushPlan(it) }
                 .subscribe()
         }
     val intentPushPlanCA = PublishSubject.create<Pair<Category, BigDecimal>>()
@@ -34,7 +34,7 @@ class ActivePlanVM(repo: Repo, domain: Domain) : ViewModel() {
             // The last plan might be the active plan, if it contains the current date.
             // push to there as well.
             it
-                .withLatestFrom(repo.plans) { _, b -> b }
+                .withLatestFrom(domain.plans) { _, b -> b }
                 .filter { it.isNotEmpty() }
                 .map { it.last() }
                 .filter { LocalDate.now() in it.localDatePeriod.blockingFirst() }

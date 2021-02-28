@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.model_domain
 
-import com.tminus1010.budgetvalue.layer_data.TypeConverter
+import com.tminus1010.budgetvalue.layer_domain.TypeConverter
 import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.model_data.PlanReceived
 import com.tminus1010.tmcommonkotlin.rx.extensions.sum
@@ -17,7 +17,7 @@ data class Plan(
             localDatePeriod.blockingFirst().startDate,
             localDatePeriod.blockingFirst().endDate,
             defaultAmount,
-            typeConverter.string(categoryAmounts)
+            typeConverter.toString(categoryAmounts)
         )
     }
 
