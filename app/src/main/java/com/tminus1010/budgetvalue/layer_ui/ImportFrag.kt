@@ -26,6 +26,7 @@ class ImportFrag : Fragment(R.layout.frag_import) {
         btn_add_account.clicks().subscribe(vmps.accountsVM.intentAddAccount)
         // # RecyclerView
         vmps.accountsVM.intentAddAccount.mergeWith(vmps.accountsVM.intentDeleteAccount.map { Unit })
+            // When an add or delete happens, listen for the next accounts and refresh
             .flatMap { vmps.accountsVM.accounts.take(2).skip(1) }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(AndroidSchedulers.mainThread())

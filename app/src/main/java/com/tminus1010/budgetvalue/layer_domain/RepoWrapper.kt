@@ -3,11 +3,7 @@ package com.tminus1010.budgetvalue.layer_domain
 import com.tminus1010.budgetvalue.extensions.fromJson
 import com.tminus1010.budgetvalue.extensions.toJson
 import com.tminus1010.budgetvalue.layer_data.Repo
-import com.tminus1010.budgetvalue.model_data.AccountDTO
-import com.tminus1010.budgetvalue.model_domain.Category
-import com.tminus1010.budgetvalue.model_domain.Plan
-import com.tminus1010.budgetvalue.model_domain.Reconciliation
-import com.tminus1010.budgetvalue.model_domain.Transaction
+import com.tminus1010.budgetvalue.model_domain.*
 import com.tminus1010.budgetvalue.moshi
 import com.tminus1010.tmcommonkotlin.rx.extensions.noEnd
 import io.reactivex.rxjava3.core.Completable
@@ -62,13 +58,18 @@ class RepoWrapper @Inject constructor(
             .map { it.map { it.toReconciliation(typeConverter) } }
             .replay(1).refCount()
 
-    override fun update(accountDTO: AccountDTO): Completable =
-        repo
-            .getAccount(accountDTO.id)
-            .take(1)
-            .filter { it != accountDTO }
-            .flatMapCompletable { repo.update(accountDTO) }
-            .subscribeOn(Schedulers.io())
+    override val accounts: Observable<List<Account>> =
+        repo.fetchAccounts()
+            .map { it.map { typeConverter.toAccount(it) } }
+
+    override fun update(account: Account): Completable =
+        repo.updateAccount(moshi.fromJson(moshi.toJson(account)))
+
+    override fun push(account: Account): Completable =
+        repo.addAccount(moshi.fromJson(moshi.toJson(account)))
+
+    override fun delete(account: Account): Completable =
+        repo.deleteAccount(moshi.fromJson(moshi.toJson(account)))
 
     override val activeReconciliationCAs: Observable<Map<Category, BigDecimal>> =
         repo.activeReconciliationCAs

@@ -15,19 +15,19 @@ interface MiscDAO {
     fun clearAccounts(): Completable
 
     @Query("select * from AccountDTO")
-    fun getAccounts(): Observable<List<AccountDTO>>
+    fun fetchAccounts(): Observable<List<AccountDTO>>
 
     @Query("select * from AccountDTO where id=:id")
     fun getAccount(id: Int): Observable<AccountDTO>
 
     @Insert
-    fun add(accountDTO: AccountDTO): Completable
+    fun addAccount(accountDTO: AccountDTO): Completable
 
     @Delete
-    fun delete(accountDTO: AccountDTO): Completable
+    fun deleteAccount(accountDTO: AccountDTO): Completable
 
     @Update
-    fun update(accountDTO: AccountDTO): Completable
+    fun updateAccount(accountDTO: AccountDTO): Completable
 
     // # Transactions
 

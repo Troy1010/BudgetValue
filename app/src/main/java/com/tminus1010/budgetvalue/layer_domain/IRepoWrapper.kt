@@ -1,10 +1,6 @@
 package com.tminus1010.budgetvalue.layer_domain
 
-import com.tminus1010.budgetvalue.model_data.AccountDTO
-import com.tminus1010.budgetvalue.model_domain.Category
-import com.tminus1010.budgetvalue.model_domain.Plan
-import com.tminus1010.budgetvalue.model_domain.Reconciliation
-import com.tminus1010.budgetvalue.model_domain.Transaction
+import com.tminus1010.budgetvalue.model_domain.*
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import java.math.BigDecimal
@@ -18,7 +14,6 @@ interface IRepoWrapper {
     fun pushReconciliation(reconciliation: Reconciliation): Completable
     val reconciliations: Observable<List<Reconciliation>>
     fun pushReconciliationCA(reconciliation: Reconciliation, category: Category, amount: BigDecimal?): Completable
-    fun update(accountDTO: AccountDTO): Completable
     val activeReconciliationCAs: Observable<Map<Category, BigDecimal>>
     fun pushActiveReconciliationCAs(categoryAmounts: Map<Category, BigDecimal>?): Completable
     fun pushActiveReconciliationCA(kv: Pair<Category, BigDecimal?>): Completable
@@ -35,4 +30,8 @@ interface IRepoWrapper {
     fun pushBlockSize(blockSize: Long?): Completable
     fun fetchAppInitBool(): Boolean
     fun pushAppInitBool(boolean: Boolean = true): Completable
+    val accounts: Observable<List<Account>>
+    fun push(account: Account): Completable
+    fun update(account: Account): Completable
+    fun delete(account: Account): Completable
 }

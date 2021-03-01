@@ -8,7 +8,7 @@ import com.tminus1010.tmcommonkotlin.view.createViewModelFactory
 class ViewModelProviders(val activity: FragmentActivity, val appComponent: AppComponent) {
     val c get() = appComponent
     val accountsVM: AccountsVM
-            by { AccountsVM(c.getRepo(), c.getDomain()) }
+            by { AccountsVM(c.getDomain()) }
                 .let { activity.viewModels { createViewModelFactory(it) } }
     val activePlanVM: ActivePlanVM
             by { ActivePlanVM(c.getDomain()) }
