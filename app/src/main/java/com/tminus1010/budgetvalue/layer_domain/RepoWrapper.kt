@@ -21,6 +21,12 @@ class RepoWrapper @Inject constructor(
             .map { it.map { it.toTransaction(typeConverter) } }
             .replay(1).refCount()
 
+    override fun tryPush(transaction: Transaction): Completable =
+        repo.tryAdd(transaction.toTransactionReceived(typeConverter))
+
+    override fun tryPush(transactions: List<Transaction>): Completable =
+        repo.tryAdd(transactions.map { it.toTransactionReceived(typeConverter) })
+
     override fun pushTransactionCA(transaction: Transaction, category: Category, amount: BigDecimal?): Completable =
         transaction.categoryAmounts
             .toMutableMap()

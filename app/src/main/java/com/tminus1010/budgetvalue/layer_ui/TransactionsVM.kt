@@ -10,7 +10,9 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import java.io.InputStream
 import java.math.BigDecimal
 
-class TransactionsVM(private val repo: Repo, val domain: Domain):ViewModel() {
+class TransactionsVM(
+    private val domain: Domain,
+) : ViewModel() {
     val transactions = domain.transactions
     val transactionBlocks = transactions
         .map(::getBlocksFromTransactions)
@@ -21,7 +23,7 @@ class TransactionsVM(private val repo: Repo, val domain: Domain):ViewModel() {
     val uncategorizedSpendsSize = uncategorizedSpends
         .map { it.size.toString() }
     fun importTransactions(inputStream: InputStream) {
-        repo.tryAdd(repo.parseToTransactions(inputStream))
+        domain.tryPush(domain.parseToTransactions(inputStream))
             .subscribeOn(Schedulers.io())
             .subscribe()
     }

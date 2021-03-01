@@ -7,6 +7,8 @@ import java.math.BigDecimal
 
 interface IRepoWrapper {
     val transactions: Observable<List<Transaction>>
+    fun tryPush(transaction: Transaction): Completable
+    fun tryPush(transactions: List<Transaction>): Completable
     fun pushTransactionCA(transaction: Transaction, category: Category, amount: BigDecimal?): Completable
     fun pushTransactionCAs(transaction: Transaction, categoryAmounts: Map<Category, BigDecimal>): Completable
     val plans: Observable<List<Plan>>

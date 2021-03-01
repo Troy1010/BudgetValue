@@ -10,12 +10,10 @@ import javax.inject.Singleton
  */
 @Singleton
 class Repo @Inject constructor(
-    transactionParser: TransactionParser,
-    sharedPrefWrapper: SharedPrefWrapper,
-    miscDAO: MiscDAO,
-    activeCategoriesDAO: ActiveCategoriesDAO,
-) : ITransactionParser by transactionParser,
-    ISharedPrefWrapper by sharedPrefWrapper,
+    private val sharedPrefWrapper: SharedPrefWrapper,
+    private val miscDAO: MiscDAO,
+    private val activeCategoriesDAO: ActiveCategoriesDAO,
+) : ISharedPrefWrapper by sharedPrefWrapper,
     MiscDAO by miscDAO,
     ActiveCategoriesDAO by activeCategoriesDAO {
     fun deleteFromActive(category: Category) {

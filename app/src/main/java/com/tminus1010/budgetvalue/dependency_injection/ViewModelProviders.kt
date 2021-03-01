@@ -32,6 +32,6 @@ class ViewModelProviders(val activity: FragmentActivity, val appComponent: AppCo
             by { HistoryVM(c.getRepo(), transactionsVM, activeReconciliationVM, activeReconciliationVM2, c.getDomain(), budgetedVM) }
                 .let { activity.viewModels { createViewModelFactory(it) } }
     val transactionsVM: TransactionsVM
-            by { TransactionsVM(c.getRepo(), c.getDomain()) }
+            by { TransactionsVM(c.getDomain()) }
                 .let { activity.viewModels { createViewModelFactory(it) } }
 }
