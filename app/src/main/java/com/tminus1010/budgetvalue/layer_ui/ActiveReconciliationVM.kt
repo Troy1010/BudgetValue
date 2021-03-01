@@ -3,7 +3,6 @@ package com.tminus1010.budgetvalue.layer_ui
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.combineLatestAsTuple
 import com.tminus1010.budgetvalue.extensions.launch
-import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.budgetvalue.layer_domain.Domain
 import com.tminus1010.budgetvalue.model_domain.Category
 import com.tminus1010.budgetvalue.model_domain.ReconcileRowData
@@ -21,7 +20,6 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 class ActiveReconciliationVM(
-    private val repo: Repo,
     private val domain: Domain,
     private val transactionsVM: TransactionsVM,
     private val accountsVM: AccountsVM,
@@ -38,7 +36,7 @@ class ActiveReconciliationVM(
                         activeReconcileCAs.value.filter { it.value != BigDecimal(0) },)
                 }
                 .doOnNext { domain.pushReconciliation(it).blockingAwait() }
-                .doOnNext { repo.clearActiveReconcileCAs() }
+                .doOnNext { domain.clearActiveReconcileCAs() }
                 .subscribe()
         }
     val intentPushActiveReconcileCA = PublishSubject.create<Pair<Category, BigDecimal>>()
