@@ -66,6 +66,6 @@ class TransactionParser @Inject constructor(
             //
             transactions.add(TransactionDTO(date, description!!, amount.toBigDecimal(), null, entireString))
         }
-        return transactions.map { it.toTransaction(typeConverter) }.toList()
+        return transactions.map { Transaction.fromDTO(it, typeConverter) }.toList()
     }
 }

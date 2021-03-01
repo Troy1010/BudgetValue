@@ -17,14 +17,14 @@ class RepoWrapper @Inject constructor(
 ) : IRepoWrapper {
     override val transactions =
         repo.getTransactionsReceived()
-            .map { it.map { it.toTransaction(typeConverter) } }
+            .map { it.map { Transaction.fromDTO(it, typeConverter) } }
             .replay(1).refCount()
 
     override fun tryPush(transaction: Transaction): Completable =
-        repo.tryAdd(transaction.toTransactionReceived(typeConverter))
+        repo.tryAdd(transaction.toDTO(typeConverter))
 
     override fun tryPush(transactions: List<Transaction>): Completable =
-        repo.tryAdd(transactions.map { it.toTransactionReceived(typeConverter) })
+        repo.tryAdd(transactions.map { it.toDTO(typeConverter) })
 
     override fun pushTransactionCA(transaction: Transaction, category: Category, amount: BigDecimal?): Completable =
         transaction.categoryAmounts

@@ -17,7 +17,7 @@ data class Transaction(
     val isUncategorized get() = categoryAmounts.isNullOrEmpty()
     val isSpend get() = amount < BigDecimal.ZERO
     override val defaultAmount get() = amount - categoryAmounts.values.sum()
-    fun toTransactionReceived(typeConverter: TypeConverter): TransactionDTO {
+    fun toDTO(typeConverter: TypeConverter): TransactionDTO {
         return TransactionDTO(
             date,
             description,
@@ -25,5 +25,17 @@ data class Transaction(
             typeConverter.toString(categoryAmounts),
             id,
         )
+    }
+    companion object {
+        fun fromDTO(transactionDTO: TransactionDTO, typeConverter: TypeConverter) =
+            transactionDTO.run {
+                Transaction(
+                    date,
+                    description,
+                    amount,
+                    typeConverter.toCategoryAmount(categoryAmounts),
+                    id,
+                )
+            }
     }
 }
