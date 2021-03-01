@@ -10,4 +10,5 @@ interface IActiveCategoriesDAOWrapper {
     val categories: BehaviorSubject<List<Category>>
     val unknownCategory: Category
     fun push(category: Category): Completable
+    fun delete(category: Category): Completable
 }

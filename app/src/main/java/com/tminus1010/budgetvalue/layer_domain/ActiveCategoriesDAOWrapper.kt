@@ -26,6 +26,9 @@ class ActiveCategoriesDAOWrapper @Inject constructor(
     override fun push(category: Category): Completable =
         activeCategoriesDAO.push(category.toDTO())
 
+    override fun delete(category: Category): Completable =
+        activeCategoriesDAO.delete(category.toDTO())
+
     override val activeCategories: BehaviorSubject<List<Category>> =
         activeCategories_
             .map { it.sortedWith(categoryComparator) }

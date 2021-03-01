@@ -13,6 +13,7 @@ import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.model_domain.Category
 import com.tminus1010.budgetvalue.reflectXY
 import com.tminus1010.tmcommonkotlin.rx.extensions.distinctUntilChangedWith
+import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -33,7 +34,7 @@ class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization)
             { View.inflate(requireContext(), R.layout.button, null) as Button },
             { v: Button, d: Category ->
                 v.text = "Delete"
-                v.setOnClickListener { repo.deleteFromActive(d) }
+                v.setOnClickListener { domain.deleteFromActive(d).launch() }
                 v.isEnabled = !d.isRequired
             }
         )
