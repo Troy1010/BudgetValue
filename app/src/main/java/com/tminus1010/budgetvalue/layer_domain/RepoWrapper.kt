@@ -38,18 +38,18 @@ class RepoWrapper @Inject constructor(
     override val plans =
         repo.fetchPlanReceived()
             .subscribeOn(Schedulers.io())
-            .map { it.map { it.toPlan(typeConverter) } }
+            .map { it.map { Plan.fromDTO(it, typeConverter) } }
             .noEnd().replay(1).refCount()
 
     override fun pushPlan(plan: Plan) =
-        repo.add(plan.toPlanReceived(typeConverter))
+        repo.add(plan.toDTO(typeConverter))
             .subscribeOn(Schedulers.io())
 
     override fun pushPlanCA(plan: Plan, category: Category, amount: BigDecimal?): Completable =
         plan.categoryAmounts
             .toMutableMap()
             .apply { if (amount==null) remove(category) else put(category, amount) }
-            .let { repo.updatePlanCategoryAmounts(plan.toPlanReceived(typeConverter).startDate, it.mapKeys { it.key.name }) }
+            .let { repo.updatePlanCategoryAmounts(plan.toDTO(typeConverter).startDate, it.mapKeys { it.key.name }) }
 
     override fun pushReconciliation(reconciliation: Reconciliation): Completable =
         reconciliation.toReconciliationReceived(typeConverter, BigDecimal(0))

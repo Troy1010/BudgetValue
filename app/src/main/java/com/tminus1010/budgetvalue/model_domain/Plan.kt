@@ -11,14 +11,22 @@ data class Plan(
     override val defaultAmount: BigDecimal,
     override val categoryAmounts: Map<Category, BigDecimal>,
 ) : IAmountAndCA {
-    fun toPlanReceived(typeConverter: TypeConverter): PlanDTO {
-        return PlanDTO(
+    fun toDTO(typeConverter: TypeConverter): PlanDTO =
+        PlanDTO(
             localDatePeriod.blockingFirst().startDate,
             localDatePeriod.blockingFirst().endDate,
             defaultAmount,
             typeConverter.toString(categoryAmounts)
         )
-    }
 
     override val amount get() = categoryAmounts.values.sum() + defaultAmount
+
+    companion object {
+        fun fromDTO(planDTO: PlanDTO, typeConverter: TypeConverter) =
+            planDTO.run {
+                Plan(Observable.just(LocalDatePeriod(startDate, endDate)),
+                    amount,
+                    typeConverter.toCategoryAmount(categoryAmounts))
+            }
+    }
 }
