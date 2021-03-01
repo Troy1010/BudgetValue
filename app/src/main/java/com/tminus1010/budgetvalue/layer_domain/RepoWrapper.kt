@@ -52,7 +52,7 @@ class RepoWrapper @Inject constructor(
             .let { repo.updatePlanCategoryAmounts(plan.toDTO(typeConverter).startDate, it.mapKeys { it.key.name }) }
 
     override fun pushReconciliation(reconciliation: Reconciliation): Completable =
-        reconciliation.toReconciliationReceived(typeConverter, BigDecimal(0))
+        reconciliation.toDTO(typeConverter, BigDecimal(0))
             .let { repo.add(it).subscribeOn(Schedulers.io()) }
 
     override fun pushReconciliationCA(reconciliation: Reconciliation, category: Category, amount: BigDecimal?, ) =
@@ -63,7 +63,7 @@ class RepoWrapper @Inject constructor(
 
     override val reconciliations: Observable<List<Reconciliation>> =
         repo.fetchReconciliationReceived()
-            .map { it.map { it.toReconciliation(typeConverter) } }
+            .map { it.map { Reconciliation.fromDTO(it, typeConverter) } }
             .replay(1).refCount()
 
     override val accounts: Observable<List<Account>> =
