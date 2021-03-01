@@ -90,7 +90,7 @@ class RepoWrapper @Inject constructor(
             .let { repo.pushActiveReconciliationCAs(moshi.fromJson(it)) }
 
     override fun pushActiveReconciliationCA(kv: Pair<Category, BigDecimal?>): Completable =
-        repo.pushActiveReconciliationCA(Pair(kv.first.name, kv.second.toString()))
+        repo.pushActiveReconciliationCA(Pair(kv.first.name, kv.second?.toString()))
 
     override fun clearActiveReconcileCAs(): Completable =
         repo.clearActiveReconcileCAs()
@@ -100,12 +100,10 @@ class RepoWrapper @Inject constructor(
             .map { moshi.fromJson(moshi.toJson(it)) }
 
     override fun pushActivePlanCAs(categoryAmounts: Map<Category, BigDecimal>?): Completable =
-        categoryAmounts
-            .let { moshi.toJson(it) }
-            .let { repo.pushActivePlanCAs(moshi.fromJson(it)) }
+        repo.pushActivePlanCAs(moshi.fromJson(moshi.toJson(categoryAmounts)))
 
     override fun pushActivePlanCA(kv: Pair<Category, BigDecimal?>): Completable =
-        repo.pushActivePlanCA(moshi.fromJson(moshi.toJson(kv)))
+        repo.pushActivePlanCA(Pair(kv.first.name, kv.second?.toString()))
 
     override fun clearActivePlan(): Completable =
         repo.clearActivePlanCAs()
