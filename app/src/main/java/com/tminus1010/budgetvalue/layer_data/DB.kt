@@ -7,7 +7,7 @@ import com.tminus1010.budgetvalue.model_data.*
 
 @TypeConverters(RoomTypeConverter::class)
 @Database(entities = [TransactionDTO::class, AccountDTO::class, ReconciliationDTO::class, PlanCategoryAmount::class, PlanDTO::class, CategoryDTO::class],
-    version = 30)
+    version = 31)
 abstract class DB : RoomDatabase() {
     abstract fun miscDAO(): MiscDAO
     abstract fun activeCategoryDAO(): ActiveCategoriesDAO
