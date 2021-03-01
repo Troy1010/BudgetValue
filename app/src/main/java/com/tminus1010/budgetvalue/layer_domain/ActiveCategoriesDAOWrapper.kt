@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue.layer_domain
 
 import com.tminus1010.budgetvalue.categoryComparator
-import com.tminus1010.budgetvalue.extensions.fromJson
 import com.tminus1010.budgetvalue.extensions.toJson
 import com.tminus1010.budgetvalue.layer_data.ActiveCategoriesDAO
 import com.tminus1010.budgetvalue.model_domain.Category
@@ -23,11 +22,11 @@ class ActiveCategoriesDAOWrapper @Inject constructor(
     // nameToCategoryDTOMap must not start with an empty list.
     private val activeCategories_: BehaviorSubject<List<Category>> =
         activeCategoriesDAO.fetchActiveCategories()
-            .map { it.map { moshi.fromJson<Category>(moshi.toJson(it)) } }
+            .map { it.map { Category.fromDTO(it) } }
             .toBehaviorSubject()
 
     override fun push(category: Category): Completable =
-        activeCategoriesDAO.push(moshi.fromJson(moshi.toJson(category)))
+        activeCategoriesDAO.push(category.toCategoryDTO())
 
     override val activeCategories: BehaviorSubject<List<Category>> =
         activeCategories_
