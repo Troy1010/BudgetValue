@@ -8,7 +8,7 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 @Entity
-data class TransactionReceived(
+data class TransactionDTO(
     val date: LocalDate,
     val description: String,
     val amount: BigDecimal,

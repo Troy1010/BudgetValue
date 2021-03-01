@@ -8,7 +8,7 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 @Entity
-data class ReconciliationReceived(
+data class ReconciliationDTO(
     val localDate: LocalDate,
     val amount: BigDecimal,
     val categoryAmounts: String?,

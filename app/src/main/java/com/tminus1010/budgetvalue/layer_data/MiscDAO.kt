@@ -31,64 +31,64 @@ interface MiscDAO {
 
     // # Transactions
 
-    @Query("DELETE FROM `TransactionReceived`")
+    @Query("DELETE FROM TransactionDTO")
     fun clearTransactions(): Completable
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun tryAdd(transactionReceived: TransactionReceived): Completable
+    fun tryAdd(transactionDTO: TransactionDTO): Completable
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun tryAdd(transactionsReceived: List<TransactionReceived>): Completable
+    fun tryAdd(transactionsDTO: List<TransactionDTO>): Completable
 
-    @Query("select * from `TransactionReceived`")
-    fun getTransactionsReceived(): Observable<List<TransactionReceived>>
+    @Query("select * from TransactionDTO")
+    fun getTransactionsReceived(): Observable<List<TransactionDTO>>
 
     @Delete
-    fun delete(transaction: TransactionReceived): Completable
+    fun delete(transaction: TransactionDTO): Completable
 
     @Update
-    fun update(transaction: TransactionReceived): Completable
+    fun update(transaction: TransactionDTO): Completable
 
-    @Query("select date from `TransactionReceived` WHERE id=:id")
+    @Query("select date from TransactionDTO WHERE id=:id")
     fun getTransactionDate(id: Int): Observable<String>
 
-    @Query("UPDATE `TransactionReceived` SET date=:date WHERE id=:id")
+    @Query("UPDATE TransactionDTO SET date=:date WHERE id=:id")
     fun updateTransactionDate(id: Int, date: String): Completable
 
-    @Query("UPDATE `TransactionReceived` SET categoryAmounts=:categoryAmounts WHERE id=:id")
+    @Query("UPDATE TransactionDTO SET categoryAmounts=:categoryAmounts WHERE id=:id")
     fun updateTransactionCategoryAmounts(id: String, categoryAmounts: Map<String, BigDecimal>): Completable
 
     // # PlanCategoryAmounts
 
-    @Query("select * from PlanReceived")
-    fun fetchPlanReceived(): Observable<List<PlanReceived>>
+    @Query("select * from PlanDTO")
+    fun fetchPlanReceived(): Observable<List<PlanDTO>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun add(PlanReceived: PlanReceived): Completable
+    fun add(PlanDTO: PlanDTO): Completable
 
     @Update
-    fun update(PlanReceived: PlanReceived): Completable
+    fun update(PlanDTO: PlanDTO): Completable
 
-    @Query("DELETE FROM PlanReceived")
+    @Query("DELETE FROM PlanDTO")
     fun clearPlans(): Completable
 
-    @Query("UPDATE `PlanReceived` SET categoryAmounts=:categoryAmounts WHERE startDate=:startDate")
+    @Query("UPDATE PlanDTO SET categoryAmounts=:categoryAmounts WHERE startDate=:startDate")
     fun updatePlanCategoryAmounts(startDate: LocalDate, categoryAmounts: Map<String, BigDecimal>): Completable
 
     // # Reconciliations
 
-    @Query("select * from ReconciliationReceived")
-    fun fetchReconciliationReceived(): Observable<List<ReconciliationReceived>>
+    @Query("select * from ReconciliationDTO")
+    fun fetchReconciliationReceived(): Observable<List<ReconciliationDTO>>
 
     @Insert
-    fun add(reconciliationReceived: ReconciliationReceived): Completable
+    fun add(reconciliationDTO: ReconciliationDTO): Completable
 
     @Update
-    fun update(reconciliationReceived: ReconciliationReceived): Completable
+    fun update(reconciliationDTO: ReconciliationDTO): Completable
 
-    @Query("DELETE FROM ReconciliationReceived")
+    @Query("DELETE FROM ReconciliationDTO")
     fun clearReconciliations(): Completable
 
-    @Query("UPDATE `ReconciliationReceived` SET categoryAmounts=:categoryAmounts WHERE id=:id")
+    @Query("UPDATE ReconciliationDTO SET categoryAmounts=:categoryAmounts WHERE id=:id")
     fun updateReconciliationCategoryAmounts(id: Int, categoryAmounts: Map<String, BigDecimal>): Completable
 }

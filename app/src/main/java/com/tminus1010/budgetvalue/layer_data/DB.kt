@@ -6,7 +6,7 @@ import androidx.room.TypeConverters
 import com.tminus1010.budgetvalue.model_data.*
 
 @TypeConverters(RoomTypeConverter::class)
-@Database(entities = [TransactionReceived::class, AccountDTO::class, ReconciliationReceived::class, PlanCategoryAmount::class, PlanReceived::class, CategoryDTO::class],
+@Database(entities = [TransactionDTO::class, AccountDTO::class, ReconciliationDTO::class, PlanCategoryAmount::class, PlanDTO::class, CategoryDTO::class],
     version = 30)
 abstract class DB : RoomDatabase() {
     abstract fun miscDAO(): MiscDAO

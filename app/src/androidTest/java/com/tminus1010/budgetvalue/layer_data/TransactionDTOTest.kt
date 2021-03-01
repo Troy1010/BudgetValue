@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.layer_data
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.tminus1010.budgetvalue.AppMock
-import com.tminus1010.budgetvalue.model_data.TransactionReceived
+import com.tminus1010.budgetvalue.model_data.TransactionDTO
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -11,7 +11,7 @@ import org.junit.runner.RunWith
 import java.time.LocalDate
 
 @RunWith(AndroidJUnit4::class)
-class TransactionReceivedTest {
+class TransactionDTOTest {
     val app by lazy { InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as AppMock }
     val repo by lazy { app.appComponent.getRepo() }
 
@@ -23,7 +23,7 @@ class TransactionReceivedTest {
     @Test
     fun addAndGetTransactionReceived() {
         // # Given
-        val transactionReceived = TransactionReceived(LocalDate.now(), "zoop", 1.5.toBigDecimal(), hashMapOf(), 1)
+        val transactionReceived = TransactionDTO(LocalDate.now(), "zoop", 1.5.toBigDecimal(), hashMapOf(), 1)
         // # Stimulate
         repo.add(transactionReceived).blockingAwait()
         // # Verify
@@ -35,9 +35,9 @@ class TransactionReceivedTest {
     fun addAndGetTransactionReceived_GivenList() {
         // # Given
         val transactionsReceived = listOf(
-            TransactionReceived(LocalDate.now(), "zoop", 1.5.toBigDecimal()),
-            TransactionReceived(LocalDate.now(), "zoop", 1.5.toBigDecimal()),
-            TransactionReceived(LocalDate.now(), "zoop", 1.5.toBigDecimal())
+            TransactionDTO(LocalDate.now(), "zoop", 1.5.toBigDecimal()),
+            TransactionDTO(LocalDate.now(), "zoop", 1.5.toBigDecimal()),
+            TransactionDTO(LocalDate.now(), "zoop", 1.5.toBigDecimal())
         )
         // # Stimulate
         repo.add(transactionsReceived).blockingAwait()
@@ -48,9 +48,9 @@ class TransactionReceivedTest {
     @Test
     fun clearTransactions() {
         // # Given
-        repo.add(TransactionReceived(LocalDate.now(), "zoopA", 1.5.toBigDecimal())).blockingAwait()
-        repo.add(TransactionReceived(LocalDate.now(), "zoopB", 1.5.toBigDecimal())).blockingAwait()
-        repo.add(TransactionReceived(LocalDate.now(), "zoopC", 1.5.toBigDecimal())).blockingAwait()
+        repo.add(TransactionDTO(LocalDate.now(), "zoopA", 1.5.toBigDecimal())).blockingAwait()
+        repo.add(TransactionDTO(LocalDate.now(), "zoopB", 1.5.toBigDecimal())).blockingAwait()
+        repo.add(TransactionDTO(LocalDate.now(), "zoopC", 1.5.toBigDecimal())).blockingAwait()
         assertEquals(3, repo.getTransactionsReceived().blockingFirst().size)
         // # Stimulate
         repo.clearTransactions().blockingAwait()
