@@ -11,7 +11,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 
 class CategorizeAdvancedVM(
-    repo: Repo,
+    domain: Domain,
     categorizeVM: CategorizeVM,
 ) : ViewModel() {
     val intentRememberCA = PublishSubject.create<Pair<Category, BigDecimal>>()
@@ -28,8 +28,7 @@ class CategorizeAdvancedVM(
         .also {
             it
                 .withLatestFrom(transactionToPush) { _, b -> b }
-                .launch { repo.updateTransactionCategoryAmounts(it.id,
-                    it.categoryAmounts.mapKeys { it.key.name }) }
+                .launch { domain.pushTransactionCAs(it, it.categoryAmounts) }
         }
     val defaultAmount = transactionToPush
         .map { it.defaultAmount }

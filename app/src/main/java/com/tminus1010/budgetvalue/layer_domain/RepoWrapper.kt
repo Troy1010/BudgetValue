@@ -27,6 +27,9 @@ class RepoWrapper @Inject constructor(
             .apply { if (amount==null) remove(moshi.fromJson(moshi.toJson(category))) else put(moshi.fromJson(moshi.toJson(category)), amount) }
             .let { repo.updateTransactionCategoryAmounts(transaction.id, it.mapKeys { it.key.name }) }
 
+    override fun pushTransactionCAs(transaction: Transaction, categoryAmounts: Map<Category, BigDecimal>) =
+        repo.updateTransactionCategoryAmounts(transaction.id, categoryAmounts.mapKeys { it.key.name })
+
     override val plans =
         repo.fetchPlanReceived()
             .subscribeOn(Schedulers.io())
