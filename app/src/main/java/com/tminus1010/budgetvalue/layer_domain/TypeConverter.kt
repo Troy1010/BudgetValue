@@ -11,7 +11,7 @@ import java.math.BigDecimal
 import javax.inject.Inject
 
 class TypeConverter @Inject constructor(
-    val categoryParser: ICategoryParser,
+    private val categoryParser: ICategoryParser,
 ) : ITypeConverter {
     override fun toAccount(accountDTO: AccountDTO): Account =
         Account(

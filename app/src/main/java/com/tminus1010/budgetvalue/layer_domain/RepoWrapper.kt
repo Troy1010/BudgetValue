@@ -1,10 +1,8 @@
 package com.tminus1010.budgetvalue.layer_domain
 
-import com.tminus1010.budgetvalue.extensions.fromJson
-import com.tminus1010.budgetvalue.extensions.toJson
 import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.budgetvalue.model_domain.*
-import com.tminus1010.budgetvalue.moshi
+import com.tminus1010.tmcommonkotlin.rx.extensions.associate
 import com.tminus1010.tmcommonkotlin.rx.extensions.noEnd
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -15,6 +13,7 @@ import javax.inject.Inject
 class RepoWrapper @Inject constructor(
     val repo: Repo,
     val typeConverter: TypeConverter,
+    val categoryParser: ICategoryParser,
 ) : IRepoWrapper {
     override val transactions =
         repo.getTransactionsReceived()
@@ -30,7 +29,7 @@ class RepoWrapper @Inject constructor(
     override fun pushTransactionCA(transaction: Transaction, category: Category, amount: BigDecimal?): Completable =
         transaction.categoryAmounts
             .toMutableMap()
-            .apply { if (amount==null) remove(moshi.fromJson(moshi.toJson(category))) else put(moshi.fromJson(moshi.toJson(category)), amount) }
+            .apply { if (amount==null) remove(category) else put(category, amount) }
             .let { repo.updateTransactionCategoryAmounts(transaction.id, it.mapKeys { it.key.name }) }
 
     override fun pushTransactionCAs(transaction: Transaction, categoryAmounts: Map<Category, BigDecimal>) =
@@ -59,7 +58,7 @@ class RepoWrapper @Inject constructor(
     override fun pushReconciliationCA(reconciliation: Reconciliation, category: Category, amount: BigDecimal?, ) =
         reconciliation.categoryAmounts
             .toMutableMap()
-            .apply { if (amount==null) remove(moshi.fromJson(moshi.toJson(category))) else put(moshi.fromJson(moshi.toJson(category)), amount) }
+            .apply { if (amount==null) remove(category) else put(category, amount) }
             .let { repo.updateReconciliationCategoryAmounts(reconciliation.id, it.mapKeys { it.key.name }) }
 
     override val reconciliations: Observable<List<Reconciliation>> =
@@ -72,22 +71,20 @@ class RepoWrapper @Inject constructor(
             .map { it.map { typeConverter.toAccount(it) } }
 
     override fun update(account: Account): Completable =
-        repo.updateAccount(moshi.fromJson(moshi.toJson(account)))
+        repo.updateAccount(account.toDTO())
 
     override fun push(account: Account): Completable =
-        repo.addAccount(moshi.fromJson(moshi.toJson(account)))
+        repo.addAccount(account.toDTO())
 
     override fun delete(account: Account): Completable =
-        repo.deleteAccount(moshi.fromJson(moshi.toJson(account)))
+        repo.deleteAccount(account.toDTO())
 
     override val activeReconciliationCAs: Observable<Map<Category, BigDecimal>> =
         repo.activeReconciliationCAs
-            .map { moshi.fromJson(moshi.toJson(it)) }
+            .map { it.associate { categoryParser.parseCategory(it.key) to it.value.toBigDecimal() } }
 
-    override fun pushActiveReconciliationCAs(categoryAmounts: Map<Category, BigDecimal>?): Completable =
-        categoryAmounts
-            .let { moshi.toJson(it) }
-            .let { repo.pushActiveReconciliationCAs(moshi.fromJson(it)) }
+    override fun pushActiveReconciliationCAs(categoryAmounts: Map<Category, BigDecimal>): Completable =
+        repo.pushActiveReconciliationCAs(categoryAmounts.associate { it.key.name to it.value.toString() })
 
     override fun pushActiveReconciliationCA(kv: Pair<Category, BigDecimal?>): Completable =
         repo.pushActiveReconciliationCA(Pair(kv.first.name, kv.second?.toString()))
@@ -97,10 +94,10 @@ class RepoWrapper @Inject constructor(
 
     override val activePlanCAs: Observable<Map<Category, BigDecimal>> =
         repo.activePlanCAs
-            .map { moshi.fromJson(moshi.toJson(it)) }
+            .map { it.associate { categoryParser.parseCategory(it.key) to it.value.toBigDecimal() } }
 
-    override fun pushActivePlanCAs(categoryAmounts: Map<Category, BigDecimal>?): Completable =
-        repo.pushActivePlanCAs(moshi.fromJson(moshi.toJson(categoryAmounts)))
+    override fun pushActivePlanCAs(categoryAmounts: Map<Category, BigDecimal>): Completable =
+        repo.pushActivePlanCAs(categoryAmounts.associate { it.key.name to it.value.toString() })
 
     override fun pushActivePlanCA(kv: Pair<Category, BigDecimal?>): Completable =
         repo.pushActivePlanCA(Pair(kv.first.name, kv.second?.toString()))
@@ -109,11 +106,10 @@ class RepoWrapper @Inject constructor(
         repo.clearActivePlanCAs()
 
     override fun fetchExpectedIncome(): BigDecimal =
-        repo.fetchExpectedIncome()
-            .let { moshi.fromJson(it) }
+        repo.fetchExpectedIncome().toBigDecimal()
 
     override fun pushExpectedIncome(expectedIncome: BigDecimal?): Completable =
-        repo.pushExpectedIncome(moshi.toJson(expectedIncome))
+        repo.pushExpectedIncome(expectedIncome.toString())
 
     override val anchorDateOffset: Observable<Long> =
         repo.anchorDateOffset

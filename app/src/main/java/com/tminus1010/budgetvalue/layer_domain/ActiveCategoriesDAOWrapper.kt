@@ -1,10 +1,8 @@
 package com.tminus1010.budgetvalue.layer_domain
 
 import com.tminus1010.budgetvalue.categoryComparator
-import com.tminus1010.budgetvalue.extensions.toJson
 import com.tminus1010.budgetvalue.layer_data.ActiveCategoriesDAO
 import com.tminus1010.budgetvalue.model_domain.Category
-import com.tminus1010.budgetvalue.moshi
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import javax.inject.Inject
@@ -26,7 +24,7 @@ class ActiveCategoriesDAOWrapper @Inject constructor(
             .toBehaviorSubject()
 
     override fun push(category: Category): Completable =
-        activeCategoriesDAO.push(category.toCategoryDTO())
+        activeCategoriesDAO.push(category.toDTO())
 
     override val activeCategories: BehaviorSubject<List<Category>> =
         activeCategories_

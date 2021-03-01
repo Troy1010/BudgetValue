@@ -18,11 +18,11 @@ interface IRepoWrapper {
     val reconciliations: Observable<List<Reconciliation>>
     fun pushReconciliationCA(reconciliation: Reconciliation, category: Category, amount: BigDecimal?): Completable
     val activeReconciliationCAs: Observable<Map<Category, BigDecimal>>
-    fun pushActiveReconciliationCAs(categoryAmounts: Map<Category, BigDecimal>?): Completable
+    fun pushActiveReconciliationCAs(categoryAmounts: Map<Category, BigDecimal>): Completable
     fun pushActiveReconciliationCA(kv: Pair<Category, BigDecimal?>): Completable
     fun clearActiveReconcileCAs(): Completable
     val activePlanCAs: Observable<Map<Category, BigDecimal>>
-    fun pushActivePlanCAs(categoryAmounts: Map<Category, BigDecimal>?): Completable
+    fun pushActivePlanCAs(categoryAmounts: Map<Category, BigDecimal>): Completable
     fun pushActivePlanCA(kv: Pair<Category, BigDecimal?>): Completable
     fun clearActivePlan(): Completable
     fun fetchExpectedIncome(): BigDecimal

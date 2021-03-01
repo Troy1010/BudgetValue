@@ -9,7 +9,7 @@ data class Category (
 ) {
     override fun toString() = name // for better logs.
     enum class Type { Misc, Always, Reservoir }
-    fun toCategoryDTO() =
+    fun toDTO() =
         CategoryDTO(name, type.ordinal.toString(), isRequired)
     companion object {
         fun fromDTO(categoryDTO: CategoryDTO) =
