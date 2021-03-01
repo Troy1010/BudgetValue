@@ -14,11 +14,10 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
 class HistoryVM(
-    private val repo: Repo,
+    private val domain: Domain,
     private val transactionsVM: TransactionsVM,
     private val activeReconciliationVM: ActiveReconciliationVM,
     private val activeReconciliationVM2: ActiveReconciliationVM2,
-    private val domain: Domain,
     private val budgetedVM: BudgetedVM,
 ) : ViewModel() {
     val historyColumnDatas =
