@@ -5,24 +5,23 @@ import com.tminus1010.budgetvalue.categoryComparator
 import com.tminus1010.budgetvalue.combineLatestImpatient
 import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.budgetvalue.layer_domain.Domain
+import com.tminus1010.budgetvalue.model_domain.Category
 import com.tminus1010.budgetvalue.model_domain.HistoryColumnData
 import com.tminus1010.budgetvalue.model_domain.LocalDatePeriod
-import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.rx.extensions.toDisplayStr
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
 class HistoryVM(
-    private val repo: Repo,
+    private val domain: Domain,
     private val transactionsVM: TransactionsVM,
     private val activeReconciliationVM: ActiveReconciliationVM,
     private val activeReconciliationVM2: ActiveReconciliationVM2,
-    private val domain: Domain,
     private val budgetedVM: BudgetedVM,
 ) : ViewModel() {
     val historyColumnDatas =
-        combineLatestImpatient(repo.reconciliations, repo.plans, activeReconciliationVM2.defaultAmount, activeReconciliationVM.activeReconcileCAs, transactionsVM.transactionBlocks, budgetedVM.defaultAmount, budgetedVM.categoryAmounts)
+        combineLatestImpatient(domain.reconciliations, domain.plans, activeReconciliationVM2.defaultAmount, activeReconciliationVM.activeReconcileCAs, transactionsVM.transactionBlocks, budgetedVM.defaultAmount, budgetedVM.categoryAmounts)
             .observeOn(Schedulers.computation())
             .throttleLatest(500, TimeUnit.MILLISECONDS)
             .map { (reconciliations, plans, activeReconciliationDefaultAmount, activeReconciliationCAs, transactionBlocks, budgetedDefaultAmount, budgetedCAs) ->

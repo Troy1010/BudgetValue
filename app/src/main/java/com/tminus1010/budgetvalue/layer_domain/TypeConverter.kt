@@ -4,10 +4,15 @@ import com.tminus1010.budgetvalue.extensions.fromJson
 import com.tminus1010.budgetvalue.extensions.toJson
 import com.tminus1010.budgetvalue.model_data.AccountDTO
 import com.tminus1010.budgetvalue.model_domain.Account
+import com.tminus1010.budgetvalue.model_domain.Category
 import com.tminus1010.budgetvalue.moshi
+import com.tminus1010.tmcommonkotlin.rx.extensions.associate
+import java.math.BigDecimal
 import javax.inject.Inject
 
-class TypeConverter @Inject constructor() : ITypeConverter {
+class TypeConverter @Inject constructor(
+    private val categoryParser: ICategoryParser,
+) : ITypeConverter {
     override fun toAccount(accountDTO: AccountDTO): Account =
         Account(
             name = accountDTO.name,
@@ -21,4 +26,14 @@ class TypeConverter @Inject constructor() : ITypeConverter {
             amount = moshi.toJson(accountDTO.amount),
             id = accountDTO.id
         )
+
+    override fun toCategoryAmount(s: String?): Map<Category, BigDecimal> =
+        if (s == null) emptyMap() else
+            moshi.fromJson<Map<String, String>>(s)
+                .associate { categoryParser.parseCategory(it.key) to (it.value as Any).toString().toBigDecimal() }
+
+    override fun toString(categoryAmounts: Map<Category, BigDecimal>): String =
+        categoryAmounts
+            .associate { it.key.name to it.value.toString() }
+            .let { moshi.toJson(it) }
 }

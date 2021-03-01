@@ -10,6 +10,6 @@ data class PlanCategoryAmount(
     override val categoryName: String,
     override val amount: BigDecimal = BigDecimal.ZERO
 ): ICategoryAmountReceived {
-    constructor(category: Category, amount: BigDecimal) : this(category.name, amount)
-    constructor(tuple: Pair<Category, BigDecimal>) : this(tuple.first, tuple.second)
+    constructor(category: CategoryDTO, amount: BigDecimal) : this(category.name, amount)
+    constructor(tuple: Pair<CategoryDTO, BigDecimal>) : this(tuple.first, tuple.second)
 }

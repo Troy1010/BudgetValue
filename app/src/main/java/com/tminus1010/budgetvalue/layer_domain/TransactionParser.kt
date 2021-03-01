@@ -1,6 +1,7 @@
-package com.tminus1010.budgetvalue.layer_data
+package com.tminus1010.budgetvalue.layer_domain
 
-import com.tminus1010.budgetvalue.model_data.TransactionReceived
+import com.tminus1010.budgetvalue.model_data.TransactionDTO
+import com.tminus1010.budgetvalue.model_domain.Transaction
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -13,9 +14,11 @@ import javax.inject.Inject
  * It's unusual that TransactionParser provides the parse methods instead of the
  * read/write methods.. but I do not yet know the best way to get ActivityResults from the repo.
  */
-class TransactionParser @Inject constructor() : ITransactionParser {
-    override fun parseToTransactions(inputStream: InputStream): List<TransactionReceived> {
-        val transactions = ArrayList<TransactionReceived>()
+class TransactionParser @Inject constructor(
+    private val typeConverter: TypeConverter,
+) : ITransactionParser {
+    override fun parseToTransactions(inputStream: InputStream): List<Transaction> {
+        val transactions = ArrayList<TransactionDTO>()
         val reader = BufferedReader(InputStreamReader(inputStream))
         val iterator = reader.lineSequence().iterator()
         while (iterator.hasNext()) {
@@ -61,8 +64,8 @@ class TransactionParser @Inject constructor() : ITransactionParser {
             }
             if (description == null) continue
             //
-            transactions.add(TransactionReceived(date, description!!, amount.toBigDecimal(), null, entireString))
+            transactions.add(TransactionDTO(date, description!!, amount.toBigDecimal(), null, entireString))
         }
-        return transactions.toList()
+        return transactions.map { Transaction.fromDTO(it, typeConverter) }.toList()
     }
 }

@@ -1,8 +1,11 @@
 package com.tminus1010.budgetvalue.layer_data
 
 import android.content.SharedPreferences
-import com.tminus1010.budgetvalue.model_data.Category
+import com.tminus1010.budgetvalue.extensions.fromJson
+import com.tminus1010.budgetvalue.extensions.toJson
+import com.tminus1010.budgetvalue.moshi
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -11,7 +14,6 @@ import javax.inject.Inject
 
 class SharedPrefWrapper @Inject constructor(
     val sharedPreferences: SharedPreferences,
-    val typeConverter: TypeConverter,
 ) : ISharedPrefWrapper {
     companion object {
         enum class Key {
@@ -31,73 +33,76 @@ class SharedPrefWrapper @Inject constructor(
 
     // # ActiveReconciliation
 
-    private val activeReconciliationCAsPublisher = PublishSubject.create<Map<Category, BigDecimal>?>()
-    override val activeReconciliationCAs: BehaviorSubject<Map<Category, BigDecimal>> =
+    private val activeReconciliationCAsPublisher = PublishSubject.create<Map<String, String>>()
+    override val activeReconciliationCAs: BehaviorSubject<Map<String, String>> =
         activeReconciliationCAsPublisher
-            .startWithItem(sharedPreferences.getString(Key.RECONCILE_CATEGORY_AMOUNTS.name, null)
-                .let { typeConverter.categoryAmounts(it) })
+            .startWithItem(moshi.fromJson(sharedPreferences.getString(Key.RECONCILE_CATEGORY_AMOUNTS.name, null)?:"{}"))
             .distinctUntilChanged()
             .toBehaviorSubject()
 
-    override fun pushActiveReconciliationCAs(categoryAmounts: Map<Category, BigDecimal>?) {
+    override fun pushActiveReconciliationCAs(categoryAmounts: Map<String, String>?): Completable {
         categoryAmounts
-            ?.let { typeConverter.string(it) }
+            ?.let { moshi.toJson(it) }
             ?.also { editor.putString(Key.RECONCILE_CATEGORY_AMOUNTS.name, it) }
             ?: editor.remove(Key.RECONCILE_CATEGORY_AMOUNTS.name)
-        editor.apply()
-        activeReconciliationCAsPublisher.onNext(categoryAmounts ?: emptyMap())
+        return Completable.fromAction {
+            editor.commit()
+            activeReconciliationCAsPublisher.onNext(categoryAmounts ?: emptyMap())
+        }
     }
 
-    override fun pushActiveReconciliationCA(kv: Pair<Category, BigDecimal?>) {
-        activeReconciliationCAs.value
+    override fun pushActiveReconciliationCA(kv: Pair<String, String?>): Completable {
+        val (k, v) = kv
+        return activeReconciliationCAs.value
             .toMutableMap()
-            .also { kv.also { (k, v) -> if (v == null || v == BigDecimal.ZERO) it.remove(k) else it[k] = v } }
-            .also { pushActiveReconciliationCAs(it) }
+            .also { if (v==null || v == BigDecimal.ZERO.toString()) it.remove(k) else it[k] = v }
+            .let { pushActiveReconciliationCAs(it) }
     }
 
     override fun clearActiveReconcileCAs() = pushActiveReconciliationCAs(null)
 
     // # ActivePlan
 
-    private val activePlanCAsPublisher = PublishSubject.create<Map<Category, BigDecimal>?>()
-    override val activePlanCAs: BehaviorSubject<Map<Category, BigDecimal>> =
+    private val activePlanCAsPublisher = PublishSubject.create<Map<String, String>>()
+    override val activePlanCAs: BehaviorSubject<Map<String, String>> =
         activePlanCAsPublisher
-            .startWithItem(sharedPreferences.getString(Key.PLAN_CATEGORY_AMOUNTS.name, null)
-                .let { typeConverter.categoryAmounts(it) })
+            .startWithItem(moshi.fromJson(sharedPreferences.getString(Key.PLAN_CATEGORY_AMOUNTS.name, null)?:"{}"))
             .distinctUntilChanged()
             .toBehaviorSubject()
 
-    override fun pushActivePlanCAs(categoryAmounts: Map<Category, BigDecimal>?) {
+    override fun pushActivePlanCAs(categoryAmounts: Map<String, String>?): Completable {
         categoryAmounts
-            ?.let { typeConverter.string(it) }
+            ?.let { moshi.toJson(it) }
             ?.also { editor.putString(Key.PLAN_CATEGORY_AMOUNTS.name, it) }
             ?: editor.remove(Key.PLAN_CATEGORY_AMOUNTS.name)
-        editor.apply()
-        activePlanCAsPublisher.onNext(categoryAmounts ?: emptyMap())
+        return Completable.fromAction {
+            editor.commit()
+            activePlanCAsPublisher.onNext(categoryAmounts ?: emptyMap())
+        }
     }
 
-    override fun pushActivePlanCA(kv: Pair<Category, BigDecimal?>) {
-        activePlanCAs.value
+    override fun pushActivePlanCA(kv: Pair<String, String?>): Completable {
+        val (k, v) = kv
+        return activePlanCAs.value
             .toMutableMap()
-            .also { kv.also { (k, v) -> if (v == null || v == BigDecimal.ZERO) it.remove(k) else it[k] = v } }
-            .also { pushActivePlanCAs(it) }
+            .also { if (v==null || v == BigDecimal.ZERO.toString()) it.remove(k) else it[k] = v }
+            .let { pushActivePlanCAs(it) }
     }
 
-    override fun clearActivePlan() = pushActivePlanCAs(null)
+    override fun clearActivePlanCAs() = pushActivePlanCAs(null)
 
     // # ExpectedIncome
 
-    override fun fetchExpectedIncome(): BigDecimal {
-        return sharedPreferences.getString(Key.EXPECTED_INCOME.name, null)
-            ?.toBigDecimal()
-            ?: BigDecimal.ZERO
-    }
+    override fun fetchExpectedIncome(): String =
+        sharedPreferences.getString(Key.EXPECTED_INCOME.name, null) ?: "0"
 
-    override fun pushExpectedIncome(expectedIncome: BigDecimal?) {
+    override fun pushExpectedIncome(expectedIncome: String?): Completable {
         expectedIncome
-            ?.also { editor.putString(Key.EXPECTED_INCOME.name, it.toString()) }
+            ?.also { editor.putString(Key.EXPECTED_INCOME.name, it) }
             ?: editor.remove(Key.EXPECTED_INCOME.name)
-        editor.apply()
+        return Completable.fromAction {
+            editor.commit()
+        }
     }
 
     // # AnchorDateOffset
@@ -107,14 +112,15 @@ class SharedPrefWrapper @Inject constructor(
         anchorDateOffsetPublisher
             .startWithItem(sharedPreferences.getLong(Key.ANCHOR_DATE_OFFSET.name, ANCHOR_DATE_OFFSET_DEFAULT))
             .distinctUntilChanged()
-            .toBehaviorSubject()
 
-    override fun pushAnchorDateOffset(anchorDateOffset: Long?) {
+    override fun pushAnchorDateOffset(anchorDateOffset: Long?): Completable {
         anchorDateOffset
             ?.also { editor.putString(Key.ANCHOR_DATE_OFFSET.name, it.toString()) }
             ?: editor.remove(Key.ANCHOR_DATE_OFFSET.name)
-        editor.apply()
-        anchorDateOffsetPublisher.onNext(anchorDateOffset ?: ANCHOR_DATE_OFFSET_DEFAULT)
+        return Completable.fromAction {
+            editor.commit()
+            anchorDateOffsetPublisher.onNext(anchorDateOffset ?: ANCHOR_DATE_OFFSET_DEFAULT)
+        }
     }
 
     // # BlockSize
@@ -124,14 +130,15 @@ class SharedPrefWrapper @Inject constructor(
         blockSizePublisher
             .startWithItem(sharedPreferences.getLong(Key.BLOCK_SIZE.name, BLOCK_SIZE_DEFAULT))
             .distinctUntilChanged()
-            .toBehaviorSubject()
 
-    override fun pushBlockSize(blockSize: Long?) {
+    override fun pushBlockSize(blockSize: Long?): Completable {
         blockSize
             ?.also { editor.putLong(Key.BLOCK_SIZE.name, it) }
             ?: editor.remove(Key.BLOCK_SIZE.name)
-        editor.apply()
-        blockSizePublisher.onNext(blockSize ?: BLOCK_SIZE_DEFAULT)
+        return Completable.fromAction {
+            editor.commit()
+            blockSizePublisher.onNext(blockSize ?: BLOCK_SIZE_DEFAULT)
+        }
     }
 
     // # AppInitBool
@@ -139,8 +146,8 @@ class SharedPrefWrapper @Inject constructor(
     override fun fetchAppInitBool(): Boolean =
         sharedPreferences.getBoolean(Key.APP_INIT_BOOL.name, false)
 
-    override fun pushAppInitBool(boolean: Boolean) {
+    override fun pushAppInitBool(boolean: Boolean): Completable {
         editor.putBoolean(Key.APP_INIT_BOOL.name, boolean)
-        editor.apply()
+        return Completable.fromAction { editor.commit() }
     }
 }

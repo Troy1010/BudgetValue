@@ -1,18 +1,18 @@
 package com.tminus1010.budgetvalue.layer_domain
 
-import com.tminus1010.budgetvalue.layer_data.Repo
-import com.tminus1010.budgetvalue.model_data.Category
+import com.tminus1010.budgetvalue.model_domain.Category
 import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import javax.inject.Inject
 
 class AppInitializer @Inject constructor(
-    val repo: Repo,
+    val repoWrapper: RepoWrapper,
+    val activeCategoriesDAOWrapper: ActiveCategoriesDAOWrapper,
 ) : IAppInitializer {
     override fun appInit() {
-        if (!repo.fetchAppInitBool()) {
+        if (!repoWrapper.fetchAppInitBool()) {
             initCategories
-                .forEach { repo.push(it).launch() }
-            repo.pushAppInitBool()
+                .forEach { activeCategoriesDAOWrapper.push(it).launch() }
+            repoWrapper.pushAppInitBool()
         }
     }
 

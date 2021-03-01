@@ -43,7 +43,7 @@ class HostActivity : AppCompatActivity() {
             bSuccessfulNavigation
         }
         // # Start at..
-        bottom_navigation.selectedItemId = R.id.menu_history
+        bottom_navigation.selectedItemId = R.id.menu_import
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -75,7 +75,7 @@ class HostActivity : AppCompatActivity() {
                 for (transactionBlock in transactionBlocks) {
                     val curStringBlock = HashMap<String, String>()
                     stringBlocks.add(curStringBlock)
-                    for (category in repo.activeCategories.value) {
+                    for (category in domain.activeCategories.value) {
                         curStringBlock[category.name] = transactionBlock.value
                             .map { it.categoryAmounts[category] ?: BigDecimal.ZERO }
                             .fold(BigDecimal.ZERO, BigDecimal::add)
@@ -121,7 +121,7 @@ class HostActivity : AppCompatActivity() {
             }
             R.id.menu_debug_do_something -> {
                 toast("Debug Do Something")
-                repo.reconciliations.take(1).subscribe()
+                domain.reconciliations.take(1).subscribe()
             }
         }
         return super.onOptionsItemSelected(item)

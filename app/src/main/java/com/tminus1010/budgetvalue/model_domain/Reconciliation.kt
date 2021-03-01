@@ -1,8 +1,7 @@
 package com.tminus1010.budgetvalue.model_domain
 
-import com.tminus1010.budgetvalue.layer_data.TypeConverter
-import com.tminus1010.budgetvalue.model_data.Category
-import com.tminus1010.budgetvalue.model_data.ReconciliationReceived
+import com.tminus1010.budgetvalue.layer_domain.TypeConverter
+import com.tminus1010.budgetvalue.model_data.ReconciliationDTO
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -12,11 +11,21 @@ data class Reconciliation(
     val categoryAmounts: Map<Category, BigDecimal>,
     val id: Int = 0
 ) {
-    fun toReconciliationReceived(typeConverter: TypeConverter, amount: BigDecimal): ReconciliationReceived {
-        return ReconciliationReceived(
+    fun toDTO(typeConverter: TypeConverter, amount: BigDecimal): ReconciliationDTO {
+        return ReconciliationDTO(
             localDate = localDate,
-            categoryAmounts = typeConverter.string(categoryAmounts),
+            categoryAmounts = typeConverter.toString(categoryAmounts),
             amount = amount,
             id = id,)
+    }
+
+    companion object {
+        fun fromDTO(reconciliationDTO: ReconciliationDTO, typeConverter: TypeConverter) =
+            reconciliationDTO.run {
+                Reconciliation(localDate,
+                    amount,
+                    typeConverter.toCategoryAmount(categoryAmounts),
+                    id)
+            }
     }
 }

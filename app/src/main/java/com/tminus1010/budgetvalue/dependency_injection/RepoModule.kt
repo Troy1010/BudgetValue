@@ -5,10 +5,10 @@ import android.content.SharedPreferences
 import com.tminus1010.budgetvalue.App
 import com.tminus1010.budgetvalue.SHARED_PREF_FILE_NAME
 import com.tminus1010.budgetvalue.layer_data.ActiveCategoriesDAO
-import com.tminus1010.budgetvalue.layer_data.ActiveCategoriesDAOWrapper
+import com.tminus1010.budgetvalue.layer_domain.ActiveCategoriesDAOWrapper
 import com.tminus1010.budgetvalue.layer_data.DB
 import com.tminus1010.budgetvalue.layer_data.MiscDAO
-import com.tminus1010.budgetvalue.layer_data.ICategoryParser
+import com.tminus1010.budgetvalue.layer_domain.ICategoryParser
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

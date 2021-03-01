@@ -4,7 +4,6 @@ import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 import com.tminus1010.budgetvalue.extensions.fromJson
 import com.tminus1010.budgetvalue.extensions.toJson
-import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.moshi
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -13,14 +12,6 @@ import java.util.*
 
 @ProvidedTypeConverter
 class RoomTypeConverter {
-    @TypeConverter
-    fun fromCategoryTypeToInt(x: Category.Type): Int =
-        x.ordinal
-
-    @TypeConverter
-    fun fromIntToCategoryType(i: Int): Category.Type =
-        Category.Type.values()[i]
-
     @TypeConverter
     fun fromBigDecimalToString(x: BigDecimal): String =
         x.toString()

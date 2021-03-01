@@ -4,12 +4,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class Category (
+data class CategoryDTO (
     @PrimaryKey
     val name: String,
-    val type: Type,
+    val type: String,
     val isRequired: Boolean = false
-) {
-    override fun toString() = name
-    enum class Type { Misc, Always, Reservoir }
-}
+)

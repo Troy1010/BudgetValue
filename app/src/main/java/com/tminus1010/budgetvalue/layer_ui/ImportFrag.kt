@@ -26,6 +26,7 @@ class ImportFrag : Fragment(R.layout.frag_import) {
         btn_add_account.clicks().subscribe(vmps.accountsVM.intentAddAccount)
         // # RecyclerView
         vmps.accountsVM.intentAddAccount.mergeWith(vmps.accountsVM.intentDeleteAccount.map { Unit })
+            // When an add or delete happens, listen for the next accounts and refresh
             .flatMap { vmps.accountsVM.accounts.take(2).skip(1) }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(AndroidSchedulers.mainThread())
@@ -46,8 +47,7 @@ class ImportFrag : Fragment(R.layout.frag_import) {
                         setText(account.name)
                         setOnFocusChangeListener { _, b ->
                             if (!b)
-                                account
-                                    .apply { name = holder.itemView.editText_name.text.toString() }
+                                account.copy(name = holder.itemView.editText_name.text.toString())
                                     .also { vmps.accountsVM.intentUpdateAmmount.onNext(it) }
                         }
                     }
@@ -55,8 +55,7 @@ class ImportFrag : Fragment(R.layout.frag_import) {
                         setText(account.amount.toString())
                         setOnFocusChangeListener { _, b ->
                             if (!b)
-                                account
-                                    .apply { amount = holder.itemView.editText_amount.text.toString().toBigDecimal() }
+                                account.copy(amount = holder.itemView.editText_amount.text.toString().toBigDecimal())
                                     .also { vmps.accountsVM.intentUpdateAmmount.onNext(it) }
                         }
                     }

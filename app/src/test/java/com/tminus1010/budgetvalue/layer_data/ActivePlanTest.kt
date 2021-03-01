@@ -29,7 +29,7 @@ class ActivePlanTest {
         repo.pushActivePlanCA(givenPlanCA0)
         repo.pushActivePlanCA(givenPlanCA1)
         repo.pushActivePlanCA(givenPlanCA2)
-        repo.clearActivePlan()
+        repo.clearActivePlanCAs()
         stopObservable.onNext(Unit)
         // # Verify
         testObserver.assertResult(0, 1, 2, 3, 0)

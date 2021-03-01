@@ -14,7 +14,7 @@ import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
-import com.tminus1010.budgetvalue.model_data.Category
+import com.tminus1010.budgetvalue.model_domain.Category
 import com.tminus1010.tmcommonkotlin.rx.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -56,7 +56,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        combineLatestAsTuple(vmps.activeReconciliationVM.rowDatas, repo.activeCategories, myTableView_1.widthObservable, vmps.budgetedVM.categoryAmounts)
+        combineLatestAsTuple(vmps.activeReconciliationVM.rowDatas, domain.activeCategories, myTableView_1.widthObservable, vmps.budgetedVM.categoryAmounts)
             .observeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) { (rowDatas, activeCategories, width, budgetedCA) ->
                 val dividerMap = activeCategories
