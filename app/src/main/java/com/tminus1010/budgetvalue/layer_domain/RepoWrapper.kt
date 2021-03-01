@@ -78,7 +78,7 @@ class RepoWrapper @Inject constructor(
     override fun pushActiveReconciliationCAs(categoryAmounts: Map<Category, BigDecimal>?): Completable =
         categoryAmounts
             .let { moshi.toJson(it) }
-            .let { repo.pushActiveReconciliationCAs(moshi.fromJson(it)) } as Completable
+            .let { repo.pushActiveReconciliationCAs(moshi.fromJson(it)) }
 
     override fun pushActiveReconciliationCA(kv: Pair<Category, BigDecimal?>): Completable =
         repo.pushActiveReconciliationCA(Pair(kv.first.name, kv.second.toString()))
