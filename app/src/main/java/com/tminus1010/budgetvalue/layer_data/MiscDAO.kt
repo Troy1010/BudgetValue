@@ -41,7 +41,7 @@ interface MiscDAO {
     fun tryAdd(transactionsDTO: List<TransactionDTO>): Completable
 
     @Query("select * from TransactionDTO")
-    fun getTransactionsReceived(): Observable<List<TransactionDTO>>
+    fun fetchTransactions(): Observable<List<TransactionDTO>>
 
     @Delete
     fun delete(transaction: TransactionDTO): Completable
@@ -61,7 +61,7 @@ interface MiscDAO {
     // # PlanCategoryAmounts
 
     @Query("select * from PlanDTO")
-    fun fetchPlanReceived(): Observable<List<PlanDTO>>
+    fun fetchPlans(): Observable<List<PlanDTO>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun add(PlanDTO: PlanDTO): Completable
@@ -78,7 +78,7 @@ interface MiscDAO {
     // # Reconciliations
 
     @Query("select * from ReconciliationDTO")
-    fun fetchReconciliationReceived(): Observable<List<ReconciliationDTO>>
+    fun fetchReconciliations(): Observable<List<ReconciliationDTO>>
 
     @Insert
     fun add(reconciliationDTO: ReconciliationDTO): Completable

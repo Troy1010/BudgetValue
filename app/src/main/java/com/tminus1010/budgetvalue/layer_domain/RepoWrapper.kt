@@ -16,7 +16,7 @@ class RepoWrapper @Inject constructor(
     val categoryParser: ICategoryParser,
 ) : IRepoWrapper {
     override val transactions =
-        repo.getTransactionsReceived()
+        repo.fetchTransactions()
             .map { it.map { Transaction.fromDTO(it, typeConverter) } }
             .replay(1).refCount()
 
@@ -36,7 +36,7 @@ class RepoWrapper @Inject constructor(
         repo.updateTransactionCategoryAmounts(transaction.id, categoryAmounts.mapKeys { it.key.name })
 
     override val plans =
-        repo.fetchPlanReceived()
+        repo.fetchPlans()
             .subscribeOn(Schedulers.io())
             .map { it.map { Plan.fromDTO(it, typeConverter) } }
             .noEnd().replay(1).refCount()
@@ -62,7 +62,7 @@ class RepoWrapper @Inject constructor(
             .let { repo.updateReconciliationCategoryAmounts(reconciliation.id, it.mapKeys { it.key.name }) }
 
     override val reconciliations: Observable<List<Reconciliation>> =
-        repo.fetchReconciliationReceived()
+        repo.fetchReconciliations()
             .map { it.map { Reconciliation.fromDTO(it, typeConverter) } }
             .replay(1).refCount()
 
