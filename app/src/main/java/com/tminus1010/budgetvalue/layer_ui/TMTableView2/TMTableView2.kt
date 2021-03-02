@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.tminus1010.budgetvalue.Orientation
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
-import com.tminus1010.tmcommonkotlin.rx.extensions.children
-import com.tminus1010.tmcommonkotlin.rx.extensions.clearItemDecorations
+import com.tminus1010.tmcommonkotlin.misc.extensions.children
+import com.tminus1010.tmcommonkotlin.misc.extensions.clearItemDecorations
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable

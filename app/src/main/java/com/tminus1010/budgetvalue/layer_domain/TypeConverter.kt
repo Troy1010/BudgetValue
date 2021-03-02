@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue.model_data.AccountDTO
 import com.tminus1010.budgetvalue.model_domain.Account
 import com.tminus1010.budgetvalue.model_domain.Category
 import com.tminus1010.budgetvalue.moshi
-import com.tminus1010.tmcommonkotlin.rx.extensions.associate
+import com.tminus1010.tmcommonkotlin.misc.extensions.associate
 import java.math.BigDecimal
 import javax.inject.Inject
 

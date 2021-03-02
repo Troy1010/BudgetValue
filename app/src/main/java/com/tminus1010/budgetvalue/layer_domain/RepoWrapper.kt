@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.layer_domain
 
 import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.budgetvalue.model_domain.*
-import com.tminus1010.tmcommonkotlin.rx.extensions.associate
+import com.tminus1010.tmcommonkotlin.misc.extensions.associate
 import com.tminus1010.tmcommonkotlin.rx.extensions.noEnd
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable

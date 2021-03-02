@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.model_domain
 
 import com.tminus1010.budgetvalue.layer_domain.TypeConverter
 import com.tminus1010.budgetvalue.model_data.PlanDTO
-import com.tminus1010.tmcommonkotlin.rx.extensions.sum
+import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import io.reactivex.rxjava3.core.Observable
 import java.math.BigDecimal
 

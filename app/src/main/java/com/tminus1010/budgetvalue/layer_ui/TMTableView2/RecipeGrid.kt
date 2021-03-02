@@ -2,9 +2,9 @@ package com.tminus1010.budgetvalue.layer_ui.TMTableView2
 
 import android.view.View
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
-import com.tminus1010.tmcommonkotlin.rx.extensions.easySetHeight
-import com.tminus1010.tmcommonkotlin.rx.extensions.easySetWidth
-import com.tminus1010.tmcommonkotlin.rx.extensions.pairwise
+import com.tminus1010.tmcommonkotlin.misc.extensions.easySetHeight
+import com.tminus1010.tmcommonkotlin.misc.extensions.easySetWidth
+import com.tminus1010.tmcommonkotlin.misc.extensions.pairwise
 
 /**
  * This class keeps data that depends on the entire grid, such as rowHeight and columnWidth

@@ -16,7 +16,7 @@ import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
 import com.tminus1010.budgetvalue.model_domain.Category
 import com.tminus1010.budgetvalue.reflectXY
 import com.tminus1010.budgetvalue.toBigDecimalSafe
-import com.tminus1010.tmcommonkotlin.rx.extensions.distinctUntilChangedWith
+import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
