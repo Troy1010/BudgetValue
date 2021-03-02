@@ -94,10 +94,6 @@ dependencies {
     def lifecycle_version = "2.2.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
 
-    // # Activity/Fragment (supports Lifecycle)
-    implementation "androidx.fragment:fragment-ktx:1.2.5"
-    implementation "androidx.activity:activity-ktx:1.1.0"
-
     // # Dagger
     implementation "com.google.dagger:dagger:2.28"
     kapt "com.google.dagger:dagger-compiler:2.28"
