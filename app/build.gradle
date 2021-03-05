@@ -9,7 +9,7 @@ android {
 
     compileOptions.sourceCompatibility JavaVersion.VERSION_1_8
     compileOptions.targetCompatibility JavaVersion.VERSION_1_8
-    kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
+    kotlinOptions.jvmTarget = "1.8"
     kotlinOptions.useIR = true
 
     defaultConfig {
@@ -85,11 +85,11 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     // # TMCommonKotlin
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-logz:1.0.34'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-rx:1.0.34'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-misc:1.0.34'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-tuple:1.0.34'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-view:1.0.34'
+//    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-logz:1.0.34'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-rx:+'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-misc:+'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-tuple:+'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-view:+'
 
     // # ViewModel
     def lifecycle_version = "2.2.0"

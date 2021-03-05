@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue.model_domain.Category
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import javax.inject.Inject
-import com.tminus1010.tmcommonkotlin.logz.logz
+import com.tminus1010.tmcommonkotlin.misc.logz
 import io.reactivex.rxjava3.core.Completable
 
 class ActiveCategoriesDAOWrapper @Inject constructor(

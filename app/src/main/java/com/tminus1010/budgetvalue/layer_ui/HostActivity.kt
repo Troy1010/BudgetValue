@@ -15,7 +15,7 @@ import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.doma
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.repo
 import com.tminus1010.budgetvalue.getBlocks
 import com.tminus1010.budgetvalue.reflectXY
-import com.tminus1010.tmcommonkotlin.logz.logz
+import com.tminus1010.tmcommonkotlin.misc.logz
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
 import kotlinx.android.synthetic.main.activity_host.*
 import java.math.BigDecimal
