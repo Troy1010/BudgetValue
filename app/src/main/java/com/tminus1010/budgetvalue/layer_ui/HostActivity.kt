@@ -66,4 +66,6 @@ class HostActivity : AppCompatActivity() {
         }
         super.onActivityResult(requestCode, resultCode, intent)
     }
+
+    fun handle(e: Exception) = errorHandler.handle(nav, e)
 }

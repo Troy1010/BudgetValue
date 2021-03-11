@@ -15,7 +15,7 @@ class ErrorHandler @Inject constructor(private val app: App) {
         when (e) {
             is ImportFailedException -> app.toast("Import failed")
             else -> {
-                app.toast("Error occurred")
+                app.toast("An error occurred")
                 navController.navigate(R.id.importFrag)
             }
         }

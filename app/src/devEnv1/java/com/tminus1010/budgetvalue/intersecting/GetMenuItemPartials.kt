@@ -16,6 +16,9 @@ import java.math.BigDecimal
 fun getMenuItemPartials(activity: HostActivity): Array<MenuItemPartial> {
     return activity.run {
         arrayOf(
+            MenuItemPartial("Throw Error") {
+                handle(Exception("Zip zoop an error"))
+            },
             MenuItemPartial("Import Transactions") {
                 launchImport(activity)
             },
