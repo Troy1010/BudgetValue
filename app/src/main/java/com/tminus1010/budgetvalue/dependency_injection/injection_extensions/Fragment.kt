@@ -1,5 +1,6 @@
 package com.tminus1010.budgetvalue.dependency_injection.injection_extensions
 
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.App
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
@@ -19,6 +20,9 @@ val Fragment.domain
 
 val Fragment.errorHandler
     get() = appComponent.getErrorHandler()
+
+val Fragment.flavorIntersection
+    get() = appComponent.getFlavorIntersection()
 
 fun Fragment.handle(e: Throwable) =
     errorHandler.handle(nav, e)

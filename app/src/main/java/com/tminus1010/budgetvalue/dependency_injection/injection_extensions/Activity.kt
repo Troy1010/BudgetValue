@@ -19,3 +19,6 @@ val AppCompatActivity.domain
 
 val AppCompatActivity.errorHandler
     get() = appComponent.getErrorHandler()
+
+val AppCompatActivity.flavorIntersection
+    get() = appComponent.getFlavorIntersection()

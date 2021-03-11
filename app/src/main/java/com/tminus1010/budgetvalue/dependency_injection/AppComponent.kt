@@ -1,5 +1,6 @@
 package com.tminus1010.budgetvalue.dependency_injection
 
+import com.tminus1010.budgetvalue.IFlavorIntersection
 import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.budgetvalue.layer_domain.ActiveCategoriesDAOWrapper
 import com.tminus1010.budgetvalue.layer_domain.Domain
@@ -18,4 +19,5 @@ interface AppComponent {
     fun getDomain(): Domain
     fun getActiveCategoriesDAOWrapper(): ActiveCategoriesDAOWrapper
     fun getErrorHandler(): ErrorHandler
+    fun getFlavorIntersection(): IFlavorIntersection
 }

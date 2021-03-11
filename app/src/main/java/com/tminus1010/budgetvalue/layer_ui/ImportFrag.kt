@@ -12,7 +12,7 @@ import com.tminus1010.budgetvalue.GenViewHolder
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
-import com.tminus1010.budgetvalue.intersecting.launchImport
+import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.flavorIntersection
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.frag_import.*
@@ -23,7 +23,7 @@ class ImportFrag : Fragment(R.layout.frag_import) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
-        btn_import.clicks().subscribe { launchImport(this.requireActivity()) }
+        btn_import.clicks().subscribe { flavorIntersection.launchImport(requireActivity()) }
         btn_add_account.clicks().subscribe(vmps.accountsVM.intentAddAccount)
         // # RecyclerView
         vmps.accountsVM.intentAddAccount.mergeWith(vmps.accountsVM.intentDeleteAccount.map { Unit })
