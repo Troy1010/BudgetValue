@@ -1,6 +1,7 @@
 buildscript {
     ext.kotlin_version = "1.4.31"
     repositories {
+        mavenLocal()
         google()
         jcenter()
     }
@@ -9,6 +10,8 @@ buildscript {
         classpath "com.android.tools.build:gradle:4.1.2"
         // Gradle + Kotlin
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        // # TMCommonKotlinDSL
+        classpath "com.tminus1010.tmcommonkotlin:tmcommonkotlindsl:+"
     }
 }
 
