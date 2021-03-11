@@ -1,8 +1,7 @@
-package com.tminus1010.budgetvalue.layer_ui
+package com.tminus1010.budgetvalue.intersecting
 
 import android.app.Activity
 import android.content.Intent
-import com.tminus1010.budgetvalue.CODE_PICK_TRANSACTIONS_FILE
 import com.tminus1010.budgetvalue.MockImportSelectionActivity
 
 fun launchImport(activity: Activity) {

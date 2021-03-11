@@ -12,8 +12,8 @@ import com.tminus1010.budgetvalue.GenViewHolder
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
+import com.tminus1010.budgetvalue.intersecting.launchImport
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
-import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.frag_import.*
 import kotlinx.android.synthetic.main.item_account.view.*
