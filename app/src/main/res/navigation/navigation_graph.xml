@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_graph"
-    app:startDestination="@id/historyFrag">
+    app:startDestination="@id/importFrag">
 
     <fragment
         android:id="@+id/categorizeFrag"
@@ -54,4 +54,12 @@
         android:name="com.tminus1010.budgetvalue.layer_ui.NewCategoryFrag"
         android:label="NewCategoryFrag"
         tools:layout="@layout/frag_new_category" />
+    <fragment
+        android:id="@+id/errorFrag"
+        android:name="com.tminus1010.budgetvalue.layer_ui.ErrorFrag"
+        android:label="ErrorFrag" >
+        <action
+            android:id="@+id/action_errorFrag_to_importFrag"
+            app:destination="@id/importFrag" />
+    </fragment>
 </navigation>

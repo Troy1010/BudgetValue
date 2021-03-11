@@ -34,4 +34,7 @@ class ViewModelProviders(val activity: FragmentActivity, val appComponent: AppCo
     val transactionsVM: TransactionsVM
             by { TransactionsVM(c.getDomain()) }
                 .let { activity.viewModels { createViewModelFactory(it) } }
+    val errorVM: ErrorVM
+            by { ErrorVM() }
+                .let { activity.viewModels { createViewModelFactory(it) } }
 }
