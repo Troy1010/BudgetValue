@@ -2,6 +2,7 @@ package com.tminus1010.budgetvalue.dependency_injection.injection_extensions
 
 import androidx.appcompat.app.AppCompatActivity
 import com.tminus1010.budgetvalue.App
+import com.tminus1010.budgetvalue.layer_ui.HostActivity
 
 
 val AppCompatActivity.app
@@ -15,3 +16,6 @@ val AppCompatActivity.repo
 
 val AppCompatActivity.domain
     get() = appComponent.getDomain()
+
+val AppCompatActivity.errorHandler
+    get() = appComponent.getErrorHandler()

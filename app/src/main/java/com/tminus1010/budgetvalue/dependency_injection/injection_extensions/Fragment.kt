@@ -2,6 +2,7 @@ package com.tminus1010.budgetvalue.dependency_injection.injection_extensions
 
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.App
+import com.tminus1010.tmcommonkotlin.view.extensions.nav
 
 
 val Fragment.app
@@ -15,3 +16,9 @@ val Fragment.repo
 
 val Fragment.domain
     get() = appComponent.getDomain()
+
+val Fragment.errorHandler
+    get() = appComponent.getErrorHandler()
+
+fun Fragment.handle(e: Throwable) =
+    errorHandler.handle(nav, e)
