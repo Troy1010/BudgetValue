@@ -4,7 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_graph"
     app:startDestination="@id/importFrag">
-
+    <action
+        android:id="@+id/errorFrag_clear_backstack"
+        app:destination="@id/errorFrag"
+        app:launchSingleTop="true"
+        app:popUpTo="@id/importFrag"
+        app:popUpToInclusive="true" />
     <fragment
         android:id="@+id/categorizeFrag"
         android:name="com.tminus1010.budgetvalue.layer_ui.CategorizeFrag"
