@@ -61,7 +61,7 @@ class HostActivity : AppCompatActivity() {
                 vmps.transactionsVM.importTransactions(inputStream)
                 toast("Import successful")
             } catch (e: Exception) {
-                errorHandler.handle(nav, e)
+                handle(e)
             }
         }
         super.onActivityResult(requestCode, resultCode, intent)
