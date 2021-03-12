@@ -1,6 +1,5 @@
 package com.tminus1010.budgetvalue.dependency_injection.injection_extensions
 
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.App
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
