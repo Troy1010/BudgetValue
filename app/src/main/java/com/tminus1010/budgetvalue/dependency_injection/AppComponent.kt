@@ -5,6 +5,7 @@ import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.budgetvalue.layer_domain.ActiveCategoriesDAOWrapper
 import com.tminus1010.budgetvalue.layer_domain.Domain
 import com.tminus1010.budgetvalue.layer_ui.ErrorHandler
+import com.tminus1010.budgetvalue.layer_ui.ErrorVM
 import dagger.Component
 import javax.inject.Singleton
 
@@ -20,4 +21,5 @@ interface AppComponent {
     fun getActiveCategoriesDAOWrapper(): ActiveCategoriesDAOWrapper
     fun getErrorHandler(): ErrorHandler
     fun getFlavorIntersection(): IFlavorIntersection
+    fun getErrorVM(): ErrorVM
 }
