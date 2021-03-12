@@ -16,6 +16,7 @@ import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import com.tminus1010.budgetvalue.unbox
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.frag_categorize.*
 import kotlinx.android.synthetic.main.item_category_btn.view.*
 import java.time.format.DateTimeFormatter
@@ -54,6 +55,8 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         textview_description.bindIncoming(vmps.categorizeVM.transactionBox)
         { it.unbox?.description ?: "" }
         textview_amount_left.bindIncoming(vmps.transactionsVM.uncategorizedSpendsSize)
-        vmps.categorizeVM.hasUncategorizedTransaction.observe(viewLifecycleOwner) { btn_advanced.isEnabled = it }
+        vmps.categorizeVM.hasUncategorizedTransaction
+            .observeOn(AndroidSchedulers.mainThread())
+            .observe(viewLifecycleOwner) { btn_advanced.isEnabled = it }
     }
 }
