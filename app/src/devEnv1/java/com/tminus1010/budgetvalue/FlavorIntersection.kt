@@ -15,6 +15,9 @@ class FlavorIntersection @Inject constructor(): IFlavorIntersection {
     override fun getMenuItemPartials(activity: HostActivity): Array<MenuItemPartial> {
         return activity.run {
             arrayOf(
+                MenuItemPartial("Throw Test Error") {
+                    handle(TestException())
+                },
                 MenuItemPartial("Throw Error") {
                     handle(Exception("Zip zoop an error"))
                 },
