@@ -46,7 +46,7 @@ class ActiveCategoriesDAOWrapper @Inject constructor(
             .replay(1).apply { connect() }
 
     override fun parseCategory(categoryName: String): Category {
-        require(categoryName != defaultCategory.name) { "Should never have to parse \"${defaultCategory.name}\"" }
+        if (categoryName == defaultCategory.name) error("Should never have to parse \"${defaultCategory.name}\"")
         return nameToCategoryMap.blockingFirst()[categoryName]
             ?: unknownCategory.also { logz("Warning: returning category Unknown for unknown name:$categoryName") }
     }
