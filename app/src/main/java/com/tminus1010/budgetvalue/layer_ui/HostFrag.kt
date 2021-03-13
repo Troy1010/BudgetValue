@@ -13,8 +13,8 @@ import com.tminus1010.tmcommonkotlin.misc.logz
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
 
-class HostFrag : NavHostFragment() {
-    val errorVM by lazy { appComponent.getErrorVM() }
+class HostFrag : NavHostFragment(), IViewModelFrag {
+    override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     fun getBackStack() = childFragmentManager.getBackStack()
     fun handle(e: Throwable, vararg buttonPartials: ButtonPartial) {
         val buttonPartialsRedef =

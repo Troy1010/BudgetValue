@@ -19,5 +19,4 @@ interface AppComponent {
     fun getDomain(): Domain
     fun getActiveCategoriesDAOWrapper(): ActiveCategoriesDAOWrapper
     fun getFlavorIntersection(): IFlavorIntersection
-    fun getErrorVM(): ErrorVM
 }
