@@ -2,6 +2,7 @@ package com.tminus1010.budgetvalue.dependency_injection.injection_extensions
 
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.App
+import com.tminus1010.budgetvalue.layer_ui.HostActivity
 
 
 val Fragment.app
@@ -15,3 +16,6 @@ val Fragment.repo
 
 val Fragment.domain
     get() = appComponent.getDomain()
+
+val Fragment.flavorIntersection
+    get() = appComponent.getFlavorIntersection()

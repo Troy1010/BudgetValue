@@ -15,3 +15,6 @@ val AppCompatActivity.repo
 
 val AppCompatActivity.domain
     get() = appComponent.getDomain()
+
+val AppCompatActivity.flavorIntersection
+    get() = appComponent.getFlavorIntersection()

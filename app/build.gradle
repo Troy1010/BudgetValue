@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: "TMPlugin"
 
 android {
     compileSdkVersion 30
@@ -9,7 +10,8 @@ android {
 
     compileOptions.sourceCompatibility JavaVersion.VERSION_1_8
     compileOptions.targetCompatibility JavaVersion.VERSION_1_8
-    kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
+    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.useIR = true
 
     defaultConfig {
         applicationId "com.tminus1010.budgetvalue"
@@ -51,6 +53,11 @@ android {
     }
 }
 
+// *Without this, there is a warning that -Xopt-in=kotlin.RequiresOptIn is required
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions.freeCompilerArgs += ["-Xopt-in=kotlin.RequiresOptIn"]
+}
+
 configurations.all {
     // *Without this, androidx.test causes junit 4.12 to be used.
     resolutionStrategy.force "junit:junit:4.13.1"
@@ -79,19 +86,15 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     // # TMCommonKotlin
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-logz:1.0.33'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-rx:1.0.33'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-misc:1.0.33'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-tuple:1.0.33'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-view:1.0.33'
+//    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-logz:1.0.34'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-rx:+'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-misc:+'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-tuple:+'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-view:+'
 
     // # ViewModel
     def lifecycle_version = "2.2.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
-
-    // # Activity/Fragment (supports Lifecycle)
-    implementation "androidx.fragment:fragment-ktx:1.2.5"
-    implementation "androidx.activity:activity-ktx:1.1.0"
 
     // # Dagger
     implementation "com.google.dagger:dagger:2.28"
@@ -102,13 +105,13 @@ dependencies {
     def room_version = "2.3.0-alpha03" // this version of room supports Rx3
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
-    // ## Kotlin/Coroutines
+    // ## Room + Kotlin/Coroutines
     implementation "androidx.room:room-ktx:$room_version"
-    // ## Rx
+    // ## Room + Rx
     implementation "androidx.room:room-rxjava3:$room_version"
-    // ## Guava
+    // ## Room + Guava
     implementation "androidx.room:room-guava:$room_version"
-    // ## Testing
+    // ## Room + Testing
     testImplementation "androidx.room:room-testing:$room_version"
 
     // # Material
@@ -121,19 +124,12 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:2.3.3"
     implementation "androidx.navigation:navigation-ui-ktx:2.3.3"
 
-    // # GSon
-    implementation 'com.google.code.gson:gson:2.8.6'
-
     // # Rx
     implementation 'io.reactivex.rxjava3:rxjava:3.0.7'
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
-    // ## Lifecycle
-    implementation 'com.trello.rxlifecycle4:rxlifecycle-android:4.0.0'
-    implementation 'com.trello.rxlifecycle4:rxlifecycle-components:4.0.0'
-    implementation 'com.trello.rxlifecycle4:rxlifecycle-components-preference:4.0.0'
-    implementation 'com.trello.rxlifecycle4:rxlifecycle-kotlin:4.0.0'
+    // ## Rx + Lifecycle
     implementation 'com.trello.rxlifecycle4:rxlifecycle-android-lifecycle-kotlin:4.0.0'
-    // ## Views
+    // ## Rx + Views
     implementation 'com.jakewharton.rxbinding4:rxbinding:4.0.0'
     implementation 'com.jakewharton.rxbinding4:rxbinding-core:4.0.0'
     implementation 'com.jakewharton.rxbinding4:rxbinding-appcompat:4.0.0'
@@ -148,4 +144,7 @@ dependencies {
     // # Mockk
     testImplementation "io.mockk:mockk:1.10.2"
     androidTestImplementation "io.mockk:mockk-android:1.10.2"
+
+    // # Moshi
+    implementation "com.squareup.moshi:moshi-kotlin:1.11.0"
 }

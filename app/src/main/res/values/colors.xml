@@ -5,5 +5,6 @@
     <color name="colorOnDark">#fff</color>
     <color name="colorOnDarkSoft">#aaa</color>
     <color name="colorBackgroundHighlight">#111</color>
+    <color name="colorErrorRed">#900</color>
     <color name="colorBackground">#333</color>
 </resources>

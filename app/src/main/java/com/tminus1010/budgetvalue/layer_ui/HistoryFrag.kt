@@ -14,13 +14,13 @@ import com.tminus1010.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.reflectXY
-import com.tminus1010.tmcommonkotlin.rx.extensions.distinctUntilChangedWith
+import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.frag_history.*
 
-class HistoryFrag : Fragment(R.layout.frag_history) {
-    val vmps by lazy { ViewModelProviders(requireActivity(), appComponent) }
+class HistoryFrag : Fragment(R.layout.frag_history), IHostFragChild, IViewModelFrag {
+    override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # TMTableView
@@ -40,7 +40,7 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        combineLatestAsTuple(vmps.historyVM.historyColumnDatas, vmps.historyVM.activeCategories)
+        combineLatestAsTuple(historyVM.historyColumnDatas, historyVM.activeCategories)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(AndroidSchedulers.mainThread())
             .distinctUntilChanged() //*idk why this emitted a copy without distinctUntilChanged

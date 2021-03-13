@@ -12,23 +12,20 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
-import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.repo
-import com.tminus1010.budgetvalue.getBlocks
-import com.tminus1010.budgetvalue.reflectXY
-import com.tminus1010.tmcommonkotlin.logz.logz
+import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.flavorIntersection
+import com.tminus1010.budgetvalue.extensions.add
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
 import kotlinx.android.synthetic.main.activity_host.*
-import java.math.BigDecimal
-import kotlin.time.ExperimentalTime
 
 class HostActivity : AppCompatActivity() {
     val vmps by lazy { ViewModelProviders(this, appComponent) }
+    val hostFrag by lazy { fragNavHost as HostFrag }
     val nav by lazy { findNavController(R.id.fragNavHost) }
+    val menuItemPartials by lazy { flavorIntersection.getMenuItemPartials(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         domain.appInit()
-
         setContentView(R.layout.activity_host)
         bottom_navigation.setOnNavigationItemSelectedListener {
             var bSuccessfulNavigation = true
@@ -43,87 +40,17 @@ class HostActivity : AppCompatActivity() {
             bSuccessfulNavigation
         }
         // # Start at..
-        bottom_navigation.selectedItemId = R.id.menu_history
+        bottom_navigation.selectedItemId = R.id.menu_import
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.top_menu, menu)
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        menu.clear()
+        menu.add(*menuItemPartials)
         return true
     }
 
-    @ExperimentalTime
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_import_transactions -> {
-                Intent().apply { type = "*/*"; action = Intent.ACTION_GET_CONTENT }.also {
-                    startActivityForResult(
-                        Intent.createChooser(it, "Select transactions csv"),
-                        CODE_PICK_TRANSACTIONS_FILE
-                    )
-                }
-            }
-            R.id.menu_print_transactions -> {
-                vmps.transactionsVM.transactions.take(1).subscribe {
-                    logz("transactions:${it?.joinToString(",")}")
-                }
-            }
-            R.id.menu_print_spends -> {
-                // define transactionBlocks
-                val transactionBlocks = vmps.transactionsVM.transactions.blockingFirst().getBlocks(2)
-                // define stringBlocks
-                val stringBlocks = arrayListOf<HashMap<String, String>>()
-                for (transactionBlock in transactionBlocks) {
-                    val curStringBlock = HashMap<String, String>()
-                    stringBlocks.add(curStringBlock)
-                    for (category in repo.activeCategories.value) {
-                        curStringBlock[category.name] = transactionBlock.value
-                            .map { it.categoryAmounts[category] ?: BigDecimal.ZERO }
-                            .fold(BigDecimal.ZERO, BigDecimal::add)
-                            .toString()
-                    }
-                }
-                //
-                logz("stringBlocks:${stringBlocks}")
-                logz("stringBlocks.reflectXY():${stringBlocks.reflectXY()}")
-                val spends = HashMap<String, String>()
-                for (x in stringBlocks.reflectXY()) {
-                    spends[x.key] = x.value.joinToString(",")
-                }
-                logz("spends:${spends}")
-                //
-                val column = listOf(
-                    "",
-                    "",
-                    "",
-                    spends["Default"] ?: "",
-                    "",
-                    "",
-                    spends["Food"] ?: "",
-                    spends["Drinks"] ?: "",
-                    spends["Vanity Food"] ?: "",
-                    spends["Improvements"] ?: "",
-                    spends["Dentist"] ?: "",
-                    spends["Diabetic Supplies"] ?: "",
-                    spends["Leli"] ?: "",
-                    spends["Misc"] ?: "",
-                    spends["Gas"] ?: "",
-                    "",
-                    spends["Vanity Food"] ?: "",
-                    spends["Emergency"] ?: ""
-                )
-                //
-                val spendsString = column.joinToString("\n")
-                logz("spendsString:${spendsString}")
-            }
-            R.id.menu_push_app_init_bool_false -> {
-                repo.pushAppInitBool(false)
-                toast("AppInitBool = false")
-            }
-            R.id.menu_debug_do_something -> {
-                toast("Debug Do Something")
-                repo.reconciliations.take(1).subscribe()
-            }
-        }
+        menuItemPartials.find { item.itemId == it.id }!!.action()
         return super.onOptionsItemSelected(item)
     }
 
@@ -134,8 +61,7 @@ class HostActivity : AppCompatActivity() {
                 vmps.transactionsVM.importTransactions(inputStream)
                 toast("Import successful")
             } catch (e: Exception) {
-                e.printStackTrace()
-                toast("Import failed")
+                hostFrag.handle(e)
             }
         }
         super.onActivityResult(requestCode, resultCode, intent)

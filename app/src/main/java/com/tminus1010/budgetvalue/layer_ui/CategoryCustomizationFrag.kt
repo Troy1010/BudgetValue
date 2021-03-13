@@ -6,19 +6,23 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.repo
+import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
+import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
+import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
-import com.tminus1010.budgetvalue.model_data.Category
+import com.tminus1010.budgetvalue.model_domain.Category
 import com.tminus1010.budgetvalue.reflectXY
-import com.tminus1010.tmcommonkotlin.rx.extensions.distinctUntilChangedWith
+import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
+import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.frag_category_customization.*
 
-class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization) {
+class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization), IViewModelFrag {
+    override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
@@ -32,7 +36,7 @@ class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization)
             { View.inflate(requireContext(), R.layout.button, null) as Button },
             { v: Button, d: Category ->
                 v.text = "Delete"
-                v.setOnClickListener { repo.deleteFromActive(d) }
+                v.setOnClickListener { domain.deleteFromActive(d).launch() }
                 v.isEnabled = !d.isRequired
             }
         )
@@ -40,7 +44,7 @@ class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization)
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        repo.activeCategories
+        domain.activeCategories
             .observeOn(Schedulers.computation())
             .map { categories ->
                 val recipeGrid = RecipeGrid(listOf(

@@ -11,17 +11,18 @@ import com.tminus1010.budgetvalue.GenViewHolder
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
-import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.repo
+import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import com.tminus1010.budgetvalue.unbox
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.frag_categorize.*
 import kotlinx.android.synthetic.main.item_category_btn.view.*
 import java.time.format.DateTimeFormatter
 
-class CategorizeFrag : Fragment(R.layout.frag_categorize) {
-    val vmps by lazy { ViewModelProviders(requireActivity(), appComponent) }
+class CategorizeFrag : Fragment(R.layout.frag_categorize), IViewModelFrag {
+    override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # RecyclerView
@@ -35,25 +36,27 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
 
             override fun onBindViewHolder(holder: GenViewHolder, position: Int) {
                 holder.itemView.btn_category.apply {
-                    text = repo.activeCategories.value[holder.adapterPosition].name
-                    setOnClickListener { vmps.categorizeVM.finishTransactionWithCategory(repo.activeCategories.value[holder.adapterPosition]) }
+                    text = domain.activeCategories.value[holder.adapterPosition].name
+                    setOnClickListener { categorizeVM.finishTransactionWithCategory(domain.activeCategories.value[holder.adapterPosition]) }
                 }
             }
 
-            override fun getItemCount() = repo.activeCategories.value.size
+            override fun getItemCount() = domain.activeCategories.value.size
         }
         // # Clicks
         btn_advanced.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_advancedCategorizeFrag) }
         btn_delete_category.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_categoryCustomizationFrag) }
         btn_new_category.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) }
         //
-        textview_date.bindIncoming(vmps.categorizeVM.transactionBox)
+        textview_date.bindIncoming(categorizeVM.transactionBox)
         { it.unbox?.date?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")) ?: "" }
-        textview_amount.bindIncoming(vmps.categorizeVM.transactionBox)
+        textview_amount.bindIncoming(categorizeVM.transactionBox)
         { it.unbox?.defaultAmount?.toString() ?: "" }
-        textview_description.bindIncoming(vmps.categorizeVM.transactionBox)
+        textview_description.bindIncoming(categorizeVM.transactionBox)
         { it.unbox?.description ?: "" }
-        textview_amount_left.bindIncoming(vmps.transactionsVM.uncategorizedSpendsSize)
-        vmps.categorizeVM.hasUncategorizedTransaction.observe(viewLifecycleOwner) { btn_advanced.isEnabled = it }
+        textview_amount_left.bindIncoming(transactionsVM.uncategorizedSpendsSize)
+        categorizeVM.hasUncategorizedTransaction
+            .observeOn(AndroidSchedulers.mainThread())
+            .observe(viewLifecycleOwner) { btn_advanced.isEnabled = it }
     }
 }

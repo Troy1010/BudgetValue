@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.layer_domain
 
 import com.tminus1010.budgetvalue.combineLatestAsTuple
 import com.tminus1010.budgetvalue.layer_data.Repo
-import com.tminus1010.budgetvalue.model_app.LocalDatePeriod
+import com.tminus1010.budgetvalue.model_domain.LocalDatePeriod
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
 import java.time.LocalDate

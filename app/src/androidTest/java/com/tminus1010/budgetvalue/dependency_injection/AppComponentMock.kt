@@ -6,7 +6,7 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules=[
     MiscModule::class,
-    BudgetValueDBModuleMock::class,
+    RepoRoomDBModuleMock::class,
     RepoModule::class
 ])
 interface AppComponentMock : AppComponent

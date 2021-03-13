@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue.layer_data
 
 import androidx.room.*
-import com.tminus1010.budgetvalue.model_data.Category
 import com.tminus1010.budgetvalue.model_data.*
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -12,84 +11,84 @@ import java.time.LocalDate
 interface MiscDAO {
     // # Accounts
 
-    @Query("DELETE FROM `Account`")
+    @Query("DELETE FROM AccountDTO")
     fun clearAccounts(): Completable
 
-    @Query("select * from `Account`")
-    fun getAccounts(): Observable<List<Account>>
+    @Query("select * from AccountDTO")
+    fun fetchAccounts(): Observable<List<AccountDTO>>
 
-    @Query("select * from `Account` where id=:id")
-    fun getAccount(id: Int): Observable<Account>
+    @Query("select * from AccountDTO where id=:id")
+    fun getAccount(id: Int): Observable<AccountDTO>
 
     @Insert
-    fun add(account: Account): Completable
+    fun addAccount(accountDTO: AccountDTO): Completable
 
     @Delete
-    fun delete(account: Account): Completable
+    fun deleteAccount(accountDTO: AccountDTO): Completable
 
     @Update
-    fun update(account: Account): Completable
+    fun updateAccount(accountDTO: AccountDTO): Completable
 
     // # Transactions
 
-    @Query("DELETE FROM `TransactionReceived`")
+    @Query("DELETE FROM TransactionDTO")
     fun clearTransactions(): Completable
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun tryAdd(transactionReceived: TransactionReceived): Completable
+    fun tryAdd(transactionDTO: TransactionDTO): Completable
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun tryAdd(transactionsReceived: List<TransactionReceived>): Completable
+    fun tryAdd(transactionsDTO: List<TransactionDTO>): Completable
 
-    @Query("select * from `TransactionReceived`")
-    fun getTransactionsReceived(): Observable<List<TransactionReceived>>
+    @Query("select * from TransactionDTO")
+    fun fetchTransactions(): Observable<List<TransactionDTO>>
 
     @Delete
-    fun delete(transaction: TransactionReceived): Completable
+    fun delete(transaction: TransactionDTO): Completable
 
     @Update
-    fun update(transaction: TransactionReceived): Completable
+    fun update(transaction: TransactionDTO): Completable
 
-    @Query("select date from `TransactionReceived` WHERE id=:id")
+    @Query("select date from TransactionDTO WHERE id=:id")
     fun getTransactionDate(id: Int): Observable<String>
 
-    @Query("UPDATE `TransactionReceived` SET date=:date WHERE id=:id")
+    @Query("UPDATE TransactionDTO SET date=:date WHERE id=:id")
     fun updateTransactionDate(id: Int, date: String): Completable
 
-    @Query("UPDATE `TransactionReceived` SET categoryAmounts=:categoryAmounts WHERE id=:id")
+    @Query("UPDATE TransactionDTO SET categoryAmounts=:categoryAmounts WHERE id=:id")
     fun updateTransactionCategoryAmounts(id: String, categoryAmounts: Map<String, BigDecimal>): Completable
 
     // # PlanCategoryAmounts
 
-    @Query("select * from PlanReceived")
-    fun fetchPlanReceived(): Observable<List<PlanReceived>>
+    @Query("select * from PlanDTO")
+    fun fetchPlans(): Observable<List<PlanDTO>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun add(PlanReceived: PlanReceived): Completable
+    fun add(PlanDTO: PlanDTO): Completable
 
     @Update
-    fun update(PlanReceived: PlanReceived): Completable
+    fun update(PlanDTO: PlanDTO): Completable
 
-    @Query("DELETE FROM PlanReceived")
+    @Query("DELETE FROM PlanDTO")
     fun clearPlans(): Completable
 
-    @Query("UPDATE `PlanReceived` SET categoryAmounts=:categoryAmounts WHERE startDate=:startDate")
+    @Query("UPDATE PlanDTO SET categoryAmounts=:categoryAmounts WHERE startDate=:startDate")
     fun updatePlanCategoryAmounts(startDate: LocalDate, categoryAmounts: Map<String, BigDecimal>): Completable
 
     // # Reconciliations
 
-    @Query("select * from ReconciliationReceived")
-    fun fetchReconciliationReceived(): Observable<List<ReconciliationReceived>>
+    @Query("select * from ReconciliationDTO")
+    fun fetchReconciliations(): Observable<List<ReconciliationDTO>>
 
     @Insert
-    fun add(reconciliationReceived: ReconciliationReceived): Completable
+    fun add(reconciliationDTO: ReconciliationDTO): Completable
 
     @Update
-    fun update(reconciliationReceived: ReconciliationReceived): Completable
+    fun update(reconciliationDTO: ReconciliationDTO): Completable
 
-    @Query("DELETE FROM ReconciliationReceived")
+    @Query("DELETE FROM ReconciliationDTO")
     fun clearReconciliations(): Completable
 
-    @Query("UPDATE `ReconciliationReceived` SET categoryAmounts=:categoryAmounts WHERE id=:id")
+    @Query("UPDATE ReconciliationDTO SET categoryAmounts=:categoryAmounts WHERE id=:id")
     fun updateReconciliationCategoryAmounts(id: Int, categoryAmounts: Map<String, BigDecimal>): Completable
 }

@@ -10,12 +10,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tminus1010.budgetvalue.model_app.Transaction
-import com.google.gson.reflect.TypeToken
-import com.tminus1010.tmcommonkotlin.logz.logz
+import com.tminus1010.budgetvalue.model_domain.Transaction
+import com.tminus1010.tmcommonkotlin.misc.logz
 import com.tminus1010.tmcommonkotlin.rx.extensions.boxStartNull
 import com.tminus1010.tmcommonkotlin.rx.extensions.isCold
-import com.tminus1010.tmcommonkotlin.rx.extensions.previous
+import com.tminus1010.tmcommonkotlin.misc.extensions.previous
 import com.tminus1010.tmcommonkotlin.tuple.*
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableSource
@@ -483,11 +482,6 @@ fun <A, B, C, D> zip(
             c,
             d)
     })
-}
-
-// Useful for Gson().fromJson(x, getType<List<Int>>())
-fun <T> getTypeForGson(): Type {
-    return object : TypeToken<T>() {}.type
 }
 
 data class IndexAndTuple<T>(
