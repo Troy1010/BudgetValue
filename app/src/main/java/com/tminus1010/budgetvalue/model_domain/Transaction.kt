@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.model_domain
 
 
-import com.tminus1010.budgetvalue.layer_domain.TypeConverter
+import com.tminus1010.budgetvalue.layer_domain.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.model_data.TransactionDTO
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import java.math.BigDecimal
@@ -17,23 +17,23 @@ data class Transaction(
     val isUncategorized get() = categoryAmounts.isNullOrEmpty()
     val isSpend get() = amount < BigDecimal.ZERO
     override val defaultAmount get() = amount - categoryAmounts.values.sum()
-    fun toDTO(typeConverter: TypeConverter): TransactionDTO {
+    fun toDTO(categoryAmountsConverter: CategoryAmountsConverter): TransactionDTO {
         return TransactionDTO(
             date,
             description,
             amount,
-            typeConverter.toString(categoryAmounts),
+            categoryAmountsConverter.toString(categoryAmounts),
             id,
         )
     }
     companion object {
-        fun fromDTO(transactionDTO: TransactionDTO, typeConverter: TypeConverter) =
+        fun fromDTO(transactionDTO: TransactionDTO, categoryAmountsConverter: CategoryAmountsConverter) =
             transactionDTO.run {
                 Transaction(
                     date,
                     description,
                     amount,
-                    typeConverter.toCategoryAmount(categoryAmounts),
+                    categoryAmountsConverter.toCategoryAmount(categoryAmounts),
                     id,
                 )
             }

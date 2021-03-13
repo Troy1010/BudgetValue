@@ -12,19 +12,19 @@ import javax.inject.Inject
 
 class RepoWrapper @Inject constructor(
     val repo: Repo,
-    val typeConverter: TypeConverter,
+    val categoryAmountsConverter: CategoryAmountsConverter,
     val categoryParser: ICategoryParser,
 ) : IRepoWrapper {
     override val transactions =
         repo.fetchTransactions()
-            .map { it.map { Transaction.fromDTO(it, typeConverter) } }
+            .map { it.map { Transaction.fromDTO(it, categoryAmountsConverter) } }
             .replay(1).refCount()
 
     override fun tryPush(transaction: Transaction): Completable =
-        repo.tryAdd(transaction.toDTO(typeConverter))
+        repo.tryAdd(transaction.toDTO(categoryAmountsConverter))
 
     override fun tryPush(transactions: List<Transaction>): Completable =
-        repo.tryAdd(transactions.map { it.toDTO(typeConverter) })
+        repo.tryAdd(transactions.map { it.toDTO(categoryAmountsConverter) })
 
     override fun pushTransactionCA(transaction: Transaction, category: Category, amount: BigDecimal?): Completable =
         transaction.categoryAmounts
@@ -38,21 +38,21 @@ class RepoWrapper @Inject constructor(
     override val plans =
         repo.fetchPlans()
             .subscribeOn(Schedulers.io())
-            .map { it.map { Plan.fromDTO(it, typeConverter) } }
+            .map { it.map { Plan.fromDTO(it, categoryAmountsConverter) } }
             .noEnd().replay(1).refCount()
 
     override fun pushPlan(plan: Plan) =
-        repo.add(plan.toDTO(typeConverter))
+        repo.add(plan.toDTO(categoryAmountsConverter))
             .subscribeOn(Schedulers.io())
 
     override fun pushPlanCA(plan: Plan, category: Category, amount: BigDecimal?): Completable =
         plan.categoryAmounts
             .toMutableMap()
             .apply { if (amount==null) remove(category) else put(category, amount) }
-            .let { repo.updatePlanCategoryAmounts(plan.toDTO(typeConverter).startDate, it.mapKeys { it.key.name }) }
+            .let { repo.updatePlanCategoryAmounts(plan.toDTO(categoryAmountsConverter).startDate, it.mapKeys { it.key.name }) }
 
     override fun pushReconciliation(reconciliation: Reconciliation): Completable =
-        reconciliation.toDTO(typeConverter, BigDecimal(0))
+        reconciliation.toDTO(categoryAmountsConverter, BigDecimal(0))
             .let { repo.add(it).subscribeOn(Schedulers.io()) }
 
     override fun pushReconciliationCA(reconciliation: Reconciliation, category: Category, amount: BigDecimal?, ) =
@@ -63,12 +63,12 @@ class RepoWrapper @Inject constructor(
 
     override val reconciliations: Observable<List<Reconciliation>> =
         repo.fetchReconciliations()
-            .map { it.map { Reconciliation.fromDTO(it, typeConverter) } }
+            .map { it.map { Reconciliation.fromDTO(it, categoryAmountsConverter) } }
             .replay(1).refCount()
 
     override val accounts: Observable<List<Account>> =
         repo.fetchAccounts()
-            .map { it.map { typeConverter.toAccount(it) } }
+            .map { it.map { Account.fromDTO(it) } }
 
     override fun update(account: Account): Completable =
         repo.updateAccount(account.toDTO())

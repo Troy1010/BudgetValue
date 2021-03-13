@@ -15,7 +15,7 @@ import javax.inject.Inject
  * read/write methods.. but I do not yet know the best way to get ActivityResults from the repo.
  */
 class TransactionParser @Inject constructor(
-    private val typeConverter: TypeConverter,
+    private val categoryAmountsConverter: CategoryAmountsConverter,
 ) : ITransactionParser {
     override fun parseToTransactions(inputStream: InputStream): List<Transaction> {
         val transactions = ArrayList<TransactionDTO>()
@@ -66,6 +66,6 @@ class TransactionParser @Inject constructor(
             //
             transactions.add(TransactionDTO(date, description!!, amount.toBigDecimal(), null, entireString))
         }
-        return transactions.map { Transaction.fromDTO(it, typeConverter) }.toList()
+        return transactions.map { Transaction.fromDTO(it, categoryAmountsConverter) }.toList()
     }
 }
