@@ -16,18 +16,17 @@ class FlavorIntersection @Inject constructor(): IFlavorIntersection {
         return activity.run {
             arrayOf(
                 MenuItemPartial("Throw Test Error") {
-                    handle(TestException())
+                    hostFrag.handle(TestException())
                 },
                 MenuItemPartial("Throw Error") {
-                    handle(Exception("Zip zoop an error"))
+                    hostFrag.handle(Exception("Zip zoop an error"))
                 },
                 MenuItemPartial("Import Transactions") {
                     launchImport(activity)
                 },
                 MenuItemPartial("Print Transactions") {
-                    vmps.transactionsVM.transactions.take(1).subscribe {
-                        logz("transactions:${it?.joinToString(",")}")
-                    }
+                    vmps.transactionsVM.transactions.take(1)
+                        .subscribe { logz("transactions:${it?.joinToString(",")}") }
                 },
                 MenuItemPartial("Print Spends") {
                     // define transactionBlocks
