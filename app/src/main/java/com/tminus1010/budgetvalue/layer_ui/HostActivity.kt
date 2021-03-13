@@ -12,7 +12,6 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
-import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.errorHandler
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.flavorIntersection
 import com.tminus1010.budgetvalue.extensions.add
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
@@ -20,6 +19,7 @@ import kotlinx.android.synthetic.main.activity_host.*
 
 class HostActivity : AppCompatActivity() {
     val vmps by lazy { ViewModelProviders(this, appComponent) }
+    val hostFrag by lazy { fragNavHost as HostFrag }
     val nav by lazy { findNavController(R.id.fragNavHost) }
     val menuItemPartials by lazy { flavorIntersection.getMenuItemPartials(this) }
 
@@ -61,11 +61,9 @@ class HostActivity : AppCompatActivity() {
                 vmps.transactionsVM.importTransactions(inputStream)
                 toast("Import successful")
             } catch (e: Exception) {
-                handle(e)
+                hostFrag.handle(e)
             }
         }
         super.onActivityResult(requestCode, resultCode, intent)
     }
-
-    fun handle(e: Exception) = errorHandler.handle(nav, e)
 }
