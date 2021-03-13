@@ -13,13 +13,11 @@ import javax.inject.Singleton
 class Domain @Inject constructor(
     private val appInitializer: AppInitializer,
     private val datePeriodGetter: DatePeriodGetter,
-    private val categoryAmountsConverter: CategoryAmountsConverter,
     private val repoWrapper: RepoWrapper,
     private val activeCategoriesDAOWrapper: ActiveCategoriesDAOWrapper,
     private val transactionParser: TransactionParser,
 ) : IAppInitializer by appInitializer,
     IDatePeriodGetter by datePeriodGetter,
-    ICategoryAmountsConverter by categoryAmountsConverter,
     IRepoWrapper by repoWrapper,
     IActiveCategoriesDAOWrapper by activeCategoriesDAOWrapper,
     ITransactionParser by transactionParser {
