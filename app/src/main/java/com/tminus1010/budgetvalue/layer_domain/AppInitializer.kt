@@ -1,18 +1,19 @@
 package com.tminus1010.budgetvalue.layer_domain
 
+import com.tminus1010.budgetvalue.layer_domain.use_cases.AppInitBoolUseCasesImpl
 import com.tminus1010.budgetvalue.model_domain.Category
 import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import javax.inject.Inject
 
 class AppInitializer @Inject constructor(
-    val repoWrapper: RepoWrapper,
+    private val appInitBoolUseCasesImpl: AppInitBoolUseCasesImpl,
     val activeCategoriesDAOWrapper: ActiveCategoriesDAOWrapper,
 ) : IAppInitializer {
     override fun appInit() {
-        if (!repoWrapper.fetchAppInitBool()) {
+        if (!appInitBoolUseCasesImpl.fetchAppInitBool()) {
             initCategories
                 .forEach { activeCategoriesDAOWrapper.push(it).launch() }
-            repoWrapper.pushAppInitBool()
+            appInitBoolUseCasesImpl.pushAppInitBool()
         }
     }
 

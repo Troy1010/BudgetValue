@@ -1,5 +1,6 @@
 package com.tminus1010.budgetvalue.layer_domain
 
+import com.tminus1010.budgetvalue.layer_domain.use_cases.*
 import com.tminus1010.budgetvalue.model_domain.Category
 import io.reactivex.rxjava3.core.Completable
 import javax.inject.Inject
@@ -13,14 +14,26 @@ import javax.inject.Singleton
 class Domain @Inject constructor(
     private val appInitializer: AppInitializer,
     private val datePeriodGetter: DatePeriodGetter,
-    private val repoWrapper: RepoWrapper,
     private val activeCategoriesDAOWrapper: ActiveCategoriesDAOWrapper,
     private val transactionParser: TransactionParser,
+    private val accountUseCasesImpl: AccountUseCasesImpl,
+    private val appInitBoolUseCasesImpl: AppInitBoolUseCasesImpl,
+    private val expectedIncomeUseCasesImpl: ExpectedIncomeUseCasesImpl,
+    private val planUseCasesImpl: PlanUseCasesImpl,
+    private val reconciliationUseCasesImpl: ReconciliationUseCasesImpl,
+    private val settingsUseCasesImpl: SettingsUseCasesImpl,
+    private val transactionUseCasesImpl: TransactionUseCasesImpl
 ) : IAppInitializer by appInitializer,
     IDatePeriodGetter by datePeriodGetter,
-    IRepoWrapper by repoWrapper,
     IActiveCategoriesDAOWrapper by activeCategoriesDAOWrapper,
-    ITransactionParser by transactionParser {
+    ITransactionParser by transactionParser,
+    AccountUseCases by accountUseCasesImpl,
+    AppInitBoolUseCases by appInitBoolUseCasesImpl,
+    ExpectedIncomeUseCases by expectedIncomeUseCasesImpl,
+    PlanUseCases by planUseCasesImpl,
+    ReconciliationUseCases by reconciliationUseCasesImpl,
+    SettingsUseCases by settingsUseCasesImpl,
+    TransactionUseCases by transactionUseCasesImpl {
 
     fun deleteFromActive(category: Category): Completable =
         Completable.merge(listOf(
