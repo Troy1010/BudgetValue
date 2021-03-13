@@ -19,8 +19,8 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.frag_history.*
 
-class HistoryFrag : Fragment(R.layout.frag_history), IHostFragChild {
-    val vmps by lazy { ViewModelProviders(requireActivity(), appComponent) }
+class HistoryFrag : Fragment(R.layout.frag_history), IHostFragChild, IViewModelFrag {
+    override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # TMTableView
@@ -40,7 +40,7 @@ class HistoryFrag : Fragment(R.layout.frag_history), IHostFragChild {
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        combineLatestAsTuple(vmps.historyVM.historyColumnDatas, vmps.historyVM.activeCategories)
+        combineLatestAsTuple(historyVM.historyColumnDatas, historyVM.activeCategories)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(AndroidSchedulers.mainThread())
             .distinctUntilChanged() //*idk why this emitted a copy without distinctUntilChanged

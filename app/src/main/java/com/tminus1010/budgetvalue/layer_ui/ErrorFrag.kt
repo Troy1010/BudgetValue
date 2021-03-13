@@ -21,8 +21,8 @@ import kotlinx.android.synthetic.main.frag_import.*
 import kotlinx.android.synthetic.main.item_account.view.*
 import kotlinx.android.synthetic.main.item_button.view.*
 
-class ErrorFrag : Fragment(R.layout.frag_error) {
-    val vmps by lazy { ViewModelProviders(requireActivity(), appComponent) }
+class ErrorFrag : Fragment(R.layout.frag_error), IViewModelFrag {
+    override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # RecyclerView
@@ -34,20 +34,20 @@ class ErrorFrag : Fragment(R.layout.frag_error) {
                         .let { GenViewHolder(it) }
 
                 override fun onBindViewHolder(holder: GenViewHolder, position: Int) {
-                    holder.itemView.btn_item.setOnClickListener { vmps.errorVM.buttons.value[holder.adapterPosition].action() }
-                    holder.itemView.btn_item.text = vmps.errorVM.buttons.value[position].title
+                    holder.itemView.btn_item.setOnClickListener { errorVM.buttons.value[holder.adapterPosition].action() }
+                    holder.itemView.btn_item.text = errorVM.buttons.value[position].title
                 }
 
-                override fun getItemCount(): Int = vmps.errorVM.buttons.value.size
+                override fun getItemCount(): Int = errorVM.buttons.value.size
             }
         }
         // # Observe
-        vmps.errorVM.message
+        errorVM.message
             .observeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) {
                 textview_message.text = it
             }
-        vmps.errorVM.buttons
+        errorVM.buttons
             .observeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) {
                 recyclerview_buttons.adapter?.notifyDataSetChanged()

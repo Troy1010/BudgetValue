@@ -21,8 +21,8 @@ import kotlinx.android.synthetic.main.frag_categorize.*
 import kotlinx.android.synthetic.main.item_category_btn.view.*
 import java.time.format.DateTimeFormatter
 
-class CategorizeFrag : Fragment(R.layout.frag_categorize) {
-    val vmps by lazy { ViewModelProviders(requireActivity(), appComponent) }
+class CategorizeFrag : Fragment(R.layout.frag_categorize), IViewModelFrag {
+    override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # RecyclerView
@@ -37,7 +37,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
             override fun onBindViewHolder(holder: GenViewHolder, position: Int) {
                 holder.itemView.btn_category.apply {
                     text = domain.activeCategories.value[holder.adapterPosition].name
-                    setOnClickListener { vmps.categorizeVM.finishTransactionWithCategory(domain.activeCategories.value[holder.adapterPosition]) }
+                    setOnClickListener { categorizeVM.finishTransactionWithCategory(domain.activeCategories.value[holder.adapterPosition]) }
                 }
             }
 
@@ -48,14 +48,14 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         btn_delete_category.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_categoryCustomizationFrag) }
         btn_new_category.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) }
         //
-        textview_date.bindIncoming(vmps.categorizeVM.transactionBox)
+        textview_date.bindIncoming(categorizeVM.transactionBox)
         { it.unbox?.date?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")) ?: "" }
-        textview_amount.bindIncoming(vmps.categorizeVM.transactionBox)
+        textview_amount.bindIncoming(categorizeVM.transactionBox)
         { it.unbox?.defaultAmount?.toString() ?: "" }
-        textview_description.bindIncoming(vmps.categorizeVM.transactionBox)
+        textview_description.bindIncoming(categorizeVM.transactionBox)
         { it.unbox?.description ?: "" }
-        textview_amount_left.bindIncoming(vmps.transactionsVM.uncategorizedSpendsSize)
-        vmps.categorizeVM.hasUncategorizedTransaction
+        textview_amount_left.bindIncoming(transactionsVM.uncategorizedSpendsSize)
+        categorizeVM.hasUncategorizedTransaction
             .observeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) { btn_advanced.isEnabled = it }
     }

@@ -23,14 +23,14 @@ import kotlinx.android.synthetic.main.frag_reconcile.*
 import kotlinx.android.synthetic.main.tableview_header_income.view.*
 import java.math.BigDecimal
 
-class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
-    val vmps by lazy { ViewModelProviders(requireActivity(), appComponent) }
+class ReconcileFrag : Fragment(R.layout.frag_reconcile), IViewModelFrag {
+    override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
         btn_save.clicks().subscribe {
-            vmps.activeReconciliationVM.intentSaveReconciliation.onNext(Unit)
-            vmps.activePlanVM.intentSaveActivePlan.onNext(Unit)
+            activeReconciliationVM.intentSaveReconciliation.onNext(Unit)
+            activePlanVM.intentSaveActivePlan.onNext(Unit)
         }
         // # TMTableView
         val cellRecipeFactory = ViewItemRecipeFactory.createCellRecipeFactory(requireContext())
@@ -45,7 +45,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
             { v, (category, d) ->
                 v.bindIncoming(d)
-                v.bindOutgoing(vmps.activeReconciliationVM.intentPushActiveReconcileCA, { s -> category to s.toBigDecimalSafe() }) { it.second }
+                v.bindOutgoing(activeReconciliationVM.intentPushActiveReconcileCA, { s -> category to s.toBigDecimalSafe() }) { it.second }
             }
         )
         val oneWayRecipeFactory = ViewItemRecipeFactory<TextView, Observable<BigDecimal>>(
@@ -56,7 +56,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        combineLatestAsTuple(vmps.activeReconciliationVM.rowDatas, domain.activeCategories, myTableView_1.widthObservable, vmps.budgetedVM.categoryAmounts)
+        combineLatestAsTuple(activeReconciliationVM.rowDatas, domain.activeCategories, myTableView_1.widthObservable, budgetedVM.categoryAmounts)
             .observeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) { (rowDatas, activeCategories, width, budgetedCA) ->
                 val dividerMap = activeCategories
@@ -69,17 +69,17 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                         headerRecipeFactory.createOne2("Category")
                                 + cellRecipeFactory.createOne2("Default")
                                 + cellRecipeFactory.createMany(rowDatas.map { it.category.name }),
-                        headerRecipeFactory_numbered.createOne2(Pair("Plan", vmps.activePlanVM.expectedIncome))
-                                + oneWayRecipeFactory.createOne2(vmps.activePlanVM.defaultAmount)
+                        headerRecipeFactory_numbered.createOne2(Pair("Plan", activePlanVM.expectedIncome))
+                                + oneWayRecipeFactory.createOne2(activePlanVM.defaultAmount)
                                 + oneWayRecipeFactory.createMany(rowDatas.map { it.plan }),
                         headerRecipeFactory.createOne2("Actual")
                                 + cellRecipeFactory.createOne2("")
                                 + oneWayRecipeFactory.createMany(rowDatas.map { it.actual }),
                         headerRecipeFactory.createOne2("Reconcile")
-                                + oneWayRecipeFactory.createOne2(vmps.activeReconciliationVM2.defaultAmount)
+                                + oneWayRecipeFactory.createOne2(activeReconciliationVM2.defaultAmount)
                                 + reconcileCARecipeFactory.createMany(rowDatas.map { it.category to it.reconcile }),
-                        headerRecipeFactory_numbered.createOne2(Pair("Budgeted", vmps.accountsVM.accountsTotal))
-                                + oneWayRecipeFactory.createOne2(vmps.budgetedVM.defaultAmount)
+                        headerRecipeFactory_numbered.createOne2(Pair("Budgeted", accountsVM.accountsTotal))
+                                + oneWayRecipeFactory.createOne2(budgetedVM.defaultAmount)
                                 + oneWayRecipeFactory.createMany(activeCategories.map { budgetedCA[it] }.map { Observable.just(it) }) //TODO("Should just pass the observable itself.")
                     ).reflectXY(), fixedWidth = width),
                     dividerMap = dividerMap,

@@ -14,7 +14,7 @@ import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
 
 class HostFrag : NavHostFragment() {
-    val vmps by lazy { ViewModelProviders(requireActivity(), appComponent) }
+    val errorVM by lazy { appComponent.getErrorVM() }
     fun getBackStack() = childFragmentManager.getBackStack()
     fun handle(e: Throwable, vararg buttonPartials: ButtonPartial) {
         val buttonPartialsRedef =
@@ -25,8 +25,8 @@ class HostFrag : NavHostFragment() {
         when (e) {
             is ImportFailedException -> app.toast("Import failed")
             is TestException -> {
-                vmps.errorVM.message.onNext("Test Exception")
-                vmps.errorVM.buttons.onNext(buttonPartialsRedef.toList())
+                errorVM.message.onNext("Test Exception")
+                errorVM.buttons.onNext(buttonPartialsRedef.toList())
                 logz("backstack1:${getBackStack()}")
                 nav.navigate(R.id.errorFrag_clear_backstack)
                 logz("backstack2:${getBackStack()}")
