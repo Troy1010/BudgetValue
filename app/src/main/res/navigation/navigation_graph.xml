@@ -12,7 +12,7 @@
         app:popUpToInclusive="true" />
     <fragment
         android:id="@+id/categorizeFrag"
-        android:name="com.tminus1010.budgetvalue.layer_ui.CategorizeFrag"
+        android:name="com.tminus1010.budgetvalue.layer_ui.CategorizeTransactionsFrag"
         android:label="Categorize"
         tools:layout="@layout/frag_categorize">
         <action

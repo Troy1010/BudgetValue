@@ -11,7 +11,7 @@ import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.math.BigDecimal
 
-class CategorizeVM(
+class CategorizeTransactionsVM(
     private val domain: Domain,
     private val transactionsVM: TransactionsVM
 ): ViewModel() {
