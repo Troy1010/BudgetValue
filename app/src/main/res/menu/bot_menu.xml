@@ -3,18 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_import"
+        android:id="@+id/importFrag"
         android:title="Import" />
     <item
-        android:id="@+id/menu_categorize"
+        android:id="@+id/categorizeFrag"
         android:title="Categorize" />
     <item
-        android:id="@+id/menu_plan"
+        android:id="@+id/planFrag"
         android:title="Plan" />
     <item
-        android:id="@+id/menu_reconcile"
+        android:id="@+id/reconcileFrag"
         android:title="Reconcile" />
     <item
-        android:id="@+id/menu_history"
+        android:id="@+id/historyFrag"
         android:title="History" />
 </menu>

@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
+import androidx.navigation.ui.NavigationUI
 import com.tminus1010.budgetvalue.CODE_PICK_TRANSACTIONS_FILE
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
@@ -27,20 +28,10 @@ class HostActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         domain.appInit()
         setContentView(R.layout.activity_host)
-        bottom_navigation.setOnNavigationItemSelectedListener {
-            var bSuccessfulNavigation = true
-            when (it.itemId) {
-                R.id.menu_import -> nav.navigate(R.id.importFrag)
-                R.id.menu_plan -> nav.navigate(R.id.planFrag)
-                R.id.menu_categorize -> nav.navigate(R.id.categorizeFrag)
-                R.id.menu_reconcile -> nav.navigate(R.id.reconcileFrag)
-                R.id.menu_history -> nav.navigate(R.id.historyFrag)
-                else -> bSuccessfulNavigation = false
-            }
-            bSuccessfulNavigation
-        }
-        // # Start at..
-        bottom_navigation.selectedItemId = R.id.menu_import
+        // # Bind bottom menu to navigation.
+        // In order for NavigationUI.setupWithNavController to work, the ids in
+        // R.menu.* must exactly match R.navigation.*
+        NavigationUI.setupWithNavController(bottom_navigation, nav)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
