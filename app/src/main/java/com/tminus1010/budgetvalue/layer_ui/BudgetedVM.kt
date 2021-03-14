@@ -24,27 +24,27 @@ class BudgetedVM(
                 if (reconciliations != null) {
                     reconciliations.forEach {
                         it.categoryAmounts.forEach { (category, amount) ->
-                            x[category] = (x[category]?:BigDecimal(0)) + amount
+                            x[category] = (x[category] ?: BigDecimal(0)) + amount
                         }
                     }
                 }
                 if (plans != null) {
                     plans.forEach {
                         it.categoryAmounts.forEach { (category, amount) ->
-                            x[category] = (x[category]?:BigDecimal(0)) + amount
+                            x[category] = (x[category] ?: BigDecimal(0)) + amount
                         }
                     }
                 }
                 if (transactionBlocks != null) {
                     transactionBlocks.forEach {
                         it.categoryAmounts.forEach { (category, amount) ->
-                            x[category] = (x[category]?:BigDecimal(0)) + amount
+                            x[category] = (x[category] ?: BigDecimal(0)) + amount
                         }
                     }
                 }
                 if (activeReconcileCAs != null) {
                     activeReconcileCAs.forEach { (category, amount) ->
-                        x[category] = (x[category]?:BigDecimal(0)) + amount
+                        x[category] = (x[category] ?: BigDecimal(0)) + amount
                     }
                 }
                 if (activeCategories != null)
