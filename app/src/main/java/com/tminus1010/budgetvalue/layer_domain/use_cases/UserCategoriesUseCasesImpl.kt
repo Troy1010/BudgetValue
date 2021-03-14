@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue.layer_domain.use_cases
 
 import com.tminus1010.budgetvalue.categoryComparator
-import com.tminus1010.budgetvalue.layer_data.ActiveCategoriesDAO
 import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.budgetvalue.model_domain.Category
 import io.reactivex.rxjava3.core.Completable

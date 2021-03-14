@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.tminus1010.budgetvalue.App
 import com.tminus1010.budgetvalue.SHARED_PREF_FILE_NAME
-import com.tminus1010.budgetvalue.layer_data.ActiveCategoriesDAO
+import com.tminus1010.budgetvalue.layer_data.UserCategoriesDAO
 import com.tminus1010.budgetvalue.layer_domain.UserCategories
 import com.tminus1010.budgetvalue.layer_data.DB
 import com.tminus1010.budgetvalue.layer_data.MiscDAO
@@ -38,7 +38,7 @@ class RepoModule {
 
     @Provides
     @Singleton
-    fun providesActiveCategoryDAO(roomDatabase: DB): ActiveCategoriesDAO {
+    fun providesActiveCategoryDAO(roomDatabase: DB): UserCategoriesDAO {
         return roomDatabase.activeCategoryDAO()
     }
 }

@@ -11,7 +11,7 @@ import javax.inject.Singleton
 class Repo @Inject constructor(
     private val sharedPrefWrapper: SharedPrefWrapper,
     private val miscDAO: MiscDAO,
-    private val activeCategoriesDAO: ActiveCategoriesDAO,
+    private val userCategoriesDAO: UserCategoriesDAO,
 ) : ISharedPrefWrapper by sharedPrefWrapper,
     MiscDAO by miscDAO,
-    ActiveCategoriesDAO by activeCategoriesDAO
+    UserCategoriesDAO by userCategoriesDAO

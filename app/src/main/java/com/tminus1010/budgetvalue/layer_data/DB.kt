@@ -10,5 +10,5 @@ import com.tminus1010.budgetvalue.model_data.*
     version = 31)
 abstract class DB : RoomDatabase() {
     abstract fun miscDAO(): MiscDAO
-    abstract fun activeCategoryDAO(): ActiveCategoriesDAO
+    abstract fun activeCategoryDAO(): UserCategoriesDAO
 }

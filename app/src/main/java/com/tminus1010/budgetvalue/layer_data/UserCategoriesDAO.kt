@@ -6,7 +6,7 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 
 @Dao
-interface ActiveCategoriesDAO {
+interface UserCategoriesDAO {
     @Query("select * from `CategoryDTO`")
     fun fetchActiveCategories(): Observable<List<CategoryDTO>>
 
