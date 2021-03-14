@@ -9,6 +9,7 @@ import java.util.function.BiFunction
 import java.util.function.Function
 
 class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue: V? = null): HashMap<K, V>() {
+    constructor(exitValue: V?, vararg entries: Pair<K, V>): this(entries.associate { it.first to it.second }, exitValue)
     private val observableMapPublisher = PublishSubject.create<MutableMap<K, BehaviorSubject<V>>>()
     private val changePublisher = PublishSubject.create<Change<K, V>>()
     private val _itemObservableMap = mutableMapOf<K, BehaviorSubject<V>>()
