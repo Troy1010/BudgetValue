@@ -19,7 +19,7 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.frag_history.*
 
-class HistoryFrag : Fragment(R.layout.frag_history), IHostFragChild, IViewModelFrag {
+class HistoryFrag : Fragment(R.layout.frag_history), IHostFragChild, IViewModels {
     override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.frag_reconcile.*
 import kotlinx.android.synthetic.main.tableview_header_income.view.*
 import java.math.BigDecimal
 
-class ReconcileFrag : Fragment(R.layout.frag_reconcile), IViewModelFrag {
+class ReconcileFrag : Fragment(R.layout.frag_reconcile), IViewModels {
     override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

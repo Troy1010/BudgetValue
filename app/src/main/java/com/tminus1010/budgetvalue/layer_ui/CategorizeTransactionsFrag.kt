@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.frag_categorize.*
 import kotlinx.android.synthetic.main.item_category_btn.view.*
 import java.time.format.DateTimeFormatter
 
-class CategorizeTransactionsFrag : Fragment(R.layout.frag_categorize), IViewModelFrag {
+class CategorizeTransactionsFrag : Fragment(R.layout.frag_categorize), IViewModels {
     override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

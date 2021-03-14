@@ -14,7 +14,7 @@ import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
 import kotlinx.android.synthetic.main.frag_new_category.*
 
-class NewCategoryFrag : Fragment(R.layout.frag_new_category), IViewModelFrag {
+class NewCategoryFrag : Fragment(R.layout.frag_new_category), IViewModels {
     override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

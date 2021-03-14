@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.frag_plan.*
 import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
-class PlanFrag: Fragment(R.layout.frag_plan), IViewModelFrag {
+class PlanFrag: Fragment(R.layout.frag_plan), IViewModels {
     override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onStart() {
         super.onStart()

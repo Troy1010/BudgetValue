@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.tminus1010.budgetvalue.CODE_PICK_TRANSACTIONS_FILE
@@ -18,12 +20,11 @@ import com.tminus1010.budgetvalue.extensions.add
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
 import kotlinx.android.synthetic.main.activity_host.*
 
-class HostActivity : AppCompatActivity() {
-    val vmps by lazy { ViewModelProviders(this, appComponent) }
+class HostActivity : AppCompatActivity(), IViewModels {
+    override val viewModelProviders by lazy { ViewModelProviders(this, appComponent) }
     val hostFrag by lazy { fragNavHost as HostFrag }
     val nav by lazy { findNavController(R.id.fragNavHost) }
     val menuItemPartials by lazy { flavorIntersection.getMenuItemPartials(this) }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         domain.appInit()
@@ -49,7 +50,7 @@ class HostActivity : AppCompatActivity() {
         if (requestCode == CODE_PICK_TRANSACTIONS_FILE && resultCode == Activity.RESULT_OK) {
             try {
                 val inputStream = contentResolver.openInputStream(intent!!.data!!)!!
-                vmps.transactionsVM.importTransactions(inputStream)
+                transactionsVM.importTransactions(inputStream)
                 toast("Import successful")
             } catch (e: Exception) {
                 hostFrag.handle(e)

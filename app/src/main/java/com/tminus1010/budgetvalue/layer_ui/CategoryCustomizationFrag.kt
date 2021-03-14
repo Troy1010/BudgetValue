@@ -21,7 +21,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.frag_category_customization.*
 
-class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization), IViewModelFrag {
+class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization), IViewModels {
     override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

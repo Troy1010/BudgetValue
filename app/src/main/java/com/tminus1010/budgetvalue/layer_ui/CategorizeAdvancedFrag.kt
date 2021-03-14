@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.frag_advanced_categorize.*
 import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
-class CategorizeAdvancedFrag : Fragment(R.layout.frag_advanced_categorize), IViewModelFrag {
+class CategorizeAdvancedFrag : Fragment(R.layout.frag_advanced_categorize), IViewModels {
     val viewRecipeFactories by lazy { ViewItemRecipeFactoryProvider(requireContext()) }
     override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
 
