@@ -8,7 +8,7 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import javax.inject.Inject
 import com.tminus1010.tmcommonkotlin.misc.logz
 
-class UserCategories @Inject constructor(
+class Categories @Inject constructor(
     userCategoriesUseCasesImpl: UserCategoriesUseCasesImpl
 ) : ICategoryParser, IUserCategories {
     override val defaultCategory = Category("Default", Category.Type.Misc, true)

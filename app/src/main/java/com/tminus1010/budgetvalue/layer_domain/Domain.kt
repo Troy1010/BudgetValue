@@ -14,7 +14,7 @@ import javax.inject.Singleton
 class Domain @Inject constructor(
     private val appInitializer: AppInitializer,
     private val datePeriodGetter: DatePeriodGetter,
-    private val userCategories: UserCategories,
+    private val userCategories: Categories,
     private val transactionParser: TransactionParser,
     private val accountUseCasesImpl: AccountUseCasesImpl,
     private val appInitBoolUseCasesImpl: AppInitBoolUseCasesImpl,
