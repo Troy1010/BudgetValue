@@ -1,15 +1,15 @@
 package com.tminus1010.budgetvalue.layer_domain
 
 import com.tminus1010.budgetvalue.categoryComparator
-import com.tminus1010.budgetvalue.layer_domain.use_cases.UserCategoriesUseCasesImpl
+import com.tminus1010.budgetvalue.layer_domain.use_cases.IUserCategoriesFetch
 import com.tminus1010.budgetvalue.model_domain.Category
+import com.tminus1010.tmcommonkotlin.misc.logz
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import javax.inject.Inject
-import com.tminus1010.tmcommonkotlin.misc.logz
 
 class CategoriesUCWrapper @Inject constructor(
-    userCategoriesUseCasesImpl: UserCategoriesUseCasesImpl
+    userCategoriesUseCasesImpl: IUserCategoriesFetch
 ) : ICategoryParser, ICategories {
     override val defaultCategory = Category("Default", Category.Type.Misc, true)
     override val unknownCategory = Category("Unknown", Category.Type.Misc, true)

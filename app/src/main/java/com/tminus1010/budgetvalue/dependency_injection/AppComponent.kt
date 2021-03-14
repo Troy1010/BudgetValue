@@ -10,7 +10,8 @@ import javax.inject.Singleton
 @Component(modules = [
     MiscModule::class,
     RepoRoomDBModule::class,
-    RepoModule::class
+    RepoModule::class,
+    BindingModule::class
 ])
 interface AppComponent {
     fun getRepo(): Repo
