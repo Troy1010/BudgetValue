@@ -2,13 +2,9 @@ package com.tminus1010.budgetvalue.layer_ui
 
 import com.tminus1010.budgetvalue.Givens
 import com.tminus1010.budgetvalue.layer_domain.Domain
-import com.tminus1010.budgetvalue.model_domain.Category
-import com.tminus1010.budgetvalue.model_domain.LocalDatePeriod
-import com.tminus1010.budgetvalue.model_domain.Plan
 import com.tminus1010.budgetvalue.source_objects.SourceHashMap
 import io.mockk.every
 import io.mockk.mockk
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import junit.framework.TestCase
 
@@ -34,16 +30,22 @@ class BudgetedVMTest : TestCase() {
         budgetedVM.categoryAmounts.take(1).test().apply {
             assertResult(SourceHashMap(
                 null,
-                Givens.givenCategories.value[0] to 40.toBigDecimal()
+                Givens.givenCategories.value[0] to 90.toBigDecimal(),
+                Givens.givenCategories.value[1] to 86.toBigDecimal(),
+                Givens.givenCategories.value[2] to 26.toBigDecimal(),
             ))
         }
     }
 
     fun testGetCaTotal() {
         budgetedVM.caTotal.take(1).test().apply {
-            assertResult(60.toBigDecimal())
+            assertResult(202.toBigDecimal())
         }
     }
 
-    fun testGetDefaultAmount() {}
+    fun testGetDefaultAmount() {
+        budgetedVM.defaultAmount.take(1).test().apply {
+            assertResult(298.toBigDecimal())
+        }
+    }
 }
