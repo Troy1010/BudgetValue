@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue.combineLatestAsTuple
 import javax.inject.Inject
 import javax.inject.Singleton
 
-// Must be separate from ActiveReconciliationVM to avoid circular dependency graph
+// Separate from ActiveReconciliationVM to avoid circular dependency graph
 class ActiveReconciliationVM2(
     activeReconciliationVM: ActiveReconciliationVM,
     budgetedVM: BudgetedVM,
