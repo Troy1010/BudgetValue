@@ -64,4 +64,5 @@ object Givens {
             null,
             givenCategories.value[0] to 9.toBigDecimal()
         ).toObservable().toBehaviorSubject()
+    val givenAccountsTotal = BehaviorSubject.createDefault(500.toBigDecimal())
 }

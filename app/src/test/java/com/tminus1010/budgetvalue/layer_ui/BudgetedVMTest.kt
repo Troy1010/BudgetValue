@@ -22,7 +22,7 @@ class BudgetedVMTest : TestCase() {
             every { it.activeReconcileCAs } returns Givens.givenActiveReconcileCAs
         },
         accountsVM = mockk<AccountsVM>().also {
-            every { it.accountsTotal } returns BehaviorSubject.createDefault(500.toBigDecimal())
+            every { it.accountsTotal } returns Givens.givenAccountsTotal
         }
     )
 
