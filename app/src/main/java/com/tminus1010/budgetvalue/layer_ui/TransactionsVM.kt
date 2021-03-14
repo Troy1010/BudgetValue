@@ -6,6 +6,7 @@ import com.tminus1010.budgetvalue.layer_domain.Domain
 import com.tminus1010.budgetvalue.model_domain.Block
 import com.tminus1010.budgetvalue.model_domain.Category
 import com.tminus1010.budgetvalue.model_domain.Transaction
+import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.io.InputStream
 import java.math.BigDecimal
@@ -23,9 +24,7 @@ class TransactionsVM(
     val uncategorizedSpendsSize = uncategorizedSpends
         .map { it.size.toString() }
     fun importTransactions(inputStream: InputStream) {
-        domain.tryPush(domain.parseToTransactions(inputStream))
-            .subscribeOn(Schedulers.io())
-            .subscribe()
+        domain.tryPush(domain.parseToTransactions(inputStream)).launch()
     }
     fun getBlocksFromTransactions(transactions: List<Transaction>): List<Block> {
         val transactionsRedefined = transactions.sortedBy { it.date }.toMutableList()
