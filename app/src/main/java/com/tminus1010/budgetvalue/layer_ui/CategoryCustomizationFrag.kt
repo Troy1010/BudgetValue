@@ -44,7 +44,7 @@ class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization)
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        domain.activeCategories
+        domain.userCategories
             .observeOn(Schedulers.computation())
             .map { categories ->
                 val recipeGrid = RecipeGrid(listOf(

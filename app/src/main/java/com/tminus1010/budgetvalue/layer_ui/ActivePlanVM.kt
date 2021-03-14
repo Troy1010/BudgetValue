@@ -2,7 +2,6 @@ package com.tminus1010.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.combineLatestAsTuple
-import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
 import com.tminus1010.budgetvalue.extensions.launch
 import com.tminus1010.budgetvalue.layer_domain.Domain
 import com.tminus1010.budgetvalue.model_domain.Category
@@ -43,7 +42,7 @@ class ActivePlanVM(domain: Domain) : ViewModel() {
                 .subscribe(intentSaveActivePlan)
         }
     val activePlan =
-        combineLatestAsTuple(domain.activePlanCAs, domain.activeCategories)
+        combineLatestAsTuple(domain.activePlanCAs, domain.userCategories)
             .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (activeReconcileCAs, activeCategories) ->
                 activeCategories
                     .associateWith { BigDecimal.ZERO }

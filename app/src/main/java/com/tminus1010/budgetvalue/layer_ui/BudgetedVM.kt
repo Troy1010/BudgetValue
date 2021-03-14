@@ -18,7 +18,7 @@ class BudgetedVM(
     accountsVM: AccountsVM,
 ): ViewModel() {
     val categoryAmounts =
-        combineLatestImpatient(domain.reconciliations, domain.plans, transactionsVM.transactionBlocks, activeReconciliationVM.activeReconcileCAs, domain.activeCategories)
+        combineLatestImpatient(domain.reconciliations, domain.plans, transactionsVM.transactionBlocks, activeReconciliationVM.activeReconcileCAs, domain.userCategories)
             .map { (reconciliations, plans, transactionBlocks, activeReconcileCAs, activeCategories) ->
                 val x = SourceHashMap<Category, BigDecimal>()
                 if (reconciliations != null) {

@@ -36,12 +36,12 @@ class CategorizeTransactionsFrag : Fragment(R.layout.frag_categorize), IViewMode
 
             override fun onBindViewHolder(holder: GenViewHolder, position: Int) {
                 holder.itemView.btn_category.apply {
-                    text = domain.activeCategories.value[holder.adapterPosition].name
-                    setOnClickListener { categorizeVM.finishTransactionWithCategory(domain.activeCategories.value[holder.adapterPosition]) }
+                    text = domain.userCategories.value[holder.adapterPosition].name
+                    setOnClickListener { categorizeVM.finishTransactionWithCategory(domain.userCategories.value[holder.adapterPosition]) }
                 }
             }
 
-            override fun getItemCount() = domain.activeCategories.value.size
+            override fun getItemCount() = domain.userCategories.value.size
         }
         // # Clicks
         btn_advanced.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_advancedCategorizeFrag) }

@@ -41,7 +41,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_advanced_categorize), IVie
         val amountRecipeFactory = viewRecipeFactories.incomingBigDecimalRecipeFactory
         val categoryAmountRecipeFactory = viewRecipeFactories.outgoingCARecipeFactory(categorizeAdvancedVM.intentRememberCA)
         val titledDividerRecipeFactory = viewRecipeFactories.titledDividerRecipeFactory
-        combineLatestAsTuple(tmTableView_ac.widthObservable, domain.activeCategories)
+        combineLatestAsTuple(tmTableView_ac.widthObservable, domain.userCategories)
             .debounce(100, TimeUnit.MILLISECONDS)
             .observeOn(Schedulers.computation())
             .map { (width, categories) ->

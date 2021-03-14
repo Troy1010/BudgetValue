@@ -14,18 +14,18 @@ class CategoriesUCWrapper @Inject constructor(
     override val defaultCategory = Category("Default", Category.Type.Misc, true)
     override val unknownCategory = Category("Unknown", Category.Type.Misc, true)
 
-    override val activeCategories: BehaviorSubject<List<Category>> =
+    override val userCategories: BehaviorSubject<List<Category>> =
         userCategoriesUseCasesImpl.fetchUserCategories()
             .toBehaviorSubject(emptyList())
 
     override val categories: BehaviorSubject<List<Category>> =
-        activeCategories
+        userCategories
             .map { it + defaultCategory + unknownCategory }
             .map { it.sortedWith(categoryComparator) }
             .toBehaviorSubject()
 
     private val nameToCategoryMap =
-        activeCategories
+        userCategories
             .skip(1)
             .map { it.associateBy { it.name } as HashMap<String, Category> }
             .replay(1).apply { connect() }

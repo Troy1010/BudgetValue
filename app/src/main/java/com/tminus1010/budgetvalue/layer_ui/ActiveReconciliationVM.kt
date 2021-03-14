@@ -43,7 +43,7 @@ class ActiveReconciliationVM(
         .also { it.launch { domain.pushActiveReconciliationCA(it) } }
     // # State
     val activeReconcileCAs =
-        combineLatestAsTuple(domain.activeReconciliationCAs, domain.activeCategories)
+        combineLatestAsTuple(domain.activeReconciliationCAs, domain.userCategories)
             .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (activeReconcileCAs, activeCategories) ->
                 activeCategories
                     .associateWith { BigDecimal.ZERO }
@@ -52,7 +52,7 @@ class ActiveReconciliationVM(
                 acc
             }
             .toBehaviorSubject()
-    val rowDatas = combineLatestAsTuple(domain.activeCategories, activeReconcileCAs.value.itemObservableMap2, activePlanVM.activePlan, transactionsVM.spends)
+    val rowDatas = combineLatestAsTuple(domain.userCategories, activeReconcileCAs.value.itemObservableMap2, activePlanVM.activePlan, transactionsVM.spends)
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
     val caTotal = activeReconcileCAs.value.itemObservableMap2
         .switchMap { it.values.total() }
