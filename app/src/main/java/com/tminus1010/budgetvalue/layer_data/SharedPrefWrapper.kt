@@ -1,9 +1,9 @@
 package com.tminus1010.budgetvalue.layer_data
 
 import android.content.SharedPreferences
+import com.squareup.moshi.Moshi
 import com.tminus1010.budgetvalue.extensions.fromJson
 import com.tminus1010.budgetvalue.extensions.toJson
-import com.tminus1010.budgetvalue.moshi
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -14,6 +14,7 @@ import javax.inject.Inject
 
 class SharedPrefWrapper @Inject constructor(
     val sharedPreferences: SharedPreferences,
+    val moshi: Moshi,
 ) : ISharedPrefWrapper {
     companion object {
         enum class Key {

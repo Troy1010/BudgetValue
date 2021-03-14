@@ -1,15 +1,16 @@
 package com.tminus1010.budgetvalue.layer_domain
 
+import com.squareup.moshi.Moshi
 import com.tminus1010.budgetvalue.extensions.fromJson
 import com.tminus1010.budgetvalue.extensions.toJson
 import com.tminus1010.budgetvalue.model_domain.Category
-import com.tminus1010.budgetvalue.moshi
 import com.tminus1010.tmcommonkotlin.misc.extensions.associate
 import java.math.BigDecimal
 import javax.inject.Inject
 
 class CategoryAmountsConverter @Inject constructor(
     private val categoryParser: ICategoryParser,
+    private val moshi: Moshi
 ) : ICategoryAmountsConverter {
     override fun toCategoryAmount(s: String?): Map<Category, BigDecimal> =
         if (s == null) emptyMap() else

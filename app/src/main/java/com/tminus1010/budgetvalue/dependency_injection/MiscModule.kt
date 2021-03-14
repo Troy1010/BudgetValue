@@ -1,8 +1,8 @@
 package com.tminus1010.budgetvalue.dependency_injection
 
-import com.tminus1010.budgetvalue.App
-import com.tminus1010.budgetvalue.FlavorIntersection
-import com.tminus1010.budgetvalue.IFlavorIntersection
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.tminus1010.budgetvalue.*
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -16,4 +16,12 @@ class MiscModule(val app: App) {
     @Provides
     @Singleton
     fun provideFlavorIntersection(flavorIntersection: FlavorIntersection): IFlavorIntersection = flavorIntersection
+
+    @Provides
+    @Singleton
+    fun provideMoshi(): Moshi =
+        Moshi.Builder()
+            .add(MoshiAdapters)
+            .addLast(KotlinJsonAdapterFactory())
+            .build()
 }

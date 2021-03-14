@@ -2,16 +2,16 @@ package com.tminus1010.budgetvalue.layer_data
 
 import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
+import com.squareup.moshi.Moshi
 import com.tminus1010.budgetvalue.extensions.fromJson
 import com.tminus1010.budgetvalue.extensions.toJson
-import com.tminus1010.budgetvalue.moshi
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 
 @ProvidedTypeConverter
-class RoomTypeConverter {
+class RoomTypeConverter(val moshi: Moshi) {
     @TypeConverter
     fun fromBigDecimalToString(x: BigDecimal): String =
         x.toString()
