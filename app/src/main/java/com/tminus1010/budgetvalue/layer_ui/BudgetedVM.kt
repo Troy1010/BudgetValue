@@ -49,7 +49,7 @@ class BudgetedVM(
                 }
                 if (activeCategories != null)
                     activeCategories
-                        .filter { it in x }
+                        .filter { it !in x }
                         .associateWith { BigDecimal.ZERO }
                         .also { x.putAll(it) }
                 x
