@@ -15,7 +15,7 @@ class Categories @Inject constructor(
     override val unknownCategory = Category("Unknown", Category.Type.Misc, true)
 
     override val activeCategories: BehaviorSubject<List<Category>> =
-        userCategoriesUseCasesImpl.fetchActiveCategories()
+        userCategoriesUseCasesImpl.fetchUserCategories()
             .toBehaviorSubject(emptyList())
 
     override val categories: BehaviorSubject<List<Category>> =

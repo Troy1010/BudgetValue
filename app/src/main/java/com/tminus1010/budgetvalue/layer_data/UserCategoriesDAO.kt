@@ -8,7 +8,7 @@ import io.reactivex.rxjava3.core.Observable
 @Dao
 interface UserCategoriesDAO {
     @Query("select * from `CategoryDTO`")
-    fun fetchActiveCategories(): Observable<List<CategoryDTO>>
+    fun fetchUserCategories(): Observable<List<CategoryDTO>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun push(category: CategoryDTO): Completable

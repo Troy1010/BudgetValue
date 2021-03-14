@@ -16,8 +16,8 @@ class UserCategoriesUseCasesImpl @Inject constructor(
     override fun delete(category: Category): Completable =
         repo.delete(category.toDTO())
 
-    override fun fetchActiveCategories(): Observable<List<Category>> =
-        repo.fetchActiveCategories()
+    override fun fetchUserCategories(): Observable<List<Category>> =
+        repo.fetchUserCategories()
             .map { it.map { Category.fromDTO(it) } }
             .map { it.sortedWith(categoryComparator) } // TODO("should be sorted later")
 }
