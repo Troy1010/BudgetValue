@@ -26,12 +26,12 @@ class FlavorIntersection @Inject constructor(): IFlavorIntersection {
                     launchImport(activity)
                 },
                 MenuItemPartial("Print Transactions") {
-                    vmps.transactionsVM.transactions.take(1)
+                    transactionsVM.transactions.take(1)
                         .subscribe { logz("transactions:${it?.joinToString(",")}") }
                 },
                 MenuItemPartial("Print Spends") {
                     // define transactionBlocks
-                    val transactionBlocks = vmps.transactionsVM.transactions.blockingFirst().getBlocks(2)
+                    val transactionBlocks = transactionsVM.transactions.blockingFirst().getBlocks(2)
                     // define stringBlocks
                     val stringBlocks = arrayListOf<HashMap<String, String>>()
                     for (transactionBlock in transactionBlocks) {
