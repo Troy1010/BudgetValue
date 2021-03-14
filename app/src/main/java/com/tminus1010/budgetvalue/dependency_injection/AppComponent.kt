@@ -16,6 +16,5 @@ import javax.inject.Singleton
 interface AppComponent {
     fun getRepo(): Repo
     fun getDomain(): Domain
-    fun getActiveCategoriesDAOWrapper(): UserCategories
     fun getFlavorIntersection(): IFlavorIntersection
 }

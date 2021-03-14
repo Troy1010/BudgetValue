@@ -26,21 +26,10 @@ private object Adapters {
         Category.Type.values()[s.toInt()]
 }
 
-class MoshiCategoryAdapter(val categoryParser: ICategoryParser) {
-    @ToJson
-    fun toJson(category: Category): String =
-        category.name
-
-    @FromJson
-    fun fromJson(s: String): Category =
-        categoryParser.parseCategory(s)
-}
-
 // TODO("Use dagger")
 val moshi by lazy {
     Moshi.Builder()
         .add(Adapters)
-        .add(MoshiCategoryAdapter(appZ.appComponent.getActiveCategoriesDAOWrapper()))
         .addLast(KotlinJsonAdapterFactory())
         .build()
 }
