@@ -35,7 +35,7 @@ class Domain @Inject constructor(
     SettingsUseCases by settingsUseCasesImpl,
     TransactionUseCases by transactionUseCasesImpl,
     UserCategoriesUseCases by userCategoriesUseCasesImpl,
-    IUserCategories by userCategories {
+    ICategories by userCategories {
 
     fun deleteFromActive(category: Category): Completable =
         Completable.merge(listOf(

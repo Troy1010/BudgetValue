@@ -10,7 +10,7 @@ import com.tminus1010.tmcommonkotlin.misc.logz
 
 class Categories @Inject constructor(
     userCategoriesUseCasesImpl: UserCategoriesUseCasesImpl
-) : ICategoryParser, IUserCategories {
+) : ICategoryParser, ICategories {
     override val defaultCategory = Category("Default", Category.Type.Misc, true)
     override val unknownCategory = Category("Unknown", Category.Type.Misc, true)
 
