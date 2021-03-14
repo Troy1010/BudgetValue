@@ -28,8 +28,7 @@ class HostActivity : AppCompatActivity(), IViewModels {
         domain.appInit()
         setContentView(R.layout.activity_host)
         // # Bind bottom menu to navigation.
-        // In order for NavigationUI.setupWithNavController to work, the ids in
-        // R.menu.* must exactly match R.navigation.*
+        // In order for NavigationUI.setupWithNavController to work, the ids in R.menu.* must exactly match R.navigation.*
         NavigationUI.setupWithNavController(bottom_navigation, nav)
     }
 
