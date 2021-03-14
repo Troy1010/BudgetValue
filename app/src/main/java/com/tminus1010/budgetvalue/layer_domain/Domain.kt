@@ -14,7 +14,7 @@ import javax.inject.Singleton
 class Domain @Inject constructor(
     private val appInitializer: AppInitializer,
     private val datePeriodGetter: DatePeriodGetter,
-    private val activeCategoriesDAOWrapper: ActiveCategoriesDAOWrapper,
+    private val userCategories: UserCategories,
     private val transactionParser: TransactionParser,
     private val accountUseCasesImpl: AccountUseCasesImpl,
     private val appInitBoolUseCasesImpl: AppInitBoolUseCasesImpl,
@@ -22,10 +22,10 @@ class Domain @Inject constructor(
     private val planUseCasesImpl: PlanUseCasesImpl,
     private val reconciliationUseCasesImpl: ReconciliationUseCasesImpl,
     private val settingsUseCasesImpl: SettingsUseCasesImpl,
-    private val transactionUseCasesImpl: TransactionUseCasesImpl
+    private val transactionUseCasesImpl: TransactionUseCasesImpl,
+    private val userCategoriesUseCasesImpl: UserCategoriesUseCasesImpl
 ) : IAppInitializer by appInitializer,
     IDatePeriodGetter by datePeriodGetter,
-    IActiveCategoriesDAOWrapper by activeCategoriesDAOWrapper,
     ITransactionParser by transactionParser,
     AccountUseCases by accountUseCasesImpl,
     AppInitBoolUseCases by appInitBoolUseCasesImpl,
@@ -33,7 +33,9 @@ class Domain @Inject constructor(
     PlanUseCases by planUseCasesImpl,
     ReconciliationUseCases by reconciliationUseCasesImpl,
     SettingsUseCases by settingsUseCasesImpl,
-    TransactionUseCases by transactionUseCasesImpl {
+    TransactionUseCases by transactionUseCasesImpl,
+    UserCategoriesUseCases by userCategoriesUseCasesImpl,
+    IUserCategories by userCategories {
 
     fun deleteFromActive(category: Category): Completable =
         Completable.merge(listOf(

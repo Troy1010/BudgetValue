@@ -3,9 +3,7 @@ package com.tminus1010.budgetvalue.layer_ui
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.combineLatestAsTuple
 import com.tminus1010.budgetvalue.combineLatestImpatient
-import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.budgetvalue.layer_domain.Domain
-import com.tminus1010.budgetvalue.model_data.CategoryDTO
 import com.tminus1010.budgetvalue.model_domain.Category
 import com.tminus1010.budgetvalue.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject

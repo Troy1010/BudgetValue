@@ -2,6 +2,7 @@ package com.tminus1010.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.combineLatestAsTuple
+import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
 import com.tminus1010.budgetvalue.extensions.launch
 import com.tminus1010.budgetvalue.layer_domain.Domain
 import com.tminus1010.budgetvalue.model_domain.Category

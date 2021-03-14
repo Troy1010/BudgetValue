@@ -11,7 +11,7 @@ buildscript {
         // Gradle + Kotlin
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // # TMCommonKotlinDSL
-        classpath "com.tminus1010.tmcommonkotlin:tmcommonkotlindsl:+"
+        classpath "com.tminus1010.tmcommonkotlin:tmcommonkotlin-dsl:+"
     }
 }
 
