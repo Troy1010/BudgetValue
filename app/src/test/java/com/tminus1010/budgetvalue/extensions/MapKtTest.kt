@@ -1,8 +1,10 @@
 package com.tminus1010.budgetvalue.extensions
 
+import com.tminus1010.tmcommonkotlin.misc.extensions.toHashMap
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
+// TODO("move test to tmcommonkotlin")
 class MapKtTest {
 
     @Test

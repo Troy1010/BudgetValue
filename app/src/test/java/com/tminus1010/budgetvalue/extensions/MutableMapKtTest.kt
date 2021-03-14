@@ -1,9 +1,11 @@
 package com.tminus1010.budgetvalue.extensions
 
+import com.tminus1010.tmcommonkotlin.misc.extensions.removeIf
 import org.junit.Test
 
 import org.junit.Assert.*
 
+// TODO("move test to tmcommonkotlin")
 class MutableMapKtTest {
 
     @Test
