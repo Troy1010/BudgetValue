@@ -14,7 +14,7 @@ import javax.inject.Singleton
 class Domain @Inject constructor(
     private val appInitializer: AppInitializer,
     private val datePeriodGetter: DatePeriodGetter,
-    private val userCategories: Categories,
+    private val categoriesUCWrapper: CategoriesUCWrapper,
     private val transactionParser: TransactionParser,
     private val accountUseCasesImpl: AccountUseCasesImpl,
     private val appInitBoolUseCasesImpl: AppInitBoolUseCasesImpl,
@@ -35,7 +35,7 @@ class Domain @Inject constructor(
     SettingsUseCases by settingsUseCasesImpl,
     TransactionUseCases by transactionUseCasesImpl,
     UserCategoriesUseCases by userCategoriesUseCasesImpl,
-    ICategories by userCategories {
+    ICategories by categoriesUCWrapper {
 
     fun deleteFromActive(category: Category): Completable =
         Completable.merge(listOf(

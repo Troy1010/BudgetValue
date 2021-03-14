@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import com.tminus1010.budgetvalue.App
 import com.tminus1010.budgetvalue.SHARED_PREF_FILE_NAME
 import com.tminus1010.budgetvalue.layer_data.UserCategoriesDAO
-import com.tminus1010.budgetvalue.layer_domain.Categories
+import com.tminus1010.budgetvalue.layer_domain.CategoriesUCWrapper
 import com.tminus1010.budgetvalue.layer_data.DB
 import com.tminus1010.budgetvalue.layer_data.MiscDAO
 import com.tminus1010.budgetvalue.layer_domain.ICategoryParser
@@ -17,7 +17,7 @@ import javax.inject.Singleton
 class RepoModule {
     @Provides
     @Singleton
-    fun providesCategoryParser(activeCategoryDAOWrapper: Categories): ICategoryParser {
+    fun providesCategoryParser(activeCategoryDAOWrapper: CategoriesUCWrapper): ICategoryParser {
         return activeCategoryDAOWrapper
     }
 
