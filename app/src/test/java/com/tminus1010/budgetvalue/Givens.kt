@@ -20,13 +20,13 @@ object Givens {
         override fun fetchUserCategories(): Observable<List<Category>> = givenUserCategories1
     }).categories
     val givenPlan1 = Plan(
-        Observable.just(LocalDatePeriod(LocalDate.now(), Period.ofWeeks(2))),
-        60.toBigDecimal(),
-        mapOf(givenCategories.value[0] to 15.toBigDecimal()))
+        localDatePeriod = Observable.just(LocalDatePeriod(LocalDate.now(), Period.ofWeeks(2))),
+        defaultAmount = 60.toBigDecimal(),
+        categoryAmounts = mapOf(givenCategories.value[0] to 15.toBigDecimal()))
     val givenPlan2 = Plan(
-        Observable.just(LocalDatePeriod(LocalDate.now().plus(Period.ofWeeks(2)), Period.ofWeeks(2))),
-        100.toBigDecimal(),
-        mapOf(givenCategories.value[0] to 60.toBigDecimal(),
+        localDatePeriod = Observable.just(LocalDatePeriod(LocalDate.now().plus(Period.ofWeeks(2)), Period.ofWeeks(2))),
+        defaultAmount = 100.toBigDecimal(),
+        categoryAmounts = mapOf(givenCategories.value[0] to 60.toBigDecimal(),
             givenCategories.value[1] to 31.toBigDecimal(),
             givenCategories.value[2] to 26.toBigDecimal()))
     val givenPlans = listOf(givenPlan1, givenPlan2).toObservable()
