@@ -48,14 +48,14 @@ object Givens {
     val givenReconciliations = listOf(givenReconciliation1, givenReconciliation2).toObservable()
     val givenTransactionBlock1 = Block(
         datePeriod = LocalDatePeriod(LocalDate.now().plus(Period.ofWeeks(2)), Period.ofWeeks(2)),
-        amount = 110.toBigDecimal(),
+        amount = (-110).toBigDecimal(),
         emptyMap()
     )
     val givenTransactionBlock2 = Block(
         datePeriod = LocalDatePeriod(LocalDate.now().plus(Period.ofWeeks(2)), Period.ofWeeks(2)),
-        amount = 16.toBigDecimal(),
+        amount = (-16).toBigDecimal(),
         mapOf(
-            givenCategories.value[0] to 9.toBigDecimal()
+            givenCategories.value[0] to (-9).toBigDecimal()
         )
     )
     val givenTransactionBlocks = listOf(givenTransactionBlock1, givenTransactionBlock2).toObservable()
