@@ -7,6 +7,7 @@ import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.repo
 import com.tminus1010.budgetvalue.layer_ui.HostActivity
 import com.tminus1010.budgetvalue.layer_ui.misc.MenuItemPartial
 import com.tminus1010.tmcommonkotlin.misc.logz
+import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -78,7 +79,7 @@ class FlavorIntersection @Inject constructor(): IFlavorIntersection {
                 },
                 MenuItemPartial("AppInitBool = false") {
                     toast("AppInitBool = false")
-                    repo.pushAppInitBool(false)
+                    repo.pushAppInitBool(false).launch()
                 },
                 MenuItemPartial("Debug Do Something") {
                     toast("Debug Do Something")
