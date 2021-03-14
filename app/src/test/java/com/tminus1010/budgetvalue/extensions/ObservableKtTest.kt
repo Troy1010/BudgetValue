@@ -1,12 +1,16 @@
 package com.tminus1010.budgetvalue.extensions
 
-import com.tminus1010.
+import com.tminus1010.tmcommonkotlin.rx.extensions.isCold
+import com.tminus1010.tmcommonkotlin.rx.extensions.noEnd
+import com.tminus1010.tmcommonkotlin.rx.extensions.pairwise
+import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.junit.Assert.*
 import org.junit.Test
 
+// TODO("move test to tmcommonkotlin")
 class ObservableKtTest {
     @Test
     fun pairwise() {

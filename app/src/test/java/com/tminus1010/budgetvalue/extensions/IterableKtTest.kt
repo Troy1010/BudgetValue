@@ -1,12 +1,13 @@
- package com.tminus1010.budgetvalue.extensions
+package com.tminus1010.budgetvalue.extensions
 
-import com.tminus1010.
+import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
+import com.tminus1010.tmcommonkotlin.rx.extensions.total
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import org.junit.Assert.assertEquals
 import org.junit.Test
-
-import org.junit.Assert.*
 import java.math.BigDecimal
 
+// TODO("move test to tmcommonkotlin")
 class IterableKtTest {
 
     @Test
