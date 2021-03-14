@@ -49,17 +49,17 @@ object Givens {
     val givenTransactionBlock1 = Block(
         datePeriod = LocalDatePeriod(LocalDate.now().plus(Period.ofWeeks(2)), Period.ofWeeks(2)),
         amount = (-110).toBigDecimal(),
-        emptyMap()
+        categoryAmounts = emptyMap()
     )
     val givenTransactionBlock2 = Block(
         datePeriod = LocalDatePeriod(LocalDate.now().plus(Period.ofWeeks(2)), Period.ofWeeks(2)),
         amount = (-16).toBigDecimal(),
-        mapOf(
+        categoryAmounts = mapOf(
             givenCategories.value[0] to (-9).toBigDecimal()
         )
     )
     val givenTransactionBlocks = listOf(givenTransactionBlock1, givenTransactionBlock2).toObservable()
-    val givenActiveReconcileCAs : BehaviorSubject<SourceHashMap<Category, BigDecimal>> =
+    val givenActiveReconcileCAs: BehaviorSubject<SourceHashMap<Category, BigDecimal>> =
         SourceHashMap(
             null,
             givenCategories.value[0] to 9.toBigDecimal()
