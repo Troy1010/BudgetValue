@@ -21,32 +21,28 @@ class BudgetedVM(
         combineLatestImpatient(domain.reconciliations, domain.plans, transactionsVM.transactionBlocks, activeReconciliationVM.activeReconcileCAs, domain.userCategories)
             .scan(SourceHashMap<Category, BigDecimal>()) { acc, (reconciliations, plans, transactionBlocks, activeReconcileCAs, activeCategories) ->
                 val newMap = mutableMapOf<Category, BigDecimal>()
-                if (reconciliations != null) {
+                if (reconciliations != null)
                     reconciliations.forEach {
                         it.categoryAmounts.forEach { (category, amount) ->
                             newMap[category] = (newMap[category] ?: BigDecimal(0)) + amount
                         }
                     }
-                }
-                if (plans != null) {
+                if (plans != null)
                     plans.forEach {
                         it.categoryAmounts.forEach { (category, amount) ->
                             newMap[category] = (newMap[category] ?: BigDecimal(0)) + amount
                         }
                     }
-                }
-                if (transactionBlocks != null) {
+                if (transactionBlocks != null)
                     transactionBlocks.forEach {
                         it.categoryAmounts.forEach { (category, amount) ->
                             newMap[category] = (newMap[category] ?: BigDecimal(0)) + amount
                         }
                     }
-                }
-                if (activeReconcileCAs != null) {
+                if (activeReconcileCAs != null)
                     activeReconcileCAs.forEach { (category, amount) ->
                         newMap[category] = (newMap[category] ?: BigDecimal(0)) + amount
                     }
-                }
                 if (activeCategories != null)
                     activeCategories
                         .filter { it !in newMap }
