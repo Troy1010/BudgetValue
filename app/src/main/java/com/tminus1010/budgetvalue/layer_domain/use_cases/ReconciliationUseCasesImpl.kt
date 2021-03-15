@@ -23,6 +23,8 @@ class ReconciliationUseCasesImpl @Inject constructor(
             .apply { if (amount==null) remove(category) else put(category, amount) }
             .let { repo.updateReconciliationCategoryAmounts(reconciliation.id, it.mapKeys { it.key.name }) }
 
+    override fun clearReconciliations() = repo.clearReconciliations()
+
     override val reconciliations: Observable<List<Reconciliation>> =
         repo.fetchReconciliations()
             .map { it.map { Reconciliation.fromDTO(it, categoryAmountsConverter) } }

@@ -9,6 +9,7 @@ import java.math.BigDecimal
 interface ReconciliationUseCases {
     val reconciliations: Observable<List<Reconciliation>>
     fun pushReconciliationCA(reconciliation: Reconciliation, category: Category, amount: BigDecimal?): Completable
+    fun clearReconciliations(): Completable
     val activeReconciliationCAs: Observable<Map<Category, BigDecimal>>
     fun pushActiveReconciliationCAs(categoryAmounts: Map<Category, BigDecimal>): Completable
     fun pushActiveReconciliationCA(kv: Pair<Category, BigDecimal?>): Completable
