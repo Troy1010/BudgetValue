@@ -16,6 +16,9 @@ class FlavorIntersection @Inject constructor(): IFlavorIntersection {
     override fun getExtraMenuItemPartials(activity: HostActivity): Array<MenuItemPartial> {
         return activity.run {
             arrayOf(
+                MenuItemPartial("Clear Reconciliations") {
+                    domain.clearReconciliations().launch()
+                },
                 MenuItemPartial("Throw Test Error") {
                     hostFrag.handle(TestException())
                 },
