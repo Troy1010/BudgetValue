@@ -63,13 +63,14 @@ class ActiveReconciliationVM(
         activeCategories: Iterable<Category>,
         reconcileCAs: Map<Category, BehaviorSubject<BigDecimal>>,
         activePlanCAs: SourceHashMap<Category, BigDecimal>,
-        transactionSet: List<Transaction>
+        transactions: List<Transaction>
     ): Iterable<ReconcileRowData> {
         return activeCategories.map { category ->
             ReconcileRowData(
                 category,
                 activePlanCAs.itemObservableMap.value[category] ?: Observable.just(BigDecimal.ZERO),
-                Observable.just(transactionSet.map { it.categoryAmounts[category] ?: BigDecimal.ZERO }.sum()),
+                Observable.just(transactions.filter { it.date in domain.getDatePeriod(
+                    LocalDate.now()) }.map { it.categoryAmounts[category] ?: BigDecimal.ZERO }.sum()),
                 reconcileCAs[category] ?: Observable.just(BigDecimal.ZERO),
             )
         }
