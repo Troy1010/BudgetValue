@@ -23,14 +23,12 @@ class ActiveReconciliationVM2(
             domain.plans,
             domain.reconciliations,
             transactionsVM.transactionBlocks,
-            activeReconciliationVM.caTotal,
             budgetedVM.defaultAmount
         )
-            .map { (plans, reconciliations, transactionBlocks, activeReconciliationCATotal, budgetedDefaultAmount) ->
+            .map { (plans, reconciliations, transactionBlocks, budgetedDefaultAmount) ->
                 (plans.map { it.defaultAmount } +
                         reconciliations.map { it.defaultAmount } +
-                        transactionBlocks.map { it.defaultAmount } +
-                        activeReconciliationCATotal)
+                        transactionBlocks.map { it.defaultAmount })
                     .fold(0.toBigDecimal()) { acc, v -> acc + v }
                     .let { budgetedDefaultAmount - it }
             }

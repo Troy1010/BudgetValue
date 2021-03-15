@@ -28,7 +28,7 @@ class ActiveReconciliationVM2Test : TestCase() {
 
     fun testGetDefaultAmount() {
         activeReconciliationVM2.defaultAmount.take(1).test().apply {
-            assertResult(180.toBigDecimal())
+            assertResult(189.toBigDecimal())
         }
     }
 }
