@@ -41,7 +41,7 @@ class ActivePlanVM(domain: Domain) : ViewModel() {
                 .map { Unit }
                 .subscribe(intentSaveActivePlan)
         }
-    val activePlan =
+    val activePlanCAs =
         combineLatestAsTuple(domain.activePlanCAs, domain.userCategories)
             .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (activeReconcileCAs, activeCategories) ->
                 activeCategories
@@ -51,7 +51,7 @@ class ActivePlanVM(domain: Domain) : ViewModel() {
                 acc
             }
             .toBehaviorSubject()
-    val planUncategorized = activePlan.value.itemObservableMap2
+    val planUncategorized = activePlanCAs.value.itemObservableMap2
         .switchMap { it.values.total() }
         .replay(1).refCount()
     val expectedIncome = intentPushExpectedIncome

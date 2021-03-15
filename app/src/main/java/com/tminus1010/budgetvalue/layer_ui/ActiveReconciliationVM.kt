@@ -52,7 +52,7 @@ class ActiveReconciliationVM(
                 acc
             }
             .toBehaviorSubject()
-    val rowDatas = combineLatestAsTuple(domain.userCategories, activeReconcileCAs.value.itemObservableMap2, activePlanVM.activePlan, transactionsVM.spends)
+    val rowDatas = combineLatestAsTuple(domain.userCategories, activeReconcileCAs.value.itemObservableMap2, activePlanVM.activePlanCAs, transactionsVM.spends)
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
     val caTotal = activeReconcileCAs.value.itemObservableMap2
         .switchMap { it.values.total() }
@@ -61,16 +61,16 @@ class ActiveReconciliationVM(
     //
     fun getRowDatas(
         activeCategories: Iterable<Category>,
-        reconcileCA: Map<Category, BehaviorSubject<BigDecimal>>,
-        planCA: SourceHashMap<Category, BigDecimal>,
+        reconcileCAs: Map<Category, BehaviorSubject<BigDecimal>>,
+        activePlanCAs: SourceHashMap<Category, BigDecimal>,
         transactionSet: List<Transaction>
     ): Iterable<ReconcileRowData> {
         return activeCategories.map { category ->
             ReconcileRowData(
                 category,
-                planCA.itemObservableMap.value[category] ?: Observable.just(BigDecimal.ZERO),
+                activePlanCAs.itemObservableMap.value[category] ?: Observable.just(BigDecimal.ZERO),
                 Observable.just(transactionSet.map { it.categoryAmounts[category] ?: BigDecimal.ZERO }.sum()),
-                reconcileCA[category] ?: Observable.just(BigDecimal.ZERO),
+                reconcileCAs[category] ?: Observable.just(BigDecimal.ZERO),
             )
         }
     }
