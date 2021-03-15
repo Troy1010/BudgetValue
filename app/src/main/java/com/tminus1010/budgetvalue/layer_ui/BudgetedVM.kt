@@ -19,40 +19,41 @@ class BudgetedVM(
 ): ViewModel() {
     val categoryAmounts =
         combineLatestImpatient(domain.reconciliations, domain.plans, transactionsVM.transactionBlocks, activeReconciliationVM.activeReconcileCAs, domain.userCategories)
-            .map { (reconciliations, plans, transactionBlocks, activeReconcileCAs, activeCategories) ->
-                val x = SourceHashMap<Category, BigDecimal>()
+            .scan(SourceHashMap<Category, BigDecimal>()) { acc, (reconciliations, plans, transactionBlocks, activeReconcileCAs, activeCategories) ->
+                val newMap = mutableMapOf<Category, BigDecimal>()
                 if (reconciliations != null) {
                     reconciliations.forEach {
                         it.categoryAmounts.forEach { (category, amount) ->
-                            x[category] = (x[category] ?: BigDecimal(0)) + amount
+                            newMap[category] = (newMap[category] ?: BigDecimal(0)) + amount
                         }
                     }
                 }
                 if (plans != null) {
                     plans.forEach {
                         it.categoryAmounts.forEach { (category, amount) ->
-                            x[category] = (x[category] ?: BigDecimal(0)) + amount
+                            newMap[category] = (newMap[category] ?: BigDecimal(0)) + amount
                         }
                     }
                 }
                 if (transactionBlocks != null) {
                     transactionBlocks.forEach {
                         it.categoryAmounts.forEach { (category, amount) ->
-                            x[category] = (x[category] ?: BigDecimal(0)) + amount
+                            newMap[category] = (newMap[category] ?: BigDecimal(0)) + amount
                         }
                     }
                 }
                 if (activeReconcileCAs != null) {
                     activeReconcileCAs.forEach { (category, amount) ->
-                        x[category] = (x[category] ?: BigDecimal(0)) + amount
+                        newMap[category] = (newMap[category] ?: BigDecimal(0)) + amount
                     }
                 }
                 if (activeCategories != null)
                     activeCategories
-                        .filter { it !in x }
+                        .filter { it !in newMap }
                         .associateWith { BigDecimal.ZERO }
-                        .also { x.putAll(it) }
-                x
+                        .also { newMap.putAll(it) }
+                acc.adjustTo(newMap)
+                acc
             }
             .throttleLatest(1, TimeUnit.SECONDS)
             .toBehaviorSubject()
