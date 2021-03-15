@@ -11,11 +11,11 @@ data class Reconciliation(
     val categoryAmounts: Map<Category, BigDecimal>,
     val id: Int = 0
 ) {
-    fun toDTO(categoryAmountsConverter: CategoryAmountsConverter, amount: BigDecimal): ReconciliationDTO {
+    fun toDTO(categoryAmountsConverter: CategoryAmountsConverter): ReconciliationDTO {
         return ReconciliationDTO(
             localDate = localDate,
             categoryAmounts = categoryAmountsConverter.toString(categoryAmounts),
-            amount = amount,
+            amount = defaultAmount,
             id = id,)
     }
 

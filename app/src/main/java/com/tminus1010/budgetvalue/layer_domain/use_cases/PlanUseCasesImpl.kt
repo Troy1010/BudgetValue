@@ -36,7 +36,7 @@ class PlanUseCasesImpl @Inject constructor(
             .let { repo.updatePlanCategoryAmounts(plan.toDTO(categoryAmountsConverter).startDate, it.mapKeys { it.key.name }) }
 
     override fun pushReconciliation(reconciliation: Reconciliation): Completable =
-        reconciliation.toDTO(categoryAmountsConverter, BigDecimal(0))
+        reconciliation.toDTO(categoryAmountsConverter)
             .let { repo.add(it).subscribeOn(Schedulers.io()) }
 
     override val activePlanCAs: Observable<Map<Category, BigDecimal>> =

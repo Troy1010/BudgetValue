@@ -21,24 +21,9 @@ import java.time.LocalDate
 
 class ActiveReconciliationVM(
     private val domain: Domain,
-    private val transactionsVM: TransactionsVM,
-    private val accountsVM: AccountsVM,
-    private val activePlanVM: ActivePlanVM,
+    transactionsVM: TransactionsVM,
+    activePlanVM: ActivePlanVM,
 ) : ViewModel() {
-    val intentSaveReconciliation:PublishSubject<Unit> = PublishSubject.create<Unit>()
-        .also {
-            it
-                .observeOn(Schedulers.io())
-                .flatMap { accountsVM.accountsTotal }
-                .map { accountsTotal ->
-                    Reconciliation(LocalDate.now(),
-                        accountsTotal,
-                        activeReconcileCAs.value.filter { it.value != BigDecimal(0) },)
-                }
-                .doOnNext { domain.pushReconciliation(it).blockingAwait() }
-                .doOnNext { domain.clearActiveReconcileCAs() }
-                .subscribe()
-        }
     val intentPushActiveReconcileCA = PublishSubject.create<Pair<Category, BigDecimal>>()
         .also { it.launch { domain.pushActiveReconciliationCA(it) } }
     // # State

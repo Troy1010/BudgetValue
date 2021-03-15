@@ -14,7 +14,7 @@ class ViewModelProviders(val activity: FragmentActivity, val appComponent: AppCo
             by { ActivePlanVM(c.getDomain()) }
                 .let { activity.viewModels { createViewModelFactory(it) } }
     val activeReconciliationVM: ActiveReconciliationVM
-            by { ActiveReconciliationVM(c.getDomain(), transactionsVM, accountsVM, activePlanVM) }
+            by { ActiveReconciliationVM(c.getDomain(), transactionsVM, activePlanVM) }
                 .let { activity.viewModels { createViewModelFactory(it) } }
     val activeReconciliationVM2: ActiveReconciliationVM2
             by { ActiveReconciliationVM2(activeReconciliationVM, budgetedVM, c.getDomain(), transactionsVM) }

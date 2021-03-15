@@ -7,14 +7,18 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding4.view.clicks
-import com.tminus1010.budgetvalue.*
+import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue.combineLatestAsTuple
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
-import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.*
+import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
+import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
 import com.tminus1010.budgetvalue.model_domain.Category
+import com.tminus1010.budgetvalue.reflectXY
+import com.tminus1010.budgetvalue.toBigDecimalSafe
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -29,7 +33,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile), IViewModels {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
         btn_save.clicks().subscribe {
-            activeReconciliationVM.intentSaveReconciliation.onNext(Unit)
+            activeReconciliationVM2.intentSaveReconciliation.onNext(Unit)
             activePlanVM.intentSaveActivePlan.onNext(Unit)
         }
         // # TMTableView
