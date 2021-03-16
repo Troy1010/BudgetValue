@@ -1,5 +1,7 @@
 package com.tminus1010.budgetvalue.dependency_injection
 
+import com.tminus1010.budgetvalue.FlavorIntersection
+import com.tminus1010.budgetvalue.IFlavorIntersection
 import com.tminus1010.budgetvalue.layer_domain.use_cases.IUserCategoriesFetch
 import com.tminus1010.budgetvalue.layer_domain.use_cases.UserCategoriesUseCases
 import com.tminus1010.budgetvalue.layer_domain.use_cases.UserCategoriesUseCasesImpl
@@ -13,4 +15,7 @@ abstract class BindingModule {
 
     @Binds
     abstract fun getUserCategoriesFetchUseCase(userCategoriesUseCasesImpl: UserCategoriesUseCasesImpl): IUserCategoriesFetch
+
+    @Binds
+    abstract fun provideFlavorIntersection(flavorIntersection: FlavorIntersection): IFlavorIntersection
 }

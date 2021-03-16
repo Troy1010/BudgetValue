@@ -15,10 +15,6 @@ class MiscModule(val app: App) {
 
     @Provides
     @Singleton
-    fun provideFlavorIntersection(flavorIntersection: FlavorIntersection): IFlavorIntersection = flavorIntersection
-
-    @Provides
-    @Singleton
     fun provideMoshi(): Moshi =
         Moshi.Builder()
             .add(MoshiAdapters)

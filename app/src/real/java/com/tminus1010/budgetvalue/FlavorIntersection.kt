@@ -5,7 +5,9 @@ import android.content.Intent
 import com.tminus1010.budgetvalue.layer_ui.HostActivity
 import com.tminus1010.budgetvalue.layer_ui.misc.MenuItemPartial
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class FlavorIntersection @Inject constructor() : IFlavorIntersection {
     override fun getExtraMenuItemPartials(activity: HostActivity): Array<MenuItemPartial> =
         emptyArray()
