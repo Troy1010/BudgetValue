@@ -41,7 +41,6 @@ fun <T> EditText.bindOutgoing(
 ) {
     this.focusChanges()
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribeOn(AndroidSchedulers.mainThread())
         .skip(1) //*focusChanges always starts with false, for some reason.
         .filter { !it }
         .withLatestFrom(this.textChanges()) { _, x -> x.toString() }
@@ -59,7 +58,6 @@ fun <T> TextView.bindIncoming(
 ): Disposable {
     return observable
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribeOn(AndroidSchedulers.mainThread())
         .filter { this.layoutParams!=null } // *An error happens if you try to set text while layoutParams is null. But perhaps this filter should be moved elsewhere.
         .map { if (toDisplayable!=null) toDisplayable(it).toString() else it.toString() }
         .subscribe { this.text = it }
