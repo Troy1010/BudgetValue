@@ -4,9 +4,9 @@
     android:id="@+id/edit_text"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:inputType="numberSigned|numberDecimal"
     android:gravity="center"
-    android:textColor="@color/colorOnDark"
-    android:maxLines="1"
     android:imeOptions="actionDone"
-    tools:text="Text"/>
+    android:inputType="numberSigned|numberDecimal"
+    android:maxLines="1"
+    android:textColor="@color/colorOnDark"
+    tools:text="Text" />
