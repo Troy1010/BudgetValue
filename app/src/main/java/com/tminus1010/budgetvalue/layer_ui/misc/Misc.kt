@@ -1,32 +1,37 @@
 package com.tminus1010.budgetvalue.layer_ui.misc
 
-import android.widget.Button
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.TextView
 import com.jakewharton.rxbinding4.view.focusChanges
+import com.jakewharton.rxbinding4.widget.TextViewEditorActionEvent
+import com.jakewharton.rxbinding4.widget.editorActionEvents
 import com.jakewharton.rxbinding4.widget.textChanges
+import com.tminus1010.tmcommonkotlin.misc.doLogx
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.subjects.Subject
+import java.util.concurrent.atomic.AtomicLong
+
 
 // * I'm not sure if this is the best idea. It might be better to have 2 different incoming and outgoing streams.
 fun <T> EditText.bind(
-    subject:Subject<T>,
-    toT:(String)->T,
-    validate: ((T)->T)? = null,
-    toDisplayable:((T)->Any)? = null
+    subject: Subject<T>,
+    toT: (String) -> T,
+    validate: ((T) -> T)? = null,
+    toDisplayable: ((T) -> Any)? = null
 ) {
     bindIncoming(subject, toDisplayable)
     bindOutgoing(subject, toT, validate)
 }
 
 fun <T> EditText.bind(
-    incoming:Observable<T>,
-    outgoing:Subject<T>,
-    toT:(String)->T,
-    validate: ((T)->T)? = null,
-    toDisplayable:((T)->Any)? = null
+    incoming: Observable<T>,
+    outgoing: Subject<T>,
+    toT: (String) -> T,
+    validate: ((T) -> T)? = null,
+    toDisplayable: ((T) -> Any)? = null
 ) {
     bindIncoming(incoming, toDisplayable)
     bindOutgoing(outgoing, toT, validate, toDisplayable)
@@ -34,15 +39,16 @@ fun <T> EditText.bind(
 
 // TODO("This will push unchanged incoming values")
 fun <T> EditText.bindOutgoing(
-    subject:Subject<T>,
-    toT:(String)->T,
-    validate: ((T)->T)? = null,
+    subject: Subject<T>,
+    toT: (String) -> T,
+    validate: ((T) -> T)? = null,
     toDisplayable: ((T) -> Any)? = null
 ) {
-    this.focusChanges()
+    Observable.merge(
+        editorActionEvents2 { false }.filter { it.actionId == EditorInfo.IME_ACTION_DONE },
+        focusChanges().skip(1).filter { !it }
+    ).subscribeOn(AndroidSchedulers.mainThread())
         .observeOn(AndroidSchedulers.mainThread())
-        .skip(1) //*focusChanges always starts with false, for some reason.
-        .filter { !it }
         .withLatestFrom(this.textChanges()) { _, x -> x.toString() }
         .map { toT(it) }
         .map { if (validate==null) it else validate(it) }
@@ -54,7 +60,7 @@ fun <T> EditText.bindOutgoing(
 
 fun <T> TextView.bindIncoming(
     observable: Observable<T>,
-    toDisplayable:((T)->Any)? = null
+    toDisplayable: ((T) -> Any)? = null
 ): Disposable {
     return observable
         .observeOn(AndroidSchedulers.mainThread())
@@ -62,3 +68,13 @@ fun <T> TextView.bindIncoming(
         .map { if (toDisplayable!=null) toDisplayable(it).toString() else it.toString() }
         .subscribe { this.text = it }
 }
+
+// editorActionEvents does not emit when handled=true:
+// https://github.com/JakeWharton/RxBinding/pull/378
+// This is a workaround.
+fun EditText.editorActionEvents2(handled: (TextViewEditorActionEvent) -> Boolean = { true }): Observable<TextViewEditorActionEvent> =
+    Observable.create { downstream ->
+        editorActionEvents { downstream.onNext(it); handled(it) }
+            .subscribe()
+            .also { downstream.setDisposable(it) }
+    }
