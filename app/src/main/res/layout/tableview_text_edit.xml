@@ -8,4 +8,5 @@
     android:gravity="center"
     android:textColor="@color/colorOnDark"
     android:maxLines="1"
+    android:imeOptions="actionDone"
     tools:text="Text"/>
