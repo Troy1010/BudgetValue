@@ -62,7 +62,3 @@ fun <T> TextView.bindIncoming(
         .map { if (toDisplayable!=null) toDisplayable(it).toString() else it.toString() }
         .subscribe { this.text = it }
 }
-
-fun Button.setOnClickListener(subject: Subject<Unit>) {
-    setOnClickListener { subject.onNext(Unit) }
-}
