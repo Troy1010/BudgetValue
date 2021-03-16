@@ -61,7 +61,7 @@ fun <T> TextView.bindIncoming(
         .observeOn(AndroidSchedulers.mainThread())
         .subscribeOn(AndroidSchedulers.mainThread())
         .filter { this.layoutParams!=null } // *An error happens if you try to set text while layoutParams is null. But perhaps this filter should be moved elsewhere.
-        .map { if (toDisplayable==null) it.toString() else toDisplayable(it).toString() }
+        .map { if (toDisplayable!=null) toDisplayable(it).toString() else it.toString() }
         .subscribe { this.text = it }
 }
 
