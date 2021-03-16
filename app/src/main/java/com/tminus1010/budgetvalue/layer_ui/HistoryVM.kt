@@ -14,10 +14,10 @@ import java.util.concurrent.TimeUnit
 
 class HistoryVM(
     private val domain: Domain,
-    private val transactionsVM: TransactionsVM,
-    private val activeReconciliationVM: ActiveReconciliationVM,
-    private val activeReconciliationVM2: ActiveReconciliationVM2,
-    private val budgetedVM: BudgetedVM,
+    transactionsVM: TransactionsVM,
+    activeReconciliationVM: ActiveReconciliationVM,
+    activeReconciliationVM2: ActiveReconciliationVM2,
+    budgetedVM: BudgetedVM,
 ) : ViewModel() {
     val historyColumnDatas =
         combineLatestImpatient(domain.reconciliations, domain.plans, activeReconciliationVM2.defaultAmount, activeReconciliationVM.activeReconcileCAs, transactionsVM.transactionBlocks, budgetedVM.defaultAmount, budgetedVM.categoryAmounts)
