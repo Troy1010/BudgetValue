@@ -4,8 +4,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.combineLatestAsTuple
+import com.tminus1010.budgetvalue.*
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
@@ -14,8 +13,6 @@ import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
 import com.tminus1010.budgetvalue.model_domain.Category
-import com.tminus1010.budgetvalue.reflectXY
-import com.tminus1010.budgetvalue.toBigDecimalSafe
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -36,14 +33,14 @@ class PlanFrag: Fragment(R.layout.frag_plan), IViewModels {
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
             { view, bs ->
                 view.bindIncoming(bs)
-                view.bindOutgoing(activePlanVM.intentPushExpectedIncome, { it.toBigDecimalSafe() }) { it }
+                view.bindOutgoing(activePlanVM.intentPushExpectedIncome, { it.toMoneyBigDecimal() }) { it }
             }
         )
         val planCAsRecipeFactory = ViewItemRecipeFactory<EditText, Pair<Category, Observable<BigDecimal>>>(
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
             { view, (category, bs) ->
                 view.bindIncoming(bs)
-                view.bindOutgoing(activePlanVM.intentPushPlanCA, { Pair(category, it.toBigDecimalSafe()) }) { it.second }
+                view.bindOutgoing(activePlanVM.intentPushPlanCA, { Pair(category, it.toMoneyBigDecimal()) }) { it.second }
             }
         )
         val oneWayRecipeBuilder = ViewItemRecipeFactory<TextView, Observable<BigDecimal>>(

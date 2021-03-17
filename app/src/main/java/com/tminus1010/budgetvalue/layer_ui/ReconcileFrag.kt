@@ -46,7 +46,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile), IViewModels {
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
             { v, (category, d) ->
                 v.bindIncoming(d)
-                v.bindOutgoing(activeReconciliationVM.intentPushActiveReconcileCA, { s -> category to s.toBigDecimalSafe() }) { it.second }
+                v.bindOutgoing(activeReconciliationVM.intentPushActiveReconcileCA, { s -> category to s.toMoneyBigDecimal() }) { it.second }
             }
         )
         val oneWayRecipeFactory = ViewItemRecipeFactory<TextView, Observable<BigDecimal>>(
