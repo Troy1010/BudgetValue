@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
     <EditText
-        style="@style/AppTheme.StandardEditText"
         android:id="@+id/editText_name"
+        style="@style/AppTheme.StandardEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
@@ -17,8 +18,8 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        style="@style/AppTheme.StandardEditText"
         android:id="@+id/editText_amount"
+        style="@style/AppTheme.StandardEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:inputType="numberDecimal"
@@ -26,10 +27,11 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/editText_name"
         app:layout_constraintTop_toTopOf="parent" />
+
     <Button
         android:id="@+id/btn_delete_account"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:text="X"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:text="X"
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
