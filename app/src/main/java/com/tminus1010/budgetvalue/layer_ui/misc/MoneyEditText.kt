@@ -6,7 +6,6 @@ import android.text.TextWatcher
 import android.util.AttributeSet
 import androidx.appcompat.R
 import androidx.appcompat.widget.AppCompatEditText
-import com.tminus1010.tmcommonkotlin.misc.logx
 
 
 class MoneyEditText @JvmOverloads constructor(
@@ -22,7 +21,7 @@ class MoneyEditText @JvmOverloads constructor(
                 removeTextChangedListener(this)
                 // If a 3rd number is added to the right of the decimal, move the decimal right.
                 if (s.contains(".") && 2 < s.split(".").last().count())
-                    s.indexOfLast { it == '.' }.logx("indexOfLast")
+                    s.indexOfLast { it == '.' }
                         .also { s.delete(it, it + 1); s.insert(it + 1, ".") }
                 addTextChangedListener(this)
             }
