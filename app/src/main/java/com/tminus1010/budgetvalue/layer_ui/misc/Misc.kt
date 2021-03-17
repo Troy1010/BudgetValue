@@ -75,6 +75,6 @@ fun <T> TextView.bindIncoming(
 fun EditText.editorActionEvents2(handled: (TextViewEditorActionEvent) -> Boolean = { true }): Observable<TextViewEditorActionEvent> =
     Observable.create { downstream ->
         editorActionEvents { downstream.onNext(it); handled(it) }
-            .subscribe()
+            .subscribe({}, { downstream.onError(it) }) { downstream.onComplete() }
             .also { downstream.setDisposable(it) }
     }
