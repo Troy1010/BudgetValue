@@ -15,6 +15,7 @@ import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appC
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.flavorIntersection
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.frag_import.*
 import kotlinx.android.synthetic.main.item_account.view.*
 
@@ -26,11 +27,13 @@ class ImportFrag : Fragment(R.layout.frag_import), IViewModels {
         btn_import.clicks().subscribe { flavorIntersection.launchImport(requireActivity()) }
         btn_add_account.clicks().subscribe(accountsVM.intentAddAccount)
         // # RecyclerView
-        accountsVM.intentAddAccount.mergeWith(accountsVM.intentDeleteAccount.map { Unit })
+        Observable.merge(
+            accountsVM.intentAddAccount,
+            accountsVM.intentDeleteAccount,
+        )
             // When an add or delete happens, listen for the next accounts and refresh
             .flatMap { accountsVM.accounts.take(2).skip(1) }
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) { recyclerview_accounts.adapter?.notifyDataSetChanged() }
         recyclerview_accounts.apply {
             layoutManager = LinearLayoutManager(requireActivity())
