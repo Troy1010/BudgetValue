@@ -446,13 +446,14 @@ fun <T, V> List<HashMap<T, V>>.reflectXY(): HashMap<T, ArrayList<V>> {
 }
 
 
-fun String.toBigDecimalSafe(): BigDecimal {
-    return try {
-        this.toBigDecimal()
-    } catch (e: NumberFormatException) {
-        BigDecimal.ZERO
-    }
-}
+fun String.toBigDecimalSafe(): BigDecimal =
+    toBigDecimalOrNull() ?: BigDecimal.ZERO
+
+
+fun String.toMoneyBigDecimal(): BigDecimal =
+    toBigDecimalSafe()
+        .let { if (it.scale() == 1) it.setScale(2) else it }
+        .let { try { it.setScale(0) } catch (e: Throwable) { it } } // throws error if decimal digits are not zeros.
 
 fun <A, B> zip(a: ObservableSource<A>, b: ObservableSource<B>): Observable<Pair<A, B>> {
     return Observable.zip(a, b, BiFunction<A, B, Pair<A, B>> { a, b -> Pair(a, b) })
