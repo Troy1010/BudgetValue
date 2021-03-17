@@ -23,7 +23,6 @@ import java.util.concurrent.TimeUnit
 class CategorizeAdvancedFrag : Fragment(R.layout.frag_advanced_categorize), IViewModels {
     val viewRecipeFactories by lazy { ViewItemRecipeFactoryProvider(requireContext()) }
     override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
