@@ -125,6 +125,8 @@ dependencies {
     // # Rx
     implementation 'io.reactivex.rxjava3:rxjava:3.0.7'
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    // ## Rx + Kotlin
+    implementation 'io.reactivex.rxjava3:rxkotlin:3.0.1'
     // ## Rx + Lifecycle
     implementation 'com.trello.rxlifecycle4:rxlifecycle-android-lifecycle-kotlin:4.0.0'
     // ## Rx + Views
