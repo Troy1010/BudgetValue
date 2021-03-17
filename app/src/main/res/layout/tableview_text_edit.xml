@@ -9,4 +9,6 @@
     android:inputType="numberSigned|numberDecimal"
     android:maxLines="1"
     android:textColor="@color/colorOnDark"
+    tools:layout_height="75dp"
+    tools:layout_width="180dp"
     tools:text="Text" />
