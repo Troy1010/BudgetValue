@@ -13,6 +13,7 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.flavorIntersection
+import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.pairwise
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -39,27 +40,21 @@ class ImportFrag : Fragment(R.layout.frag_import), IViewModels {
                 override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
                     LayoutInflater.from(requireContext()).inflate(R.layout.item_account, parent, false)
                         .let { GenViewHolder(it) }
-                override fun getItemCount() = accountsVM.accounts.value?.size ?: 0
+                override fun getItemCount() = accountsVM.accounts.value.size
                 override fun onBindViewHolder(holder: GenViewHolder, position: Int) {
-                    val account = accountsVM.accounts.value?.get(holder.adapterPosition)!!
+                    val account = accountsVM.accounts.value[holder.adapterPosition]
                     holder.itemView.btn_delete_account.clicks()
                         .map { account }
                         .subscribe(accountsVM.intentDeleteAccount)
                     holder.itemView.editText_name.apply {
                         setText(account.name)
-                        setOnFocusChangeListener { _, b ->
-                            if (!b)
-                                account.copy(name = holder.itemView.editText_name.text.toString())
-                                    .also { accountsVM.intentUpdateAmmount.onNext(it) }
-                        }
+                        bindOutgoing(accountsVM.intentUpdateAmmount,
+                            { account.copy(name = it) })
                     }
                     holder.itemView.editText_amount.apply {
                         setText(account.amount.toString())
-                        setOnFocusChangeListener { _, b ->
-                            if (!b)
-                                account.copy(amount = holder.itemView.editText_amount.text.toString().toBigDecimal())
-                                    .also { accountsVM.intentUpdateAmmount.onNext(it) }
-                        }
+                        bindOutgoing(accountsVM.intentUpdateAmmount,
+                            { account.copy(amount = it.toBigDecimal()) })
                     }
                 }
             }

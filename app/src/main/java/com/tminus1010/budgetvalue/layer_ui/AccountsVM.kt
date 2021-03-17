@@ -15,7 +15,7 @@ class AccountsVM(domain: Domain) : ViewModel() {
         .also { it.launch { domain.delete(it) } }
     val intentUpdateAmmount = PublishSubject.create<Account>()
         .also { it.launch { domain.update(it) } }
-    val accounts = domain.accounts.toBehaviorSubject()
+    val accounts = domain.accounts.toBehaviorSubject(emptyList())
     val accountsTotal = accounts
         .map { it.fold(BigDecimal.ZERO) { acc, account -> acc + account.amount } }
         .toBehaviorSubject()
