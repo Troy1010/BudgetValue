@@ -51,6 +51,10 @@ android {
             versionNameSuffix "-devEnv1"
         }
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 // *Without this, there is a warning that -Xopt-in=kotlin.RequiresOptIn is required
@@ -147,4 +151,10 @@ dependencies {
 
     // # Moshi
     implementation "com.squareup.moshi:moshi-kotlin:1.11.0"
+
+    // # Lifecycle
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.3.0"
+    implementation "androidx.lifecycle:lifecycle-common-java8:2.3.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.0"
 }
