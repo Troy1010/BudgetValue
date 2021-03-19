@@ -17,7 +17,6 @@ import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.pairwise
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.frag_import.*
 import kotlinx.android.synthetic.main.item_account.view.*
 
@@ -26,7 +25,7 @@ class ImportFrag : Fragment(R.layout.frag_import), IViewModels {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
-        btn_import.clicks().subscribe { flavorIntersection.launchImport(requireActivity()) }
+        btn_import.clicks().subscribe { flavorIntersection.launchImport(requireActivity() as HostActivity) }
         btn_add_account.clicks().subscribe(accountsVM.intentAddAccount)
         // # RecyclerView
         accountsVM.accounts

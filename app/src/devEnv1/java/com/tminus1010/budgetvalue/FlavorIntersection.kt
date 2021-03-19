@@ -1,6 +1,5 @@
 package com.tminus1010.budgetvalue
 
-import android.app.Activity
 import android.content.Intent
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.repo
@@ -89,8 +88,8 @@ class FlavorIntersection @Inject constructor(): IFlavorIntersection {
         }
     }
 
-    override fun launchImport(activity: Activity) {
-        Intent(activity, MockImportSelectionActivity::class.java)
-            .also { activity.startActivity(it) }
+    override fun launchImport(hostActivity: HostActivity) {
+        Intent(hostActivity, MockImportSelectionActivity::class.java)
+            .also { hostActivity.startActivity(it) }
     }
 }

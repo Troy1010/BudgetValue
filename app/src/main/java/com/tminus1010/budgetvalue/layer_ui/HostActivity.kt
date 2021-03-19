@@ -1,14 +1,13 @@
 package com.tminus1010.budgetvalue.layer_ui
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
-import com.tminus1010.budgetvalue.CODE_PICK_TRANSACTIONS_FILE
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
@@ -43,16 +42,16 @@ class HostActivity : AppCompatActivity(), IViewModels {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
-        if (requestCode == CODE_PICK_TRANSACTIONS_FILE && resultCode == Activity.RESULT_OK) {
-            try {
-                val inputStream = contentResolver.openInputStream(intent!!.data!!)!!
-                transactionsVM.importTransactions(inputStream)
-                toast("Import successful")
-            } catch (e: Exception) {
-                hostFrag.handle(e)
+    val activityResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                try {
+                    val inputStream = contentResolver.openInputStream(result.data!!.data!!)!!
+                    transactionsVM.importTransactions(inputStream)
+                    toast("Import successful")
+                } catch (e: Throwable) {
+                    hostFrag.handle(e)
+                }
             }
         }
-        super.onActivityResult(requestCode, resultCode, intent)
-    }
 }
