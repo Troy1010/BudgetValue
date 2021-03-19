@@ -22,8 +22,8 @@ import com.tminus1010.tmcommonkotlin.view.extensions.toast
 class HostActivity : AppCompatActivity(), IViewModels {
     override val viewModelProviders by lazy { ViewModelProviders(this, appComponent) }
     val binding by viewBinding(ActivityHostBinding::inflate)
-    val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.fragNavHost) as HostFrag }
-    val nav by lazy { findNavController(R.id.fragNavHost) }
+    val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.frag_nav_host) as HostFrag }
+    val nav by lazy { findNavController(R.id.frag_nav_host) }
     val menuItemPartials by lazy { flavorIntersection.getExtraMenuItemPartials(this) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
