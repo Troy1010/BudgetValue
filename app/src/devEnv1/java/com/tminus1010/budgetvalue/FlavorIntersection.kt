@@ -25,9 +25,6 @@ class FlavorIntersection @Inject constructor(): IFlavorIntersection {
                 MenuItemPartial("Throw Error") {
                     hostFrag.handle(Exception("Zip zoop an error"))
                 },
-                MenuItemPartial("Import Transactions") {
-                    launchImport(activity)
-                },
                 MenuItemPartial("Print Transactions") {
                     transactionsVM.transactions.take(1)
                         .subscribe { logz("transactions:${it?.joinToString(",")}") }
