@@ -6,11 +6,13 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue.databinding.FragCategoryCustomizationBinding
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
+import com.tminus1010.budgetvalue.layer_ui.misc.viewBinding
 import com.tminus1010.budgetvalue.model_domain.Category
 import com.tminus1010.budgetvalue.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
@@ -19,14 +21,14 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlinx.android.synthetic.main.frag_category_customization.*
 
 class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization), IViewModels {
+    val binding by viewBinding(FragCategoryCustomizationBinding::bind)
     override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
-        btn_done.setOnClickListener { nav.navigateUp() }
+        binding.btnDone.setOnClickListener { nav.navigateUp() }
         // # TMTableView
         val factory1 = ViewItemRecipeFactory(
             { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
@@ -59,6 +61,6 @@ class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization)
                 Pair(recipeGrid, dividerMap)
             }
             .observeOn(AndroidSchedulers.mainThread())
-            .observe(viewLifecycleOwner) { tmTableView.initialize(recipeGrid = it.first, dividerMap = it.second) }
+            .observe(viewLifecycleOwner) { binding.tmTableView.initialize(recipeGrid = it.first, dividerMap = it.second) }
     }
 }
