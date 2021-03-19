@@ -2,6 +2,7 @@ package com.tminus1010.budgetvalue.layer_ui.TMTableView2
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,14 +11,13 @@ import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.tminus1010.budgetvalue.Orientation
 import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue.databinding.TableviewLayout2Binding
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 import com.tminus1010.tmcommonkotlin.misc.extensions.children
 import com.tminus1010.tmcommonkotlin.misc.extensions.clearItemDecorations
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import kotlinx.android.synthetic.main.tableview_layout2.view.*
 import java.util.concurrent.TimeUnit
 
 class TMTableView2 @JvmOverloads constructor(
@@ -25,7 +25,6 @@ class TMTableView2 @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
-    var tableView: View? = null
     var disposable: Disposable? = null
 
     fun initialize(
@@ -57,37 +56,36 @@ class TMTableView2 @JvmOverloads constructor(
         rowFreezeCount: Int,
         synchronizedScrollListener: SynchronizedScrollListener,
     ) {
-        // # Inflate tableView
-        if (tableView == null) tableView = View.inflate(context, R.layout.tableview_layout2, this)
+        val binding = TableviewLayout2Binding.inflate(LayoutInflater.from(context), this, true)
         // # Freeze rows
         if (rowFreezeCount>1) TODO()
         if (rowFreezeCount==1) {
-            recyclerview_columnheaders.adapter = InnerRVAdapter(context, recipeGrid, 0)
-            recyclerview_columnheaders.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
-            recyclerview_columnheaders.clearItemDecorations()
-            recyclerview_columnheaders.addItemDecoration(InnerFrozenRowDecoration(context, Orientation.HORIZONTAL, recipeGrid, rowFreezeCount))
-            recyclerview_columnheaders.clearOnScrollListeners()
-            recyclerview_columnheaders.addOnScrollListener(synchronizedScrollListener)
+            binding.recyclerviewColumnheaders.adapter = InnerRVAdapter(context, recipeGrid, 0)
+            binding.recyclerviewColumnheaders.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
+            binding.recyclerviewColumnheaders.clearItemDecorations()
+            binding.recyclerviewColumnheaders.addItemDecoration(InnerFrozenRowDecoration(context, Orientation.HORIZONTAL, recipeGrid, rowFreezeCount))
+            binding.recyclerviewColumnheaders.clearOnScrollListeners()
+            binding.recyclerviewColumnheaders.addOnScrollListener(synchronizedScrollListener)
         }
         // # Cells
-        recyclerview_tier1.adapter = OuterRVAdapter(context, recipeGrid, rowFreezeCount, synchronizedScrollListener)
-        recyclerview_tier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
-        recyclerview_tier1.clearItemDecorations()
-        recyclerview_tier1.addItemDecoration(OuterDecoration(context, Orientation.VERTICAL, dividerMap, recipeGrid, colFreezeCount, rowFreezeCount))
+        binding.recyclerviewTier1.adapter = OuterRVAdapter(context, recipeGrid, rowFreezeCount, synchronizedScrollListener)
+        binding.recyclerviewTier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
+        binding.recyclerviewTier1.clearItemDecorations()
+        binding.recyclerviewTier1.addItemDecoration(OuterDecoration(context, Orientation.VERTICAL, dividerMap, recipeGrid, colFreezeCount, rowFreezeCount))
         // ## Synchronize scrolling
         disposable?.dispose()
         disposable = synchronizedScrollListener.scrollObservable
             .subscribe { (v, dx) ->
                 // ### Scroll children in recyclerview_tier1
-                recyclerview_tier1.layoutManager!!.children
+                binding.recyclerviewTier1.layoutManager!!.children
                     .filter { it != v }
                     .forEach {
                         (it as? RecyclerView)
                             ?.also { synchronizedScrollListener.ignoredScrollBy(it, dx, 0) }
                     }
                 // ### Scroll frozen row
-                if (recyclerview_columnheaders != v) {
-                    synchronizedScrollListener.ignoredScrollBy(recyclerview_columnheaders, dx, 0)
+                if (binding.recyclerviewColumnheaders != v) {
+                    synchronizedScrollListener.ignoredScrollBy(binding.recyclerviewColumnheaders, dx, 0)
                 }
             }
     }
