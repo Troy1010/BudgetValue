@@ -8,6 +8,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding4.view.clicks
 import com.tminus1010.budgetvalue.*
+import com.tminus1010.budgetvalue.databinding.FragReconcileBinding
+import com.tminus1010.budgetvalue.databinding.TableviewHeaderIncomeBinding
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
@@ -15,21 +17,21 @@ import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
+import com.tminus1010.budgetvalue.layer_ui.misc.viewBinding
 import com.tminus1010.budgetvalue.model_domain.Category
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
-import kotlinx.android.synthetic.main.frag_reconcile.*
-import kotlinx.android.synthetic.main.tableview_header_income.view.*
 import java.math.BigDecimal
 
 class ReconcileFrag : Fragment(R.layout.frag_reconcile), IViewModels {
+    val binding by viewBinding(FragReconcileBinding::bind)
     override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
-        btn_save.clicks().subscribe {
+        binding.btnSave.clicks().subscribe {
             activeReconciliationVM2.intentSaveReconciliation.onNext(Unit)
             activePlanVM.intentSaveActivePlan.onNext(Unit)
         }
@@ -39,8 +41,9 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile), IViewModels {
         val headerRecipeFactory_numbered = ViewItemRecipeFactory<LinearLayout, Pair<String, Observable<BigDecimal>>>(
             { View.inflate(requireContext(), R.layout.tableview_header_income, null) as LinearLayout },
             { v, d ->
-                v.textview_header.text = d.first
-                v.textview_number.bindIncoming(d.second)
+                val binding = TableviewHeaderIncomeBinding.bind(v)
+                binding.textviewHeader.text = d.first
+                binding.textviewNumber.bindIncoming(d.second)
             })
         val reconcileCARecipeFactory = ViewItemRecipeFactory<EditText, Pair<Category, Observable<BigDecimal>>>(
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
@@ -57,7 +60,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile), IViewModels {
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        combineLatestAsTuple(activeReconciliationVM.rowDatas, domain.userCategories, myTableView_1.widthObservable, budgetedVM.categoryAmounts.value.itemObservableMap2)
+        combineLatestAsTuple(activeReconciliationVM.rowDatas, domain.userCategories, binding.myTableView1.widthObservable, budgetedVM.categoryAmounts.value.itemObservableMap2)
             .observeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) { (rowDatas, activeCategories, width, budgetedCA) ->
                 val dividerMap = activeCategories
@@ -65,7 +68,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile), IViewModels {
                     .distinctUntilChangedWith(compareBy { it.value.type })
                     .associate { it.index to titledDividerRecipeFactory.createOne(it.value.type.name) }
                     .mapKeys { it.key + 2 } // header row, default row
-                myTableView_1.initialize(
+                binding.myTableView1.initialize(
                     recipeGrid = RecipeGrid(listOf(
                         headerRecipeFactory.createOne2("Category")
                                 + cellRecipeFactory.createOne2("Default")
