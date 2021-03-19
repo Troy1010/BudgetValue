@@ -13,7 +13,6 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
-import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.flavorIntersection
 import com.tminus1010.budgetvalue.extensions.add
 import com.tminus1010.budgetvalue.layer_ui.misc.viewBinding
@@ -27,7 +26,6 @@ class HostActivity : AppCompatActivity(), IViewModels {
     val menuItemPartials by lazy { flavorIntersection.getExtraMenuItemPartials(this) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        domain.appInit()
         setContentView(binding.root)
         // # Bind bottom menu to navigation.
         // In order for NavigationUI.setupWithNavController to work, the ids in R.menu.* must exactly match R.navigation.*
