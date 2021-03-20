@@ -18,6 +18,7 @@ import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appC
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.flavorIntersection
 import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
 import com.tminus1010.budgetvalue.layer_ui.misc.viewBinding
+import com.tminus1010.budgetvalue.toMoneyBigDecimal
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.pairwise
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -56,7 +57,8 @@ class ImportFrag : Fragment(R.layout.frag_import), IViewModels {
                     holder.binding.editTextAmount.apply {
                         setText(account.amount.toString())
                         bindOutgoing(accountsVM.intentUpdateAmmount,
-                            { account.copy(amount = it.toBigDecimal()) })
+                            toT = { account.copy(amount = it.toMoneyBigDecimal()) },
+                            toDisplayable = { it.amount })
                     }
                 }
             }
