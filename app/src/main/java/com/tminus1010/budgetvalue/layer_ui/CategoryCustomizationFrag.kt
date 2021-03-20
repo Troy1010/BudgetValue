@@ -49,10 +49,10 @@ class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization)
         domain.userCategories
             .observeOn(Schedulers.computation())
             .map { categories ->
-                val recipeGrid = RecipeGrid(listOf(
+                val recipeGrid = listOf(
                     factory1.createMany(categories),
                     factory2.createMany(categories),
-                ).reflectXY())
+                ).reflectXY()
                 val dividerMap = categories
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })

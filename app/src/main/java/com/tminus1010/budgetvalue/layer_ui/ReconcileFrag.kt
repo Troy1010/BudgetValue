@@ -60,16 +60,16 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile), IViewModels {
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        Rx.combineLatest(activeReconciliationVM.rowDatas, domain.userCategories, binding.myTableView1.widthObservable, budgetedVM.categoryAmounts.value.itemObservableMap2)
+        Rx.combineLatest(activeReconciliationVM.rowDatas, domain.userCategories, budgetedVM.categoryAmounts.value.itemObservableMap2)
             .observeOn(AndroidSchedulers.mainThread())
-            .observe(viewLifecycleOwner) { (rowDatas, activeCategories, width, budgetedCA) ->
+            .observe(viewLifecycleOwner) { (rowDatas, activeCategories, budgetedCA) ->
                 val dividerMap = activeCategories
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
                     .associate { it.index to titledDividerRecipeFactory.createOne(it.value.type.name) }
                     .mapKeys { it.key + 2 } // header row, default row
                 binding.myTableView1.initialize(
-                    recipeGrid = RecipeGrid(listOf(
+                    recipeGrid = listOf(
                         headerRecipeFactory.createOne2("Category")
                                 + cellRecipeFactory.createOne2("Default")
                                 + cellRecipeFactory.createMany(rowDatas.map { it.category.name }),
@@ -85,7 +85,8 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile), IViewModels {
                         headerRecipeFactory_numbered.createOne2(Pair("Budgeted", accountsVM.accountsTotal))
                                 + oneWayRecipeFactory.createOne2(budgetedVM.defaultAmount)
                                 + oneWayRecipeFactory.createMany(rowDatas.map { budgetedCA[it.category]!! })
-                    ).reflectXY(), fixedWidth = width),
+                    ).reflectXY(),
+                    shouldFitItemWidthsInsideTable = true,
                     dividerMap = dividerMap,
                     colFreezeCount = 0,
                     rowFreezeCount = 1

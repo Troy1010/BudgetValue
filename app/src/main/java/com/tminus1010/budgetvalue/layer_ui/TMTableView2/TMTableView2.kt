@@ -27,26 +27,39 @@ class TMTableView2 @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr) {
     var disposable: Disposable? = null
 
+    /**
+     * @param shouldFitItemWidthsInsideTable
+     * If set to true, items will be resized to make the entire grid fit within the width of the table.
+     */
     fun initialize(
-        recipeGrid: RecipeGrid,
+        recipeGrid: List<List<IViewItemRecipe>>,
+        shouldFitItemWidthsInsideTable: Boolean = false,
         dividerMap: Map<Int, IViewItemRecipe> = emptyMap(),
         colFreezeCount: Int = 0,
         rowFreezeCount: Int = 0,
     ) {
-        // * I was experiencing race conditions, so I am awaiting widthObservable before using the main thread to render views.
-        widthObservable
-            .take(1)
-            .timeout(5, TimeUnit.SECONDS)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                inflateAndBind(
-                    recipeGrid,
-                    dividerMap,
-                    colFreezeCount,
-                    rowFreezeCount,
-                    SynchronizedScrollListener(Orientation.HORIZONTAL),
-                )
-            }
+        if (shouldFitItemWidthsInsideTable)
+            widthObservable
+                .take(1)
+                .timeout(5, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { width ->
+                    inflateAndBind(
+                        RecipeGrid(recipeGrid, width),
+                        dividerMap,
+                        colFreezeCount,
+                        rowFreezeCount,
+                        SynchronizedScrollListener(Orientation.HORIZONTAL),
+                    )
+                }
+        else
+            inflateAndBind(
+                RecipeGrid(recipeGrid),
+                dividerMap,
+                colFreezeCount,
+                rowFreezeCount,
+                SynchronizedScrollListener(Orientation.HORIZONTAL),
+            )
     }
 
     private fun inflateAndBind(

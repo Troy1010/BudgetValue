@@ -42,18 +42,18 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_advanced_categorize), IVie
         val amountRecipeFactory = viewRecipeFactories.incomingBigDecimalRecipeFactory
         val categoryAmountRecipeFactory = viewRecipeFactories.outgoingCARecipeFactory(categorizeAdvancedVM.intentRememberCA)
         val titledDividerRecipeFactory = viewRecipeFactories.titledDividerRecipeFactory
-        Rx.combineLatest(binding.tmTableViewAc.widthObservable, domain.userCategories)
+        domain.userCategories
             .debounce(100, TimeUnit.MILLISECONDS)
             .observeOn(Schedulers.computation())
-            .map { (width, categories) ->
-                val recipes2D = RecipeGrid(listOf(
+            .map { categories ->
+                val recipes2D = listOf(
                     headerRecipeFactory.createOne2("Category")
                             + cellRecipeFactory.createOne2("Default")
                             + cellRecipeFactory.createMany(categories.map { it.name }),
                     headerRecipeFactory.createOne2("Amount")
                             + amountRecipeFactory.createOne2(categorizeAdvancedVM.defaultAmount)
-                            + categoryAmountRecipeFactory.createMany(categories.map { it to BigDecimal.ZERO }))
-                    .reflectXY(), fixedWidth = width)
+                            + categoryAmountRecipeFactory.createMany(categories.map { it to BigDecimal.ZERO })
+                ).reflectXY()
                 val dividerMap = categories
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
@@ -63,7 +63,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_advanced_categorize), IVie
             }
             .observeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) { (recipes2D, dividerMap) ->
-                binding.tmTableViewAc.initialize(recipes2D, dividerMap, 0, 1)
+                binding.tmTableViewAc.initialize(recipes2D, true, dividerMap, 0, 1)
             }
     }
 }

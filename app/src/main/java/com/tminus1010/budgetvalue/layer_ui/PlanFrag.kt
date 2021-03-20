@@ -53,11 +53,11 @@ class PlanFrag: Fragment(R.layout.frag_plan), IViewModels {
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        Rx.combineLatest(activePlanVM.activePlanCAs.value.itemObservableMap2, domain.userCategories, binding.myTableViewPlan.widthObservable)
+        Rx.combineLatest(activePlanVM.activePlanCAs.value.itemObservableMap2, domain.userCategories)
             .debounce(100, TimeUnit.MILLISECONDS)
             .observeOn(Schedulers.computation())
-            .map { (planCAsItemObservableMap, activeCategories, width) ->
-                val recipes2D = RecipeGrid(listOf(
+            .map { (planCAsItemObservableMap, activeCategories) ->
+                val recipes2D = listOf(
                     headerRecipeFactory.createOne2("Category")
                             + cellRecipeFactory.createOne2("Expected Income")
                             + cellRecipeFactory.createOne2("Default")
@@ -66,7 +66,7 @@ class PlanFrag: Fragment(R.layout.frag_plan), IViewModels {
                             + expectedIncomeRecipeFactory.createOne2(activePlanVM.expectedIncome)
                             + oneWayRecipeBuilder.createOne2(activePlanVM.defaultAmount)
                             + planCAsRecipeFactory.createMany(activeCategories.map { Pair(it, planCAsItemObservableMap[it] ?: error("not found:$it")) }))
-                    .reflectXY(), fixedWidth = width)
+                    .reflectXY()
                 val dividerMap = activeCategories
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
@@ -76,7 +76,7 @@ class PlanFrag: Fragment(R.layout.frag_plan), IViewModels {
             }
             .observeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) { (recipes2D, dividerMap) ->
-                binding.myTableViewPlan.initialize(recipes2D, dividerMap, 0, 1)
+                binding.myTableViewPlan.initialize(recipes2D, true, dividerMap, 0, 1)
             }
     }
 }

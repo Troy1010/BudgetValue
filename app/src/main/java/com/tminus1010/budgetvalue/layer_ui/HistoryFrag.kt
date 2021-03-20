@@ -44,10 +44,9 @@ class HistoryFrag : Fragment(R.layout.frag_history), IHostFragChild, IViewModels
         )
         Rx.combineLatest(historyVM.historyColumnDatas, historyVM.activeCategories)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(AndroidSchedulers.mainThread())
             .distinctUntilChanged() //*idk why this emitted a copy without distinctUntilChanged
             .observe(viewLifecycleOwner) { (historyColumnDatas, activeCategories) ->
-                val recipe2D = RecipeGrid(
+                val recipe2D =
                     arrayListOf<List<IViewItemRecipe>>(
                         headerRecipeFactory.createOne2("Categories") +
                                 cellRecipeFactory.createOne("Default") +
@@ -62,13 +61,13 @@ class HistoryFrag : Fragment(R.layout.frag_history), IHostFragChild, IViewModels
                                         })
                             }
                         )
-                    }.reflectXY())
+                    }.reflectXY()
                 val dividerMap = activeCategories
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
                     .associate { it.index to titledDividerRecipeFactory.createOne(it.value.type.name) }
                     .mapKeys { it.key + 2 } // header row and default row
-                binding.tmTableViewHistory.initialize(recipe2D, dividerMap, 1, 1)
+                binding.tmTableViewHistory.initialize(recipe2D, false, dividerMap, 1, 1)
             }
     }
 }
