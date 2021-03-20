@@ -14,15 +14,15 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class RepoModule {
+object RepoModule {
     @Provides
     @Singleton
-    fun providesCategoryParser(activeCategoryDAOWrapper: CategoriesUCWrapper): ICategoryParser {
-        return activeCategoryDAOWrapper
-    }
+    @JvmStatic
+    fun providesCategoryParser(activeCategoryDAOWrapper: CategoriesUCWrapper): ICategoryParser = activeCategoryDAOWrapper
 
     @Provides
     @Singleton
+    @JvmStatic
     fun providesSharedPreferences(app: App): SharedPreferences {
         return app.getSharedPreferences(
             SHARED_PREF_FILE_NAME,
@@ -32,13 +32,11 @@ class RepoModule {
 
     @Provides
     @Singleton
-    fun providesMyDao(roomDatabase: DB): MiscDAO {
-        return roomDatabase.miscDAO()
-    }
+    @JvmStatic
+    fun providesMyDao(roomDatabase: DB): MiscDAO = roomDatabase.miscDAO()
 
     @Provides
     @Singleton
-    fun providesActiveCategoryDAO(roomDatabase: DB): UserCategoriesDAO {
-        return roomDatabase.activeCategoryDAO()
-    }
+    @JvmStatic
+    fun providesActiveCategoryDAO(roomDatabase: DB): UserCategoriesDAO = roomDatabase.activeCategoryDAO()
 }

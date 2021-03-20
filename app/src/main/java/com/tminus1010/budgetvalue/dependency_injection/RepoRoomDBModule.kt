@@ -10,9 +10,10 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class RepoRoomDBModule {
+object RepoRoomDBModule {
     @Provides
     @Singleton
+    @JvmStatic
     fun providesDatabase(app: App, moshi: Moshi): DB {
         return Room.databaseBuilder(app, DB::class.java, "BudgetValueDB")
             .addTypeConverter(RoomTypeConverter(moshi))
