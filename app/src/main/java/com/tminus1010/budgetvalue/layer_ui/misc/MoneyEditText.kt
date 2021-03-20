@@ -20,7 +20,7 @@ class MoneyEditText @JvmOverloads constructor(
             override fun afterTextChanged(s: Editable) {
                 removeTextChangedListener(this)
                 // If a 3rd number is added to the right of the decimal, move the decimal right.
-                if (s.contains(".") && 2 < s.split(".").last().count())
+                if (s.contains(".") && 3 <= s.split(".").last().count())
                     s.indexOfLast { it == '.' }
                         .also { s.delete(it, it + 1); s.insert(it + 1, ".") }
                 addTextChangedListener(this)
