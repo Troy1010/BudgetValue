@@ -7,22 +7,25 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.tminus1010.budgetvalue.databinding.ActivityMockImportSelectionBinding
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
-import kotlinx.android.synthetic.devEnv1.activity_mock_import_selection.*
+import com.tminus1010.budgetvalue.layer_ui.misc.viewBinding
 
 class MockImportSelectionActivity : AppCompatActivity(R.layout.activity_mock_import_selection) {
+    val binding by viewBinding(ActivityMockImportSelectionBinding::inflate)
     val vmps by lazy { ViewModelProviders(this, appComponent) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(binding.root)
         // # RecyclerView
         val transactionPathNames =
             assets.list("transactions")
                 ?.map { "transactions/$it" }
                 ?: emptyList()
-        recyclerview_select_mock_import.layoutManager =
+        binding.recyclerviewSelectMockImport.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
-        recyclerview_select_mock_import.adapter =
+        binding.recyclerviewSelectMockImport.adapter =
             object : RecyclerView.Adapter<GenViewHolder>() {
                 override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
                     LayoutInflater.from(this@MockImportSelectionActivity)

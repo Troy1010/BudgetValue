@@ -5,6 +5,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.*
+import com.tminus1010.budgetvalue.databinding.FragPlanBinding
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
@@ -12,17 +13,18 @@ import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
+import com.tminus1010.budgetvalue.layer_ui.misc.viewBinding
 import com.tminus1010.budgetvalue.model_domain.Category
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlinx.android.synthetic.main.frag_plan.*
 import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
 class PlanFrag: Fragment(R.layout.frag_plan), IViewModels {
+    val binding by viewBinding(FragPlanBinding::bind)
     override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onStart() {
         super.onStart()
@@ -51,7 +53,7 @@ class PlanFrag: Fragment(R.layout.frag_plan), IViewModels {
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        combineLatestAsTuple(activePlanVM.activePlanCAs.value.itemObservableMap2, domain.userCategories, myTableView_plan.widthObservable)
+        combineLatestAsTuple(activePlanVM.activePlanCAs.value.itemObservableMap2, domain.userCategories, binding.myTableViewPlan.widthObservable)
             .debounce(100, TimeUnit.MILLISECONDS)
             .observeOn(Schedulers.computation())
             .map { (planCAsItemObservableMap, activeCategories, width) ->
@@ -74,7 +76,7 @@ class PlanFrag: Fragment(R.layout.frag_plan), IViewModels {
             }
             .observeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) { (recipes2D, dividerMap) ->
-                myTableView_plan.initialize(recipes2D, dividerMap, 0, 1)
+                binding.myTableViewPlan.initialize(recipes2D, dividerMap, 0, 1)
             }
     }
 }

@@ -7,35 +7,36 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tminus1010.budgetvalue.GenViewHolder
+import com.tminus1010.budgetvalue.GenViewHolder2
 import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
+import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
+import com.tminus1010.budgetvalue.layer_ui.misc.viewBinding
 import com.tminus1010.budgetvalue.unbox
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.frag_categorize.*
-import kotlinx.android.synthetic.main.item_category_btn.view.*
 import java.time.format.DateTimeFormatter
 
 class CategorizeTransactionsFrag : Fragment(R.layout.frag_categorize), IViewModels {
+    val binding by viewBinding(FragCategorizeBinding::bind)
     override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # RecyclerView
-        recyclerview_categories.layoutManager =
+        binding.recyclerviewCategories.layoutManager =
             GridLayoutManager(requireActivity(), 3, GridLayoutManager.VERTICAL, true)
-        recyclerview_categories.adapter = object : RecyclerView.Adapter<GenViewHolder>() {
+        binding.recyclerviewCategories.adapter = object : RecyclerView.Adapter<GenViewHolder2<ItemCategoryBtnBinding>>() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-                LayoutInflater.from(requireActivity())
-                    .inflate(R.layout.item_category_btn, parent, false)
-                    .let { GenViewHolder(it) }
+                ItemCategoryBtnBinding.inflate(LayoutInflater.from(requireContext()), parent, false)
+                    .let { GenViewHolder2(it) }
 
-            override fun onBindViewHolder(holder: GenViewHolder, position: Int) {
-                holder.itemView.btn_category.apply {
+            override fun onBindViewHolder(holder: GenViewHolder2<ItemCategoryBtnBinding>, position: Int) {
+                holder.binding.btnCategory.apply {
                     text = domain.userCategories.value[holder.adapterPosition].name
                     setOnClickListener { categorizeVM.finishTransactionWithCategory(domain.userCategories.value[holder.adapterPosition]) }
                 }
@@ -44,19 +45,19 @@ class CategorizeTransactionsFrag : Fragment(R.layout.frag_categorize), IViewMode
             override fun getItemCount() = domain.userCategories.value.size
         }
         // # Clicks
-        btn_advanced.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_advancedCategorizeFrag) }
-        btn_delete_category.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_categoryCustomizationFrag) }
-        btn_new_category.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) }
+        binding.btnAdvanced.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_advancedCategorizeFrag) }
+        binding.btnDeleteCategory.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_categoryCustomizationFrag) }
+        binding.btnNewCategory.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) }
         //
-        textview_date.bindIncoming(categorizeVM.transactionBox)
+        binding.textviewDate.bindIncoming(categorizeVM.transactionBox)
         { it.unbox?.date?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")) ?: "" }
-        textview_amount.bindIncoming(categorizeVM.transactionBox)
+        binding.textviewAmount.bindIncoming(categorizeVM.transactionBox)
         { it.unbox?.defaultAmount?.toString() ?: "" }
-        textview_description.bindIncoming(categorizeVM.transactionBox)
+        binding.textviewDescription.bindIncoming(categorizeVM.transactionBox)
         { it.unbox?.description ?: "" }
-        textview_amount_left.bindIncoming(transactionsVM.uncategorizedSpendsSize)
+        binding.textviewAmountLeft.bindIncoming(transactionsVM.uncategorizedSpendsSize)
         categorizeVM.hasUncategorizedTransaction
             .observeOn(AndroidSchedulers.mainThread())
-            .observe(viewLifecycleOwner) { btn_advanced.isEnabled = it }
+            .observe(viewLifecycleOwner) { binding.btnAdvanced.isEnabled = it }
     }
 }
