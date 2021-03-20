@@ -2,6 +2,7 @@ package com.tminus1010.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.Rx
+import com.tminus1010.budgetvalue.extensions.launch
 import com.tminus1010.budgetvalue.layer_domain.Domain
 import com.tminus1010.budgetvalue.model_domain.Reconciliation
 import com.tminus1010.tmcommonkotlin.rx.extensions.launch
@@ -43,9 +44,6 @@ class ActiveReconciliationVM2(
                         defaultAmount,
                         activeReconciliationVM.activeReconcileCAs.value.filter { it.value != BigDecimal(0) },)
                 }
-                .flatMapCompletable {
-                    domain.pushReconciliation(it).andThen(domain.clearActiveReconcileCAs())
-                }
-                .launch()
+                .launch { domain.pushReconciliation(it).andThen(domain.clearActiveReconcileCAs()) }
         }
 }
