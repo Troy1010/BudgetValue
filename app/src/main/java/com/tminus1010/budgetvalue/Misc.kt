@@ -129,42 +129,6 @@ fun generateLipsum(): String {
     return generateLipsum(1)[0]
 }
 
-
-fun PublishSubject<Unit>.onNext() {
-    this.onNext(Unit)
-}
-
-fun PublishSubject<Unit>.emit() {
-    this.onNext(Unit)
-}
-
-@Suppress("USELESS_CAST")
-@SuppressLint("CheckResult")
-fun <T> Observable<T>.logSubscribe2(
-    msgPrefix: String? = null,
-    bType: Boolean = false,
-): Observable<T> {
-    val tempMsgPrefix: String = if (msgPrefix == null) "" else {
-        "$msgPrefix`"
-    }
-    this
-        .subscribe({
-            if (bType) {
-                val typeName = if (it == null) {
-                    "null"
-                } else {
-                    (it as Any)::class.java.simpleName
-                }
-                logz("$tempMsgPrefix$typeName`$it")
-            } else {
-                logz("$tempMsgPrefix$it")
-            }
-        }, {
-            logz("${tempMsgPrefix}Error`$it")
-        })
-    return this
-}
-
 val GridLayoutManager.visibleChildren: HashMap<Int, View>
     get() {
         val children = HashMap<Int, View>()
