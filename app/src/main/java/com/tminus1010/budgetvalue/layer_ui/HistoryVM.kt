@@ -3,10 +3,10 @@ package com.tminus1010.budgetvalue.layer_ui
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.Rx
 import com.tminus1010.budgetvalue.categoryComparator
-import com.tminus1010.budgetvalue.combineLatestImpatient
 import com.tminus1010.budgetvalue.layer_domain.Domain
 import com.tminus1010.budgetvalue.model_domain.Category
-import com.tminus1010.budgetvalue.model_domain.HistoryColumnData
+import com.tminus1010.budgetvalue.model_domain.HistoryColumn
+import com.tminus1010.budgetvalue.model_domain.IHistoryColumn
 import com.tminus1010.budgetvalue.model_domain.LocalDatePeriod
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.misc.extensions.toDisplayStr
@@ -31,43 +31,18 @@ class HistoryVM(
                 transactionBlocks?.forEach { blockPeriods.add(it.datePeriod) }
                 reconciliations?.forEach { blockPeriods.add(domain.getDatePeriod(it.localDate)) }
                 // # Define historyColumnDatas
-                val historyColumnDatas = arrayListOf<HistoryColumnData>()
+                val historyColumnDatas = arrayListOf<IHistoryColumn>()
+                // ## Add TransactionBlocks, Reconciliations, Plans
                 for (blockPeriod in blockPeriods) {
-                    // ## Add Actuals
-                    if (transactionBlocks != null)
-                        transactionBlocks.find { it.datePeriod == blockPeriod }
-                            ?.also {
-                                historyColumnDatas.add(HistoryColumnData(
-                                    "Actual",
-                                    it.datePeriod.toDisplayStr(),
-                                    it.defaultAmount,
-                                    it.categoryAmounts,
-                                ))
-                            }
-                    // ## Add Reconciliations
-                    if (reconciliations != null)
-                        for (reconciliation in reconciliations.filter { it.localDate in blockPeriod }) {
-                            historyColumnDatas.add(HistoryColumnData(
-                                "Reconciliation",
-                                reconciliation.localDate.toDisplayStr(),
-                                reconciliation.defaultAmount,
-                                reconciliation.categoryAmounts,
-                            ))
-                        }
-                    // ## Add Plans
-                    if (plans != null)
-                        for (plan in plans.filter { it.localDatePeriod.blockingFirst().startDate in blockPeriod }) {
-                            historyColumnDatas.add(HistoryColumnData(
-                                "Plan",
-                                plan.localDatePeriod.blockingFirst().startDate.toDisplayStr(),
-                                plan.defaultAmount,
-                                plan.categoryAmounts
-                            ))
-                        }
+                    listOfNotNull(
+                        transactionBlocks?.filter { it.datePeriod == blockPeriod },
+                        reconciliations?.filter { it.localDate in blockPeriod },
+                        plans?.filter { it.localDatePeriod.blockingFirst().startDate in blockPeriod }
+                    ).flatten().also { historyColumnDatas.addAll(it) }
                 }
                 // ## Add Active Reconciliation
                 if (activeReconciliationCAs != null && activeReconciliationDefaultAmount != null) {
-                    historyColumnDatas.add(HistoryColumnData(
+                    historyColumnDatas.add(HistoryColumn(
                         "Reconciliation",
                         "Current",
                         activeReconciliationDefaultAmount,
@@ -75,13 +50,7 @@ class HistoryVM(
                     ))
                 }
                 // ## Add Budgeted
-                if (budgeted != null) {
-                    historyColumnDatas.add(HistoryColumnData(
-                        "Budgeted",
-                        defaultAmount = budgeted.defaultAmount,
-                        categoryAmounts = budgeted.categoryAmounts,
-                    ))
-                }
+                if (budgeted != null) historyColumnDatas.add(budgeted)
                 historyColumnDatas
             }
             .toBehaviorSubject()

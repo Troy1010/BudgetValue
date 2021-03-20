@@ -23,6 +23,10 @@ class DatePeriodGetter @Inject constructor(
             .map { (anchorDateOffset, blockSize) ->
                 getDatePeriod(date, anchorDateOffset, blockSize)
             }
+
+    override fun currentDatePeriod(): LocalDatePeriod =
+        getDatePeriod(LocalDate.now())
+
     // TODO("This is pretty hacky..")
     private val blockSizeBS = blockSize.toBehaviorSubject()
     private val anchorDateOffsetBS = anchorDateOffset.toBehaviorSubject()

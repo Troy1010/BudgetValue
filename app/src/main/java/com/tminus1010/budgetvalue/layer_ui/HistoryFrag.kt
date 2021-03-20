@@ -11,9 +11,9 @@ import com.tminus1010.budgetvalue.Rx
 import com.tminus1010.budgetvalue.databinding.FragHistoryBinding
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
+import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
-import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
 import com.tminus1010.budgetvalue.layer_ui.misc.viewBinding
 import com.tminus1010.budgetvalue.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
@@ -54,7 +54,7 @@ class HistoryFrag : Fragment(R.layout.frag_history), IHostFragChild, IViewModels
                     ).apply {
                         addAll(
                             historyColumnDatas.map {
-                                doubleHeaderRecipeFactory.createOne2(Pair(it.title, it.subTitle)) +
+                                doubleHeaderRecipeFactory.createOne2(Pair(it.title, it.subTitle(domain))) +
                                         cellRecipeFactory.createOne(it.defaultAmount.toString()) +
                                         cellRecipeFactory.createMany(activeCategories.map { k ->
                                             it.categoryAmounts[k]?.toString() ?: ""
