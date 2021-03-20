@@ -5,8 +5,8 @@ import java.math.BigDecimal
 
 data class Block(
     val datePeriod: LocalDatePeriod,
-    val amount: BigDecimal,
-    val categoryAmounts: Map<Category, BigDecimal>
-) {
-    val defaultAmount get() = amount - categoryAmounts.values.sum()
+    override val amount: BigDecimal,
+    override val categoryAmounts: Map<Category, BigDecimal>
+) : IAmountAndCA {
+    override val defaultAmount get() = amount - categoryAmounts.values.sum()
 }
