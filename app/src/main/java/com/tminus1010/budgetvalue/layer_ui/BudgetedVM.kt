@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.Rx
 import com.tminus1010.budgetvalue.combineLatestImpatient
 import com.tminus1010.budgetvalue.layer_domain.Domain
+import com.tminus1010.budgetvalue.model_domain.Budgeted
 import com.tminus1010.budgetvalue.model_domain.Category
 import com.tminus1010.budgetvalue.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
@@ -56,9 +57,11 @@ class BudgetedVM(
     val caTotal =
         categoryAmounts.value.itemObservableMap2
             .switchMap { it.values.total() }
-            .replay(1).refCount()
     val defaultAmount =
         Rx.combineLatest(accountsVM.accountsTotal, caTotal)
             .map { it.first - it.second }
+    val budgeted =
+        Rx.combineLatest(categoryAmounts, defaultAmount)
+            .map { Budgeted(it.first, it.second) }
             .toBehaviorSubject()
 }

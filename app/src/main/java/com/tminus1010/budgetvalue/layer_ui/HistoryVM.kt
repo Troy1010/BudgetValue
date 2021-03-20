@@ -21,10 +21,10 @@ class HistoryVM(
     budgetedVM: BudgetedVM,
 ) : ViewModel() {
     val historyColumnDatas =
-        Rx.combineLatest(domain.reconciliations, domain.plans, activeReconciliationVM2.defaultAmount, activeReconciliationVM.activeReconcileCAs, transactionsVM.transactionBlocks, budgetedVM.defaultAmount, budgetedVM.categoryAmounts)
+        Rx.combineLatest(domain.reconciliations, domain.plans, activeReconciliationVM2.defaultAmount, activeReconciliationVM.activeReconcileCAs, transactionsVM.transactionBlocks, budgetedVM.budgeted)
             .observeOn(Schedulers.computation())
             .throttleLatest(500, TimeUnit.MILLISECONDS)
-            .map { (reconciliations, plans, activeReconciliationDefaultAmount, activeReconciliationCAs, transactionBlocks, budgetedDefaultAmount, budgetedCAs) ->
+            .map { (reconciliations, plans, activeReconciliationDefaultAmount, activeReconciliationCAs, transactionBlocks, budgeted) ->
                 // # Define blocks
                 val blockPeriods = sortedSetOf<LocalDatePeriod>(compareBy { it.startDate })
                 transactionBlocks?.forEach { if (!domain.isDatePeriodValid(it.datePeriod)) error("datePeriod was not valid:${it.datePeriod}") }
@@ -75,11 +75,11 @@ class HistoryVM(
                     ))
                 }
                 // ## Add Budgeted
-                if (budgetedCAs != null && budgetedDefaultAmount != null) {
+                if (budgeted != null) {
                     historyColumnDatas.add(HistoryColumnData(
                         "Budgeted",
-                        defaultAmount = budgetedDefaultAmount,
-                        categoryAmounts = budgetedCAs,
+                        defaultAmount = budgeted.defaultAmount,
+                        categoryAmounts = budgeted.categoryAmounts,
                     ))
                 }
                 historyColumnDatas
