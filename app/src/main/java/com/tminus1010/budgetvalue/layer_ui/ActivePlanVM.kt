@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.combineLatestAsTuple
+import com.tminus1010.budgetvalue.Rx
 import com.tminus1010.budgetvalue.extensions.launch
 import com.tminus1010.budgetvalue.layer_domain.Domain
 import com.tminus1010.budgetvalue.model_domain.Category
@@ -42,7 +42,7 @@ class ActivePlanVM(domain: Domain) : ViewModel() {
                 .subscribe(intentSaveActivePlan)
         }
     val activePlanCAs =
-        combineLatestAsTuple(domain.activePlanCAs, domain.userCategories)
+        Rx.combineLatest(domain.activePlanCAs, domain.userCategories)
             .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (activeReconcileCAs, activeCategories) ->
                 activeCategories
                     .associateWith { BigDecimal.ZERO }
@@ -57,6 +57,6 @@ class ActivePlanVM(domain: Domain) : ViewModel() {
     val expectedIncome = intentPushExpectedIncome
         .startWithItem(domain.fetchExpectedIncome())
         .toBehaviorSubject()
-    val defaultAmount = combineLatestAsTuple(expectedIncome, planUncategorized)
+    val defaultAmount = Rx.combineLatest(expectedIncome, planUncategorized)
         .map { it.first - it.second }
 }

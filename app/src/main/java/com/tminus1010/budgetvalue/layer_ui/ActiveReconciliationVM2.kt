@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.combineLatestAsTuple
+import com.tminus1010.budgetvalue.Rx
 import com.tminus1010.budgetvalue.layer_domain.Domain
 import com.tminus1010.budgetvalue.model_domain.Reconciliation
 import com.tminus1010.tmcommonkotlin.rx.extensions.launch
@@ -19,7 +19,7 @@ class ActiveReconciliationVM2(
 ) : ViewModel() {
     // This calculation is a bit confusing. Take a look at ManualCalculationsForTests for clarification
     val defaultAmount =
-        combineLatestAsTuple(
+        Rx.combineLatest(
             domain.plans,
             domain.reconciliations,
             transactionsVM.transactionBlocks,

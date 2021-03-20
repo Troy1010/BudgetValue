@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.combineLatestAsTuple
+import com.tminus1010.budgetvalue.Rx
 import com.tminus1010.budgetvalue.extensions.launch
 import com.tminus1010.budgetvalue.layer_domain.Domain
 import com.tminus1010.budgetvalue.model_domain.Category
@@ -28,7 +28,7 @@ class ActiveReconciliationVM(
         .also { it.launch { domain.pushActiveReconciliationCA(it) } }
     // # State
     val activeReconcileCAs =
-        combineLatestAsTuple(domain.activeReconciliationCAs, domain.userCategories)
+        Rx.combineLatest(domain.activeReconciliationCAs, domain.userCategories)
             .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (activeReconcileCAs, activeCategories) ->
                 activeCategories
                     .associateWith { BigDecimal.ZERO }
@@ -37,7 +37,7 @@ class ActiveReconciliationVM(
                 acc
             }
             .toBehaviorSubject()
-    val rowDatas = combineLatestAsTuple(domain.userCategories, activeReconcileCAs.value.itemObservableMap2, activePlanVM.activePlanCAs, transactionsVM.spends)
+    val rowDatas = Rx.combineLatest(domain.userCategories, activeReconcileCAs.value.itemObservableMap2, activePlanVM.activePlanCAs, transactionsVM.spends)
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
     val caTotal = activeReconcileCAs.value.itemObservableMap2
         .switchMap { it.values.total() }

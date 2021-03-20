@@ -53,7 +53,7 @@ class PlanFrag: Fragment(R.layout.frag_plan), IViewModels {
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        combineLatestAsTuple(activePlanVM.activePlanCAs.value.itemObservableMap2, domain.userCategories, binding.myTableViewPlan.widthObservable)
+        Rx.combineLatest(activePlanVM.activePlanCAs.value.itemObservableMap2, domain.userCategories, binding.myTableViewPlan.widthObservable)
             .debounce(100, TimeUnit.MILLISECONDS)
             .observeOn(Schedulers.computation())
             .map { (planCAsItemObservableMap, activeCategories, width) ->

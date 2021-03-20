@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.layer_ui
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.combineLatestAsTuple
+import com.tminus1010.budgetvalue.Rx
 import com.tminus1010.budgetvalue.combineLatestImpatient
 import com.tminus1010.budgetvalue.layer_domain.Domain
 import com.tminus1010.budgetvalue.model_domain.Category
@@ -18,7 +18,7 @@ class BudgetedVM(
     accountsVM: AccountsVM,
 ): ViewModel() {
     val categoryAmounts =
-        combineLatestImpatient(domain.reconciliations, domain.plans, transactionsVM.transactionBlocks, activeReconciliationVM.activeReconcileCAs, domain.userCategories)
+        Rx.combineLatest(domain.reconciliations, domain.plans, transactionsVM.transactionBlocks, activeReconciliationVM.activeReconcileCAs, domain.userCategories)
             .scan(SourceHashMap<Category, BigDecimal>()) { acc, (reconciliations, plans, transactionBlocks, activeReconcileCAs, activeCategories) ->
                 val newMap = mutableMapOf<Category, BigDecimal>()
                 if (reconciliations != null)
@@ -58,7 +58,7 @@ class BudgetedVM(
             .switchMap { it.values.total() }
             .replay(1).refCount()
     val defaultAmount =
-        combineLatestAsTuple(accountsVM.accountsTotal, caTotal)
+        Rx.combineLatest(accountsVM.accountsTotal, caTotal)
             .map { it.first - it.second }
             .toBehaviorSubject()
 }

@@ -60,140 +60,6 @@ fun Iterable<Transaction>.getBlocks(numOfWeeks: Int): HashMap<LocalDate, java.ut
 }
 
 
-@Suppress("UNCHECKED_CAST")
-fun <A, B, C, D, E, F> combineLatestAsTuple(
-    a: ObservableSource<A>,
-    b: ObservableSource<B>,
-    c: ObservableSource<C>,
-    d: ObservableSource<D>,
-    e: ObservableSource<E>,
-    f: ObservableSource<F>
-): Observable<Sextuple<A, B, C, D, E, F>> {
-    return Observable.combineLatest(
-        listOf(a, b, c, d, e, f)
-    ) {
-        Sextuple(
-            it[0] as A,
-            it[1] as B,
-            it[2] as C,
-            it[3] as D,
-            it[4] as E,
-            it[5] as F,
-        )
-    }
-}
-
-
-@Suppress("UNCHECKED_CAST")
-fun <A, B, C, D, E, F, G> combineLatestAsTuple(
-    a: ObservableSource<A>,
-    b: ObservableSource<B>,
-    c: ObservableSource<C>,
-    d: ObservableSource<D>,
-    e: ObservableSource<E>,
-    f: ObservableSource<F>,
-    g: ObservableSource<G>,
-): Observable<Septuple<A, B, C, D, E, F, G>> {
-    return Observable.combineLatest(
-        listOf(a, b, c, d, e, f, g)
-    ) {
-        Septuple(
-            it[0] as A,
-            it[1] as B,
-            it[2] as C,
-            it[3] as D,
-            it[4] as E,
-            it[5] as F,
-            it[6] as G,
-        )
-    }
-}
-
-
-@Suppress("UNCHECKED_CAST")
-fun <A, B, C, D, E> combineLatestAsTuple(
-    a: ObservableSource<A>,
-    b: ObservableSource<B>,
-    c: ObservableSource<C>,
-    d: ObservableSource<D>,
-    e: ObservableSource<E>,
-): Observable<Quintuple<A, B, C, D, E>> {
-    return Observable.combineLatest(
-        listOf(a, b, c, d, e)
-    ) {
-        Quintuple(
-            it[0] as A,
-            it[1] as B,
-            it[2] as C,
-            it[3] as D,
-            it[4] as E
-        )
-    }
-}
-
-@Suppress("UNCHECKED_CAST")
-fun <A, B, C, D> combineLatestAsTuple(
-    a: ObservableSource<A>,
-    b: ObservableSource<B>,
-    c: ObservableSource<C>,
-    d: ObservableSource<D>,
-): Observable<Quadruple<A, B, C, D>> {
-    return Observable.combineLatest(
-        listOf(a, b, c, d)
-    ) {
-        Quadruple(
-            it[0] as A,
-            it[1] as B,
-            it[2] as C,
-            it[3] as D
-        )
-    }
-}
-
-@Suppress("UNCHECKED_CAST")
-fun <A, B, C> combineLatestAsTuple(
-    a: ObservableSource<A>,
-    b: ObservableSource<B>,
-    c: ObservableSource<C>,
-): Observable<Triple<A, B, C>> {
-    return Observable.combineLatest(
-        listOf(a, b, c)
-    ) {
-        Triple(
-            it[0] as A,
-            it[1] as B,
-            it[2] as C
-        )
-    }
-}
-
-@Suppress("UNCHECKED_CAST")
-fun <A, B> combineLatestAsTuple(
-    a: ObservableSource<A>,
-    b: ObservableSource<B>,
-): Observable<Pair<A, B>> {
-    return Observable.combineLatest(
-        listOf(a, b)
-    ) {
-        Pair(
-            it[0] as A,
-            it[1] as B
-        )
-    }
-}
-
-@Suppress("UNCHECKED_CAST")
-fun <A> combineLatestAsTuple(a: ObservableSource<A>): Observable<Box<A>> {
-    return Observable.combineLatest(
-        listOf(a)
-    ) {
-        Box(
-            it[0] as A
-        )
-    }
-}
-
-
 fun <T> LiveData<T>.observeOnce(action: (T?) -> Unit) {
     this.value
     val observer = object : Observer<T> {
@@ -500,7 +366,7 @@ fun <A, B> combineLatestWithIndex(
     b: Observable<B>,
 ): Observable<Triple<Int, A, B>> {
     return Observable.merge(a.map { 0 }, b.map { 1 })
-        .zipWith(combineLatestAsTuple(a, b)) { index, tuple -> IndexAndTuple(index, tuple) }
+        .zipWith(Rx.combineLatest(a, b)) { index, tuple -> IndexAndTuple(index, tuple) }
         .map { Triple(it.index, it.tuple.first, it.tuple.second) }
 }
 
@@ -511,7 +377,7 @@ fun <A, B, C> combineLatestWithIndex(
 ): Observable<Quadruple<Int, A, B, C>> {
     return Observable.zip(
         Observable.merge(a.map { 0 }, b.map { 1 }, c.map { 2 }),
-        combineLatestAsTuple(a, b, c)
+        Rx.combineLatest(a, b, c)
     ) { index, tuple -> IndexAndTuple(index, tuple) }
         .map { Quadruple(it.index, it.tuple.first, it.tuple.second, it.tuple.third) }
 }
@@ -584,7 +450,7 @@ fun <A, B, C> combineLatestImpatient(
     b: Observable<B>,
     c: Observable<C>,
 ): Observable<Triple<A?, B?, C?>> {
-    return combineLatestAsTuple(a.boxStartNull(), b.boxStartNull(), c.boxStartNull())
+    return Rx.combineLatest(a.boxStartNull(), b.boxStartNull(), c.boxStartNull())
         .compose { observable ->
             // # If no observables are cold, then skip the first emission
             // * The observables start with null so that combineLatest is impatient.
@@ -604,7 +470,7 @@ fun <A, B, C, D> combineLatestImpatient(
     c: Observable<C>,
     d: Observable<D>,
 ): Observable<Quadruple<A?, B?, C?, D?>> {
-    return combineLatestAsTuple(a.boxStartNull(), b.boxStartNull(), c.boxStartNull(), d.boxStartNull())
+    return Rx.combineLatest(a.boxStartNull(), b.boxStartNull(), c.boxStartNull(), d.boxStartNull())
         .compose { observable ->
             // # If no observables are cold, then skip the first emission
             // * The observables start with null so that combineLatest is impatient.
@@ -625,7 +491,7 @@ fun <A, B, C, D, E> combineLatestImpatient(
     d: Observable<D>,
     e: Observable<E>,
 ): Observable<Quintuple<A?, B?, C?, D?, E?>> {
-    return combineLatestAsTuple(a.boxStartNull(), b.boxStartNull(), c.boxStartNull(), d.boxStartNull(), e.boxStartNull())
+    return Rx.combineLatest(a.boxStartNull(), b.boxStartNull(), c.boxStartNull(), d.boxStartNull(), e.boxStartNull())
         .compose { observable ->
             // # If no observables are cold, then skip the first emission
             // * The observables start with null so that combineLatest is impatient.
@@ -647,7 +513,7 @@ fun <A, B, C, D, E, F> combineLatestImpatient(
     e: Observable<E>,
     f: Observable<F>,
 ): Observable<Sextuple<A?, B?, C?, D?, E?, F?>> {
-    return combineLatestAsTuple(a.boxStartNull(), b.boxStartNull(), c.boxStartNull(), d.boxStartNull(), e.boxStartNull(), f.boxStartNull())
+    return Rx.combineLatest(a.boxStartNull(), b.boxStartNull(), c.boxStartNull(), d.boxStartNull(), e.boxStartNull(), f.boxStartNull())
         .compose { observable ->
             // # If no observables are cold, then skip the first emission
             // * The observables start with null so that combineLatest is impatient.
@@ -670,7 +536,7 @@ fun <A, B, C, D, E, F, G> combineLatestImpatient(
     f: Observable<F>,
     g: Observable<G>,
 ): Observable<Septuple<A?, B?, C?, D?, E?, F?, G?>> {
-    return combineLatestAsTuple(a.boxStartNull(), b.boxStartNull(), c.boxStartNull(), d.boxStartNull(), e.boxStartNull(), f.boxStartNull(), g.boxStartNull())
+    return Rx.combineLatest(a.boxStartNull(), b.boxStartNull(), c.boxStartNull(), d.boxStartNull(), e.boxStartNull(), f.boxStartNull(), g.boxStartNull())
         .compose { observable ->
             // # If no observables are cold, then skip the first emission
             // * The observables start with null so that combineLatest is impatient.
