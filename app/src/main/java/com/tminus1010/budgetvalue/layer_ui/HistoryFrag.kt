@@ -15,7 +15,7 @@ import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.doma
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.misc.viewBinding
-import com.tminus1010.budgetvalue.modules_shared.IViewModels
+import com.tminus1010.budgetvalue.features_shared.IViewModels
 import com.tminus1010.budgetvalue.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe

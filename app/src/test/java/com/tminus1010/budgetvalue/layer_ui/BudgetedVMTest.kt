@@ -1,11 +1,11 @@
 package com.tminus1010.budgetvalue.layer_ui
 
 import com.tminus1010.budgetvalue.Givens
-import com.tminus1010.budgetvalue.modules_shared.Domain
-import com.tminus1010.budgetvalue.modules.accounts.AccountsVM
-import com.tminus1010.budgetvalue.modules_shared.BudgetedVM
-import com.tminus1010.budgetvalue.modules.reconciliations.ActiveReconciliationVM
-import com.tminus1010.budgetvalue.modules.transactions.TransactionsVM
+import com.tminus1010.budgetvalue.features_shared.Domain
+import com.tminus1010.budgetvalue.features.accounts.AccountsVM
+import com.tminus1010.budgetvalue.features_shared.BudgetedVM
+import com.tminus1010.budgetvalue.features.reconciliations.ActiveReconciliationVM
+import com.tminus1010.budgetvalue.features.transactions.TransactionsVM
 import com.tminus1010.budgetvalue.middleware.source_objects.SourceHashMap
 import io.mockk.every
 import io.mockk.mockk

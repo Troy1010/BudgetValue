@@ -16,7 +16,7 @@ import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appC
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.flavorIntersection
 import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
 import com.tminus1010.budgetvalue.layer_ui.misc.viewBinding
-import com.tminus1010.budgetvalue.modules_shared.IViewModels
+import com.tminus1010.budgetvalue.features_shared.IViewModels
 import com.tminus1010.budgetvalue.toMoneyBigDecimal
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.pairwise
