@@ -11,6 +11,7 @@ import com.tminus1010.budgetvalue.databinding.ActivityMockImportSelectionBinding
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.layer_ui.misc.viewBinding
+import com.tminus1010.budgetvalue.middleware.GenViewHolder
 
 class MockImportSelectionActivity : AppCompatActivity(R.layout.activity_mock_import_selection) {
     val binding by viewBinding(ActivityMockImportSelectionBinding::inflate)

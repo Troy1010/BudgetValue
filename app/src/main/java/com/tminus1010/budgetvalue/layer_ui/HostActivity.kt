@@ -15,6 +15,7 @@ import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appC
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.flavorIntersection
 import com.tminus1010.budgetvalue.extensions.add
 import com.tminus1010.budgetvalue.layer_ui.misc.viewBinding
+import com.tminus1010.budgetvalue.modules_shared.IViewModels
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
 
 class HostActivity : AppCompatActivity(), IViewModels {

@@ -2,7 +2,6 @@
 
 package com.tminus1010.budgetvalue
 
-import android.annotation.SuppressLint
 import android.content.res.Resources
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
@@ -10,7 +9,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tminus1010.budgetvalue.model_domain.Transaction
+import com.tminus1010.budgetvalue.modules.transactions.Transaction
 import com.tminus1010.tmcommonkotlin.misc.logz
 import com.tminus1010.tmcommonkotlin.rx.extensions.boxStartNull
 import com.tminus1010.tmcommonkotlin.rx.extensions.isCold
@@ -21,7 +20,6 @@ import io.reactivex.rxjava3.core.ObservableSource
 import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.functions.Function3
 import io.reactivex.rxjava3.functions.Function4
-import io.reactivex.rxjava3.subjects.PublishSubject
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.lang.reflect.Type

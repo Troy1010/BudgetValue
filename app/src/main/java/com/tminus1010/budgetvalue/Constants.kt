@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue
 
-import com.tminus1010.budgetvalue.model_domain.Category
+import com.tminus1010.budgetvalue.modules.categories.Category
 
 const val CODE_PICK_TRANSACTIONS_FILE = 3486
 const val SHARED_PREF_FILE_NAME = "SharedPref"

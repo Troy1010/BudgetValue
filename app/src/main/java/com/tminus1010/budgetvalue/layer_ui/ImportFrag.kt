@@ -1,15 +1,13 @@
 package com.tminus1010.budgetvalue.layer_ui
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding4.view.clicks
-import com.tminus1010.budgetvalue.GenViewHolder
-import com.tminus1010.budgetvalue.GenViewHolder2
+import com.tminus1010.budgetvalue.middleware.GenViewHolder2
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.databinding.FragImportBinding
 import com.tminus1010.budgetvalue.databinding.ItemAccountBinding
@@ -18,6 +16,7 @@ import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appC
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.flavorIntersection
 import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
 import com.tminus1010.budgetvalue.layer_ui.misc.viewBinding
+import com.tminus1010.budgetvalue.modules_shared.IViewModels
 import com.tminus1010.budgetvalue.toMoneyBigDecimal
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.pairwise

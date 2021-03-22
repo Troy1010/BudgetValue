@@ -2,9 +2,9 @@ package com.tminus1010.budgetvalue.dependency_injection
 
 import com.tminus1010.budgetvalue.FlavorIntersection
 import com.tminus1010.budgetvalue.IFlavorIntersection
-import com.tminus1010.budgetvalue.layer_domain.use_cases.IUserCategoriesFetch
-import com.tminus1010.budgetvalue.layer_domain.use_cases.UserCategoriesUseCases
-import com.tminus1010.budgetvalue.layer_domain.use_cases.UserCategoriesUseCasesImpl
+import com.tminus1010.budgetvalue.modules.categories.IUserCategoriesFetch
+import com.tminus1010.budgetvalue.modules.categories.UserCategoriesUseCases
+import com.tminus1010.budgetvalue.modules.categories.UserCategoriesUseCasesImpl
 import dagger.Binds
 import dagger.Module
 

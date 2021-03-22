@@ -2,7 +2,16 @@ package com.tminus1010.budgetvalue.dependency_injection
 
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentActivity
-import com.tminus1010.budgetvalue.layer_ui.*
+import com.tminus1010.budgetvalue.modules.accounts.AccountsVM
+import com.tminus1010.budgetvalue.modules.plans.ActivePlanVM
+import com.tminus1010.budgetvalue.modules_shared.BudgetedVM
+import com.tminus1010.budgetvalue.modules_shared.HistoryVM
+import com.tminus1010.budgetvalue.modules.reconciliations.ActiveReconciliationVM
+import com.tminus1010.budgetvalue.modules.reconciliations.ActiveReconciliationVM2
+import com.tminus1010.budgetvalue.modules.transactions.CategorizeAdvancedVM
+import com.tminus1010.budgetvalue.modules.transactions.CategorizeTransactionsVM
+import com.tminus1010.budgetvalue.modules.transactions.TransactionsVM
+import com.tminus1010.budgetvalue.modules_shared.ErrorVM
 import com.tminus1010.tmcommonkotlin.view.createViewModelFactory
 
 class ViewModelProviders(val activity: FragmentActivity, val appComponent: AppComponent) {

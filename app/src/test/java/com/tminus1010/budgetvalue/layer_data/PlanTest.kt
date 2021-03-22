@@ -1,17 +1,5 @@
 package com.tminus1010.budgetvalue.layer_data
 
-import com.tminus1010.budgetvalue.App
-import com.tminus1010.budgetvalue.appComponent
-import com.tminus1010.budgetvalue.model_domain.LocalDatePeriod
-import com.tminus1010.budgetvalue.model_domain.Plan
-import io.reactivex.rxjava3.core.Observable
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
-import java.time.LocalDate
-import java.time.Period
-
 //@RunWith(RobolectricTestRunner::class)
 //@Config(application = App::class, manifest = "src/main/AndroidManifest.xml")
 //class PlanTest {

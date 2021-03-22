@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.layer_data
 
 import androidx.room.*
-import com.tminus1010.budgetvalue.model_data.CategoryDTO
+import com.tminus1010.budgetvalue.modules.categories.CategoryDTO
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 

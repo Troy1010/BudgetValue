@@ -2,7 +2,11 @@ package com.tminus1010.budgetvalue.layer_ui
 
 import com.tminus1010.budgetvalue.Givens
 import com.tminus1010.budgetvalue.extensions.toObservable
-import com.tminus1010.budgetvalue.layer_domain.Domain
+import com.tminus1010.budgetvalue.modules_shared.Domain
+import com.tminus1010.budgetvalue.modules_shared.BudgetedVM
+import com.tminus1010.budgetvalue.modules.reconciliations.ActiveReconciliationVM
+import com.tminus1010.budgetvalue.modules.reconciliations.ActiveReconciliationVM2
+import com.tminus1010.budgetvalue.modules.transactions.TransactionsVM
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.mockk.every
 import io.mockk.mockk
