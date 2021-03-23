@@ -6,6 +6,7 @@ import com.tminus1010.budgetvalue.extensions.launch
 import com.tminus1010.budgetvalue.features_shared.Domain
 import com.tminus1010.budgetvalue.features.transactions.TransactionsVM
 import com.tminus1010.budgetvalue.features_shared.budgeted.BudgetedVM
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
@@ -19,7 +20,7 @@ class ActiveReconciliationVM2(
     transactionsVM: TransactionsVM,
 ) : ViewModel() {
     // This calculation is a bit confusing. Take a look at ManualCalculationsForTests for clarification
-    val defaultAmount =
+    val defaultAmount: Observable<BigDecimal> =
         Rx.combineLatest(
             domain.plans,
             domain.reconciliations,
