@@ -9,6 +9,7 @@ import com.tminus1010.budgetvalue.features.categories.Category
 import com.tminus1010.budgetvalue.features_shared.DatePeriodGetter
 import com.tminus1010.budgetvalue.features_shared.Domain
 import com.tminus1010.budgetvalue.middleware.Rx
+import com.tminus1010.budgetvalue.middleware.nullIfZero
 import com.tminus1010.budgetvalue.middleware.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.rx.extensions.total
@@ -44,7 +45,7 @@ class ActivePlanVM(domain: Domain, categoriesVM: CategoriesVM, datePeriodGetter:
     val intentPushPlanCA = PublishSubject.create<Pair<Category, BigDecimal?>>()
         .also {
             it.withLatestFrom2(activePlan)
-                .launch { (amount, plan) -> domain.updatePlanCA(plan, amount) }
+                .launch { (categoryAmount, plan) -> domain.updatePlanCA(plan, categoryAmount.copy(second = categoryAmount.second?.nullIfZero())) }
         }
     val activePlanCAs =
         Rx.combineLatest(activePlan, categoriesVM.userCategories)

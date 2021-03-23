@@ -8,7 +8,6 @@ import com.tminus1010.budgetvalue.*
 import com.tminus1010.budgetvalue.databinding.FragPlanBinding
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
-import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
 import com.tminus1010.budgetvalue.extensions.itemObservableMap2
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
@@ -17,6 +16,7 @@ import com.tminus1010.budgetvalue.layer_ui.misc.viewBinding
 import com.tminus1010.budgetvalue.features.categories.Category
 import com.tminus1010.budgetvalue.features_shared.IViewModels
 import com.tminus1010.budgetvalue.middleware.Rx
+import com.tminus1010.budgetvalue.middleware.nullIfZero
 import com.tminus1010.budgetvalue.middleware.reflectXY
 import com.tminus1010.budgetvalue.middleware.toMoneyBigDecimal
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
