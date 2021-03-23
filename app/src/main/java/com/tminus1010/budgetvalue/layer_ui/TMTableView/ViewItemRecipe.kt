@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.layer_ui.TMTableView
 
 import android.view.View
-import com.tminus1010.budgetvalue.measureUnspecified
+import com.tminus1010.budgetvalue.middleware.measureUnspecified
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 

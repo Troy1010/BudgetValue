@@ -8,7 +8,7 @@ import android.view.View.MeasureSpec
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
-import com.tminus1010.budgetvalue.Orientation
+import com.tminus1010.budgetvalue.middleware.Orientation
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
 

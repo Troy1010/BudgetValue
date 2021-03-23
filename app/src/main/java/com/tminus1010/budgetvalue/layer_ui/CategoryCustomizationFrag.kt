@@ -14,7 +14,7 @@ import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.misc.viewBinding
 import com.tminus1010.budgetvalue.features.categories.Category
 import com.tminus1010.budgetvalue.features_shared.IViewModels
-import com.tminus1010.budgetvalue.reflectXY
+import com.tminus1010.budgetvalue.middleware.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe

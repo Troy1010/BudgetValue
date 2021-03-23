@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.layer_ui.TMTableView
 
-import com.tminus1010.budgetvalue.arrayListOfZeros
+import com.tminus1010.budgetvalue.middleware.arrayListOfZeros
 import com.tminus1010.tmcommonkotlin.misc.logz
 import java.lang.Math.max
 import kotlin.math.ceil

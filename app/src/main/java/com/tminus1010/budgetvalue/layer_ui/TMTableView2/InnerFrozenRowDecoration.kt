@@ -7,7 +7,7 @@ import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.tminus1010.budgetvalue.Orientation
+import com.tminus1010.budgetvalue.middleware.Orientation
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.Decoration
 

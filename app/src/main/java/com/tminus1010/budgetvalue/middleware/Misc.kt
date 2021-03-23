@@ -1,6 +1,6 @@
 @file:Suppress("NAME_SHADOWING")
 
-package com.tminus1010.budgetvalue
+package com.tminus1010.budgetvalue.middleware
 
 import android.content.res.Resources
 import android.view.View
@@ -453,7 +453,13 @@ fun <A, B, C, D, E> combineLatestImpatient(
     d: Observable<D>,
     e: Observable<E>,
 ): Observable<Quintuple<A?, B?, C?, D?, E?>> {
-    return Rx.combineLatest(a.boxStartNull(), b.boxStartNull(), c.boxStartNull(), d.boxStartNull(), e.boxStartNull())
+    return Rx.combineLatest(
+        a.boxStartNull(),
+        b.boxStartNull(),
+        c.boxStartNull(),
+        d.boxStartNull(),
+        e.boxStartNull()
+    )
         .compose { observable ->
             // # If no observables are cold, then skip the first emission
             // * The observables start with null so that combineLatest is impatient.
@@ -475,7 +481,14 @@ fun <A, B, C, D, E, F> combineLatestImpatient(
     e: Observable<E>,
     f: Observable<F>,
 ): Observable<Sextuple<A?, B?, C?, D?, E?, F?>> {
-    return Rx.combineLatest(a.boxStartNull(), b.boxStartNull(), c.boxStartNull(), d.boxStartNull(), e.boxStartNull(), f.boxStartNull())
+    return Rx.combineLatest(
+        a.boxStartNull(),
+        b.boxStartNull(),
+        c.boxStartNull(),
+        d.boxStartNull(),
+        e.boxStartNull(),
+        f.boxStartNull()
+    )
         .compose { observable ->
             // # If no observables are cold, then skip the first emission
             // * The observables start with null so that combineLatest is impatient.
@@ -498,7 +511,15 @@ fun <A, B, C, D, E, F, G> combineLatestImpatient(
     f: Observable<F>,
     g: Observable<G>,
 ): Observable<Septuple<A?, B?, C?, D?, E?, F?, G?>> {
-    return Rx.combineLatest(a.boxStartNull(), b.boxStartNull(), c.boxStartNull(), d.boxStartNull(), e.boxStartNull(), f.boxStartNull(), g.boxStartNull())
+    return Rx.combineLatest(
+        a.boxStartNull(),
+        b.boxStartNull(),
+        c.boxStartNull(),
+        d.boxStartNull(),
+        e.boxStartNull(),
+        f.boxStartNull(),
+        g.boxStartNull()
+    )
         .compose { observable ->
             // # If no observables are cold, then skip the first emission
             // * The observables start with null so that combineLatest is impatient.

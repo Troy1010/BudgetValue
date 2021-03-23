@@ -9,7 +9,7 @@ import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
 import com.tminus1010.budgetvalue.features.categories.Category
-import com.tminus1010.budgetvalue.toMoneyBigDecimal
+import com.tminus1010.budgetvalue.middleware.toMoneyBigDecimal
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.Subject
 import java.math.BigDecimal

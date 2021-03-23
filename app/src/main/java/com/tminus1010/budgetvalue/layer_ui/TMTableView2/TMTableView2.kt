@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
-import com.tminus1010.budgetvalue.Orientation
+import com.tminus1010.budgetvalue.middleware.Orientation
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.databinding.TableviewLayout2Binding
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.IViewItemRecipe

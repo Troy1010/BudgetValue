@@ -19,6 +19,9 @@ import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
 import com.tminus1010.budgetvalue.layer_ui.misc.viewBinding
 import com.tminus1010.budgetvalue.features.categories.Category
 import com.tminus1010.budgetvalue.features_shared.IViewModels
+import com.tminus1010.budgetvalue.middleware.Rx
+import com.tminus1010.budgetvalue.middleware.reflectXY
+import com.tminus1010.budgetvalue.middleware.toMoneyBigDecimal
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers

@@ -17,7 +17,7 @@ class MiscKtTest {
             .delay(2, TimeUnit.SECONDS)
             .startWith(Observable.just("d").delay(2, TimeUnit.SECONDS))
         // # Stimulate
-        val result = mergeCombineWithIndex(a, b, c).toList().blockingGet()
+        val result = com.tminus1010.budgetvalue.middleware.mergeCombineWithIndex(a, b, c).toList().blockingGet()
         // # Verify
         assertEquals(listOf(0, 1, 2, 2), result.map { it.first })
     }

@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue
+package com.tminus1010.budgetvalue.middleware
 
 import com.tminus1010.tmcommonkotlin.tuple.*
 import io.reactivex.rxjava3.core.Observable

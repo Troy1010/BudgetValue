@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 
 import com.tminus1010.budgetvalue.features_shared.Domain
 import com.tminus1010.budgetvalue.features.categories.Category
-import com.tminus1010.budgetvalue.unbox
+import com.tminus1010.budgetvalue.middleware.unbox
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.schedulers.Schedulers

@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.features_shared
 
-import com.tminus1010.budgetvalue.Rx
+import com.tminus1010.budgetvalue.middleware.Rx
 import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.budgetvalue.middleware.LocalDatePeriod
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject

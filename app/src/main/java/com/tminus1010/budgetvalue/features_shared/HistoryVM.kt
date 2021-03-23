@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.features_shared
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.Rx
+import com.tminus1010.budgetvalue.middleware.Rx
 import com.tminus1010.budgetvalue.categoryComparator
 import com.tminus1010.budgetvalue.features.reconciliations.ActiveReconciliationVM
 import com.tminus1010.budgetvalue.features.reconciliations.ActiveReconciliationVM2
