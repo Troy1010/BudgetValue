@@ -1,14 +1,10 @@
 package com.tminus1010.budgetvalue.features.plans
 
-import com.tminus1010.budgetvalue.layer_data.Repo
-import com.tminus1010.budgetvalue.features.categories.CategoryAmountsConverter
-import com.tminus1010.budgetvalue.features.categories.ICategoryParser
 import com.tminus1010.budgetvalue.features.categories.Category
-import com.tminus1010.budgetvalue.features.reconciliations.Reconciliation
-import com.tminus1010.tmcommonkotlin.misc.extensions.associate
+import com.tminus1010.budgetvalue.features.categories.CategoryAmountsConverter
+import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.tmcommonkotlin.rx.extensions.noEnd
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -16,7 +12,6 @@ import javax.inject.Inject
 class PlanUseCasesImpl @Inject constructor(
     private val repo: Repo,
     private val categoryAmountsConverter: CategoryAmountsConverter,
-    val categoryParser: ICategoryParser,
 ): PlanUseCases {
     override val plans =
         repo.fetchPlans()
@@ -28,22 +23,22 @@ class PlanUseCasesImpl @Inject constructor(
         repo.add(plan.toDTO(categoryAmountsConverter))
             .subscribeOn(Schedulers.io())
 
-    override fun pushPlanCA(plan: Plan, category: Category, amount: BigDecimal?): Completable =
-        plan.categoryAmounts
+    override fun updatePlanCA(plan: Plan, categoryAmount: Pair<Category, BigDecimal?>): Completable {
+        val amount = categoryAmount.second
+        val category = categoryAmount.first
+        return plan.categoryAmounts
             .toMutableMap()
-            .apply { if (amount==null) remove(category) else put(category, amount) }
-            .let { repo.updatePlanCategoryAmounts(plan.toDTO(categoryAmountsConverter).startDate, it.mapKeys { it.key.name }) }
+            .apply { if (amount == null) remove(category) else put(category, amount) }
+            .let {
+                repo.updatePlanCategoryAmounts(
+                    plan.toDTO(categoryAmountsConverter).startDate,
+                    it.mapKeys { it.key.name })
+            }
+    }
 
-    override val activePlanCAs: Observable<Map<Category, BigDecimal>> =
-        repo.activePlanCAs
-            .map { it.associate { categoryParser.parseCategory(it.key) to it.value.toBigDecimal() } }
+    override fun updatePlanAmount(plan: Plan, amount: BigDecimal) =
+        repo.updatePlanAmount(plan.toDTO(categoryAmountsConverter).startDate, amount)
 
-    override fun pushActivePlanCAs(categoryAmounts: Map<Category, BigDecimal>): Completable =
-        repo.pushActivePlanCAs(categoryAmounts.associate { it.key.name to it.value.toString() })
-
-    override fun pushActivePlanCA(kv: Pair<Category, BigDecimal?>): Completable =
-        repo.pushActivePlanCA(Pair(kv.first.name, kv.second?.toString()))
-
-    override fun clearActivePlan(): Completable =
-        repo.clearActivePlanCAs()
+    override fun delete(plan: Plan) =
+        repo.delete(plan.toDTO(categoryAmountsConverter))
 }

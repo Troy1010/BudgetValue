@@ -19,7 +19,6 @@ class SharedPrefWrapper @Inject constructor(
     companion object {
         enum class Key {
             RECONCILE_CATEGORY_AMOUNTS,
-            PLAN_CATEGORY_AMOUNTS,
             EXPECTED_INCOME,
             ANCHOR_DATE_OFFSET,
             BLOCK_SIZE,
@@ -61,36 +60,6 @@ class SharedPrefWrapper @Inject constructor(
     }
 
     override fun clearActiveReconcileCAs() = pushActiveReconciliationCAs(null)
-
-    // # ActivePlan
-
-    private val activePlanCAsPublisher = PublishSubject.create<Map<String, String>>()
-    override val activePlanCAs: BehaviorSubject<Map<String, String>> =
-        activePlanCAsPublisher
-            .startWithItem(moshi.fromJson(sharedPreferences.getString(Key.PLAN_CATEGORY_AMOUNTS.name, null)?:"{}"))
-            .distinctUntilChanged()
-            .toBehaviorSubject()
-
-    override fun pushActivePlanCAs(categoryAmounts: Map<String, String>?): Completable {
-        categoryAmounts
-            ?.let { moshi.toJson(it) }
-            ?.also { editor.putString(Key.PLAN_CATEGORY_AMOUNTS.name, it) }
-            ?: editor.remove(Key.PLAN_CATEGORY_AMOUNTS.name)
-        return Completable.fromAction {
-            editor.commit()
-            activePlanCAsPublisher.onNext(categoryAmounts ?: emptyMap())
-        }
-    }
-
-    override fun pushActivePlanCA(kv: Pair<String, String?>): Completable {
-        val (k, v) = kv
-        return activePlanCAs.value
-            .toMutableMap()
-            .also { if (v==null || v == BigDecimal.ZERO.toString()) it.remove(k) else it[k] = v }
-            .let { pushActivePlanCAs(it) }
-    }
-
-    override fun clearActivePlanCAs() = pushActivePlanCAs(null)
 
     // # ExpectedIncome
 

@@ -9,6 +9,7 @@ import com.tminus1010.budgetvalue.databinding.FragPlanBinding
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
+import com.tminus1010.budgetvalue.extensions.itemObservableMap2
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
@@ -56,7 +57,7 @@ class PlanFrag: Fragment(R.layout.frag_plan), IViewModels {
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        Rx.combineLatest(activePlanVM.activePlanCAs.value.itemObservableMap2, categoriesVM.userCategories)
+        Rx.combineLatest(activePlanVM.activePlanCAs.itemObservableMap2(), categoriesVM.userCategories)
             .debounce(100, TimeUnit.MILLISECONDS)
             .observeOn(Schedulers.computation())
             .map { (planCAsItemObservableMap, activeCategories) ->

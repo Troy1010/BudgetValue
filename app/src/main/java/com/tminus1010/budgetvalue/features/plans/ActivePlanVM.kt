@@ -1,61 +1,67 @@
 package com.tminus1010.budgetvalue.features.plans
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.middleware.Rx
+import com.tminus1010.budgetvalue.extensions.itemObservableMap2
 import com.tminus1010.budgetvalue.extensions.launch
+import com.tminus1010.budgetvalue.extensions.withLatestFrom2
 import com.tminus1010.budgetvalue.features.categories.CategoriesVM
-import com.tminus1010.budgetvalue.features_shared.Domain
 import com.tminus1010.budgetvalue.features.categories.Category
+import com.tminus1010.budgetvalue.features_shared.DatePeriodGetter
+import com.tminus1010.budgetvalue.features_shared.Domain
+import com.tminus1010.budgetvalue.middleware.Rx
 import com.tminus1010.budgetvalue.middleware.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.rx.extensions.total
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
-import java.time.LocalDate
 
-class ActivePlanVM(domain: Domain, categoriesVM: CategoriesVM) : ViewModel() {
+class ActivePlanVM(domain: Domain, categoriesVM: CategoriesVM, datePeriodGetter: DatePeriodGetter) : ViewModel() {
+    val activePlan = domain.plans
+        .flatMap {
+            // If the last plan is a valid active plan, use that. Otherwise, copy some of the last plan's properties if it exists or create a new one, and push it.
+            if (it.lastOrNull()?.localDatePeriod?.blockingFirst() == datePeriodGetter.currentDatePeriod())
+                Observable.just(it.last())
+            else {
+                when {
+                    it.lastOrNull() != null ->
+                        Observable.just(Plan(Observable.just(datePeriodGetter.currentDatePeriod()),
+                            it.last().defaultAmount,
+                            it.last().categoryAmounts))
+                    else ->
+                        Observable.just(Plan(Observable.just(datePeriodGetter.currentDatePeriod()),
+                            BigDecimal.ZERO,
+                            emptyMap()))
+                }.doOnNext { domain.pushPlan(it).blockingAwait() }
+            }
+        }
+        .toBehaviorSubject()
     val intentPushExpectedIncome = PublishSubject.create<BigDecimal>()
-        .also { it.launch { domain.pushExpectedIncome(it) } }
-    val intentSaveActivePlan = PublishSubject.create<Unit>()
         .also {
-            it
-                .map {
-                    Plan(domain.getDatePeriodObservable(LocalDate.now()),
-                        expectedIncome.value,
-                        domain.activePlanCAs.blockingFirst()
-                    )
-                }
-                .flatMapCompletable { domain.pushPlan(it) }
-                .subscribe()
+            it.withLatestFrom2(activePlan)
+                .launch { (amount, plan) -> domain.updatePlanAmount(plan, amount) }
         }
     val intentPushPlanCA = PublishSubject.create<Pair<Category, BigDecimal>>()
         .also {
-            it.launch { domain.pushActivePlanCA(it) }
-            // The last plan might be the active plan, if it contains the current date.
-            // push to there as well.
-            it
-                .withLatestFrom(domain.plans) { _, b -> b }
-                .filter { it.isNotEmpty() }
-                .map { it.last() }
-                .filter { LocalDate.now() in it.localDatePeriod.blockingFirst() }
-                .map { Unit }
-                .subscribe(intentSaveActivePlan)
+            it.withLatestFrom2(activePlan)
+                .launch { (amount, plan) -> domain.updatePlanCA(plan, amount) }
         }
     val activePlanCAs =
-        Rx.combineLatest(domain.activePlanCAs, categoriesVM.userCategories)
-            .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (activeReconcileCAs, activeCategories) ->
+        Rx.combineLatest(activePlan, categoriesVM.userCategories)
+            .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (activePlan, activeCategories) ->
                 activeCategories
                     .associateWith { BigDecimal.ZERO }
-                    .let { it + activeReconcileCAs }
+                    .let { it + activePlan.categoryAmounts }
                     .also { acc.adjustTo(it) }
                 acc
             }
+            .skip(1)
             .toBehaviorSubject()
-    val planUncategorized = activePlanCAs.value.itemObservableMap2
+    val planUncategorized = activePlanCAs.itemObservableMap2()
         .switchMap { it.values.total() }
         .replay(1).refCount()
     val expectedIncome = intentPushExpectedIncome
-        .startWithItem(domain.fetchExpectedIncome())
+        .startWith(activePlan.take(1).map { it.defaultAmount })
         .toBehaviorSubject()
     val defaultAmount = Rx.combineLatest(expectedIncome, planUncategorized)
         .map { it.first - it.second }

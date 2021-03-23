@@ -67,16 +67,22 @@ interface MiscDAO {
     fun fetchPlans(): Observable<List<PlanDTO>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun add(PlanDTO: PlanDTO): Completable
+    fun add(planDTO: PlanDTO): Completable
 
     @Update
-    fun update(PlanDTO: PlanDTO): Completable
+    fun update(planDTO: PlanDTO): Completable
+
+    @Delete
+    fun delete(planDTO: PlanDTO): Completable
 
     @Query("DELETE FROM PlanDTO")
     fun clearPlans(): Completable
 
     @Query("UPDATE PlanDTO SET categoryAmounts=:categoryAmounts WHERE startDate=:startDate")
     fun updatePlanCategoryAmounts(startDate: LocalDate, categoryAmounts: Map<String, BigDecimal>): Completable
+
+    @Query("UPDATE PlanDTO SET amount=:amount WHERE startDate=:startDate")
+    fun updatePlanAmount(startDate: LocalDate, amount: BigDecimal): Completable
 
     // # Reconciliations
 

@@ -35,9 +35,8 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile), IViewModels {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
-        binding.btnSave.clicks().subscribe {
+        binding.btnSave.clicks().observe(viewLifecycleOwner) {
             activeReconciliationVM2.intentSaveReconciliation.onNext(Unit)
-            activePlanVM.intentSaveActivePlan.onNext(Unit)
         }
         // # TMTableView
         val cellRecipeFactory = ViewItemRecipeFactory.createCellRecipeFactory(requireContext())

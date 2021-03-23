@@ -3,8 +3,6 @@ package com.tminus1010.budgetvalue.features_shared
 import com.tminus1010.budgetvalue.features.accounts.AccountUseCases
 import com.tminus1010.budgetvalue.features.accounts.AccountUseCasesImpl
 import com.tminus1010.budgetvalue.features.categories.*
-import com.tminus1010.budgetvalue.features.plans.ExpectedIncomeUseCases
-import com.tminus1010.budgetvalue.features.plans.ExpectedIncomeUseCasesImpl
 import com.tminus1010.budgetvalue.features.plans.PlanUseCases
 import com.tminus1010.budgetvalue.features.plans.PlanUseCasesImpl
 import com.tminus1010.budgetvalue.features.reconciliations.ReconciliationUseCases
@@ -32,7 +30,6 @@ class Domain @Inject constructor(
     private val transactionParser: TransactionParser,
     private val accountUseCasesImpl: AccountUseCasesImpl,
     private val appInitBoolUseCasesImpl: AppInitBoolUseCasesImpl,
-    private val expectedIncomeUseCasesImpl: ExpectedIncomeUseCasesImpl,
     private val planUseCasesImpl: PlanUseCasesImpl,
     private val reconciliationUseCasesImpl: ReconciliationUseCasesImpl,
     private val settingsUseCasesImpl: SettingsUseCasesImpl,
@@ -43,17 +40,16 @@ class Domain @Inject constructor(
     ITransactionParser by transactionParser,
     AccountUseCases by accountUseCasesImpl,
     AppInitBoolUseCases by appInitBoolUseCasesImpl,
-    ExpectedIncomeUseCases by expectedIncomeUseCasesImpl,
     PlanUseCases by planUseCasesImpl,
     ReconciliationUseCases by reconciliationUseCasesImpl,
     SettingsUseCases by settingsUseCasesImpl,
     TransactionUseCases by transactionUseCasesImpl,
     UserCategoriesUseCases by userCategoriesUseCasesImpl {
 
-    fun deleteFromActive(category: Category): Completable =
-        Completable.merge(listOf(
-            pushActivePlanCA(Pair(category, null)),
-            pushActiveReconciliationCA(Pair(category, null)),
-            delete(category),
-        ))
+    fun deleteFromActive(category: Category): Completable = TODO()
+//        Completable.merge(listOf(
+//            pushActivePlanCA(Pair(category, null)),
+//            pushActiveReconciliationCA(Pair(category, null)),
+//            delete(category),
+//        ))
 }
