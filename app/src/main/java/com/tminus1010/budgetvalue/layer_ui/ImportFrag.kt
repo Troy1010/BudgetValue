@@ -50,12 +50,12 @@ class ImportFrag : Fragment(R.layout.frag_import), IViewModels {
                         .subscribe(accountsVM.intentDeleteAccount)
                     holder.binding.editTextName.apply {
                         setText(account.name)
-                        bindOutgoing(accountsVM.intentUpdateAmmount,
+                        bindOutgoing(accountsVM.intentUpdateAccount,
                             { account.copy(name = it) })
                     }
                     holder.binding.editTextAmount.apply {
                         setText(account.amount.toString())
-                        bindOutgoing(accountsVM.intentUpdateAmmount,
+                        bindOutgoing(accountsVM.intentUpdateAccount,
                             toT = { account.copy(amount = it.toMoneyBigDecimal()) },
                             toDisplayable = { it.amount })
                     }

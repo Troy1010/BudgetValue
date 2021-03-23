@@ -12,7 +12,7 @@ class AccountsVM(domain: Domain) : ViewModel() {
         .also { it.launch { domain.push(Account("", BigDecimal.ZERO)) } }
     val intentDeleteAccount = PublishSubject.create<Account>()
         .also { it.launch { domain.delete(it) } }
-    val intentUpdateAmmount = PublishSubject.create<Account>()
+    val intentUpdateAccount = PublishSubject.create<Account>()
         .also { it.launch { domain.update(it) } }
     val accounts = domain.fetchAccounts().toBehaviorSubject(emptyList())
     val accountsTotal = accounts
