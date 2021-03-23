@@ -10,7 +10,6 @@ interface PlanUseCases {
     val plans: Observable<List<Plan>>
     fun pushPlan(plan: Plan): Completable
     fun pushPlanCA(plan: Plan, category: Category, amount: BigDecimal?): Completable
-    fun pushReconciliation(reconciliation: Reconciliation): Completable
     val activePlanCAs: Observable<Map<Category, BigDecimal>>
     fun pushActivePlanCAs(categoryAmounts: Map<Category, BigDecimal>): Completable
     fun pushActivePlanCA(kv: Pair<Category, BigDecimal?>): Completable

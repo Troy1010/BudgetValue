@@ -7,6 +7,7 @@ import com.tminus1010.budgetvalue.features.categories.Category
 import com.tminus1010.tmcommonkotlin.misc.extensions.associate
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -23,6 +24,10 @@ class ReconciliationUseCasesImpl @Inject constructor(
             .let { repo.updateReconciliationCategoryAmounts(reconciliation.id, it.mapKeys { it.key.name }) }
 
     override fun clearReconciliations() = repo.clearReconciliations()
+
+    override fun pushReconciliation(reconciliation: Reconciliation): Completable =
+        reconciliation.toDTO(categoryAmountsConverter)
+            .let { repo.add(it).subscribeOn(Schedulers.io()) }
 
     override val reconciliations: Observable<List<Reconciliation>> =
         repo.fetchReconciliations()
