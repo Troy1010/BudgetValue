@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class CategoriesUCWrapper @Inject constructor(
     userCategoriesUseCasesImpl: IUserCategoriesFetch
-) : ICategoryParser, ICategories {
+) : ICategoryParser, ICategoriesUCWrapper {
     override val defaultCategory = Category("Default", Category.Type.Misc, true)
     override val unknownCategory = Category("Unknown", Category.Type.Misc, true)
 
