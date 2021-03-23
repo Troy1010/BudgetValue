@@ -5,6 +5,8 @@ import com.tminus1010.budgetvalue.IFlavorIntersection
 import com.tminus1010.budgetvalue.features.categories.IUserCategoriesFetch
 import com.tminus1010.budgetvalue.features.categories.UserCategoriesUseCases
 import com.tminus1010.budgetvalue.features.categories.UserCategoriesUseCasesImpl
+import com.tminus1010.budgetvalue.features_shared.SettingsUseCases
+import com.tminus1010.budgetvalue.features_shared.SettingsUseCasesImpl
 import dagger.Binds
 import dagger.Module
 
@@ -18,4 +20,7 @@ abstract class BindingModule {
 
     @Binds
     abstract fun provideFlavorIntersection(flavorIntersection: FlavorIntersection): IFlavorIntersection
+
+    @Binds
+    abstract fun provideSettingsUseCases(settingsUseCasesImpl: SettingsUseCasesImpl): SettingsUseCases
 }

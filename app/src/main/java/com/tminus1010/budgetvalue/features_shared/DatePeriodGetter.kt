@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue.features_shared
 
 import com.tminus1010.budgetvalue.middleware.Rx
-import com.tminus1010.budgetvalue.layer_data.Repo
 import com.tminus1010.budgetvalue.middleware.LocalDatePeriod
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
@@ -13,10 +12,10 @@ import javax.inject.Singleton
 
 @Singleton
 class DatePeriodGetter @Inject constructor(
-    repo: Repo
+    settingsUseCases: SettingsUseCases
 ): IDatePeriodGetter {
-    private val blockSize = repo.blockSize
-    private val anchorDateOffset = repo.anchorDateOffset
+    private val blockSize = settingsUseCases.blockSize
+    private val anchorDateOffset = settingsUseCases.anchorDateOffset
     private val anchorDay = LocalDate.of(2020, Month.JULY, 1)
     override fun getDatePeriodObservable(date: LocalDate): Observable<LocalDatePeriod> =
         Rx.combineLatest(anchorDateOffset, blockSize)
