@@ -40,10 +40,6 @@ class ActiveReconciliationVM(
             .toBehaviorSubject()
     val rowDatas = Rx.combineLatest(categoriesVM.userCategories, activeReconcileCAs.value.itemObservableMap2, activePlanVM.activePlanCAs, transactionsVM.spends)
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
-    val caTotal = activeReconcileCAs.value.itemObservableMap2
-        .switchMap { it.values.total() }
-        .replay(1).refCount()
-
     //
     fun getRowDatas(
         activeCategories: Iterable<Category>,
