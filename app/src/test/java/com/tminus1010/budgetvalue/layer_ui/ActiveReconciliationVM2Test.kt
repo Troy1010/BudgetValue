@@ -4,7 +4,6 @@ import com.tminus1010.budgetvalue.Givens
 import com.tminus1010.budgetvalue.extensions.toObservable
 import com.tminus1010.budgetvalue.features_shared.Domain
 import com.tminus1010.budgetvalue.features_shared.budgeted.BudgetedVM
-import com.tminus1010.budgetvalue.features.reconciliations.ActiveReconciliationVM
 import com.tminus1010.budgetvalue.features.reconciliations.ActiveReconciliationVM2
 import com.tminus1010.budgetvalue.features.transactions.TransactionsVM
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
@@ -15,9 +14,7 @@ import junit.framework.TestCase
 class ActiveReconciliationVM2Test : TestCase() {
 
     val activeReconciliationVM2 = ActiveReconciliationVM2(
-        activeReconciliationVM = mockk<ActiveReconciliationVM>().also {
-            every { it.caTotal } returns 9.toBigDecimal().toObservable()
-        },
+        activeReconciliationVM = mockk(),
         budgetedVM = mockk<BudgetedVM>().also {
             every { it.defaultAmount } returns 298.toBigDecimal().toObservable().toBehaviorSubject()
         },
