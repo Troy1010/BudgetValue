@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.middleware
+package com.tminus1010.budgetvalue.middleware.ui
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView

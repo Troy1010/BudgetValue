@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tminus1010.budgetvalue.middleware.GenViewHolder2
+import com.tminus1010.budgetvalue.middleware.ui.GenViewHolder2
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.databinding.FragErrorBinding
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding

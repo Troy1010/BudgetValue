@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding4.view.clicks
-import com.tminus1010.budgetvalue.middleware.GenViewHolder2
+import com.tminus1010.budgetvalue.middleware.ui.GenViewHolder2
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.databinding.FragImportBinding
 import com.tminus1010.budgetvalue.databinding.ItemAccountBinding
