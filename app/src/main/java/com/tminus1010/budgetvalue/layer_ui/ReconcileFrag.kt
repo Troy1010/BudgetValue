@@ -27,6 +27,7 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import java.math.BigDecimal
+import java.util.concurrent.TimeUnit
 
 class ReconcileFrag : Fragment(R.layout.frag_reconcile), IViewModels {
     val binding by viewBinding(FragReconcileBinding::bind)
@@ -65,6 +66,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile), IViewModels {
         )
         Rx.combineLatest(activeReconciliationVM.rowDatas, categoriesVM.userCategories, budgetedVM.categoryAmounts.value.itemObservableMap2)
             .observeOn(AndroidSchedulers.mainThread())
+            .debounce(100, TimeUnit.MILLISECONDS) // budgetedCA[it.category]!! causes null pointer exception without this
             .observe(viewLifecycleOwner) { (rowDatas, activeCategories, budgetedCA) ->
                 val dividerMap = activeCategories
                     .withIndex()
