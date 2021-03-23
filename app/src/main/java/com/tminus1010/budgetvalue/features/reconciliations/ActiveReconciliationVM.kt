@@ -25,7 +25,7 @@ class ActiveReconciliationVM(
     activePlanVM: ActivePlanVM,
     categoriesVM: CategoriesVM,
 ) : ViewModel() {
-    val intentPushActiveReconcileCA = PublishSubject.create<Pair<Category, BigDecimal>>()
+    val intentPushActiveReconcileCA: PublishSubject<Pair<Category, BigDecimal>> = PublishSubject.create<Pair<Category, BigDecimal>>()
         .also { it.launch { domain.pushActiveReconciliationCA(it) } }
     // # State
     val activeReconcileCAs =
