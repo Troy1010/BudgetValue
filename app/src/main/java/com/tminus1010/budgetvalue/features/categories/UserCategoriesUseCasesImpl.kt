@@ -1,6 +1,5 @@
 package com.tminus1010.budgetvalue.features.categories
 
-import com.tminus1010.budgetvalue.categoryComparator
 import com.tminus1010.budgetvalue.layer_data.Repo
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -20,5 +19,4 @@ class UserCategoriesUseCasesImpl @Inject constructor(
     override fun fetchUserCategories(): Observable<List<Category>> =
         repo.fetchUserCategories()
             .map { it.map { Category.fromDTO(it) } }
-            .map { it.sortedWith(categoryComparator) } // TODO("should be sorted later")
 }

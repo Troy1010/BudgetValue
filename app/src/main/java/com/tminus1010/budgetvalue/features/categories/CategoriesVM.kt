@@ -15,6 +15,7 @@ class CategoriesVM @Inject constructor(
 
     val userCategories: BehaviorSubject<List<Category>> =
         userCategoriesUseCasesImpl.fetchUserCategories()
+            .map { it.sortedWith(categoryComparator) }
             .toBehaviorSubject(emptyList())
 
     val categories: BehaviorSubject<List<Category>> =
