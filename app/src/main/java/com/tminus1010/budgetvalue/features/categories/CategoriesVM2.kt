@@ -8,7 +8,8 @@ import com.tminus1010.budgetvalue.features_shared.Domain
 import com.tminus1010.budgetvalue.middleware.Rx
 import io.reactivex.rxjava3.subjects.PublishSubject
 
-class CategoryDeletionVM(
+// Separate from CategoriesVM to avoid circular dependency graph
+class CategoriesVM2(
     private val domain: Domain,
     private val planUseCases: PlanUseCases,
     private val activePlanVM: ActivePlanVM,
