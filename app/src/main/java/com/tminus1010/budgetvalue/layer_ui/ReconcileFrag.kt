@@ -18,7 +18,6 @@ import com.tminus1010.budgetvalue.middleware.ui.bindIncoming
 import com.tminus1010.budgetvalue.middleware.ui.bindOutgoing
 import com.tminus1010.budgetvalue.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.features.categories.Category
-import com.tminus1010.budgetvalue.features_shared.IViewModels
 import com.tminus1010.budgetvalue.middleware.Rx
 import com.tminus1010.budgetvalue.middleware.reflectXY
 import com.tminus1010.budgetvalue.middleware.toMoneyBigDecimal

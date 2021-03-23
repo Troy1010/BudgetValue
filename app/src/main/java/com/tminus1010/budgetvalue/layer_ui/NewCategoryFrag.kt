@@ -11,7 +11,6 @@ import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appC
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
 import com.tminus1010.budgetvalue.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.features.categories.Category
-import com.tminus1010.budgetvalue.features_shared.IViewModels
 import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toast

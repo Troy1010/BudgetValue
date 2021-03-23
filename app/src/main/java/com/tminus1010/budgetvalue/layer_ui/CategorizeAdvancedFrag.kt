@@ -8,7 +8,6 @@ import com.tminus1010.budgetvalue.databinding.FragAdvancedCategorizeBinding
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.middleware.ui.viewBinding
-import com.tminus1010.budgetvalue.features_shared.IViewModels
 import com.tminus1010.budgetvalue.middleware.reflectXY
 import com.tminus1010.budgetvalue.middleware.ui.ViewItemRecipeFactoryProvider
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
