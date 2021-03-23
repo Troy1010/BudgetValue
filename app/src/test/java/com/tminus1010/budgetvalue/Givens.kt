@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue
 
 import com.tminus1010.budgetvalue.extensions.toObservable
 import com.tminus1010.budgetvalue.middleware.LocalDatePeriod
-import com.tminus1010.budgetvalue.features_shared.AppInitializer
+import com.tminus1010.budgetvalue.features_shared.app_init.AppInitializer
 import com.tminus1010.budgetvalue.features.categories.CategoriesUCWrapper
 import com.tminus1010.budgetvalue.features.categories.IUserCategoriesFetch
 import com.tminus1010.budgetvalue.features.categories.Category

@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.features_shared
+package com.tminus1010.budgetvalue.features_shared.budgeted
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.middleware.Rx
@@ -6,6 +6,7 @@ import com.tminus1010.budgetvalue.features.reconciliations.ActiveReconciliationV
 import com.tminus1010.budgetvalue.features.transactions.TransactionsVM
 import com.tminus1010.budgetvalue.features.categories.Category
 import com.tminus1010.budgetvalue.features.accounts.AccountsVM
+import com.tminus1010.budgetvalue.features_shared.Domain
 import com.tminus1010.budgetvalue.middleware.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.rx.extensions.total

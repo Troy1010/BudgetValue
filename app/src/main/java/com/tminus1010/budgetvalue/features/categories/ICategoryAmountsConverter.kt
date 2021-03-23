@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.features_shared
+package com.tminus1010.budgetvalue.features.categories
 
 import com.tminus1010.budgetvalue.features.categories.Category
 import java.math.BigDecimal

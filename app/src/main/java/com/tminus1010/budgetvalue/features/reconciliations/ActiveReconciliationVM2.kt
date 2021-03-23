@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue.middleware.Rx
 import com.tminus1010.budgetvalue.extensions.launch
 import com.tminus1010.budgetvalue.features_shared.Domain
 import com.tminus1010.budgetvalue.features.transactions.TransactionsVM
-import com.tminus1010.budgetvalue.features_shared.BudgetedVM
+import com.tminus1010.budgetvalue.features_shared.budgeted.BudgetedVM
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal

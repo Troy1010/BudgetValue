@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.features.plans
 
 import com.tminus1010.budgetvalue.layer_data.Repo
-import com.tminus1010.budgetvalue.features_shared.CategoryAmountsConverter
+import com.tminus1010.budgetvalue.features.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.features.categories.ICategoryParser
 import com.tminus1010.budgetvalue.features.categories.Category
 import com.tminus1010.budgetvalue.features.reconciliations.Reconciliation

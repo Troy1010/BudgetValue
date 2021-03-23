@@ -4,8 +4,8 @@ import androidx.activity.viewModels
 import androidx.fragment.app.FragmentActivity
 import com.tminus1010.budgetvalue.features.accounts.AccountsVM
 import com.tminus1010.budgetvalue.features.plans.ActivePlanVM
-import com.tminus1010.budgetvalue.features_shared.BudgetedVM
-import com.tminus1010.budgetvalue.features_shared.HistoryVM
+import com.tminus1010.budgetvalue.features_shared.budgeted.BudgetedVM
+import com.tminus1010.budgetvalue.features_shared.history.HistoryVM
 import com.tminus1010.budgetvalue.features.reconciliations.ActiveReconciliationVM
 import com.tminus1010.budgetvalue.features.reconciliations.ActiveReconciliationVM2
 import com.tminus1010.budgetvalue.features.transactions.CategorizeAdvancedVM

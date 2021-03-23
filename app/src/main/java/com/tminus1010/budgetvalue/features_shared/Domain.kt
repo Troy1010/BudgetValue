@@ -13,6 +13,10 @@ import com.tminus1010.budgetvalue.features.transactions.ITransactionParser
 import com.tminus1010.budgetvalue.features.transactions.TransactionParser
 import com.tminus1010.budgetvalue.features.transactions.TransactionUseCases
 import com.tminus1010.budgetvalue.features.transactions.TransactionUseCasesImpl
+import com.tminus1010.budgetvalue.features_shared.app_init.AppInitBoolUseCases
+import com.tminus1010.budgetvalue.features_shared.app_init.AppInitBoolUseCasesImpl
+import com.tminus1010.budgetvalue.features_shared.app_init.AppInitializer
+import com.tminus1010.budgetvalue.features_shared.app_init.IAppInitializer
 import io.reactivex.rxjava3.core.Completable
 import javax.inject.Inject
 import javax.inject.Singleton

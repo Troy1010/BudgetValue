@@ -1,10 +1,8 @@
-package com.tminus1010.budgetvalue.features_shared
+package com.tminus1010.budgetvalue.features.categories
 
 import com.squareup.moshi.Moshi
 import com.tminus1010.budgetvalue.extensions.fromJson
 import com.tminus1010.budgetvalue.extensions.toJson
-import com.tminus1010.budgetvalue.features.categories.Category
-import com.tminus1010.budgetvalue.features.categories.ICategoryParser
 import com.tminus1010.tmcommonkotlin.misc.extensions.associate
 import java.math.BigDecimal
 import javax.inject.Inject

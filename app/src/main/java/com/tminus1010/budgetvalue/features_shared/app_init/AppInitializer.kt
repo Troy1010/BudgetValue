@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.features_shared
+package com.tminus1010.budgetvalue.features_shared.app_init
 
 import com.tminus1010.budgetvalue.features.categories.UserCategoriesUseCasesImpl
 import com.tminus1010.budgetvalue.features.categories.Category

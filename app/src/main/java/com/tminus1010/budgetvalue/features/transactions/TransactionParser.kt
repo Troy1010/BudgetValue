@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.features.transactions
 
-import com.tminus1010.budgetvalue.features_shared.CategoryAmountsConverter
+import com.tminus1010.budgetvalue.features.categories.CategoryAmountsConverter
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader

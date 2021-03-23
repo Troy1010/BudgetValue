@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.features.transactions
 
 
-import com.tminus1010.budgetvalue.features_shared.CategoryAmountsConverter
+import com.tminus1010.budgetvalue.features.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.features.categories.Category
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import java.math.BigDecimal

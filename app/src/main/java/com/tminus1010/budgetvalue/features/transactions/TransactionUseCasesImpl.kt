@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.features.transactions
 
 import com.tminus1010.budgetvalue.layer_data.Repo
-import com.tminus1010.budgetvalue.features_shared.CategoryAmountsConverter
+import com.tminus1010.budgetvalue.features.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.features.categories.Category
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
