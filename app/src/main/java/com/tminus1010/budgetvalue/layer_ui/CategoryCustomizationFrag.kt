@@ -38,7 +38,7 @@ class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization)
             { View.inflate(requireContext(), R.layout.button, null) as Button },
             { v: Button, d: Category ->
                 v.text = "Delete"
-                v.setOnClickListener { domain.deleteFromActive(d).launch() }
+                v.setOnClickListener { categoryDeletionVM.deleteFromActive(d).launch() }
                 v.isEnabled = !d.isRequired
             }
         )

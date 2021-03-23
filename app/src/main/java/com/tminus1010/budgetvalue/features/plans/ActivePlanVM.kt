@@ -41,7 +41,7 @@ class ActivePlanVM(domain: Domain, categoriesVM: CategoriesVM, datePeriodGetter:
             it.withLatestFrom2(activePlan)
                 .launch { (amount, plan) -> domain.updatePlanAmount(plan, amount) }
         }
-    val intentPushPlanCA = PublishSubject.create<Pair<Category, BigDecimal>>()
+    val intentPushPlanCA = PublishSubject.create<Pair<Category, BigDecimal?>>()
         .also {
             it.withLatestFrom2(activePlan)
                 .launch { (amount, plan) -> domain.updatePlanCA(plan, amount) }

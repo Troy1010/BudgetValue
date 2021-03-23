@@ -44,12 +44,4 @@ class Domain @Inject constructor(
     ReconciliationUseCases by reconciliationUseCasesImpl,
     SettingsUseCases by settingsUseCasesImpl,
     TransactionUseCases by transactionUseCasesImpl,
-    UserCategoriesUseCases by userCategoriesUseCasesImpl {
-
-    fun deleteFromActive(category: Category): Completable = TODO()
-//        Completable.merge(listOf(
-//            pushActivePlanCA(Pair(category, null)),
-//            pushActiveReconciliationCA(Pair(category, null)),
-//            delete(category),
-//        ))
-}
+    UserCategoriesUseCases by userCategoriesUseCasesImpl

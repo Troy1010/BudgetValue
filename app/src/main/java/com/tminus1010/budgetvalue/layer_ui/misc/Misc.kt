@@ -42,7 +42,7 @@ fun <T> EditText.bindOutgoing(
     subject: Subject<T>,
     toT: (String) -> T,
     validate: ((T) -> T)? = null,
-    toDisplayable: ((T) -> Any)? = null
+    toDisplayable: ((T) -> Any?)? = null
 ) {
     Observable.merge(
         editorActionEvents2 { false }.filter { it.actionId == EditorInfo.IME_ACTION_DONE },
@@ -60,7 +60,7 @@ fun <T> EditText.bindOutgoing(
 
 fun <T> TextView.bindIncoming(
     observable: Observable<T>,
-    toDisplayable: ((T) -> Any)? = null
+    toDisplayable: ((T) -> Any?)? = null
 ): Disposable {
     return observable
         .observeOn(AndroidSchedulers.mainThread())
