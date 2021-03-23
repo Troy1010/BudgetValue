@@ -38,7 +38,7 @@ class FlavorIntersection @Inject constructor(): IFlavorIntersection {
                     for (transactionBlock in transactionBlocks) {
                         val curStringBlock = HashMap<String, String>()
                         stringBlocks.add(curStringBlock)
-                        for (category in domain.userCategories.value) {
+                        for (category in categoriesVM.userCategories.value) {
                             curStringBlock[category.name] = transactionBlock.value
                                 .map { it.categoryAmounts[category] ?: BigDecimal.ZERO }
                                 .fold(BigDecimal.ZERO, BigDecimal::add)

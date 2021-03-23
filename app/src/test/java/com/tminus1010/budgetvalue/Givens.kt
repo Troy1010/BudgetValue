@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue
 import com.tminus1010.budgetvalue.extensions.toObservable
 import com.tminus1010.budgetvalue.middleware.LocalDatePeriod
 import com.tminus1010.budgetvalue.features_shared.app_init.AppInitializer
-import com.tminus1010.budgetvalue.features.categories.CategoriesUCWrapper
+import com.tminus1010.budgetvalue.features.categories.CategoriesVM
 import com.tminus1010.budgetvalue.features.categories.IUserCategoriesFetch
 import com.tminus1010.budgetvalue.features.categories.Category
 import com.tminus1010.budgetvalue.features.plans.Plan
@@ -20,7 +20,7 @@ import java.time.Period
 object Givens {
     private val givenUserCategories1: Observable<List<Category>> =
         Observable.just(AppInitializer.initCategories)
-    val givenCategories = CategoriesUCWrapper(object : IUserCategoriesFetch {
+    val givenCategories = CategoriesVM(object : IUserCategoriesFetch {
         override fun fetchUserCategories(): Observable<List<Category>> = givenUserCategories1
     }).categories
     val givenPlan1 = Plan(

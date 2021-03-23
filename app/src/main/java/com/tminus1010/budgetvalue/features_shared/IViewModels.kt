@@ -5,6 +5,7 @@ import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 
 interface IViewModels {
     val viewModelProviders: ViewModelProviders
+    val LifecycleOwner.categoriesVM get() = viewModelProviders.categoriesVM
     val LifecycleOwner.accountsVM get() = viewModelProviders.accountsVM
     val LifecycleOwner.activePlanVM get() = viewModelProviders.activePlanVM
     val LifecycleOwner.activeReconciliationVM get() = viewModelProviders.activeReconciliationVM

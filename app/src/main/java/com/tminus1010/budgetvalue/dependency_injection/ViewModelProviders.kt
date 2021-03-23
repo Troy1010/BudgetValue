@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.dependency_injection
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentActivity
 import com.tminus1010.budgetvalue.features.accounts.AccountsVM
+import com.tminus1010.budgetvalue.features.categories.CategoriesVM
 import com.tminus1010.budgetvalue.features.plans.ActivePlanVM
 import com.tminus1010.budgetvalue.features_shared.budgeted.BudgetedVM
 import com.tminus1010.budgetvalue.features_shared.history.HistoryVM
@@ -15,15 +16,18 @@ import com.tminus1010.budgetvalue.features_shared.ErrorVM
 import com.tminus1010.tmcommonkotlin.view.createViewModelFactory
 
 class ViewModelProviders(val activity: FragmentActivity, val appComponent: AppComponent) {
-    val c get() = appComponent
+    private val c get() = appComponent
+    val categoriesVM: CategoriesVM
+            by { CategoriesVM(c.getDomain()) }
+                .let { activity.viewModels { createViewModelFactory(it) } }
     val accountsVM: AccountsVM
             by { AccountsVM(c.getDomain()) }
                 .let { activity.viewModels { createViewModelFactory(it) } }
     val activePlanVM: ActivePlanVM
-            by { ActivePlanVM(c.getDomain()) }
+            by { ActivePlanVM(c.getDomain(), categoriesVM) }
                 .let { activity.viewModels { createViewModelFactory(it) } }
     val activeReconciliationVM: ActiveReconciliationVM
-            by { ActiveReconciliationVM(c.getDomain(), transactionsVM, activePlanVM) }
+            by { ActiveReconciliationVM(c.getDomain(), transactionsVM, activePlanVM, categoriesVM) }
                 .let { activity.viewModels { createViewModelFactory(it) } }
     val activeReconciliationVM2: ActiveReconciliationVM2
             by { ActiveReconciliationVM2(activeReconciliationVM, budgetedVM, c.getDomain(), transactionsVM) }
@@ -32,7 +36,7 @@ class ViewModelProviders(val activity: FragmentActivity, val appComponent: AppCo
             by { CategorizeAdvancedVM(c.getDomain(), categorizeTransactionsVM) }
                 .let { activity.viewModels { createViewModelFactory(it) } }
     val budgetedVM: BudgetedVM
-            by { BudgetedVM(c.getDomain(), transactionsVM, activeReconciliationVM, accountsVM) }
+            by { BudgetedVM(c.getDomain(), transactionsVM, activeReconciliationVM, accountsVM, categoriesVM) }
                 .let { activity.viewModels { createViewModelFactory(it) } }
     val categorizeTransactionsVM: CategorizeTransactionsVM
             by { CategorizeTransactionsVM(c.getDomain(), transactionsVM) }

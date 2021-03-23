@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.features.plans
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.middleware.Rx
 import com.tminus1010.budgetvalue.extensions.launch
+import com.tminus1010.budgetvalue.features.categories.CategoriesVM
 import com.tminus1010.budgetvalue.features_shared.Domain
 import com.tminus1010.budgetvalue.features.categories.Category
 import com.tminus1010.budgetvalue.middleware.source_objects.SourceHashMap
@@ -12,7 +13,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 import java.time.LocalDate
 
-class ActivePlanVM(domain: Domain) : ViewModel() {
+class ActivePlanVM(domain: Domain, categoriesVM: CategoriesVM) : ViewModel() {
     val intentPushExpectedIncome = PublishSubject.create<BigDecimal>()
         .also { it.launch { domain.pushExpectedIncome(it) } }
     val intentSaveActivePlan = PublishSubject.create<Unit>()
@@ -41,7 +42,7 @@ class ActivePlanVM(domain: Domain) : ViewModel() {
                 .subscribe(intentSaveActivePlan)
         }
     val activePlanCAs =
-        Rx.combineLatest(domain.activePlanCAs, domain.userCategories)
+        Rx.combineLatest(domain.activePlanCAs, categoriesVM.userCategories)
             .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (activeReconcileCAs, activeCategories) ->
                 activeCategories
                     .associateWith { BigDecimal.ZERO }

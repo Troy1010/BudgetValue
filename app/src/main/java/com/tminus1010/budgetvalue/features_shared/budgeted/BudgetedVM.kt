@@ -6,6 +6,7 @@ import com.tminus1010.budgetvalue.features.reconciliations.ActiveReconciliationV
 import com.tminus1010.budgetvalue.features.transactions.TransactionsVM
 import com.tminus1010.budgetvalue.features.categories.Category
 import com.tminus1010.budgetvalue.features.accounts.AccountsVM
+import com.tminus1010.budgetvalue.features.categories.CategoriesVM
 import com.tminus1010.budgetvalue.features_shared.Domain
 import com.tminus1010.budgetvalue.middleware.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
@@ -18,9 +19,10 @@ class BudgetedVM(
     transactionsVM: TransactionsVM,
     activeReconciliationVM: ActiveReconciliationVM,
     accountsVM: AccountsVM,
+    categoriesVM: CategoriesVM,
 ): ViewModel() {
     val categoryAmounts =
-        Rx.combineLatest(domain.reconciliations, domain.plans, transactionsVM.transactionBlocks, activeReconciliationVM.activeReconcileCAs, domain.userCategories)
+        Rx.combineLatest(domain.reconciliations, domain.plans, transactionsVM.transactionBlocks, activeReconciliationVM.activeReconcileCAs, categoriesVM.userCategories)
             .scan(SourceHashMap<Category, BigDecimal>()) { acc, (reconciliations, plans, transactionBlocks, activeReconcileCAs, activeCategories) ->
                 val newMap = mutableMapOf<Category, BigDecimal>()
                 if (reconciliations != null)

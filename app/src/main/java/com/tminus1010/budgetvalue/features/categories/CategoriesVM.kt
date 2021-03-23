@@ -1,22 +1,23 @@
 package com.tminus1010.budgetvalue.features.categories
 
+import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.categoryComparator
 import com.tminus1010.tmcommonkotlin.misc.logz
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import javax.inject.Inject
 
-class CategoriesUCWrapper @Inject constructor(
+class CategoriesVM @Inject constructor(
     userCategoriesUseCasesImpl: IUserCategoriesFetch
-) : ICategoryParser, ICategoriesUCWrapper {
-    override val defaultCategory = Category("Default", Category.Type.Misc, true)
-    override val unknownCategory = Category("Unknown", Category.Type.Misc, true)
+) : ViewModel(), ICategoryParser {
+    val defaultCategory = Category("Default", Category.Type.Misc, true)
+    val unknownCategory = Category("Unknown", Category.Type.Misc, true)
 
-    override val userCategories: BehaviorSubject<List<Category>> =
+    val userCategories: BehaviorSubject<List<Category>> =
         userCategoriesUseCasesImpl.fetchUserCategories()
             .toBehaviorSubject(emptyList())
 
-    override val categories: BehaviorSubject<List<Category>> =
+    val categories: BehaviorSubject<List<Category>> =
         userCategories
             .map { it + defaultCategory + unknownCategory }
             .map { it.sortedWith(categoryComparator) }

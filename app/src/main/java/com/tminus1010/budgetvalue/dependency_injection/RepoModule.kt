@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import com.tminus1010.budgetvalue.App
 import com.tminus1010.budgetvalue.SHARED_PREF_FILE_NAME
 import com.tminus1010.budgetvalue.layer_data.UserCategoriesDAO
-import com.tminus1010.budgetvalue.features.categories.CategoriesUCWrapper
+import com.tminus1010.budgetvalue.features.categories.CategoriesVM
 import com.tminus1010.budgetvalue.layer_data.DB
 import com.tminus1010.budgetvalue.layer_data.MiscDAO
 import com.tminus1010.budgetvalue.features.categories.ICategoryParser
@@ -18,7 +18,7 @@ object RepoModule {
     @Provides
     @Singleton
     @JvmStatic
-    fun providesCategoryParser(activeCategoryDAOWrapper: CategoriesUCWrapper): ICategoryParser = activeCategoryDAOWrapper
+    fun providesCategoryParser(categoriesVM: CategoriesVM): ICategoryParser = categoriesVM
 
     @Provides
     @Singleton

@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.features.reconciliations
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.middleware.Rx
 import com.tminus1010.budgetvalue.extensions.launch
+import com.tminus1010.budgetvalue.features.categories.CategoriesVM
 import com.tminus1010.budgetvalue.features_shared.Domain
 import com.tminus1010.budgetvalue.features.plans.ActivePlanVM
 import com.tminus1010.budgetvalue.features.transactions.TransactionsVM
@@ -22,12 +23,13 @@ class ActiveReconciliationVM(
     private val domain: Domain,
     transactionsVM: TransactionsVM,
     activePlanVM: ActivePlanVM,
+    categoriesVM: CategoriesVM,
 ) : ViewModel() {
     val intentPushActiveReconcileCA = PublishSubject.create<Pair<Category, BigDecimal>>()
         .also { it.launch { domain.pushActiveReconciliationCA(it) } }
     // # State
     val activeReconcileCAs =
-        Rx.combineLatest(domain.activeReconciliationCAs, domain.userCategories)
+        Rx.combineLatest(domain.activeReconciliationCAs, categoriesVM.userCategories)
             .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (activeReconcileCAs, activeCategories) ->
                 activeCategories
                     .associateWith { BigDecimal.ZERO }
@@ -36,7 +38,7 @@ class ActiveReconciliationVM(
                 acc
             }
             .toBehaviorSubject()
-    val rowDatas = Rx.combineLatest(domain.userCategories, activeReconcileCAs.value.itemObservableMap2, activePlanVM.activePlanCAs, transactionsVM.spends)
+    val rowDatas = Rx.combineLatest(categoriesVM.userCategories, activeReconcileCAs.value.itemObservableMap2, activePlanVM.activePlanCAs, transactionsVM.spends)
         .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
     val caTotal = activeReconcileCAs.value.itemObservableMap2
         .switchMap { it.values.total() }
