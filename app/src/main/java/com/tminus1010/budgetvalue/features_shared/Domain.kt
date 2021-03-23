@@ -56,18 +56,4 @@ class Domain @Inject constructor(
             pushActiveReconciliationCA(Pair(category, null)),
             delete(category),
         ))
-
-    fun deleteFromEverywhere(category: Category): Completable =
-        Completable.merge(listOf(
-            deleteFromActive(category),
-            transactions
-                .take(1)
-                .flatMapCompletable { Completable.merge(it.map { pushTransactionCA(it, category, null) }) },
-            reconciliations
-                .take(1)
-                .flatMapCompletable { Completable.merge(it.map { pushReconciliationCA(it, category, null) }) },
-            plans
-                .take(1)
-                .flatMapCompletable { Completable.merge(it.map { pushPlanCA(it, category, null) }) },
-        ))
 }
