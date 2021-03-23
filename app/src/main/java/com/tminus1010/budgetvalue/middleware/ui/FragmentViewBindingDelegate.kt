@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.layer_ui.misc
+package com.tminus1010.budgetvalue.middleware.ui
 
 import android.view.View
 import androidx.fragment.app.Fragment

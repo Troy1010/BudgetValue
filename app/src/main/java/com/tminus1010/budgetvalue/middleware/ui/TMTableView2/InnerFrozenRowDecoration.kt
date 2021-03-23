@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.layer_ui.TMTableView2
+package com.tminus1010.budgetvalue.middleware.ui.TMTableView2
 
 import android.content.Context
 import android.graphics.Canvas
@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue.middleware.Orientation
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.layer_ui.TMTableView.Decoration
+import com.tminus1010.budgetvalue.middleware.ui.TMTableView.Decoration
 
 class InnerFrozenRowDecoration(
     context: Context,

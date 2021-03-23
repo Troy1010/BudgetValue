@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.features_shared
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.layer_ui.misc.ButtonPartial
+import com.tminus1010.budgetvalue.middleware.ui.ButtonPartial
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
 class ErrorVM: ViewModel() {

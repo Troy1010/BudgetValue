@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.layer_ui.misc
+package com.tminus1010.budgetvalue.middleware.ui
 
 import android.content.Context
 import android.text.Editable

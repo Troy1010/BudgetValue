@@ -12,12 +12,11 @@ import com.tminus1010.budgetvalue.databinding.FragReconcileBinding
 import com.tminus1010.budgetvalue.databinding.TableviewHeaderIncomeBinding
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
-import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
 import com.tminus1010.budgetvalue.extensions.itemObservableMap2
-import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
-import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
-import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
-import com.tminus1010.budgetvalue.layer_ui.misc.viewBinding
+import com.tminus1010.budgetvalue.middleware.ui.TMTableView.ViewItemRecipeFactory
+import com.tminus1010.budgetvalue.middleware.ui.bindIncoming
+import com.tminus1010.budgetvalue.middleware.ui.bindOutgoing
+import com.tminus1010.budgetvalue.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.features.categories.Category
 import com.tminus1010.budgetvalue.features_shared.IViewModels
 import com.tminus1010.budgetvalue.middleware.Rx

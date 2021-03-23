@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.layer_ui.TMTableView2
+package com.tminus1010.budgetvalue.middleware.ui.TMTableView2
 
 import android.content.Context
 import android.util.AttributeSet
@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.tminus1010.budgetvalue.middleware.Orientation
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.databinding.TableviewLayout2Binding
-import com.tminus1010.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
+import com.tminus1010.budgetvalue.middleware.ui.TMTableView.IViewItemRecipe
 import com.tminus1010.tmcommonkotlin.misc.extensions.children
 import com.tminus1010.tmcommonkotlin.misc.extensions.clearItemDecorations
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers

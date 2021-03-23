@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.tminus1010.budgetvalue.layer_ui.misc.MoneyEditText
+    <com.tminus1010.budgetvalue.middleware.ui.MoneyEditText
         android:id="@+id/editText_amount"
         style="@style/AppTheme.StandardEditText"
         android:layout_width="0dp"

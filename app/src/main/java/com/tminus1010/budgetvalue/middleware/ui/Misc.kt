@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.layer_ui.misc
+package com.tminus1010.budgetvalue.middleware.ui
 
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
@@ -7,12 +7,10 @@ import com.jakewharton.rxbinding4.view.focusChanges
 import com.jakewharton.rxbinding4.widget.TextViewEditorActionEvent
 import com.jakewharton.rxbinding4.widget.editorActionEvents
 import com.jakewharton.rxbinding4.widget.textChanges
-import com.tminus1010.tmcommonkotlin.misc.doLogx
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.subjects.Subject
-import java.util.concurrent.atomic.AtomicLong
 
 
 // * I'm not sure if this is the best idea. It might be better to have 2 different incoming and outgoing streams.

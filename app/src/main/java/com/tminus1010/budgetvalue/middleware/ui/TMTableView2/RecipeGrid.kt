@@ -1,7 +1,7 @@
-package com.tminus1010.budgetvalue.layer_ui.TMTableView2
+package com.tminus1010.budgetvalue.middleware.ui.TMTableView2
 
 import android.view.View
-import com.tminus1010.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
+import com.tminus1010.budgetvalue.middleware.ui.TMTableView.IViewItemRecipe
 import com.tminus1010.tmcommonkotlin.misc.extensions.easySetHeight
 import com.tminus1010.tmcommonkotlin.misc.extensions.easySetWidth
 import com.tminus1010.tmcommonkotlin.misc.extensions.pairwise

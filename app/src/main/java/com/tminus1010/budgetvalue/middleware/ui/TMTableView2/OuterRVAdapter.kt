@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.layer_ui.TMTableView2
+package com.tminus1010.budgetvalue.middleware.ui.TMTableView2
 
 import android.content.Context
 import android.view.View
@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue.middleware.Orientation
-import com.tminus1010.budgetvalue.layer_ui.TMTableView.Decoration
+import com.tminus1010.budgetvalue.middleware.ui.TMTableView.Decoration
 import com.tminus1010.budgetvalue.middleware.measureUnspecified
 import com.tminus1010.tmcommonkotlin.misc.extensions.scrollTo
 

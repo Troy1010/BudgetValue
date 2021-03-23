@@ -13,9 +13,8 @@ import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
-import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
-import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
-import com.tminus1010.budgetvalue.layer_ui.misc.viewBinding
+import com.tminus1010.budgetvalue.middleware.ui.bindIncoming
+import com.tminus1010.budgetvalue.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.features_shared.IViewModels
 import com.tminus1010.budgetvalue.middleware.unbox
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe

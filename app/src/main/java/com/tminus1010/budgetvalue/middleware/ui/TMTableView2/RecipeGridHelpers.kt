@@ -1,7 +1,7 @@
-package com.tminus1010.budgetvalue.layer_ui.TMTableView2
+package com.tminus1010.budgetvalue.middleware.ui.TMTableView2
 
-import com.tminus1010.budgetvalue.layer_ui.TMTableView.ColumnWidthCalculator
-import com.tminus1010.budgetvalue.layer_ui.TMTableView.IViewItemRecipe
+import com.tminus1010.budgetvalue.middleware.ui.TMTableView.ColumnWidthCalculator
+import com.tminus1010.budgetvalue.middleware.ui.TMTableView.IViewItemRecipe
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlin.math.max
