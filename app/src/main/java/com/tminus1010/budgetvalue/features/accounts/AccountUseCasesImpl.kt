@@ -8,7 +8,7 @@ import javax.inject.Inject
 class AccountUseCasesImpl @Inject constructor(
     private val repo: Repo
 ) : AccountUseCases {
-    override val accounts: Observable<List<Account>> =
+    override fun fetchAccounts(): Observable<List<Account>> =
         repo.fetchAccounts()
             .map { it.map { Account.fromDTO(it) } }
 
