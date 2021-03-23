@@ -3,9 +3,11 @@ package com.tminus1010.budgetvalue.features.transactions
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.features_shared.Domain
 import com.tminus1010.budgetvalue.features.categories.Category
+import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import java.io.InputStream
 import java.math.BigDecimal
+import java.time.LocalDate
 
 class TransactionsVM(
     private val domain: Domain,
@@ -15,6 +17,16 @@ class TransactionsVM(
         .map(::getBlocksFromTransactions)
     val spends = transactions
         .map { it.filter { it.isSpend } }
+    val currentSpendBlockCAs = spends
+        .map {
+            it
+                .filter { it.date in domain.getDatePeriod(LocalDate.now()) }
+                .map { it.categoryAmounts }
+                .fold(mapOf<Category, BigDecimal>()) { acc, v ->
+                    mutableSetOf<Category>().apply { addAll(acc.keys); addAll(v.keys) }
+                        .associateWith { (acc[it] ?: BigDecimal.ZERO) + (v[it] ?: BigDecimal.ZERO) }
+                }
+        }
     val uncategorizedSpends = spends
         .map { it.filter { it.isUncategorized } }
     val uncategorizedSpendsSize = uncategorizedSpends

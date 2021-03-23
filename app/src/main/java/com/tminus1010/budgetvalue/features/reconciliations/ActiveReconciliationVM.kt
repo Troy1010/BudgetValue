@@ -21,13 +21,10 @@ import java.time.LocalDate
 
 class ActiveReconciliationVM(
     private val domain: Domain,
-    transactionsVM: TransactionsVM,
-    activePlanVM: ActivePlanVM,
     categoriesVM: CategoriesVM,
 ) : ViewModel() {
     val intentPushActiveReconcileCA: PublishSubject<Pair<Category, BigDecimal>> = PublishSubject.create<Pair<Category, BigDecimal>>()
         .also { it.launch { domain.pushActiveReconciliationCA(it) } }
-    // # State
     val activeReconcileCAs =
         Rx.combineLatest(domain.activeReconciliationCAs, categoriesVM.userCategories)
             .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (activeReconcileCAs, activeCategories) ->
@@ -38,23 +35,4 @@ class ActiveReconciliationVM(
                 acc
             }
             .toBehaviorSubject()
-    val rowDatas = Rx.combineLatest(categoriesVM.userCategories, activeReconcileCAs.value.itemObservableMap2, activePlanVM.activePlanCAs, transactionsVM.spends)
-        .map { getRowDatas(it.first, it.second, it.third, it.fourth) }
-    //
-    fun getRowDatas(
-        activeCategories: Iterable<Category>,
-        reconcileCAs: Map<Category, BehaviorSubject<BigDecimal>>,
-        activePlanCAs: SourceHashMap<Category, BigDecimal>,
-        transactions: List<Transaction>
-    ): Iterable<ReconcileRowData> {
-        return activeCategories.map { category ->
-            ReconcileRowData(
-                category,
-                activePlanCAs.itemObservableMap.value[category] ?: Observable.just(BigDecimal.ZERO),
-                Observable.just(transactions.filter { it.date in domain.getDatePeriod(
-                    LocalDate.now()) }.map { it.categoryAmounts[category] ?: BigDecimal.ZERO }.sum()),
-                reconcileCAs[category] ?: Observable.just(BigDecimal.ZERO),
-            )
-        }
-    }
 }

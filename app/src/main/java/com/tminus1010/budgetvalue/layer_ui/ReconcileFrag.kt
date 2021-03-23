@@ -13,6 +13,7 @@ import com.tminus1010.budgetvalue.databinding.TableviewHeaderIncomeBinding
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
+import com.tminus1010.budgetvalue.extensions.itemObservableMap2
 import com.tminus1010.budgetvalue.layer_ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.layer_ui.misc.bindIncoming
 import com.tminus1010.budgetvalue.layer_ui.misc.bindOutgoing
@@ -48,26 +49,31 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile), IViewModels {
                 binding.textviewHeader.text = d.first
                 binding.textviewNumber.bindIncoming(d.second)
             })
-        val reconcileCARecipeFactory = ViewItemRecipeFactory<EditText, Pair<Category, Observable<BigDecimal>>>(
+        val reconcileCARecipeFactory = ViewItemRecipeFactory<EditText, Pair<Category, Observable<BigDecimal>?>>(
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
             { v, (category, d) ->
+                if (d==null) return@ViewItemRecipeFactory
                 v.bindIncoming(d)
                 v.bindOutgoing(activeReconciliationVM.intentPushActiveReconcileCA, { s -> category to s.toMoneyBigDecimal() }) { it.second }
             }
         )
-        val oneWayRecipeFactory = ViewItemRecipeFactory<TextView, Observable<BigDecimal>>(
+        val cellRecipeFactory2 = ViewItemRecipeFactory(
             { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
-            { v, d -> v.bindIncoming(d) }
+            { v: TextView, d: Any? -> v.text = d?.toString() }
+        )
+        val oneWayRecipeFactory = ViewItemRecipeFactory<TextView, Observable<BigDecimal>?>(
+            { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
+            { v, d -> if (d!=null) v.bindIncoming(d) }
         )
         val titledDividerRecipeFactory = ViewItemRecipeFactory<TextView, String>(
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        Rx.combineLatest(activeReconciliationVM.rowDatas, categoriesVM.userCategories, budgetedVM.categoryAmounts.value.itemObservableMap2)
+        Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs.itemObservableMap2(), transactionsVM.currentSpendBlockCAs, activeReconciliationVM.activeReconcileCAs.value.itemObservableMap2, budgetedVM.categoryAmounts.value.itemObservableMap2)
             .observeOn(AndroidSchedulers.mainThread())
             .debounce(100, TimeUnit.MILLISECONDS) // budgetedCA[it.category]!! causes null pointer exception without this
-            .observe(viewLifecycleOwner) { (rowDatas, activeCategories, budgetedCA) ->
-                val dividerMap = activeCategories
+            .observe(viewLifecycleOwner) { (categories, activePlanCAs, currentSpendBlockCAs, activeReconciliationCAs, budgetedCA) ->
+                val dividerMap = categories
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
                     .associate { it.index to titledDividerRecipeFactory.createOne(it.value.type.name) }
@@ -76,19 +82,19 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile), IViewModels {
                     recipeGrid = listOf(
                         headerRecipeFactory.createOne2("Category")
                                 + cellRecipeFactory.createOne2("Default")
-                                + cellRecipeFactory.createMany(rowDatas.map { it.category.name }),
+                                + cellRecipeFactory.createMany(categories.map { it.name }),
                         headerRecipeFactory_numbered.createOne2(Pair("Plan", activePlanVM.expectedIncome))
                                 + oneWayRecipeFactory.createOne2(activePlanVM.defaultAmount)
-                                + oneWayRecipeFactory.createMany(rowDatas.map { it.plan }),
+                                + oneWayRecipeFactory.createMany(categories.map { activePlanCAs[it] }),
                         headerRecipeFactory.createOne2("Actual")
-                                + cellRecipeFactory.createOne2("")
-                                + oneWayRecipeFactory.createMany(rowDatas.map { it.actual }),
+                                + cellRecipeFactory2.createOne2("")
+                                + cellRecipeFactory2.createMany(categories.map { currentSpendBlockCAs[it] ?: BigDecimal.ZERO }),
                         headerRecipeFactory.createOne2("Reconcile")
                                 + oneWayRecipeFactory.createOne2(activeReconciliationVM2.defaultAmount)
-                                + reconcileCARecipeFactory.createMany(rowDatas.map { it.category to it.reconcile }),
+                                + reconcileCARecipeFactory.createMany(categories.map { it to activeReconciliationCAs[it] }),
                         headerRecipeFactory_numbered.createOne2(Pair("Budgeted", accountsVM.accountsTotal))
                                 + oneWayRecipeFactory.createOne2(budgetedVM.defaultAmount)
-                                + oneWayRecipeFactory.createMany(rowDatas.map { budgetedCA[it.category]!! })
+                                + oneWayRecipeFactory.createMany(categories.map { budgetedCA[it] })
                     ).reflectXY(),
                     shouldFitItemWidthsInsideTable = true,
                     dividerMap = dividerMap,

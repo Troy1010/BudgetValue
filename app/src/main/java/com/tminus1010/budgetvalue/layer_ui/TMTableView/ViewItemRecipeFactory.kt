@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.TextView
 import com.tminus1010.budgetvalue.R
 
-class ViewItemRecipeFactory<V : View, D : Any>(
+class ViewItemRecipeFactory<V : View, D : Any?>(
     val viewFactory: () -> V,
     val bindAction: (V, D) -> Unit,
 ) {
