@@ -21,14 +21,15 @@ class ActivePlanVM(domain: Domain, categoriesVM: CategoriesVM, datePeriodGetter:
     val activePlan = domain.plans
         .flatMap {
             // If the last plan is a valid active plan, use that. Otherwise, copy some of the last plan's properties if it exists or create a new one, and push it.
-            if (it.lastOrNull()?.localDatePeriod?.blockingFirst() == datePeriodGetter.currentDatePeriod())
-                Observable.just(it.last())
+            val lastPlan = it.lastOrNull()
+            if (lastPlan != null && lastPlan.localDatePeriod.blockingFirst() == datePeriodGetter.currentDatePeriod())
+                Observable.just(lastPlan)
             else {
                 when {
-                    it.lastOrNull() != null ->
+                    lastPlan != null ->
                         Observable.just(Plan(Observable.just(datePeriodGetter.currentDatePeriod()),
-                            it.last().defaultAmount,
-                            it.last().categoryAmounts))
+                            lastPlan.defaultAmount,
+                            lastPlan.categoryAmounts))
                     else ->
                         Observable.just(Plan(Observable.just(datePeriodGetter.currentDatePeriod()),
                             BigDecimal.ZERO,
