@@ -41,9 +41,13 @@ class HistoryFrag : Fragment(R.layout.frag_history), IHostFragChild, IViewModels
                 (v.children.last() as TextView).text = historyColumnData.subTitle(domain)
                 v.setOnLongClickListener {
                     listOfNotNull(
-                        when (historyColumnData) {
-                            is Plan -> {{ plansVM.intentDeletePlan.onNext(historyColumnData) }}
-                            is Reconciliation -> {{ reconciliationsVM.intentDeleteReconciliation.onNext(historyColumnData) }}
+                        when {
+                            historyColumnData is Plan && !historyColumnData.isCurrent(domain) -> {
+                                { plansVM.intentDeletePlan.onNext(historyColumnData) }
+                            }
+                            historyColumnData is Reconciliation -> {
+                                { reconciliationsVM.intentDeleteReconciliation.onNext(historyColumnData) }
+                            }
                             else -> null
                         }?.let { MenuItemPartial("Delete", it) })
                         .also { PopupMenu(requireActivity(), v).show(it) }

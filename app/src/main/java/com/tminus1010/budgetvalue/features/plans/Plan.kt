@@ -17,10 +17,9 @@ data class Plan(
 ) : IHistoryColumnData {
     override val defaultAmount = amount - categoryAmounts.values.sum()
     override val title get() = "Plan"
+    fun isCurrent(datePeriodGetter: IDatePeriodGetter) = localDatePeriod.blockingFirst() == datePeriodGetter.currentDatePeriod()
     override fun subTitle(datePeriodGetter: IDatePeriodGetter): String? =
-        if (localDatePeriod.blockingFirst() == datePeriodGetter.currentDatePeriod())
-            "Current"
-        else
+        if (isCurrent(datePeriodGetter)) "Current" else
             localDatePeriod.blockingFirst().startDate.toDisplayStr()
 
     fun toDTO(categoryAmountsConverter: CategoryAmountsConverter): PlanDTO =
