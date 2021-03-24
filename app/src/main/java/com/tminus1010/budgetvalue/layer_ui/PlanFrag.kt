@@ -55,21 +55,21 @@ class PlanFrag: Fragment(R.layout.frag_plan), IViewModels {
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        Rx.combineLatest(activePlanVM.activePlanCAs.itemObservableMap2(), categoriesVM.userCategories)
+        Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs.itemObservableMap2())
             .debounce(100, TimeUnit.MILLISECONDS)
             .observeOn(Schedulers.computation())
-            .map { (planCAsItemObservableMap, activeCategories) ->
+            .map { (categories, planCAsItemObservableMap) ->
                 val recipes2D = listOf(
                     headerRecipeFactory.createOne2("Category")
                             + cellRecipeFactory.createOne2("Expected Income")
                             + cellRecipeFactory.createOne2("Default")
-                            + cellRecipeFactory.createMany(activeCategories.map { it.name }),
+                            + cellRecipeFactory.createMany(categories.map { it.name }),
                     headerRecipeFactory.createOne2("Plan")
                             + expectedIncomeRecipeFactory.createOne2(activePlanVM.expectedIncome)
                             + oneWayRecipeBuilder.createOne2(activePlanVM.defaultAmount)
-                            + planCAsRecipeFactory.createMany(activeCategories.map { Pair(it, planCAsItemObservableMap[it] ?: error("not found:$it")) }))
+                            + planCAsRecipeFactory.createMany(categories.map { Pair(it, planCAsItemObservableMap[it] ?: error("not found:$it")) }))
                     .reflectXY()
-                val dividerMap = activeCategories
+                val dividerMap = categories
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
                     .associate { it.index to titledDividerRecipeFactory.createOne(it.value.type.name) }
