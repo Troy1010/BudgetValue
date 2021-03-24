@@ -42,10 +42,10 @@ class ActivePlanVM(domain: Domain, categoriesVM: CategoriesVM, datePeriodGetter:
             it.withLatestFrom2(activePlan)
                 .launch { (amount, plan) -> domain.updatePlanAmount(plan, amount) }
         }
-    val intentPushPlanCA = PublishSubject.create<Pair<Category, BigDecimal?>>()
+    val intentPushActivePlanCA = PublishSubject.create<Pair<Category, BigDecimal?>>()
         .also {
             it.withLatestFrom2(activePlan)
-                .launch { (categoryAmount, plan) -> domain.updatePlanCA(plan, categoryAmount.copy(second = categoryAmount.second?.nullIfZero())) }
+                .launch { (categoryAmount, plan) -> domain.updatePlanCA(plan, categoryAmount.first, categoryAmount.second?.nullIfZero()) }
         }
     val activePlanCAs =
         Rx.combineLatest(activePlan, categoriesVM.userCategories)

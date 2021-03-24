@@ -44,7 +44,7 @@ class PlanFrag: Fragment(R.layout.frag_plan), IViewModels {
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
             { view, (category, bs) ->
                 view.bindIncoming(bs)
-                view.bindOutgoing(activePlanVM.intentPushPlanCA, { Pair(category, it.toMoneyBigDecimal()) }) { it.second }
+                view.bindOutgoing(activePlanVM.intentPushActivePlanCA, { Pair(category, it.toMoneyBigDecimal()) }) { it.second }
             }
         )
         val oneWayRecipeBuilder = ViewItemRecipeFactory<TextView, Observable<BigDecimal>>(

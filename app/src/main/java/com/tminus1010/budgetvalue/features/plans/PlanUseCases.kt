@@ -8,7 +8,7 @@ import java.math.BigDecimal
 interface PlanUseCases {
     val plans: Observable<List<Plan>> // includes active plan
     fun pushPlan(plan: Plan): Completable
-    fun updatePlanCA(plan: Plan, categoryAmount: Pair<Category, BigDecimal?>): Completable
+    fun updatePlanCA(plan: Plan, category: Category, amount: BigDecimal?): Completable
     fun updatePlanAmount(plan: Plan, amount: BigDecimal): Completable
     fun delete(plan: Plan): Completable
 }

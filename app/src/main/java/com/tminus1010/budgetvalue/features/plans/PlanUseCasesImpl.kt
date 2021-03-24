@@ -23,10 +23,8 @@ class PlanUseCasesImpl @Inject constructor(
         repo.add(plan.toDTO(categoryAmountsConverter))
             .subscribeOn(Schedulers.io())
 
-    override fun updatePlanCA(plan: Plan, categoryAmount: Pair<Category, BigDecimal?>): Completable {
-        val amount = categoryAmount.second
-        val category = categoryAmount.first
-        return plan.categoryAmounts
+    override fun updatePlanCA(plan: Plan, category: Category, amount: BigDecimal?): Completable =
+        plan.categoryAmounts
             .toMutableMap()
             .apply { if (amount == null) remove(category) else put(category, amount) }
             .let {
@@ -34,7 +32,6 @@ class PlanUseCasesImpl @Inject constructor(
                     plan.toDTO(categoryAmountsConverter).startDate,
                     it.mapKeys { it.key.name })
             }
-    }
 
     override fun updatePlanAmount(plan: Plan, amount: BigDecimal) =
         repo.updatePlanAmount(plan.toDTO(categoryAmountsConverter).startDate, amount)
