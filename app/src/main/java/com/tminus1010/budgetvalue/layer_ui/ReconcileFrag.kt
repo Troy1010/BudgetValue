@@ -69,7 +69,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile), IViewModels {
         )
         Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs.itemObservableMap2(), transactionsVM.currentSpendBlockCAs, activeReconciliationVM.activeReconcileCAs.value.itemObservableMap2, budgetedVM.categoryAmounts.value.itemObservableMap2)
             .observeOn(AndroidSchedulers.mainThread())
-            .debounce(100, TimeUnit.MILLISECONDS) // budgetedCA[it.category]!! causes null pointer exception without this
+            .debounce(100, TimeUnit.MILLISECONDS)
             .observe(viewLifecycleOwner) { (categories, activePlanCAs, currentSpendBlockCAs, activeReconciliationCAs, budgetedCA) ->
                 val dividerMap = categories
                     .withIndex()
