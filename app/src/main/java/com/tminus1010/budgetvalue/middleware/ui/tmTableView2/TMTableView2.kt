@@ -69,6 +69,7 @@ class TMTableView2 @JvmOverloads constructor(
         rowFreezeCount: Int,
         synchronizedScrollListener: SynchronizedScrollListener,
     ) {
+        removeAllViews()
         val binding = TableviewLayout2Binding.inflate(LayoutInflater.from(context), this, true)
         // # Freeze rows
         if (rowFreezeCount>1) TODO()
