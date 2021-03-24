@@ -7,15 +7,14 @@ import android.widget.TextView
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.middleware.Rx
 import com.tminus1010.budgetvalue.databinding.FragHistoryBinding
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
-import com.tminus1010.budgetvalue.middleware.ui.TMTableView.IViewItemRecipe
+import com.tminus1010.budgetvalue.middleware.Rx
+import com.tminus1010.budgetvalue.middleware.reflectXY
 import com.tminus1010.budgetvalue.middleware.ui.TMTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.middleware.ui.viewBinding
-import com.tminus1010.budgetvalue.middleware.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -47,21 +46,18 @@ class HistoryFrag : Fragment(R.layout.frag_history), IHostFragChild, IViewModels
             .distinctUntilChanged() //*idk why this emitted a copy without distinctUntilChanged
             .observe(viewLifecycleOwner) { (historyColumnDatas, activeCategories) ->
                 val recipe2D =
-                    arrayListOf<List<IViewItemRecipe>>(
+                    listOf(
                         headerRecipeFactory.createOne2("Categories") +
                                 cellRecipeFactory.createOne("Default") +
-                                cellRecipeFactory.createMany(activeCategories.map { it.name })
-                    ).apply {
-                        addAll(
-                            historyColumnDatas.map {
-                                doubleHeaderRecipeFactory.createOne2(Pair(it.title, it.subTitle(domain))) +
-                                        cellRecipeFactory.createOne(it.defaultAmount.toString()) +
-                                        cellRecipeFactory.createMany(activeCategories.map { k ->
-                                            it.categoryAmounts[k]?.toString() ?: ""
-                                        })
-                            }
-                        )
-                    }.reflectXY()
+                                cellRecipeFactory.createMany(activeCategories.map { it.name }),
+                        *historyColumnDatas.map {
+                            doubleHeaderRecipeFactory.createOne2(Pair(it.title, it.subTitle(domain))) +
+                                    cellRecipeFactory.createOne(it.defaultAmount.toString()) +
+                                    cellRecipeFactory.createMany(activeCategories.map { k ->
+                                        it.categoryAmounts[k]?.toString() ?: ""
+                                    })
+                        }.toTypedArray()
+                    ).reflectXY()
                 val dividerMap = activeCategories
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
