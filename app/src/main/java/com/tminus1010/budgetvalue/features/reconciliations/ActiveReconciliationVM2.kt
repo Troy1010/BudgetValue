@@ -22,20 +22,14 @@ class ActiveReconciliationVM2(
 ) : ViewModel() {
     // This calculation is a bit confusing. Take a look at ManualCalculationsForTests for clarification
     val defaultAmount: Observable<BigDecimal> =
-        Rx.combineLatest(
-            domain.plans,
-            domain.reconciliations,
-            transactionsVM.transactionBlocks,
-            budgetedVM.defaultAmount
-        )
+        Rx.combineLatest(domain.plans, domain.reconciliations, transactionsVM.transactionBlocks, budgetedVM.defaultAmount)
             .map { (plans, reconciliations, transactionBlocks, budgetedDefaultAmount) ->
                 (plans.map { it.defaultAmount } +
                         reconciliations.map { it.defaultAmount } +
                         transactionBlocks.map { it.defaultAmount })
                     .fold(0.toBigDecimal()) { acc, v -> acc + v }
                     .let { budgetedDefaultAmount - it }
-            }
-            .toBehaviorSubject()
+            }.toBehaviorSubject()
     val intentSaveReconciliation: PublishSubject<Unit> = PublishSubject.create<Unit>()
         .also {
             it
