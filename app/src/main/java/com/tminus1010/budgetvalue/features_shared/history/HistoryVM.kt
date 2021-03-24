@@ -37,7 +37,7 @@ class HistoryVM(
                 // ## Add TransactionBlocks, Reconciliations, Plans
                 for (blockPeriod in blockPeriods) {
                     listOfNotNull(
-                        transactionBlocks?.filter { it.datePeriod == blockPeriod },
+                        transactionBlocks?.filter { it.datePeriod == blockPeriod }, // TODO("sort by sortDate")
                         reconciliations?.filter { it.localDate in blockPeriod },
                         plans?.filter { it.localDatePeriod.blockingFirst().startDate in blockPeriod }
                     ).flatten().also { historyColumnDatas.addAll(it) }
@@ -46,11 +46,11 @@ class HistoryVM(
                 if (activeReconciliationCAs != null && activeReconciliationDefaultAmount != null) {
                     historyColumnDatas.add(
                         HistoryColumn(
-                        "Reconciliation",
-                        "Current",
-                        activeReconciliationDefaultAmount,
-                        activeReconciliationCAs,
-                    )
+                            "Reconciliation",
+                            "Current",
+                            activeReconciliationDefaultAmount,
+                            activeReconciliationCAs,
+                        )
                     )
                 }
                 // ## Add Budgeted
