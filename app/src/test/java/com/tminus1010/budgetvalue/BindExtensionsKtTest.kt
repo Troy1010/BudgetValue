@@ -6,7 +6,7 @@ import org.junit.Test
 import org.junit.Assert.*
 import java.util.concurrent.TimeUnit
 
-class MiscKtTest {
+class BindExtensionsKtTest {
 
     @Test
     fun mergeCombineWithIndex() {
