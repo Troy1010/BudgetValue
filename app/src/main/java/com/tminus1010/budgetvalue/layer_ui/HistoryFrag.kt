@@ -12,7 +12,6 @@ import com.tminus1010.budgetvalue.databinding.FragHistoryBinding
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
-import com.tminus1010.budgetvalue.extensions.add
 import com.tminus1010.budgetvalue.extensions.show
 import com.tminus1010.budgetvalue.features.history.IHistoryColumnData
 import com.tminus1010.budgetvalue.features.plans.Plan
