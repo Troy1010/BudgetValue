@@ -8,15 +8,14 @@ import com.tminus1010.budgetvalue.*
 import com.tminus1010.budgetvalue.databinding.FragPlanBinding
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
-import com.tminus1010.budgetvalue.extensions.itemObservableMap2
-import com.tminus1010.budgetvalue.middleware.ui.tmTableView.ViewItemRecipeFactory
-import com.tminus1010.budgetvalue.middleware.ui.bindIncoming
-import com.tminus1010.budgetvalue.middleware.ui.bindOutgoing
-import com.tminus1010.budgetvalue.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.features.categories.Category
 import com.tminus1010.budgetvalue.middleware.Rx
 import com.tminus1010.budgetvalue.middleware.reflectXY
 import com.tminus1010.budgetvalue.middleware.toMoneyBigDecimal
+import com.tminus1010.budgetvalue.middleware.ui.bindIncoming
+import com.tminus1010.budgetvalue.middleware.ui.bindOutgoing
+import com.tminus1010.budgetvalue.middleware.ui.tmTableView.ViewItemRecipeFactory
+import com.tminus1010.budgetvalue.middleware.ui.viewBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -40,10 +39,11 @@ class PlanFrag: Fragment(R.layout.frag_plan), IViewModels {
                 view.bindOutgoing(activePlanVM.intentPushExpectedIncome, { it.toMoneyBigDecimal() }) { it }
             }
         )
-        val planCAsRecipeFactory = ViewItemRecipeFactory<EditText, Pair<Category, Observable<BigDecimal>>>(
+        val planCAsRecipeFactory = ViewItemRecipeFactory<EditText, Pair<Category, Observable<BigDecimal>?>>(
             { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
-            { view, (category, bs) ->
-                view.bindIncoming(bs)
+            { view, (category, d) ->
+                if (d == null) return@ViewItemRecipeFactory
+                view.bindIncoming(d)
                 view.bindOutgoing(activePlanVM.intentPushActivePlanCA, { Pair(category, it.toMoneyBigDecimal()) }) { it.second }
             }
         )
@@ -55,7 +55,7 @@ class PlanFrag: Fragment(R.layout.frag_plan), IViewModels {
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs.itemObservableMap2())
+        Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs.value.itemObservableMap2)
             .debounce(100, TimeUnit.MILLISECONDS)
             .observeOn(Schedulers.computation())
             .map { (categories, planCAsItemObservableMap) ->
@@ -67,7 +67,7 @@ class PlanFrag: Fragment(R.layout.frag_plan), IViewModels {
                     headerRecipeFactory.createOne2("Plan")
                             + expectedIncomeRecipeFactory.createOne2(activePlanVM.expectedIncome)
                             + oneWayRecipeBuilder.createOne2(activePlanVM.defaultAmount)
-                            + planCAsRecipeFactory.createMany(categories.map { Pair(it, planCAsItemObservableMap[it] ?: error("not found:$it")) }))
+                            + planCAsRecipeFactory.createMany(categories.map { Pair(it, planCAsItemObservableMap[it]) }))
                     .reflectXY()
                 val dividerMap = categories
                     .withIndex()

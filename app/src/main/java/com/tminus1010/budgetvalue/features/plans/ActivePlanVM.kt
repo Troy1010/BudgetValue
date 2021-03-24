@@ -57,7 +57,6 @@ class ActivePlanVM(domain: Domain, categoriesVM: CategoriesVM, datePeriodGetter:
                     .also { acc.adjustTo(it) }
                 acc
             }
-            .skip(1)
             .toBehaviorSubject()
     val planUncategorized = activePlanCAs.itemObservableMap2()
         .switchMap { it.values.total() }
