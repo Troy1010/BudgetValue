@@ -8,6 +8,7 @@ import com.tminus1010.budgetvalue.features.categories.CategoriesVM2
 import com.tminus1010.budgetvalue.features.plans.ActivePlanVM
 import com.tminus1010.budgetvalue.features.budgeted.BudgetedVM
 import com.tminus1010.budgetvalue.features.history.HistoryVM
+import com.tminus1010.budgetvalue.features.plans.PlansVM
 import com.tminus1010.budgetvalue.features.reconciliations.ActiveReconciliationVM
 import com.tminus1010.budgetvalue.features.reconciliations.ActiveReconciliationVM2
 import com.tminus1010.budgetvalue.features.transactions.CategorizeTransactionsAdvancedVM
@@ -18,6 +19,9 @@ import com.tminus1010.tmcommonkotlin.view.createViewModelFactory
 
 class ViewModelProviders(val activity: FragmentActivity, val appComponent: AppComponent) {
     private val c get() = appComponent
+    val plansVM: PlansVM
+            by { PlansVM(c.getDomain()) }
+                .let { activity.viewModels { createViewModelFactory(it) } }
     val categoriesVM2: CategoriesVM2
             by { CategoriesVM2(c.getDomain(), c.getPlanUseCases(), activePlanVM) }
                 .let { activity.viewModels { createViewModelFactory(it) } }
@@ -28,7 +32,7 @@ class ViewModelProviders(val activity: FragmentActivity, val appComponent: AppCo
             by { AccountsVM(c.getDomain()) }
                 .let { activity.viewModels { createViewModelFactory(it) } }
     val activePlanVM: ActivePlanVM
-            by { ActivePlanVM(c.getDomain(), categoriesVM, c.getDatePeriodGetter()) }
+            by { ActivePlanVM(c.getDomain(), categoriesVM, c.getDatePeriodGetter(), plansVM) }
                 .let { activity.viewModels { createViewModelFactory(it) } }
     val activeReconciliationVM: ActiveReconciliationVM
             by { ActiveReconciliationVM(c.getDomain(), categoriesVM) }

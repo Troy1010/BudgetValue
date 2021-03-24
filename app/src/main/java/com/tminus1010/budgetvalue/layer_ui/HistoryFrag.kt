@@ -12,9 +12,13 @@ import com.tminus1010.budgetvalue.databinding.FragHistoryBinding
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
+import com.tminus1010.budgetvalue.extensions.add
 import com.tminus1010.budgetvalue.features.history.IHistoryColumnData
+import com.tminus1010.budgetvalue.features.plans.Plan
+import com.tminus1010.budgetvalue.features.reconciliations.Reconciliation
 import com.tminus1010.budgetvalue.middleware.Rx
 import com.tminus1010.budgetvalue.middleware.reflectXY
+import com.tminus1010.budgetvalue.middleware.ui.MenuItemPartial
 import com.tminus1010.budgetvalue.middleware.ui.tmTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.middleware.ui.viewBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
@@ -36,12 +40,16 @@ class HistoryFrag : Fragment(R.layout.frag_history), IHostFragChild, IViewModels
                 (v.children.last() as TextView).text = historyColumnData.subTitle(domain)
                 v.setOnLongClickListener {
                     PopupMenu(requireActivity(), v).apply {
-                        inflate(R.menu.history_column_menu)
+                        val menuItemPartials = listOfNotNull(
+                            when(historyColumnData) {
+                                is Plan -> {{ plansVM.intentDeletePlan.onNext(historyColumnData) }}
+                                is Reconciliation -> {{ TODO() }}
+                                else -> null
+                            }?.let { MenuItemPartial("Delete", it) }).toTypedArray()
+                        menu.add(*menuItemPartials)
                         setOnMenuItemClickListener {
-                            when(it.itemId) {
-                                R.id.delete -> TODO()
-                                else -> TODO()
-                            }
+                            menuItemPartials.find { it.id == it.id }!!.action()
+                            true
                         }
                         show()
                     }

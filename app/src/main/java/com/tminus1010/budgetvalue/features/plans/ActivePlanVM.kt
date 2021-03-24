@@ -17,8 +17,13 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 
-class ActivePlanVM(domain: Domain, categoriesVM: CategoriesVM, datePeriodGetter: DatePeriodGetter) : ViewModel() {
-    val activePlan = domain.plans
+class ActivePlanVM(
+    domain: Domain,
+    categoriesVM: CategoriesVM,
+    datePeriodGetter: DatePeriodGetter,
+    plansVM: PlansVM
+) : ViewModel() {
+    val activePlan = plansVM.plans
         .flatMap {
             // If the last plan is a valid active plan, use that. Otherwise, copy some of the last plan's properties if it exists or create a new one, and push it.
             val lastPlan = it.lastOrNull()
