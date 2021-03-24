@@ -60,8 +60,14 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_advanced_categorize), IVie
                 Pair(recipes2D, dividerMap)
             }
             .observeOn(AndroidSchedulers.mainThread())
-            .observe(viewLifecycleOwner) { (recipes2D, dividerMap) ->
-                vb.tmTableView.initialize(recipes2D, true, dividerMap, 0, 1)
+            .observe(viewLifecycleOwner) { (recipeGrid, dividerMap) ->
+                vb.tmTableView.initialize(
+                    recipeGrid = recipeGrid,
+                    shouldFitItemWidthsInsideTable = true,
+                    dividerMap = dividerMap,
+                    colFreezeCount = 0,
+                    rowFreezeCount = 1,
+                )
             }
     }
 }
