@@ -6,6 +6,7 @@ import com.tminus1010.budgetvalue.extensions.launch
 import com.tminus1010.budgetvalue.features_shared.Domain
 import com.tminus1010.budgetvalue.features.transactions.TransactionsVM
 import com.tminus1010.budgetvalue.features_shared.budgeted.BudgetedVM
+import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -34,6 +35,7 @@ class ActiveReconciliationVM2(
                     .fold(0.toBigDecimal()) { acc, v -> acc + v }
                     .let { budgetedDefaultAmount - it }
             }
+            .toBehaviorSubject()
     val intentSaveReconciliation: PublishSubject<Unit> = PublishSubject.create<Unit>()
         .also {
             it
