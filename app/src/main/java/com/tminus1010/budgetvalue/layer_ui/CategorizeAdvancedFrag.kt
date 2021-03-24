@@ -26,7 +26,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_advanced_categorize), IVie
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
-        binding.btnAcDone.setOnClickListener {
+        binding.btnDone.setOnClickListener {
             if (categorizeAdvancedVM.defaultAmount.value.compareTo(BigDecimal.ZERO)!=0) {
                 toast("Default must be 0")
             } else {
@@ -61,7 +61,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_advanced_categorize), IVie
             }
             .observeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) { (recipes2D, dividerMap) ->
-                binding.tmTableViewAc.initialize(recipes2D, true, dividerMap, 0, 1)
+                binding.tmTableView.initialize(recipes2D, true, dividerMap, 0, 1)
             }
     }
 }
