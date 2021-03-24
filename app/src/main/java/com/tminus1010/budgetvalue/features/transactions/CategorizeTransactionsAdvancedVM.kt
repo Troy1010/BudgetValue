@@ -9,7 +9,7 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 
-class CategorizeAdvancedVM(
+class CategorizeTransactionsAdvancedVM(
     domain: Domain,
     categorizeTransactionsVM: CategorizeTransactionsVM,
 ) : ViewModel() {

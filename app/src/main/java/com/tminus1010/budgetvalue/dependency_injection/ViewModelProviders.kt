@@ -10,7 +10,7 @@ import com.tminus1010.budgetvalue.features_shared.budgeted.BudgetedVM
 import com.tminus1010.budgetvalue.features_shared.history.HistoryVM
 import com.tminus1010.budgetvalue.features.reconciliations.ActiveReconciliationVM
 import com.tminus1010.budgetvalue.features.reconciliations.ActiveReconciliationVM2
-import com.tminus1010.budgetvalue.features.transactions.CategorizeAdvancedVM
+import com.tminus1010.budgetvalue.features.transactions.CategorizeTransactionsAdvancedVM
 import com.tminus1010.budgetvalue.features.transactions.CategorizeTransactionsVM
 import com.tminus1010.budgetvalue.features.transactions.TransactionsVM
 import com.tminus1010.budgetvalue.features_shared.ErrorVM
@@ -36,8 +36,8 @@ class ViewModelProviders(val activity: FragmentActivity, val appComponent: AppCo
     val activeReconciliationVM2: ActiveReconciliationVM2
             by { ActiveReconciliationVM2(activeReconciliationVM, budgetedVM, c.getDomain(), transactionsVM) }
                 .let { activity.viewModels { createViewModelFactory(it) } }
-    val categorizeAdvancedVM: CategorizeAdvancedVM
-            by { CategorizeAdvancedVM(c.getDomain(), categorizeTransactionsVM) }
+    val categorizeTransactionsAdvancedVM: CategorizeTransactionsAdvancedVM
+            by { CategorizeTransactionsAdvancedVM(c.getDomain(), categorizeTransactionsVM) }
                 .let { activity.viewModels { createViewModelFactory(it) } }
     val budgetedVM: BudgetedVM
             by { BudgetedVM(c.getDomain(), transactionsVM, activeReconciliationVM, accountsVM, categoriesVM) }

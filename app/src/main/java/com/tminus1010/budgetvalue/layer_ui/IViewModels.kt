@@ -11,7 +11,7 @@ interface IViewModels {
     val LifecycleOwner.activePlanVM get() = viewModelProviders.activePlanVM
     val LifecycleOwner.activeReconciliationVM get() = viewModelProviders.activeReconciliationVM
     val LifecycleOwner.activeReconciliationVM2 get() = viewModelProviders.activeReconciliationVM2
-    val LifecycleOwner.categorizeAdvancedVM get() = viewModelProviders.categorizeAdvancedVM
+    val LifecycleOwner.categorizeAdvancedVM get() = viewModelProviders.categorizeTransactionsAdvancedVM
     val LifecycleOwner.categorizeVM get() = viewModelProviders.categorizeTransactionsVM
     val LifecycleOwner.historyVM get() = viewModelProviders.historyVM
     val LifecycleOwner.transactionsVM get() = viewModelProviders.transactionsVM
