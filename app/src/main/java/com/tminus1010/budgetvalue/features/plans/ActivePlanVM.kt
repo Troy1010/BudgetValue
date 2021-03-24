@@ -28,7 +28,7 @@ class ActivePlanVM(domain: Domain, categoriesVM: CategoriesVM, datePeriodGetter:
                 when {
                     lastPlan != null ->
                         Observable.just(Plan(Observable.just(datePeriodGetter.currentDatePeriod()),
-                            lastPlan.defaultAmount,
+                            lastPlan.amount,
                             lastPlan.categoryAmounts))
                     else ->
                         Observable.just(Plan(Observable.just(datePeriodGetter.currentDatePeriod()),
@@ -63,7 +63,7 @@ class ActivePlanVM(domain: Domain, categoriesVM: CategoriesVM, datePeriodGetter:
         .switchMap { it.values.total() }
         .replay(1).refCount()
     val expectedIncome = intentPushExpectedIncome
-        .startWith(activePlan.take(1).map { it.defaultAmount })
+        .startWith(activePlan.take(1).map { it.amount })
         .toBehaviorSubject()
     val defaultAmount = Rx.combineLatest(expectedIncome, planUncategorized)
         .map { it.first - it.second }

@@ -24,7 +24,7 @@ class ActiveReconciliationVM2(
     val defaultAmount: Observable<BigDecimal> =
         Rx.combineLatest(domain.plans, domain.reconciliations, transactionsVM.transactionBlocks, budgetedVM.defaultAmount)
             .map { (plans, reconciliations, transactionBlocks, budgetedDefaultAmount) ->
-                (plans.map { it.defaultAmount } +
+                (plans.map { it.amount } +
                         reconciliations.map { it.defaultAmount } +
                         transactionBlocks.map { it.defaultAmount })
                     .fold(BigDecimal.ZERO) { acc, v -> acc + v }

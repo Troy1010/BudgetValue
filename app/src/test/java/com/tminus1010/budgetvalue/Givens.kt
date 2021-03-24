@@ -25,11 +25,11 @@ object Givens {
     }).categories
     val givenPlan1 = Plan(
         localDatePeriod = Observable.just(LocalDatePeriod(LocalDate.now(), Period.ofWeeks(2))),
-        defaultAmount = 60.toBigDecimal(),
+        amount = 60.toBigDecimal(),
         categoryAmounts = mapOf(givenCategories.value[0] to 15.toBigDecimal()))
     val givenPlan2 = Plan(
         localDatePeriod = Observable.just(LocalDatePeriod(LocalDate.now().plus(Period.ofWeeks(2)), Period.ofWeeks(2))),
-        defaultAmount = 100.toBigDecimal(),
+        amount = 100.toBigDecimal(),
         categoryAmounts = mapOf(givenCategories.value[0] to 60.toBigDecimal(),
             givenCategories.value[1] to 31.toBigDecimal(),
             givenCategories.value[2] to 26.toBigDecimal()))
