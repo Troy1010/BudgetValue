@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.features.transactions
 
 import com.tminus1010.budgetvalue.features_shared.IDatePeriodGetter
-import com.tminus1010.budgetvalue.features_shared.history.IHistoryColumn
+import com.tminus1010.budgetvalue.features_shared.history.IHistoryColumnData
 import com.tminus1010.budgetvalue.middleware.LocalDatePeriod
 import com.tminus1010.budgetvalue.features.categories.Category
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
@@ -12,7 +12,7 @@ data class Block(
     val datePeriod: LocalDatePeriod,
     val amount: BigDecimal,
     override val categoryAmounts: Map<Category, BigDecimal>
-) : IHistoryColumn {
+) : IHistoryColumnData {
     override val title = "Actual"
 
     override fun subTitle(datePeriodGetter: IDatePeriodGetter): String? =

@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.features.reconciliations
 import com.tminus1010.budgetvalue.features.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.features_shared.IDatePeriodGetter
 import com.tminus1010.budgetvalue.features.categories.Category
-import com.tminus1010.budgetvalue.features_shared.history.IHistoryColumn
+import com.tminus1010.budgetvalue.features_shared.history.IHistoryColumnData
 import com.tminus1010.tmcommonkotlin.misc.extensions.toDisplayStr
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -13,7 +13,7 @@ data class Reconciliation(
     override val defaultAmount: BigDecimal,
     override val categoryAmounts: Map<Category, BigDecimal>,
     val id: Int = 0
-) : IHistoryColumn {
+) : IHistoryColumnData {
     fun toDTO(categoryAmountsConverter: CategoryAmountsConverter): ReconciliationDTO {
         return ReconciliationDTO(
             localDate = localDate,

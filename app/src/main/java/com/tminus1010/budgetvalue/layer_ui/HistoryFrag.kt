@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue.layer_ui
 
 import android.os.Bundle
-import android.view.ContextMenu
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -13,8 +12,7 @@ import com.tminus1010.budgetvalue.databinding.FragHistoryBinding
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
-import com.tminus1010.budgetvalue.features_shared.history.HistoryColumn
-import com.tminus1010.budgetvalue.features_shared.history.IHistoryColumn
+import com.tminus1010.budgetvalue.features_shared.history.IHistoryColumnData
 import com.tminus1010.budgetvalue.middleware.Rx
 import com.tminus1010.budgetvalue.middleware.reflectXY
 import com.tminus1010.budgetvalue.middleware.ui.tmTableView.ViewItemRecipeFactory
@@ -31,7 +29,7 @@ class HistoryFrag : Fragment(R.layout.frag_history), IHostFragChild, IViewModels
         // # TMTableView
         val cellRecipeFactory = ViewItemRecipeFactory.createCellRecipeFactory(requireContext())
         val headerRecipeFactory = ViewItemRecipeFactory.createHeaderRecipeFactory(requireContext())
-        val columnHeaderFactory = ViewItemRecipeFactory<LinearLayout, IHistoryColumn>(
+        val columnHeaderFactory = ViewItemRecipeFactory<LinearLayout, IHistoryColumnData>(
             { View.inflate(context, R.layout.tableview_header_with_subtitle, null) as LinearLayout }, // TODO("use viewBinding")
             { v, historyColumnData ->
                 (v.children.first() as TextView).text = historyColumnData.title

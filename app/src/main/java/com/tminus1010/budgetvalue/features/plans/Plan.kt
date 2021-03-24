@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.features.plans
 
 import com.tminus1010.budgetvalue.features.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.features_shared.IDatePeriodGetter
-import com.tminus1010.budgetvalue.features_shared.history.IHistoryColumn
+import com.tminus1010.budgetvalue.features_shared.history.IHistoryColumnData
 import com.tminus1010.budgetvalue.middleware.LocalDatePeriod
 import com.tminus1010.budgetvalue.features.categories.Category
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
@@ -14,7 +14,7 @@ data class Plan(
     val localDatePeriod: Observable<LocalDatePeriod>,
     val amount: BigDecimal,
     override val categoryAmounts: Map<Category, BigDecimal>,
-) : IHistoryColumn {
+) : IHistoryColumnData {
     override val defaultAmount = amount - categoryAmounts.values.sum()
     override val title get() = "Plan"
     override fun subTitle(datePeriodGetter: IDatePeriodGetter): String? =

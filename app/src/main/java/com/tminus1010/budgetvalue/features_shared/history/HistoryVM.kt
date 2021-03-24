@@ -33,7 +33,7 @@ class HistoryVM(
                 reconciliations?.forEach { blockPeriods.add(domain.getDatePeriod(it.localDate)) }
                 plans?.forEach { blockPeriods.add(it.localDatePeriod.blockingFirst()) }
                 // # Define historyColumnDatas
-                val historyColumnDatas = arrayListOf<IHistoryColumn>()
+                val historyColumnDatas = arrayListOf<IHistoryColumnData>()
                 // ## Add TransactionBlocks, Reconciliations, Plans
                 for (blockPeriod in blockPeriods) {
                     listOfNotNull(
@@ -45,7 +45,7 @@ class HistoryVM(
                 // ## Add Active Reconciliation
                 if (activeReconciliationCAs != null && activeReconciliationDefaultAmount != null) {
                     historyColumnDatas.add(
-                        HistoryColumn(
+                        HistoryColumnData(
                             "Reconciliation",
                             "Current",
                             activeReconciliationDefaultAmount,
