@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.features.transactions
 
 import com.tminus1010.budgetvalue.features_shared.IDatePeriodGetter
-import com.tminus1010.budgetvalue.features_shared.history.IHistoryColumnData
+import com.tminus1010.budgetvalue.features.history.IHistoryColumnData
 import com.tminus1010.budgetvalue.middleware.LocalDatePeriod
 import com.tminus1010.budgetvalue.features.categories.Category
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum

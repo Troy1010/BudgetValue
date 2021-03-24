@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.layer_ui
 import com.tminus1010.budgetvalue.Givens
 import com.tminus1010.budgetvalue.extensions.toObservable
 import com.tminus1010.budgetvalue.features_shared.Domain
-import com.tminus1010.budgetvalue.features_shared.budgeted.BudgetedVM
+import com.tminus1010.budgetvalue.features.budgeted.BudgetedVM
 import com.tminus1010.budgetvalue.features.reconciliations.ActiveReconciliationVM2
 import com.tminus1010.budgetvalue.features.transactions.TransactionsVM
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject

@@ -1,7 +1,7 @@
-package com.tminus1010.budgetvalue.features_shared.budgeted
+package com.tminus1010.budgetvalue.features.budgeted
 
 import com.tminus1010.budgetvalue.features.categories.Category
-import com.tminus1010.budgetvalue.features_shared.history.IHistoryColumnData
+import com.tminus1010.budgetvalue.features.history.IHistoryColumnData
 import com.tminus1010.budgetvalue.features_shared.IDatePeriodGetter
 import java.math.BigDecimal
 

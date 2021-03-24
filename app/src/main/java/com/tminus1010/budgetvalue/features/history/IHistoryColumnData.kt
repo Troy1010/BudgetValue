@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.features_shared.history
+package com.tminus1010.budgetvalue.features.history
 
 import com.tminus1010.budgetvalue.features.categories.Category
 import com.tminus1010.budgetvalue.features_shared.IDatePeriodGetter

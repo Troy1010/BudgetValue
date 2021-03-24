@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.features.reconciliations
 import com.tminus1010.budgetvalue.features.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.features_shared.IDatePeriodGetter
 import com.tminus1010.budgetvalue.features.categories.Category
-import com.tminus1010.budgetvalue.features_shared.history.IHistoryColumnData
+import com.tminus1010.budgetvalue.features.history.IHistoryColumnData
 import com.tminus1010.tmcommonkotlin.misc.extensions.toDisplayStr
 import java.math.BigDecimal
 import java.time.LocalDate

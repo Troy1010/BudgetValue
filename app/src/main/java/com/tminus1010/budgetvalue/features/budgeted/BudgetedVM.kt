@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.features_shared.budgeted
+package com.tminus1010.budgetvalue.features.budgeted
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.features.accounts.AccountsVM

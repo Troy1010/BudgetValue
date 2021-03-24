@@ -6,8 +6,8 @@ import com.tminus1010.budgetvalue.features.accounts.AccountsVM
 import com.tminus1010.budgetvalue.features.categories.CategoriesVM
 import com.tminus1010.budgetvalue.features.categories.CategoriesVM2
 import com.tminus1010.budgetvalue.features.plans.ActivePlanVM
-import com.tminus1010.budgetvalue.features_shared.budgeted.BudgetedVM
-import com.tminus1010.budgetvalue.features_shared.history.HistoryVM
+import com.tminus1010.budgetvalue.features.budgeted.BudgetedVM
+import com.tminus1010.budgetvalue.features.history.HistoryVM
 import com.tminus1010.budgetvalue.features.reconciliations.ActiveReconciliationVM
 import com.tminus1010.budgetvalue.features.reconciliations.ActiveReconciliationVM2
 import com.tminus1010.budgetvalue.features.transactions.CategorizeTransactionsAdvancedVM
