@@ -5,4 +5,4 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 
 class GenViewHolder(v: View) : RecyclerView.ViewHolder(v)
-class GenViewHolder2<T:ViewBinding>(val binding: T) : RecyclerView.ViewHolder(binding.root)
+class GenViewHolder2<T:ViewBinding>(val vb: T) : RecyclerView.ViewHolder(vb.root)

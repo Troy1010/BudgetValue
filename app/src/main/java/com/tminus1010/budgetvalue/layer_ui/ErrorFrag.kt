@@ -19,11 +19,11 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 class ErrorFrag : Fragment(R.layout.frag_error), IViewModels {
     override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
-    val binding by viewBinding(FragErrorBinding::bind)
+    val vb by viewBinding(FragErrorBinding::bind)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # RecyclerView
-        binding.recyclerviewButtons.apply {
+        vb.recyclerviewButtons.apply {
             layoutManager = GridLayoutManager(requireContext(), 2)
             adapter = object : RecyclerView.Adapter<GenViewHolder2<ItemButtonBinding>>() {
                 override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
@@ -31,8 +31,8 @@ class ErrorFrag : Fragment(R.layout.frag_error), IViewModels {
                         .let { GenViewHolder2(it) }
 
                 override fun onBindViewHolder(holder: GenViewHolder2<ItemButtonBinding>, position: Int) {
-                    holder.binding.btnItem.setOnClickListener { errorVM.buttons.value[holder.adapterPosition].action() }
-                    holder.binding.btnItem.text = errorVM.buttons.value[position].title
+                    holder.vb.btnItem.setOnClickListener { errorVM.buttons.value[holder.adapterPosition].action() }
+                    holder.vb.btnItem.text = errorVM.buttons.value[position].title
                 }
 
                 override fun getItemCount(): Int = errorVM.buttons.value.size
@@ -42,13 +42,13 @@ class ErrorFrag : Fragment(R.layout.frag_error), IViewModels {
         errorVM.message
             .observeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) {
-                binding.textviewMessage.text = it
+                vb.textviewMessage.text = it
             }
         // # Buttons
         errorVM.buttons
             .observeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) {
-                binding.recyclerviewButtons.adapter?.notifyDataSetChanged()
+                vb.recyclerviewButtons.adapter?.notifyDataSetChanged()
             }
     }
 }

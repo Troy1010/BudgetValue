@@ -28,7 +28,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 
 class HistoryFrag : Fragment(R.layout.frag_history), IHostFragChild, IViewModels {
     override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
-    val binding by viewBinding(FragHistoryBinding::bind)
+    val vb by viewBinding(FragHistoryBinding::bind)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # TMTableView
@@ -83,7 +83,7 @@ class HistoryFrag : Fragment(R.layout.frag_history), IHostFragChild, IViewModels
             }
             .observeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) { (recipe2D, dividerMap) ->
-                binding.tmTableViewHistory.initialize(recipe2D, false, dividerMap, 1, 1)
+                vb.tmTableViewHistory.initialize(recipe2D, false, dividerMap, 1, 1)
             }
     }
 }

@@ -25,7 +25,7 @@ import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
 class PlanFrag: Fragment(R.layout.frag_plan), IViewModels {
-    val binding by viewBinding(FragPlanBinding::bind)
+    val vb by viewBinding(FragPlanBinding::bind)
     override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onStart() {
         super.onStart()
@@ -78,7 +78,7 @@ class PlanFrag: Fragment(R.layout.frag_plan), IViewModels {
             }
             .observeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) { (recipes2D, dividerMap) ->
-                binding.myTableViewPlan.initialize(recipes2D, true, dividerMap, 0, 1)
+                vb.myTableViewPlan.initialize(recipes2D, true, dividerMap, 0, 1)
             }
     }
 }

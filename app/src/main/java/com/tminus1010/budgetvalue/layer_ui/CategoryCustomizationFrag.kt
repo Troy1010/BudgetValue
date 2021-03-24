@@ -20,12 +20,12 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization), IViewModels {
-    val binding by viewBinding(FragCategoryCustomizationBinding::bind)
+    val vb by viewBinding(FragCategoryCustomizationBinding::bind)
     override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
-        binding.btnDone.setOnClickListener { nav.navigateUp() }
+        vb.btnDone.setOnClickListener { nav.navigateUp() }
         // # TMTableView
         val factory1 = ViewItemRecipeFactory(
             { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
@@ -58,6 +58,6 @@ class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization)
                 Pair(recipeGrid, dividerMap)
             }
             .observeOn(AndroidSchedulers.mainThread())
-            .observe(viewLifecycleOwner) { binding.tmTableView.initialize(recipeGrid = it.first, dividerMap = it.second) }
+            .observe(viewLifecycleOwner) { vb.tmTableView.initialize(recipeGrid = it.first, dividerMap = it.second) }
     }
 }

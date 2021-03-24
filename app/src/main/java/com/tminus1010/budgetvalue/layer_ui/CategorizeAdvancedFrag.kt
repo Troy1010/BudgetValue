@@ -20,13 +20,13 @@ import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
 class CategorizeAdvancedFrag : Fragment(R.layout.frag_advanced_categorize), IViewModels {
-    val binding by viewBinding(FragAdvancedCategorizeBinding::bind)
+    val vb by viewBinding(FragAdvancedCategorizeBinding::bind)
     val viewRecipeFactories by lazy { ViewItemRecipeFactoryProvider(requireContext()) }
     override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
-        binding.btnDone.setOnClickListener {
+        vb.btnDone.setOnClickListener {
             if (categorizeAdvancedVM.defaultAmount.value.compareTo(BigDecimal.ZERO)!=0) {
                 toast("Default must be 0")
             } else {
@@ -61,7 +61,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_advanced_categorize), IVie
             }
             .observeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) { (recipes2D, dividerMap) ->
-                binding.tmTableView.initialize(recipes2D, true, dividerMap, 0, 1)
+                vb.tmTableView.initialize(recipes2D, true, dividerMap, 0, 1)
             }
     }
 }

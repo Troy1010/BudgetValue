@@ -22,20 +22,20 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.pairwise
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 class ImportFrag : Fragment(R.layout.frag_import), IViewModels {
-    val binding by viewBinding(FragImportBinding::bind)
+    val vb by viewBinding(FragImportBinding::bind)
     override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
-        binding.btnImport.clicks().subscribe { flavorIntersection.launchImport(requireActivity() as HostActivity) }
-        binding.btnAddAccount.clicks().subscribe(accountsVM.intentAddAccount)
+        vb.btnImport.clicks().subscribe { flavorIntersection.launchImport(requireActivity() as HostActivity) }
+        vb.btnAddAccount.clicks().subscribe(accountsVM.intentAddAccount)
         // # RecyclerView
         accountsVM.accounts
             .pairwise()
             .filter { it.first.size != it.second.size }
             .observeOn(AndroidSchedulers.mainThread())
-            .observe(viewLifecycleOwner) { binding.recyclerviewAccounts.adapter?.notifyDataSetChanged() }
-        binding.recyclerviewAccounts.apply {
+            .observe(viewLifecycleOwner) { vb.recyclerviewAccounts.adapter?.notifyDataSetChanged() }
+        vb.recyclerviewAccounts.apply {
             layoutManager = LinearLayoutManager(requireActivity())
             adapter = object : RecyclerView.Adapter<GenViewHolder2<ItemAccountBinding>>() {
                 override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
@@ -44,15 +44,15 @@ class ImportFrag : Fragment(R.layout.frag_import), IViewModels {
                 override fun getItemCount() = accountsVM.accounts.value.size
                 override fun onBindViewHolder(holder: GenViewHolder2<ItemAccountBinding>, position: Int) {
                     val account = accountsVM.accounts.value[holder.adapterPosition]
-                    holder.binding.btnDeleteAccount.clicks()
+                    holder.vb.btnDeleteAccount.clicks()
                         .map { account }
                         .subscribe(accountsVM.intentDeleteAccount)
-                    holder.binding.editTextName.apply {
+                    holder.vb.editTextName.apply {
                         setText(account.name)
                         bindOutgoing(accountsVM.intentUpdateAccount,
                             { account.copy(name = it) })
                     }
-                    holder.binding.editTextAmount.apply {
+                    holder.vb.editTextAmount.apply {
                         setText(account.amount.toString())
                         bindOutgoing(accountsVM.intentUpdateAccount,
                             toT = { account.copy(amount = it.toMoneyBigDecimal()) },

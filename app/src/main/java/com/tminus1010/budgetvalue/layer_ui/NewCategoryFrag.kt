@@ -16,16 +16,16 @@ import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
 
 class NewCategoryFrag : Fragment(R.layout.frag_new_category), IViewModels {
-    val binding by viewBinding(FragNewCategoryBinding::bind)
+    val vb by viewBinding(FragNewCategoryBinding::bind)
     override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
-        binding.btnDone.setOnClickListener {
+        vb.btnDone.setOnClickListener {
             try {
-                val name = binding.edittextName.text.toString()
+                val name = vb.edittextName.text.toString()
                 require(name.isNotEmpty())
-                val type = binding.spinnerType.selectedItem as Category.Type
+                val type = vb.spinnerType.selectedItem as Category.Type
                 Category(name, type).also { domain.push(it).launch() }
                 nav.navigateUp()
             } catch (e: IllegalArgumentException) {
@@ -33,6 +33,6 @@ class NewCategoryFrag : Fragment(R.layout.frag_new_category), IViewModels {
             }
         }
         //
-        binding.spinnerType.adapter = ArrayAdapter(requireContext(), R.layout.text_view, Category.Type.values().drop(1))
+        vb.spinnerType.adapter = ArrayAdapter(requireContext(), R.layout.text_view, Category.Type.values().drop(1))
     }
 }

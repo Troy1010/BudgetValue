@@ -30,12 +30,12 @@ import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
 class ReconcileFrag : Fragment(R.layout.frag_reconcile), IViewModels {
-    val binding by viewBinding(FragReconcileBinding::bind)
+    val vb by viewBinding(FragReconcileBinding::bind)
     override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
-        binding.btnSave.clicks().observe(viewLifecycleOwner) {
+        vb.btnSave.clicks().observe(viewLifecycleOwner) {
             activeReconciliationVM2.intentSaveReconciliation.onNext(Unit)
         }
         // # TMTableView
@@ -98,7 +98,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile), IViewModels {
             }
             .observeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) { (recipeGrid, dividerMap) ->
-                binding.myTableView1.initialize(
+                vb.myTableView1.initialize(
                     recipeGrid = recipeGrid,
                     shouldFitItemWidthsInsideTable = true,
                     dividerMap = dividerMap,
