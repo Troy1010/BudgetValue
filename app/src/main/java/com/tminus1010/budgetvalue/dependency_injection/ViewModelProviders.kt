@@ -31,7 +31,7 @@ class ViewModelProviders(val activity: FragmentActivity, val appComponent: AppCo
             by { ActivePlanVM(c.getDomain(), categoriesVM, c.getDatePeriodGetter()) }
                 .let { activity.viewModels { createViewModelFactory(it) } }
     val activeReconciliationVM: ActiveReconciliationVM
-            by { ActiveReconciliationVM(c.getDomain(), transactionsVM, activePlanVM, categoriesVM) }
+            by { ActiveReconciliationVM(c.getDomain(), categoriesVM) }
                 .let { activity.viewModels { createViewModelFactory(it) } }
     val activeReconciliationVM2: ActiveReconciliationVM2
             by { ActiveReconciliationVM2(activeReconciliationVM, budgetedVM, c.getDomain(), transactionsVM) }

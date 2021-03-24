@@ -18,7 +18,7 @@ class CategoriesVM2(
         .also {
             it.launch { category ->
                 Rx.merge(
-                    activePlanVM.activePlan.flatMapCompletable { planUseCases.updatePlanCA(it, Pair(category, null)) },
+                    activePlanVM.activePlan.flatMapCompletable { planUseCases.updatePlanCA(it, category, null) },
                     domain.pushActiveReconciliationCA(Pair(category, null)),
                     domain.delete(category),
                 )
