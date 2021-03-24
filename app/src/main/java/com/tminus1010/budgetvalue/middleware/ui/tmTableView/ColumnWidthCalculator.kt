@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.middleware.ui.TMTableView
+package com.tminus1010.budgetvalue.middleware.ui.tmTableView
 
 import com.tminus1010.budgetvalue.middleware.arrayListOfZeros
 import com.tminus1010.tmcommonkotlin.misc.logz

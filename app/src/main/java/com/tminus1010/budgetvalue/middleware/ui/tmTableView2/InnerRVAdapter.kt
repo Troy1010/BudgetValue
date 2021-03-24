@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.middleware.ui.TMTableView2
+package com.tminus1010.budgetvalue.middleware.ui.tmTableView2
 
 import android.content.Context
 import android.view.View

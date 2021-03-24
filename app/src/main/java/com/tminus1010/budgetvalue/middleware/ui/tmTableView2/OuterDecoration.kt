@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.middleware.ui.TMTableView2
+package com.tminus1010.budgetvalue.middleware.ui.tmTableView2
 
 import android.content.Context
 import android.graphics.Canvas
@@ -10,7 +10,7 @@ import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue.middleware.Orientation
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.middleware.ui.TMTableView.IViewItemRecipe
+import com.tminus1010.budgetvalue.middleware.ui.tmTableView.IViewItemRecipe
 
 class OuterDecoration(
     val context: Context,

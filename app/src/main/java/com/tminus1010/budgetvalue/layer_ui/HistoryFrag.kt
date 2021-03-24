@@ -13,7 +13,7 @@ import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appC
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
 import com.tminus1010.budgetvalue.middleware.Rx
 import com.tminus1010.budgetvalue.middleware.reflectXY
-import com.tminus1010.budgetvalue.middleware.ui.TMTableView.ViewItemRecipeFactory
+import com.tminus1010.budgetvalue.middleware.ui.tmTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.middleware.ui.viewBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe

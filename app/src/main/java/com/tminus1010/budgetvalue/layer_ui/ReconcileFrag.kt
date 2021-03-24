@@ -13,7 +13,7 @@ import com.tminus1010.budgetvalue.databinding.TableviewHeaderIncomeBinding
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.extensions.itemObservableMap2
-import com.tminus1010.budgetvalue.middleware.ui.TMTableView.ViewItemRecipeFactory
+import com.tminus1010.budgetvalue.middleware.ui.tmTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.middleware.ui.bindIncoming
 import com.tminus1010.budgetvalue.middleware.ui.bindOutgoing
 import com.tminus1010.budgetvalue.middleware.ui.viewBinding

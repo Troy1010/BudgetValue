@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.middleware.ui.TMTableView.ViewItemRecipeFactory
+import com.tminus1010.budgetvalue.middleware.ui.tmTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.features.categories.Category
 import com.tminus1010.budgetvalue.middleware.toMoneyBigDecimal
 import io.reactivex.rxjava3.core.Observable
