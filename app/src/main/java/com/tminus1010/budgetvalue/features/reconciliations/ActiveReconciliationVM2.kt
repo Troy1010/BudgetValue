@@ -27,7 +27,7 @@ class ActiveReconciliationVM2(
                 (plans.map { it.defaultAmount } +
                         reconciliations.map { it.defaultAmount } +
                         transactionBlocks.map { it.defaultAmount })
-                    .fold(0.toBigDecimal()) { acc, v -> acc + v }
+                    .fold(BigDecimal.ZERO) { acc, v -> acc + v }
                     .let { budgetedDefaultAmount - it }
             }.toBehaviorSubject()
     val intentSaveReconciliation: PublishSubject<Unit> = PublishSubject.create<Unit>()
