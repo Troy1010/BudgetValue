@@ -25,6 +25,7 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
@@ -68,32 +69,37 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile), IViewModels {
             { v, s -> v.text = s }
         )
         Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs.itemObservableMap2(), transactionsVM.currentSpendBlockCAs, activeReconciliationVM.activeReconcileCAs.value.itemObservableMap2, budgetedVM.categoryAmounts.value.itemObservableMap2)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(Schedulers.computation())
             .debounce(100, TimeUnit.MILLISECONDS)
-            .observe(viewLifecycleOwner) { (categories, activePlanCAs, currentSpendBlockCAs, activeReconciliationCAs, budgetedCA) ->
+            .map { (categories, activePlanCAs, currentSpendBlockCAs, activeReconciliationCAs, budgetedCA) ->
+                val recipeGrid = listOf(
+                    headerRecipeFactory.createOne2("Category")
+                            + cellRecipeFactory.createOne2("Default")
+                            + cellRecipeFactory.createMany(categories.map { it.name }),
+                    headerRecipeFactory_numbered.createOne2(Pair("Plan", activePlanVM.expectedIncome))
+                            + oneWayRecipeFactory.createOne2(activePlanVM.defaultAmount)
+                            + oneWayRecipeFactory.createMany(categories.map { activePlanCAs[it] }),
+                    headerRecipeFactory.createOne2("Actual")
+                            + cellRecipeFactory2.createOne2("")
+                            + cellRecipeFactory2.createMany(categories.map { currentSpendBlockCAs[it] ?: BigDecimal.ZERO }),
+                    headerRecipeFactory.createOne2("Reconcile")
+                            + oneWayRecipeFactory.createOne2(activeReconciliationVM2.defaultAmount)
+                            + reconcileCARecipeFactory.createMany(categories.map { it to activeReconciliationCAs[it] }),
+                    headerRecipeFactory_numbered.createOne2(Pair("Budgeted", accountsVM.accountsTotal))
+                            + oneWayRecipeFactory.createOne2(budgetedVM.defaultAmount)
+                            + oneWayRecipeFactory.createMany(categories.map { budgetedCA[it] })
+                ).reflectXY()
                 val dividerMap = categories
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
                     .associate { it.index to titledDividerRecipeFactory.createOne(it.value.type.name) }
                     .mapKeys { it.key + 2 } // header row, default row
+                Pair(recipeGrid, dividerMap)
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .observe(viewLifecycleOwner) { (recipeGrid, dividerMap) ->
                 binding.myTableView1.initialize(
-                    recipeGrid = listOf(
-                        headerRecipeFactory.createOne2("Category")
-                                + cellRecipeFactory.createOne2("Default")
-                                + cellRecipeFactory.createMany(categories.map { it.name }),
-                        headerRecipeFactory_numbered.createOne2(Pair("Plan", activePlanVM.expectedIncome))
-                                + oneWayRecipeFactory.createOne2(activePlanVM.defaultAmount)
-                                + oneWayRecipeFactory.createMany(categories.map { activePlanCAs[it] }),
-                        headerRecipeFactory.createOne2("Actual")
-                                + cellRecipeFactory2.createOne2("")
-                                + cellRecipeFactory2.createMany(categories.map { currentSpendBlockCAs[it] ?: BigDecimal.ZERO }),
-                        headerRecipeFactory.createOne2("Reconcile")
-                                + oneWayRecipeFactory.createOne2(activeReconciliationVM2.defaultAmount)
-                                + reconcileCARecipeFactory.createMany(categories.map { it to activeReconciliationCAs[it] }),
-                        headerRecipeFactory_numbered.createOne2(Pair("Budgeted", accountsVM.accountsTotal))
-                                + oneWayRecipeFactory.createOne2(budgetedVM.defaultAmount)
-                                + oneWayRecipeFactory.createMany(categories.map { budgetedCA[it] })
-                    ).reflectXY(),
+                    recipeGrid = recipeGrid,
                     shouldFitItemWidthsInsideTable = true,
                     dividerMap = dividerMap,
                     colFreezeCount = 0,
