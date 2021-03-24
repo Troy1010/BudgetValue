@@ -25,6 +25,7 @@ import com.tminus1010.budgetvalue.middleware.ui.viewBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 class HistoryFrag : Fragment(R.layout.frag_history), IHostFragChild, IViewModels {
     override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
@@ -60,9 +61,9 @@ class HistoryFrag : Fragment(R.layout.frag_history), IHostFragChild, IViewModels
             { v, s -> v.text = s }
         )
         Rx.combineLatest(historyVM.historyColumnDatas, historyVM.activeCategories)
-            .observeOn(AndroidSchedulers.mainThread())
             .distinctUntilChanged() //*idk why this emitted a copy without distinctUntilChanged
-            .observe(viewLifecycleOwner) { (historyColumnDatas, activeCategories) ->
+            .observeOn(Schedulers.computation())
+            .map { (historyColumnDatas, activeCategories) ->
                 val recipe2D =
                     listOf(
                         headerRecipeFactory.createOne2("Categories") +
@@ -79,6 +80,10 @@ class HistoryFrag : Fragment(R.layout.frag_history), IHostFragChild, IViewModels
                     .distinctUntilChangedWith(compareBy { it.value.type })
                     .associate { it.index to titledDividerRecipeFactory.createOne(it.value.type.name) }
                     .mapKeys { it.key + 2 } // header row and default row
+                Pair(recipe2D, dividerMap)
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .observe(viewLifecycleOwner) { (recipe2D, dividerMap) ->
                 binding.tmTableViewHistory.initialize(recipe2D, false, dividerMap, 1, 1)
             }
     }
