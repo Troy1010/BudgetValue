@@ -11,6 +11,7 @@ import com.tminus1010.budgetvalue.features.history.HistoryVM
 import com.tminus1010.budgetvalue.features.plans.PlansVM
 import com.tminus1010.budgetvalue.features.reconciliations.ActiveReconciliationVM
 import com.tminus1010.budgetvalue.features.reconciliations.ActiveReconciliationVM2
+import com.tminus1010.budgetvalue.features.reconciliations.ReconciliationsVM
 import com.tminus1010.budgetvalue.features.transactions.CategorizeTransactionsAdvancedVM
 import com.tminus1010.budgetvalue.features.transactions.CategorizeTransactionsVM
 import com.tminus1010.budgetvalue.features.transactions.TransactionsVM
@@ -19,6 +20,9 @@ import com.tminus1010.tmcommonkotlin.view.createViewModelFactory
 
 class ViewModelProviders(val activity: FragmentActivity, val appComponent: AppComponent) {
     private val c get() = appComponent
+    val reconciliationsVM: ReconciliationsVM
+            by { ReconciliationsVM(c.getDomain()) }
+                .let { activity.viewModels { createViewModelFactory(it) } }
     val plansVM: PlansVM
             by { PlansVM(c.getDomain()) }
                 .let { activity.viewModels { createViewModelFactory(it) } }

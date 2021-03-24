@@ -95,6 +95,9 @@ interface MiscDAO {
     @Update
     fun update(reconciliationDTO: ReconciliationDTO): Completable
 
+    @Delete
+    fun delete(reconciliationDTO: ReconciliationDTO): Completable
+
     @Query("DELETE FROM ReconciliationDTO")
     fun clearReconciliations(): Completable
 

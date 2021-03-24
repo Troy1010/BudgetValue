@@ -43,7 +43,7 @@ class HistoryFrag : Fragment(R.layout.frag_history), IHostFragChild, IViewModels
                     listOfNotNull(
                         when (historyColumnData) {
                             is Plan -> {{ plansVM.intentDeletePlan.onNext(historyColumnData) }}
-                            is Reconciliation -> {{ TODO() }}
+                            is Reconciliation -> {{ reconciliationsVM.intentDeleteReconciliation.onNext(historyColumnData) }}
                             else -> null
                         }?.let { MenuItemPartial("Delete", it) })
                         .also { PopupMenu(requireActivity(), v).show(it) }

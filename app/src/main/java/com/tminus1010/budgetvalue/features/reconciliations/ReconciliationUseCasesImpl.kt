@@ -26,8 +26,10 @@ class ReconciliationUseCasesImpl @Inject constructor(
     override fun clearReconciliations() = repo.clearReconciliations()
 
     override fun pushReconciliation(reconciliation: Reconciliation): Completable =
-        reconciliation.toDTO(categoryAmountsConverter)
-            .let { repo.add(it).subscribeOn(Schedulers.io()) }
+        repo.add(reconciliation.toDTO(categoryAmountsConverter))
+
+    override fun delete(reconciliation: Reconciliation): Completable =
+        repo.delete(reconciliation.toDTO(categoryAmountsConverter))
 
     override val reconciliations: Observable<List<Reconciliation>> =
         repo.fetchReconciliations()
