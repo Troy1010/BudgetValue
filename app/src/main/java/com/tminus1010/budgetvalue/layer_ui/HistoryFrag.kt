@@ -13,6 +13,7 @@ import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
 import com.tminus1010.budgetvalue.extensions.add
+import com.tminus1010.budgetvalue.extensions.show
 import com.tminus1010.budgetvalue.features.history.IHistoryColumnData
 import com.tminus1010.budgetvalue.features.plans.Plan
 import com.tminus1010.budgetvalue.features.reconciliations.Reconciliation
@@ -39,20 +40,13 @@ class HistoryFrag : Fragment(R.layout.frag_history), IHostFragChild, IViewModels
                 (v.children.first() as TextView).text = historyColumnData.title
                 (v.children.last() as TextView).text = historyColumnData.subTitle(domain)
                 v.setOnLongClickListener {
-                    PopupMenu(requireActivity(), v).apply {
-                        val menuItemPartials = listOfNotNull(
-                            when(historyColumnData) {
-                                is Plan -> {{ plansVM.intentDeletePlan.onNext(historyColumnData) }}
-                                is Reconciliation -> {{ TODO() }}
-                                else -> null
-                            }?.let { MenuItemPartial("Delete", it) }).toTypedArray()
-                        menu.add(*menuItemPartials)
-                        setOnMenuItemClickListener {
-                            menuItemPartials.find { it.id == it.id }!!.action()
-                            true
-                        }
-                        show()
-                    }
+                    listOfNotNull(
+                        when (historyColumnData) {
+                            is Plan -> {{ plansVM.intentDeletePlan.onNext(historyColumnData) }}
+                            is Reconciliation -> {{ TODO() }}
+                            else -> null
+                        }?.let { MenuItemPartial("Delete", it) })
+                        .also { PopupMenu(requireActivity(), v).show(it) }
                     true
                 }
             },
