@@ -4,7 +4,9 @@ import android.content.Intent
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.repo
 import com.tminus1010.budgetvalue.layer_ui.HostActivity
-import com.tminus1010.budgetvalue.layer_ui.misc.MenuItemPartial
+import com.tminus1010.budgetvalue.middleware.ui.MenuItemPartial
+import com.tminus1010.budgetvalue.middleware.getBlocks
+import com.tminus1010.budgetvalue.middleware.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.logz
 import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
@@ -36,7 +38,7 @@ class FlavorIntersection @Inject constructor(): IFlavorIntersection {
                     for (transactionBlock in transactionBlocks) {
                         val curStringBlock = HashMap<String, String>()
                         stringBlocks.add(curStringBlock)
-                        for (category in domain.userCategories.value) {
+                        for (category in categoriesVM.userCategories.value) {
                             curStringBlock[category.name] = transactionBlock.value
                                 .map { it.categoryAmounts[category] ?: BigDecimal.ZERO }
                                 .fold(BigDecimal.ZERO, BigDecimal::add)

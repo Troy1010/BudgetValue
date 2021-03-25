@@ -4,14 +4,12 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.Rx
 import com.tminus1010.budgetvalue.databinding.FragAdvancedCategorizeBinding
 import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
-import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.domain
-import com.tminus1010.budgetvalue.layer_ui.TMTableView2.RecipeGrid
-import com.tminus1010.budgetvalue.layer_ui.misc.viewBinding
-import com.tminus1010.budgetvalue.reflectXY
+import com.tminus1010.budgetvalue.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue.middleware.reflectXY
+import com.tminus1010.budgetvalue.middleware.ui.ViewItemRecipeFactoryProvider
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
@@ -22,13 +20,13 @@ import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
 class CategorizeAdvancedFrag : Fragment(R.layout.frag_advanced_categorize), IViewModels {
-    val binding by viewBinding(FragAdvancedCategorizeBinding::bind)
+    val vb by viewBinding(FragAdvancedCategorizeBinding::bind)
     val viewRecipeFactories by lazy { ViewItemRecipeFactoryProvider(requireContext()) }
     override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
-        binding.btnAcDone.setOnClickListener {
+        vb.btnDone.setOnClickListener {
             if (categorizeAdvancedVM.defaultAmount.value.compareTo(BigDecimal.ZERO)!=0) {
                 toast("Default must be 0")
             } else {
@@ -42,7 +40,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_advanced_categorize), IVie
         val amountRecipeFactory = viewRecipeFactories.incomingBigDecimalRecipeFactory
         val categoryAmountRecipeFactory = viewRecipeFactories.outgoingCARecipeFactory(categorizeAdvancedVM.intentRememberCA)
         val titledDividerRecipeFactory = viewRecipeFactories.titledDividerRecipeFactory
-        domain.userCategories
+        categoriesVM.userCategories
             .debounce(100, TimeUnit.MILLISECONDS)
             .observeOn(Schedulers.computation())
             .map { categories ->
@@ -62,8 +60,14 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_advanced_categorize), IVie
                 Pair(recipes2D, dividerMap)
             }
             .observeOn(AndroidSchedulers.mainThread())
-            .observe(viewLifecycleOwner) { (recipes2D, dividerMap) ->
-                binding.tmTableViewAc.initialize(recipes2D, true, dividerMap, 0, 1)
+            .observe(viewLifecycleOwner) { (recipeGrid, dividerMap) ->
+                vb.tmTableView.initialize(
+                    recipeGrid = recipeGrid,
+                    shouldFitItemWidthsInsideTable = true,
+                    dividerMap = dividerMap,
+                    colFreezeCount = 0,
+                    rowFreezeCount = 1,
+                )
             }
     }
 }

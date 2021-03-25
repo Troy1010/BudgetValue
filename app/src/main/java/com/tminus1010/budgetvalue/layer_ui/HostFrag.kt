@@ -8,7 +8,7 @@ import com.tminus1010.budgetvalue.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.app
 import com.tminus1010.budgetvalue.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.extensions.getBackStack
-import com.tminus1010.budgetvalue.layer_ui.misc.ButtonPartial
+import com.tminus1010.budgetvalue.middleware.ui.ButtonPartial
 import com.tminus1010.tmcommonkotlin.misc.logz
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toast

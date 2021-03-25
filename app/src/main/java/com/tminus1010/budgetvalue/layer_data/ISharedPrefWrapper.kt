@@ -8,10 +8,6 @@ interface ISharedPrefWrapper {
     fun pushActiveReconciliationCAs(categoryAmounts: Map<String, String>?): Completable
     fun pushActiveReconciliationCA(kv: Pair<String, String?>): Completable
     fun clearActiveReconcileCAs(): Completable
-    val activePlanCAs: Observable<Map<String, String>>
-    fun pushActivePlanCAs(categoryAmounts: Map<String, String>?): Completable
-    fun pushActivePlanCA(kv: Pair<String, String?>): Completable
-    fun clearActivePlanCAs(): Completable
     fun fetchExpectedIncome(): String
     fun pushExpectedIncome(expectedIncome: String?): Completable
     val anchorDateOffset: Observable<Long>

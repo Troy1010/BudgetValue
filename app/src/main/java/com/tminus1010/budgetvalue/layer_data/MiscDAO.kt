@@ -1,7 +1,10 @@
 package com.tminus1010.budgetvalue.layer_data
 
 import androidx.room.*
-import com.tminus1010.budgetvalue.model_data.*
+import com.tminus1010.budgetvalue.features.accounts.AccountDTO
+import com.tminus1010.budgetvalue.features.plans.PlanDTO
+import com.tminus1010.budgetvalue.features.reconciliations.ReconciliationDTO
+import com.tminus1010.budgetvalue.features.transactions.TransactionDTO
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import java.math.BigDecimal
@@ -64,16 +67,22 @@ interface MiscDAO {
     fun fetchPlans(): Observable<List<PlanDTO>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun add(PlanDTO: PlanDTO): Completable
+    fun add(planDTO: PlanDTO): Completable
 
     @Update
-    fun update(PlanDTO: PlanDTO): Completable
+    fun update(planDTO: PlanDTO): Completable
+
+    @Delete
+    fun delete(planDTO: PlanDTO): Completable
 
     @Query("DELETE FROM PlanDTO")
     fun clearPlans(): Completable
 
     @Query("UPDATE PlanDTO SET categoryAmounts=:categoryAmounts WHERE startDate=:startDate")
     fun updatePlanCategoryAmounts(startDate: LocalDate, categoryAmounts: Map<String, BigDecimal>): Completable
+
+    @Query("UPDATE PlanDTO SET amount=:amount WHERE startDate=:startDate")
+    fun updatePlanAmount(startDate: LocalDate, amount: BigDecimal): Completable
 
     // # Reconciliations
 
@@ -85,6 +94,9 @@ interface MiscDAO {
 
     @Update
     fun update(reconciliationDTO: ReconciliationDTO): Completable
+
+    @Delete
+    fun delete(reconciliationDTO: ReconciliationDTO): Completable
 
     @Query("DELETE FROM ReconciliationDTO")
     fun clearReconciliations(): Completable
