@@ -25,30 +25,14 @@ class BudgetedVM(
         Rx.combineLatest(domain.reconciliations, domain.plans, transactionsVM.transactionBlocks, activeReconciliationVM.activeReconcileCAs)
             .throttleLatest(1, TimeUnit.SECONDS)
             .map { (reconciliations, plans, transactionBlocks, activeReconcileCAs) ->
-                val newMap = mutableMapOf<Category, BigDecimal>()
-                if (reconciliations != null)
-                    reconciliations.forEach {
-                        it.categoryAmounts.forEach { (category, amount) ->
-                            newMap[category] = (newMap[category] ?: BigDecimal(0)) + amount
-                        }
+                (reconciliations + plans + transactionBlocks)
+                    .map { it.categoryAmounts }
+                    .plus(activeReconcileCAs)
+                    .fold(hashMapOf<Category, BigDecimal>()) { acc, map ->
+                        map.forEach { (k, v) -> acc[k] = (acc[k] ?: BigDecimal.ZERO) + v }
+                        acc
                     }
-                if (plans != null)
-                    plans.forEach {
-                        it.categoryAmounts.forEach { (category, amount) ->
-                            newMap[category] = (newMap[category] ?: BigDecimal(0)) + amount
-                        }
-                    }
-                if (transactionBlocks != null)
-                    transactionBlocks.forEach {
-                        it.categoryAmounts.forEach { (category, amount) ->
-                            newMap[category] = (newMap[category] ?: BigDecimal(0)) + amount
-                        }
-                    }
-                if (activeReconcileCAs != null)
-                    activeReconcileCAs.forEach { (category, amount) ->
-                        newMap[category] = (newMap[category] ?: BigDecimal(0)) + amount
-                    }
-                newMap.toMap()
+                    .toMap()
             }
     val categoryAmountsObservableMap = categoryAmounts
         .flatMapSourceHashMap { it.itemObservableMap2 }
