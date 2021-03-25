@@ -23,6 +23,7 @@ class BudgetedVM(
 ): ViewModel() {
     val categoryAmounts =
         Rx.combineLatest(domain.reconciliations, domain.plans, transactionsVM.transactionBlocks, activeReconciliationVM.activeReconcileCAs, categoriesVM.userCategories)
+            .throttleLatest(1, TimeUnit.SECONDS)
             .scan(SourceHashMap<Category, BigDecimal>()) { acc, (reconciliations, plans, transactionBlocks, activeReconcileCAs, activeCategories) ->
                 val newMap = mutableMapOf<Category, BigDecimal>()
                 if (reconciliations != null)
@@ -55,7 +56,6 @@ class BudgetedVM(
                 acc.adjustTo(newMap)
                 acc
             }
-            .throttleLatest(1, TimeUnit.SECONDS)
             .toBehaviorSubject()
     val caTotal =
         categoryAmounts.value.itemObservableMap2
