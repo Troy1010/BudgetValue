@@ -20,44 +20,23 @@ class BudgetedVM(
     transactionsVM: TransactionsVM,
     activeReconciliationVM: ActiveReconciliationVM,
     accountsVM: AccountsVM,
-    categoriesVM: CategoriesVM,
 ): ViewModel() {
     val categoryAmounts =
-        Rx.combineLatest(domain.reconciliations, domain.plans, transactionsVM.transactionBlocks, activeReconciliationVM.activeReconcileCAs, categoriesVM.userCategories)
+        Rx.combineLatest(domain.reconciliations, domain.plans, transactionsVM.transactionBlocks, activeReconciliationVM.activeReconcileCAs)
             .throttleLatest(1, TimeUnit.SECONDS)
-            .map { (reconciliations, plans, transactionBlocks, activeReconcileCAs, activeCategories) ->
-                val newMap = mutableMapOf<Category, BigDecimal>()
-                if (reconciliations != null)
-                    reconciliations.forEach {
-                        it.categoryAmounts.forEach { (category, amount) ->
-                            newMap[category] = (newMap[category] ?: BigDecimal(0)) + amount
-                        }
+            .map { (reconciliations, plans, transactionBlocks, activeReconcileCAs) ->
+                (reconciliations + plans + transactionBlocks)
+                    .map { it.categoryAmounts }
+                    .plus(activeReconcileCAs)
+                    .fold(hashMapOf<Category, BigDecimal>()) { acc, map ->
+                        map.forEach { (k, v) -> acc[k] = (acc[k] ?: BigDecimal.ZERO) + v }
+                        acc
                     }
-                if (plans != null)
-                    plans.forEach {
-                        it.categoryAmounts.forEach { (category, amount) ->
-                            newMap[category] = (newMap[category] ?: BigDecimal(0)) + amount
-                        }
-                    }
-                if (transactionBlocks != null)
-                    transactionBlocks.forEach {
-                        it.categoryAmounts.forEach { (category, amount) ->
-                            newMap[category] = (newMap[category] ?: BigDecimal(0)) + amount
-                        }
-                    }
-                if (activeReconcileCAs != null)
-                    activeReconcileCAs.forEach { (category, amount) ->
-                        newMap[category] = (newMap[category] ?: BigDecimal(0)) + amount
-                    }
-                if (activeCategories != null)
-                    activeCategories
-                        .filter { it !in newMap }
-                        .associateWith { BigDecimal.ZERO }
-                        .also { newMap.putAll(it) }
-                newMap.toMap()
+                    .toMap()
             }
     val categoryAmountsObservableMap = categoryAmounts
-        .flatMapSourceHashMap { it.itemObservableMap2 }
+        .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO))
+        { it.itemObservableMap2 }
     val caTotal = categoryAmountsObservableMap.switchMap { it.values.total() }
     val defaultAmount =
         Rx.combineLatest(accountsVM.accountsTotal, caTotal)

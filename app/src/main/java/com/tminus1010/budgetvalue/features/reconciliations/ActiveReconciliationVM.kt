@@ -34,7 +34,7 @@ class ActiveReconciliationVM(
             .toBehaviorSubject()
     val activeReconcileCAs2 =
         activeReconcileCAs
-            .flatMapSourceHashMap(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0)))
+            .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO))
             { it.itemObservableMap2 }
             .replay(1).refCount()
 }
