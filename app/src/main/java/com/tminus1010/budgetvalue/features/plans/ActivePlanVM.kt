@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.features.plans
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.extensions.itemObservableMap2
 import com.tminus1010.budgetvalue.extensions.launch
+import com.tminus1010.budgetvalue.extensions.toSourceHashMapOutput
 import com.tminus1010.budgetvalue.extensions.withLatestFrom2
 import com.tminus1010.budgetvalue.features.categories.CategoriesVM
 import com.tminus1010.budgetvalue.features.categories.Category
@@ -55,15 +56,13 @@ class ActivePlanVM(
         }
     val activePlanCAs =
         Rx.combineLatest(activePlan, categoriesVM.userCategories)
-            .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (activePlan, activeCategories) ->
-                activeCategories
-                    .associateWith { BigDecimal.ZERO }
-                    .let { it + activePlan.categoryAmounts }
-                    .also { acc.adjustTo(it) }
-                acc
+            .map { (activePlan, activeCategories) ->
+                activeCategories.associateWith { BigDecimal.ZERO } + activePlan.categoryAmounts
             }
-            .toBehaviorSubject()
-    val planUncategorized = activePlanCAs.itemObservableMap2()
+            .toSourceHashMapOutput(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0)))
+            { it.itemObservableMap2 }
+            .replay(1).refCount()
+    val planUncategorized = activePlanCAs
         .switchMap { it.values.total() }
         .replay(1).refCount()
     val expectedIncome = intentPushExpectedIncome
