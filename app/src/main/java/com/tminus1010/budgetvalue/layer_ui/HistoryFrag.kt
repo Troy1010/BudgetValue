@@ -68,10 +68,10 @@ class HistoryFrag : Fragment(R.layout.frag_history), IHostFragChild, IViewModels
                         headerRecipeFactory.createOne2("Categories") +
                                 cellRecipeFactory.createOne("Default") +
                                 cellRecipeFactory.createMany(activeCategories.map { it.name }),
-                        *historyColumnDatas.map {
-                            columnHeaderFactory.createOne2(it) +
-                                    cellRecipeFactory.createOne(it.defaultAmount.toString()) +
-                                    cellRecipeFactory.createMany(activeCategories.map { k -> it.categoryAmounts[k]?.toString() ?: "" })
+                        *historyColumnDatas.map { historyColumnData ->
+                            columnHeaderFactory.createOne2(historyColumnData) +
+                                    cellRecipeFactory.createOne(historyColumnData.defaultAmount.toString()) +
+                                    cellRecipeFactory.createMany(activeCategories.map { historyColumnData.categoryAmounts[it]?.toString() ?: "" })
                         }.toTypedArray()
                     ).reflectXY()
                 val dividerMap = activeCategories
