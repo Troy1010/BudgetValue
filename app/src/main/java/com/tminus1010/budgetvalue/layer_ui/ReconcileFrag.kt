@@ -68,7 +68,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile), IViewModels {
             { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs, transactionsVM.currentSpendBlockCAs, activeReconciliationVM.activeReconcileCAs2, budgetedVM.categoryAmounts.value.itemObservableMap2)
+        Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs, transactionsVM.currentSpendBlockCAs, activeReconciliationVM.activeReconcileCAs2, budgetedVM.categoryAmountsObservableMap)
             .observeOn(Schedulers.computation())
             .debounce(100, TimeUnit.MILLISECONDS)
             .map { (categories, activePlanCAs, currentSpendBlockCAs, activeReconciliationCAs, budgetedCA) ->

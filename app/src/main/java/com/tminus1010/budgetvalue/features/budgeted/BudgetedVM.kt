@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.features.budgeted
 
 import androidx.lifecycle.ViewModel
+import com.tminus1010.budgetvalue.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue.features.accounts.AccountsVM
 import com.tminus1010.budgetvalue.features.categories.CategoriesVM
 import com.tminus1010.budgetvalue.features.categories.Category
@@ -24,7 +25,7 @@ class BudgetedVM(
     val categoryAmounts =
         Rx.combineLatest(domain.reconciliations, domain.plans, transactionsVM.transactionBlocks, activeReconciliationVM.activeReconcileCAs, categoriesVM.userCategories)
             .throttleLatest(1, TimeUnit.SECONDS)
-            .scan(SourceHashMap<Category, BigDecimal>()) { acc, (reconciliations, plans, transactionBlocks, activeReconcileCAs, activeCategories) ->
+            .map { (reconciliations, plans, transactionBlocks, activeReconcileCAs, activeCategories) ->
                 val newMap = mutableMapOf<Category, BigDecimal>()
                 if (reconciliations != null)
                     reconciliations.forEach {
@@ -53,13 +54,11 @@ class BudgetedVM(
                         .filter { it !in newMap }
                         .associateWith { BigDecimal.ZERO }
                         .also { newMap.putAll(it) }
-                acc.adjustTo(newMap)
-                acc
+                newMap.toMap()
             }
-            .toBehaviorSubject()
-    val caTotal =
-        categoryAmounts.value.itemObservableMap2
-            .switchMap { it.values.total() }
+    val categoryAmountsObservableMap = categoryAmounts
+        .flatMapSourceHashMap { it.itemObservableMap2 }
+    val caTotal = categoryAmountsObservableMap.switchMap { it.values.total() }
     val defaultAmount =
         Rx.combineLatest(accountsVM.accountsTotal, caTotal)
             .map { it.first - it.second }
