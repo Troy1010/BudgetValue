@@ -35,7 +35,8 @@ class BudgetedVM(
                     .toMap()
             }
     val categoryAmountsObservableMap = categoryAmounts
-        .flatMapSourceHashMap { it.itemObservableMap2 }
+        .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO))
+        { it.itemObservableMap2 }
     val caTotal = categoryAmountsObservableMap.switchMap { it.values.total() }
     val defaultAmount =
         Rx.combineLatest(accountsVM.accountsTotal, caTotal)
