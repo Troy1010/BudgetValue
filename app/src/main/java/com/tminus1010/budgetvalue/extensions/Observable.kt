@@ -20,7 +20,7 @@ fun <A, B> Observable<A>.withLatestFrom2(o1: Observable<B>) =
 
 fun <T> Observable<T>.toCompletable() = Completable.fromObservable(this)
 
-fun <K, V, T> Observable<Map<K, V>>.toSourceHashMapOutput(sourceHashMap: SourceHashMap<K, V>, outputChooser: (SourceHashMap<K, V>) -> Observable<T>) =
+fun <K, V, T> Observable<Map<K, V>>.flatMapSourceHashMap(sourceHashMap: SourceHashMap<K, V>, outputChooser: (SourceHashMap<K, V>) -> Observable<T>): Observable<T> =
     compose { upstream ->
         Observable.create<T> { downstream ->
             CompositeDisposable(
