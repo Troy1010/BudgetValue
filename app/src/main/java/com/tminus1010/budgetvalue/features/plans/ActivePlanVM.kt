@@ -58,7 +58,7 @@ class ActivePlanVM(
             .map { (activePlan, activeCategories) ->
                 activeCategories.associateWith { BigDecimal.ZERO } + activePlan.categoryAmounts
             }
-            .flatMapSourceHashMap(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0)))
+            .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal(0)))
             { it.itemObservableMap2 }
             .replay(1).refCount()
     val planUncategorized = activePlanCAs
