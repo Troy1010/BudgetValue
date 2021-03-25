@@ -20,12 +20,11 @@ class BudgetedVM(
     transactionsVM: TransactionsVM,
     activeReconciliationVM: ActiveReconciliationVM,
     accountsVM: AccountsVM,
-    categoriesVM: CategoriesVM,
 ): ViewModel() {
     val categoryAmounts =
-        Rx.combineLatest(domain.reconciliations, domain.plans, transactionsVM.transactionBlocks, activeReconciliationVM.activeReconcileCAs, categoriesVM.userCategories)
+        Rx.combineLatest(domain.reconciliations, domain.plans, transactionsVM.transactionBlocks, activeReconciliationVM.activeReconcileCAs)
             .throttleLatest(1, TimeUnit.SECONDS)
-            .map { (reconciliations, plans, transactionBlocks, activeReconcileCAs, activeCategories) ->
+            .map { (reconciliations, plans, transactionBlocks, activeReconcileCAs) ->
                 val newMap = mutableMapOf<Category, BigDecimal>()
                 if (reconciliations != null)
                     reconciliations.forEach {
@@ -49,11 +48,6 @@ class BudgetedVM(
                     activeReconcileCAs.forEach { (category, amount) ->
                         newMap[category] = (newMap[category] ?: BigDecimal(0)) + amount
                     }
-                if (activeCategories != null)
-                    activeCategories
-                        .filter { it !in newMap }
-                        .associateWith { BigDecimal.ZERO }
-                        .also { newMap.putAll(it) }
                 newMap.toMap()
             }
     val categoryAmountsObservableMap = categoryAmounts
