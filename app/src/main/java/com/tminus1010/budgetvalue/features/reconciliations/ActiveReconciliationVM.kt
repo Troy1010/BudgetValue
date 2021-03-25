@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.features.reconciliations
 
 import androidx.lifecycle.ViewModel
+import com.tminus1010.budgetvalue.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue.middleware.Rx
 import com.tminus1010.budgetvalue.extensions.launch
 import com.tminus1010.budgetvalue.features.categories.CategoriesVM
@@ -27,12 +28,13 @@ class ActiveReconciliationVM(
         .also { it.launch { domain.pushActiveReconciliationCA(it) } }
     val activeReconcileCAs =
         Rx.combineLatest(domain.activeReconciliationCAs, categoriesVM.userCategories)
-            .scan(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0))) { acc, (activeReconcileCAs, activeCategories) ->
-                activeCategories
-                    .associateWith { BigDecimal.ZERO }
-                    .let { it + activeReconcileCAs }
-                    .also { acc.adjustTo(it) }
-                acc
+            .map { (activeReconcileCAs, activeCategories) ->
+                activeCategories.associateWith { BigDecimal.ZERO } + activeReconcileCAs
             }
             .toBehaviorSubject()
+    val activeReconcileCAs2 =
+        activeReconcileCAs
+            .flatMapSourceHashMap(SourceHashMap<Category, BigDecimal>(exitValue = BigDecimal(0)))
+            { it.itemObservableMap2 }
+            .replay(1).refCount()
 }
