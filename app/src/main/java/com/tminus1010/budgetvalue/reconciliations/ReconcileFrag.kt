@@ -17,7 +17,7 @@ import com.tminus1010.budgetvalue._core.middleware.ui.bindIncoming
 import com.tminus1010.budgetvalue._core.middleware.ui.bindOutgoing
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
-import com.tminus1010.budgetvalue._shared.ui.IViewModels
+import com.tminus1010.budgetvalue._layer_facades.IViewModels
 import com.tminus1010.budgetvalue.databinding.FragReconcileBinding
 import com.tminus1010.budgetvalue.databinding.TableviewHeaderIncomeBinding
 import com.tminus1010.budgetvalue.categories.Category

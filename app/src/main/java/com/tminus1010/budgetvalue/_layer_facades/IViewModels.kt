@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._shared.ui
+package com.tminus1010.budgetvalue._layer_facades
 
 import androidx.lifecycle.LifecycleOwner
 import com.tminus1010.budgetvalue._core.dependency_injection.ViewModelProviders

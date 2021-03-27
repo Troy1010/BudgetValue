@@ -7,8 +7,8 @@ import com.tminus1010.budgetvalue.categories.UserCategoriesUseCases
 import com.tminus1010.budgetvalue.categories.UserCategoriesUseCasesImpl
 import com.tminus1010.budgetvalue.plans.PlanUseCases
 import com.tminus1010.budgetvalue.plans.PlanUseCasesImpl
-import com.tminus1010.budgetvalue._shared.domain.SettingsUseCases
-import com.tminus1010.budgetvalue._shared.domain.SettingsUseCasesImpl
+import com.tminus1010.budgetvalue._core.shared_features.date_period_getter.SettingsUseCases
+import com.tminus1010.budgetvalue._core.shared_features.date_period_getter.SettingsUseCasesImpl
 import dagger.Binds
 import dagger.Module
 

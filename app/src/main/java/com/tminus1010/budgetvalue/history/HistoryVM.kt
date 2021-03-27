@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue.categories.Category
 import com.tminus1010.budgetvalue.reconciliations.ActiveReconciliationVM
 import com.tminus1010.budgetvalue.reconciliations.ActiveReconciliationVM2
 import com.tminus1010.budgetvalue.transactions.TransactionsVM
-import com.tminus1010.budgetvalue._shared.domain.Domain
+import com.tminus1010.budgetvalue._layer_facades.Domain
 import com.tminus1010.budgetvalue.budgeted.BudgetedVM
 import com.tminus1010.budgetvalue._core.middleware.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.middleware.Rx

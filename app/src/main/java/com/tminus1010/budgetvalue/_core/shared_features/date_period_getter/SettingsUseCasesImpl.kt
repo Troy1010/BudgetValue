@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._shared.domain
+package com.tminus1010.budgetvalue._core.shared_features.date_period_getter
 
 import com.tminus1010.budgetvalue._core.data.Repo
 import io.reactivex.rxjava3.core.Completable

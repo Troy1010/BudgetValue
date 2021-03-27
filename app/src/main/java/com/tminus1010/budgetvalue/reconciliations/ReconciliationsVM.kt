@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.reconciliations
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.extensions.launch
-import com.tminus1010.budgetvalue._shared.domain.Domain
+import com.tminus1010.budgetvalue._layer_facades.Domain
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class ReconciliationsVM(

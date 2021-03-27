@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.transactions
 
 import androidx.lifecycle.ViewModel
 
-import com.tminus1010.budgetvalue._shared.domain.Domain
+import com.tminus1010.budgetvalue._layer_facades.Domain
 import com.tminus1010.budgetvalue.categories.Category
 import com.tminus1010.budgetvalue._core.middleware.unbox
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox

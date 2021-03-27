@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._shared.domain
+package com.tminus1010.budgetvalue._layer_facades
 
 import com.tminus1010.budgetvalue.accounts.AccountUseCases
 import com.tminus1010.budgetvalue.accounts.AccountUseCasesImpl
@@ -11,10 +11,14 @@ import com.tminus1010.budgetvalue.transactions.ITransactionParser
 import com.tminus1010.budgetvalue.transactions.TransactionParser
 import com.tminus1010.budgetvalue.transactions.TransactionUseCases
 import com.tminus1010.budgetvalue.transactions.TransactionUseCasesImpl
-import com.tminus1010.budgetvalue._core.app_init.AppInitBoolUseCases
-import com.tminus1010.budgetvalue._core.app_init.AppInitBoolUseCasesImpl
-import com.tminus1010.budgetvalue._core.app_init.AppInitializer
-import com.tminus1010.budgetvalue._core.app_init.IAppInitializer
+import com.tminus1010.budgetvalue._core.shared_features.app_init.AppInitBoolUseCases
+import com.tminus1010.budgetvalue._core.shared_features.app_init.AppInitBoolUseCasesImpl
+import com.tminus1010.budgetvalue._core.shared_features.app_init.AppInitializer
+import com.tminus1010.budgetvalue._core.shared_features.app_init.IAppInitializer
+import com.tminus1010.budgetvalue._core.shared_features.date_period_getter.DatePeriodGetter
+import com.tminus1010.budgetvalue._core.shared_features.date_period_getter.IDatePeriodGetter
+import com.tminus1010.budgetvalue._core.shared_features.date_period_getter.SettingsUseCases
+import com.tminus1010.budgetvalue._core.shared_features.date_period_getter.SettingsUseCasesImpl
 import javax.inject.Inject
 import javax.inject.Singleton
 

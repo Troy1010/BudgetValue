@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._shared.ui
+package com.tminus1010.budgetvalue.history
 
 import android.os.Bundle
 import android.view.View
@@ -16,9 +16,9 @@ import com.tminus1010.budgetvalue._core.middleware.reflectXY
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuItemPartial
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue._layer_facades.IViewModels
 import com.tminus1010.budgetvalue.databinding.FragHistoryBinding
 import com.tminus1010.budgetvalue.extensions.show
-import com.tminus1010.budgetvalue.history.IHistoryColumnData
 import com.tminus1010.budgetvalue.plans.Plan
 import com.tminus1010.budgetvalue.reconciliations.Reconciliation
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith

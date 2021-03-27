@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._core.app_init
+package com.tminus1010.budgetvalue._core.shared_features.app_init
 
 import com.tminus1010.budgetvalue._core.data.Repo
 import io.reactivex.rxjava3.core.Completable

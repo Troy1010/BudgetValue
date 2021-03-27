@@ -9,7 +9,7 @@ import com.tminus1010.budgetvalue._core.dependency_injection.injection_extension
 import com.tminus1010.budgetvalue._core.middleware.reflectXY
 import com.tminus1010.budgetvalue._core.middleware.ui.ViewItemRecipeFactoryProvider
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
-import com.tminus1010.budgetvalue._shared.ui.IViewModels
+import com.tminus1010.budgetvalue._layer_facades.IViewModels
 import com.tminus1010.budgetvalue.databinding.FragAdvancedCategorizeBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe

@@ -42,7 +42,7 @@
         android:label="Plan" />
     <fragment
         android:id="@+id/historyFrag"
-        android:name="com.tminus1010.budgetvalue._shared.ui.HistoryFrag"
+        android:name="com.tminus1010.budgetvalue.history.HistoryFrag"
         android:label="History" />
     <fragment
         android:id="@+id/advancedCategorizeFrag"

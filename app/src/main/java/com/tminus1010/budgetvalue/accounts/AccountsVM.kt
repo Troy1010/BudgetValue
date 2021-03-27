@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.accounts
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.extensions.launch
-import com.tminus1010.budgetvalue._shared.domain.Domain
+import com.tminus1010.budgetvalue._layer_facades.Domain
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal

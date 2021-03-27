@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.extensions.launch
 import com.tminus1010.budgetvalue.plans.ActivePlanVM
 import com.tminus1010.budgetvalue.plans.PlanUseCases
-import com.tminus1010.budgetvalue._shared.domain.Domain
+import com.tminus1010.budgetvalue._layer_facades.Domain
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import io.reactivex.rxjava3.subjects.PublishSubject
 
