@@ -17,4 +17,4 @@ val Fragment.domain
     get() = appComponent.getDomain()
 
 val Fragment.flavorIntersection
-    get() = appComponent.getFlavorIntersection()
+    get() = appComponent.getFlavorFacade()

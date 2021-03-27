@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue
+package com.tminus1010.budgetvalue._core.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.databinding.ActivityMockImportSelectionBinding
 import com.tminus1010.budgetvalue._core.dependency_injection.ViewModelProviders
 import com.tminus1010.budgetvalue._core.dependency_injection.injection_extensions.appComponent
