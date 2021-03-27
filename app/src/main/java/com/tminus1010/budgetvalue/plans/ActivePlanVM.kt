@@ -7,7 +7,7 @@ import com.tminus1010.budgetvalue.extensions.withLatestFrom2
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.Category
 import com.tminus1010.budgetvalue._core.shared_features.date_period_getter.DatePeriodGetter
-import com.tminus1010.budgetvalue._layer_facades.Domain
+import com.tminus1010.budgetvalue._layer_facades.DomainFacade
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.nullIfZero
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
@@ -18,7 +18,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 
 class ActivePlanVM(
-    domain: Domain,
+    domainFacade: DomainFacade,
     categoriesVM: CategoriesVM,
     datePeriodGetter: DatePeriodGetter,
     plansVM: PlansVM
@@ -39,19 +39,19 @@ class ActivePlanVM(
                         Observable.just(Plan(Observable.just(datePeriodGetter.currentDatePeriod()),
                             BigDecimal.ZERO,
                             emptyMap()))
-                }.doOnNext { domain.pushPlan(it).blockingAwait() }
+                }.doOnNext { domainFacade.pushPlan(it).blockingAwait() }
             }
         }
         .toBehaviorSubject()
     val intentPushExpectedIncome = PublishSubject.create<BigDecimal>()
         .also {
             it.withLatestFrom2(activePlan)
-                .launch { (amount, plan) -> domain.updatePlanAmount(plan, amount) }
+                .launch { (amount, plan) -> domainFacade.updatePlanAmount(plan, amount) }
         }
     val intentPushActivePlanCA = PublishSubject.create<Pair<Category, BigDecimal?>>()
         .also {
             it.withLatestFrom2(activePlan)
-                .launch { (categoryAmount, plan) -> domain.updatePlanCA(plan, categoryAmount.first, categoryAmount.second?.nullIfZero()) }
+                .launch { (categoryAmount, plan) -> domainFacade.updatePlanCA(plan, categoryAmount.first, categoryAmount.second?.nullIfZero()) }
         }
     val activePlanCAs =
         Rx.combineLatest(activePlan, categoriesVM.userCategories)

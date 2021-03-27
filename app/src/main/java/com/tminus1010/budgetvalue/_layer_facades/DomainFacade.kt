@@ -27,7 +27,7 @@ import javax.inject.Singleton
  * If you ever change the business logic, all other layers will not require updates.
  */
 @Singleton
-class Domain @Inject constructor(
+class DomainFacade @Inject constructor(
     private val appInitializer: AppInitializer,
     private val datePeriodGetter: DatePeriodGetter,
     private val transactionParser: TransactionParser,

@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.reconciliations
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.extensions.launch
 import com.tminus1010.budgetvalue.transactions.TransactionsVM
-import com.tminus1010.budgetvalue._layer_facades.Domain
+import com.tminus1010.budgetvalue._layer_facades.DomainFacade
 import com.tminus1010.budgetvalue.budgeted.BudgetedVM
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
@@ -17,12 +17,12 @@ import java.time.LocalDate
 class ActiveReconciliationVM2(
     activeReconciliationVM: ActiveReconciliationVM,
     budgetedVM: BudgetedVM,
-    domain: Domain,
+    domainFacade: DomainFacade,
     transactionsVM: TransactionsVM,
 ) : ViewModel() {
     // This calculation is a bit confusing. Take a look at ManualCalculationsForTests for clarification
     val defaultAmount: Observable<BigDecimal> =
-        Rx.combineLatest(domain.plans, domain.reconciliations, transactionsVM.transactionBlocks, budgetedVM.defaultAmount)
+        Rx.combineLatest(domainFacade.plans, domainFacade.reconciliations, transactionsVM.transactionBlocks, budgetedVM.defaultAmount)
             .map { (plans, reconciliations, transactionBlocks, budgetedDefaultAmount) ->
                 (plans.map { it.amount } +
                         reconciliations.map { it.defaultAmount } +
@@ -41,6 +41,6 @@ class ActiveReconciliationVM2(
                         defaultAmount,
                         activeReconciliationVM.activeReconcileCAs.value.filter { it.value != BigDecimal(0) },)
                 }
-                .launch { domain.pushReconciliation(it).andThen(domain.clearActiveReconcileCAs()) }
+                .launch { domainFacade.pushReconciliation(it).andThen(domainFacade.clearActiveReconcileCAs()) }
         }
 }

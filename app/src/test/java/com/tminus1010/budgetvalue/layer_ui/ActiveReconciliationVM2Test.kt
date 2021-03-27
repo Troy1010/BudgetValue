@@ -18,7 +18,7 @@ class ActiveReconciliationVM2Test : TestCase() {
         budgetedVM = mockk<BudgetedVM>().also {
             every { it.defaultAmount } returns 298.toBigDecimal().toObservable().toBehaviorSubject()
         },
-        domain = mockk<Domain>().also {
+        domainFacade = mockk<Domain>().also {
             every { it.plans } returns Givens.givenPlans
             every { it.reconciliations } returns Givens.givenReconciliations
         },
