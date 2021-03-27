@@ -3,9 +3,9 @@ package com.tminus1010.budgetvalue.layer_ui
 import com.tminus1010.budgetvalue.Givens
 import com.tminus1010.budgetvalue.extensions.toObservable
 import com.tminus1010.budgetvalue.features_shared.Domain
-import com.tminus1010.budgetvalue.features.budgeted.BudgetedVM
-import com.tminus1010.budgetvalue.features.reconciliations.ActiveReconciliationVM2
-import com.tminus1010.budgetvalue.features.transactions.TransactionsVM
+import com.tminus1010.budgetvalue.budgeted.BudgetedVM
+import com.tminus1010.budgetvalue.reconciliations.ActiveReconciliationVM2
+import com.tminus1010.budgetvalue.transactions.TransactionsVM
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.mockk.every
 import io.mockk.mockk

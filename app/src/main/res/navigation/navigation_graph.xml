@@ -12,7 +12,7 @@
         app:popUpToInclusive="true" />
     <fragment
         android:id="@+id/categorizeFrag"
-        android:name="com.tminus1010.budgetvalue.layer_ui.CategorizeTransactionsFrag"
+        android:name="com.tminus1010.budgetvalue.aa_shared.ui.CategorizeTransactionsFrag"
         android:label="Categorize"
         tools:layout="@layout/frag_categorize">
         <action
@@ -30,38 +30,38 @@
     </fragment>
     <fragment
         android:id="@+id/importFrag"
-        android:name="com.tminus1010.budgetvalue.layer_ui.ImportFrag"
+        android:name="com.tminus1010.budgetvalue.aa_shared.ui.ImportFrag"
         android:label="Import" />
     <fragment
         android:id="@+id/reconcileFrag"
-        android:name="com.tminus1010.budgetvalue.layer_ui.ReconcileFrag"
+        android:name="com.tminus1010.budgetvalue.aa_shared.ui.ReconcileFrag"
         android:label="Reconcile" />
     <fragment
         android:id="@+id/planFrag"
-        android:name="com.tminus1010.budgetvalue.layer_ui.PlanFrag"
+        android:name="com.tminus1010.budgetvalue.aa_shared.ui.PlanFrag"
         android:label="Plan" />
     <fragment
         android:id="@+id/historyFrag"
-        android:name="com.tminus1010.budgetvalue.layer_ui.HistoryFrag"
+        android:name="com.tminus1010.budgetvalue.aa_shared.ui.HistoryFrag"
         android:label="History" />
     <fragment
         android:id="@+id/advancedCategorizeFrag"
-        android:name="com.tminus1010.budgetvalue.layer_ui.CategorizeAdvancedFrag"
+        android:name="com.tminus1010.budgetvalue.aa_shared.ui.CategorizeAdvancedFrag"
         android:label="AdvancedCategorizeFrag"
         tools:layout="@layout/frag_advanced_categorize" />
     <fragment
         android:id="@+id/categoryCustomizationFrag"
-        android:name="com.tminus1010.budgetvalue.layer_ui.CategoryCustomizationFrag"
+        android:name="com.tminus1010.budgetvalue.aa_shared.ui.CategoryCustomizationFrag"
         android:label="CategoryCustomizationFrag"
         tools:layout="@layout/frag_category_customization" />
     <fragment
         android:id="@+id/newCategoryFrag"
-        android:name="com.tminus1010.budgetvalue.layer_ui.NewCategoryFrag"
+        android:name="com.tminus1010.budgetvalue.aa_shared.ui.NewCategoryFrag"
         android:label="NewCategoryFrag"
         tools:layout="@layout/frag_new_category" />
     <fragment
         android:id="@+id/errorFrag"
-        android:name="com.tminus1010.budgetvalue.layer_ui.ErrorFrag"
+        android:name="com.tminus1010.budgetvalue.aa_shared.ui.ErrorFrag"
         android:label="ErrorFrag" >
         <action
             android:id="@+id/action_errorFrag_to_importFrag"

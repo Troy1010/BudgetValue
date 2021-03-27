@@ -1,8 +1,9 @@
 package com.tminus1010.budgetvalue
 
 import android.content.Intent
-import com.tminus1010.budgetvalue.layer_ui.HostActivity
-import com.tminus1010.budgetvalue.middleware.ui.MenuItemPartial
+import com.tminus1010.budgetvalue.aa_core.IFlavorIntersection
+import com.tminus1010.budgetvalue.aa_core.middleware.ui.MenuItemPartial
+import com.tminus1010.budgetvalue.aa_shared.ui.HostActivity
 import javax.inject.Inject
 import javax.inject.Singleton
 
