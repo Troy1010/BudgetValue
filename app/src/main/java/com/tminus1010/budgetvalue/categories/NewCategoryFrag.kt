@@ -5,11 +5,11 @@ import android.view.View
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.aa_core.dependency_injection.ViewModelProviders
-import com.tminus1010.budgetvalue.aa_core.dependency_injection.injection_extensions.appComponent
-import com.tminus1010.budgetvalue.aa_core.dependency_injection.injection_extensions.domain
-import com.tminus1010.budgetvalue.aa_core.middleware.ui.viewBinding
-import com.tminus1010.budgetvalue.aa_shared.ui.IViewModels
+import com.tminus1010.budgetvalue._core.dependency_injection.ViewModelProviders
+import com.tminus1010.budgetvalue._core.dependency_injection.injection_extensions.appComponent
+import com.tminus1010.budgetvalue._core.dependency_injection.injection_extensions.domain
+import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue._shared.ui.IViewModels
 import com.tminus1010.budgetvalue.databinding.FragNewCategoryBinding
 import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import com.tminus1010.tmcommonkotlin.view.extensions.nav

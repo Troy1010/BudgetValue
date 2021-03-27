@@ -6,11 +6,11 @@ import com.tminus1010.budgetvalue.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue.extensions.withLatestFrom2
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.Category
-import com.tminus1010.budgetvalue.aa_shared.domain.DatePeriodGetter
-import com.tminus1010.budgetvalue.aa_shared.domain.Domain
-import com.tminus1010.budgetvalue.aa_core.middleware.Rx
-import com.tminus1010.budgetvalue.aa_core.middleware.nullIfZero
-import com.tminus1010.budgetvalue.aa_core.middleware.source_objects.SourceHashMap
+import com.tminus1010.budgetvalue._shared.domain.DatePeriodGetter
+import com.tminus1010.budgetvalue._shared.domain.Domain
+import com.tminus1010.budgetvalue._core.middleware.Rx
+import com.tminus1010.budgetvalue._core.middleware.nullIfZero
+import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.rx.extensions.total
 import io.reactivex.rxjava3.core.Observable

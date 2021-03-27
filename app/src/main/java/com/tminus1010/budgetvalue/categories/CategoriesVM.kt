@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.categories
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.aa_core.categoryComparator
+import com.tminus1010.budgetvalue._core.categoryComparator
 import com.tminus1010.tmcommonkotlin.misc.logz
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.BehaviorSubject

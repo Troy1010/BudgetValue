@@ -3,9 +3,9 @@ package com.tminus1010.budgetvalue.reconciliations
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.extensions.launch
 import com.tminus1010.budgetvalue.transactions.TransactionsVM
-import com.tminus1010.budgetvalue.aa_shared.domain.Domain
+import com.tminus1010.budgetvalue._shared.domain.Domain
 import com.tminus1010.budgetvalue.budgeted.BudgetedVM
-import com.tminus1010.budgetvalue.aa_core.middleware.Rx
+import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers

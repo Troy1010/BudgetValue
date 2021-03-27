@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.transactions
 
-import com.tminus1010.budgetvalue.aa_core.data.Repo
+import com.tminus1010.budgetvalue._core.data.Repo
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.Category
 import io.reactivex.rxjava3.core.Completable

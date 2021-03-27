@@ -1,15 +1,15 @@
 package com.tminus1010.budgetvalue
 
 import com.tminus1010.budgetvalue.extensions.toObservable
-import com.tminus1010.budgetvalue.aa_core.middleware.LocalDatePeriod
-import com.tminus1010.budgetvalue.aa_core.app_init.AppInitializer
+import com.tminus1010.budgetvalue._core.middleware.LocalDatePeriod
+import com.tminus1010.budgetvalue._core.app_init.AppInitializer
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.IUserCategoriesFetch
 import com.tminus1010.budgetvalue.categories.Category
 import com.tminus1010.budgetvalue.plans.Plan
 import com.tminus1010.budgetvalue.reconciliations.Reconciliation
 import com.tminus1010.budgetvalue.transactions.Block
-import com.tminus1010.budgetvalue.aa_core.middleware.source_objects.SourceHashMap
+import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject

@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.reconciliations
 
-import com.tminus1010.budgetvalue.aa_core.data.Repo
+import com.tminus1010.budgetvalue._core.data.Repo
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.Category

@@ -6,9 +6,9 @@ import com.tminus1010.budgetvalue.accounts.AccountsVM
 import com.tminus1010.budgetvalue.categories.Category
 import com.tminus1010.budgetvalue.reconciliations.ActiveReconciliationVM
 import com.tminus1010.budgetvalue.transactions.TransactionsVM
-import com.tminus1010.budgetvalue.aa_shared.domain.Domain
-import com.tminus1010.budgetvalue.aa_core.middleware.Rx
-import com.tminus1010.budgetvalue.aa_core.middleware.source_objects.SourceHashMap
+import com.tminus1010.budgetvalue._shared.domain.Domain
+import com.tminus1010.budgetvalue._core.middleware.Rx
+import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.rx.extensions.total
 import java.math.BigDecimal

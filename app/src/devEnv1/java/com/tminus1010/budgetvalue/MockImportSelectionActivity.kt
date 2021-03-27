@@ -8,10 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue.databinding.ActivityMockImportSelectionBinding
-import com.tminus1010.budgetvalue.aa_core.dependency_injection.ViewModelProviders
-import com.tminus1010.budgetvalue.aa_core.dependency_injection.injection_extensions.appComponent
-import com.tminus1010.budgetvalue.aa_core.middleware.ui.viewBinding
-import com.tminus1010.budgetvalue.aa_core.middleware.ui.GenViewHolder
+import com.tminus1010.budgetvalue._core.dependency_injection.ViewModelProviders
+import com.tminus1010.budgetvalue._core.dependency_injection.injection_extensions.appComponent
+import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue._core.middleware.ui.GenViewHolder
 
 class MockImportSelectionActivity : AppCompatActivity(R.layout.activity_mock_import_selection) {
     val binding by viewBinding(ActivityMockImportSelectionBinding::inflate)

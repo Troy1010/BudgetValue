@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.transactions
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.aa_shared.domain.Domain
+import com.tminus1010.budgetvalue._shared.domain.Domain
 import com.tminus1010.budgetvalue.categories.Category
 import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import java.io.InputStream

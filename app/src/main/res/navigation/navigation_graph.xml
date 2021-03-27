@@ -30,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/importFrag"
-        android:name="com.tminus1010.budgetvalue.aa_shared.ui.ImportFrag"
+        android:name="com.tminus1010.budgetvalue._shared.ui.ImportFrag"
         android:label="Import" />
     <fragment
         android:id="@+id/reconcileFrag"
@@ -42,7 +42,7 @@
         android:label="Plan" />
     <fragment
         android:id="@+id/historyFrag"
-        android:name="com.tminus1010.budgetvalue.aa_shared.ui.HistoryFrag"
+        android:name="com.tminus1010.budgetvalue._shared.ui.HistoryFrag"
         android:label="History" />
     <fragment
         android:id="@+id/advancedCategorizeFrag"
@@ -61,7 +61,7 @@
         tools:layout="@layout/frag_new_category" />
     <fragment
         android:id="@+id/errorFrag"
-        android:name="com.tminus1010.budgetvalue.aa_core.ui.ErrorFrag"
+        android:name="com.tminus1010.budgetvalue._core.ui.ErrorFrag"
         android:label="ErrorFrag" >
         <action
             android:id="@+id/action_errorFrag_to_importFrag"
