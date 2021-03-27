@@ -30,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/importFrag"
-        android:name="com.tminus1010.budgetvalue._shared.ui.ImportFrag"
+        android:name="com.tminus1010.budgetvalue.accounts.ImportFrag"
         android:label="Import" />
     <fragment
         android:id="@+id/reconcileFrag"

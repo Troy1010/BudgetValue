@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._shared.ui
+package com.tminus1010.budgetvalue.accounts
 
 import android.os.Bundle
 import android.view.View
@@ -16,6 +16,7 @@ import com.tminus1010.budgetvalue._core.middleware.ui.GenViewHolder2
 import com.tminus1010.budgetvalue._core.middleware.ui.bindOutgoing
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._core.ui.HostActivity
+import com.tminus1010.budgetvalue._shared.ui.IViewModels
 import com.tminus1010.budgetvalue.databinding.FragImportBinding
 import com.tminus1010.budgetvalue.databinding.ItemAccountBinding
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
