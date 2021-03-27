@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.aa_shared.ui
+package com.tminus1010.budgetvalue.categories
 
 import android.os.Bundle
 import android.view.View
@@ -9,8 +9,8 @@ import com.tminus1010.budgetvalue.aa_core.dependency_injection.ViewModelProvider
 import com.tminus1010.budgetvalue.aa_core.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.aa_core.dependency_injection.injection_extensions.domain
 import com.tminus1010.budgetvalue.aa_core.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue.aa_shared.ui.IViewModels
 import com.tminus1010.budgetvalue.databinding.FragNewCategoryBinding
-import com.tminus1010.budgetvalue.categories.Category
 import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toast

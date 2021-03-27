@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.aa_shared.ui
+package com.tminus1010.budgetvalue.aa_core.ui
 
 import android.app.Activity
 import android.os.Bundle
@@ -13,6 +13,7 @@ import com.tminus1010.budgetvalue.aa_core.dependency_injection.ViewModelProvider
 import com.tminus1010.budgetvalue.aa_core.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.aa_core.dependency_injection.injection_extensions.flavorIntersection
 import com.tminus1010.budgetvalue.aa_core.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue.aa_shared.ui.IViewModels
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.extensions.add
 import com.tminus1010.tmcommonkotlin.view.extensions.toast

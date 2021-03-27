@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.aa_shared.ui
+package com.tminus1010.budgetvalue.transactions
 
 import android.os.Bundle
 import android.view.View
@@ -9,6 +9,7 @@ import com.tminus1010.budgetvalue.aa_core.dependency_injection.injection_extensi
 import com.tminus1010.budgetvalue.aa_core.middleware.reflectXY
 import com.tminus1010.budgetvalue.aa_core.middleware.ui.ViewItemRecipeFactoryProvider
 import com.tminus1010.budgetvalue.aa_core.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue.aa_shared.ui.IViewModels
 import com.tminus1010.budgetvalue.databinding.FragAdvancedCategorizeBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe

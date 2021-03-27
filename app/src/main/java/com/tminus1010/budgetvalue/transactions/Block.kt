@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.transactions
 
-import com.tminus1010.budgetvalue.aa_shared.IDatePeriodGetter
+import com.tminus1010.budgetvalue.aa_shared.domain.IDatePeriodGetter
 import com.tminus1010.budgetvalue.history.IHistoryColumnData
 import com.tminus1010.budgetvalue.aa_core.middleware.LocalDatePeriod
 import com.tminus1010.budgetvalue.categories.Category

@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.aa_shared
+package com.tminus1010.budgetvalue.aa_shared.domain
 
 import com.tminus1010.budgetvalue.aa_core.middleware.LocalDatePeriod
 import io.reactivex.rxjava3.core.Observable

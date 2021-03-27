@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.aa_shared.ui
+package com.tminus1010.budgetvalue.plans
 
 import android.view.View
 import android.widget.EditText
@@ -14,6 +14,7 @@ import com.tminus1010.budgetvalue.aa_core.middleware.ui.bindIncoming
 import com.tminus1010.budgetvalue.aa_core.middleware.ui.bindOutgoing
 import com.tminus1010.budgetvalue.aa_core.middleware.ui.tmTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.aa_core.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue.aa_shared.ui.IViewModels
 import com.tminus1010.budgetvalue.databinding.FragPlanBinding
 import com.tminus1010.budgetvalue.categories.Category
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith

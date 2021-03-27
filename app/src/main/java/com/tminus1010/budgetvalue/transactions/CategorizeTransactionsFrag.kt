@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.aa_shared.ui
+package com.tminus1010.budgetvalue.transactions
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,6 +14,7 @@ import com.tminus1010.budgetvalue.aa_core.middleware.ui.GenViewHolder2
 import com.tminus1010.budgetvalue.aa_core.middleware.ui.bindIncoming
 import com.tminus1010.budgetvalue.aa_core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.aa_core.middleware.unbox
+import com.tminus1010.budgetvalue.aa_shared.ui.IViewModels
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe

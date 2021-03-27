@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.aa_shared.ui
+package com.tminus1010.budgetvalue.reconciliations
 
 import android.os.Bundle
 import android.view.View
@@ -17,6 +17,7 @@ import com.tminus1010.budgetvalue.aa_core.middleware.ui.bindIncoming
 import com.tminus1010.budgetvalue.aa_core.middleware.ui.bindOutgoing
 import com.tminus1010.budgetvalue.aa_core.middleware.ui.tmTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue.aa_core.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue.aa_shared.ui.IViewModels
 import com.tminus1010.budgetvalue.databinding.FragReconcileBinding
 import com.tminus1010.budgetvalue.databinding.TableviewHeaderIncomeBinding
 import com.tminus1010.budgetvalue.categories.Category

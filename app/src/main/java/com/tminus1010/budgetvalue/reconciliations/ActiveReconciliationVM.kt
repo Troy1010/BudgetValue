@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue.aa_core.middleware.Rx
 import com.tminus1010.budgetvalue.extensions.launch
 import com.tminus1010.budgetvalue.categories.CategoriesVM
-import com.tminus1010.budgetvalue.aa_shared.Domain
+import com.tminus1010.budgetvalue.aa_shared.domain.Domain
 import com.tminus1010.budgetvalue.categories.Category
 import com.tminus1010.budgetvalue.aa_core.middleware.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject

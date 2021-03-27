@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.plans
 
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
-import com.tminus1010.budgetvalue.aa_shared.IDatePeriodGetter
+import com.tminus1010.budgetvalue.aa_shared.domain.IDatePeriodGetter
 import com.tminus1010.budgetvalue.history.IHistoryColumnData
 import com.tminus1010.budgetvalue.aa_core.middleware.LocalDatePeriod
 import com.tminus1010.budgetvalue.categories.Category

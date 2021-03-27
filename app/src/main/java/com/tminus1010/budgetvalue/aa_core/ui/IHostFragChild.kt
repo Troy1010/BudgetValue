@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.aa_shared.ui
+package com.tminus1010.budgetvalue.aa_core.ui
 
 import androidx.fragment.app.Fragment
 

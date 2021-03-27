@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.aa_shared
+package com.tminus1010.budgetvalue.aa_shared.domain
 
 import com.tminus1010.budgetvalue.aa_core.data.Repo
 import io.reactivex.rxjava3.core.Completable

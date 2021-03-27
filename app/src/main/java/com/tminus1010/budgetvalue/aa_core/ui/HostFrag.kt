@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.aa_shared.ui
+package com.tminus1010.budgetvalue.aa_core.ui
 
 import androidx.navigation.fragment.NavHostFragment
 import com.tminus1010.budgetvalue.R
@@ -8,6 +8,7 @@ import com.tminus1010.budgetvalue.aa_core.dependency_injection.ViewModelProvider
 import com.tminus1010.budgetvalue.aa_core.dependency_injection.injection_extensions.app
 import com.tminus1010.budgetvalue.aa_core.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue.aa_core.middleware.ui.ButtonPartial
+import com.tminus1010.budgetvalue.aa_shared.ui.IViewModels
 import com.tminus1010.budgetvalue.extensions.getBackStack
 import com.tminus1010.tmcommonkotlin.misc.logz
 import com.tminus1010.tmcommonkotlin.view.extensions.nav

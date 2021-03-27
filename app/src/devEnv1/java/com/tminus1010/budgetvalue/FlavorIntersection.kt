@@ -8,7 +8,7 @@ import com.tminus1010.budgetvalue.aa_core.dependency_injection.injection_extensi
 import com.tminus1010.budgetvalue.aa_core.middleware.getBlocks
 import com.tminus1010.budgetvalue.aa_core.middleware.ui.MenuItemPartial
 import com.tminus1010.budgetvalue.aa_core.middleware.reflectXY
-import com.tminus1010.budgetvalue.aa_shared.ui.HostActivity
+import com.tminus1010.budgetvalue.aa_core.ui.HostActivity
 import com.tminus1010.tmcommonkotlin.misc.logz
 import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import com.tminus1010.tmcommonkotlin.view.extensions.toast

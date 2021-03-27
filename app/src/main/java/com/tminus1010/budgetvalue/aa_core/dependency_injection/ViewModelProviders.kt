@@ -15,7 +15,7 @@ import com.tminus1010.budgetvalue.reconciliations.ReconciliationsVM
 import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsAdvancedVM
 import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsVM
 import com.tminus1010.budgetvalue.transactions.TransactionsVM
-import com.tminus1010.budgetvalue.aa_shared.ErrorVM
+import com.tminus1010.budgetvalue.aa_core.ErrorVM
 import com.tminus1010.tmcommonkotlin.view.createViewModelFactory
 
 class ViewModelProviders(val activity: FragmentActivity, val appComponent: AppComponent) {

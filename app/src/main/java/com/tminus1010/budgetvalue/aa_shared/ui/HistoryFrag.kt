@@ -26,7 +26,7 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class HistoryFrag : Fragment(R.layout.frag_history), IHostFragChild, IViewModels {
+class HistoryFrag : Fragment(R.layout.frag_history), IViewModels {
     override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     val vb by viewBinding(FragHistoryBinding::bind)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.reconciliations
 
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
-import com.tminus1010.budgetvalue.aa_shared.IDatePeriodGetter
+import com.tminus1010.budgetvalue.aa_shared.domain.IDatePeriodGetter
 import com.tminus1010.budgetvalue.categories.Category
 import com.tminus1010.budgetvalue.history.IHistoryColumnData
 import com.tminus1010.tmcommonkotlin.misc.extensions.toDisplayStr

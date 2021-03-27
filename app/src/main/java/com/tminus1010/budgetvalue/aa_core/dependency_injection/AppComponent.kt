@@ -2,9 +2,9 @@ package com.tminus1010.budgetvalue.aa_core.dependency_injection
 
 import com.tminus1010.budgetvalue.aa_core.IFlavorIntersection
 import com.tminus1010.budgetvalue.plans.PlanUseCases
-import com.tminus1010.budgetvalue.aa_shared.DatePeriodGetter
+import com.tminus1010.budgetvalue.aa_shared.domain.DatePeriodGetter
 import com.tminus1010.budgetvalue.aa_core.data.Repo
-import com.tminus1010.budgetvalue.aa_shared.Domain
+import com.tminus1010.budgetvalue.aa_shared.domain.Domain
 import dagger.Component
 import javax.inject.Singleton
 
