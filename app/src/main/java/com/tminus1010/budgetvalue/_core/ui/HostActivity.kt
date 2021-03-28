@@ -6,7 +6,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.dependency_injection.ViewModelProviders
@@ -22,14 +21,13 @@ class HostActivity : AppCompatActivity(), IViewModels {
     override val viewModelProviders by lazy { ViewModelProviders(this, appComponent) }
     val binding by viewBinding(ActivityHostBinding::inflate)
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.frag_nav_host) as HostFrag }
-    val nav by lazy { findNavController(R.id.frag_nav_host) }
     val menuItemPartials by lazy { flavorIntersection.getExtraMenuItemPartials(this) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         // # Bind bottom menu to navigation.
         // In order for NavigationUI.setupWithNavController to work, the ids in R.menu.* must exactly match R.navigation.*
-        NavigationUI.setupWithNavController(binding.bottomNavigation, nav)
+        NavigationUI.setupWithNavController(binding.bottomNavigation, hostFrag.navController)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
