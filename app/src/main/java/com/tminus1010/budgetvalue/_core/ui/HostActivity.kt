@@ -11,7 +11,6 @@ import androidx.navigation.ui.NavigationUI
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._layer_facades.DomainFacade
-import com.tminus1010.budgetvalue._layer_facades.FlavorFacade
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.extensions.add
@@ -22,13 +21,13 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class HostActivity : AppCompatActivity() {
-    @Inject lateinit var flavorFacade: FlavorFacade
+    @Inject lateinit var getExtraMenuItemPartialsUC: GetExtraMenuItemPartialsUC
     @Inject lateinit var domainFacade: DomainFacade
     val transactionsVM by viewModels<TransactionsVM>()
     val categoriesVM by viewModels<CategoriesVM>()
     val vb by viewBinding(ActivityHostBinding::inflate)
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.frag_nav_host) as HostFrag }
-    val menuItemPartials by lazy { flavorFacade.getExtraMenuItemPartials(this) }
+    val menuItemPartials by lazy { getExtraMenuItemPartialsUC(this) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(vb.root)

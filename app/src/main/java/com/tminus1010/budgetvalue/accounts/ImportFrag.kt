@@ -14,7 +14,7 @@ import com.tminus1010.budgetvalue._core.middleware.ui.GenViewHolder2
 import com.tminus1010.budgetvalue._core.middleware.ui.bindOutgoing
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._core.ui.HostActivity
-import com.tminus1010.budgetvalue._layer_facades.FlavorFacade
+import com.tminus1010.budgetvalue._core.ui.LaunchImportUC
 import com.tminus1010.budgetvalue.databinding.FragImportBinding
 import com.tminus1010.budgetvalue.databinding.ItemAccountBinding
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -25,13 +25,13 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ImportFrag : Fragment(R.layout.frag_import) {
-    @Inject lateinit var flavorFacade: FlavorFacade
+    @Inject lateinit var launchImportUC: LaunchImportUC
     val accountsVM: AccountsVM by activityViewModels()
     val vb by viewBinding(FragImportBinding::bind)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
-        vb.btnImport.clicks().subscribe { flavorFacade.launchImport(requireActivity() as HostActivity) }
+        vb.btnImport.clicks().subscribe { launchImportUC(requireActivity() as HostActivity) }
         vb.btnAddAccount.clicks().subscribe(accountsVM.intentAddAccount)
         // # RecyclerView
         accountsVM.accounts
