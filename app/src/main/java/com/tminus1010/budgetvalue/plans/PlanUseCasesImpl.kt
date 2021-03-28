@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.plans
 import com.tminus1010.budgetvalue.categories.Category
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue._core.data.RepoFacade
+import com.tminus1010.budgetvalue.plans.models.Plan
 import com.tminus1010.tmcommonkotlin.rx.extensions.noEnd
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.schedulers.Schedulers

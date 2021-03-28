@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.transactions
 import com.tminus1010.budgetvalue._core.data.RepoFacade
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.Category
+import com.tminus1010.budgetvalue.transactions.models.Transaction
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import java.math.BigDecimal

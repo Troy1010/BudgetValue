@@ -17,9 +17,10 @@ import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._layer_facades.DomainFacade
 import com.tminus1010.budgetvalue.databinding.FragHistoryBinding
 import com.tminus1010.budgetvalue.extensions.show
-import com.tminus1010.budgetvalue.plans.Plan
+import com.tminus1010.budgetvalue.history.models.IHistoryColumnData
+import com.tminus1010.budgetvalue.plans.models.Plan
 import com.tminus1010.budgetvalue.plans.PlansVM
-import com.tminus1010.budgetvalue.reconciliations.Reconciliation
+import com.tminus1010.budgetvalue.reconciliations.models.Reconciliation
 import com.tminus1010.budgetvalue.reconciliations.ReconciliationsVM
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe

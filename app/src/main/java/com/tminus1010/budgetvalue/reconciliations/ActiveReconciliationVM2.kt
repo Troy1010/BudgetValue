@@ -1,18 +1,9 @@
 package com.tminus1010.budgetvalue.reconciliations
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.extensions.launch
-import com.tminus1010.budgetvalue.transactions.TransactionsVM
-import com.tminus1010.budgetvalue._layer_facades.DomainFacade
-import com.tminus1010.budgetvalue.budgeted.BudgetedVM
-import com.tminus1010.budgetvalue._core.middleware.Rx
-import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
+import com.tminus1010.budgetvalue.reconciliations.domain.ActiveReconciliationDomain2
+import com.tminus1010.budgetvalue.reconciliations.domain.IActiveReconciliationDomain2
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.PublishSubject
-import java.math.BigDecimal
-import java.time.LocalDate
 import javax.inject.Inject
 
 // Separate from ActiveReconciliationVM to avoid circular dependency graph

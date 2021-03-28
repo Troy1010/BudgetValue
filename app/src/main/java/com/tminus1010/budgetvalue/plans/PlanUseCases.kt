@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.plans
 
 import com.tminus1010.budgetvalue.categories.Category
+import com.tminus1010.budgetvalue.plans.models.Plan
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import java.math.BigDecimal

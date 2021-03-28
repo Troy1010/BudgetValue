@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.extensions.launch
 import com.tminus1010.budgetvalue._layer_facades.DomainFacade
 import com.tminus1010.budgetvalue.categories.Category
+import com.tminus1010.budgetvalue.transactions.domain.CategorizeTransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import dagger.hilt.android.lifecycle.HiltViewModel

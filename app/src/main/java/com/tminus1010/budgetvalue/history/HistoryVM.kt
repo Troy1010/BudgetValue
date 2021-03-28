@@ -5,11 +5,13 @@ import com.tminus1010.budgetvalue._core.categoryComparator
 import com.tminus1010.budgetvalue._core.middleware.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._layer_facades.DomainFacade
-import com.tminus1010.budgetvalue.budgeted.BudgetedDomain
+import com.tminus1010.budgetvalue.budgeted.domain.BudgetedDomain
 import com.tminus1010.budgetvalue.categories.Category
-import com.tminus1010.budgetvalue.reconciliations.ActiveReconciliationDomain
-import com.tminus1010.budgetvalue.reconciliations.ActiveReconciliationDomain2
-import com.tminus1010.budgetvalue.transactions.TransactionsDomain
+import com.tminus1010.budgetvalue.history.models.HistoryColumnData
+import com.tminus1010.budgetvalue.history.models.IHistoryColumnData
+import com.tminus1010.budgetvalue.reconciliations.domain.ActiveReconciliationDomain
+import com.tminus1010.budgetvalue.reconciliations.domain.ActiveReconciliationDomain2
+import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.schedulers.Schedulers

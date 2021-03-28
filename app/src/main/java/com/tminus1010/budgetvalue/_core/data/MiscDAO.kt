@@ -1,10 +1,10 @@
 package com.tminus1010.budgetvalue._core.data
 
 import androidx.room.*
-import com.tminus1010.budgetvalue.accounts.AccountDTO
-import com.tminus1010.budgetvalue.plans.PlanDTO
-import com.tminus1010.budgetvalue.reconciliations.ReconciliationDTO
-import com.tminus1010.budgetvalue.transactions.TransactionDTO
+import com.tminus1010.budgetvalue.accounts.models.AccountDTO
+import com.tminus1010.budgetvalue.plans.models.PlanDTO
+import com.tminus1010.budgetvalue.reconciliations.models.ReconciliationDTO
+import com.tminus1010.budgetvalue.transactions.models.TransactionDTO
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import java.math.BigDecimal
