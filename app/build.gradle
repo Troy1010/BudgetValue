@@ -109,10 +109,13 @@ dependencies {
     implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-tuple:+'
     implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-view:+'
 
-    // # Hilt
+    // # Hilt TODO("Don't use +")
     implementation 'com.google.dagger:hilt-android:+'
     kapt 'com.google.dagger:hilt-android-compiler:+'
     kaptAndroidTest 'com.google.dagger:hilt-android-compiler:+'
+    // ## Hilt + ViewModels
+    implementation 'androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03'
+    kapt 'androidx.hilt:hilt-compiler:1.0.0-beta01'
 
     // # Room
     def room_version = "2.3.0-alpha03" // this version of room supports Rx3
