@@ -2,16 +2,16 @@ package com.tminus1010.budgetvalue.transactions.domain
 
 import com.tminus1010.budgetvalue._layer_facades.DomainFacade
 import com.tminus1010.budgetvalue.categories.Category
-import com.tminus1010.budgetvalue.transactions.models.TransactionsBlock
 import com.tminus1010.budgetvalue.transactions.models.Transaction
+import com.tminus1010.budgetvalue.transactions.models.TransactionsBlock
 import com.tminus1010.tmcommonkotlin.rx.extensions.launch
-import dagger.Reusable
 import java.io.InputStream
 import java.math.BigDecimal
 import java.time.LocalDate
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@Reusable
+@Singleton
 class TransactionsDomain @Inject constructor(
     private val domainFacade: DomainFacade,
 ) : ITransactionsDomain {

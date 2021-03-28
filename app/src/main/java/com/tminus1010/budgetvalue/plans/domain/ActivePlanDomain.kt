@@ -6,21 +6,21 @@ import com.tminus1010.budgetvalue._core.middleware.nullIfZero
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue._core.shared_features.date_period_getter.DatePeriodGetter
 import com.tminus1010.budgetvalue._layer_facades.DomainFacade
-import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.Category
+import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue.extensions.launch
 import com.tminus1010.budgetvalue.extensions.withLatestFrom2
 import com.tminus1010.budgetvalue.plans.models.Plan
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.rx.extensions.total
-import dagger.Reusable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@Reusable
+@Singleton
 class ActivePlanDomain @Inject constructor(
     domainFacade: DomainFacade,
     categoriesDomain: CategoriesDomain,

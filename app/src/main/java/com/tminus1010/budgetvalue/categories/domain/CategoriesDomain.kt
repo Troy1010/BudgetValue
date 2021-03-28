@@ -5,11 +5,11 @@ import com.tminus1010.budgetvalue.categories.Category
 import com.tminus1010.budgetvalue.categories.UserCategoriesUseCases
 import com.tminus1010.tmcommonkotlin.misc.logz
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
-import dagger.Reusable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@Reusable
+@Singleton
 class CategoriesDomain @Inject constructor(
     userCategoriesUseCasesImpl: UserCategoriesUseCases
 ) : ICategoriesDomain {

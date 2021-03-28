@@ -8,7 +8,9 @@ import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.math.BigDecimal
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class CategorizeTransactionsDomain @Inject constructor(
     private val domainFacade: DomainFacade,
     transactionsDomain: TransactionsDomain,

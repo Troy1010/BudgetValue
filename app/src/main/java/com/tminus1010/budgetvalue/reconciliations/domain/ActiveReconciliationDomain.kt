@@ -6,11 +6,11 @@ import com.tminus1010.budgetvalue._layer_facades.DomainFacade
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.extensions.flatMapSourceHashMap
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
-import dagger.Reusable
 import java.math.BigDecimal
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@Reusable
+@Singleton
 class ActiveReconciliationDomain @Inject constructor(
     domainFacade: DomainFacade,
     categoriesDomain: CategoriesDomain

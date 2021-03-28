@@ -4,7 +4,9 @@ import com.tminus1010.budgetvalue.categories.UserCategoriesUseCasesImpl
 import com.tminus1010.budgetvalue.categories.Category
 import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class AppInitializer @Inject constructor(
     private val appInitBoolUseCasesImpl: AppInitBoolUseCasesImpl,
     private val userCategoriesUseCasesImpl: UserCategoriesUseCasesImpl,

@@ -5,14 +5,14 @@ import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._layer_facades.DomainFacade
 import com.tminus1010.budgetvalue.categories.Category
 import com.tminus1010.budgetvalue.extensions.launch
-import com.tminus1010.budgetvalue.plans.domain.ActivePlanDomain
 import com.tminus1010.budgetvalue.plans.PlanUseCases
-import dagger.Reusable
+import com.tminus1010.budgetvalue.plans.domain.ActivePlanDomain
 import io.reactivex.rxjava3.subjects.PublishSubject
 import javax.inject.Inject
+import javax.inject.Singleton
 
 // Separate from CategoriesDomain to avoid circular dependency graph
-@Reusable
+@Singleton
 class CategoriesDomain2 @Inject constructor(
     private val domainFacade: DomainFacade,
     private val planUseCases: PlanUseCases,

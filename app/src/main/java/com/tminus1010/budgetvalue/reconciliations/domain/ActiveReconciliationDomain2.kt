@@ -14,7 +14,9 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 import java.time.LocalDate
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class ActiveReconciliationDomain2 @Inject constructor(
     activeReconciliationDomain: ActiveReconciliationDomain,
     budgetedDomain: BudgetedDomain,

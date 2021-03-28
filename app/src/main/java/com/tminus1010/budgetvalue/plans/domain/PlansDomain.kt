@@ -4,11 +4,11 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._layer_facades.DomainFacade
 import com.tminus1010.budgetvalue.extensions.launch
 import com.tminus1010.budgetvalue.plans.models.Plan
-import dagger.Reusable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@Reusable
+@Singleton
 class PlansDomain @Inject constructor(
     private val domainFacade: DomainFacade
 ) : ViewModel(), IPlansDomain {

@@ -14,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AccountsVM @Inject constructor(
     domainFacade: DomainFacade,
-    accountsDomain: AccountsDomain,
+    private val accountsDomain: AccountsDomain,
 ) : ViewModel(), IAccountsDomain by accountsDomain {
     val intentAddAccount = PublishSubject.create<Unit>()
         .also { it.launch { domainFacade.push(Account("", BigDecimal.ZERO)) } }

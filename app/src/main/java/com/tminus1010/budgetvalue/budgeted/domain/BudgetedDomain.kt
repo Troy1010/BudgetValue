@@ -11,12 +11,12 @@ import com.tminus1010.budgetvalue.reconciliations.domain.ActiveReconciliationDom
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.rx.extensions.total
-import dagger.Reusable
 import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@Reusable
+@Singleton
 class BudgetedDomain @Inject constructor(
     domainFacade: DomainFacade,
     transactionsDomain: TransactionsDomain,
