@@ -1,0 +1,3 @@
+package com.tminus1010.budgetvalue.accounts
+
+interface IAccountsDomain

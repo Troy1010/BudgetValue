@@ -11,16 +11,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountsVM @Inject constructor(
-    domainFacade: DomainFacade
-) : ViewModel() {
+    domainFacade: DomainFacade,
+    accountsDomain: AccountsDomain,
+) : ViewModel(), IAccountsDomain by accountsDomain {
     val intentAddAccount = PublishSubject.create<Unit>()
         .also { it.launch { domainFacade.push(Account("", BigDecimal.ZERO)) } }
     val intentDeleteAccount = PublishSubject.create<Account>()
         .also { it.launch { domainFacade.delete(it) } }
     val intentUpdateAccount = PublishSubject.create<Account>()
         .also { it.launch { domainFacade.update(it) } }
-    val accounts = domainFacade.fetchAccounts().toBehaviorSubject(emptyList())
-    val accountsTotal = accounts
-        .map { it.fold(BigDecimal.ZERO) { acc, account -> acc + account.amount } }
-        .toBehaviorSubject()
 }
