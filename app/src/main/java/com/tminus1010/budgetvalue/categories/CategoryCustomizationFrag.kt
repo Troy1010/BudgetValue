@@ -20,7 +20,6 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 
 @AndroidEntryPoint
 class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization) {
-    val categoriesVM2: CategoriesVM2 by activityViewModels()
     val categoriesVM: CategoriesVM by activityViewModels()
     val vb by viewBinding(FragCategoryCustomizationBinding::bind)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,7 +35,7 @@ class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization)
             { View.inflate(requireContext(), R.layout.button, null) as Button },
             { v: Button, d: Category ->
                 v.text = "Delete"
-                v.setOnClickListener { categoriesVM2.intentDeleteCategoryFromActive.onNext(d) }
+                v.setOnClickListener { categoriesVM.intentDeleteCategoryFromActive.onNext(d) }
                 v.isEnabled = !d.isRequired
             }
         )

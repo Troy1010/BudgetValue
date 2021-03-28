@@ -10,5 +10,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoriesVM @Inject constructor(
-    categoriesDomain: CategoriesDomain
-) : ViewModel(), ICategoriesDomain by categoriesDomain
+    categoriesDomain: CategoriesDomain,
+    categoriesDomain2: CategoriesDomain2
+) : ViewModel(),
+    ICategoriesDomain by categoriesDomain,
+    ICategoriesDomain2 by categoriesDomain2

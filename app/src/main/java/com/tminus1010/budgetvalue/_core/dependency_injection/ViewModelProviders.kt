@@ -1,23 +1,5 @@
 package com.tminus1010.budgetvalue._core.dependency_injection
 
-import androidx.activity.viewModels
-import androidx.fragment.app.FragmentActivity
-import com.tminus1010.budgetvalue.accounts.AccountsVM
-import com.tminus1010.budgetvalue.categories.CategoriesVM
-import com.tminus1010.budgetvalue.categories.CategoriesVM2
-import com.tminus1010.budgetvalue.plans.ActivePlanVM
-import com.tminus1010.budgetvalue.budgeted.BudgetedVM
-import com.tminus1010.budgetvalue.history.HistoryVM
-import com.tminus1010.budgetvalue.plans.PlansVM
-import com.tminus1010.budgetvalue.reconciliations.ActiveReconciliationVM
-import com.tminus1010.budgetvalue.reconciliations.ActiveReconciliationVM2
-import com.tminus1010.budgetvalue.reconciliations.ReconciliationsVM
-import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsAdvancedVM
-import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsVM
-import com.tminus1010.budgetvalue.transactions.TransactionsVM
-import com.tminus1010.budgetvalue._core.ErrorVM
-import com.tminus1010.tmcommonkotlin.view.createViewModelFactory
-
 //class ViewModelProviders(val activity: FragmentActivity, val appComponent: AppComponent) {
 //    private val c get() = appComponent
 //    val reconciliationsVM: ReconciliationsVM

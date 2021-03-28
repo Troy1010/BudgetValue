@@ -10,6 +10,7 @@ import dagger.Reusable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import javax.inject.Inject
 
+// Separate from CategoriesDomain to avoid circular dependency graph
 @Reusable
 class CategoriesDomain2 @Inject constructor(
     private val domainFacade: DomainFacade,
