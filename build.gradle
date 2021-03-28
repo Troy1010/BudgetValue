@@ -12,6 +12,8 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // # TMCommonKotlinDSL
         classpath "com.tminus1010.tmcommonkotlin:tmcommonkotlin-dsl:+"
+        // # Hilt
+        classpath "com.google.dagger:hilt-android-gradle-plugin:+"
     }
 }
 

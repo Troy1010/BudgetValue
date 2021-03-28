@@ -5,8 +5,10 @@ import com.tminus1010.budgetvalue._core.dependency_injection.AppComponent
 import com.tminus1010.budgetvalue._core.dependency_injection.DaggerAppComponent
 import com.tminus1010.budgetvalue._core.dependency_injection.MiscModule
 import com.tminus1010.tmcommonkotlin.misc.logz
+import dagger.hilt.android.HiltAndroidApp
 import io.reactivex.rxjava3.plugins.RxJavaPlugins
 
+@HiltAndroidApp
 open class App : Application() {
     override fun onCreate() {
         logz("!*!*! START")

@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-parcelize'
     id 'kotlin-kapt'
     id "TMPlugin"
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -103,10 +104,10 @@ dependencies {
     implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-tuple:+'
     implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-view:+'
 
-    // # Dagger
-    implementation "com.google.dagger:dagger:2.28.3"
-    kapt "com.google.dagger:dagger-compiler:2.28"
-    kaptAndroidTest "com.google.dagger:dagger-compiler:2.28"
+    // # Hilt
+    implementation 'com.google.dagger:hilt-android:+'
+    kapt 'com.google.dagger:hilt-android-compiler:+'
+    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:+'
 
     // # Room
     def room_version = "2.3.0-alpha03" // this version of room supports Rx3

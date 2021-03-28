@@ -6,6 +6,7 @@ import com.tminus1010.budgetvalue._core.data.RepoFacade
 import com.tminus1010.budgetvalue._layer_facades.DomainFacade
 import com.tminus1010.budgetvalue._layer_facades.FlavorFacade
 import dagger.Component
+import dagger.hilt.DefineComponent
 import javax.inject.Singleton
 
 @Singleton
@@ -16,6 +17,7 @@ import javax.inject.Singleton
     BindingModule::class,
     FlavorContractModule::class
 ])
+@DefineComponent
 interface AppComponent {
     fun getRepo(): RepoFacade
     fun getDomain(): DomainFacade

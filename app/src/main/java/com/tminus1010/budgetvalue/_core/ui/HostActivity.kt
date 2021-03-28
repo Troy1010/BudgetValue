@@ -16,7 +16,9 @@ import com.tminus1010.budgetvalue._layer_facades.IViewModels
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.extensions.add
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HostActivity : AppCompatActivity(), IViewModels {
     override val viewModelProviders by lazy { ViewModelProviders(this, appComponent) }
     val binding by viewBinding(ActivityHostBinding::inflate)
