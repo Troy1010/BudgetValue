@@ -8,6 +8,7 @@ import com.tminus1010.budgetvalue._core.data.UserCategoriesDAO
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue._core.data.DB
 import com.tminus1010.budgetvalue._core.data.MiscDAO
+import com.tminus1010.budgetvalue.categories.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import dagger.Module
 import dagger.Provides
@@ -20,7 +21,8 @@ import javax.inject.Singleton
 object RepoModule {
     @Provides
     @Singleton
-    fun providesCategoryParser(categoriesVM: CategoriesVM): ICategoryParser = categoriesVM
+    // TODO("This can be a bind")
+    fun providesCategoryParser(categoriesDomain: CategoriesDomain): ICategoryParser = categoriesDomain
 
     @Provides
     @Singleton

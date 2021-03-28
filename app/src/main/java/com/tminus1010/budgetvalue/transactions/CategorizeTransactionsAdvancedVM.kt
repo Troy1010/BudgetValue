@@ -14,10 +14,10 @@ import javax.inject.Inject
 @HiltViewModel
 class CategorizeTransactionsAdvancedVM @Inject constructor(
     domainFacade: DomainFacade,
-    categorizeTransactionsVM: CategorizeTransactionsVM,
+    categorizeTransactionsDomain: CategorizeTransactionsDomain,
 ) : ViewModel() {
     val intentRememberCA = PublishSubject.create<Pair<Category, BigDecimal>>()
-    val transactionToPush = categorizeTransactionsVM.transactionBox
+    val transactionToPush = categorizeTransactionsDomain.transactionBox
         .unbox()
         .switchMap {
             intentRememberCA

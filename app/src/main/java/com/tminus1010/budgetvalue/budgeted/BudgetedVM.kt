@@ -19,33 +19,5 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BudgetedVM @Inject constructor(
-    domainFacade: DomainFacade,
-    transactionsVM: TransactionsVM,
-    activeReconciliationVM: ActiveReconciliationVM,
-    accountsDomain: AccountsDomain,
-): ViewModel() {
-    val categoryAmounts =
-        Rx.combineLatest(domainFacade.reconciliations, domainFacade.plans, transactionsVM.transactionBlocks, activeReconciliationVM.activeReconcileCAs)
-            .throttleLatest(1, TimeUnit.SECONDS)
-            .map { (reconciliations, plans, transactionBlocks, activeReconcileCAs) ->
-                (reconciliations + plans + transactionBlocks)
-                    .map { it.categoryAmounts }
-                    .plus(activeReconcileCAs)
-                    .fold(hashMapOf<Category, BigDecimal>()) { acc, map ->
-                        map.forEach { (k, v) -> acc[k] = (acc[k] ?: BigDecimal.ZERO) + v }
-                        acc
-                    }
-                    .toMap()
-            }
-    val categoryAmountsObservableMap = categoryAmounts
-        .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO))
-        { it.itemObservableMap2 }
-    val caTotal = categoryAmountsObservableMap.switchMap { it.values.total() }
-    val defaultAmount =
-        Rx.combineLatest(accountsDomain.accountsTotal, caTotal)
-            .map { it.first - it.second }
-    val budgeted =
-        Rx.combineLatest(categoryAmounts, defaultAmount)
-            .map { Budgeted(it.first, it.second) }
-            .toBehaviorSubject()
-}
+    budgetedDomain: BudgetedDomain
+): ViewModel(), IBudgetedDomain by budgetedDomain

@@ -45,6 +45,9 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
     val vb by viewBinding(FragReconcileBinding::bind)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // # Init VMs
+        // Hilt requires that VM initializations are on main thread.
+        activeReconciliationVM2
         // # Clicks
         vb.btnSave.clicks().observe(viewLifecycleOwner) {
             activeReconciliationVM2.intentSaveReconciliation.onNext(Unit)

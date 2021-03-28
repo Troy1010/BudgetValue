@@ -1,0 +1,11 @@
+package com.tminus1010.budgetvalue.reconciliations
+
+import com.tminus1010.budgetvalue.categories.Category
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.BehaviorSubject
+import java.math.BigDecimal
+
+interface IActiveReconciliationDomain {
+    val activeReconcileCAs: BehaviorSubject<Map<Category, BigDecimal>>
+    val activeReconcileCAs2: Observable<Map<Category, BehaviorSubject<BigDecimal>>>
+}

@@ -13,18 +13,5 @@ import javax.inject.Inject
 // Separate from CategoriesVM to avoid circular dependency graph
 @HiltViewModel
 class CategoriesVM2 @Inject constructor(
-    private val domainFacade: DomainFacade,
-    private val planUseCases: PlanUseCases,
-    private val activePlanVM: ActivePlanVM,
-): ViewModel() {
-    val intentDeleteCategoryFromActive = PublishSubject.create<Category>()
-        .also {
-            it.launch { category ->
-                Rx.merge(
-                    activePlanVM.activePlan.flatMapCompletable { planUseCases.updatePlanCA(it, category, null) },
-                    domainFacade.pushActiveReconciliationCA(Pair(category, null)),
-                    domainFacade.delete(category),
-                )
-            }
-        }
-}
+    categoriesDomain2: CategoriesDomain2
+) : ViewModel(), ICategoriesDomain2 by categoriesDomain2

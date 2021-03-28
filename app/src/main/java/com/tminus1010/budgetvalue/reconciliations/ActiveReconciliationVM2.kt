@@ -18,32 +18,5 @@ import javax.inject.Inject
 // Separate from ActiveReconciliationVM to avoid circular dependency graph
 @HiltViewModel
 class ActiveReconciliationVM2 @Inject constructor(
-    activeReconciliationVM: ActiveReconciliationVM,
-    budgetedVM: BudgetedVM,
-    domainFacade: DomainFacade,
-    transactionsVM: TransactionsVM,
-) : ViewModel() {
-    // This calculation is a bit confusing. Take a look at ManualCalculationsForTests for clarification
-    val defaultAmount: Observable<BigDecimal> =
-        Rx.combineLatest(domainFacade.plans, domainFacade.reconciliations, transactionsVM.transactionBlocks, budgetedVM.defaultAmount)
-            .map { (plans, reconciliations, transactionBlocks, budgetedDefaultAmount) ->
-                (plans.map { it.amount } +
-                        reconciliations.map { it.defaultAmount } +
-                        transactionBlocks.map { it.defaultAmount })
-                    .fold(BigDecimal.ZERO) { acc, v -> acc + v }
-                    .let { budgetedDefaultAmount - it }
-            }.toBehaviorSubject()
-    val intentSaveReconciliation: PublishSubject<Unit> = PublishSubject.create<Unit>()
-        .also {
-            it
-                .observeOn(Schedulers.io())
-                .flatMap { defaultAmount.take(1) }
-                .map { defaultAmount ->
-                    Reconciliation(
-                        LocalDate.now(),
-                        defaultAmount,
-                        activeReconciliationVM.activeReconcileCAs.value.filter { it.value != BigDecimal(0) },)
-                }
-                .launch { domainFacade.pushReconciliation(it).andThen(domainFacade.clearActiveReconcileCAs()) }
-        }
-}
+    activeReconciliationDomain2: ActiveReconciliationDomain2
+) : ViewModel(), IActiveReconciliationDomain2 by activeReconciliationDomain2

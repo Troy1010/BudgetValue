@@ -2,14 +2,14 @@ package com.tminus1010.budgetvalue.history
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.categoryComparator
-import com.tminus1010.budgetvalue.categories.Category
-import com.tminus1010.budgetvalue.reconciliations.ActiveReconciliationVM
-import com.tminus1010.budgetvalue.reconciliations.ActiveReconciliationVM2
-import com.tminus1010.budgetvalue.transactions.TransactionsVM
-import com.tminus1010.budgetvalue._layer_facades.DomainFacade
-import com.tminus1010.budgetvalue.budgeted.BudgetedVM
 import com.tminus1010.budgetvalue._core.middleware.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.middleware.Rx
+import com.tminus1010.budgetvalue._layer_facades.DomainFacade
+import com.tminus1010.budgetvalue.budgeted.BudgetedDomain
+import com.tminus1010.budgetvalue.categories.Category
+import com.tminus1010.budgetvalue.reconciliations.ActiveReconciliationDomain
+import com.tminus1010.budgetvalue.reconciliations.ActiveReconciliationDomain2
+import com.tminus1010.budgetvalue.transactions.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -19,13 +19,13 @@ import javax.inject.Inject
 @HiltViewModel
 class HistoryVM @Inject constructor(
     private val domainFacade: DomainFacade,
-    transactionsVM: TransactionsVM,
-    activeReconciliationVM: ActiveReconciliationVM,
-    activeReconciliationVM2: ActiveReconciliationVM2,
-    budgetedVM: BudgetedVM,
+    transactionsDomain: TransactionsDomain,
+    activeReconciliationDomain: ActiveReconciliationDomain,
+    activeReconciliationVM2: ActiveReconciliationDomain2,
+    budgetedDomain: BudgetedDomain,
 ) : ViewModel() {
     val historyColumnDatas =
-        Rx.combineLatest(domainFacade.reconciliations, domainFacade.plans, activeReconciliationVM2.defaultAmount, activeReconciliationVM.activeReconcileCAs, transactionsVM.transactionBlocks, budgetedVM.budgeted)
+        Rx.combineLatest(domainFacade.reconciliations, domainFacade.plans, activeReconciliationVM2.defaultAmount, activeReconciliationDomain.activeReconcileCAs, transactionsDomain.transactionBlocks, budgetedDomain.budgeted)
             .observeOn(Schedulers.computation())
             .throttleLatest(500, TimeUnit.MILLISECONDS)
             .map { (reconciliations, plans, activeReconciliationDefaultAmount, activeReconciliationCAs, transactionBlocks, budgeted) ->
