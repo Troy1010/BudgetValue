@@ -1,18 +1,22 @@
 package com.tminus1010.budgetvalue.transactions
 
 import androidx.lifecycle.ViewModel
-
+import androidx.lifecycle.ViewModelProvider
+import com.tminus1010.budgetvalue._core.App
 import com.tminus1010.budgetvalue._layer_facades.DomainFacade
 import com.tminus1010.budgetvalue.categories.Category
 import com.tminus1010.budgetvalue._core.middleware.unbox
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import com.tminus1010.tmcommonkotlin.tuple.Box
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.math.BigDecimal
+import javax.inject.Inject
 
-class CategorizeTransactionsVM(
+@HiltViewModel
+class CategorizeTransactionsVM @Inject constructor(
     private val domainFacade: DomainFacade,
-    private val transactionsVM: TransactionsVM
+    transactionsVM: TransactionsVM,
 ): ViewModel() {
     val transactionBox = transactionsVM.uncategorizedSpends
         .map { Box(it.getOrNull(0)) }

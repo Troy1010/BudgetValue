@@ -6,10 +6,13 @@ import com.tminus1010.budgetvalue._layer_facades.DomainFacade
 import com.tminus1010.budgetvalue.categories.Category
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
+import javax.inject.Inject
 
-class CategorizeTransactionsAdvancedVM(
+@HiltViewModel
+class CategorizeTransactionsAdvancedVM @Inject constructor(
     domainFacade: DomainFacade,
     categorizeTransactionsVM: CategorizeTransactionsVM,
 ) : ViewModel() {

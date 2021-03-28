@@ -1,6 +1,5 @@
 package com.tminus1010.budgetvalue._core.dependency_injection
 
-import com.tminus1010.budgetvalue._core.App
 import com.tminus1010.budgetvalue._core.shared_features.date_period_getter.SettingsUseCases
 import com.tminus1010.budgetvalue._core.shared_features.date_period_getter.SettingsUseCasesImpl
 import com.tminus1010.budgetvalue.categories.IUserCategoriesFetch
@@ -11,9 +10,10 @@ import com.tminus1010.budgetvalue.plans.PlanUseCasesImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 @Module
-@InstallIn(AppComponent::class)
+@InstallIn(SingletonComponent::class)
 abstract class BindingModule {
     @Binds
     abstract fun getUserCategoriesUseCases(userCategoriesUseCasesImpl: UserCategoriesUseCasesImpl): UserCategoriesUseCases

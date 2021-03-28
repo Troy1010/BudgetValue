@@ -4,19 +4,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.databinding.ActivityMockImportSelectionBinding
-import com.tminus1010.budgetvalue._core.dependency_injection.ViewModelProviders
-import com.tminus1010.budgetvalue._core.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._core.middleware.ui.GenViewHolder
+import com.tminus1010.budgetvalue.transactions.TransactionsVM
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MockImportSelectionActivity : AppCompatActivity(R.layout.activity_mock_import_selection) {
+    val transactionsVM by viewModels<TransactionsVM>()
     val binding by viewBinding(ActivityMockImportSelectionBinding::inflate)
-    val vmps by lazy { ViewModelProviders(this, appComponent) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -39,7 +41,7 @@ class MockImportSelectionActivity : AppCompatActivity(R.layout.activity_mock_imp
                     holder.itemView.text = "Import Transactions ${holder.adapterPosition}"
                     holder.itemView.setOnClickListener {
                         assets.open(transactionPathNames[holder.adapterPosition]).buffered()
-                            .also { vmps.transactionsVM.importTransactions(it) }
+                            .also { transactionsVM.importTransactions(it) }
                         finish()
                     }
                 }

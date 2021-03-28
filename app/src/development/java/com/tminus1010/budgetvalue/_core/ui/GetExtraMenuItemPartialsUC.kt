@@ -1,8 +1,6 @@
 package com.tminus1010.budgetvalue._core.ui
 
 import com.tminus1010.budgetvalue._core.TestException
-import com.tminus1010.budgetvalue._core.dependency_injection.injection_extensions.domain
-import com.tminus1010.budgetvalue._core.dependency_injection.injection_extensions.repo
 import com.tminus1010.budgetvalue._core.flavor_contracts.development_production.IGetExtraMenuItemPartialsUC
 import com.tminus1010.budgetvalue._core.middleware.getBlocks
 import com.tminus1010.budgetvalue._core.middleware.reflectXY
@@ -16,9 +14,6 @@ import javax.inject.Inject
 class GetExtraMenuItemPartialsUC @Inject constructor(): IGetExtraMenuItemPartialsUC {
     override operator fun invoke(hostActivity: HostActivity) = hostActivity.run {
         arrayOf(
-            MenuItemPartial("Clear Reconciliations") {
-                domain.clearReconciliations().launch()
-            },
             MenuItemPartial("Throw Test Error") {
                 hostFrag.handle(TestException())
             },
@@ -76,14 +71,6 @@ class GetExtraMenuItemPartialsUC @Inject constructor(): IGetExtraMenuItemPartial
                 //
                 val spendsString = column.joinToString("\n")
                 logz("spendsString:${spendsString}")
-            },
-            MenuItemPartial("AppInitBool = false") {
-                toast("AppInitBool = false")
-                repo.pushAppInitBool(false).launch()
-            },
-            MenuItemPartial("Debug Do Something") {
-                toast("Debug Do Something")
-                domain.reconciliations.take(1).subscribe()
             },
         )
     }

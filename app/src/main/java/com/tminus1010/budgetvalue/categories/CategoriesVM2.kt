@@ -6,10 +6,13 @@ import com.tminus1010.budgetvalue.plans.ActivePlanVM
 import com.tminus1010.budgetvalue.plans.PlanUseCases
 import com.tminus1010.budgetvalue._layer_facades.DomainFacade
 import com.tminus1010.budgetvalue._core.middleware.Rx
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.PublishSubject
+import javax.inject.Inject
 
 // Separate from CategoriesVM to avoid circular dependency graph
-class CategoriesVM2(
+@HiltViewModel
+class CategoriesVM2 @Inject constructor(
     private val domainFacade: DomainFacade,
     private val planUseCases: PlanUseCases,
     private val activePlanVM: ActivePlanVM,

@@ -1,21 +1,24 @@
 package com.tminus1010.budgetvalue._core.ui
 
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.NavHostFragment
 import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue._core.App
+import com.tminus1010.budgetvalue._core.ErrorVM
 import com.tminus1010.budgetvalue._core.ImportFailedException
 import com.tminus1010.budgetvalue._core.TestException
-import com.tminus1010.budgetvalue._core.dependency_injection.ViewModelProviders
-import com.tminus1010.budgetvalue._core.dependency_injection.injection_extensions.app
-import com.tminus1010.budgetvalue._core.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonPartial
-import com.tminus1010.budgetvalue._layer_facades.IViewModels
 import com.tminus1010.budgetvalue.extensions.getBackStack
 import com.tminus1010.tmcommonkotlin.misc.logz
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class HostFrag : NavHostFragment(), IViewModels {
-    override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
+@AndroidEntryPoint
+class HostFrag : NavHostFragment() {
+    @Inject lateinit var app: App
+    val errorVM by activityViewModels<ErrorVM>()
     fun getBackStack() = childFragmentManager.getBackStack()
     fun handle(e: Throwable, vararg buttonPartials: ButtonPartial) {
         val buttonPartialsRedef =

@@ -11,10 +11,13 @@ import com.tminus1010.budgetvalue.budgeted.BudgetedVM
 import com.tminus1010.budgetvalue._core.middleware.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class HistoryVM(
+@HiltViewModel
+class HistoryVM @Inject constructor(
     private val domainFacade: DomainFacade,
     transactionsVM: TransactionsVM,
     activeReconciliationVM: ActiveReconciliationVM,

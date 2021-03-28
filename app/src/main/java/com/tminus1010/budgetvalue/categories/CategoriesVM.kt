@@ -4,9 +4,11 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.categoryComparator
 import com.tminus1010.tmcommonkotlin.misc.logz
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import javax.inject.Inject
 
+@HiltViewModel
 class CategoriesVM @Inject constructor(
     userCategoriesUseCasesImpl: IUserCategoriesFetch
 ) : ViewModel(), ICategoryParser {

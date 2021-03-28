@@ -6,8 +6,11 @@ import com.tminus1010.budgetvalue._core.flavor_contracts.development_production.
 import com.tminus1010.budgetvalue._core.ui.LaunchImportUC
 import dagger.Binds
 import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 @Module
+@InstallIn(SingletonComponent::class)
 abstract class FlavorContractModule {
     @Binds
     abstract fun getUserCategoriesUseCases(launchImportUC: LaunchImportUC): ILaunchImportUC

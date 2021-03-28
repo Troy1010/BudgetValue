@@ -11,18 +11,19 @@ import com.tminus1010.budgetvalue._core.data.MiscDAO
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
+@InstallIn(SingletonComponent::class)
 object RepoModule {
     @Provides
     @Singleton
-    @JvmStatic
     fun providesCategoryParser(categoriesVM: CategoriesVM): ICategoryParser = categoriesVM
 
     @Provides
     @Singleton
-    @JvmStatic
     fun providesSharedPreferences(app: App): SharedPreferences {
         return app.getSharedPreferences(
             SHARED_PREF_FILE_NAME,
@@ -32,11 +33,9 @@ object RepoModule {
 
     @Provides
     @Singleton
-    @JvmStatic
     fun providesMyDao(roomDatabase: DB): MiscDAO = roomDatabase.miscDAO()
 
     @Provides
     @Singleton
-    @JvmStatic
     fun providesActiveCategoryDAO(roomDatabase: DB): UserCategoriesDAO = roomDatabase.activeCategoryDAO()
 }

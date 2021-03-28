@@ -13,11 +13,14 @@ import com.tminus1010.budgetvalue._core.middleware.nullIfZero
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.rx.extensions.total
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
+import javax.inject.Inject
 
-class ActivePlanVM(
+@HiltViewModel
+class ActivePlanVM @Inject constructor(
     domainFacade: DomainFacade,
     categoriesVM: CategoriesVM,
     datePeriodGetter: DatePeriodGetter,

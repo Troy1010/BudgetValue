@@ -5,21 +5,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.dependency_injection.ViewModelProviders
-import com.tminus1010.budgetvalue._core.dependency_injection.injection_extensions.appComponent
+import com.tminus1010.budgetvalue._core.ErrorVM
 import com.tminus1010.budgetvalue._core.middleware.ui.GenViewHolder2
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
-import com.tminus1010.budgetvalue._layer_facades.IViewModels
 import com.tminus1010.budgetvalue.databinding.FragErrorBinding
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
-class ErrorFrag : Fragment(R.layout.frag_error), IViewModels {
-    override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
+@AndroidEntryPoint
+class ErrorFrag : Fragment(R.layout.frag_error) {
+    val errorVM: ErrorVM by activityViewModels()
     val vb by viewBinding(FragErrorBinding::bind)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

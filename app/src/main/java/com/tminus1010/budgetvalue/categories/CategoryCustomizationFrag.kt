@@ -5,23 +5,24 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.dependency_injection.ViewModelProviders
-import com.tminus1010.budgetvalue._core.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue._core.middleware.reflectXY
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
-import com.tminus1010.budgetvalue._layer_facades.IViewModels
 import com.tminus1010.budgetvalue.databinding.FragCategoryCustomizationBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization), IViewModels {
+@AndroidEntryPoint
+class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization) {
+    val categoriesVM2: CategoriesVM2 by activityViewModels()
+    val categoriesVM: CategoriesVM by activityViewModels()
     val vb by viewBinding(FragCategoryCustomizationBinding::bind)
-    override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
@@ -35,7 +36,7 @@ class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization)
             { View.inflate(requireContext(), R.layout.button, null) as Button },
             { v: Button, d: Category ->
                 v.text = "Delete"
-                v.setOnClickListener { categoryDeletionVM.intentDeleteCategoryFromActive.onNext(d) }
+                v.setOnClickListener { categoriesVM2.intentDeleteCategoryFromActive.onNext(d) }
                 v.isEnabled = !d.isRequired
             }
         )
