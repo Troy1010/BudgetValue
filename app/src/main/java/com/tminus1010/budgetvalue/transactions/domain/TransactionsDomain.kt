@@ -1,7 +1,9 @@
 package com.tminus1010.budgetvalue.transactions.domain
 
-import com.tminus1010.budgetvalue._layer_facades.DomainFacade
+import com.tminus1010.budgetvalue._core.shared_features.date_period_getter.DatePeriodGetter
 import com.tminus1010.budgetvalue.categories.Category
+import com.tminus1010.budgetvalue.transactions.TransactionParser
+import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.budgetvalue.transactions.models.TransactionsBlock
 import com.tminus1010.tmcommonkotlin.rx.extensions.launch
@@ -13,9 +15,11 @@ import javax.inject.Singleton
 
 @Singleton
 class TransactionsDomain @Inject constructor(
-    private val domainFacade: DomainFacade,
+    private val transactionsRepo: ITransactionsRepo,
+    private val datePeriodGetter: DatePeriodGetter,
+    private val transactionParser: TransactionParser
 ) : ITransactionsDomain {
-    override val transactions = domainFacade.transactions
+    override val transactions = transactionsRepo.transactions
     override val transactionBlocks = transactions
         .map(::getBlocksFromTransactions)
     override val spends = transactions
@@ -23,7 +27,7 @@ class TransactionsDomain @Inject constructor(
     override val currentSpendBlockCAs = spends
         .map {
             it
-                .filter { it.date in domainFacade.getDatePeriod(LocalDate.now()) }
+                .filter { it.date in datePeriodGetter.getDatePeriod(LocalDate.now()) }
                 .map { it.categoryAmounts }
                 .fold(mapOf<Category, BigDecimal>()) { acc, v ->
                     mutableSetOf<Category>().apply { addAll(acc.keys); addAll(v.keys) }
@@ -35,13 +39,13 @@ class TransactionsDomain @Inject constructor(
     override val uncategorizedSpendsSize = uncategorizedSpends
         .map { it.size.toString() }
     override fun importTransactions(inputStream: InputStream) {
-        domainFacade.tryPush(domainFacade.parseToTransactions(inputStream)).launch()
+        transactionsRepo.tryPush(transactionParser.parseToTransactions(inputStream)).launch()
     }
     override fun getBlocksFromTransactions(transactions: List<Transaction>): List<TransactionsBlock> {
         val transactionsRedefined = transactions.sortedBy { it.date }.toMutableList()
         val returning = ArrayList<TransactionsBlock>()
         if (0 !in transactionsRedefined.indices) return returning
-        var datePeriod = domainFacade.getDatePeriod(transactionsRedefined[0].date)
+        var datePeriod = datePeriodGetter.getDatePeriod(transactionsRedefined[0].date)
         while (datePeriod.startDate <= transactionsRedefined.last().date) {
             val transactionSet = transactionsRedefined
                 .filter { it.date in datePeriod }
@@ -54,7 +58,7 @@ class TransactionsDomain @Inject constructor(
                     }
                     .let { TransactionsBlock(datePeriod, it.first, it.second) }
             if (transactionsRedefined.isEmpty()) break
-            datePeriod = domainFacade.getDatePeriod(transactionsRedefined[0].date)
+            datePeriod = datePeriodGetter.getDatePeriod(transactionsRedefined[0].date)
         }
         return returning
     }

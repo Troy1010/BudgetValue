@@ -14,14 +14,14 @@ import com.tminus1010.budgetvalue._core.middleware.reflectXY
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuItemPartial
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
-import com.tminus1010.budgetvalue._layer_facades.DomainFacade
+import com.tminus1010.budgetvalue._core.shared_features.date_period_getter.DatePeriodGetter
 import com.tminus1010.budgetvalue.databinding.FragHistoryBinding
 import com.tminus1010.budgetvalue.extensions.show
 import com.tminus1010.budgetvalue.history.models.IHistoryColumnData
-import com.tminus1010.budgetvalue.plans.models.Plan
 import com.tminus1010.budgetvalue.plans.PlansVM
-import com.tminus1010.budgetvalue.reconciliations.models.Reconciliation
+import com.tminus1010.budgetvalue.plans.models.Plan
 import com.tminus1010.budgetvalue.reconciliations.ReconciliationsVM
+import com.tminus1010.budgetvalue.reconciliations.models.Reconciliation
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,7 +31,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class HistoryFrag : Fragment(R.layout.frag_history) {
-    @Inject lateinit var domainFacade: DomainFacade
+    @Inject lateinit var datePeriodGetter: DatePeriodGetter
     val plansVM: PlansVM by activityViewModels()
     val reconciliationsVM: ReconciliationsVM by activityViewModels()
     val historyVM: HistoryVM by activityViewModels()
@@ -45,11 +45,11 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
             { View.inflate(context, R.layout.tableview_header_with_subtitle, null) as LinearLayout }, // TODO("use viewBinding")
             { v, historyColumnData ->
                 (v.children.first() as TextView).text = historyColumnData.title
-                (v.children.last() as TextView).text = historyColumnData.subTitle(domainFacade)
+                (v.children.last() as TextView).text = historyColumnData.subTitle(datePeriodGetter)
                 v.setOnLongClickListener {
                     listOfNotNull(
                         when {
-                            historyColumnData is Plan && !historyColumnData.isCurrent(domainFacade) -> {
+                            historyColumnData is Plan && !historyColumnData.isCurrent(datePeriodGetter) -> {
                                 { plansVM.intentDeletePlan.onNext(historyColumnData) }
                             }
                             historyColumnData is Reconciliation -> {

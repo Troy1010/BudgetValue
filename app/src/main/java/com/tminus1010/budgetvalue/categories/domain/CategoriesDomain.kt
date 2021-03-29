@@ -2,7 +2,8 @@ package com.tminus1010.budgetvalue.categories.domain
 
 import com.tminus1010.budgetvalue._core.categoryComparator
 import com.tminus1010.budgetvalue.categories.Category
-import com.tminus1010.budgetvalue.categories.UserCategoriesUseCases
+import com.tminus1010.budgetvalue.categories.ICategoryParser
+import com.tminus1010.budgetvalue.categories.data.ICategoriesRepo
 import com.tminus1010.tmcommonkotlin.misc.logz
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -11,13 +12,13 @@ import javax.inject.Singleton
 
 @Singleton
 class CategoriesDomain @Inject constructor(
-    userCategoriesUseCasesImpl: UserCategoriesUseCases
-) : ICategoriesDomain {
+    categoriesRepo: ICategoriesRepo
+) : ICategoriesDomain, ICategoryParser {
     override val defaultCategory = Category("Default", Category.Type.Misc, true)
     override val unknownCategory = Category("Unknown", Category.Type.Misc, true)
 
     override val userCategories: BehaviorSubject<List<Category>> =
-        userCategoriesUseCasesImpl.fetchUserCategories()
+        categoriesRepo.fetchUserCategories()
             .map { it.sortedWith(categoryComparator) }
             .toBehaviorSubject(emptyList())
 

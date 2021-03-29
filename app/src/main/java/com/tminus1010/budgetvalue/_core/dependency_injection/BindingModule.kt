@@ -1,12 +1,14 @@
 package com.tminus1010.budgetvalue._core.dependency_injection
 
-import com.tminus1010.budgetvalue._core.shared_features.date_period_getter.SettingsUseCases
-import com.tminus1010.budgetvalue._core.shared_features.date_period_getter.SettingsUseCasesImpl
-import com.tminus1010.budgetvalue.categories.IUserCategoriesFetch
-import com.tminus1010.budgetvalue.categories.UserCategoriesUseCases
-import com.tminus1010.budgetvalue.categories.UserCategoriesUseCasesImpl
-import com.tminus1010.budgetvalue.plans.PlanUseCases
-import com.tminus1010.budgetvalue.plans.PlanUseCasesImpl
+import com.tminus1010.budgetvalue._core.data.RepoFacade
+import com.tminus1010.budgetvalue._core.shared_features.app_init.data.IAppInitRepo
+import com.tminus1010.budgetvalue._core.shared_features.date_period_getter.data.ISettingsRepo
+import com.tminus1010.budgetvalue.accounts.data.IAccountsRepo
+import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
+import com.tminus1010.budgetvalue.categories.data.ICategoriesRepo
+import com.tminus1010.budgetvalue.plans.data.IPlansRepo
+import com.tminus1010.budgetvalue.reconciliations.data.IReconciliationsRepo
+import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -16,14 +18,23 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 abstract class BindingModule {
     @Binds
-    abstract fun getUserCategoriesUseCases(userCategoriesUseCasesImpl: UserCategoriesUseCasesImpl): UserCategoriesUseCases
+    abstract fun categoriesRepo(categoriesRepo: CategoriesRepo): ICategoriesRepo
 
     @Binds
-    abstract fun getUserCategoriesFetchUseCase(userCategoriesUseCasesImpl: UserCategoriesUseCasesImpl): IUserCategoriesFetch
+    abstract fun accountsRepo(repoFacade: RepoFacade): IAccountsRepo
 
     @Binds
-    abstract fun provideSettingsUseCases(settingsUseCasesImpl: SettingsUseCasesImpl): SettingsUseCases
+    abstract fun reconciliationRepo(repoFacade: RepoFacade): IReconciliationsRepo
 
     @Binds
-    abstract fun providePlanUseCases(planUseCasesImpl: PlanUseCasesImpl): PlanUseCases
+    abstract fun plansRepo(repoFacade: RepoFacade): IPlansRepo
+
+    @Binds
+    abstract fun settingsRepo(repoFacade: RepoFacade): ISettingsRepo
+
+    @Binds
+    abstract fun appInitRepo(repoFacade: RepoFacade): IAppInitRepo
+
+    @Binds
+    abstract fun transactionsRepo(repoFacade: RepoFacade): ITransactionsRepo
 }

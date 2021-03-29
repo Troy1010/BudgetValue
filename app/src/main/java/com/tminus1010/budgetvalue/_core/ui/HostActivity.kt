@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.ui.NavigationUI
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
-import com.tminus1010.budgetvalue._layer_facades.DomainFacade
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.extensions.add
@@ -22,7 +21,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class HostActivity : AppCompatActivity() {
     @Inject lateinit var getExtraMenuItemPartialsUC: GetExtraMenuItemPartialsUC
-    @Inject lateinit var domainFacade: DomainFacade
     val transactionsVM by viewModels<TransactionsVM>()
     val categoriesVM by viewModels<CategoriesVM>()
     val vb by viewBinding(ActivityHostBinding::inflate)

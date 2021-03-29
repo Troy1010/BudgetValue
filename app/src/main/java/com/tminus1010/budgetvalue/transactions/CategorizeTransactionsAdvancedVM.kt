@@ -1,9 +1,9 @@
 package com.tminus1010.budgetvalue.transactions
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.extensions.launch
-import com.tminus1010.budgetvalue._layer_facades.DomainFacade
 import com.tminus1010.budgetvalue.categories.Category
+import com.tminus1010.budgetvalue.extensions.launch
+import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeTransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategorizeTransactionsAdvancedVM @Inject constructor(
-    domainFacade: DomainFacade,
+    transactionsRepo: ITransactionsRepo, // TODO("Use a Domain")
     categorizeTransactionsDomain: CategorizeTransactionsDomain,
 ) : ViewModel() {
     val intentRememberCA = PublishSubject.create<Pair<Category, BigDecimal>>()
@@ -31,7 +31,7 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
         .also {
             it
                 .withLatestFrom(transactionToPush) { _, b -> b }
-                .launch { domainFacade.pushTransactionCAs(it, it.categoryAmounts) }
+                .launch { transactionsRepo.pushTransactionCAs(it, it.categoryAmounts) }
         }
     val defaultAmount = transactionToPush
         .map { it.defaultAmount }

@@ -1,21 +1,21 @@
 package com.tminus1010.budgetvalue._core.shared_features.app_init
 
-import com.tminus1010.budgetvalue.categories.UserCategoriesUseCasesImpl
+import com.tminus1010.budgetvalue._core.shared_features.app_init.data.IAppInitRepo
 import com.tminus1010.budgetvalue.categories.Category
+import com.tminus1010.budgetvalue.categories.data.ICategoriesRepo
 import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AppInitializer @Inject constructor(
-    private val appInitBoolUseCasesImpl: AppInitBoolUseCasesImpl,
-    private val userCategoriesUseCasesImpl: UserCategoriesUseCasesImpl,
+class AppInitDomain @Inject constructor(
+    private val appInitRepo: IAppInitRepo,
+    private val categoriesRepo: ICategoriesRepo
 ) : IAppInitializer {
     override fun appInit() {
-        if (!appInitBoolUseCasesImpl.fetchAppInitBool()) {
-            initCategories
-                .forEach { userCategoriesUseCasesImpl.push(it).launch() }
-            appInitBoolUseCasesImpl.pushAppInitBool()
+        if (!appInitRepo.fetchAppInitBool()) {
+            initCategories.forEach { categoriesRepo.push(it).launch() }
+            appInitRepo.pushAppInitBool(true)
         }
     }
 

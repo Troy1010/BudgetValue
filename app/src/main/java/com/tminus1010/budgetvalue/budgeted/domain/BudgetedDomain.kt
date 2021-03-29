@@ -2,12 +2,13 @@ package com.tminus1010.budgetvalue.budgeted.domain
 
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
-import com.tminus1010.budgetvalue._layer_facades.DomainFacade
 import com.tminus1010.budgetvalue.accounts.domain.AccountsDomain
 import com.tminus1010.budgetvalue.budgeted.Budgeted
 import com.tminus1010.budgetvalue.categories.Category
 import com.tminus1010.budgetvalue.extensions.flatMapSourceHashMap
+import com.tminus1010.budgetvalue.plans.domain.PlansDomain
 import com.tminus1010.budgetvalue.reconciliations.domain.ActiveReconciliationDomain
+import com.tminus1010.budgetvalue.reconciliations.domain.ReconciliationDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.rx.extensions.total
@@ -18,13 +19,14 @@ import javax.inject.Singleton
 
 @Singleton
 class BudgetedDomain @Inject constructor(
-    domainFacade: DomainFacade,
+    reconciliationDomain: ReconciliationDomain,
+    plansDomain: PlansDomain,
     transactionsDomain: TransactionsDomain,
     activeReconciliationDomain: ActiveReconciliationDomain,
     accountsDomain: AccountsDomain
 ) : IBudgetedDomain {
     override val categoryAmounts =
-        Rx.combineLatest(domainFacade.reconciliations, domainFacade.plans, transactionsDomain.transactionBlocks, activeReconciliationDomain.activeReconcileCAs)
+        Rx.combineLatest(reconciliationDomain.reconciliations, plansDomain.plans, transactionsDomain.transactionBlocks, activeReconciliationDomain.activeReconcileCAs)
             .throttleLatest(1, TimeUnit.SECONDS)
             .map { (reconciliations, plans, transactionBlocks, activeReconcileCAs) ->
                 (reconciliations + plans + transactionBlocks)

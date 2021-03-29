@@ -5,12 +5,12 @@ import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.nullIfZero
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue._core.shared_features.date_period_getter.DatePeriodGetter
-import com.tminus1010.budgetvalue._layer_facades.DomainFacade
 import com.tminus1010.budgetvalue.categories.Category
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue.extensions.launch
 import com.tminus1010.budgetvalue.extensions.withLatestFrom2
+import com.tminus1010.budgetvalue.plans.data.IPlansRepo
 import com.tminus1010.budgetvalue.plans.models.Plan
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.rx.extensions.total
@@ -22,7 +22,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ActivePlanDomain @Inject constructor(
-    domainFacade: DomainFacade,
+    plansRepo: IPlansRepo,
     categoriesDomain: CategoriesDomain,
     datePeriodGetter: DatePeriodGetter,
     plansDomain: PlansDomain,
@@ -49,19 +49,19 @@ class ActivePlanDomain @Inject constructor(
                             BigDecimal.ZERO,
                             emptyMap())
                         )
-                }.doOnNext { domainFacade.pushPlan(it).blockingAwait() }
+                }.doOnNext { plansRepo.pushPlan(it).blockingAwait() }
             }
         }
         .toBehaviorSubject()
     override val intentPushExpectedIncome = PublishSubject.create<BigDecimal>()
         .also {
             it.withLatestFrom2(activePlan)
-                .launch { (amount, plan) -> domainFacade.updatePlanAmount(plan, amount) }
+                .launch { (amount, plan) -> plansRepo.updatePlanAmount(plan, amount) }
         }
     override val intentPushActivePlanCA = PublishSubject.create<Pair<Category, BigDecimal?>>()
         .also {
             it.withLatestFrom2(activePlan)
-                .launch { (categoryAmount, plan) -> domainFacade.updatePlanCA(plan, categoryAmount.first, categoryAmount.second?.nullIfZero()) }
+                .launch { (categoryAmount, plan) -> plansRepo.updatePlanCA(plan, categoryAmount.first, categoryAmount.second?.nullIfZero()) }
         }
     override val activePlanCAs =
         Rx.combineLatest(activePlan, categoriesDomain.userCategories)
