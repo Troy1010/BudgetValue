@@ -18,12 +18,11 @@ import javax.inject.Singleton
 object RepoModule {
     @Provides
     @Singleton
-    fun providesSharedPreferences(app: App): SharedPreferences {
-        return app.getSharedPreferences(
+    fun providesSharedPreferences(app: App): SharedPreferences =
+        app.getSharedPreferences(
             SHARED_PREF_FILE_NAME,
             Context.MODE_PRIVATE
         )
-    }
 
     @Provides
     @Singleton
