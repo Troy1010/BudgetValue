@@ -5,7 +5,9 @@ import com.tminus1010.budgetvalue.categories.Category
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class CategoriesRepo @Inject constructor(
     private val userCategoriesDAO: UserCategoriesDAO
 ) : ICategoriesRepo {
