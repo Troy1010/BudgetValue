@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.tminus1010.budgetvalue">
 
-    <application>
+    <application
+        tools:replace="android:name"
+        android:name=".App_DevEnv">
         <activity android:name="._core.ui.MockImportSelectionActivity"/>
+        <activity android:name="com.tminus1010.budgetvalue._core.ui.ChooseDevEnvActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
