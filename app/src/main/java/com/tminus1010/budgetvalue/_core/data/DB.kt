@@ -14,5 +14,5 @@ import com.tminus1010.budgetvalue.transactions.models.TransactionDTO
     version = 32)
 abstract class DB : RoomDatabase() {
     abstract fun miscDAO(): MiscDAO
-    abstract fun activeCategoryDAO(): UserCategoriesDAO
+    abstract fun userCategoriesDAO(): UserCategoriesDAO
 }

@@ -38,5 +38,5 @@ object RepoModule {
 
     @Provides
     @Singleton
-    fun providesActiveCategoryDAO(roomDatabase: DB): UserCategoriesDAO = roomDatabase.activeCategoryDAO()
+    fun providesActiveCategoryDAO(roomDatabase: DB): UserCategoriesDAO = roomDatabase.userCategoriesDAO()
 }
