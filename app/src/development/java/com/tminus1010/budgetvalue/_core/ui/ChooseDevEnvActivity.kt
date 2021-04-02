@@ -1,5 +1,6 @@
 package com.tminus1010.budgetvalue._core.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -18,6 +19,11 @@ import com.tminus1010.tmcommonkotlin.misc.logz
 class ChooseDevEnvActivity: AppCompatActivity(R.layout.activity_choose_dev_env) {
     val vb by viewBinding(ActivityChooseDevEnvBinding::inflate)
     val rvData = listOf(
+        ButtonPartial("Launch Normally w/o Changes") {
+            logz("launching original")
+            Intent(this, HostActivity::class.java)
+                .let { startActivity(it) }
+        },
         ButtonPartial("DevEnv1") { logz("hi1") },
         ButtonPartial("DevEnv2") { logz("hi2") },
     )

@@ -5,7 +5,7 @@
 
     <application
         tools:replace="android:name"
-        android:name="._core.App_Development">
+        android:name="._core.App">
         <activity android:name="._core.ui.MockImportSelectionActivity"/>
         <activity android:name="com.tminus1010.budgetvalue._core.ui.ChooseDevEnvActivity">
             <intent-filter>
