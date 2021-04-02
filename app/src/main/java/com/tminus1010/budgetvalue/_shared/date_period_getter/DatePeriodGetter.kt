@@ -1,8 +1,8 @@
-package com.tminus1010.budgetvalue._core.shared_features.date_period_getter
+package com.tminus1010.budgetvalue._shared.date_period_getter
 
 import com.tminus1010.budgetvalue._core.middleware.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.middleware.Rx
-import com.tminus1010.budgetvalue._core.shared_features.date_period_getter.data.ISettingsRepo
+import com.tminus1010.budgetvalue._shared.date_period_getter.data.ISettingsRepo
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
 import java.time.LocalDate

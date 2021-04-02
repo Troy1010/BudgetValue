@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.categoryComparator
 import com.tminus1010.budgetvalue._core.middleware.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.middleware.Rx
-import com.tminus1010.budgetvalue._core.shared_features.date_period_getter.DatePeriodGetter
+import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
 import com.tminus1010.budgetvalue.budgeted.domain.BudgetedDomain
 import com.tminus1010.budgetvalue.categories.Category
 import com.tminus1010.budgetvalue.history.models.HistoryColumnData

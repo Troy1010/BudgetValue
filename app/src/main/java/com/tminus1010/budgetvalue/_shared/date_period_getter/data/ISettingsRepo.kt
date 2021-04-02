@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._core.shared_features.date_period_getter.data
+package com.tminus1010.budgetvalue._shared.date_period_getter.data
 
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable

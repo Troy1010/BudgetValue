@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.reconciliations.models
 
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
-import com.tminus1010.budgetvalue._core.shared_features.date_period_getter.IDatePeriodGetter
+import com.tminus1010.budgetvalue._shared.date_period_getter.IDatePeriodGetter
 import com.tminus1010.budgetvalue.categories.Category
 import com.tminus1010.budgetvalue.history.models.IHistoryColumnData
 import com.tminus1010.tmcommonkotlin.misc.extensions.toDisplayStr

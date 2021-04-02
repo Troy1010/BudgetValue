@@ -1,6 +1,6 @@
-package com.tminus1010.budgetvalue._core.shared_features.app_init
+package com.tminus1010.budgetvalue._shared.app_init
 
-import com.tminus1010.budgetvalue._core.shared_features.app_init.data.IAppInitRepo
+import com.tminus1010.budgetvalue._shared.app_init.data.IAppInitRepo
 import com.tminus1010.budgetvalue.categories.Category
 import com.tminus1010.budgetvalue.categories.data.ICategoriesRepo
 import com.tminus1010.tmcommonkotlin.rx.extensions.launch
