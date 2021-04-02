@@ -28,7 +28,10 @@ class ChooseDevEnvActivity: AppCompatActivity(R.layout.activity_choose_dev_env) 
             logz("DevEnv1")
 
         },
-        ButtonPartial("DevEnv2") { logz("hi2") },
+        ButtonPartial("DevEnv2") {
+            logz("DevEnv2")
+            
+        },
     )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
