@@ -1,8 +1,8 @@
 package com.tminus1010.budgetvalue._core.dependency_injection
 
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import com.tminus1010.budgetvalue._core.App
 import com.tminus1010.budgetvalue._core.SHARED_PREF_FILE_NAME
 import com.tminus1010.budgetvalue._core.data.DB
 import com.tminus1010.budgetvalue._core.data.MiscDAO
@@ -18,8 +18,8 @@ import javax.inject.Singleton
 object RepoModule {
     @Provides
     @Singleton
-    fun providesSharedPreferences(app: App): SharedPreferences =
-        app.getSharedPreferences(
+    fun providesSharedPreferences(application: Application): SharedPreferences =
+        application.getSharedPreferences(
             SHARED_PREF_FILE_NAME,
             Context.MODE_PRIVATE
         )

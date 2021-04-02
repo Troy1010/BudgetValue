@@ -1,9 +1,9 @@
 package com.tminus1010.budgetvalue._core.ui
 
+import android.app.Application
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.NavHostFragment
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.App
 import com.tminus1010.budgetvalue._core.ErrorVM
 import com.tminus1010.budgetvalue._core.ImportFailedException
 import com.tminus1010.budgetvalue._core.TestException
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class HostFrag : NavHostFragment() {
-    @Inject lateinit var app: App
+    @Inject lateinit var app: Application
     val errorVM by activityViewModels<ErrorVM>()
     fun getBackStack() = childFragmentManager.getBackStack()
     fun handle(e: Throwable, vararg buttonPartials: ButtonPartial) {
