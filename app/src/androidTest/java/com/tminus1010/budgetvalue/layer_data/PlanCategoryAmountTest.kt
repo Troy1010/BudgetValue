@@ -2,12 +2,11 @@ package com.tminus1010.budgetvalue.layer_data
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.tminus1010.budgetvalue.AppMock
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class PlanCategoryAmountTest {
-    val app by lazy { InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as AppMock }
+//    val app by lazy { InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as AppMock }
 //    val repo by lazy { app.appComponent.getRepo() }
 //    val x by lazy {
 //        app.appComponent.getCategoriesAppVM()
