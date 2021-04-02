@@ -17,6 +17,7 @@ import com.tminus1010.budgetvalue._core.ui.HostActivity
 import com.tminus1010.budgetvalue._core.ui.LaunchImportUC
 import com.tminus1010.budgetvalue.databinding.FragImportBinding
 import com.tminus1010.budgetvalue.databinding.ItemAccountBinding
+import com.tminus1010.tmcommonkotlin.misc.logx
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.pairwise
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,10 +27,13 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ImportFrag : Fragment(R.layout.frag_import) {
     @Inject lateinit var launchImportUC: LaunchImportUC
+    @Inject lateinit var helloSayer: String
     val accountsVM: AccountsVM by activityViewModels()
     val vb by viewBinding(FragImportBinding::bind)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // # Say Hello
+        helloSayer.logx("yyy")
         // # Clicks
         vb.btnImport.clicks().subscribe { launchImportUC(requireActivity() as HostActivity) }
         vb.btnAddAccount.clicks().subscribe(accountsVM.intentAddAccount)
