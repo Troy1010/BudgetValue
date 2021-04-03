@@ -32,7 +32,7 @@ class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization)
             { v: TextView, d: Category -> v.text = d.name }
         )
         val factory2 = ViewItemRecipeFactory(
-            { View.inflate(requireContext(), R.layout.button, null) as Button },
+            { View.inflate(requireContext(), R.layout.item_button, null) },
             { v: Button, d: Category ->
                 v.text = "Delete"
                 v.setOnClickListener { categoriesVM.intentDeleteCategoryFromActive.onNext(d) }
