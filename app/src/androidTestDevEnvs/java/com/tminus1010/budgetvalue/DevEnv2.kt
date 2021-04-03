@@ -25,7 +25,7 @@ class DevEnv2 {
 
     @InstallIn(SingletonComponent::class)
     @Module
-    object MockHelloModule {
+    object MockHelloModule2 {
         @Provides
         @Singleton
         fun provideHello(): String =
