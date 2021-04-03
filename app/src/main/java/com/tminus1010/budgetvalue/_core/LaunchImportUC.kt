@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue._core.flavor_contracts.development_production.
 import com.tminus1010.budgetvalue._core.ui.HostActivity
 import javax.inject.Inject
 
-class LaunchImportUC @Inject constructor() : ILaunchImportUC {
+open class LaunchImportUC @Inject constructor() : ILaunchImportUC {
     override operator fun invoke(hostActivity: HostActivity) {
         Intent().apply { type = "*/*"; action = Intent.ACTION_GET_CONTENT }
             .let { Intent.createChooser(it, "Select transactions csv") }
