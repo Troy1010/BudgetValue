@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue._core.dependency_injection
 
-import com.tminus1010.budgetvalue._core.data.RepoFacade
+import com.tminus1010.budgetvalue._core.data.MainRepo
 import com.tminus1010.budgetvalue._shared.app_init.data.IAppInitRepo
 import com.tminus1010.budgetvalue._shared.date_period_getter.data.ISettingsRepo
 import com.tminus1010.budgetvalue.accounts.data.IAccountsRepo
@@ -26,20 +26,20 @@ abstract class BindingModule {
     abstract fun categoriesRepo(categoriesRepo: CategoriesRepo): ICategoriesRepo
 
     @Binds
-    abstract fun accountsRepo(repoFacade: RepoFacade): IAccountsRepo
+    abstract fun accountsRepo(mainRepo: MainRepo): IAccountsRepo
 
     @Binds
-    abstract fun reconciliationRepo(repoFacade: RepoFacade): IReconciliationsRepo
+    abstract fun reconciliationRepo(mainRepo: MainRepo): IReconciliationsRepo
 
     @Binds
-    abstract fun plansRepo(repoFacade: RepoFacade): IPlansRepo
+    abstract fun plansRepo(mainRepo: MainRepo): IPlansRepo
 
     @Binds
-    abstract fun settingsRepo(repoFacade: RepoFacade): ISettingsRepo
+    abstract fun settingsRepo(mainRepo: MainRepo): ISettingsRepo
 
     @Binds
-    abstract fun appInitRepo(repoFacade: RepoFacade): IAppInitRepo
+    abstract fun appInitRepo(mainRepo: MainRepo): IAppInitRepo
 
     @Binds
-    abstract fun transactionsRepo(repoFacade: RepoFacade): ITransactionsRepo
+    abstract fun transactionsRepo(mainRepo: MainRepo): ITransactionsRepo
 }
