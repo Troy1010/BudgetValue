@@ -7,7 +7,7 @@
     android:textAllCaps="false"
     android:ellipsize="end"
     android:autoSizeTextType="uniform"
-    android:autoSizeMaxTextSize="22sp"
+    android:autoSizeMaxTextSize="21sp"
     android:autoSizeMinTextSize="14sp"
     android:insetBottom="0dp"
     android:insetTop="0dp"
