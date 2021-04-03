@@ -2,7 +2,6 @@ package com.tminus1010.budgetvalue
 
 import androidx.lifecycle.Lifecycle
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.tminus1010.budgetvalue._core.dependency_injection.HelloModule
 import com.tminus1010.budgetvalue._core.ui.HostActivity
 import dagger.Module
 import dagger.Provides
@@ -18,7 +17,6 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import org.junit.Rule
 
 @HiltAndroidTest
-@UninstallModules(HelloModule::class)
 @RunWith(AndroidJUnit4::class)
 class DevEnv2 {
     @get:Rule var hiltRule = HiltAndroidRule(this)

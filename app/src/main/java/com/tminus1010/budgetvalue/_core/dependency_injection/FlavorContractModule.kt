@@ -1,9 +1,9 @@
 package com.tminus1010.budgetvalue._core.dependency_injection
 
-import com.tminus1010.budgetvalue._core.ui.GetExtraMenuItemPartialsUC
+import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartialsUC
 import com.tminus1010.budgetvalue._core.flavor_contracts.development_production.IGetExtraMenuItemPartialsUC
 import com.tminus1010.budgetvalue._core.flavor_contracts.development_production.ILaunchImportUC
-import com.tminus1010.budgetvalue._core.ui.LaunchImportUC
+import com.tminus1010.budgetvalue._core.LaunchImportUC
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
