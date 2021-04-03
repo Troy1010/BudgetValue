@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/btn_category"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="65dp"
     android:textAllCaps="false"
     android:ellipsize="end"
     android:autoSizeTextType="uniform"
@@ -11,4 +11,5 @@
     android:autoSizeMinTextSize="14sp"
     android:insetBottom="0dp"
     android:insetTop="0dp"
+    android:padding="2dp"
     tools:text="Category" />
