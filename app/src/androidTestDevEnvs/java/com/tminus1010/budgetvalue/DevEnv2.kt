@@ -7,7 +7,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartialsUC
 import com.tminus1010.budgetvalue._core.LaunchImportUC
 import com.tminus1010.budgetvalue._core.TestException
-import com.tminus1010.budgetvalue._core.dependency_injection.UCModule
 import com.tminus1010.budgetvalue._core.middleware.getBlocks
 import com.tminus1010.budgetvalue._core.middleware.reflectXY
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuItemPartial
@@ -19,7 +18,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.UninstallModules
 import dagger.hilt.components.SingletonComponent
 import org.junit.Rule
 import org.junit.Test
@@ -28,7 +26,6 @@ import java.math.BigDecimal
 import javax.inject.Singleton
 
 @HiltAndroidTest
-@UninstallModules(UCModule::class)
 @RunWith(AndroidJUnit4::class)
 class DevEnv2 {
     @get:Rule var hiltRule = HiltAndroidRule(this)
