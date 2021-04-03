@@ -47,19 +47,19 @@ android {
         }
     }
 
-    flavorDimensions "development_production"
+    flavorDimensions "devEnvs_production"
     productFlavors {
         // # Production flavor
         production {
-            dimension "development_production"
+            dimension "devEnvs_production"
             applicationIdSuffix ".production"
             versionNameSuffix "-production"
         }
         // # Development flavor has DevEnvs.
-        development {
-            dimension "development_production"
-            applicationIdSuffix ".development"
-            versionNameSuffix "-development"
+        devEnvs {
+            dimension "devEnvs_production"
+            applicationIdSuffix ".devEnvs"
+            versionNameSuffix "-devEnvs"
         }
     }
 
@@ -131,8 +131,8 @@ dependencies {
     androidTestImplementation 'com.google.dagger:hilt-android-testing:2.33-beta'
     kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.33-beta'
     // ## Hilt & Test in development/
-    developmentImplementation 'com.google.dagger:hilt-android-testing:2.33-beta'
-    kaptDevelopment 'com.google.dagger:hilt-android-compiler:2.33-beta'
+//    developmentImplementation 'com.google.dagger:hilt-android-testing:2.33-beta'
+//    kaptDevelopment 'com.google.dagger:hilt-android-compiler:2.33-beta'
 
     // # Room
     def room_version = "2.3.0-alpha03" // this version of room supports Rx3
