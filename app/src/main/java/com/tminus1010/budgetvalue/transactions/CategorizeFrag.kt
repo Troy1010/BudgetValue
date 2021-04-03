@@ -23,7 +23,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
-class CategorizeTransactionsFrag : Fragment(R.layout.frag_categorize) {
+class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     val categorizeTransactionsVM by activityViewModels<CategorizeTransactionsVM>()
     val categoriesVM by activityViewModels<CategoriesVM>()
     val transactionsVM by activityViewModels<TransactionsVM>()
