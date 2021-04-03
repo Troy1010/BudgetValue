@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-parcelize'
     id 'kotlin-kapt'
     id "TMPlugin"
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -28,7 +29,7 @@ android {
 
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
     }
@@ -59,15 +60,20 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    lintOptions {
+        // Please do not warn about using +
+        disable 'GradleDynamicVersion'
+    }
 }
 
-// *Without this, there is a warning that -Xopt-in=kotlin.RequiresOptIn is required
+// Without this, there is a warning that -Xopt-in=kotlin.RequiresOptIn is required
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     kotlinOptions.freeCompilerArgs += ["-Xopt-in=kotlin.RequiresOptIn"]
 }
 
 configurations.all {
-    // *Without this, androidx.test causes junit 4.12 to be used.
+    // Without this, androidx.test causes junit 4.12 to be used.
     resolutionStrategy.force "junit:junit:4.13.1"
 }
 
@@ -84,8 +90,8 @@ dependencies {
     testImplementation 'androidx.test:core:1.3.0'
 
     // # Fragment, Activity
-    implementation "androidx.fragment:fragment-ktx:1.3.1"
-    implementation 'androidx.activity:activity-ktx:1.3.0-alpha04'
+    implementation "androidx.fragment:fragment-ktx:1.3.2"
+    implementation 'androidx.activity:activity-ktx:1.3.0-alpha05'
 
     // # JUnit
     testImplementation 'junit:junit:4.13.2'
@@ -103,10 +109,13 @@ dependencies {
     implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-tuple:+'
     implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-view:+'
 
-    // # Dagger
-    implementation "com.google.dagger:dagger:2.28.3"
-    kapt "com.google.dagger:dagger-compiler:2.28"
-    kaptAndroidTest "com.google.dagger:dagger-compiler:2.28"
+    // # Hilt TODO("Don't use +")
+    implementation 'com.google.dagger:hilt-android:+'
+    kapt 'com.google.dagger:hilt-android-compiler:+'
+    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:+'
+    // ## Hilt + ViewModels
+    implementation 'androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03'
+    kapt 'androidx.hilt:hilt-compiler:1.0.0-beta01'
 
     // # Room
     def room_version = "2.3.0-alpha03" // this version of room supports Rx3

@@ -15,7 +15,7 @@ import javax.inject.Inject
 class SharedPrefWrapper @Inject constructor(
     val sharedPreferences: SharedPreferences,
     val moshi: Moshi,
-) : ISharedPrefWrapper {
+) {
     companion object {
         enum class Key {
             RECONCILE_CATEGORY_AMOUNTS,
@@ -34,13 +34,13 @@ class SharedPrefWrapper @Inject constructor(
     // # ActiveReconciliation
 
     private val activeReconciliationCAsPublisher = PublishSubject.create<Map<String, String>>()
-    override val activeReconciliationCAs: BehaviorSubject<Map<String, String>> =
+    val activeReconciliationCAs: BehaviorSubject<Map<String, String>> =
         activeReconciliationCAsPublisher
             .startWithItem(moshi.fromJson(sharedPreferences.getString(Key.RECONCILE_CATEGORY_AMOUNTS.name, null)?:"{}"))
             .distinctUntilChanged()
             .toBehaviorSubject()
 
-    override fun pushActiveReconciliationCAs(categoryAmounts: Map<String, String>?): Completable {
+    fun pushActiveReconciliationCAs(categoryAmounts: Map<String, String>?): Completable {
         categoryAmounts
             ?.let { moshi.toJson(it) }
             ?.also { editor.putString(Key.RECONCILE_CATEGORY_AMOUNTS.name, it) }
@@ -51,7 +51,7 @@ class SharedPrefWrapper @Inject constructor(
         }
     }
 
-    override fun pushActiveReconciliationCA(kv: Pair<String, String?>): Completable {
+    fun pushActiveReconciliationCA(kv: Pair<String, String?>): Completable {
         val (k, v) = kv
         return activeReconciliationCAs.value
             .toMutableMap()
@@ -59,14 +59,14 @@ class SharedPrefWrapper @Inject constructor(
             .let { pushActiveReconciliationCAs(it) }
     }
 
-    override fun clearActiveReconcileCAs() = pushActiveReconciliationCAs(null)
+    fun clearActiveReconcileCAs() = pushActiveReconciliationCAs(null)
 
     // # ExpectedIncome
 
-    override fun fetchExpectedIncome(): String =
+    fun fetchExpectedIncome(): String =
         sharedPreferences.getString(Key.EXPECTED_INCOME.name, null) ?: "0"
 
-    override fun pushExpectedIncome(expectedIncome: String?): Completable {
+    fun pushExpectedIncome(expectedIncome: String?): Completable {
         expectedIncome
             ?.also { editor.putString(Key.EXPECTED_INCOME.name, it) }
             ?: editor.remove(Key.EXPECTED_INCOME.name)
@@ -78,12 +78,12 @@ class SharedPrefWrapper @Inject constructor(
     // # AnchorDateOffset
 
     private val anchorDateOffsetPublisher = PublishSubject.create<Long>()
-    override val anchorDateOffset: Observable<Long> =
+    val anchorDateOffset: Observable<Long> =
         anchorDateOffsetPublisher
             .startWithItem(sharedPreferences.getLong(Key.ANCHOR_DATE_OFFSET.name, ANCHOR_DATE_OFFSET_DEFAULT))
             .distinctUntilChanged()
 
-    override fun pushAnchorDateOffset(anchorDateOffset: Long?): Completable {
+    fun pushAnchorDateOffset(anchorDateOffset: Long?): Completable {
         anchorDateOffset
             ?.also { editor.putString(Key.ANCHOR_DATE_OFFSET.name, it.toString()) }
             ?: editor.remove(Key.ANCHOR_DATE_OFFSET.name)
@@ -96,12 +96,12 @@ class SharedPrefWrapper @Inject constructor(
     // # BlockSize
 
     private val blockSizePublisher = PublishSubject.create<Long>()
-    override val blockSize: Observable<Long> =
+    val blockSize: Observable<Long> =
         blockSizePublisher
             .startWithItem(sharedPreferences.getLong(Key.BLOCK_SIZE.name, BLOCK_SIZE_DEFAULT))
             .distinctUntilChanged()
 
-    override fun pushBlockSize(blockSize: Long?): Completable {
+    fun pushBlockSize(blockSize: Long?): Completable {
         blockSize
             ?.also { editor.putLong(Key.BLOCK_SIZE.name, it) }
             ?: editor.remove(Key.BLOCK_SIZE.name)
@@ -113,10 +113,10 @@ class SharedPrefWrapper @Inject constructor(
 
     // # AppInitBool
 
-    override fun fetchAppInitBool(): Boolean =
+    fun fetchAppInitBool(): Boolean =
         sharedPreferences.getBoolean(Key.APP_INIT_BOOL.name, false)
 
-    override fun pushAppInitBool(boolean: Boolean): Completable {
+    fun pushAppInitBool(boolean: Boolean): Completable {
         editor.putBoolean(Key.APP_INIT_BOOL.name, boolean)
         return Completable.fromAction { editor.commit() }
     }

@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.layer_data
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.tminus1010.budgetvalue.AppMock
-import com.tminus1010.budgetvalue.transactions.TransactionDTO
+import com.tminus1010.budgetvalue.transactions.models.TransactionDTO
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test

@@ -5,29 +5,33 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.ui.NavigationUI
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.dependency_injection.ViewModelProviders
-import com.tminus1010.budgetvalue._core.dependency_injection.injection_extensions.appComponent
-import com.tminus1010.budgetvalue._core.dependency_injection.injection_extensions.flavorIntersection
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
-import com.tminus1010.budgetvalue._layer_facades.IViewModels
+import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.extensions.add
+import com.tminus1010.budgetvalue.transactions.TransactionsVM
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class HostActivity : AppCompatActivity(), IViewModels {
-    override val viewModelProviders by lazy { ViewModelProviders(this, appComponent) }
-    val binding by viewBinding(ActivityHostBinding::inflate)
+@AndroidEntryPoint
+class HostActivity : AppCompatActivity() {
+    @Inject lateinit var getExtraMenuItemPartialsUC: GetExtraMenuItemPartialsUC
+    val transactionsVM by viewModels<TransactionsVM>()
+    val categoriesVM by viewModels<CategoriesVM>()
+    val vb by viewBinding(ActivityHostBinding::inflate)
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.frag_nav_host) as HostFrag }
-    val menuItemPartials by lazy { flavorIntersection.getExtraMenuItemPartials(this) }
+    val menuItemPartials by lazy { getExtraMenuItemPartialsUC(this) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+        setContentView(vb.root)
         // # Bind bottom menu to navigation.
         // In order for NavigationUI.setupWithNavController to work, the ids in R.menu.* must exactly match R.navigation.*
-        NavigationUI.setupWithNavController(binding.bottomNavigation, hostFrag.navController)
+        NavigationUI.setupWithNavController(vb.bottomNavigation, hostFrag.navController)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {

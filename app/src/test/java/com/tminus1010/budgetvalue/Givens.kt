@@ -2,13 +2,12 @@ package com.tminus1010.budgetvalue
 
 import com.tminus1010.budgetvalue.extensions.toObservable
 import com.tminus1010.budgetvalue._core.middleware.LocalDatePeriod
-import com.tminus1010.budgetvalue._core.shared_features.app_init.AppInitializer
+import com.tminus1010.budgetvalue._core.shared_features.app_init.AppInitDomain
 import com.tminus1010.budgetvalue.categories.CategoriesVM
-import com.tminus1010.budgetvalue.categories.IUserCategoriesFetch
 import com.tminus1010.budgetvalue.categories.Category
-import com.tminus1010.budgetvalue.plans.Plan
-import com.tminus1010.budgetvalue.reconciliations.Reconciliation
-import com.tminus1010.budgetvalue.transactions.Block
+import com.tminus1010.budgetvalue.plans.models.Plan
+import com.tminus1010.budgetvalue.reconciliations.models.Reconciliation
+import com.tminus1010.budgetvalue.transactions.models.TransactionsBlock
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
@@ -19,7 +18,7 @@ import java.time.Period
 
 object Givens {
     private val givenUserCategories1: Observable<List<Category>> =
-        Observable.just(AppInitializer.initCategories)
+        Observable.just(AppInitDomain.initCategories)
     val givenCategories = CategoriesVM(object : IUserCategoriesFetch {
         override fun fetchUserCategories(): Observable<List<Category>> = givenUserCategories1
     }).categories
@@ -50,12 +49,12 @@ object Givens {
         )
     )
     val givenReconciliations = listOf(givenReconciliation1, givenReconciliation2).toObservable()
-    val givenTransactionBlock1 = Block(
+    val givenTransactionBlock1 = TransactionsBlock(
         datePeriod = LocalDatePeriod(LocalDate.now().plus(Period.ofWeeks(2)), Period.ofWeeks(2)),
         amount = (-110).toBigDecimal(),
         categoryAmounts = emptyMap()
     )
-    val givenTransactionBlock2 = Block(
+    val givenTransactionBlock2 = TransactionsBlock(
         datePeriod = LocalDatePeriod(LocalDate.now().plus(Period.ofWeeks(2)), Period.ofWeeks(2)),
         amount = (-16).toBigDecimal(),
         categoryAmounts = mapOf(

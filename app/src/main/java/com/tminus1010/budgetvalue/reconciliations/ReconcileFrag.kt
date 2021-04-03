@@ -6,10 +6,9 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.jakewharton.rxbinding4.view.clicks
 import com.tminus1010.budgetvalue.*
-import com.tminus1010.budgetvalue._core.dependency_injection.ViewModelProviders
-import com.tminus1010.budgetvalue._core.dependency_injection.injection_extensions.appComponent
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.reflectXY
 import com.tminus1010.budgetvalue._core.middleware.toMoneyBigDecimal
@@ -17,23 +16,38 @@ import com.tminus1010.budgetvalue._core.middleware.ui.bindIncoming
 import com.tminus1010.budgetvalue._core.middleware.ui.bindOutgoing
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
-import com.tminus1010.budgetvalue._layer_facades.IViewModels
+import com.tminus1010.budgetvalue.accounts.AccountsVM
+import com.tminus1010.budgetvalue.budgeted.BudgetedVM
+import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.databinding.FragReconcileBinding
 import com.tminus1010.budgetvalue.databinding.TableviewHeaderIncomeBinding
 import com.tminus1010.budgetvalue.categories.Category
+import com.tminus1010.budgetvalue.plans.ActivePlanVM
+import com.tminus1010.budgetvalue.transactions.TransactionsVM
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
-class ReconcileFrag : Fragment(R.layout.frag_reconcile), IViewModels {
+@AndroidEntryPoint
+class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
+    val activeReconciliationVM2 by activityViewModels<ActiveReconciliationVM2>()
+    val activeReconciliationVM by activityViewModels<ActiveReconciliationVM>()
+    val categoriesVM by activityViewModels<CategoriesVM>()
+    val activePlanVM by activityViewModels<ActivePlanVM>()
+    val transactionsVM by activityViewModels<TransactionsVM>()
+    val accountsVM by activityViewModels<AccountsVM>()
+    val budgetedVM by activityViewModels<BudgetedVM>()
     val vb by viewBinding(FragReconcileBinding::bind)
-    override val viewModelProviders by lazy { ViewModelProviders(requireActivity(), appComponent) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // # Init VMs
+        // Hilt requires that VM initializations are on main thread.
+        activeReconciliationVM2
         // # Clicks
         vb.btnSave.clicks().observe(viewLifecycleOwner) {
             activeReconciliationVM2.intentSaveReconciliation.onNext(Unit)

@@ -1,6 +1,8 @@
 package com.tminus1010.budgetvalue.transactions
 
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
+import com.tminus1010.budgetvalue.transactions.models.Transaction
+import com.tminus1010.budgetvalue.transactions.models.TransactionDTO
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader

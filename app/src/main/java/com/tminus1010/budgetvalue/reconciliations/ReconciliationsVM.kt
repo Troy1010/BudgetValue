@@ -2,13 +2,17 @@ package com.tminus1010.budgetvalue.reconciliations
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.extensions.launch
-import com.tminus1010.budgetvalue._layer_facades.DomainFacade
+import com.tminus1010.budgetvalue.reconciliations.domain.ReconciliationDomain
+import com.tminus1010.budgetvalue.reconciliations.models.Reconciliation
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.PublishSubject
+import javax.inject.Inject
 
-class ReconciliationsVM(
-    domainFacade: DomainFacade
+@HiltViewModel
+class ReconciliationsVM @Inject constructor(
+    reconciliationDomain: ReconciliationDomain
 ) : ViewModel() {
-    val reconciliations = domainFacade.reconciliations
+    val reconciliations = reconciliationDomain.reconciliations
     val intentDeleteReconciliation = PublishSubject.create<Reconciliation>()
-        .apply { launch { domainFacade.delete(it) } }
+        .apply { launch { reconciliationDomain.delete(it) } }
 }
