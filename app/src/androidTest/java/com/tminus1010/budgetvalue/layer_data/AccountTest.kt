@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.layer_data
 
 import androidx.test.platform.app.InstrumentationRegistry
 import com.tminus1010.budgetvalue.AppMock
-import com.tminus1010.budgetvalue.features.accounts.AccountDTO
+import com.tminus1010.budgetvalue.accounts.AccountDTO
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.junit.Assert.assertEquals
 import org.junit.Before

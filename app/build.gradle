@@ -38,17 +38,19 @@ android {
         }
     }
 
-    flavorDimensions "devEnvs"
+    flavorDimensions "development_production"
     productFlavors {
-        real {
-            dimension "devEnvs"
-            applicationIdSuffix ".real"
-            versionNameSuffix "-real"
+        // # Production flavor
+        production {
+            dimension "development_production"
+            applicationIdSuffix ".production"
+            versionNameSuffix "-production"
         }
-        devEnv1 {
-            dimension "devEnvs"
-            applicationIdSuffix ".devEnv1"
-            versionNameSuffix "-devEnv1"
+        // # Development flavor has DevEnvs.
+        development {
+            dimension "development_production"
+            applicationIdSuffix ".development"
+            versionNameSuffix "-development"
         }
     }
 
