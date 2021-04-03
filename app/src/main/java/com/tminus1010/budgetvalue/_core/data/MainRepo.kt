@@ -17,21 +17,16 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Whenever you need a layer to be scoped for injection, you can either use
- * UseCases or Facade+Contracts.
- *
- * Here is an example of Facade+Contracts.
- *
- * I also am doing the DTO <-> DomainModel mapping here, b/c, why not.
+ * DTO <-> DomainModel mapping happens here, b/c, why not.
  */
 @Singleton
-class RepoFacade @Inject constructor(
+class MainRepo @Inject constructor(
     private val sharedPrefWrapper: SharedPrefWrapper,
     private val miscDAO: MiscDAO,
     private val categoryAmountsConverter: CategoryAmountsConverter,
     private val categoryParser: ICategoryParser,
     private val categoriesRepo: CategoriesRepo
-) : IRepoFacade, ICategoriesRepo by categoriesRepo {
+) : IMainRepo, ICategoriesRepo by categoriesRepo {
     override fun fetchAccounts(): Observable<List<Account>> =
         miscDAO.fetchAccounts().map { it.map { Account.fromDTO(it) } }
 

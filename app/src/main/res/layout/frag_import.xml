@@ -8,6 +8,7 @@
         android:id="@+id/btn_add_account"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
         android:text="Add Account"
         app:layout_constraintBottom_toBottomOf="parent" />
 
@@ -15,6 +16,7 @@
         android:id="@+id/btn_import"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
         android:text="Import"
         app:layout_constraintBottom_toTopOf="@id/btn_add_account" />
 

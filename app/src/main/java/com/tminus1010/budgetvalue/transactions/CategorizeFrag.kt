@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.middleware.ui.GenViewHolder2
 import com.tminus1010.budgetvalue._core.middleware.ui.bindIncoming
@@ -23,7 +24,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
-class CategorizeTransactionsFrag : Fragment(R.layout.frag_categorize) {
+class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     val categorizeTransactionsVM by activityViewModels<CategorizeTransactionsVM>()
     val categoriesVM by activityViewModels<CategoriesVM>()
     val transactionsVM by activityViewModels<TransactionsVM>()
@@ -31,6 +32,7 @@ class CategorizeTransactionsFrag : Fragment(R.layout.frag_categorize) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # RecyclerView
+        vb.recyclerviewCategories.addItemDecoration(LayoutMarginDecoration(3, 15))
         vb.recyclerviewCategories.layoutManager =
             GridLayoutManager(requireActivity(), 3, GridLayoutManager.VERTICAL, true)
         vb.recyclerviewCategories.adapter = object : RecyclerView.Adapter<GenViewHolder2<ItemCategoryBtnBinding>>() {

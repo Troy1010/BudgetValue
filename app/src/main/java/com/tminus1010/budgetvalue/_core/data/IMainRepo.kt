@@ -8,7 +8,7 @@ import com.tminus1010.budgetvalue.plans.data.IPlansRepo
 import com.tminus1010.budgetvalue.reconciliations.data.IReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
 
-interface IRepoFacade :
+interface IMainRepo :
     IAccountsRepo,
     IAppInitRepo,
     ICategoriesRepo,
