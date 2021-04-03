@@ -1,14 +1,12 @@
 package com.tminus1010.budgetvalue._core.dependency_injection
 
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import com.tminus1010.budgetvalue._core.App
 import com.tminus1010.budgetvalue._core.SHARED_PREF_FILE_NAME
-import com.tminus1010.budgetvalue._core.data.UserCategoriesDAO
 import com.tminus1010.budgetvalue._core.data.DB
 import com.tminus1010.budgetvalue._core.data.MiscDAO
-import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
-import com.tminus1010.budgetvalue.categories.ICategoryParser
+import com.tminus1010.budgetvalue._core.data.UserCategoriesDAO
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,17 +18,11 @@ import javax.inject.Singleton
 object RepoModule {
     @Provides
     @Singleton
-    // TODO("This can be a bind")
-    fun providesCategoryParser(categoriesDomain: CategoriesDomain): ICategoryParser = categoriesDomain
-
-    @Provides
-    @Singleton
-    fun providesSharedPreferences(app: App): SharedPreferences {
-        return app.getSharedPreferences(
+    fun providesSharedPreferences(application: Application): SharedPreferences =
+        application.getSharedPreferences(
             SHARED_PREF_FILE_NAME,
             Context.MODE_PRIVATE
         )
-    }
 
     @Provides
     @Singleton
@@ -38,5 +30,5 @@ object RepoModule {
 
     @Provides
     @Singleton
-    fun providesActiveCategoryDAO(roomDatabase: DB): UserCategoriesDAO = roomDatabase.activeCategoryDAO()
+    fun providesActiveCategoryDAO(roomDatabase: DB): UserCategoriesDAO = roomDatabase.userCategoriesDAO()
 }

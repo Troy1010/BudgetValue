@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tminus1010.budgetvalue">
-
-    <application>
-        <activity android:name="._core.ui.MockImportSelectionActivity"/>
-    </application>
-
-</manifest>
