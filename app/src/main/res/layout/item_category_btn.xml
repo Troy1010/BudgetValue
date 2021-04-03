@@ -7,4 +7,4 @@
     android:textAllCaps="false"
     android:autoSizeTextType="uniform"
     android:autoSizeMaxTextSize="22sp"
-    tools:text="(CATEGORY)" />
+    tools:text="Category" />
