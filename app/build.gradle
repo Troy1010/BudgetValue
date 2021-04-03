@@ -66,11 +66,6 @@ android {
     buildFeatures {
         viewBinding = true
     }
-
-    lintOptions {
-        // Please do not warn about using +
-        disable 'GradleDynamicVersion'
-    }
 }
 
 // Without this, there is a warning that -Xopt-in=kotlin.RequiresOptIn is required
