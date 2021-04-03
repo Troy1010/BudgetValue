@@ -11,7 +11,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class FlavorContractModule {
+abstract class UCModule {
     @Binds
     abstract fun getUserCategoriesUseCases(launchImportUC: LaunchImportUC): ILaunchImportUC
 
