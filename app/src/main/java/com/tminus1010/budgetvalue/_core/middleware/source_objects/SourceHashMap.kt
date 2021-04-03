@@ -51,6 +51,7 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue
         .map { _itemObservableMap }
         .startWithItem(_itemObservableMap)
         .map { it.toMap() }
+        .retry(100) // avoids Concurrent Modification problems
         .toBehaviorSubject()
 
     val allEdits =
