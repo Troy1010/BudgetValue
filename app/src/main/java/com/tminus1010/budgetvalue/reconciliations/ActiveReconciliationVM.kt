@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue.extensions.launch
 import com.tminus1010.budgetvalue.categories.CategoriesVM
-import com.tminus1010.budgetvalue._layer_facades.Domain
+import com.tminus1010.budgetvalue._layer_facades.DomainFacade
 import com.tminus1010.budgetvalue.categories.Category
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
@@ -13,13 +13,13 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 
 class ActiveReconciliationVM(
-    private val domain: Domain,
+    private val domainFacade: DomainFacade,
     categoriesVM: CategoriesVM,
 ) : ViewModel() {
     val intentPushActiveReconcileCA: PublishSubject<Pair<Category, BigDecimal>> = PublishSubject.create<Pair<Category, BigDecimal>>()
-        .also { it.launch { domain.pushActiveReconciliationCA(it) } }
+        .also { it.launch { domainFacade.pushActiveReconciliationCA(it) } }
     val activeReconcileCAs =
-        Rx.combineLatest(domain.activeReconciliationCAs, categoriesVM.userCategories)
+        Rx.combineLatest(domainFacade.activeReconciliationCAs, categoriesVM.userCategories)
             .map { (activeReconcileCAs, activeCategories) ->
                 activeCategories.associateWith { BigDecimal.ZERO } + activeReconcileCAs
             }

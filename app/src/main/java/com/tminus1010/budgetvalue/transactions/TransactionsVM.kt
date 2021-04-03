@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.transactions
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue._layer_facades.Domain
+import com.tminus1010.budgetvalue._layer_facades.DomainFacade
 import com.tminus1010.budgetvalue.categories.Category
 import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import java.io.InputStream
@@ -9,9 +9,9 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 class TransactionsVM(
-    private val domain: Domain,
+    private val domainFacade: DomainFacade,
 ) : ViewModel() {
-    val transactions = domain.transactions
+    val transactions = domainFacade.transactions
     val transactionBlocks = transactions
         .map(::getBlocksFromTransactions)
     val spends = transactions
@@ -19,7 +19,7 @@ class TransactionsVM(
     val currentSpendBlockCAs = spends
         .map {
             it
-                .filter { it.date in domain.getDatePeriod(LocalDate.now()) }
+                .filter { it.date in domainFacade.getDatePeriod(LocalDate.now()) }
                 .map { it.categoryAmounts }
                 .fold(mapOf<Category, BigDecimal>()) { acc, v ->
                     mutableSetOf<Category>().apply { addAll(acc.keys); addAll(v.keys) }
@@ -31,13 +31,13 @@ class TransactionsVM(
     val uncategorizedSpendsSize = uncategorizedSpends
         .map { it.size.toString() }
     fun importTransactions(inputStream: InputStream) {
-        domain.tryPush(domain.parseToTransactions(inputStream)).launch()
+        domainFacade.tryPush(domainFacade.parseToTransactions(inputStream)).launch()
     }
     fun getBlocksFromTransactions(transactions: List<Transaction>): List<Block> {
         val transactionsRedefined = transactions.sortedBy { it.date }.toMutableList()
         val returning = ArrayList<Block>()
         if (0 !in transactionsRedefined.indices) return returning
-        var datePeriod = domain.getDatePeriod(transactionsRedefined[0].date)
+        var datePeriod = domainFacade.getDatePeriod(transactionsRedefined[0].date)
         while (datePeriod.startDate <= transactionsRedefined.last().date) {
             val transactionSet = transactionsRedefined
                 .filter { it.date in datePeriod }
@@ -50,7 +50,7 @@ class TransactionsVM(
                     }
                     .let { Block(datePeriod, it.first, it.second) }
             if (transactionsRedefined.isEmpty()) break
-            datePeriod = domain.getDatePeriod(transactionsRedefined[0].date)
+            datePeriod = domainFacade.getDatePeriod(transactionsRedefined[0].date)
         }
         return returning
     }

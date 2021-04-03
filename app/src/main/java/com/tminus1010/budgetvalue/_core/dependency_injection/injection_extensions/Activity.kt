@@ -17,4 +17,4 @@ val AppCompatActivity.domain
     get() = appComponent.getDomain()
 
 val AppCompatActivity.flavorIntersection
-    get() = appComponent.getFlavorIntersection()
+    get() = appComponent.getFlavorFacade()

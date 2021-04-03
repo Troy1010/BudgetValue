@@ -3,7 +3,7 @@
     package="com.tminus1010.budgetvalue">
 
     <application>
-        <activity android:name=".MockImportSelectionActivity"/>
+        <activity android:name="._core.ui.MockImportSelectionActivity"/>
     </application>
 
 </manifest>
