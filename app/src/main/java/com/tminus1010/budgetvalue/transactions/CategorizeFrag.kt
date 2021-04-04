@@ -19,12 +19,12 @@ import com.tminus1010.budgetvalue._core.middleware.unbox
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
-import com.tminus1010.tmcommonkotlin.misc.logx
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import java.time.format.DateTimeFormatter
+
 
 @AndroidEntryPoint
 class CategorizeFrag : Fragment(R.layout.frag_categorize) {
@@ -34,7 +34,10 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     val vb by viewBinding(FragCategorizeBinding::bind)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // # Selection alpha
+        // # Selection mode
+        vb.root.setOnClickListener {
+            if (categoriesVM.inSelectionMode.value) categoriesVM.clearSelection()
+        }
         categoriesVM.inSelectionMode.observe(viewLifecycleOwner) { inSelectionMode ->
             vb.root.children
                 .filter { it != vb.recyclerviewCategories }
@@ -49,27 +52,30 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 ItemCategoryBtnBinding.inflate(LayoutInflater.from(requireContext()), parent, false)
                     .let { GenViewHolder2(it) }
 
-            override fun onBindViewHolder(holder: GenViewHolder2<ItemCategoryBtnBinding>, position: Int) {
+            override fun onBindViewHolder(
+                holder: GenViewHolder2<ItemCategoryBtnBinding>,
+                position: Int
+            ) {
                 val category = categoriesVM.userCategories.value[position]
+                val selectionModeAction = {
+                    categoriesVM.selectCategory(
+                        addRemType = if (category !in categoriesVM.selectedCategories.value)
+                            AddRemType.ADD else AddRemType.REMOVE,
+                        category = category
+                    )
+                }
+                categoriesVM.selectedCategories.observe(viewLifecycleOwner) { selectedCategories ->
+                    holder.vb.btnCategory.alpha =
+                        if (selectedCategories.isEmpty() || category in selectedCategories) 1F
+                        else 0.5F
+                }
                 holder.vb.btnCategory.apply {
                     text = category.name
-                    val selectionModeAction = {
-                        categoriesVM.selectCategory(
-                            addRemType = if (category !in categoriesVM.selectedCategories.value)
-                                AddRemType.ADD else AddRemType.REMOVE,
-                            category = category
-                        )
-                    }
                     setOnClickListener {
                         if (categoriesVM.inSelectionMode.value) selectionModeAction()
                         else categorizeTransactionsVM.finishTransactionWithCategory(category)
                     }
                     setOnLongClickListener { selectionModeAction(); true }
-                    categoriesVM.selectedCategories.observe(viewLifecycleOwner) { selectedCategories ->
-                        holder.vb.btnCategory.alpha =
-                            if (selectedCategories.isEmpty() || category in selectedCategories) 1F
-                            else 0.5F
-                    }
                 }
             }
 
