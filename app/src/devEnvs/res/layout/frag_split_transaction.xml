@@ -5,74 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textview_amount_left"
-        style="@style/AppTheme.StandardTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textColor="@color/colorOnDark"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.25"
-        tools:text="25" />
-
-    <TextView
-        android:id="@+id/textview_amount_left_title"
-        style="@style/AppTheme.StandardTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Left"
-        android:textColor="@color/colorOnDark"
-        app:layout_constraintEnd_toEndOf="@id/textview_amount_left"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_amount_left" />
-
-    <TextView
-        android:id="@+id/textview_date"
-        style="@style/AppTheme.StandardTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorOnDark"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/textview_amount_left"
-        app:layout_constraintTop_toTopOf="@id/textview_amount_left"
-        tools:text="DATE" />
-
-    <TextView
-        android:id="@+id/textview_amount"
-        style="@style/AppTheme.StandardTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorOnDark"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/textview_amount_left"
-        app:layout_constraintTop_toBottomOf="@id/textview_date"
-        tools:text="AMOUNT" />
-
-    <TextView
-        android:id="@+id/textview_description"
-        style="@style/AppTheme.StandardTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorOnDark"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/textview_amount_left"
-        app:layout_constraintTop_toBottomOf="@id/textview_amount"
-        tools:text="DESCRIPTION" />
-
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/barrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="textview_description,textview_amount_left_title" />
-
     <com.tminus1010.budgetvalue._core.middleware.ui.tmTableView2.TMTableView2
         android:id="@+id/tmTableView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/barrier"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
