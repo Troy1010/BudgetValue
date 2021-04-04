@@ -30,8 +30,11 @@ class CategoriesVM @Inject constructor(
                 AddRemType.REMOVE -> acc.minus(category)
             }
         }.toBehaviorSubject()
+    val inSelectionMode : BehaviorSubject<Boolean> = selectedCategories
+        .map { it.isNotEmpty() }
+        .toBehaviorSubject()
 
-    // # Intents
+    // # User Intents
     fun selectCategory(addRemType: AddRemType, category: Category) {
         intentSelectCategoryBus.onNext(Pair(addRemType, category))
     }

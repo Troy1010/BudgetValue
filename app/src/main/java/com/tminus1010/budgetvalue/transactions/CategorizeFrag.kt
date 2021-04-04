@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -18,6 +19,7 @@ import com.tminus1010.budgetvalue._core.middleware.unbox
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
+import com.tminus1010.tmcommonkotlin.misc.logx
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,6 +34,12 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     val vb by viewBinding(FragCategorizeBinding::bind)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // # Selection alpha
+        categoriesVM.inSelectionMode.observe(viewLifecycleOwner) { inSelectionMode ->
+            vb.root.children
+                .filter { it != vb.recyclerviewCategories }
+                .forEach { it.alpha = if (inSelectionMode) 0.5F else 1F }
+        }
         // # RecyclerView
         vb.recyclerviewCategories.addItemDecoration(LayoutMarginDecoration(3, 15))
         vb.recyclerviewCategories.layoutManager =
@@ -45,14 +53,22 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 val category = categoriesVM.userCategories.value[position]
                 holder.vb.btnCategory.apply {
                     text = category.name
-                    setOnClickListener { categorizeTransactionsVM.finishTransactionWithCategory(category) }
-                    setOnLongClickListener {
+                    val selectionModeAction = {
                         categoriesVM.selectCategory(
                             addRemType = if (category !in categoriesVM.selectedCategories.value)
                                 AddRemType.ADD else AddRemType.REMOVE,
                             category = category
                         )
-                        true
+                    }
+                    setOnClickListener {
+                        if (categoriesVM.inSelectionMode.value) selectionModeAction()
+                        else categorizeTransactionsVM.finishTransactionWithCategory(category)
+                    }
+                    setOnLongClickListener { selectionModeAction(); true }
+                    categoriesVM.selectedCategories.observe(viewLifecycleOwner) { selectedCategories ->
+                        holder.vb.btnCategory.alpha =
+                            if (selectedCategories.isEmpty() || category in selectedCategories) 1F
+                            else 0.5F
                     }
                 }
             }
