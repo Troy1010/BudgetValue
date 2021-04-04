@@ -28,7 +28,7 @@ class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization)
         vb.btnDone.setOnClickListener { nav.navigateUp() }
         // # TMTableView
         val factory1 = ViewItemRecipeFactory(
-            { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
+            { View.inflate(context, R.layout.item_text_view, null) as TextView },
             { v: TextView, d: Category -> v.text = d.name }
         )
         val factory2 = ViewItemRecipeFactory(
@@ -40,7 +40,7 @@ class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization)
             }
         )
         val titledDividerRecipeFactory = ViewItemRecipeFactory<TextView, String>(
-            { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
+            { View.inflate(context, R.layout.item_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
         categoriesVM.userCategories
