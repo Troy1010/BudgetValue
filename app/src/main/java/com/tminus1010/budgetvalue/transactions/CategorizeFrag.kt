@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
@@ -17,6 +18,7 @@ import com.tminus1010.budgetvalue._core.middleware.ui.bindIncoming
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._core.middleware.unbox
 import com.tminus1010.budgetvalue.categories.CategoriesVM
+import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -31,14 +33,15 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     val categorizeTransactionsVM by activityViewModels<CategorizeTransactionsVM>()
     val categoriesVM by activityViewModels<CategoriesVM>()
     val transactionsVM by activityViewModels<TransactionsVM>()
+    val categorySelectionVM: CategorySelectionVM by viewModels()
     val vb by viewBinding(FragCategorizeBinding::bind)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Selection mode
         vb.root.setOnClickListener {
-            if (categoriesVM.inSelectionMode.value) categoriesVM.clearSelection()
+            if (categorySelectionVM.inSelectionMode.value) categorySelectionVM.clearSelection()
         }
-        categoriesVM.inSelectionMode.observe(viewLifecycleOwner) { inSelectionMode ->
+        categorySelectionVM.inSelectionMode.observe(viewLifecycleOwner) { inSelectionMode ->
             vb.root.children
                 .filter { it != vb.recyclerviewCategories }
                 .forEach { it.alpha = if (inSelectionMode) 0.5F else 1F }
@@ -58,13 +61,13 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
             ) {
                 val category = categoriesVM.userCategories.value[position]
                 val selectionModeAction = {
-                    categoriesVM.selectCategory(
-                        addRemType = if (category !in categoriesVM.selectedCategories.value)
+                    categorySelectionVM.selectCategory(
+                        addRemType = if (category !in categorySelectionVM.selectedCategories.value)
                             AddRemType.ADD else AddRemType.REMOVE,
                         category = category
                     )
                 }
-                categoriesVM.selectedCategories.observe(viewLifecycleOwner) { selectedCategories ->
+                categorySelectionVM.selectedCategories.observe(viewLifecycleOwner) { selectedCategories ->
                     holder.vb.btnCategory.alpha =
                         if (selectedCategories.isEmpty() || category in selectedCategories) 1F
                         else 0.5F
@@ -72,7 +75,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 holder.vb.btnCategory.apply {
                     text = category.name
                     setOnClickListener {
-                        if (categoriesVM.inSelectionMode.value) selectionModeAction()
+                        if (categorySelectionVM.inSelectionMode.value) selectionModeAction()
                         else categorizeTransactionsVM.finishTransactionWithCategory(category)
                     }
                     setOnLongClickListener { selectionModeAction(); true }
