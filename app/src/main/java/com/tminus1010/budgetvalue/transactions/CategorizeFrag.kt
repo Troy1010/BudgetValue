@@ -85,9 +85,14 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
             override fun getItemCount() = categoriesVM.userCategories.value.size
         }
         // # Clicks
-        vb.btnAdvanced.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_advancedCategorizeFrag) }
-        vb.btnDeleteCategory.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_categoryCustomizationFrag) }
-        vb.btnNewCategory.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) }
+        categorySelectionVM.inSelectionMode.observe(viewLifecycleOwner) {
+            if (it) vb.btnAdvanced.setOnClickListener { categorySelectionVM.clearSelection() }
+            else vb.btnAdvanced.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_advancedCategorizeFrag) }
+            if (it) vb.btnDeleteCategory.setOnClickListener { categorySelectionVM.clearSelection() }
+            else vb.btnDeleteCategory.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_categoryCustomizationFrag) }
+            if (it) vb.btnNewCategory.setOnClickListener { categorySelectionVM.clearSelection() }
+            else vb.btnNewCategory.setOnClickListener { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) }
+        }
         //
         vb.textviewDate.bindIncoming(categorizeTransactionsVM.transactionBox)
         { it.unbox?.date?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")) ?: "" }
