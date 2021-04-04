@@ -17,7 +17,9 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
     transactionsRepo: ITransactionsRepo,
     categorizeTransactionsDomain: CategorizeTransactionsDomain,
 ) : ViewModel() {
+    // # User Intent Buses
     val intentRememberCA = PublishSubject.create<Pair<Category, BigDecimal>>()
+    // # Databindable State
     val transactionToPush = categorizeTransactionsDomain.transactionBox
         .unbox()
         .switchMap {
@@ -27,13 +29,21 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
                 }
         }
         .toBehaviorSubject()
+    val defaultAmount = transactionToPush
+        .map { it.defaultAmount }
+        .toBehaviorSubject()
+    // # User Intent Buses
     val intentPushActiveCategories = PublishSubject.create<Unit>()
         .also {
             it
                 .withLatestFrom(transactionToPush) { _, b -> b }
                 .launch { transactionsRepo.pushTransactionCAs(it, it.categoryAmounts) }
         }
-    val defaultAmount = transactionToPush
-        .map { it.defaultAmount }
-        .toBehaviorSubject()
+    // # User Intents
+    fun rememberCA(category: Category, amount: BigDecimal) {
+        intentRememberCA.onNext(Pair(category, amount))
+    }
+    fun pushRememberedCategories() {
+        intentPushActiveCategories.onNext(Unit)
+    }
 }

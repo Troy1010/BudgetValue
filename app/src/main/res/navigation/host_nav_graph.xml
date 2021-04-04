@@ -27,6 +27,9 @@
             android:id="@+id/action_categorizeFrag_to_newCategoryFrag"
             app:destination="@id/newCategoryFrag"
             app:popUpTo="@id/categorizeFrag" />
+        <action
+            android:id="@+id/action_categorizeFrag_to_splitTransactionFrag"
+            app:destination="@id/splitTransactionFrag" />
     </fragment>
     <fragment
         android:id="@+id/importFrag"
@@ -67,4 +70,8 @@
             android:id="@+id/action_errorFrag_to_importFrag"
             app:destination="@id/importFrag" />
     </fragment>
+    <fragment
+        android:id="@+id/splitTransactionFrag"
+        android:name="com.tminus1010.budgetvalue.transactions.SplitTransactionFrag"
+        android:label="SplitTransactionFrag" />
 </navigation>

@@ -69,54 +69,10 @@
         app:barrierDirection="bottom"
         app:constraint_referenced_ids="textview_description,textview_amount_left_title" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview_categories"
+    <com.tminus1010.budgetvalue._core.middleware.ui.tmTableView2.TMTableView2
+        android:id="@+id/tmTableView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/lower_guideline"
         app:layout_constraintTop_toBottomOf="@id/barrier"
-        tools:layoutManager="GridLayoutManager"
-        tools:listitem="@layout/item_category_btn"
-        tools:spanCount="3" />
-
-    <Button
-        android:id="@+id/btn_new_category"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:text="Make New Category"
-        app:layout_constraintBottom_toTopOf="@id/btn_delete_category" />
-
-    <Button
-        android:id="@+id/btn_delete_category"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:text="Delete Category"
-        app:layout_constraintBottom_toTopOf="@id/btn_advanced" />
-
-    <Button
-        android:id="@+id/btn_advanced"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:text="Advanced"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/lower_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.8"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@color/colorBackground"
-        app:layout_constraintTop_toTopOf="@id/lower_guideline"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:layoutManager="LinearLayoutManager"
-        tools:listitem="@layout/item_button" />
+        app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
