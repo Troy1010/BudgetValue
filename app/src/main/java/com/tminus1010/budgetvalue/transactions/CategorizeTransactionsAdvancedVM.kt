@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategorizeTransactionsAdvancedVM @Inject constructor(
-    transactionsRepo: ITransactionsRepo, // TODO("Use a Domain")
+    transactionsRepo: ITransactionsRepo,
     categorizeTransactionsDomain: CategorizeTransactionsDomain,
 ) : ViewModel() {
     val intentRememberCA = PublishSubject.create<Pair<Category, BigDecimal>>()
