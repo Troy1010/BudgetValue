@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue._core.middleware.AddRemType
 import com.tminus1010.budgetvalue._core.middleware.ui.GenViewHolder2
 import com.tminus1010.budgetvalue._core.middleware.ui.bindIncoming
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
@@ -41,9 +42,18 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     .let { GenViewHolder2(it) }
 
             override fun onBindViewHolder(holder: GenViewHolder2<ItemCategoryBtnBinding>, position: Int) {
+                val category = categoriesVM.userCategories.value[position]
                 holder.vb.btnCategory.apply {
-                    text = categoriesVM.userCategories.value[holder.adapterPosition].name
-                    setOnClickListener { categorizeTransactionsVM.finishTransactionWithCategory(categoriesVM.userCategories.value[holder.adapterPosition]) }
+                    text = category.name
+                    setOnClickListener { categorizeTransactionsVM.finishTransactionWithCategory(category) }
+                    setOnLongClickListener {
+                        categoriesVM.selectCategory(
+                            addRemType = if (category !in categoriesVM.selectedCategories.value)
+                                AddRemType.ADD else AddRemType.REMOVE,
+                            category = category
+                        )
+                        true
+                    }
                 }
             }
 

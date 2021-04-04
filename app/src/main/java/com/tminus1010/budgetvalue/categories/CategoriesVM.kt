@@ -19,19 +19,25 @@ class CategoriesVM @Inject constructor(
 ) : ViewModel(),
     ICategoriesDomain by categoriesDomain,
     ICategoriesDomain2 by categoriesDomain2 {
-    val intentSelectCategory = PublishSubject.create<Pair<AddRemType, Category>>()
-    private val selectedCategories : BehaviorSubject<Set<Category>> =
-        intentSelectCategory.scan(setOf<Category>()) { acc, (addRemType, category) ->
+    // # Buses
+    private val intentSelectCategoryBus = PublishSubject.create<Pair<AddRemType, Category>>()
+
+    // # Databinding Sources
+    val selectedCategories : BehaviorSubject<Set<Category>> =
+        intentSelectCategoryBus.scan(setOf<Category>()) { acc, (addRemType, category) ->
             when(addRemType) {
                 AddRemType.ADD -> acc.plus(category)
                 AddRemType.REMOVE -> acc.minus(category)
             }
         }.toBehaviorSubject()
-    val intentDeleteSelectedCategories = PublishSubject.create<Unit>()
-        .also {
-            it
-                .flatMap { selectedCategories.take(1) }
-                .doOnNext { it.map { intentDeleteCategoryFromActive.onNext(it) } }
-                .subscribe()
-        }
+
+    // # Intents
+    fun selectCategory(addRemType: AddRemType, category: Category) {
+        intentSelectCategoryBus.onNext(Pair(addRemType, category))
+    }
+    fun deleteSelectedCategories() {
+        selectedCategories.take(1)
+            .doOnNext { it.map { intentDeleteCategoryFromActive.onNext(it) } }
+            .subscribe()
+    }
 }
