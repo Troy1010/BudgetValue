@@ -139,6 +139,7 @@ object Rx {
     }
 
     fun merge(vararg completables: Completable) = Completable.merge(completables.toList())
+    fun merge(completables: List<Completable>): Completable = merge(*completables.toTypedArray())
 
     inline fun <reified A, reified B> merge(a: ObservableSource<A>, b: ObservableSource<B>): Observable<Pair<A?, B?>> {
         return Observable.merge(a, b)

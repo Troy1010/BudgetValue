@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.middleware.AddRemType
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
-import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain2
+import com.tminus1010.budgetvalue.categories.domain.DeleteCategoryFromActiveDomainUC
 import com.tminus1010.budgetvalue.categories.domain.ICategoriesDomain
-import com.tminus1010.budgetvalue.categories.domain.ICategoriesDomain2
+import com.tminus1010.tmcommonkotlin.misc.doLogx
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -16,10 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CategorySelectionVM @Inject constructor(
     categoriesDomain: CategoriesDomain,
-    categoriesDomain2: CategoriesDomain2
-) : ViewModel(),
-    ICategoriesDomain by categoriesDomain,
-    ICategoriesDomain2 by categoriesDomain2 {
+    private val deleteCategoryFromActiveDomainUC: DeleteCategoryFromActiveDomainUC
+) : ViewModel(), ICategoriesDomain by categoriesDomain {
     // # Buses
     private val intentSelectCategoryBus = PublishSubject.create<Pair<AddRemType, Category>>()
     private val intentClearSelectionBus = PublishSubject.create<Unit>()
@@ -36,7 +34,9 @@ class CategorySelectionVM @Inject constructor(
                     v2 != null -> emptySet()
                     else -> error("How did we get here?")
                 }
-            }.toBehaviorSubject()
+            }
+            .doLogx("aaa")
+            .toBehaviorSubject()
     val inSelectionMode : BehaviorSubject<Boolean> = selectedCategories
         .map { it.isNotEmpty() }
         .toBehaviorSubject()
@@ -50,7 +50,7 @@ class CategorySelectionVM @Inject constructor(
     }
     fun deleteSelectedCategories() {
         selectedCategories.take(1)
-            .doOnNext { it.map { intentDeleteCategoryFromActive.onNext(it) } }
+            .flatMapCompletable { Rx.merge(it.map { deleteCategoryFromActiveDomainUC(it) }) }
             .subscribe()
     }
 }
