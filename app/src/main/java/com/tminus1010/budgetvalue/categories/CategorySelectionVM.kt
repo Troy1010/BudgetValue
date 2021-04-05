@@ -35,7 +35,6 @@ class CategorySelectionVM @Inject constructor(
                     else -> error("How did we get here?")
                 }
             }
-            .doLogx("aaa")
             .toBehaviorSubject()
     val inSelectionMode : BehaviorSubject<Boolean> = selectedCategories
         .map { it.isNotEmpty() }
