@@ -42,12 +42,11 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     val vb by viewBinding(FragCategorizeBinding::bind)
 
     val selectionModeOffBtnSet = listOf(
-        ButtonPartial("Advanced") { nav.navigate(R.id.action_categorizeFrag_to_advancedCategorizeFrag) },
-        ButtonPartial("Make New Category") { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) }
+        ButtonPartial("Make New Category") { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) },
     )
     val selectionModeOnBtnSet = listOf(
         ButtonPartial("Delete") { categorySelectionVM.deleteSelectedCategories() },
-        ButtonPartial("Split") { nav.navigate(R.id.action_categorizeFrag_to_splitTransactionFrag) }
+        ButtonPartial("Split") { nav.navigate(R.id.action_categorizeFrag_to_splitTransactionFrag) },
     )
     var btns = emptyList<ButtonPartial>()
         set(value) { field = value; vb.recyclerviewButtons.adapter?.notifyDataSetChanged() }

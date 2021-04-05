@@ -21,6 +21,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
+// TODO("Delete")
 @AndroidEntryPoint
 class CategorizeAdvancedFrag : Fragment(R.layout.frag_advanced_categorize) {
     val categorizeTransactionsAdvancedVM by activityViewModels<CategorizeTransactionsAdvancedVM>()
