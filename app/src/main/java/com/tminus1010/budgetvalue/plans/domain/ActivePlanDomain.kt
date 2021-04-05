@@ -7,9 +7,9 @@ import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
 import com.tminus1010.budgetvalue.categories.Category
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
-import com.tminus1010.budgetvalue.extensions.flatMapSourceHashMap
-import com.tminus1010.budgetvalue.extensions.launch
-import com.tminus1010.budgetvalue.extensions.withLatestFrom2
+import com.tminus1010.budgetvalue._core.extensions.flatMapSourceHashMap
+import com.tminus1010.budgetvalue._core.extensions.launch
+import com.tminus1010.budgetvalue._core.extensions.withLatestFrom2
 import com.tminus1010.budgetvalue.plans.data.IPlansRepo
 import com.tminus1010.budgetvalue.plans.models.Plan
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject

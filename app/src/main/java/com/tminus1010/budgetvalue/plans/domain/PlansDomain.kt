@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.plans.domain
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.extensions.launch
+import com.tminus1010.budgetvalue._core.extensions.launch
 import com.tminus1010.budgetvalue.plans.data.IPlansRepo
 import com.tminus1010.budgetvalue.plans.models.Plan
 import io.reactivex.rxjava3.subjects.PublishSubject

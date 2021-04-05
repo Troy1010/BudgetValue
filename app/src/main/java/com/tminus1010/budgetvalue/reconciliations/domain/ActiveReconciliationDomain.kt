@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.reconciliations.domain
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
-import com.tminus1010.budgetvalue.extensions.flatMapSourceHashMap
+import com.tminus1010.budgetvalue._core.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue.reconciliations.data.IReconciliationsRepo
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import java.math.BigDecimal

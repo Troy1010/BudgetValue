@@ -1,5 +1,6 @@
 package com.tminus1010.budgetvalue.extensions
 
+import com.tminus1010.budgetvalue._core.extensions.toSourceHashMap
 import com.tminus1010.tmcommonkotlin.misc.extensions.toHashMap
 import org.junit.Assert.assertEquals
 import org.junit.Test

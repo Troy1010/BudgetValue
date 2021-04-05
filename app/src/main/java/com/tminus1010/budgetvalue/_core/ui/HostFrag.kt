@@ -8,7 +8,7 @@ import com.tminus1010.budgetvalue._core.ErrorVM
 import com.tminus1010.budgetvalue._core.ImportFailedException
 import com.tminus1010.budgetvalue._core.TestException
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonPartial
-import com.tminus1010.budgetvalue.extensions.getBackStack
+import com.tminus1010.budgetvalue._core.extensions.getBackStack
 import com.tminus1010.tmcommonkotlin.misc.logz
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toast

@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.transactions
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.categories.Category
-import com.tminus1010.budgetvalue.extensions.launch
+import com.tminus1010.budgetvalue._core.extensions.launch
 import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeTransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject

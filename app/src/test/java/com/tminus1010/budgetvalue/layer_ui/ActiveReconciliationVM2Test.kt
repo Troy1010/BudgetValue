@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.layer_ui
 
 import com.tminus1010.budgetvalue.Givens
-import com.tminus1010.budgetvalue.extensions.toObservable
+import com.tminus1010.budgetvalue._core.extensions.toObservable
 import com.tminus1010.budgetvalue.features_shared.Domain
 import com.tminus1010.budgetvalue.budgeted.BudgetedVM
 import com.tminus1010.budgetvalue.reconciliations.ActiveReconciliationVM2

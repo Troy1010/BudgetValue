@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.extensions
+package com.tminus1010.budgetvalue._core.extensions
 
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import io.reactivex.rxjava3.core.Completable
