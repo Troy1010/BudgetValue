@@ -124,6 +124,11 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
             override fun onBindViewHolder(holder: GenViewHolder2<ItemButtonBinding>, position: Int) {
                 holder.vb.btnItem.text = btns[position].title
                 holder.vb.btnItem.setOnClickListener { btns[holder.adapterPosition].action() }
+                // TODO("This does not belong here")
+                if (btns[position].title == "Split")
+                    categorizeTransactionsVM.transactionBox.observe(viewLifecycleOwner) {
+                        holder.vb.btnItem.isEnabled = (it.unbox != null)
+                    }
             }
             override fun getItemCount() = btns.size
         }
