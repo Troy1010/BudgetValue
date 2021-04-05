@@ -2,6 +2,7 @@ package com.tminus1010.budgetvalue.transactions
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.extensions.toLiveData
+import com.tminus1010.budgetvalue._core.middleware.unbox
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeTransactionsDomain
 import com.tminus1010.budgetvalue.transactions.domain.ICategorizeTransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
@@ -19,5 +20,8 @@ class CategorizeTransactionsVM @Inject constructor(
     // # State
     val amountToCategorize = categorizeTransactionsDomain.transactionBox
         .unbox().map { "Amount to categorize: $${it.amount}" }
+        .toLiveData(errorSubject)
+    val isTransactionAvailable = categorizeTransactionsDomain.transactionBox
+        .map { it.unbox != null }
         .toLiveData(errorSubject)
 }

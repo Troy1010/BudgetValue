@@ -4,6 +4,10 @@ import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 
-fun TextView.databind(lifecycleOwner: LifecycleOwner, liveData: LiveData<String>) {
+fun TextView.bindText(lifecycleOwner: LifecycleOwner, liveData: LiveData<String>) {
     liveData.observe(lifecycleOwner) { this.text = it }
+}
+
+fun TextView.bindEnabled(lifecycleOwner: LifecycleOwner, liveData: LiveData<Boolean>) {
+    liveData.observe(lifecycleOwner) { this.isEnabled = it }
 }

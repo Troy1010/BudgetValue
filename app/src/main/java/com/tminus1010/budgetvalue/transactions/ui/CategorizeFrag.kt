@@ -20,6 +20,7 @@ import com.tminus1010.budgetvalue._core.middleware.ui.GenViewHolder2
 import com.tminus1010.budgetvalue._core.middleware.ui.bindIncoming
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._core.middleware.unbox
+import com.tminus1010.budgetvalue._core.ui.data_binding.bindButtonPartial
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
@@ -42,6 +43,8 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     val categorySelectionVM: CategorySelectionVM by activityViewModels()
     val vb by viewBinding(FragCategorizeBinding::bind)
     val alertDialogBuilder by lazy { AlertDialog.Builder(requireContext()) }
+
+
 
     val selectionModeOffBtnSet = listOf(
         ButtonPartial("Make New Category") { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) },
@@ -132,15 +135,9 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 ItemButtonBinding.inflate(LayoutInflater.from(requireContext()), parent, false)
                     .let { GenViewHolder2(it) }
 
-            override fun onBindViewHolder(holder: GenViewHolder2<ItemButtonBinding>, position: Int) {
-                holder.vb.btnItem.text = btns[position].title
-                holder.vb.btnItem.setOnClickListener { btns[holder.adapterPosition].action() }
-                // TODO("This does not belong here")
-                if (btns[position].title == "Split")
-                    categorizeTransactionsVM.transactionBox.observe(viewLifecycleOwner) {
-                        holder.vb.btnItem.isEnabled = (it.unbox != null)
-                    }
-            }
+            override fun onBindViewHolder(holder: GenViewHolder2<ItemButtonBinding>, position: Int) =
+                holder.vb.btnItem.bindButtonPartial(viewLifecycleOwner, btns[position]) // TODO("This is the wrong lifecycle owner")
+
             override fun getItemCount() = btns.size
         }
     }
