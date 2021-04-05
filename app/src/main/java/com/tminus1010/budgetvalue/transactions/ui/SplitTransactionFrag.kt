@@ -10,6 +10,8 @@ import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.reflectXY
 import com.tminus1010.budgetvalue._core.middleware.ui.ViewItemRecipeFactoryProvider
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue._core.middleware.unbox
+import com.tminus1010.budgetvalue._core.ui.data_binding.databind
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.databinding.FragSplitTransactionBinding
@@ -45,6 +47,8 @@ class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
         ).take(1)
             .map { categorizeTransactionsAdvancedDomain.calcExactSplit(it.first, it.second) }
             .subscribe { it.forEach { c, a -> categorizeTransactionsAdvancedVM.rememberCA(c, a) } }
+        // # TextView: amount to split
+        vb.textviewAmountToSplit.databind(viewLifecycleOwner, categorizeTransactionsVM.amountToCategorize)
         // # TMTableView
         val cellRecipeFactory = viewRecipeFactories.cellRecipeFactory
         val headerRecipeFactory = viewRecipeFactories.headerRecipeFactory
