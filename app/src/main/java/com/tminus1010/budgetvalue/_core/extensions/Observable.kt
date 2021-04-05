@@ -1,12 +1,15 @@
 package com.tminus1010.budgetvalue._core.extensions
 
+import androidx.lifecycle.LiveDataReactiveStreams
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
+import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.Subject
 
 fun <T> Observable<T>.io(): Observable<T> = observeOn(Schedulers.io())
 fun <T> Observable<T>.launch(scheduler: Scheduler = Schedulers.io(), completableProvider: (T) -> Completable): Disposable =
@@ -33,3 +36,12 @@ fun <K, V, T> Observable<Map<K, V>>.flatMapSourceHashMap(sourceHashMap: SourceHa
             ).also { downstream.setDisposable(it) }
         }
     }
+
+fun <T> Observable<T>.divertErrors(errorSubject: Subject<Throwable>) =
+    this.onErrorResumeNext { errorSubject.onNext(it); Observable.empty() }
+
+private fun <T> Observable<T>.toLiveData() =
+    LiveDataReactiveStreams.fromPublisher(this.toFlowable(BackpressureStrategy.LATEST))
+
+fun <T> Observable<T>.toLiveData(errorSubject: Subject<Throwable>) =
+    this.divertErrors(errorSubject).toLiveData()
