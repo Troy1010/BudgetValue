@@ -29,13 +29,14 @@ import com.tminus1010.budgetvalue.transactions.TransactionsVM
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import java.time.format.DateTimeFormatter
 
 
 @AndroidEntryPoint
 class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     val categorizeTransactionsVM by activityViewModels<CategorizeTransactionsVM>()
-    val categoriesVM by activityViewModels<CategoriesVM>()
+    val categoriesVM: CategoriesVM by activityViewModels()
     val transactionsVM by activityViewModels<TransactionsVM>()
     val categorySelectionVM: CategorySelectionVM by activityViewModels()
     val vb by viewBinding(FragCategorizeBinding::bind)
@@ -71,7 +72,10 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         vb.textviewDescription.bindIncoming(categorizeTransactionsVM.transactionBox)
         { it.unbox?.description ?: "" }
         vb.textviewAmountLeft.bindIncoming(transactionsVM.uncategorizedSpendsSize)
-        // # RecyclerView
+        // # Categories RecyclerView
+        categoriesVM.categories
+            .observeOn(AndroidSchedulers.mainThread())
+            .observe(viewLifecycleOwner) { vb.recyclerviewCategories.adapter?.notifyDataSetChanged() }
         vb.recyclerviewCategories.addItemDecoration(LayoutMarginDecoration(3, 15))
         vb.recyclerviewCategories.layoutManager =
             GridLayoutManager(requireActivity(), 3, GridLayoutManager.VERTICAL, false)
