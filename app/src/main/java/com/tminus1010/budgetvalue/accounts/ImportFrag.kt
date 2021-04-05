@@ -31,7 +31,7 @@ class ImportFrag : Fragment(R.layout.frag_import) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
-        vb.btnImport.clicks().subscribe { launchImportUC(requireActivity() as HostActivity) }
+        vb.btnImport.setOnClickListener { launchImportUC(requireActivity() as HostActivity) }
         vb.btnAddAccount.clicks().subscribe(accountsVM.intentAddAccount)
         // # RecyclerView
         accountsVM.accounts
