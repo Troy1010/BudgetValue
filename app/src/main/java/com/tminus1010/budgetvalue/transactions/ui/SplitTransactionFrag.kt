@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.reflectXY
@@ -16,18 +17,22 @@ import com.tminus1010.budgetvalue.transactions.CategorizeAdvancedDomain
 import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsAdvancedVM
 import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsVM
 import com.tminus1010.budgetvalue.transactions.TransactionsVM
+import com.tminus1010.budgetvalue.transactions.domain.CategorizeTransactionsDomain
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
+import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import dagger.hilt.android.AndroidEntryPoint
+import java.math.BigDecimal
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
     @Inject lateinit var categorizeTransactionsAdvancedDomain: CategorizeAdvancedDomain
+    @Inject lateinit var categorizeTransactionsDomain: CategorizeTransactionsDomain
     val categorizeTransactionsVM by activityViewModels<CategorizeTransactionsVM>()
     val categoriesVM by activityViewModels<CategoriesVM>()
     val transactionsVM by activityViewModels<TransactionsVM>()
-    val categorizeTransactionsAdvancedVM: CategorizeTransactionsAdvancedVM by activityViewModels()
+    val categorizeTransactionsAdvancedVM by viewModels<CategorizeTransactionsAdvancedVM>()
     val categorySelectionVM: CategorySelectionVM by activityViewModels()
     val vb by viewBinding(FragSplitTransactionBinding::bind)
     val viewRecipeFactories by lazy { ViewItemRecipeFactoryProvider(requireContext()) }
@@ -36,7 +41,7 @@ class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
         // # Mediation
         Rx.combineLatest(
             categorySelectionVM.selectedCategories,
-            categorizeTransactionsAdvancedVM.defaultAmount
+            categorizeTransactionsDomain.transactionBox.unbox().map { it.amount }
         ).take(1)
             .map { categorizeTransactionsAdvancedDomain.calcExactSplit(it.first, it.second) }
             .subscribe { it.forEach { c, a -> categorizeTransactionsAdvancedVM.rememberCA(c, a) } }
