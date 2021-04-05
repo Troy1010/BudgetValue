@@ -19,7 +19,7 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
 ) : ViewModel() {
     // # User Intent Buses
     val intentRememberCA = PublishSubject.create<Pair<Category, BigDecimal>>()
-    // # Databindable State
+    // # State
     val transactionToPush = categorizeTransactionsDomain.transactionBox
         .unbox()
         .switchMap {
@@ -39,7 +39,7 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
                 .withLatestFrom(transactionToPush) { _, b -> b }
                 .launch { transactionsRepo.pushTransactionCAs(it, it.categoryAmounts) }
         }
-    // # User Intents
+    // # Intents
     fun rememberCA(category: Category, amount: BigDecimal) {
         intentRememberCA.onNext(Pair(category, amount))
     }
