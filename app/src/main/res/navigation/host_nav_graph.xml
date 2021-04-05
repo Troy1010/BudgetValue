@@ -16,10 +16,6 @@
         android:label="Categorize"
         tools:layout="@layout/frag_categorize">
         <action
-            android:id="@+id/action_categorizeFrag_to_advancedCategorizeFrag"
-            app:destination="@id/advancedCategorizeFrag"
-            app:popUpTo="@id/categorizeFrag" />
-        <action
             android:id="@+id/action_categorizeFrag_to_categoryCustomizationFrag"
             app:destination="@id/categoryCustomizationFrag"
             app:popUpTo="@id/categorizeFrag" />
@@ -47,11 +43,6 @@
         android:id="@+id/historyFrag"
         android:name="com.tminus1010.budgetvalue.history.HistoryFrag"
         android:label="History" />
-    <fragment
-        android:id="@+id/advancedCategorizeFrag"
-        android:name="com.tminus1010.budgetvalue.transactions.ui.CategorizeAdvancedFrag"
-        android:label="AdvancedCategorizeFrag"
-        tools:layout="@layout/frag_advanced_categorize" />
     <fragment
         android:id="@+id/categoryCustomizationFrag"
         android:name="com.tminus1010.budgetvalue.categories.ui.CategoryCustomizationFrag"
