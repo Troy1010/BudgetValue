@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.transactions
+package com.tminus1010.budgetvalue.transactions.ui
 
 import android.os.Bundle
 import android.view.View
@@ -10,6 +10,7 @@ import com.tminus1010.budgetvalue._core.middleware.ui.ViewItemRecipeFactoryProvi
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.databinding.FragAdvancedCategorizeBinding
+import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsAdvancedVM
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav

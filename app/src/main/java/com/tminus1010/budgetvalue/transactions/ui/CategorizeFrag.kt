@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.transactions
+package com.tminus1010.budgetvalue.transactions.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,6 +24,8 @@ import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.databinding.ItemButton2Binding
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
+import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsVM
+import com.tminus1010.budgetvalue.transactions.TransactionsVM
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
