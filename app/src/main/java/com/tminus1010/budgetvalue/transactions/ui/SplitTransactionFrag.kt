@@ -5,6 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.reflectXY
 import com.tminus1010.budgetvalue._core.middleware.ui.ViewItemRecipeFactoryProvider
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
@@ -33,10 +34,12 @@ class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Mediation
-        categorizeTransactionsAdvancedDomain.calcExactSplit(
-            categorySelectionVM.selectedCategories.value,
-            categorizeTransactionsAdvancedVM.defaultAmount.value
-        ).also { it.forEach { c, a -> categorizeTransactionsAdvancedVM.rememberCA(c, a) } }
+        Rx.combineLatest(
+            categorySelectionVM.selectedCategories,
+            categorizeTransactionsAdvancedVM.defaultAmount
+        ).take(1)
+            .map { categorizeTransactionsAdvancedDomain.calcExactSplit(it.first, it.second) }
+            .subscribe { it.forEach { c, a -> categorizeTransactionsAdvancedVM.rememberCA(c, a) } }
         // # TMTableView
         val cellRecipeFactory = viewRecipeFactories.cellRecipeFactory
         val headerRecipeFactory = viewRecipeFactories.headerRecipeFactory
