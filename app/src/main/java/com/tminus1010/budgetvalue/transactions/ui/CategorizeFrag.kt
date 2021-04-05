@@ -49,10 +49,8 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         super.onViewCreated(view, savedInstanceState)
         // # Mediation
         categorySelectionVM.clearSelection()
-        // # Selection mode
-        vb.root.setOnClickListener {
-            if (categorySelectionVM.inSelectionMode.value) categorySelectionVM.clearSelection()
-        }
+        // # Root
+        // ## Reduce alpha while inSelectionMode
         categorySelectionVM.inSelectionMode.observe(viewLifecycleOwner) { inSelectionMode ->
             vb.root.children
                 .filter { it != vb.recyclerviewCategories && it != vb.recyclerviewButtons }
@@ -69,7 +67,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         categoriesVM.categories
             .observeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) { vb.recyclerviewCategories.adapter?.notifyDataSetChanged() }
-        vb.recyclerviewCategories.addItemDecoration(LayoutMarginDecoration(3, 15))
+        vb.recyclerviewCategories.addItemDecoration(LayoutMarginDecoration(3, 8.toPX(requireContext())))
         vb.recyclerviewCategories.layoutManager =
             GridLayoutManager(requireActivity(), 3, GridLayoutManager.VERTICAL, false)
         vb.recyclerviewCategories.adapter = object : RecyclerView.Adapter<GenViewHolder2<ItemCategoryBtnBinding>>() {
@@ -119,6 +117,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 ButtonPartial("Split", categorizeTransactionsVM.isTransactionAvailable ) {
                     nav.navigate(R.id.action_categorizeFrag_to_splitTransactionFrag)
                 },
+                ButtonPartial("Clear selection") { categorySelectionVM.clearSelection() },
             )
             else listOf(
                 ButtonPartial("Make New Category") { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) },
