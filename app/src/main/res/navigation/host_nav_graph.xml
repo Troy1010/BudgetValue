@@ -54,12 +54,12 @@
         tools:layout="@layout/frag_advanced_categorize" />
     <fragment
         android:id="@+id/categoryCustomizationFrag"
-        android:name="com.tminus1010.budgetvalue.categories.CategoryCustomizationFrag"
+        android:name="com.tminus1010.budgetvalue.categories.ui.CategoryCustomizationFrag"
         android:label="CategoryCustomizationFrag"
         tools:layout="@layout/frag_category_customization" />
     <fragment
         android:id="@+id/newCategoryFrag"
-        android:name="com.tminus1010.budgetvalue.categories.NewCategoryFrag"
+        android:name="com.tminus1010.budgetvalue.categories.ui.NewCategoryFrag"
         android:label="NewCategoryFrag"
         tools:layout="@layout/frag_new_category" />
     <fragment

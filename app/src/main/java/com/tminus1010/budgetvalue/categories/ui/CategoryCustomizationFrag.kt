@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.categories
+package com.tminus1010.budgetvalue.categories.ui
 
 import android.os.Bundle
 import android.view.View
@@ -10,6 +10,8 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.middleware.reflectXY
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue.categories.CategoriesVM
+import com.tminus1010.budgetvalue.categories.Category
 import com.tminus1010.budgetvalue.categories.domain.DeleteCategoryFromActiveDomainUC
 import com.tminus1010.budgetvalue.databinding.FragCategoryCustomizationBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
