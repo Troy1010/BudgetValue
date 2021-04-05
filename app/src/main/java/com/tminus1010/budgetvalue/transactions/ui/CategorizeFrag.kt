@@ -42,7 +42,6 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     val transactionsVM by activityViewModels<TransactionsVM>()
     val categorySelectionVM: CategorySelectionVM by activityViewModels()
     val vb by viewBinding(FragCategorizeBinding::bind)
-    val alertDialogBuilder by lazy { AlertDialog.Builder(requireContext()) }
     var btns = emptyList<ButtonPartial>()
         set(value) { field = value; vb.recyclerviewButtons.adapter?.notifyDataSetChanged() }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -105,7 +104,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         categorySelectionVM.inSelectionMode.observe(viewLifecycleOwner) { btns = if (it)
             listOf(
                 ButtonPartial("Delete") {
-                    alertDialogBuilder
+                    AlertDialog.Builder(requireContext())
                         .setMessage(listOf(
                             "Are you sure you want to delete these categories?\n",
                             *categorySelectionVM.selectedCategories.value.map { "\t${it.name}" }.toTypedArray()
