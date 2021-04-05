@@ -47,7 +47,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Mediation
-        categorySelectionVM.clearSelection()
+        categorySelectionVM.clearSelection() // TODO("Bind this VM to a navGraph")
         // # Root
         // ## Reduce alpha while inSelectionMode
         categorySelectionVM.inSelectionMode.observe(viewLifecycleOwner) { inSelectionMode ->
