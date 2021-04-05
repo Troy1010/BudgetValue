@@ -22,6 +22,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
+// TODO("Delete")
 @AndroidEntryPoint
 class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization) {
     @Inject lateinit var deleteCategoryFromActiveDomainUC: DeleteCategoryFromActiveDomainUC
