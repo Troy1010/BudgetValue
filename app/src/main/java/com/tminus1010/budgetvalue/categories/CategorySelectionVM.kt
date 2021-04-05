@@ -50,5 +50,6 @@ class CategorySelectionVM @Inject constructor(
         selectedCategories.take(1)
             .flatMapCompletable { Rx.merge(it.map { deleteCategoryFromActiveDomainUC(it) }) }
             .subscribe()
+        clearSelection()
     }
 }
