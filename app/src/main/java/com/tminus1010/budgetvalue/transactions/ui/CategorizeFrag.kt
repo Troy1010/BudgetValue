@@ -22,7 +22,7 @@ import com.tminus1010.budgetvalue._core.middleware.unbox
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
-import com.tminus1010.budgetvalue.databinding.ItemButton2Binding
+import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
 import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsVM
 import com.tminus1010.budgetvalue.transactions.TransactionsVM
@@ -117,12 +117,12 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         categorySelectionVM.inSelectionMode.observe(viewLifecycleOwner) { btns = if (it) selectionModeOnBtnSet else selectionModeOffBtnSet }
         vb.recyclerviewButtons.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true)
         vb.recyclerviewButtons.addItemDecoration(LayoutMarginDecoration(8.toPX(requireContext())))
-        vb.recyclerviewButtons.adapter = object : RecyclerView.Adapter<GenViewHolder2<ItemButton2Binding>>() {
+        vb.recyclerviewButtons.adapter = object : RecyclerView.Adapter<GenViewHolder2<ItemButtonBinding>>() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-                ItemButton2Binding.inflate(LayoutInflater.from(requireContext()), parent, false)
+                ItemButtonBinding.inflate(LayoutInflater.from(requireContext()), parent, false)
                     .let { GenViewHolder2(it) }
 
-            override fun onBindViewHolder(holder: GenViewHolder2<ItemButton2Binding>, position: Int) {
+            override fun onBindViewHolder(holder: GenViewHolder2<ItemButtonBinding>, position: Int) {
                 holder.vb.btnItem.text = btns[position].title
                 holder.vb.btnItem.setOnClickListener { btns[holder.adapterPosition].action() }
             }

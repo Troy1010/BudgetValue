@@ -89,5 +89,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layoutManager="LinearLayoutManager"
         tools:itemCount="3"
-        tools:listitem="@layout/item_button2" />
+        tools:listitem="@layout/item_button" />
 </androidx.constraintlayout.widget.ConstraintLayout>
