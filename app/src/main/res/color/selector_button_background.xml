@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- I don't like to grey things out when they're disabled -->
+<!-- Instead, the color is kept the same, and the alpha is changed -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="true" android:alpha="1" android:color="?colorPrimary" />
+    <item android:state_enabled="false" android:alpha="0.25" android:color="?colorPrimary"/>
+</selector>

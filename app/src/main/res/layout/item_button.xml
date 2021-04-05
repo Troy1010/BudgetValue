@@ -4,8 +4,10 @@
     android:id="@+id/btn_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:insetBottom="0dp"
+    android:backgroundTint="@color/selector_button_background"
     android:insetTop="0dp"
-    android:paddingVertical="8dp"
+    android:insetBottom="0dp"
     android:minHeight="0dp"
+    android:paddingVertical="8dp"
+    android:textColor="?colorOnPrimary"
     tools:text="Some text" />
