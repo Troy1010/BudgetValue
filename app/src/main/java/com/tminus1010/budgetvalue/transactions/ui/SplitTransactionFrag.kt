@@ -46,7 +46,7 @@ class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
             .map { categorizeTransactionsAdvancedDomain.calcExactSplit(it.first, it.second) }
             .subscribe { it.forEach { c, a -> categorizeTransactionsAdvancedVM.rememberCA(c, a) } }
         // # TextView: amount to split
-        vb.textviewAmountToSplit.bindText(viewLifecycleOwner, categorizeTransactionsVM.amountToCategorize)
+        vb.textviewAmountToSplit.bindText(categorizeTransactionsVM.amountToCategorize)
         // # TMTableView
         val cellRecipeFactory = viewRecipeFactories.cellRecipeFactory
         val headerRecipeFactory = viewRecipeFactories.headerRecipeFactory

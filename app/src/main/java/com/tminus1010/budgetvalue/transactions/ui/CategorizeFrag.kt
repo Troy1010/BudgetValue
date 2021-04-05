@@ -21,6 +21,7 @@ import com.tminus1010.budgetvalue._core.middleware.ui.bindIncoming
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._core.middleware.unbox
 import com.tminus1010.budgetvalue._core.ui.data_binding.bindButtonPartial
+import com.tminus1010.budgetvalue._core.ui.data_binding.bindText
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
@@ -32,7 +33,6 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import java.time.format.DateTimeFormatter
 
 
 @AndroidEntryPoint
@@ -59,8 +59,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 .forEach { it.alpha = if (inSelectionMode) 0.5F else 1F }
         }
         // # TextViews
-        vb.textviewDate.bindIncoming(categorizeTransactionsVM.transactionBox)
-        { it.unbox?.date?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")) ?: "" }
+        vb.textviewDate.bindText(categorizeTransactionsVM.date)
         vb.textviewAmount.bindIncoming(categorizeTransactionsVM.transactionBox)
         { it.unbox?.defaultAmount?.toString() ?: "" }
         vb.textviewDescription.bindIncoming(categorizeTransactionsVM.transactionBox)
