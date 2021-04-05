@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -40,12 +41,22 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     val transactionsVM by activityViewModels<TransactionsVM>()
     val categorySelectionVM: CategorySelectionVM by activityViewModels()
     val vb by viewBinding(FragCategorizeBinding::bind)
+    val alertDialogBuilder by lazy { AlertDialog.Builder(requireContext()) }
 
     val selectionModeOffBtnSet = listOf(
         ButtonPartial("Make New Category") { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) },
     )
     val selectionModeOnBtnSet = listOf(
-        ButtonPartial("Delete") { categorySelectionVM.deleteSelectedCategories() },
+        ButtonPartial("Delete") {
+            alertDialogBuilder
+                .setMessage(listOf(
+                    "Are you sure you want to delete these categories?\n",
+                    *categorySelectionVM.selectedCategories.value.map { "\t${it.name}" }.toTypedArray()
+                ).joinToString("\n"))
+                .setPositiveButton("Yes") { _, _ -> categorySelectionVM.deleteSelectedCategories() }
+                .setNegativeButton("No") { _, _ -> }
+                .show()
+        },
         ButtonPartial("Split") { nav.navigate(R.id.action_categorizeFrag_to_splitTransactionFrag) },
     )
     var btns = emptyList<ButtonPartial>()
