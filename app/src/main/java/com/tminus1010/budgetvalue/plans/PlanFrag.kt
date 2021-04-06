@@ -36,14 +36,14 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
         val cellRecipeFactory = ViewItemRecipeFactory.createCellRecipeFactory(requireContext())
         val headerRecipeFactory = ViewItemRecipeFactory.createHeaderRecipeFactory(requireContext())
         val expectedIncomeRecipeFactory = ViewItemRecipeFactory<EditText, Observable<BigDecimal>>(
-            { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
+            { View.inflate(context, R.layout.item_text_edit, null) as EditText },
             { view, bs ->
                 view.bindIncoming(bs)
                 view.bindOutgoing(activePlanVM.intentPushExpectedIncome, { it.toMoneyBigDecimal() }) { it }
             }
         )
         val planCAsRecipeFactory = ViewItemRecipeFactory<EditText, Pair<Category, Observable<BigDecimal>?>>(
-            { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
+            { View.inflate(context, R.layout.item_text_edit, null) as EditText },
             { view, (category, d) ->
                 if (d == null) return@ViewItemRecipeFactory
                 view.bindIncoming(d)
@@ -51,11 +51,11 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
             }
         )
         val oneWayRecipeBuilder = ViewItemRecipeFactory<TextView, Observable<BigDecimal>>(
-            { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
+            { View.inflate(context, R.layout.item_text_view, null) as TextView },
             { v, bs -> v.bindIncoming(bs) }
         )
         val titledDividerRecipeFactory = ViewItemRecipeFactory<TextView, String>(
-            { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
+            { View.inflate(context, R.layout.item_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
         Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs)

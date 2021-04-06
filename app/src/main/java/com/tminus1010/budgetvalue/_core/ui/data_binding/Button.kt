@@ -1,0 +1,12 @@
+package com.tminus1010.budgetvalue._core.ui.data_binding
+
+import android.widget.Button
+import androidx.lifecycle.LifecycleOwner
+import com.tminus1010.budgetvalue._core.middleware.ui.ButtonPartial
+
+fun Button.bindButtonPartial(lifecycleOwner: LifecycleOwner, buttonPartial: ButtonPartial) {
+    text = buttonPartial.title
+    setOnClickListener { buttonPartial.action() }
+    if (buttonPartial.enabledLiveData != null)
+        bindEnabled(lifecycleOwner, buttonPartial.enabledLiveData)
+}

@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.extensions
+package com.tminus1010.budgetvalue._core.extensions
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapter

@@ -32,7 +32,7 @@ data class Transaction(
                 Transaction(
                     date,
                     description,
-                    amount,
+                    amount.setScale(2),
                     categoryAmountsConverter.toCategoryAmount(categoryAmounts),
                     id,
                 )

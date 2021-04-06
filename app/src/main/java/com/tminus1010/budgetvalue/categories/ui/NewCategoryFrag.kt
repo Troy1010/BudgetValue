@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.categories
+package com.tminus1010.budgetvalue.categories.ui
 
 import android.os.Bundle
 import android.view.View
@@ -6,6 +6,7 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue.categories.Category
 import com.tminus1010.budgetvalue.categories.data.ICategoriesRepo
 import com.tminus1010.budgetvalue.databinding.FragNewCategoryBinding
 import com.tminus1010.tmcommonkotlin.rx.extensions.launch
@@ -33,6 +34,6 @@ class NewCategoryFrag : Fragment(R.layout.frag_new_category) {
             }
         }
         //
-        vb.spinnerType.adapter = ArrayAdapter(requireContext(), R.layout.text_view, Category.Type.values().drop(1))
+        vb.spinnerType.adapter = ArrayAdapter(requireContext(), R.layout.item_text_view, Category.Type.values().drop(1))
     }
 }

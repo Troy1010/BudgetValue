@@ -16,7 +16,7 @@ import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView.ViewItemRecipe
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
 import com.tminus1010.budgetvalue.databinding.FragHistoryBinding
-import com.tminus1010.budgetvalue.extensions.show
+import com.tminus1010.budgetvalue._core.extensions.show
 import com.tminus1010.budgetvalue.history.models.IHistoryColumnData
 import com.tminus1010.budgetvalue.plans.PlansVM
 import com.tminus1010.budgetvalue.plans.models.Plan
@@ -42,7 +42,7 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
         val cellRecipeFactory = ViewItemRecipeFactory.createCellRecipeFactory(requireContext())
         val headerRecipeFactory = ViewItemRecipeFactory.createHeaderRecipeFactory(requireContext())
         val columnHeaderFactory = ViewItemRecipeFactory<LinearLayout, IHistoryColumnData>(
-            { View.inflate(context, R.layout.tableview_header_with_subtitle, null) as LinearLayout }, // TODO("use viewBinding")
+            { View.inflate(context, R.layout.item_header_with_subtitle, null) as LinearLayout }, // TODO("use viewBinding")
             { v, historyColumnData ->
                 (v.children.first() as TextView).text = historyColumnData.title
                 (v.children.last() as TextView).text = historyColumnData.subTitle(datePeriodGetter)
@@ -63,7 +63,7 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
             },
         )
         val titledDividerRecipeFactory = ViewItemRecipeFactory<TextView, String>(
-            { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
+            { View.inflate(context, R.layout.item_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
         Rx.combineLatest(historyVM.historyColumnDatas, historyVM.activeCategories)

@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.extensions
+package com.tminus1010.budgetvalue._core.extensions
 
 import androidx.appcompat.widget.PopupMenu
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuItemPartial

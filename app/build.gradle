@@ -183,6 +183,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-common-java8:2.3.1"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.1"
+    // # Lifecycle & Rx
+    implementation "androidx.lifecycle:lifecycle-reactivestreams-ktx:2.3.1"
 
     // # RecyclerMargin
     // for LayoutMarginDecoration

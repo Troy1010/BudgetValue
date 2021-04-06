@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.extensions
+package com.tminus1010.budgetvalue._core.extensions
 
 import androidx.fragment.app.FragmentManager
 

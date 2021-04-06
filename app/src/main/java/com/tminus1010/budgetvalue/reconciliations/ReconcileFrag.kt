@@ -20,8 +20,8 @@ import com.tminus1010.budgetvalue.accounts.AccountsVM
 import com.tminus1010.budgetvalue.budgeted.BudgetedVM
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.databinding.FragReconcileBinding
-import com.tminus1010.budgetvalue.databinding.TableviewHeaderIncomeBinding
 import com.tminus1010.budgetvalue.categories.Category
+import com.tminus1010.budgetvalue.databinding.ItemHeaderIncomeBinding
 import com.tminus1010.budgetvalue.plans.ActivePlanVM
 import com.tminus1010.budgetvalue.transactions.TransactionsVM
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
@@ -56,14 +56,14 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
         val cellRecipeFactory = ViewItemRecipeFactory.createCellRecipeFactory(requireContext())
         val headerRecipeFactory = ViewItemRecipeFactory.createHeaderRecipeFactory(requireContext())
         val headerRecipeFactory_numbered = ViewItemRecipeFactory<LinearLayout, Pair<String, Observable<BigDecimal>>>(
-            { View.inflate(requireContext(), R.layout.tableview_header_income, null) as LinearLayout },
+            { View.inflate(requireContext(), R.layout.item_header_income, null) as LinearLayout },
             { v, d ->
-                val binding = TableviewHeaderIncomeBinding.bind(v)
+                val binding = ItemHeaderIncomeBinding.bind(v)
                 binding.textviewHeader.text = d.first
                 binding.textviewNumber.bindIncoming(d.second)
             })
         val reconcileCARecipeFactory = ViewItemRecipeFactory<EditText, Pair<Category, Observable<BigDecimal>?>>(
-            { View.inflate(context, R.layout.tableview_text_edit, null) as EditText },
+            { View.inflate(context, R.layout.item_text_edit, null) as EditText },
             { v, (category, d) ->
                 if (d==null) return@ViewItemRecipeFactory
                 v.bindIncoming(d)
@@ -71,15 +71,15 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
             }
         )
         val cellRecipeFactory2 = ViewItemRecipeFactory(
-            { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
+            { View.inflate(context, R.layout.item_text_view, null) as TextView },
             { v: TextView, d: Any? -> v.text = d?.toString() }
         )
         val oneWayRecipeFactory = ViewItemRecipeFactory<TextView, Observable<BigDecimal>?>(
-            { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
+            { View.inflate(context, R.layout.item_text_view, null) as TextView },
             { v, d -> if (d!=null) v.bindIncoming(d) }
         )
         val titledDividerRecipeFactory = ViewItemRecipeFactory<TextView, String>(
-            { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
+            { View.inflate(context, R.layout.item_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
         Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs, transactionsVM.currentSpendBlockCAs, activeReconciliationVM.activeReconcileCAs2, budgetedVM.categoryAmountsObservableMap)

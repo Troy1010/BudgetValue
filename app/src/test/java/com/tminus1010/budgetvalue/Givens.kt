@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue
 
-import com.tminus1010.budgetvalue.extensions.toObservable
+import com.tminus1010.budgetvalue._core.extensions.toObservable
 import com.tminus1010.budgetvalue._core.middleware.LocalDatePeriod
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
 import com.tminus1010.budgetvalue.categories.CategoriesVM

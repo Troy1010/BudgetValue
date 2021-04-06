@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.tminus1010.budgetvalue._core.middleware.Orientation
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.databinding.TableviewLayout2Binding
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView.IViewItemRecipe
+import com.tminus1010.budgetvalue.databinding.TableviewBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.children
 import com.tminus1010.tmcommonkotlin.misc.extensions.clearItemDecorations
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -70,7 +70,7 @@ class TMTableView2 @JvmOverloads constructor(
         synchronizedScrollListener: SynchronizedScrollListener,
     ) {
         removeAllViews()
-        val binding = TableviewLayout2Binding.inflate(LayoutInflater.from(context), this, true)
+        val binding = TableviewBinding.inflate(LayoutInflater.from(context), this, true)
         // # Freeze rows
         if (rowFreezeCount>1) TODO()
         if (rowFreezeCount==1) {

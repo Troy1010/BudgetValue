@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.categories
+package com.tminus1010.budgetvalue.categories.ui
 
 import android.os.Bundle
 import android.view.View
@@ -10,6 +10,9 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.middleware.reflectXY
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue.categories.CategoriesVM
+import com.tminus1010.budgetvalue.categories.Category
+import com.tminus1010.budgetvalue.categories.domain.DeleteCategoryFromActiveDomainUC
 import com.tminus1010.budgetvalue.databinding.FragCategoryCustomizationBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -17,9 +20,12 @@ import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
+// TODO("Delete")
 @AndroidEntryPoint
 class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization) {
+    @Inject lateinit var deleteCategoryFromActiveDomainUC: DeleteCategoryFromActiveDomainUC
     val categoriesVM: CategoriesVM by activityViewModels()
     val vb by viewBinding(FragCategoryCustomizationBinding::bind)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -28,19 +34,19 @@ class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization)
         vb.btnDone.setOnClickListener { nav.navigateUp() }
         // # TMTableView
         val factory1 = ViewItemRecipeFactory(
-            { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
+            { View.inflate(context, R.layout.item_text_view, null) as TextView },
             { v: TextView, d: Category -> v.text = d.name }
         )
         val factory2 = ViewItemRecipeFactory(
             { View.inflate(requireContext(), R.layout.item_button, null) as Button },
             { v: Button, d: Category ->
                 v.text = "Delete"
-                v.setOnClickListener { categoriesVM.intentDeleteCategoryFromActive.onNext(d) }
+                v.setOnClickListener { deleteCategoryFromActiveDomainUC(d) }
                 v.isEnabled = !d.isRequired
             }
         )
         val titledDividerRecipeFactory = ViewItemRecipeFactory<TextView, String>(
-            { View.inflate(context, R.layout.tableview_titled_divider, null) as TextView },
+            { View.inflate(context, R.layout.item_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
         categoriesVM.userCategories

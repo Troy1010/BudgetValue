@@ -1,6 +1,9 @@
 package com.tminus1010.budgetvalue._core.middleware.ui
 
+import androidx.lifecycle.LiveData
+
 data class ButtonPartial(
     val title: String,
-    val action: () -> Unit
+    val enabledLiveData: LiveData<Boolean>? = null,
+    val action: () -> Unit,
 )

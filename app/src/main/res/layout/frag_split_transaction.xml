@@ -5,20 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview_columnheaders"
+    <TextView
+        android:id="@+id/textview_amountToSplit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:textColor="@color/colorOnDark"
+        android:textSize="18sp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Amount to split: $1.6" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview_tier1"
+    <com.tminus1010.budgetvalue._core.middleware.ui.tmTableView2.TMTableView2
+        android:id="@+id/tmTableView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recyclerview_columnheaders"
-        tools:itemCount="4"
-        tools:layoutManager="LinearLayoutManager"
-        tools:listitem="@layout/tableview_text_view"
-        tools:orientation="horizontal" />
+        app:layout_constraintTop_toBottomOf="@id/textview_amountToSplit" />
 </androidx.constraintlayout.widget.ConstraintLayout>

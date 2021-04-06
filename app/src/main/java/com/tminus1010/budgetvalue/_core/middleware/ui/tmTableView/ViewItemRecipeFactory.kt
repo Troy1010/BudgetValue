@@ -17,14 +17,14 @@ class ViewItemRecipeFactory<V : View, D : Any?>(
         // These are just some common ViewItemRecipeFactory
         fun createHeaderRecipeFactory(context: Context): ViewItemRecipeFactory<TextView, String> {
             return ViewItemRecipeFactory(
-                { View.inflate(context, R.layout.tableview_header, null) as TextView },
+                { View.inflate(context, R.layout.item_header, null) as TextView },
                 { view: TextView, s: String? -> view.text = s }
             )
         }
 
         fun createCellRecipeFactory(context: Context): ViewItemRecipeFactory<TextView, String> {
             return ViewItemRecipeFactory(
-                { View.inflate(context, R.layout.tableview_text_view, null) as TextView },
+                { View.inflate(context, R.layout.item_text_view, null) as TextView },
                 { view: TextView, s: String? -> view.text = s }
             )
         }

@@ -9,15 +9,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding4.view.clicks
 import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue._core.LaunchImportUC
 import com.tminus1010.budgetvalue._core.middleware.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.middleware.ui.GenViewHolder2
 import com.tminus1010.budgetvalue._core.middleware.ui.bindOutgoing
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._core.ui.HostActivity
-import com.tminus1010.budgetvalue._core.LaunchImportUC
 import com.tminus1010.budgetvalue.databinding.FragImportBinding
 import com.tminus1010.budgetvalue.databinding.ItemAccountBinding
-import com.tminus1010.tmcommonkotlin.misc.logx
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.pairwise
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,7 +31,7 @@ class ImportFrag : Fragment(R.layout.frag_import) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
-        vb.btnImport.clicks().subscribe { launchImportUC(requireActivity() as HostActivity) }
+        vb.btnImport.setOnClickListener { launchImportUC(requireActivity() as HostActivity) }
         vb.btnAddAccount.clicks().subscribe(accountsVM.intentAddAccount)
         // # RecyclerView
         accountsVM.accounts
