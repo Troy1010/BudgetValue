@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.categories.domain
 
-import com.tminus1010.budgetvalue.categories.Category
+import com.tminus1010.budgetvalue.categories.models.Category
 import io.reactivex.rxjava3.observables.ConnectableObservable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 

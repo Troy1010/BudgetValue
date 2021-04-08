@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue._shared.app_init
 
 import com.tminus1010.budgetvalue._shared.app_init.data.IAppInitRepo
-import com.tminus1010.budgetvalue.categories.Category
+import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.data.ICategoriesRepo
 import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import javax.inject.Inject

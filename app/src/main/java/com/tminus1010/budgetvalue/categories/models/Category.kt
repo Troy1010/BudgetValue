@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.categories
+package com.tminus1010.budgetvalue.categories.models
 
 data class Category (
     val name: String,

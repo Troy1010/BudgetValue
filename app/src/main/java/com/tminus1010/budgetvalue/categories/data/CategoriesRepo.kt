@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.categories.data
 
 import com.tminus1010.budgetvalue._core.data.UserCategoriesDAO
-import com.tminus1010.budgetvalue.categories.Category
+import com.tminus1010.budgetvalue.categories.models.Category
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject

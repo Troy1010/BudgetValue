@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.transactions
 
-import com.tminus1010.budgetvalue.categories.Category
+import com.tminus1010.budgetvalue.categories.models.Category
 import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
