@@ -111,6 +111,7 @@ dependencies {
     testImplementation "org.robolectric:robolectric:4.5.1"
 
     // # TMCommonKotlin
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-core:+'
     implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-rx:+'
     implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-misc:+'
     implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-tuple:+'
