@@ -45,3 +45,6 @@ private fun <T> Observable<T>.toLiveData() =
 
 fun <T> Observable<T>.toLiveData(errorSubject: Subject<Throwable>) =
     this.divertErrors(errorSubject).toLiveData()
+
+fun <T> Observable<T>.nonLazyCache() =
+    replay(1).also { it.connect() }
