@@ -49,11 +49,27 @@ fun <T> EditText.bindOutgoing(
         .observeOn(AndroidSchedulers.mainThread())
         .withLatestFrom(this.textChanges()) { _, x -> x.toString() }
         .map { toT(it) }
-        .map { if (validate==null) it else validate(it) }
+        .map { if (validate!=null) validate(it) else it }
         .publish().refCount()
         .also { if (toDisplayable!=null) this.bindIncoming(it, toDisplayable) }
         .distinctUntilChanged()
         .subscribe(subject)
+}
+
+// Transform to output, validate, transform back
+
+fun EditText.setOnDoneListener(
+    onDone: () -> Unit
+) {
+    setOnEditorActionListener { v, actionId, event ->
+        if (event.action == EditorInfo.IME_ACTION_DONE) {
+            onDone()
+            true
+        } else false
+    }
+    setOnFocusChangeListener { v, hasFocus ->
+        if (!hasFocus) onDone()
+    }
 }
 
 fun <T> TextView.bindIncoming(
