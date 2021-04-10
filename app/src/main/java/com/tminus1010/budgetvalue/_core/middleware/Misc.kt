@@ -10,7 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue.transactions.models.Transaction
-import com.tminus1010.tmcommonkotlin.misc.logz
+import com.tminus1010.tmcommonkotlin.core.logz
 import com.tminus1010.tmcommonkotlin.rx.extensions.boxStartNull
 import com.tminus1010.tmcommonkotlin.rx.extensions.isCold
 import com.tminus1010.tmcommonkotlin.misc.extensions.previous

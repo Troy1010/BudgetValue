@@ -5,7 +5,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.tminus1010.tmcommonkotlin.misc.fnName
-import com.tminus1010.tmcommonkotlin.misc.logz
+import com.tminus1010.tmcommonkotlin.core.logz
 
 fun TextView.bindText(liveData: LiveData<String>, lifecycleOwner: LifecycleOwner? = null) {
     (lifecycleOwner ?: findViewTreeLifecycleOwner())

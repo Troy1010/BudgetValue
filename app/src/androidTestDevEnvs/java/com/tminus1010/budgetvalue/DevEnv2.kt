@@ -12,7 +12,7 @@ import com.tminus1010.budgetvalue._core.middleware.reflectXY
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuItemPartial
 import com.tminus1010.budgetvalue._core.ui.HostActivity
 import com.tminus1010.budgetvalue._core.ui.MockImportSelectionActivity
-import com.tminus1010.tmcommonkotlin.misc.logz
+import com.tminus1010.tmcommonkotlin.core.logz
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
