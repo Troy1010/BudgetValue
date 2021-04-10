@@ -13,7 +13,7 @@ import io.reactivex.rxjava3.subjects.Subject
 
 fun <T> Observable<T>.io(): Observable<T> = observeOn(Schedulers.io())
 fun <T> Observable<T>.launch(scheduler: Scheduler = Schedulers.io(), completableProvider: (T) -> Completable): Disposable =
-    this.observeOn(scheduler).flatMapCompletable { completableProvider(it) }.subscribe()
+    observeOn(scheduler).flatMapCompletable { completableProvider(it) }.subscribe()
 
 fun <K, V, T: SourceHashMap<K, V>> Observable<T>.itemObservableMap2() = // TODO("there must be a better way..")
     take(1).flatMap { it.itemObservableMap2 }
