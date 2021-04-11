@@ -41,7 +41,7 @@ class BudgetedDomain @Inject constructor(
     override val categoryAmountsObservableMap = categoryAmounts
         .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO))
         { it.itemObservableMap2 }
-    override val caTotal = categoryAmountsObservableMap.switchMap { it.values.total() }
+    private val caTotal = categoryAmountsObservableMap.switchMap { it.values.total() }
     override val defaultAmount =
         Rx.combineLatest(accountsDomain.accountsTotal, caTotal)
             .map { it.first - it.second }
