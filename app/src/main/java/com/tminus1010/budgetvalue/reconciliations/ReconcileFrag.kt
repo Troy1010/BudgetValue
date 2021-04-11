@@ -7,6 +7,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.LiveData
 import com.jakewharton.rxbinding4.view.clicks
 import com.tminus1010.budgetvalue.*
 import com.tminus1010.budgetvalue._core.middleware.Rx
@@ -62,6 +63,13 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                 binding.textviewHeader.text = d.first
                 binding.textviewNumber.bindIncoming(d.second)
             })
+        val headerRecipeFactory_numbered2 = ViewItemRecipeFactory<LinearLayout, Pair<String, LiveData<String>>>(
+            { View.inflate(requireContext(), R.layout.item_header_income, null) as LinearLayout },
+            { v, d ->
+                val binding = ItemHeaderIncomeBinding.bind(v)
+                binding.textviewHeader.text = d.first
+                binding.textviewNumber.bindIncoming(viewLifecycleOwner, d.second)
+            })
         val reconcileCARecipeFactory = ViewItemRecipeFactory<EditText, Pair<Category, Observable<BigDecimal>?>>(
             { View.inflate(context, R.layout.item_text_edit, null) as EditText },
             { v, (category, d) ->
@@ -99,7 +107,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                     headerRecipeFactory.createOne2("Reconcile")
                             + oneWayRecipeFactory.createOne2(activeReconciliationVM2.defaultAmount)
                             + reconcileCARecipeFactory.createMany(categories.map { it to activeReconciliationCAs[it] }),
-                    headerRecipeFactory_numbered.createOne2(Pair("Budgeted", accountsVM.accountsTotal))
+                    headerRecipeFactory_numbered2.createOne2(Pair("Budgeted", accountsVM.accountsTotal))
                             + oneWayRecipeFactory.createOne2(budgetedVM.defaultAmount)
                             + oneWayRecipeFactory.createMany(categories.map { budgetedCA[it] })
                 ).reflectXY()
