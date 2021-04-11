@@ -13,6 +13,6 @@ interface IActivePlanDomain {
     val intentPushActivePlanCA: PublishSubject<Pair<Category, BigDecimal?>>
     val activePlanCAs: Observable<Map<Category, BehaviorSubject<BigDecimal>>>
     val planUncategorized: Observable<BigDecimal>
-    val expectedIncome: BehaviorSubject<BigDecimal>
+    val expectedIncome: Observable<BigDecimal>
     val defaultAmount: Observable<BigDecimal>
 }

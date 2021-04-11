@@ -74,9 +74,7 @@ class ActivePlanDomain @Inject constructor(
     override val planUncategorized = activePlanCAs
         .switchMap { it.values.total() }
         .replay(1).refCount()
-    override val expectedIncome = intentPushExpectedIncome
-        .startWith(activePlan.take(1).map { it.amount })
-        .toBehaviorSubject()
+    override val expectedIncome = activePlan.map { it.amount }
     override val defaultAmount = Rx.combineLatest(expectedIncome, planUncategorized)
         .map { it.first - it.second }
 }

@@ -2,8 +2,9 @@ package com.tminus1010.budgetvalue.plans
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue._core.extensions.launch
+import com.tminus1010.budgetvalue._core.extensions.await
 import com.tminus1010.budgetvalue._core.extensions.toLiveData
+import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.data.IPlansRepo
@@ -31,10 +32,10 @@ class ActivePlanVM @Inject constructor(
 
     // # Intents
     fun pushExpectedIncome(s: String) {
-        activePlanDomain.activePlan.take(1).launch { plansRepo.updatePlanAmount(it, s.toMoneyBigDecimal()) }
+        Rx.launch { plansRepo.updatePlanAmount(activePlanDomain.activePlan.await(), s.toMoneyBigDecimal()) }
     }
 
     fun pushActivePlanCA(category: Category, s: String) {
-        activePlanDomain.activePlan.take(1).launch { plansRepo.updatePlanCA(it, category, s.toMoneyBigDecimal()) }
+        Rx.launch { plansRepo.updatePlanCA(activePlanDomain.activePlan.await(), category, s.toMoneyBigDecimal()) }
     }
 }
