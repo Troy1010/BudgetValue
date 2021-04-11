@@ -22,8 +22,10 @@ import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._core.middleware.unbox
 import com.tminus1010.budgetvalue._core.ui.data_binding.bindButtonPartial
 import com.tminus1010.budgetvalue._core.ui.data_binding.bindText
+import com.tminus1010.budgetvalue.accounts.models.Account
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
+import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
@@ -44,6 +46,12 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     val vb by viewBinding(FragCategorizeBinding::bind)
     var btns = emptyList<ButtonPartial>()
         set(value) { field = value; vb.recyclerviewButtons.adapter?.notifyDataSetChanged() }
+    var categories = emptyList<Category>()
+        set(value) {
+            val shouldNotifyDataSetChanged = field.size != value.size
+            field = value
+            if (shouldNotifyDataSetChanged) vb.recyclerviewCategories.adapter?.notifyDataSetChanged()
+        }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Mediation
@@ -63,9 +71,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         { it.unbox?.description ?: "" }
         vb.textviewAmountLeft.bindIncoming(transactionsVM.uncategorizedSpendsSize)
         // # Categories RecyclerView
-        categoriesVM.categories
-            .observeOn(AndroidSchedulers.mainThread())
-            .observe(viewLifecycleOwner) { vb.recyclerviewCategories.adapter?.notifyDataSetChanged() }
+        categoriesVM.userCategories.observe(viewLifecycleOwner) { categories = it }
         vb.recyclerviewCategories.addItemDecoration(LayoutMarginDecoration(3, 8.toPX(requireContext())))
         vb.recyclerviewCategories.layoutManager =
             GridLayoutManager(requireActivity(), 3, GridLayoutManager.VERTICAL, false)
@@ -75,7 +81,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     .let { GenViewHolder2(it) }
 
             override fun onBindViewHolder(holder: GenViewHolder2<ItemCategoryBtnBinding>, position: Int) {
-                val category = categoriesVM.userCategories.value[position]
+                val category = categories[position]
                 val selectionModeAction = {
                     categorySelectionVM.selectCategory(
                         addRemType = if (category !in categorySelectionVM.selectedCategories.value)
@@ -98,7 +104,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 }
             }
 
-            override fun getItemCount() = categoriesVM.userCategories.value.size
+            override fun getItemCount() = categories.size
         }
         // # Button RecyclerView
         categorySelectionVM.inSelectionMode.observe(viewLifecycleOwner) { btns = if (it)
