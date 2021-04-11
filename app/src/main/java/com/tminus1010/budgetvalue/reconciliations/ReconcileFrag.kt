@@ -66,9 +66,9 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
         val headerRecipeFactory_numbered2 = ViewItemRecipeFactory<LinearLayout, Pair<String, LiveData<String>>>(
             { View.inflate(requireContext(), R.layout.item_header_income, null) as LinearLayout },
             { v, d ->
-                val binding = ItemHeaderIncomeBinding.bind(v)
-                binding.textviewHeader.text = d.first
-                binding.textviewNumber.bindIncoming(viewLifecycleOwner, d.second)
+                val vb = ItemHeaderIncomeBinding.bind(v)
+                vb.textviewHeader.text = d.first
+                vb.textviewNumber.bindIncoming(viewLifecycleOwner, d.second)
             })
         val reconcileCARecipeFactory = ViewItemRecipeFactory<EditText, Pair<Category, Observable<BigDecimal>?>>(
             { View.inflate(context, R.layout.item_text_edit, null) as EditText },
