@@ -52,16 +52,6 @@ class ActivePlanDomain @Inject constructor(
             }
         }
         .toBehaviorSubject()
-    override val intentPushExpectedIncome = PublishSubject.create<BigDecimal>()
-        .also {
-            it.withLatestFrom2(activePlan)
-                .launch { (amount, plan) -> plansRepo.updatePlanAmount(plan, amount) }
-        }
-    override val intentPushActivePlanCA = PublishSubject.create<Pair<Category, BigDecimal?>>()
-        .also {
-            it.withLatestFrom2(activePlan)
-                .launch { (categoryAmount, plan) -> plansRepo.updatePlanCA(plan, categoryAmount.first, categoryAmount.second?.nullIfZero()) }
-        }
     override val activePlanCAs =
         Rx.combineLatest(activePlan, categoriesDomain.userCategories)
             .map { (activePlan, activeCategories) ->

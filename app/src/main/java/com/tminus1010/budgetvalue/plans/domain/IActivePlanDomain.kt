@@ -9,8 +9,6 @@ import java.math.BigDecimal
 
 interface IActivePlanDomain {
     val activePlan: BehaviorSubject<Plan>
-    val intentPushExpectedIncome: PublishSubject<BigDecimal>
-    val intentPushActivePlanCA: PublishSubject<Pair<Category, BigDecimal?>>
     val activePlanCAs: Observable<Map<Category, BehaviorSubject<BigDecimal>>>
     val planUncategorized: Observable<BigDecimal>
     val expectedIncome: Observable<BigDecimal>
