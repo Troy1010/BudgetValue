@@ -51,7 +51,7 @@ class ActivePlanDomain @Inject constructor(
                 }.doOnNext { plansRepo.pushPlan(it).blockingAwait() }
             }
         }
-        .toBehaviorSubject()
+        .replay(1).refCount()
     override val activePlanCAs =
         Rx.combineLatest(activePlan, categoriesDomain.userCategories)
             .map { (activePlan, activeCategories) ->
