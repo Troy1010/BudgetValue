@@ -56,14 +56,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
         // # TMTableView
         val cellRecipeFactory = ViewItemRecipeFactory.createCellRecipeFactory(requireContext())
         val headerRecipeFactory = ViewItemRecipeFactory.createHeaderRecipeFactory(requireContext())
-        val headerRecipeFactory_numbered = ViewItemRecipeFactory<LinearLayout, Pair<String, Observable<BigDecimal>>>(
-            { View.inflate(requireContext(), R.layout.item_header_income, null) as LinearLayout },
-            { v, d ->
-                val binding = ItemHeaderIncomeBinding.bind(v)
-                binding.textviewHeader.text = d.first
-                binding.textviewNumber.bindIncoming(d.second)
-            })
-        val headerRecipeFactory_numbered2 = ViewItemRecipeFactory<LinearLayout, Pair<String, LiveData<String>>>(
+        val headerRecipeFactory_numbered = ViewItemRecipeFactory<LinearLayout, Pair<String, LiveData<String>>>(
             { View.inflate(requireContext(), R.layout.item_header_income, null) as LinearLayout },
             { v, d ->
                 val vb = ItemHeaderIncomeBinding.bind(v)
@@ -86,6 +79,10 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
             { View.inflate(context, R.layout.item_text_view, null) as TextView },
             { v, d -> if (d!=null) v.bindIncoming(d) }
         )
+        val oneWayRecipeFactory2 = ViewItemRecipeFactory<TextView, LiveData<String>?>(
+            { View.inflate(context, R.layout.item_text_view, null) as TextView },
+            { v, d -> if (d != null) v.bindIncoming(viewLifecycleOwner, d) }
+        )
         val titledDividerRecipeFactory = ViewItemRecipeFactory<TextView, String>(
             { View.inflate(context, R.layout.item_titled_divider, null) as TextView },
             { v, s -> v.text = s }
@@ -99,15 +96,15 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                             + cellRecipeFactory.createOne2("Default")
                             + cellRecipeFactory.createMany(categories.map { it.name }),
                     headerRecipeFactory_numbered.createOne2(Pair("Plan", activePlanVM.expectedIncome))
-                            + oneWayRecipeFactory.createOne2(activePlanVM.defaultAmount)
-                            + oneWayRecipeFactory.createMany(categories.map { activePlanCAs[it] }),
+                            + oneWayRecipeFactory2.createOne2(activePlanVM.defaultAmount)
+                            + oneWayRecipeFactory2.createMany(categories.map { activePlanCAs[it] }),
                     headerRecipeFactory.createOne2("Actual")
                             + cellRecipeFactory2.createOne2("")
                             + cellRecipeFactory2.createMany(categories.map { currentSpendBlockCAs[it] ?: BigDecimal.ZERO }),
                     headerRecipeFactory.createOne2("Reconcile")
                             + oneWayRecipeFactory.createOne2(activeReconciliationVM2.defaultAmount)
                             + reconcileCARecipeFactory.createMany(categories.map { it to activeReconciliationCAs[it] }),
-                    headerRecipeFactory_numbered2.createOne2(Pair("Budgeted", accountsVM.accountsTotal))
+                    headerRecipeFactory_numbered.createOne2(Pair("Budgeted", accountsVM.accountsTotal))
                             + oneWayRecipeFactory.createOne2(budgetedVM.defaultAmount)
                             + oneWayRecipeFactory.createMany(categories.map { budgetedCA[it] })
                 ).reflectXY()

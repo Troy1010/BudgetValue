@@ -5,12 +5,14 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.LiveData
 import com.tminus1010.budgetvalue.*
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.reflectXY
 import com.tminus1010.budgetvalue._core.middleware.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.middleware.ui.bindIncoming
 import com.tminus1010.budgetvalue._core.middleware.ui.bindOutgoing
+import com.tminus1010.budgetvalue._core.middleware.ui.onDone
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.categories.CategoriesVM
@@ -35,24 +37,24 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
         // # TMTableView
         val cellRecipeFactory = ViewItemRecipeFactory.createCellRecipeFactory(requireContext())
         val headerRecipeFactory = ViewItemRecipeFactory.createHeaderRecipeFactory(requireContext())
-        val expectedIncomeRecipeFactory = ViewItemRecipeFactory<EditText, Observable<BigDecimal>>(
+        val expectedIncomeRecipeFactory = ViewItemRecipeFactory<EditText, LiveData<String>>(
             { View.inflate(context, R.layout.item_text_edit, null) as EditText },
-            { view, bs ->
-                view.bindIncoming(bs)
-                view.bindOutgoing(activePlanVM.intentPushExpectedIncome, { it.toMoneyBigDecimal() }) { it }
+            { v, d ->
+                v.bindIncoming(viewLifecycleOwner, d)
+                v.onDone { activePlanVM.pushExpectedIncome(it) }
             }
         )
-        val planCAsRecipeFactory = ViewItemRecipeFactory<EditText, Pair<Category, Observable<BigDecimal>?>>(
+        val planCAsRecipeFactory = ViewItemRecipeFactory<EditText, Pair<Category, LiveData<String>?>>(
             { View.inflate(context, R.layout.item_text_edit, null) as EditText },
-            { view, (category, d) ->
+            { v, (category, d) ->
                 if (d == null) return@ViewItemRecipeFactory
-                view.bindIncoming(d)
-                view.bindOutgoing(activePlanVM.intentPushActivePlanCA, { Pair(category, it.toMoneyBigDecimal()) }) { it.second }
+                v.bindIncoming(viewLifecycleOwner, d)
+                v.onDone { activePlanVM.pushActivePlanCA(category, it) }
             }
         )
-        val oneWayRecipeBuilder = ViewItemRecipeFactory<TextView, Observable<BigDecimal>>(
+        val oneWayRecipeFactory2 = ViewItemRecipeFactory<TextView, LiveData<String>>(
             { View.inflate(context, R.layout.item_text_view, null) as TextView },
-            { v, bs -> v.bindIncoming(bs) }
+            { v, d -> v.bindIncoming(viewLifecycleOwner, d) }
         )
         val titledDividerRecipeFactory = ViewItemRecipeFactory<TextView, String>(
             { View.inflate(context, R.layout.item_titled_divider, null) as TextView },
@@ -69,7 +71,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
                             + cellRecipeFactory.createMany(categories.map { it.name }),
                     headerRecipeFactory.createOne2("Plan")
                             + expectedIncomeRecipeFactory.createOne2(activePlanVM.expectedIncome)
-                            + oneWayRecipeBuilder.createOne2(activePlanVM.defaultAmount)
+                            + oneWayRecipeFactory2.createOne2(activePlanVM.defaultAmount)
                             + planCAsRecipeFactory.createMany(categories.map { Pair(it, planCAsItemObservableMap[it]) }))
                     .reflectXY()
                 val dividerMap = categories
