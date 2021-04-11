@@ -8,20 +8,18 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
-import com.jakewharton.rxbinding4.view.clicks
 import com.tminus1010.budgetvalue.*
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.reflectXY
-import com.tminus1010.budgetvalue._core.middleware.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.middleware.ui.bindIncoming
-import com.tminus1010.budgetvalue._core.middleware.ui.bindOutgoing
+import com.tminus1010.budgetvalue._core.middleware.ui.onDone
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.accounts.AccountsVM
 import com.tminus1010.budgetvalue.budgeted.BudgetedVM
 import com.tminus1010.budgetvalue.categories.CategoriesVM
-import com.tminus1010.budgetvalue.databinding.FragReconcileBinding
 import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.databinding.FragReconcileBinding
 import com.tminus1010.budgetvalue.databinding.ItemHeaderIncomeBinding
 import com.tminus1010.budgetvalue.plans.ActivePlanVM
 import com.tminus1010.budgetvalue.transactions.TransactionsVM
@@ -36,7 +34,6 @@ import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
-    val activeReconciliationVM2 by activityViewModels<ActiveReconciliationVM2>()
     val activeReconciliationVM by activityViewModels<ActiveReconciliationVM>()
     val categoriesVM by activityViewModels<CategoriesVM>()
     val activePlanVM by activityViewModels<ActivePlanVM>()
@@ -46,13 +43,8 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
     val vb by viewBinding(FragReconcileBinding::bind)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // # Init VMs
-        // Hilt requires that VM initializations are on main thread.
-        activeReconciliationVM2
         // # Clicks
-        vb.btnSave.clicks().observe(viewLifecycleOwner) {
-            activeReconciliationVM2.intentSaveReconciliation.onNext(Unit)
-        }
+        vb.btnSave.setOnClickListener { activeReconciliationVM.saveReconciliation() }
         // # TMTableView
         val cellRecipeFactory = ViewItemRecipeFactory.createCellRecipeFactory(requireContext())
         val headerRecipeFactory = ViewItemRecipeFactory.createHeaderRecipeFactory(requireContext())
@@ -63,12 +55,12 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                 vb.textviewHeader.text = d.first
                 vb.textviewNumber.bindIncoming(viewLifecycleOwner, d.second)
             })
-        val reconcileCARecipeFactory = ViewItemRecipeFactory<EditText, Pair<Category, Observable<BigDecimal>?>>(
+        val reconcileCARecipeFactory = ViewItemRecipeFactory<EditText, Pair<Category, LiveData<String>?>>(
             { View.inflate(context, R.layout.item_text_edit, null) as EditText },
             { v, (category, d) ->
                 if (d==null) return@ViewItemRecipeFactory
-                v.bindIncoming(d)
-                v.bindOutgoing(activeReconciliationVM.intentPushActiveReconcileCA, { s -> category to s.toMoneyBigDecimal() }) { it.second }
+                v.bindIncoming(viewLifecycleOwner, d)
+                v.onDone { activeReconciliationVM.pushActiveReconcileCA(category, it) }
             }
         )
         val cellRecipeFactory2 = ViewItemRecipeFactory(
@@ -102,7 +94,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                             + cellRecipeFactory2.createOne2("")
                             + cellRecipeFactory2.createMany(categories.map { currentSpendBlockCAs[it] ?: BigDecimal.ZERO }),
                     headerRecipeFactory.createOne2("Reconcile")
-                            + oneWayRecipeFactory.createOne2(activeReconciliationVM2.defaultAmount)
+                            + oneWayRecipeFactory2.createOne2(activeReconciliationVM.defaultAmount)
                             + reconcileCARecipeFactory.createMany(categories.map { it to activeReconciliationCAs[it] }),
                     headerRecipeFactory_numbered.createOne2(Pair("Budgeted", accountsVM.accountsTotal))
                             + oneWayRecipeFactory.createOne2(budgetedVM.defaultAmount)

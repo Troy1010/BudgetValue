@@ -51,17 +51,7 @@ class ActivePlanDomain @Inject constructor(
                 }.doOnNext { plansRepo.pushPlan(it).blockingAwait() }
             }
         }
-        .toBehaviorSubject()
-    override val intentPushExpectedIncome = PublishSubject.create<BigDecimal>()
-        .also {
-            it.withLatestFrom2(activePlan)
-                .launch { (amount, plan) -> plansRepo.updatePlanAmount(plan, amount) }
-        }
-    override val intentPushActivePlanCA = PublishSubject.create<Pair<Category, BigDecimal?>>()
-        .also {
-            it.withLatestFrom2(activePlan)
-                .launch { (categoryAmount, plan) -> plansRepo.updatePlanCA(plan, categoryAmount.first, categoryAmount.second?.nullIfZero()) }
-        }
+        .replay(1).refCount()
     override val activePlanCAs =
         Rx.combineLatest(activePlan, categoriesDomain.userCategories)
             .map { (activePlan, activeCategories) ->
@@ -70,10 +60,11 @@ class ActivePlanDomain @Inject constructor(
             .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO))
             { it.itemObservableMap2 }
             .replay(1).refCount()
-    override val planUncategorized = activePlanCAs
-        .switchMap { it.values.total() }
-        .replay(1).refCount()
     override val expectedIncome = activePlan.map { it.amount }
-    override val defaultAmount = Rx.combineLatest(expectedIncome, planUncategorized)
-        .map { it.first - it.second }
+    override val defaultAmount =
+        Rx.combineLatest(
+            expectedIncome,
+            activePlanCAs.switchMap { it.values.total() },
+        ).map { it.first - it.second }
+            .replay(1).refCount()
 }

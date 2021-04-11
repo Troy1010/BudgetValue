@@ -81,10 +81,12 @@ class MainRepo @Inject constructor(
     override val reconciliations: Observable<List<Reconciliation>> =
         miscDAO.fetchReconciliations()
             .map { it.map { Reconciliation.fromDTO(it, categoryAmountsConverter) } }
+            .replay(1).refCount()
 
     override val activeReconciliationCAs: Observable<Map<Category, BigDecimal>> =
         sharedPrefWrapper.activeReconciliationCAs
             .map { it.associate { categoryParser.parseCategory(it.key) to it.value.toBigDecimalSafe() } }
+            .replay(1).refCount()
 
     override fun pushActiveReconciliationCAs(categoryAmounts: Map<Category, BigDecimal>): Completable =
         sharedPrefWrapper.pushActiveReconciliationCAs(categoryAmounts.associate { it.key.name to it.value.toString() })

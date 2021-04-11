@@ -11,8 +11,7 @@ import com.tminus1010.budgetvalue.history.models.HistoryColumnData
 import com.tminus1010.budgetvalue.history.models.IHistoryColumnData
 import com.tminus1010.budgetvalue.plans.data.IPlansRepo
 import com.tminus1010.budgetvalue.reconciliations.data.IReconciliationsRepo
-import com.tminus1010.budgetvalue.reconciliations.domain.ActiveReconciliationDomain
-import com.tminus1010.budgetvalue.reconciliations.domain.ActiveReconciliationDomain2
+import com.tminus1010.budgetvalue.reconciliations.domain.ActiveReconciliationDefaultAmountUC
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,13 +24,13 @@ class HistoryVM @Inject constructor(
     plansRepo: IPlansRepo,
     reconciliationDomain: IReconciliationsRepo,
     transactionsDomain: TransactionsDomain,
-    activeReconciliationDomain: ActiveReconciliationDomain,
-    activeReconciliationDomain2: ActiveReconciliationDomain2,
+    reconciliationRepo: IReconciliationsRepo,
+    activeReconciliationDefaultAmountUC: ActiveReconciliationDefaultAmountUC,
     budgetedDomain: BudgetedDomain,
     private val datePeriodGetter: DatePeriodGetter
 ) : ViewModel() {
     val historyColumnDatas =
-        Rx.combineLatest(reconciliationDomain.reconciliations, plansRepo.plans, activeReconciliationDomain2.defaultAmount, activeReconciliationDomain.activeReconcileCAs, transactionsDomain.transactionBlocks, budgetedDomain.budgeted)
+        Rx.combineLatest(reconciliationDomain.reconciliations, plansRepo.plans, activeReconciliationDefaultAmountUC(), reconciliationRepo.activeReconciliationCAs, transactionsDomain.transactionBlocks, budgetedDomain.budgeted)
             .observeOn(Schedulers.computation())
             .throttleLatest(500, TimeUnit.MILLISECONDS)
             .map { (reconciliations, plans, activeReconciliationDefaultAmount, activeReconciliationCAs, transactionBlocks, budgeted) ->
