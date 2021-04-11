@@ -7,7 +7,7 @@ import com.tminus1010.budgetvalue.accounts.domain.AccountsDomain
 import com.tminus1010.budgetvalue.budgeted.Budgeted
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.data.IPlansRepo
-import com.tminus1010.budgetvalue.reconciliations.domain.ActiveReconciliationDomain
+import com.tminus1010.budgetvalue.reconciliations.data.IReconciliationsRepo
 import com.tminus1010.budgetvalue.reconciliations.domain.ReconciliationDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
@@ -22,11 +22,11 @@ class BudgetedDomain @Inject constructor(
     reconciliationDomain: ReconciliationDomain,
     plansRepo: IPlansRepo,
     transactionsDomain: TransactionsDomain,
-    activeReconciliationDomain: ActiveReconciliationDomain,
+    reconciliationsRepo: IReconciliationsRepo,
     accountsDomain: AccountsDomain,
 ) : IBudgetedDomain {
     override val categoryAmounts =
-        Rx.combineLatest(reconciliationDomain.reconciliations, plansRepo.plans, transactionsDomain.transactionBlocks, activeReconciliationDomain.activeReconcileCAs)
+        Rx.combineLatest(reconciliationDomain.reconciliations, plansRepo.plans, transactionsDomain.transactionBlocks, reconciliationsRepo.activeReconciliationCAs)
             .throttleLatest(1, TimeUnit.SECONDS)
             .map { (reconciliations, plans, transactionBlocks, activeReconcileCAs) ->
                 (reconciliations + plans + transactionBlocks)
