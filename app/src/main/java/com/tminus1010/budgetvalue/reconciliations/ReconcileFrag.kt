@@ -34,7 +34,6 @@ import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
-    val activeReconciliationVM2 by activityViewModels<ActiveReconciliationVM2>()
     val activeReconciliationVM by activityViewModels<ActiveReconciliationVM>()
     val categoriesVM by activityViewModels<CategoriesVM>()
     val activePlanVM by activityViewModels<ActivePlanVM>()
@@ -44,11 +43,8 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
     val vb by viewBinding(FragReconcileBinding::bind)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // # Init VMs
-        // Hilt requires that VM initializations are on main thread.
-        activeReconciliationVM2
         // # Clicks
-        vb.btnSave.setOnClickListener { activeReconciliationVM2.saveReconciliation() }
+        vb.btnSave.setOnClickListener { activeReconciliationVM.saveReconciliation() }
         // # TMTableView
         val cellRecipeFactory = ViewItemRecipeFactory.createCellRecipeFactory(requireContext())
         val headerRecipeFactory = ViewItemRecipeFactory.createHeaderRecipeFactory(requireContext())
@@ -98,7 +94,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                             + cellRecipeFactory2.createOne2("")
                             + cellRecipeFactory2.createMany(categories.map { currentSpendBlockCAs[it] ?: BigDecimal.ZERO }),
                     headerRecipeFactory.createOne2("Reconcile")
-                            + oneWayRecipeFactory2.createOne2(activeReconciliationVM2.defaultAmount)
+                            + oneWayRecipeFactory2.createOne2(activeReconciliationVM.defaultAmount)
                             + reconcileCARecipeFactory.createMany(categories.map { it to activeReconciliationCAs[it] }),
                     headerRecipeFactory_numbered.createOne2(Pair("Budgeted", accountsVM.accountsTotal))
                             + oneWayRecipeFactory.createOne2(budgetedVM.defaultAmount)
