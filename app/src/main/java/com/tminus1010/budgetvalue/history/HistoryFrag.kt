@@ -53,7 +53,7 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
                                 { plansVM.deletePlan(historyColumnData) }
                             }
                             historyColumnData is Reconciliation -> {
-                                { reconciliationsVM.intentDeleteReconciliation.onNext(historyColumnData) }
+                                { reconciliationsVM.delete(historyColumnData) }
                             }
                             else -> null
                         }?.let { MenuItemPartial("Delete", it) })
