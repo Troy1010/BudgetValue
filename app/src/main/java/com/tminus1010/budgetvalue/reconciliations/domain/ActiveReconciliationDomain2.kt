@@ -5,6 +5,7 @@ import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue.budgeted.domain.BudgetedDomain
 import com.tminus1010.budgetvalue.plans.data.IPlansRepo
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
+import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
 import java.math.BigDecimal
@@ -25,7 +26,6 @@ class ActiveReconciliationDomain2 @Inject constructor(
                 (plans.map { it.amount } +
                         reconciliations.map { it.defaultAmount } +
                         transactionBlocks.map { it.defaultAmount })
-                    .fold(BigDecimal.ZERO) { acc, v -> acc + v }
-                    .let { budgetedDefaultAmount - it }
+                    .let { budgetedDefaultAmount - it.sum() }
             }.toBehaviorSubject()
 }
