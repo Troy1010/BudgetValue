@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue.budgeted.domain.BudgetedDomain
 import com.tminus1010.budgetvalue.plans.data.IPlansRepo
+import com.tminus1010.budgetvalue.reconciliations.data.IReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
@@ -15,13 +16,13 @@ import javax.inject.Singleton
 @Singleton
 class ActiveReconciliationDomain2 @Inject constructor(
     plansRepo: IPlansRepo,
-    reconciliationDomain: ReconciliationDomain,
+    reconciliationsRepo: IReconciliationsRepo,
     budgetedDomain: BudgetedDomain,
     transactionsDomain: TransactionsDomain,
 ) : ViewModel(), IActiveReconciliationDomain2 {
     // This calculation is a bit confusing. Take a look at ManualCalculationsForTests for clarification
     override val defaultAmount: Observable<BigDecimal> =
-        Rx.combineLatest(plansRepo.plans, reconciliationDomain.reconciliations, transactionsDomain.transactionBlocks, budgetedDomain.defaultAmount)
+        Rx.combineLatest(plansRepo.plans, reconciliationsRepo.reconciliations, transactionsDomain.transactionBlocks, budgetedDomain.defaultAmount)
             .map { (plans, reconciliations, transactionBlocks, budgetedDefaultAmount) ->
                 (plans.map { it.amount } +
                         reconciliations.map { it.defaultAmount } +

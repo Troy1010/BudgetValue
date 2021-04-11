@@ -81,6 +81,7 @@ class MainRepo @Inject constructor(
     override val reconciliations: Observable<List<Reconciliation>> =
         miscDAO.fetchReconciliations()
             .map { it.map { Reconciliation.fromDTO(it, categoryAmountsConverter) } }
+            .replay(1).refCount()
 
     override val activeReconciliationCAs: Observable<Map<Category, BigDecimal>> =
         sharedPrefWrapper.activeReconciliationCAs
