@@ -31,10 +31,10 @@ class ActivePlanVM @Inject constructor(
 
     // # Intents
     fun pushExpectedIncome(s: String) {
-        activePlanDomain.activePlan.launch { plansRepo.updatePlanAmount(it, s.toMoneyBigDecimal()) }
+        activePlanDomain.activePlan.take(1).launch { plansRepo.updatePlanAmount(it, s.toMoneyBigDecimal()) }
     }
 
     fun pushActivePlanCA(category: Category, s: String) {
-        activePlanDomain.activePlan.launch { plansRepo.updatePlanCA(it, category, s.toMoneyBigDecimal()) }
+        activePlanDomain.activePlan.take(1).launch { plansRepo.updatePlanCA(it, category, s.toMoneyBigDecimal()) }
     }
 }
