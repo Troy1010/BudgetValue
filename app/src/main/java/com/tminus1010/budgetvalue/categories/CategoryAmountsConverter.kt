@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.categories
 import com.squareup.moshi.Moshi
 import com.tminus1010.budgetvalue._core.extensions.fromJson
 import com.tminus1010.budgetvalue._core.extensions.toJson
+import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.tmcommonkotlin.misc.extensions.associate
 import java.math.BigDecimal
 import javax.inject.Inject

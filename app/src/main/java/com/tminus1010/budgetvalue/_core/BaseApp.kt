@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue._core
 
 import android.app.Application
-import com.tminus1010.tmcommonkotlin.misc.logz
+import com.tminus1010.tmcommonkotlin.core.logz
 import io.reactivex.rxjava3.plugins.RxJavaPlugins
 
 open class BaseApp : Application() {

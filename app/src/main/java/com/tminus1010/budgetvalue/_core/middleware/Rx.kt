@@ -4,6 +4,9 @@ import com.tminus1010.tmcommonkotlin.tuple.*
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableSource
+import io.reactivex.rxjava3.core.Scheduler
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 object Rx {
     @Suppress("UNCHECKED_CAST")
@@ -145,4 +148,10 @@ object Rx {
         return Observable.merge(a, b)
             .map { Pair(it as? A, it as? B) }
     }
+
+    fun launch(scheduler: Scheduler = Schedulers.io(), lambda: () -> Completable): Disposable =
+        lambda().subscribeOn(scheduler).subscribe()
+
+    fun launch2(scheduler: Scheduler = Schedulers.io(), lambda: () -> Unit): Disposable =
+        Completable.fromAction { lambda() }.subscribeOn(scheduler).subscribe()
 }

@@ -3,10 +3,14 @@ package com.tminus1010.budgetvalue._core.middleware.ui
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.TextView
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import com.jakewharton.rxbinding4.view.focusChanges
 import com.jakewharton.rxbinding4.widget.TextViewEditorActionEvent
 import com.jakewharton.rxbinding4.widget.editorActionEvents
 import com.jakewharton.rxbinding4.widget.textChanges
+import com.tminus1010.budgetvalue._core.middleware.Rx
+import com.tminus1010.tmcommonkotlin.misc.extensions.easyGetLayoutParams
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
@@ -49,11 +53,36 @@ fun <T> EditText.bindOutgoing(
         .observeOn(AndroidSchedulers.mainThread())
         .withLatestFrom(this.textChanges()) { _, x -> x.toString() }
         .map { toT(it) }
-        .map { if (validate==null) it else validate(it) }
+        .map { if (validate!=null) validate(it) else it }
         .publish().refCount()
         .also { if (toDisplayable!=null) this.bindIncoming(it, toDisplayable) }
         .distinctUntilChanged()
         .subscribe(subject)
+}
+
+// Transform to output, validate, transform back
+
+fun EditText.onDone(
+    onDone: (String) -> Unit
+) {
+    setOnEditorActionListener { v, actionId, event ->
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+            onDone(text.toString())
+            false
+        } else true
+    }
+    setOnFocusChangeListener { v, hasFocus ->
+        if (!hasFocus) onDone(text.toString())
+    }
+}
+
+fun TextView.bindIncoming(lifecycleOwner: LifecycleOwner, liveData: LiveData<String>) {
+    Rx.launch2(AndroidSchedulers.mainThread()) { // You might get: "Cannot invoke observe on a background thread" without this.
+        liveData.observe(lifecycleOwner) {
+            easyGetLayoutParams() // You might get: "Attempt to read from field 'int android.view.ViewGroup$LayoutParams.width' on a null object reference" without this.
+            if (text.toString() != it) text = it // is .toString() necessary?
+        }
+    }
 }
 
 fun <T> TextView.bindIncoming(

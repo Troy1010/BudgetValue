@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue._core.data
 
 import com.tminus1010.budgetvalue._core.middleware.toBigDecimalSafe
 import com.tminus1010.budgetvalue.accounts.models.Account
-import com.tminus1010.budgetvalue.categories.Category
+import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.data.CategoriesRepo

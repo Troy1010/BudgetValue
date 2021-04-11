@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.categories.domain
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.middleware.Rx
-import com.tminus1010.budgetvalue.categories.Category
+import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.data.ICategoriesRepo
 import com.tminus1010.budgetvalue.plans.data.IPlansRepo
 import com.tminus1010.budgetvalue.plans.domain.ActivePlanDomain

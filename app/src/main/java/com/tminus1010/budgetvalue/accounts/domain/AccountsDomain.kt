@@ -12,15 +12,11 @@ import javax.inject.Singleton
 @Singleton
 class AccountsDomain @Inject constructor(
     accountsRepo: IAccountsRepo
-) : IAccountsDomain {
-    override val intentAddAccount = PublishSubject.create<Unit>()
-        .also { it.launch { accountsRepo.push(Account("", BigDecimal.ZERO)) } }
-    override val intentDeleteAccount = PublishSubject.create<Account>()
-        .also { it.launch { accountsRepo.delete(it) } }
-    override val intentUpdateAccount = PublishSubject.create<Account>()
-        .also { it.launch { accountsRepo.update(it) } }
-    override val accounts = accountsRepo.fetchAccounts().toBehaviorSubject(emptyList())
-    override val accountsTotal = accounts
+) {
+    val accounts = accountsRepo.fetchAccounts()
+        .replay(1).refCount()
+
+    val accountsTotal = accounts
         .map { it.fold(BigDecimal.ZERO) { acc, account -> acc + account.amount } }
-        .toBehaviorSubject()
+        .replay(1).refCount()
 }

@@ -11,10 +11,10 @@ import com.jakewharton.rxbinding4.view.clicks
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.LaunchImportUC
 import com.tminus1010.budgetvalue._core.middleware.toMoneyBigDecimal
-import com.tminus1010.budgetvalue._core.middleware.ui.GenViewHolder2
-import com.tminus1010.budgetvalue._core.middleware.ui.bindOutgoing
-import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue._core.middleware.ui.*
 import com.tminus1010.budgetvalue._core.ui.HostActivity
+import com.tminus1010.budgetvalue._core.ui.view_binding.bind
+import com.tminus1010.budgetvalue.accounts.models.Account
 import com.tminus1010.budgetvalue.databinding.FragImportBinding
 import com.tminus1010.budgetvalue.databinding.ItemAccountBinding
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -28,40 +28,28 @@ class ImportFrag : Fragment(R.layout.frag_import) {
     @Inject lateinit var launchImportUC: LaunchImportUC
     val accountsVM: AccountsVM by activityViewModels()
     val vb by viewBinding(FragImportBinding::bind)
+    var accounts = emptyList<Account>()
+        set(value) {
+            val shouldNotifyDataSetChanged = field.size != value.size
+            field = value
+            if (shouldNotifyDataSetChanged) vb.recyclerviewAccounts.adapter?.notifyDataSetChanged()
+        }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Clicks
         vb.btnImport.setOnClickListener { launchImportUC(requireActivity() as HostActivity) }
-        vb.btnAddAccount.clicks().subscribe(accountsVM.intentAddAccount)
+        vb.btnAddAccount.setOnClickListener { accountsVM.addAccount() }
         // # RecyclerView
-        accountsVM.accounts
-            .pairwise()
-            .filter { it.first.size != it.second.size }
-            .observeOn(AndroidSchedulers.mainThread())
-            .observe(viewLifecycleOwner) { vb.recyclerviewAccounts.adapter?.notifyDataSetChanged() }
+        accountsVM.accounts.observe(viewLifecycleOwner) { accounts = it }
         vb.recyclerviewAccounts.apply {
             layoutManager = LinearLayoutManager(requireActivity())
             adapter = object : RecyclerView.Adapter<GenViewHolder2<ItemAccountBinding>>() {
                 override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
                     ItemAccountBinding.inflate(layoutInflater, parent, false)
                         .let { GenViewHolder2(it) }
-                override fun getItemCount() = accountsVM.accounts.value.size
+                override fun getItemCount() = accounts.size
                 override fun onBindViewHolder(holder: GenViewHolder2<ItemAccountBinding>, position: Int) {
-                    val account = accountsVM.accounts.value[holder.adapterPosition]
-                    holder.vb.btnDeleteAccount.clicks()
-                        .map { account }
-                        .subscribe(accountsVM.intentDeleteAccount)
-                    holder.vb.editTextName.apply {
-                        setText(account.name)
-                        bindOutgoing(accountsVM.intentUpdateAccount,
-                            { account.copy(name = it) })
-                    }
-                    holder.vb.editTextAmount.apply {
-                        setText(account.amount.toString())
-                        bindOutgoing(accountsVM.intentUpdateAccount,
-                            toT = { account.copy(amount = it.toMoneyBigDecimal()) },
-                            toDisplayable = { it.amount })
-                    }
+                    holder.vb.bind(accounts[holder.adapterPosition], accountsVM)
                 }
             }
         }

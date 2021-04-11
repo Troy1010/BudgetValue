@@ -4,7 +4,7 @@ import com.tminus1010.budgetvalue._core.extensions.toObservable
 import com.tminus1010.budgetvalue._core.middleware.LocalDatePeriod
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
 import com.tminus1010.budgetvalue.categories.CategoriesVM
-import com.tminus1010.budgetvalue.categories.Category
+import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.models.Plan
 import com.tminus1010.budgetvalue.reconciliations.models.Reconciliation
 import com.tminus1010.budgetvalue.transactions.models.TransactionsBlock

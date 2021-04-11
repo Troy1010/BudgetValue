@@ -2,6 +2,8 @@ package com.tminus1010.budgetvalue._core.extensions
 
 import androidx.lifecycle.LiveDataReactiveStreams
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
+import com.tminus1010.tmcommonkotlin.rx.extensions.isCold
+import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -13,7 +15,7 @@ import io.reactivex.rxjava3.subjects.Subject
 
 fun <T> Observable<T>.io(): Observable<T> = observeOn(Schedulers.io())
 fun <T> Observable<T>.launch(scheduler: Scheduler = Schedulers.io(), completableProvider: (T) -> Completable): Disposable =
-    this.observeOn(scheduler).flatMapCompletable { completableProvider(it) }.subscribe()
+    observeOn(scheduler).flatMapCompletable { completableProvider(it) }.subscribe()
 
 fun <K, V, T: SourceHashMap<K, V>> Observable<T>.itemObservableMap2() = // TODO("there must be a better way..")
     take(1).flatMap { it.itemObservableMap2 }
@@ -44,4 +46,9 @@ private fun <T> Observable<T>.toLiveData() =
     LiveDataReactiveStreams.fromPublisher(this.toFlowable(BackpressureStrategy.LATEST))
 
 fun <T> Observable<T>.toLiveData(errorSubject: Subject<Throwable>) =
-    this.divertErrors(errorSubject).toLiveData()
+    divertErrors(errorSubject).toLiveData()
+
+fun <T> Observable<T>.nonLazyCache() =
+    replay(1).also { it.connect() }
+
+fun <T> Observable<T>.await() = value ?: take(1).blockingLast()

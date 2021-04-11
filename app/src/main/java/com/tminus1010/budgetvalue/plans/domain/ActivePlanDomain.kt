@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.nullIfZero
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
-import com.tminus1010.budgetvalue.categories.Category
+import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue._core.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue._core.extensions.launch
@@ -25,9 +25,8 @@ class ActivePlanDomain @Inject constructor(
     plansRepo: IPlansRepo,
     categoriesDomain: CategoriesDomain,
     datePeriodGetter: DatePeriodGetter,
-    plansDomain: PlansDomain,
 ) : ViewModel(), IActivePlanDomain {
-    override val activePlan = plansDomain.plans
+    override val activePlan = plansRepo.plans
         .flatMap {
             // If the last plan is a valid active plan, use that. Otherwise, copy some of the last plan's properties if it exists or create a new one, and push it.
             val lastPlan = it.lastOrNull()
@@ -74,9 +73,7 @@ class ActivePlanDomain @Inject constructor(
     override val planUncategorized = activePlanCAs
         .switchMap { it.values.total() }
         .replay(1).refCount()
-    override val expectedIncome = intentPushExpectedIncome
-        .startWith(activePlan.take(1).map { it.amount })
-        .toBehaviorSubject()
+    override val expectedIncome = activePlan.map { it.amount }
     override val defaultAmount = Rx.combineLatest(expectedIncome, planUncategorized)
         .map { it.first - it.second }
 }

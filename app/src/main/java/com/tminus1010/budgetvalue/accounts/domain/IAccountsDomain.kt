@@ -8,7 +8,4 @@ import java.math.BigDecimal
 interface IAccountsDomain {
     val accounts: BehaviorSubject<List<Account>>
     val accountsTotal: BehaviorSubject<BigDecimal>
-    val intentAddAccount: PublishSubject<Unit>
-    val intentDeleteAccount: PublishSubject<Account>
-    val intentUpdateAccount: PublishSubject<Account>
 }
