@@ -59,11 +59,11 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                 vb.textviewHeader.text = d.first
                 vb.textviewNumber.bindIncoming(viewLifecycleOwner, d.second)
             })
-        val reconcileCARecipeFactory = ViewItemRecipeFactory<EditText, Pair<Category, Observable<BigDecimal>?>>(
+        val reconcileCARecipeFactory = ViewItemRecipeFactory<EditText, Pair<Category, LiveData<String>?>>(
             { View.inflate(context, R.layout.item_text_edit, null) as EditText },
             { v, (category, d) ->
                 if (d==null) return@ViewItemRecipeFactory
-                v.bindIncoming(d)
+                v.bindIncoming(viewLifecycleOwner, d)
                 v.onDone { activeReconciliationVM.pushActiveReconcileCA(category, it) }
             }
         )
