@@ -48,5 +48,5 @@ class BudgetedDomain @Inject constructor(
     override val budgeted =
         Rx.combineLatest(categoryAmounts, defaultAmount)
             .map { Budgeted(it.first, it.second) }
-            .toBehaviorSubject()
+            .replay(1).refCount()
 }
