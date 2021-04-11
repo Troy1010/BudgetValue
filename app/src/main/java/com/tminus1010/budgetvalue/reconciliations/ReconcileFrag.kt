@@ -50,9 +50,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
         // Hilt requires that VM initializations are on main thread.
         activeReconciliationVM2
         // # Clicks
-        vb.btnSave.clicks().observe(viewLifecycleOwner) {
-            activeReconciliationVM2.intentSaveReconciliation.onNext(Unit)
-        }
+        vb.btnSave.setOnClickListener { activeReconciliationVM2.saveReconciliation() }
         // # TMTableView
         val cellRecipeFactory = ViewItemRecipeFactory.createCellRecipeFactory(requireContext())
         val headerRecipeFactory = ViewItemRecipeFactory.createHeaderRecipeFactory(requireContext())
@@ -102,7 +100,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                             + cellRecipeFactory2.createOne2("")
                             + cellRecipeFactory2.createMany(categories.map { currentSpendBlockCAs[it] ?: BigDecimal.ZERO }),
                     headerRecipeFactory.createOne2("Reconcile")
-                            + oneWayRecipeFactory.createOne2(activeReconciliationVM2.defaultAmount)
+                            + oneWayRecipeFactory2.createOne2(activeReconciliationVM2.defaultAmount)
                             + reconcileCARecipeFactory.createMany(categories.map { it to activeReconciliationCAs[it] }),
                     headerRecipeFactory_numbered.createOne2(Pair("Budgeted", accountsVM.accountsTotal))
                             + oneWayRecipeFactory.createOne2(budgetedVM.defaultAmount)
