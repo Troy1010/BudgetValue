@@ -44,7 +44,7 @@ private fun <T> Observable<T>.toLiveData() =
     LiveDataReactiveStreams.fromPublisher(this.toFlowable(BackpressureStrategy.LATEST))
 
 fun <T> Observable<T>.toLiveData(errorSubject: Subject<Throwable>) =
-    this.divertErrors(errorSubject).toLiveData()
+    divertErrors(errorSubject).toLiveData()
 
 fun <T> Observable<T>.nonLazyCache() =
     replay(1).also { it.connect() }
