@@ -10,7 +10,6 @@ import java.math.BigDecimal
 interface IActivePlanDomain {
     val activePlan: BehaviorSubject<Plan>
     val activePlanCAs: Observable<Map<Category, BehaviorSubject<BigDecimal>>>
-    val planUncategorized: Observable<BigDecimal>
     val expectedIncome: Observable<BigDecimal>
     val defaultAmount: Observable<BigDecimal>
 }

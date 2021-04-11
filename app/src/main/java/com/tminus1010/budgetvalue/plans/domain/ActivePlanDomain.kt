@@ -60,10 +60,9 @@ class ActivePlanDomain @Inject constructor(
             .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO))
             { it.itemObservableMap2 }
             .replay(1).refCount()
-    override val planUncategorized = activePlanCAs
-        .switchMap { it.values.total() }
-        .replay(1).refCount()
     override val expectedIncome = activePlan.map { it.amount }
-    override val defaultAmount = Rx.combineLatest(expectedIncome, planUncategorized)
-        .map { it.first - it.second }
+    override val defaultAmount = activePlanCAs
+        .switchMap { it.values.total() }
+        .withLatestFrom(expectedIncome) { caTotal, expectedIncome -> expectedIncome - caTotal }
+        .replay(1).refCount()
 }
