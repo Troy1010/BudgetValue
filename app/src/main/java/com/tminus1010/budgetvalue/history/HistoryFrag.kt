@@ -50,7 +50,7 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
                     listOfNotNull(
                         when {
                             historyColumnData is Plan && !historyColumnData.isCurrent(datePeriodGetter) -> {
-                                { plansVM.intentDeletePlan.onNext(historyColumnData) }
+                                { plansVM.deletePlan(historyColumnData) }
                             }
                             historyColumnData is Reconciliation -> {
                                 { reconciliationsVM.intentDeleteReconciliation.onNext(historyColumnData) }
