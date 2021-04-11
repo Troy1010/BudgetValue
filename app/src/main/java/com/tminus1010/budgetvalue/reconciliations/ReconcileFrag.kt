@@ -27,7 +27,6 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
@@ -67,10 +66,6 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
             { View.inflate(context, R.layout.item_text_view, null) as TextView },
             { v: TextView, d: Any? -> v.text = d?.toString() }
         )
-        val oneWayRecipeFactory = ViewItemRecipeFactory<TextView, Observable<BigDecimal>?>(
-            { View.inflate(context, R.layout.item_text_view, null) as TextView },
-            { v, d -> if (d!=null) v.bindIncoming(d) }
-        )
         val oneWayRecipeFactory2 = ViewItemRecipeFactory<TextView, LiveData<String>?>(
             { View.inflate(context, R.layout.item_text_view, null) as TextView },
             { v, d -> if (d != null) v.bindIncoming(viewLifecycleOwner, d) }
@@ -79,7 +74,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
             { View.inflate(context, R.layout.item_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs, transactionsVM.currentSpendBlockCAs, activeReconciliationVM.activeReconcileCAs2, budgetedVM.categoryAmountsObservableMap)
+        Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs, transactionsVM.currentSpendBlockCAs, activeReconciliationVM.activeReconcileCAs2, budgetedVM.categoryAmounts)
             .observeOn(Schedulers.computation())
             .debounce(100, TimeUnit.MILLISECONDS)
             .map { (categories, activePlanCAs, currentSpendBlockCAs, activeReconciliationCAs, budgetedCA) ->
@@ -97,8 +92,8 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                             + oneWayRecipeFactory2.createOne2(activeReconciliationVM.defaultAmount)
                             + reconcileCARecipeFactory.createMany(categories.map { it to activeReconciliationCAs[it] }),
                     headerRecipeFactory_numbered.createOne2(Pair("Budgeted", accountsVM.accountsTotal))
-                            + oneWayRecipeFactory.createOne2(budgetedVM.defaultAmount)
-                            + oneWayRecipeFactory.createMany(categories.map { budgetedCA[it] })
+                            + oneWayRecipeFactory2.createOne2(budgetedVM.defaultAmount)
+                            + oneWayRecipeFactory2.createMany(categories.map { budgetedCA[it] })
                 ).reflectXY()
                 val dividerMap = categories
                     .withIndex()
