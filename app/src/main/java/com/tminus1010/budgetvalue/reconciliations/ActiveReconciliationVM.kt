@@ -11,7 +11,7 @@ import com.tminus1010.budgetvalue._core.middleware.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.reconciliations.data.IReconciliationsRepo
-import com.tminus1010.budgetvalue.reconciliations.domain.ActiveReconciliationDomain2
+import com.tminus1010.budgetvalue.reconciliations.domain.ActiveReconciliationDefaultAmountUC
 import com.tminus1010.budgetvalue.reconciliations.models.Reconciliation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.Subject
@@ -24,7 +24,7 @@ class ActiveReconciliationVM @Inject constructor(
     errorSubject: Subject<Throwable>,
     private val reconciliationsRepo: IReconciliationsRepo,
     categoriesDomain: CategoriesDomain,
-    private val activeReconciliationDomain2: ActiveReconciliationDomain2,
+    private val activeReconciliationDefaultAmountUC: ActiveReconciliationDefaultAmountUC,
 ) : ViewModel() {
     // # State
     val activeReconcileCAs2 =
@@ -37,7 +37,7 @@ class ActiveReconciliationVM @Inject constructor(
             { it.itemObservableMap2 }
             .map { it.mapValues { it.value.map { it.toString() }.toLiveData(errorSubject) } }
             .replay(1).refCount()
-    val defaultAmount: LiveData<String> = activeReconciliationDomain2.defaultAmount
+    val defaultAmount: LiveData<String> = activeReconciliationDefaultAmountUC()
         .map { it.toString() }
         .toLiveData(errorSubject)
 
@@ -50,7 +50,7 @@ class ActiveReconciliationVM @Inject constructor(
         Rx.launch {
             Reconciliation(
                 LocalDate.now(),
-                activeReconciliationDomain2.defaultAmount.await(),
+                activeReconciliationDefaultAmountUC().await(),
                 reconciliationsRepo.activeReconciliationCAs.await(),
             )
                 .let { reconciliationsRepo.push(it) }
