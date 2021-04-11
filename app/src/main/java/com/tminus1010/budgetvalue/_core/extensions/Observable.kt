@@ -2,6 +2,8 @@ package com.tminus1010.budgetvalue._core.extensions
 
 import androidx.lifecycle.LiveDataReactiveStreams
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
+import com.tminus1010.tmcommonkotlin.rx.extensions.isCold
+import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -48,3 +50,5 @@ fun <T> Observable<T>.toLiveData(errorSubject: Subject<Throwable>) =
 
 fun <T> Observable<T>.nonLazyCache() =
     replay(1).also { it.connect() }
+
+fun <T> Observable<T>.await() = value ?: take(1).blockingLast()

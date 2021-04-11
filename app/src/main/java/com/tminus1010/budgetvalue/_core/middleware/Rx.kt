@@ -149,6 +149,9 @@ object Rx {
             .map { Pair(it as? A, it as? B) }
     }
 
-    fun launch(scheduler: Scheduler = Schedulers.io(), lambda: () -> Unit): Disposable =
+    fun launch(scheduler: Scheduler = Schedulers.io(), lambda: () -> Completable): Disposable =
+        lambda().subscribeOn(scheduler).subscribe()
+
+    fun launch2(scheduler: Scheduler = Schedulers.io(), lambda: () -> Unit): Disposable =
         Completable.fromAction { lambda() }.subscribeOn(scheduler).subscribe()
 }

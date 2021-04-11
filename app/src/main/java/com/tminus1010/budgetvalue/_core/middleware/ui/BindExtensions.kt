@@ -77,7 +77,7 @@ fun EditText.onDone(
 }
 
 fun TextView.bindIncoming(lifecycleOwner: LifecycleOwner, liveData: LiveData<String>) {
-    Rx.launch(AndroidSchedulers.mainThread()) { // You might get: "Cannot invoke observe on a background thread" without this.
+    Rx.launch2(AndroidSchedulers.mainThread()) { // You might get: "Cannot invoke observe on a background thread" without this.
         liveData.observe(lifecycleOwner) {
             easyGetLayoutParams() // You might get: "Attempt to read from field 'int android.view.ViewGroup$LayoutParams.width' on a null object reference" without this.
             if (text.toString() != it) text = it // is .toString() necessary?
