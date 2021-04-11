@@ -19,9 +19,7 @@ import java.time.Period
 object Givens {
     private val givenUserCategories1: Observable<List<Category>> =
         Observable.just(AppInitDomain.initCategories)
-    val givenCategories = CategoriesVM(object : IUserCategoriesFetch {
-        override fun fetchUserCategories(): Observable<List<Category>> = givenUserCategories1
-    }).categories
+    val givenCategories = givenUserCategories1.toBehaviorSubject()
     val givenPlan1 = Plan(
         localDatePeriod = Observable.just(LocalDatePeriod(LocalDate.now(), Period.ofWeeks(2))),
         amount = 60.toBigDecimal(),
