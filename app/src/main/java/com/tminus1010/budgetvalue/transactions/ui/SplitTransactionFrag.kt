@@ -14,7 +14,7 @@ import com.tminus1010.budgetvalue._core.ui.data_binding.bindText
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.databinding.FragSplitTransactionBinding
-import com.tminus1010.budgetvalue.transactions.CategorizeAdvancedDomain
+import com.tminus1010.budgetvalue.transactions.domain.CategorizeAdvancedDomain
 import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsAdvancedVM
 import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsVM
 import com.tminus1010.budgetvalue.transactions.TransactionsVM
