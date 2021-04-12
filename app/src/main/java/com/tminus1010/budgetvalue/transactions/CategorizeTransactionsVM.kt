@@ -19,8 +19,8 @@ class CategorizeTransactionsVM @Inject constructor(
     private val errorSubject = PublishSubject.create<Throwable>()
         .also { it.subscribe() }
     // # State
-    val amountToCategorize = categorizeTransactionsDomain.transactionBox
-        .unbox().map { "Amount to categorize: $${it.amount}" }
+    val amountToCategorize = categorizeTransactionsDomain.transactionBox.unbox()
+        .map { "Amount to categorize: $${it.amount}" }
         .toLiveData(errorSubject)
     val isTransactionAvailable = categorizeTransactionsDomain.transactionBox
         .map { it.unbox != null }
