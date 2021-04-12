@@ -8,16 +8,15 @@ import com.tminus1010.budgetvalue.transactions.domain.ICategorizeTransactionsDom
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.Subject
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
 class CategorizeTransactionsVM @Inject constructor(
-    categorizeTransactionsDomain: CategorizeTransactionsDomain
+    errorSubject: Subject<Throwable>,
+    categorizeTransactionsDomain: CategorizeTransactionsDomain,
 ): ViewModel(), ICategorizeTransactionsDomain by categorizeTransactionsDomain {
-    // # Subjects
-    private val errorSubject = PublishSubject.create<Throwable>()
-        .also { it.subscribe() }
     // # State
     val amountToCategorize = categorizeTransactionsDomain.transactionBox.unbox()
         .map { "Amount to categorize: $${it.amount}" }
