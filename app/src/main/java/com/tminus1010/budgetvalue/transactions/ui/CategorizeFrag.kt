@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.toPX
-import com.tminus1010.budgetvalue._core.middleware.AddRemType
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonPartial
 import com.tminus1010.budgetvalue._core.middleware.ui.GenViewHolder2
 import com.tminus1010.budgetvalue._core.middleware.ui.bindIncoming
@@ -22,7 +21,6 @@ import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._core.middleware.unbox
 import com.tminus1010.budgetvalue._core.ui.data_binding.bindButtonPartial
 import com.tminus1010.budgetvalue._core.ui.data_binding.bindText
-import com.tminus1010.budgetvalue.accounts.models.Account
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
@@ -50,18 +48,18 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         set(value) {
             val shouldNotifyDataSetChanged = field.size != value.size
             field = value
-            if (shouldNotifyDataSetChanged) vb.recyclerviewCategories.adapter?.notifyDataSetChanged()
+            if (shouldNotifyDataSetChanged)vb.recyclerviewCategories.adapter?.notifyDataSetChanged()
         }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Mediation
         categorySelectionVM.clearSelection() // TODO("Bind this VM to a navGraph")
-        // # Root
-        // ## Reduce alpha while inSelectionMode
-        categorySelectionVM.inSelectionMode.observe(viewLifecycleOwner) { inSelectionMode ->
+        // # Observe categorySelectionVM.state
+        categorySelectionVM.state.observe(viewLifecycleOwner) { state ->
+            // ## inSelectionMode
             vb.root.children
                 .filter { it != vb.recyclerviewCategories && it != vb.recyclerviewButtons }
-                .forEach { it.alpha = if (inSelectionMode) 0.5F else 1F }
+                .forEach { it.alpha = if (state.inSelectionMode) 0.5F else 1F }
         }
         // # TextViews
         vb.textviewDate.bindText(categorizeTransactionsVM.date)
@@ -71,7 +69,9 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         { it.unbox?.description ?: "" }
         vb.textviewAmountLeft.bindIncoming(transactionsVM.uncategorizedSpendsSize)
         // # Categories RecyclerView
-        categoriesVM.userCategories.observe(viewLifecycleOwner) { categories = it }
+        categoriesVM.userCategories
+            .observeOn(AndroidSchedulers.mainThread())
+            .observe(viewLifecycleOwner) { categories = it }
         vb.recyclerviewCategories.addItemDecoration(LayoutMarginDecoration(3, 8.toPX(requireContext())))
         vb.recyclerviewCategories.layoutManager =
             GridLayoutManager(requireActivity(), 3, GridLayoutManager.VERTICAL, false)
@@ -83,11 +83,10 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
             override fun onBindViewHolder(holder: GenViewHolder2<ItemCategoryBtnBinding>, position: Int) {
                 val category = categories[position]
                 val selectionModeAction = {
-                    categorySelectionVM.selectCategory(
-                        addRemType = if (category !in categorySelectionVM.selectedCategories.value)
-                            AddRemType.ADD else AddRemType.REMOVE,
-                        category = category
-                    )
+                    if (category !in categorySelectionVM.selectedCategories.value!!)
+                        categorySelectionVM.selectCategory(category)
+                    else
+                        categorySelectionVM.unselectCategory(category)
                 }
                 categorySelectionVM.selectedCategories.observe(viewLifecycleOwner) { selectedCategories ->
                     holder.vb.btnCategory.alpha =
@@ -97,7 +96,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 holder.vb.btnCategory.apply {
                     text = category.name
                     setOnClickListener {
-                        if (categorySelectionVM.inSelectionMode.value) selectionModeAction()
+                        if (categorySelectionVM.inSelectionMode.value!!) selectionModeAction()
                         else categorizeTransactionsVM.finishTransactionWithCategory(category)
                     }
                     setOnLongClickListener { selectionModeAction(); true }
@@ -113,7 +112,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     AlertDialog.Builder(requireContext())
                         .setMessage(listOf(
                             "Are you sure you want to delete these categories?\n",
-                            *categorySelectionVM.selectedCategories.value.map { "\t${it.name}" }.toTypedArray()
+                            *categorySelectionVM.selectedCategories.value!!.map { "\t${it.name}" }.toTypedArray()
                         ).joinToString("\n"))
                         .setPositiveButton("Yes") { _, _ -> categorySelectionVM.deleteSelectedCategories() }
                         .setNegativeButton("No") { _, _ -> }

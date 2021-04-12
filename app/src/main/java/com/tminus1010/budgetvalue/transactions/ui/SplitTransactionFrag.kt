@@ -22,6 +22,7 @@ import com.tminus1010.budgetvalue.transactions.domain.CategorizeTransactionsDoma
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
+import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -39,12 +40,10 @@ class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Mediation
-        Rx.combineLatest(
-            categorySelectionVM.selectedCategories,
-            categorizeTransactionsDomain.transactionBox.unbox().map { it.amount }
-        ).take(1)
-            .map { categorizeTransactionsAdvancedDomain.calcExactSplit(it.first, it.second) }
-            .subscribe { it.forEach { c, a -> categorizeTransactionsAdvancedVM.rememberCA(c, a) } }
+        categorizeTransactionsAdvancedDomain.calcExactSplit(
+            categorySelectionVM.selectedCategories.value!!,
+            categorizeTransactionsDomain.transactionBox.unbox().map { it.amount }.value!!
+        ).forEach { (category, amount) -> categorizeTransactionsAdvancedVM.rememberCA(category, amount) }
         // # TextView: amount to split
         vb.textviewAmountToSplit.bindText(categorizeTransactionsVM.amountToCategorize)
         // # TMTableView
