@@ -67,7 +67,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         { it.unbox?.defaultAmount?.toString() ?: "" }
         vb.textviewDescription.bindIncoming(categorizeTransactionsVM.transactionBox)
         { it.unbox?.description ?: "" }
-        vb.textviewAmountLeft.bindIncoming(transactionsVM.uncategorizedSpendsSize)
+        vb.textviewAmountLeft.bindIncoming(viewLifecycleOwner, transactionsVM.uncategorizedSpendsSize)
         // # Categories RecyclerView
         categoriesVM.userCategories
             .observeOn(AndroidSchedulers.mainThread())
