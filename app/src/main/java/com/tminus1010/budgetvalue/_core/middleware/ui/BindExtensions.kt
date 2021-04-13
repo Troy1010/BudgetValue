@@ -76,6 +76,7 @@ fun EditText.onDone(
     }
 }
 
+@Deprecated("Use bindText")
 fun TextView.bindIncoming(lifecycleOwner: LifecycleOwner, liveData: LiveData<String>) {
     Rx.launch2(AndroidSchedulers.mainThread()) { // You might get: "Cannot invoke observe on a background thread" without this.
         liveData.observe(lifecycleOwner) {
