@@ -64,5 +64,6 @@
     <fragment
         android:id="@+id/splitTransactionFrag"
         android:name="com.tminus1010.budgetvalue.transactions.ui.SplitTransactionFrag"
-        android:label="SplitTransactionFrag" />
+        android:label="SplitTransactionFrag"
+        tools:layout="@layout/frag_split_transaction" />
 </navigation>
