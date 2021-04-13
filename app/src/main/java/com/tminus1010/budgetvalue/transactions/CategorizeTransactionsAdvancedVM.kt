@@ -3,22 +3,25 @@ package com.tminus1010.budgetvalue.transactions
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue._core.extensions.launch
+import com.tminus1010.budgetvalue._core.extensions.toLiveData
 import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeTransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.Subject
 import java.math.BigDecimal
 import javax.inject.Inject
 
 @HiltViewModel
 class CategorizeTransactionsAdvancedVM @Inject constructor(
+    errorSubject: Subject<Throwable>,
     transactionsRepo: ITransactionsRepo,
     categorizeTransactionsDomain: CategorizeTransactionsDomain,
 ) : ViewModel() {
-    // # User Intent Buses
-    val intentRememberCA = PublishSubject.create<Pair<Category, BigDecimal>>()
+    // # Private Intent Subjects
+    private val intentRememberCA = PublishSubject.create<Pair<Category, BigDecimal>>()
     // # State
     val transactionToPush = categorizeTransactionsDomain.transactionBox
         .unbox()
@@ -30,8 +33,8 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
         }
         .toBehaviorSubject()
     val defaultAmount = transactionToPush
-        .map { it.defaultAmount }
-        .toBehaviorSubject()
+        .map { it.defaultAmount.toString() }
+        .toLiveData(errorSubject)
     // # User Intent Buses
     val intentPushActiveCategories = PublishSubject.create<Unit>()
         .also {

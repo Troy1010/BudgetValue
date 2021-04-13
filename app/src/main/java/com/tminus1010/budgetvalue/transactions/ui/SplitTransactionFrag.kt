@@ -2,17 +2,22 @@ package com.tminus1010.budgetvalue.transactions.ui
 
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.reflectXY
-import com.tminus1010.budgetvalue._core.middleware.ui.ViewItemRecipeFactoryProvider
-import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue._core.middleware.toMoneyBigDecimal
+import com.tminus1010.budgetvalue._core.middleware.ui.*
+import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue._core.ui.data_binding.bindText
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
+import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.FragSplitTransactionBinding
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeAdvancedDomain
 import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsAdvancedVM
@@ -24,6 +29,8 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.core.Observable
+import java.math.BigDecimal
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -49,8 +56,17 @@ class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
         // # TMTableView
         val cellRecipeFactory = viewRecipeFactories.cellRecipeFactory
         val headerRecipeFactory = viewRecipeFactories.headerRecipeFactory
-        val amountRecipeFactory = viewRecipeFactories.incomingBigDecimalRecipeFactory
-        val categoryAmountRecipeFactory = viewRecipeFactories.outgoingCARecipeFactory(categorizeTransactionsAdvancedVM.intentRememberCA)
+        val amountRecipeFactory = ViewItemRecipeFactory<TextView, LiveData<String>>(
+            { View.inflate(context, R.layout.item_text_view, null) as TextView },
+            { v, d -> v.bindIncoming(viewLifecycleOwner, d) }
+        )
+        val categoryAmountRecipeFactory = ViewItemRecipeFactory<EditText, Pair<Category, BigDecimal>>(
+            { View.inflate(context, R.layout.item_text_edit, null) as EditText },
+            { v, d ->
+                v.setText(d.second.toString())
+                v.onDone { categorizeTransactionsAdvancedVM.rememberCA(d.first, it.toMoneyBigDecimal()) }
+            }
+        )
         val titledDividerRecipeFactory = viewRecipeFactories.titledDividerRecipeFactory
         categorizeTransactionsAdvancedVM.transactionToPush
             .map {
