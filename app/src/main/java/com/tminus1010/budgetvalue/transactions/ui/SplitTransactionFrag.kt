@@ -28,6 +28,7 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
+import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import java.math.BigDecimal
@@ -53,6 +54,11 @@ class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
         ).forEach { (category, amount) -> categorizeTransactionsAdvancedVM.rememberCA(category, amount) }
         // # TextView: amount to split
         vb.textviewAmountToSplit.bindText(categorizeTransactionsVM.amountToCategorize)
+        // # Button
+        vb.btnSave.setOnClickListener {
+            categorizeTransactionsAdvancedVM.pushRememberedCategories()
+            nav.navigateUp()
+        }
         // # TMTableView
         val cellRecipeFactory = viewRecipeFactories.cellRecipeFactory
         val headerRecipeFactory = viewRecipeFactories.headerRecipeFactory

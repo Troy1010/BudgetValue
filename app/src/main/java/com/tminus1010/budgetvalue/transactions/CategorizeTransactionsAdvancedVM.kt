@@ -6,6 +6,7 @@ import com.tminus1010.budgetvalue._core.extensions.launch
 import com.tminus1010.budgetvalue._core.extensions.toLiveData
 import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeTransactionsDomain
+import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CategorizeTransactionsAdvancedVM @Inject constructor(
     errorSubject: Subject<Throwable>,
-    transactionsRepo: ITransactionsRepo,
+    private val transactionsRepo: ITransactionsRepo,
     categorizeTransactionsDomain: CategorizeTransactionsDomain,
 ) : ViewModel() {
     // # Private Intent Subjects
@@ -35,18 +36,13 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
     val defaultAmount = transactionToPush
         .map { it.defaultAmount.toString() }
         .toLiveData(errorSubject)
-    // # User Intent Buses
-    val intentPushActiveCategories = PublishSubject.create<Unit>()
-        .also {
-            it
-                .withLatestFrom(transactionToPush) { _, b -> b }
-                .launch { transactionsRepo.pushTransactionCAs(it, it.categoryAmounts) }
-        }
     // # Intents
     fun rememberCA(category: Category, amount: BigDecimal) {
         intentRememberCA.onNext(Pair(category, amount))
     }
     fun pushRememberedCategories() {
-        intentPushActiveCategories.onNext(Unit)
+        transactionToPush.take(1)
+            .flatMapCompletable { transactionsRepo.pushTransactionCAs(it, it.categoryAmounts) }
+            .launch()
     }
 }
