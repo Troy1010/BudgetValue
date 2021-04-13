@@ -62,9 +62,7 @@ fun <T> EditText.bindOutgoing(
 
 // Transform to output, validate, transform back
 
-fun EditText.onDone(
-    onDone: (String) -> Unit
-) {
+fun EditText.onDone(onDone: (String) -> Unit) {
     setOnEditorActionListener { _, actionId, _ ->
         if (actionId == EditorInfo.IME_ACTION_DONE) {
             onDone(text.toString())
