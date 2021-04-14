@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
 import com.tminus1010.budgetvalue.*
+import com.tminus1010.budgetvalue._core.extensions.toObservable
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.reflectXY
 import com.tminus1010.budgetvalue._core.middleware.ui.bindIncoming
@@ -56,7 +57,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
             { View.inflate(context, R.layout.item_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs)
+        Rx.combineLatest(categoriesVM.userCategories.toObservable(viewLifecycleOwner), activePlanVM.activePlanCAs)
             .debounce(150, TimeUnit.MILLISECONDS)
             .observeOn(Schedulers.computation())
             .map { (categories, planCAsItemObservableMap) ->

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue._core.extensions.toObservable
 import com.tminus1010.budgetvalue._core.extensions.toPX
 import com.tminus1010.budgetvalue._core.middleware.ui.*
 import com.tminus1010.budgetvalue._core.middleware.unbox
@@ -67,9 +68,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         { it.unbox?.description ?: "" }
         vb.textviewAmountLeft.bindIncoming(viewLifecycleOwner, transactionsVM.uncategorizedSpendsSize)
         // # Categories RecyclerView
-        categoriesVM.userCategories
-            .observeOn(AndroidSchedulers.mainThread())
-            .observe(viewLifecycleOwner) { categories = it }
+        categoriesVM.userCategories.observe(viewLifecycleOwner) { categories = it }
         vb.recyclerviewCategories.addItemDecoration(LayoutMarginDecoration(3, 8.toPX(requireContext())))
         vb.recyclerviewCategories.layoutManager =
             GridLayoutManager(requireActivity(), 3, GridLayoutManager.VERTICAL, false)

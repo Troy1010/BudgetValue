@@ -16,6 +16,7 @@ import com.tminus1010.budgetvalue._core.middleware.ui.bindIncoming
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue._core.ui.data_binding.bindText
 import com.tminus1010.budgetvalue.accounts.AccountsVM
 import com.tminus1010.budgetvalue.budgeted.BudgetedVM
 import com.tminus1010.budgetvalue.categories.CategoriesVM
@@ -53,13 +54,13 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
             { v, d ->
                 val vb = ItemHeaderIncomeBinding.bind(v)
                 vb.textviewHeader.text = d.first
-                vb.textviewNumber.bindIncoming(viewLifecycleOwner, d.second)
+                vb.textviewNumber.bindText(d.second, viewLifecycleOwner)
             })
         val reconcileCARecipeFactory = ViewItemRecipeFactory<EditText, Pair<Category, LiveData<String>?>>(
             { View.inflate(context, R.layout.item_text_edit, null) as EditText },
             { v, (category, d) ->
                 if (d==null) return@ViewItemRecipeFactory
-                v.bindIncoming(viewLifecycleOwner, d)
+                v.bindText(d, viewLifecycleOwner)
                 v.onDone { activeReconciliationVM.pushActiveReconcileCA(category, it) }
             }
         )
@@ -75,7 +76,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
             { View.inflate(context, R.layout.item_titled_divider, null) as TextView },
             { v, s -> v.text = s }
         )
-        Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs, transactionsVM.currentSpendBlockCAs, activeReconciliationVM.activeReconcileCAs2, budgetedVM.categoryAmounts.toObservable(viewLifecycleOwner))
+        Rx.combineLatest(categoriesVM.userCategories.toObservable(viewLifecycleOwner), activePlanVM.activePlanCAs, transactionsVM.currentSpendBlockCAs, activeReconciliationVM.activeReconcileCAs2, budgetedVM.categoryAmounts.toObservable(viewLifecycleOwner))
             .observeOn(Schedulers.computation())
             .debounce(100, TimeUnit.MILLISECONDS)
             .map { (categories, activePlanCAs, currentSpendBlockCAs, activeReconciliationCAs, budgetedCA) ->
