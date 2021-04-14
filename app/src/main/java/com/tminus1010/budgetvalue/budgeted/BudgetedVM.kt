@@ -25,7 +25,8 @@ class BudgetedVM @Inject constructor(
     val defaultAmount: LiveData<String> = budgetedDomain.defaultAmount
         .map { it.toString() }
         .toLiveData(errorSubject)
-    val categoryAmounts: Observable<Map<Category, LiveData<String>>> =
+    val categoryAmounts: LiveData<Map<Category, LiveData<String>>> =
         budgetedDomain.categoryAmountsObservableMap
             .map { it.mapValues { it.value.map { it.toString() }.toLiveData(errorSubject) } }
+            .toLiveData(errorSubject)
 }
