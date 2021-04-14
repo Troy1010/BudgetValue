@@ -7,7 +7,7 @@ import androidx.lifecycle.OnLifecycleEvent
 import androidx.recyclerview.widget.RecyclerView
 
 // Experimental
-abstract class LifecycleImbuedAdapter<VH: RecyclerView.ViewHolder> (
+abstract class LifecycleRVAdapter<VH: RecyclerView.ViewHolder> (
     private val parentLifecycleOwner: LifecycleOwner
 ): RecyclerView.Adapter<VH>() {
     init {

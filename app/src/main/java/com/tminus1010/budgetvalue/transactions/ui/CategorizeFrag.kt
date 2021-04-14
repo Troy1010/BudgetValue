@@ -73,7 +73,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         vb.recyclerviewCategories.addItemDecoration(LayoutMarginDecoration(3, 8.toPX(requireContext())))
         vb.recyclerviewCategories.layoutManager =
             GridLayoutManager(requireActivity(), 3, GridLayoutManager.VERTICAL, false)
-        vb.recyclerviewCategories.adapter = object : LifecycleImbuedAdapter<ItemCategoryBtnBinding>(viewLifecycleOwner) {
+        vb.recyclerviewCategories.adapter = object : LifecycleRVAdapter<ItemCategoryBtnBinding>(viewLifecycleOwner) {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
                 ItemCategoryBtnBinding.inflate(LayoutInflater.from(requireContext()), parent, false)
                     .let { GenViewHolder2(it) }
