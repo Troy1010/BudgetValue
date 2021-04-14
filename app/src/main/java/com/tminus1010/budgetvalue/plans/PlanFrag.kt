@@ -78,7 +78,6 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
                     .mapKeys { it.key + 3 } // header row, expected income row, and default row
                 Pair(recipes2D, dividerMap)
             }
-            .observeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) { (recipes2D, dividerMap) ->
                 vb.myTableViewPlan.initialize(recipes2D, true, dividerMap, 0, 1)
             }
