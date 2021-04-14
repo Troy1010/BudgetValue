@@ -8,16 +8,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.toPX
-import com.tminus1010.budgetvalue._core.middleware.ui.ButtonPartial
-import com.tminus1010.budgetvalue._core.middleware.ui.GenViewHolder2
-import com.tminus1010.budgetvalue._core.middleware.ui.bindIncoming
-import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue._core.middleware.ui.*
 import com.tminus1010.budgetvalue._core.middleware.unbox
 import com.tminus1010.budgetvalue._core.ui.data_binding.bindButtonPartial
 import com.tminus1010.budgetvalue._core.ui.data_binding.bindText
@@ -75,12 +73,12 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         vb.recyclerviewCategories.addItemDecoration(LayoutMarginDecoration(3, 8.toPX(requireContext())))
         vb.recyclerviewCategories.layoutManager =
             GridLayoutManager(requireActivity(), 3, GridLayoutManager.VERTICAL, false)
-        vb.recyclerviewCategories.adapter = object : RecyclerView.Adapter<GenViewHolder2<ItemCategoryBtnBinding>>() {
+        vb.recyclerviewCategories.adapter = object : LifecycleImbuedAdapter<ItemCategoryBtnBinding>(viewLifecycleOwner) {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
                 ItemCategoryBtnBinding.inflate(LayoutInflater.from(requireContext()), parent, false)
                     .let { GenViewHolder2(it) }
 
-            override fun onBindViewHolder(holder: GenViewHolder2<ItemCategoryBtnBinding>, position: Int) {
+            override fun onBindViewHolder(holder: GenViewHolder2<ItemCategoryBtnBinding>, position: Int, lifecycleOwner: LifecycleOwner) {
                 val category = categories[position]
                 val selectionModeAction = {
                     if (category !in categorySelectionVM.selectedCategories.value!!)
@@ -88,7 +86,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     else
                         categorySelectionVM.unselectCategory(category)
                 }
-                categorySelectionVM.selectedCategories.observe(viewLifecycleOwner) { selectedCategories ->
+                categorySelectionVM.selectedCategories.observe(lifecycleOwner) { selectedCategories ->
                     holder.vb.btnCategory.alpha =
                         if (selectedCategories.isEmpty() || category in selectedCategories) 1F
                         else 0.5F
