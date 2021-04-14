@@ -9,7 +9,7 @@ import androidx.lifecycle.OnLifecycleEvent
 fun LifecycleOwner.onDestroy(lambda: () -> Unit) {
     lifecycle.addObserver(object: LifecycleObserver {
         @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-        fun onDestroy() { lambda() }
+        fun onDestroy() { lambda(); lifecycle.removeObserver(this) }
     })
 }
 
@@ -17,6 +17,6 @@ fun LifecycleOwner.onDestroy(lambda: () -> Unit) {
 fun LifecycleOwner.onCreate(lambda: () -> Unit) {
     lifecycle.addObserver(object: LifecycleObserver {
         @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        fun onCreate() { lambda() }
+        fun onCreate() { lambda(); lifecycle.removeObserver(this) }
     })
 }

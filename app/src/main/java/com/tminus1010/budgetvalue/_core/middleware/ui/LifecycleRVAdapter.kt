@@ -1,23 +1,16 @@
 package com.tminus1010.budgetvalue._core.middleware.ui
 
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
 import androidx.recyclerview.widget.RecyclerView
 
 // Experimental
 abstract class LifecycleRVAdapter<VH: RecyclerView.ViewHolder> (
-    private val parentLifecycleOwner: LifecycleOwner
+    parentLifecycleOwner: LifecycleOwner
 ): RecyclerView.Adapter<VH>() {
     init {
-        parentLifecycleOwner.lifecycle.addObserver(object: LifecycleObserver {
-            @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-            fun onDestroy() {
-                lifecycleMap.forEach { (_, lifecycleOwner) -> lifecycleOwner.onDestroy() }
-                parentLifecycleOwner.lifecycle.removeObserver(this)
-            }
-        })
+        parentLifecycleOwner.onDestroy {
+            lifecycleMap.forEach { (_, lifecycleOwner) -> lifecycleOwner.onDestroy() }
+        }
     }
 
     abstract fun onBindViewHolder(holder: VH, position: Int, lifecycleOwner: LifecycleOwner)
