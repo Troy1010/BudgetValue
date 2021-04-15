@@ -1,7 +1,5 @@
 package com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3
 
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView.ColumnWidthCalculator
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView.IViewItemRecipe
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlin.math.max
@@ -11,7 +9,7 @@ interface IColumnWidthsProvider3 {
     fun getColumnWidth(i: Int): Int
 }
 class ColWidthsProviderFixedWidth3(recipes2d: List<List<IViewItemRecipe3>>, fixedWidth: Int): IColumnWidthsProvider3 {
-    private val colWidths = ColumnWidthCalculator.generateColumnWidths(recipes2d, fixedWidth)
+    private val colWidths = ColumnWidthCalculator3.generateColumnWidths(recipes2d, fixedWidth)
     override fun getColumnWidth(i: Int) = colWidths[i]
 }
 class ColWidthsProvider3(val recipes2d: List<List<IViewItemRecipe3>>): IColumnWidthsProvider3 {
