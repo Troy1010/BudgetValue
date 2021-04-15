@@ -20,8 +20,11 @@ import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
 import com.tminus1010.budgetvalue.databinding.FragHistoryBinding
 import com.tminus1010.budgetvalue._core.extensions.show
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.viewItemRecipeFactories.ItemTitledDividerBindingRF
+import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.viewItemRecipeFactories.itemHeaderBindingRF
+import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.viewItemRecipeFactories.itemTextViewBindingRF
+import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.viewItemRecipeFactories.itemTitledDividerBindingRF
 import com.tminus1010.budgetvalue._core.ui.data_binding.bindText
+import com.tminus1010.budgetvalue.databinding.ItemHeaderWithSubtitleBinding
 import com.tminus1010.budgetvalue.databinding.ItemTextViewBinding
 import com.tminus1010.budgetvalue.history.models.IHistoryColumnData
 import com.tminus1010.budgetvalue.plans.PlansVM
@@ -45,36 +48,23 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # TMTableView
-        val cellRecipeFactory = ViewItemRecipeFactory3(
-            createVB = { ItemTextViewBinding.inflate(LayoutInflater.from(context)) },
-            bind = { d: String, vb, _ ->
-                vb.textviewBasicCell.text = d
-            }
-        )
-        val cellRecipeFactory2 = ViewItemRecipeFactory3(
-            createVB = { ItemTextViewBinding.inflate(LayoutInflater.from(context)) },
-            bind = { d: LiveData<String>, vb, lifecycle ->
-                vb.textviewBasicCell.bindText(d, lifecycle)
-            }
-        )
-        val headerRecipeFactory = ViewItemRecipeFactory.createHeaderRecipeFactory(requireContext())
-        val columnHeaderFactory = ViewItemRecipeFactory<LinearLayout, IHistoryColumnData>(
-            { View.inflate(context, R.layout.item_header_with_subtitle, null) as LinearLayout }, // TODO("use viewBinding")
-            { v, historyColumnData ->
-                (v.children.first() as TextView).text = historyColumnData.title
-                (v.children.last() as TextView).text = historyColumnData.subTitle(datePeriodGetter)
-                v.setOnLongClickListener {
+        val columnHeaderFactory = ViewItemRecipeFactory3(
+            { ItemHeaderWithSubtitleBinding.inflate(LayoutInflater.from(requireContext())) },
+            { d: IHistoryColumnData, vb, lifecycle ->
+                vb.textviewHeader.text = d.title
+                vb.textviewSubtitle.text = d.subTitle(datePeriodGetter)
+                vb.root.setOnLongClickListener {
                     listOfNotNull(
                         when {
-                            historyColumnData is Plan && !historyColumnData.isCurrent(datePeriodGetter) -> {
-                                { plansVM.deletePlan(historyColumnData) }
+                            d is Plan && !d.isCurrent(datePeriodGetter) -> {
+                                { plansVM.deletePlan(d) }
                             }
-                            historyColumnData is Reconciliation -> {
-                                { reconciliationsVM.delete(historyColumnData) }
+                            d is Reconciliation -> {
+                                { reconciliationsVM.delete(d) }
                             }
                             else -> null
                         }?.let { MenuItemPartial("Delete", it) })
-                        .also { PopupMenu(requireActivity(), v).show(it) }
+                        .also { PopupMenu(requireActivity(), vb.root).show(it) }
                     true
                 }
             },
@@ -85,23 +75,22 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
             .map { (historyColumnDatas, activeCategories) ->
                 val recipe2D =
                     listOf(
-                        headerRecipeFactory.createOne2("Categories") +
-                                cellRecipeFactory.createOne("Default") +
-                                cellRecipeFactory.createMany(activeCategories.map { it.name }),
+                        listOf(itemHeaderBindingRF.createOne("Categories")) +
+                                itemTextViewBindingRF.createOne("Default") +
+                                itemTextViewBindingRF.createMany(activeCategories.map { it.name }),
                         *historyColumnDatas.map { historyColumnData ->
-                            columnHeaderFactory.createOne2(historyColumnData) +
-                                    cellRecipeFactory.createOne(historyColumnData.defaultAmount.toString()) +
-                                    cellRecipeFactory.createMany(activeCategories.map { historyColumnData.categoryAmounts[it]?.toString() ?: "" })
+                            listOf(columnHeaderFactory.createOne(historyColumnData)) +
+                                    itemTextViewBindingRF.createOne(historyColumnData.defaultAmount.toString()) +
+                                    itemTextViewBindingRF.createMany(activeCategories.map { historyColumnData.categoryAmounts[it]?.toString() ?: "" })
                         }.toTypedArray()
                     ).reflectXY()
                 val dividerMap = activeCategories
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
-                    .associate { it.index to ItemTitledDividerBindingRF(requireContext()).createOne(it.value.type.name) }
+                    .associate { it.index to itemTitledDividerBindingRF.createOne(it.value.type.name) }
                     .mapKeys { it.key + 2 } // header row and default row
                 Pair(recipe2D, dividerMap)
             }
-            .observeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) { (recipe2D, dividerMap) ->
                 vb.tmTableViewHistory.initialize(recipe2D, false, dividerMap, 1, 1)
             }
