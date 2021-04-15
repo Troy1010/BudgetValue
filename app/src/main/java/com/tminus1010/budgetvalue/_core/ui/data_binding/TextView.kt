@@ -7,8 +7,8 @@ import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.tminus1010.tmcommonkotlin.misc.fnName
 import com.tminus1010.tmcommonkotlin.core.logz
 
-fun TextView.bindText(liveData: LiveData<String>, lifecycleOwner: LifecycleOwner? = null) {
-    (lifecycleOwner ?: findViewTreeLifecycleOwner())
+fun TextView.bindText(liveData: LiveData<String>, lifecycle: LifecycleOwner? = null) {
+    (lifecycle ?: findViewTreeLifecycleOwner())
         ?.also { liveData.observe(it) { this.text = it } }
         ?: logz("WARNING: $fnName failed to find lifecycleOwner")
 }
