@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.history
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -8,6 +9,7 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.LiveData
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.reflectXY
@@ -17,6 +19,10 @@ import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
 import com.tminus1010.budgetvalue.databinding.FragHistoryBinding
 import com.tminus1010.budgetvalue._core.extensions.show
+import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
+import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.viewItemRecipeFactories.ItemTitledDividerBindingRF
+import com.tminus1010.budgetvalue._core.ui.data_binding.bindText
+import com.tminus1010.budgetvalue.databinding.ItemTextViewBinding
 import com.tminus1010.budgetvalue.history.models.IHistoryColumnData
 import com.tminus1010.budgetvalue.plans.PlansVM
 import com.tminus1010.budgetvalue.plans.models.Plan
@@ -39,7 +45,18 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # TMTableView
-        val cellRecipeFactory = ViewItemRecipeFactory.createCellRecipeFactory(requireContext())
+        val cellRecipeFactory = ViewItemRecipeFactory3(
+            createVB = { ItemTextViewBinding.inflate(LayoutInflater.from(context)) },
+            bind = { d: String, vb, _ ->
+                vb.textviewBasicCell.text = d
+            }
+        )
+        val cellRecipeFactory2 = ViewItemRecipeFactory3(
+            createVB = { ItemTextViewBinding.inflate(LayoutInflater.from(context)) },
+            bind = { d: LiveData<String>, vb, lifecycle ->
+                vb.textviewBasicCell.bindText(d, lifecycle)
+            }
+        )
         val headerRecipeFactory = ViewItemRecipeFactory.createHeaderRecipeFactory(requireContext())
         val columnHeaderFactory = ViewItemRecipeFactory<LinearLayout, IHistoryColumnData>(
             { View.inflate(context, R.layout.item_header_with_subtitle, null) as LinearLayout }, // TODO("use viewBinding")
@@ -62,10 +79,6 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
                 }
             },
         )
-        val titledDividerRecipeFactory = ViewItemRecipeFactory<TextView, String>(
-            { View.inflate(context, R.layout.item_titled_divider, null) as TextView },
-            { v, s -> v.text = s }
-        )
         Rx.combineLatest(historyVM.historyColumnDatas, historyVM.activeCategories)
             .distinctUntilChanged() //*idk why this emitted a copy without distinctUntilChanged
             .observeOn(Schedulers.computation())
@@ -84,7 +97,7 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
                 val dividerMap = activeCategories
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
-                    .associate { it.index to titledDividerRecipeFactory.createOne(it.value.type.name) }
+                    .associate { it.index to ItemTitledDividerBindingRF(requireContext()).createOne(it.value.type.name) }
                     .mapKeys { it.key + 2 } // header row and default row
                 Pair(recipe2D, dividerMap)
             }

@@ -7,11 +7,11 @@ import com.tminus1010.budgetvalue._core.middleware.measureUnspecified
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 
-data class ViewItemRecipe2<VB : ViewBinding, D : Any?>(
+data class ViewItemRecipe3<VB : ViewBinding, D : Any?>(
     private val vbLambda: () -> VB,
     private val data: D,
-    private val bindAction: (VB, D, LifecycleOwner) -> Unit,
-) : IViewItemRecipe2 {
+    private val bindAction: (D, VB, LifecycleOwner) -> Unit,
+) : IViewItemRecipe3 {
     // This cast allows IViewItemRecipe of different view types to be stored together
     @Suppress("UNCHECKED_CAST")
     private val bindAction_ = bindAction as (ViewBinding, Any?) -> Unit
@@ -20,8 +20,8 @@ data class ViewItemRecipe2<VB : ViewBinding, D : Any?>(
     override val intrinsicHeight
         get() = createBoundView().apply { measureUnspecified() }.measuredHeight
 
-    override fun createView(): ViewBinding = vbLambda()
-    override fun createBoundView(): View = createView().also { bind(it) }.root
+    override fun createVB(): ViewBinding = vbLambda()
+    override fun createBoundView(): View = createVB().also { bind(it) }.root
 
     override fun bind(vb: ViewBinding) {
         try {

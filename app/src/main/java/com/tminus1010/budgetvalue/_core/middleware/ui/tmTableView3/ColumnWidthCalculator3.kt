@@ -1,12 +1,11 @@
-package com.tminus1010.budgetvalue._core.middleware.ui.tmTableView
+package com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3
 
 import com.tminus1010.budgetvalue._core.middleware.arrayListOfZeros
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.IViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.core.logz
 import java.lang.Math.max
 import kotlin.math.ceil
 
-object ColumnWidthCalculator {
+object ColumnWidthCalculator3 {
     fun generateIntrinsicWidths(viewItemRecipes: Iterable<Iterable<IViewItemRecipe3>>): List<List<Int>> {
         val intrinsicWidths = ArrayList<ArrayList<Int>>()
         for ((yPos, rowData) in viewItemRecipes.withIndex()) {
