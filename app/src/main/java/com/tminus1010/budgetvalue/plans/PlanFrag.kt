@@ -57,7 +57,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
             { v, s -> v.text = s }
         )
         Rx.combineLatest(categoriesVM.userCategories.toObservable(viewLifecycleOwner), activePlanVM.activePlanCAs)
-            .debounce(150, TimeUnit.MILLISECONDS)
+            .throttleLatest(150, TimeUnit.MILLISECONDS)
             .observeOn(Schedulers.computation())
             .map { (categories, planCAsItemObservableMap) ->
                 val recipes2D = listOf(
