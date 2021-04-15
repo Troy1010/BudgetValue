@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3
 
 import android.view.View
+import androidx.viewbinding.ViewBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.easySetHeight
 import com.tminus1010.tmcommonkotlin.misc.extensions.easySetWidth
 import com.tminus1010.tmcommonkotlin.misc.extensions.pairwise
@@ -25,9 +26,9 @@ class RecipeGrid3(
         recipes2d.pairwise().forEach { if (it.first.size != it.second.size) error("All sub-lists must be equal size.") }
     }
 
-    fun createResizedView(i: Int, j: Int): View {
-        return recipes2d[j][i].createVB().root
-            .apply { easySetWidth(getColumnWidth(i)) }
-            .apply { easySetHeight(getRowHeight(j)) }
+    fun createResizedView(i: Int, j: Int): ViewBinding {
+        return recipes2d[j][i].createVB()
+            .apply { root.easySetWidth(getColumnWidth(i)) }
+            .apply { root.easySetHeight(getRowHeight(j)) }
     }
 }

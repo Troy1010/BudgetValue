@@ -39,7 +39,7 @@ class TMTableView3 @JvmOverloads constructor(
         rowFreezeCount: Int = 0,
     ) {
         if (shouldFitItemWidthsInsideTable)
-            widthObservable
+            widthSubject
                 .take(1)
                 .timeout(5, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -74,15 +74,15 @@ class TMTableView3 @JvmOverloads constructor(
         // # Freeze rows
         if (rowFreezeCount>1) TODO()
         if (rowFreezeCount==1) {
-            binding.recyclerviewColumnheaders.adapter = InnerRVAdapter(context, recipeGrid, 0)
+            binding.recyclerviewColumnheaders.adapter = InnerRVAdapter3(context, recipeGrid, 0)
             binding.recyclerviewColumnheaders.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
             binding.recyclerviewColumnheaders.clearItemDecorations()
-            binding.recyclerviewColumnheaders.addItemDecoration(InnerFrozenRowDecoration(context, Orientation.HORIZONTAL, recipeGrid, rowFreezeCount))
+            binding.recyclerviewColumnheaders.addItemDecoration(InnerFrozenRowDecoration3(context, Orientation.HORIZONTAL, recipeGrid, rowFreezeCount))
             binding.recyclerviewColumnheaders.clearOnScrollListeners()
             binding.recyclerviewColumnheaders.addOnScrollListener(synchronizedScrollListener)
         }
         // # Cells
-        binding.recyclerviewTier1.adapter = OuterRVAdapter(context, recipeGrid, rowFreezeCount, synchronizedScrollListener)
+        binding.recyclerviewTier1.adapter = OuterRVAdapter3(context, recipeGrid, rowFreezeCount, synchronizedScrollListener)
         binding.recyclerviewTier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
         binding.recyclerviewTier1.clearItemDecorations()
         binding.recyclerviewTier1.addItemDecoration(OuterDecoration3(context, Orientation.VERTICAL, dividerMap, recipeGrid, colFreezeCount, rowFreezeCount))
@@ -111,9 +111,9 @@ class TMTableView3 @JvmOverloads constructor(
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        if (w != oldw) widthObservable.onNext(w)
+        if (w != oldw) widthSubject.onNext(w)
     }
 
-    val widthObservable = BehaviorSubject.create<Int>()
+    val widthSubject = BehaviorSubject.create<Int>()
 }
 
