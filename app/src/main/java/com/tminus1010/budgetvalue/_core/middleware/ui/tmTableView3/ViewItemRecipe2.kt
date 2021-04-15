@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3
 
 import android.view.View
+import androidx.lifecycle.LifecycleOwner
 import androidx.viewbinding.ViewBinding
 import com.tminus1010.budgetvalue._core.middleware.measureUnspecified
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -9,7 +10,7 @@ import io.reactivex.rxjava3.core.Completable
 data class ViewItemRecipe2<VB : ViewBinding, D : Any?>(
     private val vbLambda: () -> VB,
     private val data: D,
-    private val bindAction: (VB, D) -> Unit,
+    private val bindAction: (VB, D, LifecycleOwner) -> Unit,
 ) : IViewItemRecipe2 {
     // This cast allows IViewItemRecipe of different view types to be stored together
     @Suppress("UNCHECKED_CAST")
