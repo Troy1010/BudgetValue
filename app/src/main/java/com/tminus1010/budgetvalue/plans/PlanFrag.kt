@@ -10,17 +10,16 @@ import com.tminus1010.budgetvalue.*
 import com.tminus1010.budgetvalue._core.extensions.toObservable
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.reflectXY
-import com.tminus1010.budgetvalue._core.middleware.ui.bindIncoming
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView.ViewItemRecipeFactory
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue._core.ui.data_binding.bindText
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.FragPlanBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
@@ -37,7 +36,7 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
         val expectedIncomeRecipeFactory = ViewItemRecipeFactory<EditText, LiveData<String>>(
             { View.inflate(context, R.layout.item_text_edit, null) as EditText },
             { v, d ->
-                v.bindIncoming(viewLifecycleOwner, d)
+                v.bindText(d, viewLifecycleOwner)
                 v.onDone { activePlanVM.pushExpectedIncome(it) }
             }
         )
@@ -45,13 +44,13 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
             { View.inflate(context, R.layout.item_text_edit, null) as EditText },
             { v, (category, d) ->
                 if (d == null) return@ViewItemRecipeFactory
-                v.bindIncoming(viewLifecycleOwner, d)
+                v.bindText(d, viewLifecycleOwner)
                 v.onDone { activePlanVM.pushActivePlanCA(category, it) }
             }
         )
         val oneWayRecipeFactory2 = ViewItemRecipeFactory<TextView, LiveData<String>>(
             { View.inflate(context, R.layout.item_text_view, null) as TextView },
-            { v, d -> v.bindIncoming(viewLifecycleOwner, d) }
+            { v, d -> v.bindText(d, viewLifecycleOwner) }
         )
         val titledDividerRecipeFactory = ViewItemRecipeFactory<TextView, String>(
             { View.inflate(context, R.layout.item_titled_divider, null) as TextView },
