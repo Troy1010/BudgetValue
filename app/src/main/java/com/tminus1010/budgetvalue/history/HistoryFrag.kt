@@ -48,15 +48,13 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
                 vb.root.setOnLongClickListener {
                     listOfNotNull(
                         when {
-                            d is Plan && !d.isCurrent(datePeriodGetter) -> {
-                                { plansVM.deletePlan(d) }
-                            }
-                            d is Reconciliation -> {
-                                { reconciliationsVM.delete(d) }
-                            }
+                            d is Plan && !d.isCurrent(datePeriodGetter) ->
+                                MenuItemPartial("Delete") { plansVM.deletePlan(d) }
+                            d is Reconciliation ->
+                                MenuItemPartial("Delete") { reconciliationsVM.delete(d) }
                             else -> null
-                        }?.let { MenuItemPartial("Delete", it) })
-                        .also { PopupMenu(requireActivity(), vb.root).show(it) }
+                        },
+                    ).also { PopupMenu(requireActivity(), vb.root).show(it) }
                     true
                 }
             },
