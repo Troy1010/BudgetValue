@@ -10,10 +10,10 @@ import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.reflectXY
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.viewItemRecipeFactories.itemHeaderBindingRF
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.viewItemRecipeFactories.itemTextViewBindingLRF
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.viewItemRecipeFactories.itemTextViewBindingRF
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.viewItemRecipeFactories.itemTitledDividerBindingRF
+import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.itemHeaderBindingRF
+import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.itemTextViewBindingLRF
+import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.itemTextViewBindingRF
+import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.itemTitledDividerBindingRF
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._core.ui.data_binding.bindText
 import com.tminus1010.budgetvalue.categories.CategoriesVM

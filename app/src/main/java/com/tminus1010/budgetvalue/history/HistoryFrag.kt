@@ -12,9 +12,9 @@ import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.reflectXY
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuItemPartial
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.viewItemRecipeFactories.itemHeaderBindingRF
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.viewItemRecipeFactories.itemTextViewBindingRF
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.viewItemRecipeFactories.itemTitledDividerBindingRF
+import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.itemHeaderBindingRF
+import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.itemTextViewBindingRF
+import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.itemTitledDividerBindingRF
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
 import com.tminus1010.budgetvalue.databinding.FragHistoryBinding
