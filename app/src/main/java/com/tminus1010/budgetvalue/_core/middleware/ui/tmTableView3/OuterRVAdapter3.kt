@@ -34,7 +34,7 @@ class OuterRVAdapter3(
     fun createInnerRV(j: Int): RecyclerView {
         return RecyclerView(context)
             .apply {
-                adapter = InnerRVAdapter3(parentLifecycleOwner, context, recipeGrid, j)
+                adapter = InnerRVAdapter3(parentLifecycleOwner, recipeGrid, j)
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 addItemDecoration(Decoration(context, Orientation.HORIZONTAL))
                 addOnScrollListener(synchronizedScrollListener)
