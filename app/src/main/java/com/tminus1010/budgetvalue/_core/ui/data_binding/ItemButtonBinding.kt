@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._core.ui.view_binding
+package com.tminus1010.budgetvalue._core.ui.data_binding
 
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonPartial
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
