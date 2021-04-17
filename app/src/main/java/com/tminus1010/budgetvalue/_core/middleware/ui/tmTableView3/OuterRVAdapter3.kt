@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue._core.middleware.Orientation
@@ -12,6 +13,7 @@ import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView2.SynchronizedS
 import com.tminus1010.tmcommonkotlin.misc.extensions.scrollTo
 
 class OuterRVAdapter3(
+    val parentLifecycleOwner: LifecycleOwner,
     val context: Context,
     val recipeGrid: RecipeGrid3,
     val rowFreezeCount: Int,
@@ -32,7 +34,7 @@ class OuterRVAdapter3(
     fun createInnerRV(j: Int): RecyclerView {
         return RecyclerView(context)
             .apply {
-                adapter = InnerRVAdapter3(context, recipeGrid, j)
+                adapter = InnerRVAdapter3(parentLifecycleOwner, context, recipeGrid, j)
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 addItemDecoration(Decoration(context, Orientation.HORIZONTAL))
                 addOnScrollListener(synchronizedScrollListener)
