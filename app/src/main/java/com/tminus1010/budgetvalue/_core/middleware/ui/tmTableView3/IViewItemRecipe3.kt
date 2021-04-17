@@ -8,6 +8,6 @@ interface IViewItemRecipe3 {
     val intrinsicWidth: Int
     val intrinsicHeight: Int
     fun createVB(): ViewBinding
-    fun bind(vb: ViewBinding, lifecycle: LifecycleOwner)
-    fun createBoundView(lifecycle: LifecycleOwner): View
+    fun bind(vb: ViewBinding, lifecycle: LifecycleOwner? = null)
+    fun createBoundView(lifecycle: LifecycleOwner? = null): View
 }

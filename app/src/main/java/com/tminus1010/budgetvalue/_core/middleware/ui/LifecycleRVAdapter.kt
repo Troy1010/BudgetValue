@@ -9,7 +9,7 @@ abstract class LifecycleRVAdapter<VH: RecyclerView.ViewHolder> (
 ): RecyclerView.Adapter<VH>() {
     init {
         parentLifecycleOwner.onDestroy {
-            lifecycleMap.forEach { (_, lifecycleOwner) -> lifecycleOwner.onDestroy() }
+            lifecycleMap.forEach { (_, lifecycleOwner) -> lifecycleOwner.emitDestroy() }
         }
     }
 
@@ -20,25 +20,25 @@ abstract class LifecycleRVAdapter<VH: RecyclerView.ViewHolder> (
     override fun onBindViewHolder(holder: VH, position: Int) {
         if (lifecycleMap[position] != null) error("Shouldn't this have already been cleared..?")
         lifecycleMap[position] = ExposedLifecycleOwner()
-        lifecycleMap[position]!!.onCreate()
+        lifecycleMap[position]!!.emitCreate()
         onBindViewHolder(holder, position, lifecycleMap[position]!!)
     }
 
     override fun onViewRecycled(holder: VH) {
         super.onViewRecycled(holder)
-        lifecycleMap[holder.adapterPosition]!!.onDestroy()
+        lifecycleMap[holder.adapterPosition]!!.emitDestroy()
         lifecycleMap.remove(holder.adapterPosition)
     }
 
     override fun onViewAttachedToWindow(holder: VH) {
         super.onViewAttachedToWindow(holder)
-        lifecycleMap[holder.adapterPosition]!!.onStart()
-        lifecycleMap[holder.adapterPosition]!!.onResume()
+        lifecycleMap[holder.adapterPosition]!!.emitStart()
+        lifecycleMap[holder.adapterPosition]!!.emitResume()
     }
 
     override fun onViewDetachedFromWindow(holder: VH) {
         super.onViewDetachedFromWindow(holder)
-        lifecycleMap[holder.adapterPosition]!!.onPause()
-        lifecycleMap[holder.adapterPosition]!!.onStop()
+        lifecycleMap[holder.adapterPosition]!!.emitPause()
+        lifecycleMap[holder.adapterPosition]!!.emitStop()
     }
 }

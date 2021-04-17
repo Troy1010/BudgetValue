@@ -8,10 +8,10 @@ import androidx.lifecycle.LifecycleRegistry
 class ExposedLifecycleOwner: LifecycleOwner {
     private val lifecycleRegistry = LifecycleRegistry(this)
     override fun getLifecycle(): Lifecycle = lifecycleRegistry
-    fun onResume() { lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME) }
-    fun onPause() { lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE) }
-    fun onStart() { lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START) }
-    fun onStop() { lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP) }
-    fun onCreate() { lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE) }
-    fun onDestroy() { lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY) }
+    fun emitResume() { lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME) }
+    fun emitPause() { lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE) }
+    fun emitStart() { lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START) }
+    fun emitStop() { lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP) }
+    fun emitCreate() { lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE) }
+    fun emitDestroy() { lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY) }
 }
