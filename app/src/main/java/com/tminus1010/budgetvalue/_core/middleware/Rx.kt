@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue._core.middleware
 
 import com.tminus1010.tmcommonkotlin.tuple.*
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableSource
@@ -155,4 +156,7 @@ object Rx {
 
     fun launch2(scheduler: Scheduler = Schedulers.io(), lambda: () -> Unit): Disposable =
         Completable.fromAction { lambda() }.subscribeOn(scheduler).subscribe()
+
+    fun runBlockingMain(lambda: () -> Unit) =
+        Completable.fromAction { lambda() }.subscribeOn(AndroidSchedulers.mainThread()).blockingAwait()
 }
