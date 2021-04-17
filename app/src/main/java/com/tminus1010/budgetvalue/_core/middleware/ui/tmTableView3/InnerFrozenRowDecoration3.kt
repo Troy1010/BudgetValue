@@ -27,7 +27,7 @@ class InnerFrozenRowDecoration3(
             if (orientation == Orientation.VERTICAL) TODO()
             val child = parent
             val layoutParams = child.layoutParams as ConstraintLayout.LayoutParams
-            val view = recipeGrid[0][0].createBoundView()
+            val view = recipeGrid[0][0].createImpatientlyBoundView()
             val width = recipeGrid.getColumnWidth(0)
             val height = recipeGrid.getRowHeight(0)
 

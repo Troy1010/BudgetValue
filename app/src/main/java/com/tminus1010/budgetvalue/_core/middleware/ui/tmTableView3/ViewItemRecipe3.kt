@@ -17,28 +17,31 @@ data class ViewItemRecipe3<VB : ViewBinding, D : Any?>(
     @Suppress("UNCHECKED_CAST")
     private val bindAction_ = bindAction as (Any?, ViewBinding, LifecycleOwner) -> Unit
     override val intrinsicWidth: Int
-        get() = createBoundView().apply { measureUnspecified() }.measuredWidth
+        get() = createImpatientlyBoundView().apply { measureUnspecified() }.measuredWidth
     override val intrinsicHeight: Int
-        get() = createBoundView().apply { measureUnspecified() }.measuredHeight
+        get() = createImpatientlyBoundView().apply { measureUnspecified() }.measuredHeight
 
     override fun createVB(): ViewBinding = vbLambda()
-    override fun createBoundView(lifecycle: LifecycleOwner?): View = createVB().also { bind(it, lifecycle) }.root
+    override fun createImpatientlyBoundView(): View = createVB().also { bindImpatiently(it) }.root
 
-    override fun bind(vb: ViewBinding, lifecycle: LifecycleOwner?) {
-        val lambda = { _lifecycle: LifecycleOwner ->
-            try {
-                bindAction_(data, vb, _lifecycle)
-            } catch (e: android.util.AndroidRuntimeException) { // maybe mainThread is required
-                Completable.fromAction { bindAction_(data, vb, _lifecycle) }
-                    .subscribeOn(AndroidSchedulers.mainThread())
-                    .blockingAwait()
-            }
+
+    private fun _bind(vb: ViewBinding, _lifecycle: LifecycleOwner) {
+        return try {
+            bindAction_(data, vb, _lifecycle)
+        } catch (e: android.util.AndroidRuntimeException) { // maybe mainThread is required
+            Completable.fromAction { bindAction_(data, vb, _lifecycle) }
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .blockingAwait()
         }
-        if (lifecycle != null) lambda(lifecycle)
-        else {
-            val _lifecycle = ExposedLifecycleOwner().apply { emitResume() }
-            lambda(_lifecycle)
-            _lifecycle.emitDestroy()
-        }
+    }
+
+    override fun bind(vb: ViewBinding, lifecycle: LifecycleOwner) {
+        _bind(vb, lifecycle)
+    }
+
+    override fun bindImpatiently(vb: ViewBinding) {
+        val _lifecycle = ExposedLifecycleOwner().apply { emitResume() }
+        _bind(vb, _lifecycle)
+        _lifecycle.emitDestroy()
     }
 }

@@ -42,7 +42,7 @@ class OuterDecoration3(
             val layoutParams = child.layoutParams as RecyclerView.LayoutParams
 
             if (j in dividerMap.keys) {
-                val view = dividerMap[j]!!.createBoundView()
+                val view = dividerMap[j]!!.createImpatientlyBoundView()
 
                 val top = child.top - layoutParams.topMargin - dividerMap[j]!!.intrinsicHeight
                 val rect = Rect(0, top, parent.width, top + dividerMap[j]!!.intrinsicHeight)
@@ -80,7 +80,7 @@ class OuterDecoration3(
             for (child in parent.children) {
                 val j = parent.getChildAdapterPosition(child) + rowFreezeCount
                 val layoutParams = child.layoutParams as RecyclerView.LayoutParams
-                val view = recipeGrid[j][0].createBoundView()
+                val view = recipeGrid[j][0].createImpatientlyBoundView()
                 val height = recipeGrid.getRowHeight(j)
 
                 val top = child.top - layoutParams.topMargin
