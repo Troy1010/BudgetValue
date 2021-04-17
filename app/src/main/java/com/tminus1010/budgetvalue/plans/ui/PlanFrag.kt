@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.plans
+package com.tminus1010.budgetvalue.plans.ui
 
 import android.view.View
 import android.widget.EditText
@@ -17,6 +17,7 @@ import com.tminus1010.budgetvalue._core.ui.data_binding.bindText
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.FragPlanBinding
+import com.tminus1010.budgetvalue.plans.ActivePlanVM
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
