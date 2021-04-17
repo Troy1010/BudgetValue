@@ -4,6 +4,7 @@ import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewbinding.ViewBinding
 import com.tminus1010.budgetvalue._core.middleware.measureUnspecified
+import com.tminus1010.budgetvalue._core.middleware.ui.ExposedLifecycleOwner
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 
@@ -14,20 +15,28 @@ data class ViewItemRecipe3<VB : ViewBinding, D : Any?>(
 ) : IViewItemRecipe3 {
     // This cast allows IViewItemRecipe of different view types to be stored together
     @Suppress("UNCHECKED_CAST")
-    private val bindAction_ = bindAction as (ViewBinding, Any?) -> Unit
-    override val intrinsicWidth
-        get() = createBoundView().apply { measureUnspecified() }.measuredWidth
-    override val intrinsicHeight
-        get() = createBoundView().apply { measureUnspecified() }.measuredHeight
+    private val bindAction_ = bindAction as (Any?, ViewBinding, LifecycleOwner) -> Unit
+    override val intrinsicWidth: Int
+        get() {
+            val lifecycle = ExposedLifecycleOwner().apply { onResume() }
+            return createBoundView(lifecycle).apply { measureUnspecified() }.measuredWidth
+                .also { lifecycle.onDestroy() }
+        }
+    override val intrinsicHeight: Int
+        get() {
+            val lifecycle = ExposedLifecycleOwner().apply { onResume() }
+            return createBoundView(lifecycle).apply { measureUnspecified() }.measuredHeight
+                .also { lifecycle.onDestroy() }
+        }
 
     override fun createVB(): ViewBinding = vbLambda()
-    override fun createBoundView(): View = createVB().also { bind(it) }.root
+    override fun createBoundView(lifecycle: LifecycleOwner): View = createVB().also { bind(it, lifecycle) }.root
 
-    override fun bind(vb: ViewBinding) {
+    override fun bind(vb: ViewBinding, lifecycle: LifecycleOwner) {
         try {
-            bindAction_(vb, data)
+            bindAction_(data, vb, lifecycle)
         } catch (e: android.util.AndroidRuntimeException) { // maybe mainThread is required
-            Completable.fromAction { bindAction_(vb, data) }
+            Completable.fromAction { bindAction_(data, vb, lifecycle) }
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .blockingAwait()
         }
