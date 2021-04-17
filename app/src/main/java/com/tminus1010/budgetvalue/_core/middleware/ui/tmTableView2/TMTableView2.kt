@@ -3,21 +3,19 @@ package com.tminus1010.budgetvalue._core.middleware.ui.tmTableView2
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
+import com.tminus1010.budgetvalue._core.extensions.widthObservable
 import com.tminus1010.budgetvalue._core.middleware.Orientation
-import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView.IViewItemRecipe
 import com.tminus1010.budgetvalue.databinding.TableviewBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.children
 import com.tminus1010.tmcommonkotlin.misc.extensions.clearItemDecorations
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.util.concurrent.TimeUnit
 
 class TMTableView2 @JvmOverloads constructor(
@@ -39,7 +37,7 @@ class TMTableView2 @JvmOverloads constructor(
         rowFreezeCount: Int = 0,
     ) {
         if (shouldFitItemWidthsInsideTable)
-            widthObservable
+            widthObservable()
                 .take(1)
                 .timeout(5, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -103,17 +101,5 @@ class TMTableView2 @JvmOverloads constructor(
                 }
             }
     }
-
-    init {
-        // * A view needs to be inflated to trigger onSizeChanged
-        View.inflate(context, R.layout.blank_view, this)
-    }
-
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
-        if (w != oldw) widthObservable.onNext(w)
-    }
-
-    val widthObservable = BehaviorSubject.create<Int>()
 }
 
