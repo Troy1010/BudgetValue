@@ -13,6 +13,7 @@ import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.misc.extensions.associate
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -113,6 +114,9 @@ class MainRepo @Inject constructor(
 
     override fun pushTransactionCAs(transaction: Transaction, categoryAmounts: Map<Category, BigDecimal>) =
         miscDAO.updateTransactionCategoryAmounts(transaction.id, categoryAmounts.mapKeys { it.key.name })
+
+    override fun findTransactionsWithDescription(description: String): Single<List<Transaction>> =
+        miscDAO.fetchTransactions(description).map { it.map { Transaction.fromDTO(it, categoryAmountsConverter) } }
 
     override val plans: Observable<List<Plan>> =
         miscDAO.fetchPlans().map { it.map { Plan.fromDTO(it, categoryAmountsConverter) } }
