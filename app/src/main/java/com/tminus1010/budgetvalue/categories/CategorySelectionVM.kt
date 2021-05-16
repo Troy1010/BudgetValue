@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.categories
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
+import com.tminus1010.budgetvalue._core.BaseViewModel
 import com.tminus1010.budgetvalue._core.extensions.await
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.extensions.toLiveData
@@ -17,7 +17,7 @@ import javax.inject.Inject
 class CategorySelectionVM @Inject constructor(
     errorSubject: Subject<Throwable>,
     private val deleteCategoryFromActiveDomainUC: DeleteCategoryFromActiveDomainUC,
-) : ViewModel() {
+) : BaseViewModel() {
     // # MVI stuff
     sealed class Intents {
         object ClearSelection: Intents()
@@ -48,7 +48,7 @@ class CategorySelectionVM @Inject constructor(
                 )
             }
         }
-        .nonLazyCache() // This might not be necessary
+        .nonLazyCache(disposables) // This might not be necessary
 
     // # State
     val selectedCategories: LiveData<Set<Category>> = state
