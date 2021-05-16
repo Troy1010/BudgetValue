@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.extensions.toObservable
 import com.tminus1010.budgetvalue._core.extensions.toPX
 import com.tminus1010.budgetvalue._core.middleware.ui.*
 import com.tminus1010.budgetvalue._core.middleware.unbox
@@ -31,7 +30,6 @@ import com.tminus1010.budgetvalue.transactions.TransactionsVM
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 
 @AndroidEntryPoint
@@ -77,7 +75,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 ItemCategoryBtnBinding.inflate(LayoutInflater.from(requireContext()), parent, false)
                     .let { GenViewHolder2(it) }
 
-            override fun onBindViewHolder(holder: GenViewHolder2<ItemCategoryBtnBinding>, position: Int, lifecycleOwner: LifecycleOwner) {
+            override fun onBindViewHolder(holder: GenViewHolder2<ItemCategoryBtnBinding>, position: Int, lifecycle: LifecycleOwner) {
                 val category = categories[position]
                 val selectionModeAction = {
                     if (category !in categorySelectionVM.selectedCategories.value!!)
@@ -85,7 +83,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     else
                         categorySelectionVM.unselectCategory(category)
                 }
-                categorySelectionVM.selectedCategories.observe(lifecycleOwner) { selectedCategories ->
+                categorySelectionVM.selectedCategories.observe(lifecycle) { selectedCategories ->
                     holder.vb.btnCategory.alpha =
                         if (selectedCategories.isEmpty() || category in selectedCategories) 1F
                         else 0.5F
