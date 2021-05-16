@@ -73,7 +73,7 @@ class TMTableView3 @JvmOverloads constructor(
         // # Freeze rows
         if (rowFreezeCount>1) TODO()
         if (rowFreezeCount==1) {
-            binding.recyclerviewColumnheaders.adapter = InnerRVAdapter3(findViewTreeLifecycleOwner()!!, recipeGrid, 0)
+            binding.recyclerviewColumnheaders.adapter = InnerRVAdapter3(recipeGrid, 0)
             binding.recyclerviewColumnheaders.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
             binding.recyclerviewColumnheaders.clearItemDecorations()
             binding.recyclerviewColumnheaders.addItemDecoration(InnerFrozenRowDecoration3(context, Orientation.HORIZONTAL, recipeGrid, rowFreezeCount))
@@ -81,7 +81,7 @@ class TMTableView3 @JvmOverloads constructor(
             binding.recyclerviewColumnheaders.addOnScrollListener(synchronizedScrollListener)
         }
         // # Cells
-        binding.recyclerviewTier1.adapter = OuterRVAdapter3(findViewTreeLifecycleOwner()!!, context, recipeGrid, rowFreezeCount, synchronizedScrollListener)
+        binding.recyclerviewTier1.adapter = OuterRVAdapter3(context, recipeGrid, rowFreezeCount, synchronizedScrollListener)
         binding.recyclerviewTier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
         binding.recyclerviewTier1.clearItemDecorations()
         binding.recyclerviewTier1.addItemDecoration(OuterDecoration3(context, Orientation.VERTICAL, dividerMap, recipeGrid, colFreezeCount, rowFreezeCount))
