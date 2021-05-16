@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue._core.middleware.ui
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class LifecycleRVAdapter3<VH: RecyclerView.ViewHolder>: RecyclerView.Adapter<VH>() {
+abstract class LifecycleRVAdapter<VH: RecyclerView.ViewHolder>: RecyclerView.Adapter<VH>() {
     override fun onBindViewHolder(holder: VH, position: Int) { }
     abstract fun onViewAttachedToWindow(holder: VH, lifecycle: LifecycleOwner)
 

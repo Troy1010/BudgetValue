@@ -3,7 +3,6 @@ package com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue._core.middleware.Orientation
@@ -33,7 +32,7 @@ class OuterRVAdapter3(
     fun createInnerRV(j: Int): RecyclerView {
         return RecyclerView(context)
             .apply {
-                adapter = InnerRVAdapter3(recipeGrid, j)
+                adapter = InnerRVAdapter(recipeGrid, j)
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 addItemDecoration(Decoration(context, Orientation.HORIZONTAL))
                 addOnScrollListener(synchronizedScrollListener)
