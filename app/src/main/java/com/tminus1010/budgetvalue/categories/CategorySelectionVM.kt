@@ -44,7 +44,7 @@ class CategorySelectionVM @Inject constructor(
                 )
                 is Intents.UnselectCategory -> acc.copy(
                     selectedCategories = acc.selectedCategories - v.category,
-                    inSelectionMode = acc.selectedCategories.isNotEmpty()
+                    inSelectionMode = (acc.selectedCategories - v.category).isNotEmpty()
                 )
             }
         }
@@ -53,10 +53,12 @@ class CategorySelectionVM @Inject constructor(
     // # State
     val selectedCategories: LiveData<Set<Category>> = state
         .map { it.selectedCategories }
+        .distinctUntilChanged()
         .toLiveData(errorSubject)
 
     val inSelectionMode: LiveData<Boolean> = state
         .map { it.inSelectionMode }
+        .distinctUntilChanged()
         .toLiveData(errorSubject)
 
     // # Intents
