@@ -19,7 +19,15 @@ class OuterRVAdapter3(
 ) : RecyclerView.Adapter<OuterRVAdapter3.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
     //
-    override fun onCreateViewHolder(parent: ViewGroup, j: Int) = ViewHolder(createInnerRV(j))
+    override fun onCreateViewHolder(parent: ViewGroup, j: Int) = RecyclerView(context)
+        .apply {
+            adapter = InnerRVAdapter(recipeGrid, j)
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            addItemDecoration(Decoration(context, Orientation.HORIZONTAL))
+            addOnScrollListener(synchronizedScrollListener)
+            layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, recipeGrid.getRowHeight(j))
+        }
+        .let { ViewHolder(it) }
     override fun getItemViewType(position: Int) = position + rowFreezeCount
     override fun onBindViewHolder(holder: ViewHolder, position: Int) { }
     override fun getItemCount() = recipeGrid.size - rowFreezeCount
@@ -28,15 +36,5 @@ class OuterRVAdapter3(
         // # Synchronize scroll initialization
         ((holder.itemView as RecyclerView).layoutManager as LinearLayoutManager).scrollTo(synchronizedScrollListener.scrollPosObservable.value)
         holder.itemView.measureUnspecified() // Why is this necessary? (otherwise, there will be extra inner scroll space after outer scrolling)
-    }
-    fun createInnerRV(j: Int): RecyclerView {
-        return RecyclerView(context)
-            .apply {
-                adapter = InnerRVAdapter(recipeGrid, j)
-                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                addItemDecoration(Decoration(context, Orientation.HORIZONTAL))
-                addOnScrollListener(synchronizedScrollListener)
-                layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, recipeGrid.getRowHeight(j))
-            }
     }
 }
