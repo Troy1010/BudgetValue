@@ -69,12 +69,12 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         vb.recyclerviewCategories.addItemDecoration(LayoutMarginDecoration(3, 8.toPX(requireContext())))
         vb.recyclerviewCategories.layoutManager =
             GridLayoutManager(requireActivity(), 3, GridLayoutManager.VERTICAL, false)
-        vb.recyclerviewCategories.adapter = object : LifecycleRVAdapter2<GenViewHolder3<ItemCategoryBtnBinding>>() {
+        vb.recyclerviewCategories.adapter = object : LifecycleRVAdapter3<GenViewHolder2<ItemCategoryBtnBinding>>() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
                 ItemCategoryBtnBinding.inflate(LayoutInflater.from(requireContext()), parent, false)
-                    .let { GenViewHolder3(it) }
+                    .let { GenViewHolder2(it) }
 
-            override fun onBindViewHolder(holder: GenViewHolder3<ItemCategoryBtnBinding>, position: Int) {
+            override fun onBindViewHolder(holder: GenViewHolder2<ItemCategoryBtnBinding>, position: Int) {
                 val category = categories[position]
                 holder.vb.btnCategory.apply {
                     val selectionModeAction = {
@@ -93,7 +93,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
             }
 
             override fun getItemCount() = categories.size
-            override fun onViewAttachedToWindow(holder: GenViewHolder3<ItemCategoryBtnBinding>, lifecycle: LifecycleOwner, ) {
+            override fun onViewAttachedToWindow(holder: GenViewHolder2<ItemCategoryBtnBinding>, lifecycle: LifecycleOwner) {
                 val category = categories[holder.adapterPosition]
                 categorySelectionVM.selectedCategories.observe(lifecycle) { selectedCategories ->
                     holder.vb.btnCategory.alpha =
@@ -129,12 +129,12 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         }
         vb.recyclerviewButtons.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true)
         vb.recyclerviewButtons.addItemDecoration(LayoutMarginDecoration(8.toPX(requireContext())))
-        vb.recyclerviewButtons.adapter = object : LifecycleRVAdapter2<GenViewHolder3<ItemButtonBinding>>() {
+        vb.recyclerviewButtons.adapter = object : LifecycleRVAdapter3<GenViewHolder2<ItemButtonBinding>>() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
                 ItemButtonBinding.inflate(LayoutInflater.from(requireContext()), parent, false)
-                    .let { GenViewHolder3(it) }
+                    .let { GenViewHolder2(it) }
 
-            override fun onViewAttachedToWindow(holder: GenViewHolder3<ItemButtonBinding>, lifecycle: LifecycleOwner) {
+            override fun onViewAttachedToWindow(holder: GenViewHolder2<ItemButtonBinding>, lifecycle: LifecycleOwner) {
                 holder.vb.btnItem.bindButtonPartial(lifecycle, btns[holder.adapterPosition])
             }
 
