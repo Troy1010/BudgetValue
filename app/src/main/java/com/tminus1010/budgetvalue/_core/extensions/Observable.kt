@@ -48,6 +48,7 @@ private fun <T> Observable<T>.toLiveData() =
 fun <T> Observable<T>.toLiveData(errorSubject: Subject<Throwable>) =
     divertErrors(errorSubject).toLiveData()
 
+@Deprecated("loses disposable")
 fun <T> Observable<T>.nonLazyCache() =
     replay(1).also { it.connect() }
 

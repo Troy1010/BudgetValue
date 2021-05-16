@@ -21,8 +21,8 @@ class InnerRVAdapter3(
     override fun onBindViewHolder(
         holder: GenViewHolder2<ViewBinding>,
         position: Int,
-        lifecycleOwner: LifecycleOwner
+        lifecycle: LifecycleOwner
     ) {
-        recipeGrid[j][holder.adapterPosition].bind(holder.vb, lifecycleOwner)
+        recipeGrid[j][holder.adapterPosition].bind(holder.vb, lifecycle)
     }
 }

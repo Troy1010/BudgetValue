@@ -13,7 +13,7 @@ abstract class LifecycleRVAdapter<VH: RecyclerView.ViewHolder> (
         }
     }
 
-    abstract fun onBindViewHolder(holder: VH, position: Int, lifecycleOwner: LifecycleOwner)
+    abstract fun onBindViewHolder(holder: VH, position: Int, lifecycle: LifecycleOwner)
 
     var lifecycleMap = hashMapOf<Int, ExposedLifecycleOwner>()
 

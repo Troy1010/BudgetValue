@@ -11,10 +11,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.extensions.toObservable
 import com.tminus1010.budgetvalue._core.extensions.toPX
 import com.tminus1010.budgetvalue._core.middleware.ui.*
 import com.tminus1010.budgetvalue._core.middleware.unbox
@@ -31,7 +29,6 @@ import com.tminus1010.budgetvalue.transactions.TransactionsVM
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 
 @AndroidEntryPoint
@@ -72,25 +69,20 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         vb.recyclerviewCategories.addItemDecoration(LayoutMarginDecoration(3, 8.toPX(requireContext())))
         vb.recyclerviewCategories.layoutManager =
             GridLayoutManager(requireActivity(), 3, GridLayoutManager.VERTICAL, false)
-        vb.recyclerviewCategories.adapter = object : LifecycleRVAdapter<GenViewHolder2<ItemCategoryBtnBinding>>(viewLifecycleOwner) {
+        vb.recyclerviewCategories.adapter = object : LifecycleRVAdapter3<GenViewHolder2<ItemCategoryBtnBinding>>() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
                 ItemCategoryBtnBinding.inflate(LayoutInflater.from(requireContext()), parent, false)
                     .let { GenViewHolder2(it) }
 
-            override fun onBindViewHolder(holder: GenViewHolder2<ItemCategoryBtnBinding>, position: Int, lifecycleOwner: LifecycleOwner) {
+            override fun onBindViewHolder(holder: GenViewHolder2<ItemCategoryBtnBinding>, position: Int) {
                 val category = categories[position]
-                val selectionModeAction = {
-                    if (category !in categorySelectionVM.selectedCategories.value!!)
-                        categorySelectionVM.selectCategory(category)
-                    else
-                        categorySelectionVM.unselectCategory(category)
-                }
-                categorySelectionVM.selectedCategories.observe(lifecycleOwner) { selectedCategories ->
-                    holder.vb.btnCategory.alpha =
-                        if (selectedCategories.isEmpty() || category in selectedCategories) 1F
-                        else 0.5F
-                }
                 holder.vb.btnCategory.apply {
+                    val selectionModeAction = {
+                        if (category !in categorySelectionVM.selectedCategories.value!!)
+                            categorySelectionVM.selectCategory(category)
+                        else
+                            categorySelectionVM.unselectCategory(category)
+                    }
                     text = category.name
                     setOnClickListener {
                         if (categorySelectionVM.inSelectionMode.value!!) selectionModeAction()
@@ -101,38 +93,50 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
             }
 
             override fun getItemCount() = categories.size
+            override fun onViewAttachedToWindow(holder: GenViewHolder2<ItemCategoryBtnBinding>, lifecycle: LifecycleOwner) {
+                val category = categories[holder.adapterPosition]
+                categorySelectionVM.selectedCategories.observe(lifecycle) { selectedCategories ->
+                    holder.vb.btnCategory.alpha =
+                        if (selectedCategories.isEmpty() || category in selectedCategories) 1F
+                        else 0.5F
+                }
+            }
         }
         // # Button RecyclerView
-        categorySelectionVM.inSelectionMode.observe(viewLifecycleOwner) { btns = if (it)
-            listOf(
-                ButtonPartial("Delete") {
-                    AlertDialog.Builder(requireContext())
-                        .setMessage(listOf(
-                            "Are you sure you want to delete these categories?\n",
-                            *categorySelectionVM.selectedCategories.value!!.map { "\t${it.name}" }.toTypedArray()
-                        ).joinToString("\n"))
-                        .setPositiveButton("Yes") { _, _ -> categorySelectionVM.deleteSelectedCategories() }
-                        .setNegativeButton("No") { _, _ -> }
-                        .show()
-                },
-                ButtonPartial("Split", categorizeTransactionsVM.isTransactionAvailable ) {
-                    nav.navigate(R.id.action_categorizeFrag_to_splitTransactionFrag)
-                },
-                ButtonPartial("Clear selection") { categorySelectionVM.clearSelection() },
-            )
-            else listOf(
-                ButtonPartial("Make New Category") { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) },
-            )
+        categorySelectionVM.inSelectionMode.observe(viewLifecycleOwner) {
+            btns = if (it)
+                listOf(
+                    ButtonPartial("Delete") {
+                        AlertDialog.Builder(requireContext())
+                            .setMessage(listOf(
+                                "Are you sure you want to delete these categories?\n",
+                                *categorySelectionVM.selectedCategories.value!!.map { "\t${it.name}" }
+                                    .toTypedArray()
+                            ).joinToString("\n"))
+                            .setPositiveButton("Yes") { _, _ -> categorySelectionVM.deleteSelectedCategories() }
+                            .setNegativeButton("No") { _, _ -> }
+                            .show()
+                    },
+                    ButtonPartial("Split", categorizeTransactionsVM.isTransactionAvailable) {
+                        nav.navigate(R.id.action_categorizeFrag_to_splitTransactionFrag)
+                    },
+                    ButtonPartial("Clear selection") { categorySelectionVM.clearSelection() },
+                )
+            else
+                listOf(
+                    ButtonPartial("Make New Category") { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) },
+                )
         }
         vb.recyclerviewButtons.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true)
         vb.recyclerviewButtons.addItemDecoration(LayoutMarginDecoration(8.toPX(requireContext())))
-        vb.recyclerviewButtons.adapter = object : RecyclerView.Adapter<GenViewHolder2<ItemButtonBinding>>() {
+        vb.recyclerviewButtons.adapter = object : LifecycleRVAdapter3<GenViewHolder2<ItemButtonBinding>>() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
                 ItemButtonBinding.inflate(LayoutInflater.from(requireContext()), parent, false)
                     .let { GenViewHolder2(it) }
 
-            override fun onBindViewHolder(holder: GenViewHolder2<ItemButtonBinding>, position: Int) =
-                holder.vb.btnItem.bindButtonPartial(viewLifecycleOwner, btns[position]) // TODO("This is the wrong lifecycle owner")
+            override fun onViewAttachedToWindow(holder: GenViewHolder2<ItemButtonBinding>, lifecycle: LifecycleOwner) {
+                holder.vb.btnItem.bindButtonPartial(lifecycle, btns[holder.adapterPosition])
+            }
 
             override fun getItemCount() = btns.size
         }
