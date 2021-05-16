@@ -10,6 +10,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeTransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
+import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.Singles
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -44,8 +45,10 @@ class CategorizeTransactionsVM @Inject constructor(
             transactionsRepo.findTransactionsWithDescription(transaction.description)
                 .map { it.filter { transaction.id != it.id } }
         }
-    val isRedoAvailable = matchingDescriptions
-        .map { it.isNotEmpty() }
+    val redoTransaction = matchingDescriptions
+        .map { Box(it.maxByOrNull { it.date }) } // This will redo the transaction that happened most recent. But perhaps I should remember when the categorization took place, and redo the most recent.
+    val isRedoAvailable = redoTransaction
+        .map { it.first != null }
         .nonLazyCache(disposables)
     // # Intents
     fun finishTransactionWithCategory(category: Category) {
@@ -54,12 +57,12 @@ class CategorizeTransactionsVM @Inject constructor(
     fun redo() {
         Singles.zip(
             categorizeTransactionsDomain.transactionBox.unbox().toSingle(),
-            matchingDescriptions.toSingle()
+            redoTransaction.toSingle()
         ).subscribeOn(Schedulers.io())
-            .flatMapCompletable { (transaction, transactionsWithMatchingDescription) ->
+            .flatMapCompletable { (transaction, redoTransaction) ->
                 transactionsRepo.pushTransactionCAs(
                     transaction,
-                    transactionsWithMatchingDescription.maxByOrNull { it.date }!!.categoryAmounts // This will redo the transaction that happened most recent. But perhaps I should remember when the categorization took place, and redo the most recent.
+                    redoTransaction.unbox!!.categoryAmounts
                 )
             }
             .subscribe()
