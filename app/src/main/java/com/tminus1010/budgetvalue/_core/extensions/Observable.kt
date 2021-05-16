@@ -49,6 +49,9 @@ fun <T> Observable<T>.toLiveData(errorSubject: Subject<Throwable>) =
 fun <T> Observable<T>.nonLazyCache() =
     replay(1).also { it.connect() }
 
+fun <T> Observable<T>.nonLazyCache(compositeDisposable: CompositeDisposable) =
+    replay(1).also { compositeDisposable.add(it.connect()) }
+
 fun <T> Observable<T>.await() = value ?: take(1).blockingLast()
 
 /**
