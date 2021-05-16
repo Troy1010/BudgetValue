@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.toPX
 import com.tminus1010.budgetvalue._core.middleware.ui.*
 import com.tminus1010.budgetvalue._core.middleware.unbox
@@ -50,7 +51,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         super.onViewCreated(view, savedInstanceState)
         // # Mediation
         categorySelectionVM.clearSelection() // TODO("Bind this VM to a navGraph")
-        // # Observe categorySelectionVM.state
+        // # Some of SelectionMode
         categorySelectionVM.state.observe(viewLifecycleOwner) { state ->
             // ## inSelectionMode
             vb.root.children
@@ -58,12 +59,10 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 .forEach { it.alpha = if (state.inSelectionMode) 0.5F else 1F }
         }
         // # TextViews
-        vb.textviewDate.bindText(categorizeTransactionsVM.date)
-        vb.textviewAmount.bindIncoming(categorizeTransactionsVM.transactionBox)
-        { it.unbox?.defaultAmount?.toString() ?: "" }
-        vb.textviewDescription.bindIncoming(categorizeTransactionsVM.transactionBox)
-        { it.unbox?.description ?: "" }
-        vb.textviewAmountLeft.bindIncoming(viewLifecycleOwner, transactionsVM.uncategorizedSpendsSize)
+        vb.textviewDate.bind(categorizeTransactionsVM.date) { text = it }
+        vb.textviewAmount.bind(categorizeTransactionsVM.latestUncategorizedTransactionAmount) { text = it }
+        vb.textviewDescription.bind(categorizeTransactionsVM.latestUncategorizedTransactionDescription) { text = it }
+        vb.textviewAmountLeft.bind(transactionsVM.uncategorizedSpendsSize) { text = it }
         // # Categories RecyclerView
         categoriesVM.userCategories.observe(viewLifecycleOwner) { categories = it }
         vb.recyclerviewCategories.addItemDecoration(LayoutMarginDecoration(3, 8.toPX(requireContext())))
