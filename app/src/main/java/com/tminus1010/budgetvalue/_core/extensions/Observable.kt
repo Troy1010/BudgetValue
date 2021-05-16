@@ -4,10 +4,7 @@ import androidx.lifecycle.LiveDataReactiveStreams
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin.rx.extensions.isCold
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
-import io.reactivex.rxjava3.core.BackpressureStrategy
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Scheduler
+import io.reactivex.rxjava3.core.*
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -53,3 +50,9 @@ fun <T> Observable<T>.nonLazyCache() =
     replay(1).also { it.connect() }
 
 fun <T> Observable<T>.await() = value ?: take(1).blockingLast()
+
+/**
+ * Emits the first onNext().
+ */
+fun <T> Observable<T>.toSingle(): Single<T> =
+    Single.fromObservable(take(1))
