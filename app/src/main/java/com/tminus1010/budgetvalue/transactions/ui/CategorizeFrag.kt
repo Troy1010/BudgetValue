@@ -28,8 +28,10 @@ import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
 import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsVM
 import com.tminus1010.budgetvalue.transactions.TransactionsVM
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
+import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.kotlin.Observables
 
 
 @AndroidEntryPoint
@@ -102,8 +104,8 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
             }
         }
         // # Button RecyclerView
-        categorySelectionVM.inSelectionMode.observe(viewLifecycleOwner) {
-            btns = if (it)
+        Observables.combineLatest(categorySelectionVM.inSelectionMode, categorizeTransactionsVM.isRedoAvailable).observe(viewLifecycleOwner) { (inSelectionMode, isRedoAvailable) ->
+            btns = if (inSelectionMode)
                 listOf(
                     ButtonPartial("Delete") {
                         AlertDialog.Builder(requireContext())
@@ -122,7 +124,8 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     ButtonPartial("Clear selection") { categorySelectionVM.clearSelection() },
                 )
             else
-                listOf(
+                listOfNotNull(
+                    if (!isRedoAvailable) null else ButtonPartial("Redo") { categorizeTransactionsVM.redo() },
                     ButtonPartial("Make New Category") { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) },
                 )
         }

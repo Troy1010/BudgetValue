@@ -9,6 +9,7 @@ import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue.categories.domain.DeleteCategoryFromActiveDomainUC
 import com.tminus1010.budgetvalue.categories.models.Category
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
 import javax.inject.Inject
@@ -56,10 +57,10 @@ class CategorySelectionVM @Inject constructor(
         .distinctUntilChanged()
         .toLiveData(errorSubject)
 
-    val inSelectionMode: LiveData<Boolean> = state
+    val inSelectionMode: Observable<Boolean> = state
         .map { it.inSelectionMode }
         .distinctUntilChanged()
-        .toLiveData(errorSubject)
+        .nonLazyCache(disposables)
 
     // # Intents
     fun clearSelection() {
