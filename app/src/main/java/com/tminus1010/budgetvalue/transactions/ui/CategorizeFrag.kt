@@ -70,25 +70,20 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         vb.recyclerviewCategories.addItemDecoration(LayoutMarginDecoration(3, 8.toPX(requireContext())))
         vb.recyclerviewCategories.layoutManager =
             GridLayoutManager(requireActivity(), 3, GridLayoutManager.VERTICAL, false)
-        vb.recyclerviewCategories.adapter = object : LifecycleRVAdapter<GenViewHolder2<ItemCategoryBtnBinding>>(viewLifecycleOwner) {
+        vb.recyclerviewCategories.adapter = object : LifecycleRVAdapter2<GenViewHolder2<ItemCategoryBtnBinding>>() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
                 ItemCategoryBtnBinding.inflate(LayoutInflater.from(requireContext()), parent, false)
                     .let { GenViewHolder2(it) }
 
-            override fun onBindViewHolder(holder: GenViewHolder2<ItemCategoryBtnBinding>, position: Int, lifecycle: LifecycleOwner) {
+            override fun onBindViewHolder(holder: GenViewHolder2<ItemCategoryBtnBinding>, position: Int) {
                 val category = categories[position]
-                val selectionModeAction = {
-                    if (category !in categorySelectionVM.selectedCategories.value!!)
-                        categorySelectionVM.selectCategory(category)
-                    else
-                        categorySelectionVM.unselectCategory(category)
-                }
-                categorySelectionVM.selectedCategories.observe(lifecycle) { selectedCategories ->
-                    holder.vb.btnCategory.alpha =
-                        if (selectedCategories.isEmpty() || category in selectedCategories) 1F
-                        else 0.5F
-                }
                 holder.vb.btnCategory.apply {
+                    val selectionModeAction = {
+                        if (category !in categorySelectionVM.selectedCategories.value!!)
+                            categorySelectionVM.selectCategory(category)
+                        else
+                            categorySelectionVM.unselectCategory(category)
+                    }
                     text = category.name
                     setOnClickListener {
                         if (categorySelectionVM.inSelectionMode.value!!) selectionModeAction()
@@ -99,6 +94,14 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
             }
 
             override fun getItemCount() = categories.size
+            override fun onViewAttachedToWindow(holder: GenViewHolder2<ItemCategoryBtnBinding>, lifecycle: LifecycleOwner, ) {
+                val category = categories[holder.adapterPosition]
+                categorySelectionVM.selectedCategories.observe(lifecycle) { selectedCategories ->
+                    holder.vb.btnCategory.alpha =
+                        if (selectedCategories.isEmpty() || category in selectedCategories) 1F
+                        else 0.5F
+                }
+            }
         }
         // # Button RecyclerView
         categorySelectionVM.inSelectionMode.observe(viewLifecycleOwner) { btns = if (it)
