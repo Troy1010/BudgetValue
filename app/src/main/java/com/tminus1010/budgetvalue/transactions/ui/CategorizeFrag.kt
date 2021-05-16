@@ -110,18 +110,20 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                         AlertDialog.Builder(requireContext())
                             .setMessage(listOf(
                                 "Are you sure you want to delete these categories?\n",
-                                *categorySelectionVM.selectedCategories.value!!.map { "\t${it.name}" }.toTypedArray()
+                                *categorySelectionVM.selectedCategories.value!!.map { "\t${it.name}" }
+                                    .toTypedArray()
                             ).joinToString("\n"))
                             .setPositiveButton("Yes") { _, _ -> categorySelectionVM.deleteSelectedCategories() }
                             .setNegativeButton("No") { _, _ -> }
                             .show()
                     },
-                    ButtonPartial("Split", categorizeTransactionsVM.isTransactionAvailable ) {
+                    ButtonPartial("Split", categorizeTransactionsVM.isTransactionAvailable) {
                         nav.navigate(R.id.action_categorizeFrag_to_splitTransactionFrag)
                     },
                     ButtonPartial("Clear selection") { categorySelectionVM.clearSelection() },
                 )
-                else listOf(
+            else
+                listOf(
                     ButtonPartial("Make New Category") { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) },
                 )
         }
