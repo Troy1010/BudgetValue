@@ -51,7 +51,7 @@ class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
         categorizeTransactionsAdvancedDomain.calcExactSplit(
             categorySelectionVM.selectedCategories.value!!,
             categorizeTransactionsDomain.transactionBox.unbox().map { it.amount }.value!!
-        ).forEach { (category, amount) -> categorizeTransactionsAdvancedVM.rememberCA(category, amount) }
+        ).forEach { (category, amount) -> categorizeTransactionsAdvancedVM.rememberCA(category, -amount) }
         // # TextView: amount to split
         vb.textviewAmountToSplit.bindText(categorizeTransactionsVM.amountToCategorize)
         // # Button
