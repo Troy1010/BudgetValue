@@ -47,7 +47,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         set(value) {
             val shouldNotifyDataSetChanged = field.size != value.size
             field = value
-            if (shouldNotifyDataSetChanged)vb.recyclerviewCategories.adapter?.notifyDataSetChanged()
+            if (shouldNotifyDataSetChanged) vb.recyclerviewCategories.adapter?.notifyDataSetChanged()
         }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

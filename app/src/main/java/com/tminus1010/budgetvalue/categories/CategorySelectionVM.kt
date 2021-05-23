@@ -20,18 +20,20 @@ class CategorySelectionVM @Inject constructor(
     private val deleteCategoryFromActiveDomainUC: DeleteCategoryFromActiveDomainUC,
 ) : BaseViewModel() {
     // # MVI stuff
-    sealed class Intents {
-        object ClearSelection: Intents()
-        class SelectCategory(val category: Category): Intents()
-        class UnselectCategory(val category: Category): Intents()
+    private sealed class Intents {
+        object ClearSelection : Intents()
+        class SelectCategory(val category: Category) : Intents()
+        class UnselectCategory(val category: Category) : Intents()
     }
 
     private val intents = PublishSubject.create<Intents>()
 
+    // # State
     data class State(
         val selectedCategories: Set<Category> = emptySet(),
-        val inSelectionMode: Boolean = false
+        val inSelectionMode: Boolean = false,
     )
+
     val state = intents
         .scan(State()) { acc, v ->
             when (v) {
@@ -49,9 +51,8 @@ class CategorySelectionVM @Inject constructor(
                 )
             }
         }
-        .nonLazyCache(disposables) // This might not be necessary
+        .nonLazyCache(disposables)
 
-    // # State
     val selectedCategories: LiveData<Set<Category>> = state
         .map { it.selectedCategories }
         .distinctUntilChanged()

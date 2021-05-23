@@ -45,6 +45,7 @@ class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
     val categorySelectionVM: CategorySelectionVM by activityViewModels()
     val vb by viewBinding(FragSplitTransactionBinding::bind)
     val viewRecipeFactories by lazy { ViewItemRecipeFactoryProvider(requireContext()) }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Mediation
