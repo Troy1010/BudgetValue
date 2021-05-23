@@ -9,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.reflectXY
 import com.tminus1010.budgetvalue._core.middleware.toMoneyBigDecimal
@@ -47,8 +48,7 @@ class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // # TextView: amount to split
-        vb.tvAmountToSplit.bindText(categorizeTransactionsVM.amountToCategorize)
+        vb.tvAmountToSplit.bind(categorizeTransactionsVM.amountToCategorize) { text = it }
         // # Button
         vb.btnSave.setOnClickListener {
             categorizeTransactionsAdvancedVM.pushRememberedCategories()
