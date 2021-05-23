@@ -1,13 +1,12 @@
 package com.tminus1010.budgetvalue.transactions
 
-import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue._core.extensions.launch
+import com.tminus1010.budgetvalue._core.BaseViewModel
+import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.extensions.toLiveData
+import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeTransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.launch
-import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -20,29 +19,44 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
     errorSubject: Subject<Throwable>,
     private val transactionsRepo: ITransactionsRepo,
     categorizeTransactionsDomain: CategorizeTransactionsDomain,
-) : ViewModel() {
-    // # Private Intent Subjects
-    private val intentRememberCA = PublishSubject.create<Pair<Category, BigDecimal>>()
+) : BaseViewModel() {
+    // # Private
+    private val intents = PublishSubject.create<Intents>()
+    private sealed class Intents {
+        object Clear: Intents()
+        class Add(val category: Category, val amount: BigDecimal): Intents()
+    }
     // # State
     val transactionToPush = categorizeTransactionsDomain.transactionBox
         .unbox()
         .switchMap {
-            intentRememberCA
+            intents
                 .scan(it) { acc, v ->
-                    acc.copy(categoryAmounts = acc.categoryAmounts.toMutableMap().also { it[v.first] = -v.second })
+                    when (v) {
+                        is Intents.Clear -> acc.copy(categoryAmounts = emptyMap())
+                        is Intents.Add -> acc.copy(categoryAmounts = acc.categoryAmounts.toMutableMap().also { it[v.category] = v.amount })
+                    }
                 }
         }
-        .toBehaviorSubject()
+        .nonLazyCache(disposables)
     val defaultAmount = transactionToPush
         .map { it.defaultAmount.toString() }
         .toLiveData(errorSubject)
-    // # Intents
+    // # User Intents
     fun rememberCA(category: Category, amount: BigDecimal) {
-        intentRememberCA.onNext(Pair(category, amount))
+        intents.onNext(Intents.Add(category, amount))
+    }
+    fun clearCA() {
+        intents.onNext(Intents.Clear)
     }
     fun pushRememberedCategories() {
         transactionToPush.take(1)
             .flatMapCompletable { transactionsRepo.pushTransactionCAs(it, it.categoryAmounts) }
             .launch()
+    }
+    //
+    fun setup(categoryAmounts: Map<Category, BigDecimal>) {
+        clearCA()
+        categoryAmounts.forEach { rememberCA(it.key, it.value) }
     }
 }

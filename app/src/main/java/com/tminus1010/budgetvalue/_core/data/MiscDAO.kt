@@ -7,6 +7,7 @@ import com.tminus1010.budgetvalue.reconciliations.models.ReconciliationDTO
 import com.tminus1010.budgetvalue.transactions.models.TransactionDTO
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -45,6 +46,9 @@ interface MiscDAO {
 
     @Query("select * from TransactionDTO")
     fun fetchTransactions(): Observable<List<TransactionDTO>>
+
+    @Query("select * from TransactionDTO WHERE description=:description")
+    fun fetchTransactions(description: String): Single<List<TransactionDTO>>
 
     @Delete
     fun delete(transaction: TransactionDTO): Completable

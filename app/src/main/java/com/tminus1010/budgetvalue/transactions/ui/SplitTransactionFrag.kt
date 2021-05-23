@@ -9,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.reflectXY
 import com.tminus1010.budgetvalue._core.middleware.toMoneyBigDecimal
@@ -41,19 +42,13 @@ class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
     val categorizeTransactionsVM by activityViewModels<CategorizeTransactionsVM>()
     val categoriesVM by activityViewModels<CategoriesVM>()
     val transactionsVM by activityViewModels<TransactionsVM>()
-    val categorizeTransactionsAdvancedVM by viewModels<CategorizeTransactionsAdvancedVM>()
-    val categorySelectionVM: CategorySelectionVM by activityViewModels()
+    val categorizeTransactionsAdvancedVM by activityViewModels<CategorizeTransactionsAdvancedVM>()
     val vb by viewBinding(FragSplitTransactionBinding::bind)
     val viewRecipeFactories by lazy { ViewItemRecipeFactoryProvider(requireContext()) }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // # Mediation
-        categorizeTransactionsAdvancedDomain.calcExactSplit(
-            categorySelectionVM.selectedCategories.value!!,
-            categorizeTransactionsDomain.transactionBox.unbox().map { it.amount }.value!!
-        ).forEach { (category, amount) -> categorizeTransactionsAdvancedVM.rememberCA(category, amount) }
-        // # TextView: amount to split
-        vb.textviewAmountToSplit.bindText(categorizeTransactionsVM.amountToCategorize)
+        vb.tvAmountToSplit.bind(categorizeTransactionsVM.amountToCategorize) { text = it }
         // # Button
         vb.btnSave.setOnClickListener {
             categorizeTransactionsAdvancedVM.pushRememberedCategories()
