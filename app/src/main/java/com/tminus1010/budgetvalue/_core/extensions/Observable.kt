@@ -3,15 +3,11 @@ package com.tminus1010.budgetvalue._core.extensions
 import androidx.lifecycle.LiveDataReactiveStreams
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
-import io.reactivex.rxjava3.core.*
+import io.reactivex.rxjava3.core.BackpressureStrategy
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.Subject
-
-fun <T> Observable<T>.io(): Observable<T> = observeOn(Schedulers.io())
-fun <T> Observable<T>.launch(scheduler: Scheduler = Schedulers.io(), completableProvider: (T) -> Completable): Disposable =
-    observeOn(scheduler).flatMapCompletable { completableProvider(it) }.subscribe()
 
 fun <K, V, T> Observable<Map<K, V>>.flatMapSourceHashMap(sourceHashMap: SourceHashMap<K, V> = SourceHashMap(), outputChooser: (SourceHashMap<K, V>) -> Observable<T>): Observable<T> =
     compose { upstream ->
