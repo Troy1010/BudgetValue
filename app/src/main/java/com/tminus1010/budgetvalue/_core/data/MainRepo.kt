@@ -99,7 +99,7 @@ class MainRepo @Inject constructor(
     override val transactions: Observable<List<Transaction>> =
         miscDAO.fetchTransactions()
             .map { it.map { Transaction.fromDTO(it, categoryAmountsConverter) } }
-            .replay(1).refCount()
+            .replay(1).refCount().subscribeOn(Schedulers.io())
 
     override fun tryPush(transaction: Transaction): Completable =
         miscDAO.tryAdd(transaction.toDTO(categoryAmountsConverter))
