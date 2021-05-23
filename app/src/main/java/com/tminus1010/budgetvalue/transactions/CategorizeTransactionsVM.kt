@@ -1,6 +1,5 @@
 package com.tminus1010.budgetvalue.transactions
 
-import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.BaseViewModel
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.extensions.toLiveData
