@@ -16,9 +16,7 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.toPX
 import com.tminus1010.budgetvalue._core.middleware.ui.*
-import com.tminus1010.budgetvalue._core.middleware.unbox
 import com.tminus1010.budgetvalue._core.ui.data_binding.bindButtonPartial
-import com.tminus1010.budgetvalue._core.ui.data_binding.bindText
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
@@ -69,6 +67,11 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
             vb.root.children
                 .filter { it != vb.recyclerviewCategories && it != vb.recyclerviewButtons }
                 .forEach { it.alpha = if (state.inSelectionMode) 0.5F else 1F }
+        }
+        // # Navigation
+        vb.root.bind(categorizeTransactionsVM.navToSplit) {
+            categorizeTransactionsAdvancedVM.setup(it)
+            nav.navigate(R.id.action_categorizeFrag_to_splitTransactionFrag)
         }
         // # TextViews
         vb.textviewDate.bind(categorizeTransactionsVM.date) { text = it }
@@ -140,7 +143,9 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 )
             else
                 listOfNotNull(
-                    if (!isRedoAvailable) null else ButtonPartial("Redo") { categorizeTransactionsVM.redo() },
+                    if (!isRedoAvailable) null else ButtonPartial("Redo",
+                        onLongClick = { categorizeTransactionsVM.tryNavToSplitWithRedoValues() },
+                        onClick = { categorizeTransactionsVM.redo() }),
                     ButtonPartial("Make New Category") { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) },
                 )
         }

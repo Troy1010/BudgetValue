@@ -9,4 +9,6 @@ fun Button.bindButtonPartial(lifecycleOwner: LifecycleOwner, buttonPartial: Butt
     setOnClickListener { buttonPartial.onClick() }
     if (buttonPartial.enabledLiveData != null)
         bindEnabled(lifecycleOwner, buttonPartial.enabledLiveData)
+    if (buttonPartial.onLongClick != null)
+        setOnLongClickListener { buttonPartial.onLongClick!!(); true }
 }

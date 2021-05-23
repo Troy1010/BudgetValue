@@ -9,12 +9,15 @@ import com.tminus1010.budgetvalue._core.middleware.unbox
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeTransactionsDomain
+import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.Singles
 import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
+import java.math.BigDecimal
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
@@ -50,6 +53,7 @@ class CategorizeTransactionsVM @Inject constructor(
     val isRedoAvailable = redoTransaction
         .map { it.first != null }
         .nonLazyCache(disposables)
+    val navToSplit = PublishSubject.create<Map<Category, BigDecimal>>()
     // # Intents
     fun finishTransactionWithCategory(category: Category) {
         categorizeTransactionsDomain.finishTransactionWithCategory(category)
@@ -66,5 +70,9 @@ class CategorizeTransactionsVM @Inject constructor(
                 )
             }
             .subscribe()
+    }
+    fun tryNavToSplitWithRedoValues() {
+        redoTransaction.toSingle()
+            .observe(disposables, onSuccess = { navToSplit.onNext(it.first!!.categoryAmounts) })
     }
 }
