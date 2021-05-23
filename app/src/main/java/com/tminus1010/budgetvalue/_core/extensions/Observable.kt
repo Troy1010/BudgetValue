@@ -13,14 +13,6 @@ fun <T> Observable<T>.io(): Observable<T> = observeOn(Schedulers.io())
 fun <T> Observable<T>.launch(scheduler: Scheduler = Schedulers.io(), completableProvider: (T) -> Completable): Disposable =
     observeOn(scheduler).flatMapCompletable { completableProvider(it) }.subscribe()
 
-fun <K, V, T: SourceHashMap<K, V>> Observable<T>.itemObservableMap2() = // TODO("there must be a better way..")
-    take(1).flatMap { it.itemObservableMap2 }
-
-fun <A, B> Observable<A>.withLatestFrom2(o1: Observable<B>) =
-    this.withLatestFrom(o1) { a, b -> Pair(a, b) }
-
-fun <T> Observable<T>.toCompletable() = Completable.fromObservable(this)
-
 fun <K, V, T> Observable<Map<K, V>>.flatMapSourceHashMap(sourceHashMap: SourceHashMap<K, V> = SourceHashMap(), outputChooser: (SourceHashMap<K, V>) -> Observable<T>): Observable<T> =
     compose { upstream ->
         Observable.create<T> { downstream ->
