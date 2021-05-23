@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue._core.middleware.ui.ButtonPartial
 
 fun Button.bindButtonPartial(lifecycleOwner: LifecycleOwner, buttonPartial: ButtonPartial) {
     text = buttonPartial.title
-    setOnClickListener { buttonPartial.action() }
+    setOnClickListener { buttonPartial.onClick() }
     if (buttonPartial.enabledLiveData != null)
         bindEnabled(lifecycleOwner, buttonPartial.enabledLiveData)
 }

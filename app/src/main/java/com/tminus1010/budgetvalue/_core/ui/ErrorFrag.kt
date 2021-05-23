@@ -33,7 +33,7 @@ class ErrorFrag : Fragment(R.layout.frag_error) {
                         .let { GenViewHolder2(it) }
 
                 override fun onBindViewHolder(holder: GenViewHolder2<ItemButtonBinding>, position: Int) {
-                    holder.vb.btnItem.setOnClickListener { errorVM.buttons.value[holder.adapterPosition].action() }
+                    holder.vb.btnItem.setOnClickListener { errorVM.buttons.value[holder.adapterPosition].onClick() }
                     holder.vb.btnItem.text = errorVM.buttons.value[position].title
                 }
 

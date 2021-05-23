@@ -5,5 +5,5 @@ import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
 
 fun ItemButtonBinding.bind(buttonPartial: ButtonPartial) {
     btnItem.text = buttonPartial.title
-    btnItem.setOnClickListener { buttonPartial.action() }
+    btnItem.setOnClickListener { buttonPartial.onClick() }
 }
