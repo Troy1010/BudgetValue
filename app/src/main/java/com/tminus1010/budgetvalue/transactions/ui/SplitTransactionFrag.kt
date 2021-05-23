@@ -48,7 +48,7 @@ class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # TextView: amount to split
-        vb.textviewAmountToSplit.bindText(categorizeTransactionsVM.amountToCategorize)
+        vb.tvAmountToSplit.bindText(categorizeTransactionsVM.amountToCategorize)
         // # Button
         vb.btnSave.setOnClickListener {
             categorizeTransactionsAdvancedVM.pushRememberedCategories()
