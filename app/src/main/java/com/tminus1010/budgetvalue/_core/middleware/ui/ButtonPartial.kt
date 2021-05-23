@@ -5,5 +5,6 @@ import androidx.lifecycle.LiveData
 data class ButtonPartial(
     val title: String,
     val enabledLiveData: LiveData<Boolean>? = null,
+    val onLongClick: (() -> Unit)? = null,
     val onClick: () -> Unit,
 )
