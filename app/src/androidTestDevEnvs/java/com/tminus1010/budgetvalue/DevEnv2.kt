@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue
 
 import android.content.Intent
-import androidx.lifecycle.Lifecycle
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartialsUC
@@ -24,7 +23,17 @@ import javax.inject.Singleton
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class DevEnv2 {
-    @get:Rule var hiltRule = HiltAndroidRule(this)
+    @get:Rule(order = 0)
+    var hiltRule = HiltAndroidRule(this)
+
+    @get:Rule(order = 1)
+    var activityScenarioRule = ActivityScenarioRule(HostActivity::class.java)
+
+    @Test
+    fun devEnv2() {
+        // # Stall forever
+        while (true) Thread.sleep(5000)
+    }
 
     @InstallIn(SingletonComponent::class)
     @Module
@@ -52,15 +61,5 @@ class DevEnv2 {
                 )
             }
         }
-    }
-
-    @get:Rule
-    var activityScenarioRule = ActivityScenarioRule(HostActivity::class.java)
-
-    @Test
-    fun devEnv2() {
-        activityScenarioRule.scenario.moveToState(Lifecycle.State.RESUMED)
-        // # Stall forever
-        while (true) Thread.sleep(5000)
     }
 }
