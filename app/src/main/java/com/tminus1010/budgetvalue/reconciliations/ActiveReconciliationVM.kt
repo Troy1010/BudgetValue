@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.reconciliations
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.extensions.await
+import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue._core.extensions.toLiveData
 import com.tminus1010.budgetvalue._core.middleware.Rx
@@ -14,6 +15,7 @@ import com.tminus1010.budgetvalue.reconciliations.data.IReconciliationsRepo
 import com.tminus1010.budgetvalue.reconciliations.domain.ActiveReconciliationDefaultAmountUC
 import com.tminus1010.budgetvalue.reconciliations.models.Reconciliation
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.Subject
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -37,9 +39,9 @@ class ActiveReconciliationVM @Inject constructor(
             { it.itemObservableMap2 }
             .map { it.mapValues { it.value.map { it.toString() }.toLiveData(errorSubject) } }
             .replay(1).refCount()
-    val defaultAmount: LiveData<String> = activeReconciliationDefaultAmountUC()
+    val defaultAmount: Observable<String> = activeReconciliationDefaultAmountUC()
         .map { it.toString() }
-        .toLiveData(errorSubject)
+        .divertErrors(errorSubject)
 
     // # Intents
     fun pushActiveReconcileCA(category: Category, s: String) {

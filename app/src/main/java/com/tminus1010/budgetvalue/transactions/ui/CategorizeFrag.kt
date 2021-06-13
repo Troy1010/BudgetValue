@@ -16,6 +16,7 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.toPX
 import com.tminus1010.budgetvalue._core.middleware.ui.*
+import com.tminus1010.budgetvalue._core.middleware.unbox
 import com.tminus1010.budgetvalue._core.ui.data_binding.bindButtonPartial
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
@@ -44,8 +45,6 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     val transactionsVM by activityViewModels<TransactionsVM>()
     val categorySelectionVM: CategorySelectionVM by activityViewModels()
     val categorizeTransactionsAdvancedVM by activityViewModels<CategorizeTransactionsAdvancedVM>()
-    @Inject
-    lateinit var categorizeTransactionsDomain: CategorizeTransactionsDomain
     @Inject
     lateinit var categorizeAdvancedDomain: CategorizeAdvancedDomain
     val vb by viewBinding(FragCategorizeBinding::bind)
@@ -134,7 +133,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     ButtonPartial("Split", categorizeTransactionsVM.isTransactionAvailable) {
                         categorizeAdvancedDomain.calcExactSplit(
                             categorySelectionVM.selectedCategories.value!!,
-                            categorizeTransactionsDomain.transactionBox.unbox().map { it.amount }.value!!
+                            categorizeTransactionsVM.transactionBox.value!!.unbox!!.amount
                         ).let { it.mapValues { -it.value } }
                             .also { categorizeTransactionsAdvancedVM.setup(it) }
                         nav.navigate(R.id.action_categorizeFrag_to_splitTransactionFrag)

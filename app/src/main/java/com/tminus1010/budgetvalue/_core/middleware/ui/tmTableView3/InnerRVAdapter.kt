@@ -17,10 +17,7 @@ class InnerRVAdapter(
 
     override fun getItemCount() = recipeGrid[0].size
 
-    override fun onViewAttachedToWindow(
-        holder: GenViewHolder2<ViewBinding>,
-        lifecycle: LifecycleOwner,
-    ) {
+    override fun onViewAttachedToWindow(holder: GenViewHolder2<ViewBinding>, lifecycle: LifecycleOwner) {
         recipeGrid[j][holder.adapterPosition].bind(holder.vb, lifecycle)
     }
 }
