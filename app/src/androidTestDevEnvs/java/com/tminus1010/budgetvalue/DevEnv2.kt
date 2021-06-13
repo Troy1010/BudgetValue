@@ -37,7 +37,7 @@ class DevEnv2 {
 
     @InstallIn(SingletonComponent::class)
     @Module
-    object UCModule_Mock {
+    object MockModule {
         @Provides
         @Singleton
         fun launchImportUC() = object : LaunchImportUC() {
