@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.transactions
 
-import com.tminus1010.budgetvalue._core.BaseViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.extensions.toLiveData
@@ -27,7 +28,7 @@ class CategorizeTransactionsVM @Inject constructor(
     errorSubject: Subject<Throwable>,
     private val categorizeTransactionsDomain: CategorizeTransactionsDomain,
     private val transactionsRepo: ITransactionsRepo
-): BaseViewModel() {
+): ViewModel() {
     // # State
     val amountToCategorize = categorizeTransactionsDomain.transactionBox.unbox()
         .map { "Amount to categorize: $${it.amount}" }

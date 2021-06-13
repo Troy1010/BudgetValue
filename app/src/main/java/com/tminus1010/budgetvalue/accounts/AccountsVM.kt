@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.accounts
 
-import com.tminus1010.budgetvalue._core.BaseViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue.accounts.data.IAccountsRepo
 import com.tminus1010.budgetvalue.accounts.domain.AccountsDomain
 import com.tminus1010.budgetvalue.accounts.models.Account
@@ -16,7 +17,7 @@ class AccountsVM @Inject constructor(
     private val accountsRepo: IAccountsRepo,
     accountsDomain: AccountsDomain,
     errorSubject: Subject<Throwable>,
-) : BaseViewModel() {
+) : ViewModel() {
     // # State
     val accounts = accountsDomain.accounts
         .startWithItem(emptyList())
@@ -24,7 +25,6 @@ class AccountsVM @Inject constructor(
     val accountsTotal = accountsDomain.accountsTotal
         .map { it.toString() }
         .toState(disposables, errorSubject)
-
     // # Intents
     fun addAccount() {
         accountsRepo.push(Account("", BigDecimal.ZERO)).launch()

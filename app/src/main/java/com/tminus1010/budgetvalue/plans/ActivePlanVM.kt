@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.plans
 
-import com.tminus1010.budgetvalue._core.BaseViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.extensions.await
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.toMoneyBigDecimal
@@ -18,7 +19,7 @@ class ActivePlanVM @Inject constructor(
     errorSubject: Subject<Throwable>,
     private val activePlanDomain: ActivePlanDomain,
     private val plansRepo: IPlansRepo,
-) : BaseViewModel() {
+) : ViewModel() {
     // # State
     val defaultAmount = activePlanDomain.defaultAmount
         .map { it.toString() }

@@ -1,8 +1,8 @@
 package com.tminus1010.budgetvalue.categories
 
 import androidx.lifecycle.LiveData
-import com.tminus1010.budgetvalue._core.BaseViewModel
-import com.tminus1010.budgetvalue._core.extensions.await
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.extensions.toLiveData
 import com.tminus1010.budgetvalue._core.middleware.Rx
@@ -18,7 +18,7 @@ import javax.inject.Inject
 class CategorySelectionVM @Inject constructor(
     errorSubject: Subject<Throwable>,
     private val deleteCategoryFromActiveDomainUC: DeleteCategoryFromActiveDomainUC,
-) : BaseViewModel() {
+) : ViewModel() {
     // # MVI stuff
     private sealed class Intents {
         object ClearSelection : Intents()
@@ -77,11 +77,10 @@ class CategorySelectionVM @Inject constructor(
     }
 
     fun deleteSelectedCategories() {
-        Rx.launch {
-            state.await().selectedCategories
-                .map { deleteCategoryFromActiveDomainUC(it) }
-                .let { Rx.merge(it) }
-                .andThen { clearSelection() }
-        }
+        state.take(1)
+            .map { it.selectedCategories.map { deleteCategoryFromActiveDomainUC(it) } }
+            .flatMapCompletable { Rx.merge(it) }
+            .andThen { clearSelection() }
+            .subscribe()
     }
 }
