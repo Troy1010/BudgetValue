@@ -2,6 +2,7 @@ package com.tminus1010.budgetvalue.budgeted
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.toLiveData
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue.budgeted.domain.BudgetedDomain
@@ -22,11 +23,11 @@ class BudgetedVM @Inject constructor(
     budgetedDomain: BudgetedDomain,
 ) : ViewModel() {
     // # State
-    val defaultAmount: LiveData<String> = budgetedDomain.defaultAmount
+    val defaultAmount: Observable<String> = budgetedDomain.defaultAmount
         .map { it.toString() }
-        .toLiveData(errorSubject)
-    val categoryAmounts: LiveData<Map<Category, LiveData<String>>> =
+        .divertErrors(errorSubject)
+    val categoryAmounts: LiveData<Map<Category, Observable<String>>> =
         budgetedDomain.categoryAmountsObservableMap
-            .map { it.mapValues { it.value.map { it.toString() }.toLiveData(errorSubject) } }
+            .map { it.mapValues { it.value.map { it.toString() }.divertErrors(errorSubject) } }
             .toLiveData(errorSubject)
 }

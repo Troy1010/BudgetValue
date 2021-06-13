@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.transactions
 
-import com.tminus1010.budgetvalue._core.BaseViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.extensions.toLiveData
@@ -11,6 +12,7 @@ import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeTransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
+import com.tminus1010.tmcommonkotlin.rx.toState
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.Singles
@@ -26,7 +28,7 @@ class CategorizeTransactionsVM @Inject constructor(
     errorSubject: Subject<Throwable>,
     private val categorizeTransactionsDomain: CategorizeTransactionsDomain,
     private val transactionsRepo: ITransactionsRepo
-): BaseViewModel() {
+): ViewModel() {
     // # State
     val amountToCategorize = categorizeTransactionsDomain.transactionBox.unbox()
         .map { "Amount to categorize: $${it.amount}" }
@@ -54,6 +56,8 @@ class CategorizeTransactionsVM @Inject constructor(
         .map { it.first != null }
         .nonLazyCache(disposables)
     val navToSplit = PublishSubject.create<Map<Category, BigDecimal>>()
+    val transactionBox = categorizeTransactionsDomain.transactionBox
+        .toState(disposables, errorSubject)
     // # Intents
     fun finishTransactionWithCategory(category: Category) {
         categorizeTransactionsDomain.finishTransactionWithCategory(category)

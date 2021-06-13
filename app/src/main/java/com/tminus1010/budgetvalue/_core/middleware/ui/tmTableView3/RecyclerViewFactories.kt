@@ -2,12 +2,12 @@ package com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3
 
 import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
+import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.easyText
-import com.tminus1010.budgetvalue._core.ui.data_binding.bindText
 import com.tminus1010.budgetvalue.databinding.ItemHeaderBinding
 import com.tminus1010.budgetvalue.databinding.ItemTextViewBinding
 import com.tminus1010.budgetvalue.databinding.ItemTitledDividerBinding
+import io.reactivex.rxjava3.core.Observable
 
 val Fragment.itemTitledDividerBindingRF: ViewItemRecipeFactory3<ItemTitledDividerBinding, String>
     get() = ViewItemRecipeFactory3(
@@ -27,8 +27,8 @@ val Fragment.itemHeaderBindingRF: ViewItemRecipeFactory3<ItemHeaderBinding, Stri
         { d: String, vb, _ -> vb.textview.easyText = d }
     )
 
-val Fragment.itemTextViewBindingLRF: ViewItemRecipeFactory3<ItemTextViewBinding, LiveData<String>>
+val Fragment.itemTextViewBindingLRF: ViewItemRecipeFactory3<ItemTextViewBinding, Observable<String>>
     get() = ViewItemRecipeFactory3(
         { ItemTextViewBinding.inflate(LayoutInflater.from(requireContext())) },
-        { d: LiveData<String>, vb, lifecycle -> vb.textview.bindText(d, lifecycle) }
+        { d, vb, lifecycle -> vb.textview.bind(d, lifecycle) { easyText = it } }
     )

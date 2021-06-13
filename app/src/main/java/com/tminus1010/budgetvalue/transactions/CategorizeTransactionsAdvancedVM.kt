@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.transactions
 
-import com.tminus1010.budgetvalue._core.BaseViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.extensions.toLiveData
 import com.tminus1010.budgetvalue.categories.models.Category
@@ -19,7 +20,7 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
     errorSubject: Subject<Throwable>,
     private val transactionsRepo: ITransactionsRepo,
     categorizeTransactionsDomain: CategorizeTransactionsDomain,
-) : BaseViewModel() {
+) : ViewModel() {
     // # Private
     private val intents = PublishSubject.create<Intents>()
     private sealed class Intents {
