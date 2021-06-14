@@ -48,7 +48,7 @@ class CategorizeTransactionsVM @Inject constructor(
     val matchingDescriptions = categorizeTransactionsDomain.transactionBox.unbox()
         .flatMapSingle { transaction ->
             transactionsRepo.findTransactionsWithDescription(transaction.description)
-                .map { it.filter { transaction.id != it.id } }
+                .map { it.filter { transaction.id != it.id && !it.isUncategorized } }
         }
     val redoTransaction = matchingDescriptions
         .map { Box(it.maxByOrNull { it.date }) } // This will redo the transaction that happened most recent. But perhaps I should remember when the categorization took place, and redo the most recent.

@@ -34,6 +34,7 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.Observables
 import javax.inject.Inject
 
@@ -116,7 +117,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
             }
         }
         // # Button RecyclerView
-        Observables.combineLatest(categorySelectionVM.inSelectionMode, categorizeTransactionsVM.isRedoAvailable).observe(viewLifecycleOwner) { (inSelectionMode, isRedoAvailable) ->
+        categorySelectionVM.inSelectionMode.observe(viewLifecycleOwner) { inSelectionMode ->
             btns = if (inSelectionMode)
                 listOf(
                     ButtonPartial("Delete") {
@@ -141,8 +142,9 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     ButtonPartial("Clear selection") { categorySelectionVM.clearSelection() },
                 )
             else
-                listOfNotNull(
-                    if (!isRedoAvailable) null else ButtonPartial("Redo",
+                listOf(
+                    ButtonPartial("Redo",
+                        isEnabled = categorizeTransactionsVM.isRedoAvailable,
                         onLongClick = { categorizeTransactionsVM.tryNavToSplitWithRedoValues() },
                         onClick = { categorizeTransactionsVM.redo() }),
                     ButtonPartial("Make New Category") { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) },
