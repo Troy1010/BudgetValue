@@ -12,9 +12,7 @@ import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.reflectXY
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuItemPartial
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.itemHeaderBindingRF
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.itemTextViewBindingRF
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.itemTitledDividerBindingRF
+import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
 import com.tminus1010.budgetvalue.databinding.FragHistoryBinding
@@ -65,19 +63,19 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
             .map { (historyColumnDatas, activeCategories) ->
                 val recipe2D =
                     listOf(
-                        listOf(itemHeaderBindingRF.createOne("Categories")) +
-                                itemTextViewBindingRF.createOne("Default") +
-                                itemTextViewBindingRF.createMany(activeCategories.map { it.name }),
+                        listOf(recipeFactories.header.createOne("Categories")) +
+                                recipeFactories.textView.createOne("Default") +
+                                recipeFactories.textView.createMany(activeCategories.map { it.name }),
                         *historyColumnDatas.map { historyColumnData ->
                             listOf(columnHeaderFactory.createOne(historyColumnData)) +
-                                    itemTextViewBindingRF.createOne(historyColumnData.defaultAmount.toString()) +
-                                    itemTextViewBindingRF.createMany(activeCategories.map { historyColumnData.categoryAmounts[it]?.toString() ?: "" })
+                                    recipeFactories.textView.createOne(historyColumnData.defaultAmount.toString()) +
+                                    recipeFactories.textView.createMany(activeCategories.map { historyColumnData.categoryAmounts[it]?.toString() ?: "" })
                         }.toTypedArray()
                     ).reflectXY()
                 val dividerMap = activeCategories
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
-                    .associate { it.index to itemTitledDividerBindingRF.createOne(it.value.type.name) }
+                    .associate { it.index to recipeFactories.titledDivider.createOne(it.value.type.name) }
                     .mapKeys { it.key + 2 } // header row and default row
                 Pair(recipe2D, dividerMap)
             }

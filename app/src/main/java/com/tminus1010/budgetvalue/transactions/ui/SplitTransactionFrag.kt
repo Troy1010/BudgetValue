@@ -12,7 +12,8 @@ import com.tminus1010.budgetvalue._core.middleware.reflectXY
 import com.tminus1010.budgetvalue._core.middleware.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuItemPartial
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.*
+import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
+import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.models.Category
@@ -63,17 +64,17 @@ class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
         categorizeTransactionsAdvancedVM.transactionToPush
             .map {
                 val recipes2D = listOf(
-                    listOf(itemHeaderBindingRF.createOne("Category"))
-                            + itemTextViewBindingRF.createOne("Default")
-                            + itemTextViewBindingRF.createMany(it.categoryAmounts.keys.map { it.name }),
-                    listOf(itemHeaderBindingRF.createOne("Amount"))
-                            + itemTextViewBindingLRF.createOne(categorizeTransactionsAdvancedVM.defaultAmount)
+                    listOf(recipeFactories.header.createOne("Category"))
+                            + recipeFactories.textView.createOne("Default")
+                            + recipeFactories.textView.createMany(it.categoryAmounts.keys.map { it.name }),
+                    listOf(recipeFactories.header.createOne("Amount"))
+                            + recipeFactories.textViewWithLifecycle.createOne(categorizeTransactionsAdvancedVM.defaultAmount)
                             + categoryAmountRecipeFactory.createMany(it.categoryAmounts.entries.map { it.key to it.value })
                 ).reflectXY()
                 val dividerMap = it.categoryAmounts.keys
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
-                    .associate { it.index to itemTitledDividerBindingRF.createOne(it.value.type.name) }
+                    .associate { it.index to recipeFactories.titledDivider.createOne(it.value.type.name) }
                     .mapKeys { it.key + 2 } // header row, and default row
                 Pair(recipes2D, dividerMap)
             }

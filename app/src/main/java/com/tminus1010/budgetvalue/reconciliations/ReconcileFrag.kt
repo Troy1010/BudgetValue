@@ -14,7 +14,7 @@ import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.reflectXY
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.itemTitledDividerBindingRF
+import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._core.ui.data_binding.bindText
 import com.tminus1010.budgetvalue.accounts.AccountsVM
@@ -101,7 +101,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                 val dividerMap = categories
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
-                    .associate { it.index to itemTitledDividerBindingRF.createOne(it.value.type.name) }
+                    .associate { it.index to recipeFactories.titledDivider.createOne(it.value.type.name) }
                     .mapKeys { it.key + 2 } // header row, default row
                 Pair(recipeGrid, dividerMap)
             }
