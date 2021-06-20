@@ -4,8 +4,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 
 abstract class LifecycleRVAdapter<VH: RecyclerView.ViewHolder>: RecyclerView.Adapter<VH>() {
-    override fun onBindViewHolder(holder: VH, position: Int) { }
     abstract fun onViewAttachedToWindow(holder: VH, lifecycle: LifecycleOwner)
+    override fun onBindViewHolder(holder: VH, position: Int) { }
 
     private val lifecycleMap = hashMapOf<RecyclerView.ViewHolder, ExposedLifecycleOwner>()
 
