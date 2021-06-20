@@ -20,7 +20,6 @@ import com.tminus1010.budgetvalue.databinding.FragSplitTransactionBinding
 import com.tminus1010.budgetvalue.databinding.ItemTextEditBinding
 import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsAdvancedVM
 import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsVM
-import com.tminus1010.budgetvalue.transactions.TransactionsVM
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeAdvancedDomain
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeTransactionsDomain
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
@@ -37,7 +36,6 @@ class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
     @Inject lateinit var categorizeTransactionsDomain: CategorizeTransactionsDomain
     val categorizeTransactionsVM by activityViewModels<CategorizeTransactionsVM>()
     val categoriesVM by activityViewModels<CategoriesVM>()
-    val transactionsVM by activityViewModels<TransactionsVM>()
     val categorizeTransactionsAdvancedVM by activityViewModels<CategorizeTransactionsAdvancedVM>()
     val vb by viewBinding(FragSplitTransactionBinding::bind)
 
