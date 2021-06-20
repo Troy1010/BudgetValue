@@ -60,7 +60,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Mediation
-        categorySelectionVM.clearSelection() // TODO("Bind this VM to a navGraph")
+        categorySelectionVM.clearSelection()
         // # Some of SelectionMode
         categorySelectionVM.state.observe(viewLifecycleOwner) { state ->
             // ## inSelectionMode
