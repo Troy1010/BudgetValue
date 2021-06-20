@@ -81,7 +81,10 @@ class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
             }
             .observe(viewLifecycleOwner) { (recipes2D, dividerMap) ->
                 vb.tmTableView.initialize(
-                    recipeGrid = recipes2D, true, dividerMap, 0, 1)
+                    recipeGrid = recipes2D,
+                    shouldFitItemWidthsInsideTable = true,
+                    dividerMap = dividerMap,
+                    rowFreezeCount = 1)
             }
     }
 }
