@@ -29,7 +29,7 @@ class ActiveReconciliationVM @Inject constructor(
     private val activeReconciliationDefaultAmountUC: ActiveReconciliationDefaultAmountUC,
 ) : ViewModel() {
     // # State
-    val activeReconcileCAs2 =
+    val activeReconcileCAs2: Observable<Map<Category, Observable<String>>> =
         Rx.combineLatest(reconciliationsRepo.activeReconciliationCAs, categoriesDomain.userCategories)
             // These extra zeros prevent refreshes on hidden additions/removals that happen when a value is set to 0.
             .map { (activeReconcileCAs, activeCategories) ->
@@ -37,7 +37,7 @@ class ActiveReconciliationVM @Inject constructor(
             }
             .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO))
             { it.itemObservableMap2 }
-            .map { it.mapValues { it.value.map { it.toString() }.toLiveData(errorSubject) } }
+            .map { it.mapValues { it.value.map { it.toString() }.divertErrors(errorSubject) } }
             .replay(1).refCount()
     val defaultAmount: Observable<String> = activeReconciliationDefaultAmountUC()
         .map { it.toString() }
