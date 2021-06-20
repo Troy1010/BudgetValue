@@ -69,14 +69,6 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                 v.editText.onDone { activeReconciliationVM.pushActiveReconcileCA(category, it) }
             }
         )
-        val cellRecipeFactory2 = ViewItemRecipeFactory3<ItemTextViewBinding, Any?>(
-            { ItemTextViewBinding.inflate(LayoutInflater.from(context)) },
-            { d, v, _ -> v.textview.text = d?.toString() }
-        )
-        val oneWayRecipeFactory2 = ViewItemRecipeFactory3<ItemTextViewBinding, Observable<String>?>(
-            { ItemTextViewBinding.inflate(LayoutInflater.from(context),) },
-            { d, v, lifecycle -> if (d != null) v.textview.bind(d, lifecycle) { easyText = it } }
-        )
         Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs, transactionsVM.currentSpendBlockCAs, activeReconciliationVM.activeReconcileCAs2, budgetedVM.categoryAmounts.toObservable(viewLifecycleOwner))
             .observeOn(Schedulers.computation())
             .debounce(100, TimeUnit.MILLISECONDS)
@@ -86,17 +78,17 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                             + cellRecipeFactory.createOne("Default")
                             + cellRecipeFactory.createMany(categories.map { it.name }),
                     listOf(headerRecipeFactory_numbered.createOne(Pair("Plan", activePlanVM.expectedIncome)))
-                            + oneWayRecipeFactory2.createOne(activePlanVM.defaultAmount)
-                            + oneWayRecipeFactory2.createMany(categories.map { activePlanCAs[it] }),
+                            + recipeFactories.textViewWithLifecycle.createOne(activePlanVM.defaultAmount)
+                            + recipeFactories.textViewWithLifecycle.createMany(categories.map { activePlanCAs[it] }),
                     listOf(headerRecipeFactory.createOne("Actual"))
-                            + cellRecipeFactory2.createOne("")
-                            + cellRecipeFactory2.createMany(categories.map { currentSpendBlockCAs[it] ?: BigDecimal.ZERO }),
+                            + recipeFactories.textView.createOne("")
+                            + recipeFactories.textView.createMany(categories.map { currentSpendBlockCAs[it] ?: BigDecimal.ZERO }),
                     listOf(headerRecipeFactory.createOne("Reconcile"))
-                            + oneWayRecipeFactory2.createOne(activeReconciliationVM.defaultAmount)
+                            + recipeFactories.textViewWithLifecycle.createOne(activeReconciliationVM.defaultAmount)
                             + reconcileCARecipeFactory.createMany(categories.map { it to activeReconciliationCAs[it] }),
                     listOf(headerRecipeFactory_numbered.createOne(Pair("Budgeted", accountsVM.accountsTotal)))
-                            + oneWayRecipeFactory2.createOne(budgetedVM.defaultAmount)
-                            + oneWayRecipeFactory2.createMany(categories.map { budgetedCA[it] })
+                            + recipeFactories.textViewWithLifecycle.createOne(budgetedVM.defaultAmount)
+                            + recipeFactories.textViewWithLifecycle.createMany(categories.map { budgetedCA[it] })
                 ).reflectXY()
                 val dividerMap = categories
                     .withIndex()

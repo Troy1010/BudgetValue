@@ -11,9 +11,9 @@ import io.reactivex.rxjava3.core.Observable
 
 interface IRecipeFactories {
     val titledDivider: ViewItemRecipeFactory3<ItemTitledDividerBinding, String>
-    val textView: ViewItemRecipeFactory3<ItemTextViewBinding, String>
+    val textView: ViewItemRecipeFactory3<ItemTextViewBinding, Any>
     val header: ViewItemRecipeFactory3<ItemHeaderBinding, String>
-    val textViewWithLifecycle: ViewItemRecipeFactory3<ItemTextViewBinding, Observable<String>>
+    val textViewWithLifecycle: ViewItemRecipeFactory3<ItemTextViewBinding, Observable<String>?>
 }
 
 val Fragment.recipeFactories
@@ -24,10 +24,10 @@ val Fragment.recipeFactories
                 { d: String, vb, _ -> vb.textview.easyText = d }
             )
 
-        override val textView: ViewItemRecipeFactory3<ItemTextViewBinding, String>
+        override val textView: ViewItemRecipeFactory3<ItemTextViewBinding, Any>
             get() = ViewItemRecipeFactory3(
                 { ItemTextViewBinding.inflate(LayoutInflater.from(requireContext())) },
-                { d: String, vb, _ -> vb.textview.easyText = d }
+                { d: Any, vb, _ -> vb.textview.easyText = d.toString() }
             )
 
         override val header: ViewItemRecipeFactory3<ItemHeaderBinding, String>
@@ -36,9 +36,12 @@ val Fragment.recipeFactories
                 { d: String, vb, _ -> vb.textview.easyText = d }
             )
 
-        override val textViewWithLifecycle: ViewItemRecipeFactory3<ItemTextViewBinding, Observable<String>>
+        override val textViewWithLifecycle: ViewItemRecipeFactory3<ItemTextViewBinding, Observable<String>?>
             get() = ViewItemRecipeFactory3(
                 { ItemTextViewBinding.inflate(LayoutInflater.from(requireContext())) },
-                { d, vb, lifecycle -> vb.textview.bind(d, lifecycle) { easyText = it } }
+                { d, vb, lifecycle ->
+                    if (d==null) return@ViewItemRecipeFactory3
+                    vb.textview.bind(d, lifecycle) { easyText = it }
+                }
             )
     }
