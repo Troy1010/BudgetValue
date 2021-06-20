@@ -65,7 +65,7 @@ class CategorizeTransactionsVM @Inject constructor(
     fun redo() {
         Singles.zip(
             categorizeTransactionsDomain.transactionBox.unbox().toSingle(),
-            redoTransaction.toSingle()
+            redoTransaction.toSingle(),
         ).subscribeOn(Schedulers.io())
             .flatMapCompletable { (transaction, redoTransaction) ->
                 transactionsRepo.pushTransactionCAs(
