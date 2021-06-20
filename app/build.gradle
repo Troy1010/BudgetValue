@@ -111,11 +111,11 @@ dependencies {
     testImplementation "org.robolectric:robolectric:4.5.1"
 
     // # TMCommonKotlin
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-core:+'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-rx:+'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-misc:+'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-tuple:+'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-view:+'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-core:1.1.+'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-rx:1.1.+'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-misc:1.1.+'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-tuple:1.1.+'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-view:1.1.+'
 
     // # Hilt
     implementation 'com.google.dagger:hilt-android:2.33-beta'

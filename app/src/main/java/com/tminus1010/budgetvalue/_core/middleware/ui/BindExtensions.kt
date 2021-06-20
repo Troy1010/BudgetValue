@@ -62,20 +62,19 @@ fun <T> EditText.bindOutgoing(
 
 // Transform to output, validate, transform back
 
-fun EditText.onDone(
-    onDone: (String) -> Unit
-) {
-    setOnEditorActionListener { v, actionId, event ->
+fun EditText.onDone(onDone: (String) -> Unit) {
+    setOnEditorActionListener { _, actionId, _ ->
         if (actionId == EditorInfo.IME_ACTION_DONE) {
             onDone(text.toString())
             false
         } else true
     }
-    setOnFocusChangeListener { v, hasFocus ->
+    setOnFocusChangeListener { _, hasFocus ->
         if (!hasFocus) onDone(text.toString())
     }
 }
 
+@Deprecated("Use bindText")
 fun TextView.bindIncoming(lifecycleOwner: LifecycleOwner, liveData: LiveData<String>) {
     Rx.launch2(AndroidSchedulers.mainThread()) { // You might get: "Cannot invoke observe on a background thread" without this.
         liveData.observe(lifecycleOwner) {

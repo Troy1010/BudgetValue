@@ -37,6 +37,9 @@ class HostActivity : AppCompatActivity() {
         // # Bind bottom menu to navigation.
         // In order for NavigationUI.setupWithNavController to work, the ids in R.menu.* must exactly match R.navigation.*
         NavigationUI.setupWithNavController(vb.bottomNavigation, hostFrag.navController)
+        //
+        // This line solves (after IMPORT): java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
+        transactionsVM
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {

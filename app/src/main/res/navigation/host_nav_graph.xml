@@ -16,10 +16,6 @@
         android:label="Categorize"
         tools:layout="@layout/frag_categorize">
         <action
-            android:id="@+id/action_categorizeFrag_to_categoryCustomizationFrag"
-            app:destination="@id/categoryCustomizationFrag"
-            app:popUpTo="@id/categorizeFrag" />
-        <action
             android:id="@+id/action_categorizeFrag_to_newCategoryFrag"
             app:destination="@id/newCategoryFrag"
             app:popUpTo="@id/categorizeFrag" />
@@ -30,24 +26,23 @@
     <fragment
         android:id="@+id/importFrag"
         android:name="com.tminus1010.budgetvalue.accounts.ImportFrag"
-        android:label="Import" />
+        android:label="Import"
+        tools:layout="@layout/frag_import"  />
     <fragment
         android:id="@+id/reconcileFrag"
         android:name="com.tminus1010.budgetvalue.reconciliations.ReconcileFrag"
-        android:label="Reconcile" />
+        android:label="Reconcile"
+        tools:layout="@layout/frag_reconcile"  />
     <fragment
         android:id="@+id/planFrag"
-        android:name="com.tminus1010.budgetvalue.plans.PlanFrag"
-        android:label="Plan" />
+        android:name="com.tminus1010.budgetvalue.plans.ui.PlanFrag"
+        android:label="Plan"
+        tools:layout="@layout/frag_plan"  />
     <fragment
         android:id="@+id/historyFrag"
         android:name="com.tminus1010.budgetvalue.history.HistoryFrag"
-        android:label="History" />
-    <fragment
-        android:id="@+id/categoryCustomizationFrag"
-        android:name="com.tminus1010.budgetvalue.categories.ui.CategoryCustomizationFrag"
-        android:label="CategoryCustomizationFrag"
-        tools:layout="@layout/frag_category_customization" />
+        android:label="History"
+        tools:layout="@layout/frag_history" />
     <fragment
         android:id="@+id/newCategoryFrag"
         android:name="com.tminus1010.budgetvalue.categories.ui.NewCategoryFrag"
@@ -56,7 +51,8 @@
     <fragment
         android:id="@+id/errorFrag"
         android:name="com.tminus1010.budgetvalue._core.ui.ErrorFrag"
-        android:label="ErrorFrag" >
+        android:label="ErrorFrag"
+        tools:layout="@layout/frag_error"  >
         <action
             android:id="@+id/action_errorFrag_to_importFrag"
             app:destination="@id/importFrag" />
@@ -64,5 +60,6 @@
     <fragment
         android:id="@+id/splitTransactionFrag"
         android:name="com.tminus1010.budgetvalue.transactions.ui.SplitTransactionFrag"
-        android:label="SplitTransactionFrag" />
+        android:label="SplitTransactionFrag"
+        tools:layout="@layout/frag_split_transaction" />
 </navigation>

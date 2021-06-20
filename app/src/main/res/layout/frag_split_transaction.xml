@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textview_amountToSplit"
+        android:id="@+id/tvAmountToSplit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -16,11 +16,21 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Amount to split: $1.6" />
 
-    <com.tminus1010.budgetvalue._core.middleware.ui.tmTableView2.TMTableView2
+    <com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.TMTableView3
         android:id="@+id/tmTableView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_amountToSplit" />
+        app:layout_constraintBottom_toTopOf="@id/btn_save"
+        app:layout_constraintTop_toBottomOf="@id/tvAmountToSplit" />
+
+    <Button
+        android:id="@+id/btn_save"
+        style="@style/MainButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginHorizontal="16dp"
+        android:text="Save"
+        app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

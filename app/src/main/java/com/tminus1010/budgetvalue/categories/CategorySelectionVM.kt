@@ -1,56 +1,86 @@
 package com.tminus1010.budgetvalue.categories
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue._core.middleware.AddRemType
+import androidx.lifecycle.disposables
+import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
+import com.tminus1010.budgetvalue._core.extensions.toLiveData
 import com.tminus1010.budgetvalue._core.middleware.Rx
-import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.domain.DeleteCategoryFromActiveDomainUC
-import com.tminus1010.budgetvalue.categories.domain.ICategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.Subject
 import javax.inject.Inject
 
 @HiltViewModel
 class CategorySelectionVM @Inject constructor(
-    categoriesDomain: CategoriesDomain,
-    private val deleteCategoryFromActiveDomainUC: DeleteCategoryFromActiveDomainUC
-) : ViewModel(), ICategoriesDomain by categoriesDomain {
-    // # Buses
-    private val intentSelectCategoryBus = PublishSubject.create<Pair<AddRemType, Category>>()
-    private val intentClearSelectionBus = PublishSubject.create<Unit>()
+    errorSubject: Subject<Throwable>,
+    private val deleteCategoryFromActiveDomainUC: DeleteCategoryFromActiveDomainUC,
+) : ViewModel() {
+    // # MVI stuff
+    private sealed class Intents {
+        object ClearSelection : Intents()
+        class SelectCategory(val category: Category) : Intents()
+        class UnselectCategory(val category: Category) : Intents()
+    }
 
-    // # Databinding Sources
-    val selectedCategories: BehaviorSubject<Set<Category>> =
-        Rx.merge(intentSelectCategoryBus, intentClearSelectionBus)
-            .scan(setOf<Category>()) { acc, (v1, v2) ->
-                when {
-                    v1 != null -> when (v1.first) {
-                        AddRemType.ADD -> acc.plus(v1.second)
-                        AddRemType.REMOVE -> acc.minus(v1.second)
-                    }
-                    v2 != null -> emptySet()
-                    else -> error("How did we get here?")
-                }
+    private val intents = PublishSubject.create<Intents>()
+
+    // # State
+    data class State(
+        val selectedCategories: Set<Category> = emptySet(),
+        val inSelectionMode: Boolean = false,
+    )
+
+    val state = intents
+        .scan(State()) { acc, v ->
+            when (v) {
+                is Intents.ClearSelection -> acc.copy(
+                    selectedCategories = emptySet(),
+                    inSelectionMode = false
+                )
+                is Intents.SelectCategory -> acc.copy(
+                    selectedCategories = acc.selectedCategories + v.category,
+                    inSelectionMode = true
+                )
+                is Intents.UnselectCategory -> acc.copy(
+                    selectedCategories = acc.selectedCategories - v.category,
+                    inSelectionMode = (acc.selectedCategories - v.category).isNotEmpty()
+                )
             }
-            .toBehaviorSubject()
-    val inSelectionMode : BehaviorSubject<Boolean> = selectedCategories
-        .map { it.isNotEmpty() }
-        .toBehaviorSubject()
+        }
+        .nonLazyCache(disposables)
 
-    // # User Intents
+    val selectedCategories: LiveData<Set<Category>> = state
+        .map { it.selectedCategories }
+        .distinctUntilChanged()
+        .toLiveData(errorSubject)
+
+    val inSelectionMode: Observable<Boolean> = state
+        .map { it.inSelectionMode }
+        .distinctUntilChanged()
+        .nonLazyCache(disposables)
+
+    // # Intents
     fun clearSelection() {
-        intentClearSelectionBus.onNext(Unit)
+        intents.onNext(Intents.ClearSelection)
     }
-    fun selectCategory(addRemType: AddRemType, category: Category) {
-        intentSelectCategoryBus.onNext(Pair(addRemType, category))
+
+    fun selectCategory(category: Category) {
+        intents.onNext(Intents.SelectCategory(category))
     }
+
+    fun unselectCategory(category: Category) {
+        intents.onNext(Intents.UnselectCategory(category))
+    }
+
     fun deleteSelectedCategories() {
-        selectedCategories.take(1)
-            .flatMapCompletable { Rx.merge(it.map { deleteCategoryFromActiveDomainUC(it) }) }
+        state.take(1)
+            .map { it.selectedCategories.map { deleteCategoryFromActiveDomainUC(it) } }
+            .flatMapCompletable { Rx.merge(it) }
+            .andThen { clearSelection() }
             .subscribe()
-        clearSelection()
     }
 }

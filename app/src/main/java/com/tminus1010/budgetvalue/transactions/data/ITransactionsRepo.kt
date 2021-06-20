@@ -4,6 +4,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import java.math.BigDecimal
 
 interface ITransactionsRepo {
@@ -12,4 +13,5 @@ interface ITransactionsRepo {
     fun tryPush(transactions: List<Transaction>): Completable
     fun pushTransactionCA(transaction: Transaction, category: Category, amount: BigDecimal?): Completable
     fun pushTransactionCAs(transaction: Transaction, categoryAmounts: Map<Category, BigDecimal>): Completable
+    fun findTransactionsWithDescription(description: String): Single<List<Transaction>>
 }

@@ -1,6 +1,5 @@
 package com.tminus1010.budgetvalue.reconciliations.domain
 
-import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue.budgeted.domain.BudgetedDomain
 import com.tminus1010.budgetvalue.plans.data.IPlansRepo
@@ -27,6 +26,6 @@ class ActiveReconciliationDefaultAmountUC @Inject constructor(
                         reconciliations.map { it.defaultAmount } +
                         transactionBlocks.map { it.defaultAmount })
                     .let { budgetedDefaultAmount - it.sum() }
-            }.nonLazyCache()
+            }.replay(1).also { it.connect() } // TODO: No lifecycle to give to..? Seems like a coding error. Shouldn't this be in a VM?
     operator fun invoke(): Observable<BigDecimal> = defaultAmount
 }

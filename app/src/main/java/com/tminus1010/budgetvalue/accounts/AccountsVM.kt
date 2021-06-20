@@ -1,11 +1,12 @@
 package com.tminus1010.budgetvalue.accounts
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue._core.extensions.toLiveData
+import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue.accounts.data.IAccountsRepo
 import com.tminus1010.budgetvalue.accounts.domain.AccountsDomain
 import com.tminus1010.budgetvalue.accounts.models.Account
 import com.tminus1010.tmcommonkotlin.rx.extensions.launch
+import com.tminus1010.tmcommonkotlin.rx.toState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.Subject
 import java.math.BigDecimal
@@ -20,11 +21,10 @@ class AccountsVM @Inject constructor(
     // # State
     val accounts = accountsDomain.accounts
         .startWithItem(emptyList())
-        .toLiveData(errorSubject)
+        .toState(disposables, errorSubject)
     val accountsTotal = accountsDomain.accountsTotal
         .map { it.toString() }
-        .toLiveData(errorSubject)
-
+        .toState(disposables, errorSubject)
     // # Intents
     fun addAccount() {
         accountsRepo.push(Account("", BigDecimal.ZERO)).launch()

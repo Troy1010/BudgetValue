@@ -10,5 +10,5 @@ interface IBudgetedDomain {
     val categoryAmounts: Observable<Map<Category, BigDecimal>>
     val categoryAmountsObservableMap: Observable<Map<Category, BehaviorSubject<BigDecimal>>>
     val defaultAmount: Observable<BigDecimal>
-    val budgeted: BehaviorSubject<Budgeted>
+    val budgeted: Observable<Budgeted>
 }

@@ -9,7 +9,6 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.data.IPlansRepo
 import com.tminus1010.budgetvalue.reconciliations.data.IReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
-import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.rx.extensions.total
 import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
@@ -48,5 +47,5 @@ class BudgetedDomain @Inject constructor(
     override val budgeted =
         Rx.combineLatest(categoryAmounts, defaultAmount)
             .map { Budgeted(it.first, it.second) }
-            .toBehaviorSubject()
+            .replay(1).refCount()
 }
