@@ -8,6 +8,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeTransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.launch
+import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -57,7 +58,10 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
     }
     //
     fun setup(categoryAmounts: Map<Category, BigDecimal>) {
-        clearCA()
-        categoryAmounts.forEach { rememberCA(it.key, it.value) }
+        transactionToPush.take(1)
+            .observe(disposables) {
+                clearCA()
+                categoryAmounts.forEach { rememberCA(it.key, it.value) }
+            }
     }
 }
