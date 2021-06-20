@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.show
-import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.reflectXY
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuItemPartial
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
@@ -25,6 +24,7 @@ import com.tminus1010.budgetvalue.reconciliations.models.Reconciliation
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.kotlin.Observables
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
@@ -57,7 +57,7 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
                 }
             },
         )
-        Rx.combineLatest(historyVM.historyColumnDatas, historyVM.activeCategories)
+        Observables.combineLatest(historyVM.historyColumnDatas, historyVM.activeCategories)
             .distinctUntilChanged() //*idk why this emitted a copy without distinctUntilChanged
             .observeOn(Schedulers.computation())
             .map { (historyColumnDatas, activeCategories) ->
