@@ -31,16 +31,16 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class HistoryFrag : Fragment(R.layout.frag_history) {
     @Inject lateinit var datePeriodGetter: DatePeriodGetter
-    val plansVM: PlansVM by activityViewModels()
-    val reconciliationsVM: ReconciliationsVM by activityViewModels()
-    val historyVM: HistoryVM by activityViewModels()
-    val vb by viewBinding(FragHistoryBinding::bind)
+    private val plansVM: PlansVM by activityViewModels()
+    private val reconciliationsVM: ReconciliationsVM by activityViewModels()
+    private val historyVM: HistoryVM by activityViewModels()
+    private val vb by viewBinding(FragHistoryBinding::bind)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # TMTableView
         val columnHeaderFactory = ViewItemRecipeFactory3(
             { ItemHeaderWithSubtitleBinding.inflate(LayoutInflater.from(requireContext())) },
-            { d: IHistoryColumnData, vb, lifecycle ->
+            { d: IHistoryColumnData, vb, _ ->
                 vb.textviewHeader.text = d.title
                 vb.textviewSubtitle.text = d.subTitle(datePeriodGetter)
                 vb.root.setOnLongClickListener {
