@@ -2,8 +2,8 @@ package com.tminus1010.budgetvalue.transactions
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
+import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
-import com.tminus1010.budgetvalue._core.extensions.toLiveData
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeTransactionsDomain
@@ -42,7 +42,7 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
         .nonLazyCache(disposables)
     val defaultAmount = transactionToPush
         .map { it.defaultAmount.toString() }
-        .toLiveData(errorSubject)
+        .divertErrors(errorSubject)
     // # User Intents
     fun rememberCA(category: Category, amount: BigDecimal) {
         intents.onNext(Intents.Add(category, amount))
