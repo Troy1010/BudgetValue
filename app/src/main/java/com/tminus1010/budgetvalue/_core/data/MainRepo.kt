@@ -89,12 +89,14 @@ class MainRepo @Inject constructor(
         sharedPrefWrapper.activeReconciliationCAs
             .map { it.associate { categoryParser.parseCategory(it.key) to it.value.toBigDecimalSafe() } }
             .replay(1).refCount()
+            .subscribeOn(Schedulers.io())
 
     override fun pushActiveReconciliationCAs(categoryAmounts: Map<Category, BigDecimal>): Completable =
         sharedPrefWrapper.pushActiveReconciliationCAs(categoryAmounts.associate { it.key.name to it.value.toString() })
 
     override fun clearActiveReconcileCAs(): Completable =
         sharedPrefWrapper.clearActiveReconcileCAs()
+            .subscribeOn(Schedulers.io())
 
     override val transactions: Observable<List<Transaction>> =
         miscDAO.fetchTransactions()
