@@ -83,7 +83,8 @@ class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
                     recipeGrid = recipes2D,
                     shouldFitItemWidthsInsideTable = true,
                     dividerMap = dividerMap,
-                    rowFreezeCount = 1)
+                    rowFreezeCount = 1,
+                )
             }
     }
 }

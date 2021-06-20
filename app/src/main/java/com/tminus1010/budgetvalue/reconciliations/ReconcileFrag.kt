@@ -110,8 +110,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                     recipeGrid = recipeGrid,
                     shouldFitItemWidthsInsideTable = true,
                     dividerMap = dividerMap,
-                    colFreezeCount = 0,
-                    rowFreezeCount = 1
+                    rowFreezeCount = 1,
                 )
             }
     }

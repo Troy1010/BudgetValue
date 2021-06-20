@@ -70,7 +70,12 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
                 Pair(recipes2D, dividerMap)
             }
             .observe(viewLifecycleOwner) { (recipes2D, dividerMap) ->
-                vb.myTableViewPlan.initialize(recipes2D, true, dividerMap, 0, 1)
+                vb.myTableViewPlan.initialize(
+                    recipeGrid = recipes2D,
+                    shouldFitItemWidthsInsideTable = true,
+                    dividerMap = dividerMap,
+                    rowFreezeCount = 1,
+                )
             }
     }
 }

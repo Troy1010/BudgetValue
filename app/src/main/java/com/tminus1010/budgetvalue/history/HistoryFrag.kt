@@ -80,7 +80,13 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
                 Pair(recipe2D, dividerMap)
             }
             .observe(viewLifecycleOwner) { (recipe2D, dividerMap) ->
-                vb.tmTableViewHistory.initialize(recipe2D, false, dividerMap, 1, 1)
+                vb.tmTableViewHistory.initialize(
+                    recipeGrid = recipe2D,
+                    shouldFitItemWidthsInsideTable = false,
+                    dividerMap = dividerMap,
+                    colFreezeCount = 1,
+                    rowFreezeCount = 1,
+                )
             }
     }
 }
