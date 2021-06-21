@@ -17,8 +17,10 @@ class CategorizeTransactionsDomain @Inject constructor(
     private val transactionsRepo: ITransactionsRepo,
     transactionsDomain: TransactionsDomain,
 ) : ICategorizeTransactionsDomain {
-    override val transactionBox: Observable<Box<Transaction?>> = transactionsDomain.uncategorizedSpends
-        .map { Box(it.getOrNull(0)) }
+    private val activeCA = mutableMapOf<Category, BigDecimal>()
+    override val transactionBox: Observable<Box<Transaction?>> =
+        transactionsDomain.uncategorizedSpends
+            .map { Box(it.getOrNull(0)) }
     override fun finishTransactionWithCategory(category: Category) {
         transactionBox
             .observeOn(Schedulers.io())
@@ -29,7 +31,7 @@ class CategorizeTransactionsDomain @Inject constructor(
             .doOnComplete { activeCA.clear() }
             .subscribe()
     }
-    override var activeCA = mutableMapOf<Category, BigDecimal>()
-    override val hasUncategorizedTransaction: Observable<Boolean> = transactionBox
-        .map { it.unbox != null }
+    override val hasUncategorizedTransaction: Observable<Boolean> =
+        transactionBox
+            .map { it.unbox != null }
 }
