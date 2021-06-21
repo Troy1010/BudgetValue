@@ -77,6 +77,9 @@ class CategorizeTransactionsVM @Inject constructor(
             }
             .subscribe()
     }
+    fun undo() {
+        categorizeTransactionsDomain.undo()
+    }
     fun tryNavToSplitWithRedoValues() {
         redoTransaction.toSingle()
             .observe(disposables, onSuccess = { navToSplit.onNext(it.first!!.categoryAmounts) })
