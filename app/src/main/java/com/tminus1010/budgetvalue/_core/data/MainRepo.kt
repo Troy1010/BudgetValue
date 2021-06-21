@@ -115,8 +115,8 @@ class MainRepo @Inject constructor(
             .apply { if (amount==null) remove(category) else put(category, amount) }
             .let { miscDAO.updateTransactionCategoryAmounts(transaction.id, it.mapKeys { it.key.name }) }
 
-    override fun pushTransactionCAs(transaction: Transaction, categoryAmounts: Map<Category, BigDecimal>): Completable =
-        miscDAO.updateTransactionCategoryAmounts(transaction.id, categoryAmounts.mapKeys { it.key.name })
+    override fun pushTransactionCAs(id: String, categoryAmounts: Map<Category, BigDecimal>): Completable =
+        miscDAO.updateTransactionCategoryAmounts(id, categoryAmounts.mapKeys { it.key.name })
             .subscribeOn(Schedulers.io())
 
     override fun findTransactionsWithDescription(description: String): Single<List<Transaction>> =

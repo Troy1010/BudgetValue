@@ -27,11 +27,16 @@ class CategorizeTransactionsDomain @Inject constructor(
             .take(1)
             .unbox()
             .doOnNext { activeCA[category] = it.amount - activeCA.map{ it.value }.fold(0.toBigDecimal()) { acc, v -> acc + v } }
-            .flatMapCompletable { transactionsRepo.pushTransactionCAs(it, activeCA) }
+            .flatMapCompletable { transactionsRepo.pushTransactionCAs(it.id, activeCA) }
             .doOnComplete { activeCA.clear() }
             .subscribe()
     }
     override val hasUncategorizedTransaction: Observable<Boolean> =
         transactionBox
             .map { it.unbox != null }
+    fun pushTransactionCAs(id: String, categoryAmount: Map<Category, BigDecimal>) =
+        transactionsRepo.pushTransactionCAs(
+            id,
+            categoryAmount,
+        )
 }

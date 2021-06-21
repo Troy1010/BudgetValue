@@ -53,7 +53,7 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
     }
     fun pushRememberedCategories() {
         transactionToPush.take(1)
-            .flatMapCompletable { transactionsRepo.pushTransactionCAs(it, it.categoryAmounts) }
+            .flatMapCompletable { transactionsRepo.pushTransactionCAs(it.id, it.categoryAmounts) }
             .launch()
     }
     //

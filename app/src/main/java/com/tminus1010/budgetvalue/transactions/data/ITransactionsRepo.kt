@@ -12,6 +12,6 @@ interface ITransactionsRepo {
     fun tryPush(transaction: Transaction): Completable
     fun tryPush(transactions: List<Transaction>): Completable
     fun pushTransactionCA(transaction: Transaction, category: Category, amount: BigDecimal?): Completable
-    fun pushTransactionCAs(transaction: Transaction, categoryAmounts: Map<Category, BigDecimal>): Completable
+    fun pushTransactionCAs(id: String, categoryAmounts: Map<Category, BigDecimal>): Completable
     fun findTransactionsWithDescription(description: String): Single<List<Transaction>>
 }
