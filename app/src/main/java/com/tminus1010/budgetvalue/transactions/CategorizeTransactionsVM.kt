@@ -32,6 +32,7 @@ class CategorizeTransactionsVM @Inject constructor(
     private val transactionsRepo: ITransactionsRepo
 ): ViewModel() {
     // # State
+    val isUndoAvailable = categorizeTransactionsDomain.isUndoAvailable
     val amountToCategorize = categorizeTransactionsDomain.transactionBox.unbox()
         .map { "Amount to categorize: $${it.amount}" }
         .divertErrors(errorSubject).nonLazyCache(disposables)

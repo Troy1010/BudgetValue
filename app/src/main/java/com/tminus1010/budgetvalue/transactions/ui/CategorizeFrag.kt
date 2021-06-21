@@ -143,6 +143,9 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 )
             else
                 listOf(
+                    ButtonPartial("Undo",
+                        isEnabled = categorizeTransactionsVM.isUndoAvailable,
+                        onClick = { categorizeTransactionsVM.undo() }),
                     ButtonPartial("Redo",
                         isEnabled = categorizeTransactionsVM.isRedoAvailable,
                         onLongClick = { categorizeTransactionsVM.tryNavToSplitWithRedoValues() },
