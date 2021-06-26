@@ -6,7 +6,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.extensions.add2
+import com.tminus1010.budgetvalue._core.extensions.add
 import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.middleware.reflectXY
 import com.tminus1010.budgetvalue._core.middleware.toMoneyBigDecimal
@@ -51,11 +51,11 @@ class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
         // # TMTableView
         val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemTextEditBinding, Pair<Category, BigDecimal>>(
             { ItemTextEditBinding.inflate(LayoutInflater.from(context)) },
-            { (category, amount), vb, lifecycle ->
+            { (category, amount), vb, _ ->
                 vb.editText.setText(amount.toString())
                 vb.editText.onDone { categorizeTransactionsAdvancedVM.rememberCA(category, it.toMoneyBigDecimal()) }
                 vb.editText.setOnCreateContextMenuListener { menu, _, _ ->
-                    menu.add2(MenuItemPartial("Fill") {
+                    menu.add(MenuItemPartial("Fill") {
                         categorizeTransactionsAdvancedVM.rememberCA(category, vb.editText.text.toString().toMoneyBigDecimal() + categorizeTransactionsAdvancedVM.defaultAmount.value!!.toBigDecimal())
                     })
                 }
