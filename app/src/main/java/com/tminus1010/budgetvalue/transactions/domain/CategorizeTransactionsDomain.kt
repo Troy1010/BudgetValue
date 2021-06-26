@@ -60,22 +60,20 @@ class CategorizeTransactionsDomain @Inject constructor(
         .map { it.isNotEmpty() }
         .replay(1).also { it.connect() }
     fun pushTransactionCAs(id: String, categoryAmount: Map<Category, BigDecimal>): Completable {
-        var oldTransaction: Transaction? = null
         return transactionsRepo.getTransaction(id)
-            .doOnSuccess { oldTransaction = it }
-            .flatMapCompletable {
+            .flatMapCompletable { oldTransaction ->
                 transactionsRepo.pushTransactionCAs(
                     id,
                     categoryAmount,
                 )
-            }
-            .doOnComplete {
-                undoQueueIntents.onNext(UndoQueueIntent.Add {
-                    transactionsRepo.pushTransactionCAs(
-                        id,
-                        oldTransaction!!.categoryAmounts,
-                    ).subscribe()
-                })
+                    .doOnComplete {
+                        undoQueueIntents.onNext(UndoQueueIntent.Add {
+                            transactionsRepo.pushTransactionCAs(
+                                id,
+                                oldTransaction.categoryAmounts,
+                            ).subscribe()
+                        })
+                    }
             }
     }
     fun undo() {
