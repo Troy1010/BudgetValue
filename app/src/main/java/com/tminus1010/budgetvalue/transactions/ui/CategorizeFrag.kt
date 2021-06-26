@@ -28,14 +28,10 @@ import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsAdvancedVM
 import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsVM
 import com.tminus1010.budgetvalue.transactions.TransactionsVM
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeAdvancedDomain
-import com.tminus1010.budgetvalue.transactions.domain.CategorizeTransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
-import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.kotlin.Observables
 import javax.inject.Inject
 
 
@@ -60,7 +56,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Mediation
-        categorySelectionVM.clearSelection() // TODO("Bind this VM to a navGraph")
+        categorySelectionVM.clearSelection()
         // # Some of SelectionMode
         categorySelectionVM.state.observe(viewLifecycleOwner) { state ->
             // ## inSelectionMode
@@ -100,7 +96,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     text = category.name
                     setOnClickListener {
                         if (categorySelectionVM.inSelectionMode.value!!) selectionModeAction()
-                        else categorizeTransactionsVM.finishTransactionWithCategory(category)
+                        else categorizeTransactionsVM.userSimpleCategorize(category)
                     }
                     setOnLongClickListener { selectionModeAction(); true }
                 }
@@ -143,10 +139,13 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 )
             else
                 listOf(
-                    ButtonPartial("Redo",
+                    ButtonPartial("Undo",
+                        isEnabled = categorizeTransactionsVM.isUndoAvailable,
+                        onClick = { categorizeTransactionsVM.userUndo() }),
+                    ButtonPartial("Replay",
                         isEnabled = categorizeTransactionsVM.isRedoAvailable,
-                        onLongClick = { categorizeTransactionsVM.tryNavToSplitWithRedoValues() },
-                        onClick = { categorizeTransactionsVM.redo() }),
+                        onLongClick = { categorizeTransactionsVM.userTryNavSplitWithRedoValues() },
+                        onClick = { categorizeTransactionsVM.userReplay() }),
                     ButtonPartial("Make New Category") { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) },
                 )
         }

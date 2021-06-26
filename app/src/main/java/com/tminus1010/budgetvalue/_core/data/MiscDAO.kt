@@ -41,6 +41,9 @@ interface MiscDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun tryAdd(transactionDTO: TransactionDTO): Completable
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun add(transactionDTO: TransactionDTO): Completable
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun tryAdd(transactionsDTO: List<TransactionDTO>): Completable
 
@@ -56,8 +59,11 @@ interface MiscDAO {
     @Update
     fun update(transaction: TransactionDTO): Completable
 
+    @Query("select * from TransactionDTO WHERE id=:id")
+    fun getTransaction(id: String): Single<TransactionDTO>
+
     @Query("select date from TransactionDTO WHERE id=:id")
-    fun getTransactionDate(id: Int): Observable<String>
+    fun getTransactionDate(id: Int): Single<String>
 
     @Query("UPDATE TransactionDTO SET date=:date WHERE id=:id")
     fun updateTransactionDate(id: Int, date: String): Completable

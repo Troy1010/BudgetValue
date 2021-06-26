@@ -8,7 +8,6 @@ import java.math.BigDecimal
 
 interface ICategorizeTransactionsDomain {
     val transactionBox: Observable<Box<Transaction?>>
-    var activeCA: MutableMap<Category, BigDecimal>
     val hasUncategorizedTransaction: Observable<Boolean>
     fun finishTransactionWithCategory(category: Category)
 }

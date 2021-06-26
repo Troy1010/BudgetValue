@@ -10,11 +10,13 @@ import com.tminus1010.budgetvalue._core.middleware.unbox
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeTransactionsDomain
+import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import com.tminus1010.tmcommonkotlin.rx.toState
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.Singles
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -30,6 +32,7 @@ class CategorizeTransactionsVM @Inject constructor(
     private val transactionsRepo: ITransactionsRepo
 ): ViewModel() {
     // # State
+    val isUndoAvailable = categorizeTransactionsDomain.isUndoAvailable
     val amountToCategorize = categorizeTransactionsDomain.transactionBox.unbox()
         .map { "Amount to categorize: $${it.amount}" }
         .divertErrors(errorSubject).nonLazyCache(disposables)
@@ -45,7 +48,7 @@ class CategorizeTransactionsVM @Inject constructor(
     val latestUncategorizedTransactionDescription = categorizeTransactionsDomain.transactionBox
         .map { it.unbox?.description ?: "" }
         .toLiveData(errorSubject)
-    val matchingDescriptions = categorizeTransactionsDomain.transactionBox.unbox()
+    val matchingDescriptions: Observable<List<Transaction>> = categorizeTransactionsDomain.transactionBox.unbox()
         .flatMapSingle { transaction ->
             transactionsRepo.findTransactionsWithDescription(transaction.description)
                 .map { it.filter { transaction.id != it.id && !it.isUncategorized } }
@@ -59,23 +62,26 @@ class CategorizeTransactionsVM @Inject constructor(
     val transactionBox = categorizeTransactionsDomain.transactionBox
         .toState(disposables, errorSubject)
     // # Intents
-    fun finishTransactionWithCategory(category: Category) {
+    fun userSimpleCategorize(category: Category) {
         categorizeTransactionsDomain.finishTransactionWithCategory(category)
     }
-    fun redo() {
+    fun userReplay() {
         Singles.zip(
             categorizeTransactionsDomain.transactionBox.unbox().toSingle(),
-            redoTransaction.toSingle()
+            redoTransaction.toSingle(),
         ).subscribeOn(Schedulers.io())
             .flatMapCompletable { (transaction, redoTransaction) ->
-                transactionsRepo.pushTransactionCAs(
-                    transaction,
-                    redoTransaction.unbox!!.categoryAmounts
+                categorizeTransactionsDomain.pushTransactionCAs(
+                    id = transaction.id,
+                    categoryAmount = redoTransaction.unbox!!.categoryAmounts,
                 )
             }
             .subscribe()
     }
-    fun tryNavToSplitWithRedoValues() {
+    fun userUndo() {
+        categorizeTransactionsDomain.undo()
+    }
+    fun userTryNavSplitWithRedoValues() {
         redoTransaction.toSingle()
             .observe(disposables, onSuccess = { navToSplit.onNext(it.first!!.categoryAmounts) })
     }

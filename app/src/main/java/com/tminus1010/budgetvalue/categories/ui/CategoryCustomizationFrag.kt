@@ -65,6 +65,11 @@ class CategoryCustomizationFrag : Fragment(R.layout.frag_category_customization)
                 Pair(recipeGrid, dividerMap)
             }
             .observeOn(AndroidSchedulers.mainThread())
-            .observe(viewLifecycleOwner) { vb.tmTableView.initialize(recipeGrid = it.first, dividerMap = it.second) }
+            .observe(viewLifecycleOwner) { (recipes2D, dividerMap) ->
+                vb.tmTableView.initialize(
+                    recipeGrid = recipes2D,
+                    dividerMap = dividerMap,
+                )
+            }
     }
 }

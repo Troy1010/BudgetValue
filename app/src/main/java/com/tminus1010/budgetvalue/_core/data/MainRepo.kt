@@ -89,12 +89,14 @@ class MainRepo @Inject constructor(
         sharedPrefWrapper.activeReconciliationCAs
             .map { it.associate { categoryParser.parseCategory(it.key) to it.value.toBigDecimalSafe() } }
             .replay(1).refCount()
+            .subscribeOn(Schedulers.io())
 
     override fun pushActiveReconciliationCAs(categoryAmounts: Map<Category, BigDecimal>): Completable =
         sharedPrefWrapper.pushActiveReconciliationCAs(categoryAmounts.associate { it.key.name to it.value.toString() })
 
     override fun clearActiveReconcileCAs(): Completable =
         sharedPrefWrapper.clearActiveReconcileCAs()
+            .subscribeOn(Schedulers.io())
 
     override val transactions: Observable<List<Transaction>> =
         miscDAO.fetchTransactions()
@@ -103,6 +105,12 @@ class MainRepo @Inject constructor(
 
     override fun tryPush(transaction: Transaction): Completable =
         miscDAO.tryAdd(transaction.toDTO(categoryAmountsConverter))
+
+    override fun push(transaction: Transaction): Completable =
+        miscDAO.add(transaction.toDTO(categoryAmountsConverter))
+
+    override fun delete(transaction: Transaction): Completable =
+        miscDAO.delete(transaction.toDTO(categoryAmountsConverter))
 
     override fun tryPush(transactions: List<Transaction>): Completable =
         miscDAO.tryAdd(transactions.map { it.toDTO(categoryAmountsConverter) })
@@ -113,12 +121,17 @@ class MainRepo @Inject constructor(
             .apply { if (amount==null) remove(category) else put(category, amount) }
             .let { miscDAO.updateTransactionCategoryAmounts(transaction.id, it.mapKeys { it.key.name }) }
 
-    override fun pushTransactionCAs(transaction: Transaction, categoryAmounts: Map<Category, BigDecimal>) =
-        miscDAO.updateTransactionCategoryAmounts(transaction.id, categoryAmounts.mapKeys { it.key.name })
+    override fun pushTransactionCAs(id: String, categoryAmounts: Map<Category, BigDecimal>): Completable =
+        miscDAO.updateTransactionCategoryAmounts(id, categoryAmounts.mapKeys { it.key.name })
             .subscribeOn(Schedulers.io())
 
     override fun findTransactionsWithDescription(description: String): Single<List<Transaction>> =
         miscDAO.fetchTransactions(description).map { it.map { Transaction.fromDTO(it, categoryAmountsConverter) } }
+
+    override fun getTransaction(id: String): Single<Transaction> =
+        miscDAO.getTransaction(id)
+            .map { Transaction.fromDTO(it, categoryAmountsConverter) }
+            .subscribeOn(Schedulers.io())
 
     override val plans: Observable<List<Plan>> =
         miscDAO.fetchPlans().map { it.map { Plan.fromDTO(it, categoryAmountsConverter) } }

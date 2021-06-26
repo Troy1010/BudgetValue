@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.LiveData
 import com.tminus1010.budgetvalue.*
 import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.easyText
@@ -14,9 +13,8 @@ import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.reflectXY
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.itemTitledDividerBindingRF
+import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
-import com.tminus1010.budgetvalue._core.ui.data_binding.bindText
 import com.tminus1010.budgetvalue.accounts.AccountsVM
 import com.tminus1010.budgetvalue.budgeted.BudgetedVM
 import com.tminus1010.budgetvalue.categories.CategoriesVM
@@ -34,26 +32,18 @@ import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
-    val activeReconciliationVM by activityViewModels<ActiveReconciliationVM>()
-    val categoriesVM by activityViewModels<CategoriesVM>()
-    val activePlanVM by activityViewModels<ActivePlanVM>()
-    val transactionsVM by activityViewModels<TransactionsVM>()
-    val accountsVM by activityViewModels<AccountsVM>()
-    val budgetedVM by activityViewModels<BudgetedVM>()
-    val vb by viewBinding(FragReconcileBinding::bind)
+    private val activeReconciliationVM by activityViewModels<ActiveReconciliationVM>()
+    private val categoriesVM by activityViewModels<CategoriesVM>()
+    private val activePlanVM by activityViewModels<ActivePlanVM>()
+    private val transactionsVM by activityViewModels<TransactionsVM>()
+    private val accountsVM by activityViewModels<AccountsVM>()
+    private val budgetedVM by activityViewModels<BudgetedVM>()
+    private val vb by viewBinding(FragReconcileBinding::bind)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // # Clicks
+        // # User Intents
         vb.btnSave.setOnClickListener { activeReconciliationVM.saveReconciliation() }
         // # TMTableView
-        val cellRecipeFactory = ViewItemRecipeFactory3<ItemTextViewBinding, String>(
-            { ItemTextViewBinding.inflate(LayoutInflater.from(context)) },
-            { s, v, _ -> v.textview.text = s }
-        )
-        val headerRecipeFactory = ViewItemRecipeFactory3<ItemHeaderBinding, String>(
-            { ItemHeaderBinding.inflate(LayoutInflater.from(context)) },
-            { s, v, _ -> v.textview.text = s }
-        )
         val headerRecipeFactory_numbered = ViewItemRecipeFactory3<ItemHeaderIncomeBinding, Pair<String, Observable<String>>>(
             { ItemHeaderIncomeBinding.inflate(LayoutInflater.from(context)) },
             { d, v, _ ->
@@ -61,47 +51,39 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                 v.textviewNumber.bind(d.second, viewLifecycleOwner) { text = it }
             }
         )
-        val reconcileCARecipeFactory = ViewItemRecipeFactory3<ItemTextEditBinding, Pair<Category, LiveData<String>?>>(
+        val reconcileCARecipeFactory = ViewItemRecipeFactory3<ItemTextEditBinding, Pair<Category, Observable<String>?>>(
             { ItemTextEditBinding.inflate(LayoutInflater.from(context)) },
             { (category, d), v, _ ->
                 if (d==null) return@ViewItemRecipeFactory3
-                v.editText.bindText(d, viewLifecycleOwner)
+                v.editText.bind(d, viewLifecycleOwner) { easyText = it }
                 v.editText.onDone { activeReconciliationVM.pushActiveReconcileCA(category, it) }
             }
-        )
-        val cellRecipeFactory2 = ViewItemRecipeFactory3<ItemTextViewBinding, Any?>(
-            { ItemTextViewBinding.inflate(LayoutInflater.from(context)) },
-            { d, v, _ -> v.textview.text = d?.toString() }
-        )
-        val oneWayRecipeFactory2 = ViewItemRecipeFactory3<ItemTextViewBinding, Observable<String>?>(
-            { ItemTextViewBinding.inflate(LayoutInflater.from(context),) },
-            { d, v, lifecycle -> if (d != null) v.textview.bind(d, lifecycle) { easyText = it } }
         )
         Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs, transactionsVM.currentSpendBlockCAs, activeReconciliationVM.activeReconcileCAs2, budgetedVM.categoryAmounts.toObservable(viewLifecycleOwner))
             .observeOn(Schedulers.computation())
             .debounce(100, TimeUnit.MILLISECONDS)
             .map { (categories, activePlanCAs, currentSpendBlockCAs, activeReconciliationCAs, budgetedCA) ->
                 val recipeGrid = listOf(
-                    listOf(headerRecipeFactory.createOne("Category"))
-                            + cellRecipeFactory.createOne("Default")
-                            + cellRecipeFactory.createMany(categories.map { it.name }),
+                    listOf(recipeFactories.header.createOne("Category"))
+                            + recipeFactories.textView.createOne("Default")
+                            + recipeFactories.textView.createMany(categories.map { it.name }),
                     listOf(headerRecipeFactory_numbered.createOne(Pair("Plan", activePlanVM.expectedIncome)))
-                            + oneWayRecipeFactory2.createOne(activePlanVM.defaultAmount)
-                            + oneWayRecipeFactory2.createMany(categories.map { activePlanCAs[it] }),
-                    listOf(headerRecipeFactory.createOne("Actual"))
-                            + cellRecipeFactory2.createOne("")
-                            + cellRecipeFactory2.createMany(categories.map { currentSpendBlockCAs[it] ?: BigDecimal.ZERO }),
-                    listOf(headerRecipeFactory.createOne("Reconcile"))
-                            + oneWayRecipeFactory2.createOne(activeReconciliationVM.defaultAmount)
+                            + recipeFactories.textViewWithLifecycle.createOne(activePlanVM.defaultAmount)
+                            + recipeFactories.textViewWithLifecycle.createMany(categories.map { activePlanCAs[it] }),
+                    listOf(recipeFactories.header.createOne("Actual"))
+                            + recipeFactories.textView.createOne("")
+                            + recipeFactories.textView.createMany(categories.map { currentSpendBlockCAs[it] ?: BigDecimal.ZERO }),
+                    listOf(recipeFactories.header.createOne("Reconcile"))
+                            + recipeFactories.textViewWithLifecycle.createOne(activeReconciliationVM.defaultAmount)
                             + reconcileCARecipeFactory.createMany(categories.map { it to activeReconciliationCAs[it] }),
                     listOf(headerRecipeFactory_numbered.createOne(Pair("Budgeted", accountsVM.accountsTotal)))
-                            + oneWayRecipeFactory2.createOne(budgetedVM.defaultAmount)
-                            + oneWayRecipeFactory2.createMany(categories.map { budgetedCA[it] })
+                            + recipeFactories.textViewWithLifecycle.createOne(budgetedVM.defaultAmount)
+                            + recipeFactories.textViewWithLifecycle.createMany(categories.map { budgetedCA[it] })
                 ).reflectXY()
                 val dividerMap = categories
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
-                    .associate { it.index to itemTitledDividerBindingRF.createOne(it.value.type.name) }
+                    .associate { it.index to recipeFactories.titledDivider.createOne(it.value.type.name) }
                     .mapKeys { it.key + 2 } // header row, default row
                 Pair(recipeGrid, dividerMap)
             }
@@ -110,8 +92,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                     recipeGrid = recipeGrid,
                     shouldFitItemWidthsInsideTable = true,
                     dividerMap = dividerMap,
-                    colFreezeCount = 0,
-                    rowFreezeCount = 1
+                    rowFreezeCount = 1,
                 )
             }
     }

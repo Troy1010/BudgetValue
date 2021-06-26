@@ -9,26 +9,39 @@ import com.tminus1010.budgetvalue.databinding.ItemTextViewBinding
 import com.tminus1010.budgetvalue.databinding.ItemTitledDividerBinding
 import io.reactivex.rxjava3.core.Observable
 
-val Fragment.itemTitledDividerBindingRF: ViewItemRecipeFactory3<ItemTitledDividerBinding, String>
-    get() = ViewItemRecipeFactory3(
-        { ItemTitledDividerBinding.inflate(LayoutInflater.from(requireContext())) },
-        { d: String, vb, _ -> vb.textview.easyText = d }
-    )
+interface IRecipeFactories {
+    val titledDivider: ViewItemRecipeFactory3<ItemTitledDividerBinding, String>
+    val textView: ViewItemRecipeFactory3<ItemTextViewBinding, Any>
+    val header: ViewItemRecipeFactory3<ItemHeaderBinding, String>
+    val textViewWithLifecycle: ViewItemRecipeFactory3<ItemTextViewBinding, Observable<String>?>
+}
 
-val Fragment.itemTextViewBindingRF: ViewItemRecipeFactory3<ItemTextViewBinding, String>
-    get() = ViewItemRecipeFactory3(
-        { ItemTextViewBinding.inflate(LayoutInflater.from(requireContext())) },
-        { d: String, vb, _ -> vb.textview.easyText = d }
-    )
+val Fragment.recipeFactories
+    get() = object : IRecipeFactories {
+        override val titledDivider: ViewItemRecipeFactory3<ItemTitledDividerBinding, String>
+            get() = ViewItemRecipeFactory3(
+                { ItemTitledDividerBinding.inflate(LayoutInflater.from(requireContext())) },
+                { d: String, vb, _ -> vb.textview.easyText = d }
+            )
 
-val Fragment.itemHeaderBindingRF: ViewItemRecipeFactory3<ItemHeaderBinding, String>
-    get() = ViewItemRecipeFactory3(
-        { ItemHeaderBinding.inflate(LayoutInflater.from(requireContext())) },
-        { d: String, vb, _ -> vb.textview.easyText = d }
-    )
+        override val textView: ViewItemRecipeFactory3<ItemTextViewBinding, Any>
+            get() = ViewItemRecipeFactory3(
+                { ItemTextViewBinding.inflate(LayoutInflater.from(requireContext())) },
+                { d: Any, vb, _ -> vb.textview.easyText = d.toString() }
+            )
 
-val Fragment.itemTextViewBindingLRF: ViewItemRecipeFactory3<ItemTextViewBinding, Observable<String>>
-    get() = ViewItemRecipeFactory3(
-        { ItemTextViewBinding.inflate(LayoutInflater.from(requireContext())) },
-        { d, vb, lifecycle -> vb.textview.bind(d, lifecycle) { easyText = it } }
-    )
+        override val header: ViewItemRecipeFactory3<ItemHeaderBinding, String>
+            get() = ViewItemRecipeFactory3(
+                { ItemHeaderBinding.inflate(LayoutInflater.from(requireContext())) },
+                { d: String, vb, _ -> vb.textview.easyText = d }
+            )
+
+        override val textViewWithLifecycle: ViewItemRecipeFactory3<ItemTextViewBinding, Observable<String>?>
+            get() = ViewItemRecipeFactory3(
+                { ItemTextViewBinding.inflate(LayoutInflater.from(requireContext())) },
+                { d, vb, lifecycle ->
+                    if (d==null) return@ViewItemRecipeFactory3
+                    vb.textview.bind(d, lifecycle) { easyText = it }
+                }
+            )
+    }

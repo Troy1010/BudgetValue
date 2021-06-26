@@ -8,13 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.show
-import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.reflectXY
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuItemPartial
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.itemHeaderBindingRF
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.itemTextViewBindingRF
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.itemTitledDividerBindingRF
+import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
 import com.tminus1010.budgetvalue.databinding.FragHistoryBinding
@@ -27,22 +24,23 @@ import com.tminus1010.budgetvalue.reconciliations.models.Reconciliation
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.kotlin.Observables
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class HistoryFrag : Fragment(R.layout.frag_history) {
     @Inject lateinit var datePeriodGetter: DatePeriodGetter
-    val plansVM: PlansVM by activityViewModels()
-    val reconciliationsVM: ReconciliationsVM by activityViewModels()
-    val historyVM: HistoryVM by activityViewModels()
-    val vb by viewBinding(FragHistoryBinding::bind)
+    private val plansVM: PlansVM by activityViewModels()
+    private val reconciliationsVM: ReconciliationsVM by activityViewModels()
+    private val historyVM: HistoryVM by activityViewModels()
+    private val vb by viewBinding(FragHistoryBinding::bind)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # TMTableView
         val columnHeaderFactory = ViewItemRecipeFactory3(
             { ItemHeaderWithSubtitleBinding.inflate(LayoutInflater.from(requireContext())) },
-            { d: IHistoryColumnData, vb, lifecycle ->
+            { d: IHistoryColumnData, vb, _ ->
                 vb.textviewHeader.text = d.title
                 vb.textviewSubtitle.text = d.subTitle(datePeriodGetter)
                 vb.root.setOnLongClickListener {
@@ -59,30 +57,36 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
                 }
             },
         )
-        Rx.combineLatest(historyVM.historyColumnDatas, historyVM.activeCategories)
+        Observables.combineLatest(historyVM.historyColumnDatas, historyVM.activeCategories)
             .distinctUntilChanged() //*idk why this emitted a copy without distinctUntilChanged
             .observeOn(Schedulers.computation())
             .map { (historyColumnDatas, activeCategories) ->
                 val recipe2D =
                     listOf(
-                        listOf(itemHeaderBindingRF.createOne("Categories")) +
-                                itemTextViewBindingRF.createOne("Default") +
-                                itemTextViewBindingRF.createMany(activeCategories.map { it.name }),
+                        listOf(recipeFactories.header.createOne("Categories")) +
+                                recipeFactories.textView.createOne("Default") +
+                                recipeFactories.textView.createMany(activeCategories.map { it.name }),
                         *historyColumnDatas.map { historyColumnData ->
                             listOf(columnHeaderFactory.createOne(historyColumnData)) +
-                                    itemTextViewBindingRF.createOne(historyColumnData.defaultAmount.toString()) +
-                                    itemTextViewBindingRF.createMany(activeCategories.map { historyColumnData.categoryAmounts[it]?.toString() ?: "" })
+                                    recipeFactories.textView.createOne(historyColumnData.defaultAmount.toString()) +
+                                    recipeFactories.textView.createMany(activeCategories.map { historyColumnData.categoryAmounts[it]?.toString() ?: "" })
                         }.toTypedArray()
                     ).reflectXY()
                 val dividerMap = activeCategories
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
-                    .associate { it.index to itemTitledDividerBindingRF.createOne(it.value.type.name) }
+                    .associate { it.index to recipeFactories.titledDivider.createOne(it.value.type.name) }
                     .mapKeys { it.key + 2 } // header row and default row
                 Pair(recipe2D, dividerMap)
             }
             .observe(viewLifecycleOwner) { (recipe2D, dividerMap) ->
-                vb.tmTableViewHistory.initialize(recipe2D, false, dividerMap, 1, 1)
+                vb.tmTableViewHistory.initialize(
+                    recipeGrid = recipe2D,
+                    shouldFitItemWidthsInsideTable = false,
+                    dividerMap = dividerMap,
+                    colFreezeCount = 1,
+                    rowFreezeCount = 1,
+                )
             }
     }
 }
