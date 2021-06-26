@@ -62,10 +62,10 @@ class CategorizeTransactionsVM @Inject constructor(
     val transactionBox = categorizeTransactionsDomain.transactionBox
         .toState(disposables, errorSubject)
     // # Intents
-    fun finishTransactionWithCategory(category: Category) {
+    fun userSimpleCategorize(category: Category) {
         categorizeTransactionsDomain.finishTransactionWithCategory(category)
     }
-    fun redo() {
+    fun userReplay() {
         Singles.zip(
             categorizeTransactionsDomain.transactionBox.unbox().toSingle(),
             redoTransaction.toSingle(),
@@ -78,10 +78,10 @@ class CategorizeTransactionsVM @Inject constructor(
             }
             .subscribe()
     }
-    fun undo() {
+    fun userUndo() {
         categorizeTransactionsDomain.undo()
     }
-    fun tryNavToSplitWithRedoValues() {
+    fun userTryNavSplitWithRedoValues() {
         redoTransaction.toSingle()
             .observe(disposables, onSuccess = { navToSplit.onNext(it.first!!.categoryAmounts) })
     }
