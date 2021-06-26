@@ -74,7 +74,7 @@ class CategorizeTransactionsDomain @Inject constructor(
                     transactionsRepo.pushTransactionCAs(
                         id,
                         oldTransaction!!.categoryAmounts,
-                    )
+                    ).subscribe()
                 })
             }
     }
