@@ -114,40 +114,69 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         }
         // # Button RecyclerView
         categorySelectionVM.inSelectionMode.observe(viewLifecycleOwner) { inSelectionMode ->
-            btns = if (inSelectionMode)
-                listOf(
-                    ButtonRVItem("Delete") {
-                        AlertDialog.Builder(requireContext())
-                            .setMessage(listOf(
-                                "Are you sure you want to delete these categories?\n",
-                                *categorySelectionVM.selectedCategories.value!!.map { "\t${it.name}" }
-                                    .toTypedArray()
-                            ).joinToString("\n"))
-                            .setPositiveButton("Yes") { _, _ -> categorySelectionVM.deleteSelectedCategories() }
-                            .setNegativeButton("No") { _, _ -> }
-                            .show()
-                    },
-                    ButtonRVItem("Split", categorizeTransactionsVM.isTransactionAvailable) {
-                        categorizeAdvancedDomain.calcExactSplit(
-                            categorySelectionVM.selectedCategories.value!!,
-                            categorizeTransactionsVM.transactionBox.value!!.unbox!!.amount
-                        ).let { it.mapValues { -it.value } }
-                            .also { categorizeTransactionsAdvancedVM.setup(it) }
-                        nav.navigate(R.id.action_categorizeFrag_to_splitTransactionFrag)
-                    },
-                    ButtonRVItem("Clear selection") { categorySelectionVM.clearSelection() },
-                )
-            else
-                listOf(
-                    ButtonRVItem("Undo",
-                        isEnabled = categorizeTransactionsVM.isUndoAvailable,
-                        onClick = { categorizeTransactionsVM.userUndo() }),
-                    ButtonRVItem("Replay",
+            btns = listOfNotNull(
+                if (inSelectionMode)
+                    ButtonRVItem(
+                        title = "Delete",
+                        onClick = {
+                            AlertDialog.Builder(requireContext())
+                                .setMessage(listOf(
+                                    "Are you sure you want to delete these categories?\n",
+                                    *categorySelectionVM.selectedCategories.value!!.map { "\t${it.name}" }
+                                        .toTypedArray()
+                                ).joinToString("\n"))
+                                .setPositiveButton("Yes") { _, _ -> categorySelectionVM.deleteSelectedCategories() }
+                                .setNegativeButton("No") { _, _ -> }
+                                .show()
+                        }
+                    )
+                else null,
+                if (inSelectionMode)
+                    ButtonRVItem(
+                        title = "Split",
+                        isEnabled = categorizeTransactionsVM.isTransactionAvailable,
+                        onClick = {
+                            categorizeAdvancedDomain.calcExactSplit(
+                                categorySelectionVM.selectedCategories.value!!,
+                                categorizeTransactionsVM.transactionBox.value!!.unbox!!.amount
+                            ).let { it.mapValues { -it.value } }
+                                .also { categorizeTransactionsAdvancedVM.setup(it) }
+                            nav.navigate(R.id.action_categorizeFrag_to_splitTransactionFrag)
+                        }
+                    )
+                else null,
+                if (inSelectionMode)
+                    ButtonRVItem(
+                        title = "Clear selection",
+                        onClick = { categorySelectionVM.clearSelection() }
+                    )
+                else null,
+                if (!inSelectionMode)
+                    ButtonRVItem(
+                        title = "Redo",
                         isEnabled = categorizeTransactionsVM.isRedoAvailable,
+                        onClick = { categorizeTransactionsVM.userRedo() })
+                else null,
+                if (!inSelectionMode)
+                    ButtonRVItem(
+                        title = "Undo",
+                        isEnabled = categorizeTransactionsVM.isUndoAvailable,
+                        onClick = { categorizeTransactionsVM.userUndo() })
+                else null,
+                if (!inSelectionMode)
+                    ButtonRVItem(
+                        title = "Replay",
+                        isEnabled = categorizeTransactionsVM.isReplayAvailable,
                         onLongClick = { categorizeTransactionsVM.userNavToSplitWithReplayValues() },
-                        onClick = { categorizeTransactionsVM.userReplay() }),
-                    ButtonRVItem("Make New Category") { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) },
-                )
+                        onClick = { categorizeTransactionsVM.userReplay() })
+                else null,
+                if (!inSelectionMode)
+                    ButtonRVItem(
+                        title = "Make New Category",
+                        onClick = { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) }
+                    )
+                else null,
+            )
         }
         vb.recyclerviewButtons.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true)
         vb.recyclerviewButtons.addItemDecoration(LayoutMarginDecoration(8.toPX(requireContext())))
