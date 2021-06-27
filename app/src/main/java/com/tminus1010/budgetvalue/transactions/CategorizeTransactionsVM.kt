@@ -72,6 +72,7 @@ class CategorizeTransactionsVM @Inject constructor(
     // # Output
     val isReplayAvailable: Observable<Boolean> = replayTransactionBox
         .map { it.first != null }
+        .startWithItem(false)
         .nonLazyCache(disposables)
     val isUndoAvailable = categorizeTransactionsDomain.isUndoAvailable
     val isRedoAvailable = categorizeTransactionsDomain.isRedoAvailable

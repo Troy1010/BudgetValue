@@ -6,9 +6,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.tminus1010.budgetvalue.*
-import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.easyText
-import com.tminus1010.budgetvalue._core.extensions.toObservable
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.reflectXY
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
@@ -46,20 +44,20 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
         // # TMTableView
         val headerRecipeFactory_numbered = ViewItemRecipeFactory3<ItemHeaderIncomeBinding, Pair<String, Observable<String>>>(
             { ItemHeaderIncomeBinding.inflate(LayoutInflater.from(context)) },
-            { d, v, _ ->
-                v.textviewHeader.text = d.first
-                v.textviewNumber.bind(d.second, viewLifecycleOwner) { text = it }
+            { d, vb, lifecycle ->
+                vb.textviewHeader.text = d.first
+                d.second.observe(lifecycle) { vb.textviewNumber.text = it }
             }
         )
         val reconcileCARecipeFactory = ViewItemRecipeFactory3<ItemTextEditBinding, Pair<Category, Observable<String>?>>(
             { ItemTextEditBinding.inflate(LayoutInflater.from(context)) },
-            { (category, d), v, _ ->
+            { (category, d), vb, lifecycle ->
                 if (d==null) return@ViewItemRecipeFactory3
-                v.editText.bind(d, viewLifecycleOwner) { easyText = it }
-                v.editText.onDone { activeReconciliationVM.pushActiveReconcileCA(category, it) }
+                d.observe(lifecycle) { vb.editText.easyText = it }
+                vb.editText.onDone { activeReconciliationVM.pushActiveReconcileCA(category, it) }
             }
         )
-        Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs, transactionsVM.currentSpendBlockCAs, activeReconciliationVM.activeReconcileCAs2, budgetedVM.categoryAmounts.toObservable(viewLifecycleOwner))
+        Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs, transactionsVM.currentSpendBlockCAs, activeReconciliationVM.activeReconcileCAs2, budgetedVM.categoryAmounts)
             .observeOn(Schedulers.computation())
             .debounce(100, TimeUnit.MILLISECONDS)
             .map { (categories, activePlanCAs, currentSpendBlockCAs, activeReconciliationCAs, budgetedCA) ->
