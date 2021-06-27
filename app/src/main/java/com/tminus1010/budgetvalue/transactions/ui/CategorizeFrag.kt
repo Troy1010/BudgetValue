@@ -144,7 +144,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                         onClick = { categorizeTransactionsVM.userUndo() }),
                     ButtonPartial("Replay",
                         isEnabled = categorizeTransactionsVM.isRedoAvailable,
-                        onLongClick = { categorizeTransactionsVM.userTryNavSplitWithRedoValues() },
+                        onLongClick = { categorizeTransactionsVM.userNavToSplitWithReplayValues() },
                         onClick = { categorizeTransactionsVM.userReplay() }),
                     ButtonPartial("Make New Category") { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) },
                 )

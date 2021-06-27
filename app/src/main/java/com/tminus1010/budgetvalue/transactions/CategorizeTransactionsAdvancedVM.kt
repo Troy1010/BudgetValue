@@ -7,9 +7,11 @@ import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeTransactionsDomain
+import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
+import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
@@ -20,16 +22,20 @@ import javax.inject.Inject
 class CategorizeTransactionsAdvancedVM @Inject constructor(
     errorSubject: Subject<Throwable>,
     private val transactionsRepo: ITransactionsRepo,
-    categorizeTransactionsDomain: CategorizeTransactionsDomain,
+    transactionsDomain: TransactionsDomain
 ) : ViewModel() {
-    // # Private
+    // # Internal
     private val intents = PublishSubject.create<Intents>()
     private sealed class Intents {
         object Clear: Intents()
         class Add(val category: Category, val amount: BigDecimal): Intents()
     }
+    private val firstTransactionBox =
+        transactionsDomain.uncategorizedSpends
+            .map { Box(it.getOrNull(0)) }
+            .nonLazyCache(disposables)
     // # State
-    val transactionToPush = categorizeTransactionsDomain.transactionBox
+    val transactionToPush = firstTransactionBox
         .unbox()
         .switchMap {
             intents
