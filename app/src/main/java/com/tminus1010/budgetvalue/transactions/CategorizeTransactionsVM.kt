@@ -4,21 +4,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
-import com.tminus1010.budgetvalue._core.extensions.toLiveData
-import com.tminus1010.budgetvalue._core.extensions.toSingle
 import com.tminus1010.budgetvalue._core.middleware.unbox
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeTransactionsDomain
+import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
-import com.tminus1010.tmcommonkotlin.rx.toState
+import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.kotlin.Singles
-import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
 import java.math.BigDecimal
@@ -29,60 +26,73 @@ import javax.inject.Inject
 class CategorizeTransactionsVM @Inject constructor(
     errorSubject: Subject<Throwable>,
     private val categorizeTransactionsDomain: CategorizeTransactionsDomain,
-    private val transactionsRepo: ITransactionsRepo
+    private val transactionsRepo: ITransactionsRepo,
+    transactionsDomain: TransactionsDomain
 ): ViewModel() {
-    // # State
-    val isUndoAvailable = categorizeTransactionsDomain.isUndoAvailable
-    val amountToCategorize = categorizeTransactionsDomain.transactionBox.unbox()
-        .map { "Amount to categorize: $${it.amount}" }
-        .divertErrors(errorSubject).nonLazyCache(disposables)
-    val isTransactionAvailable = categorizeTransactionsDomain.transactionBox
-        .map { it.unbox != null }
-        .toLiveData(errorSubject)
-    val date = categorizeTransactionsDomain.transactionBox
-        .map { it.unbox?.date?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")) ?: "" }
-        .toLiveData(errorSubject)
-    val latestUncategorizedTransactionAmount = categorizeTransactionsDomain.transactionBox
-        .map { it.unbox?.defaultAmount?.toString() ?: "" }
-        .toLiveData(errorSubject)
-    val latestUncategorizedTransactionDescription = categorizeTransactionsDomain.transactionBox
-        .map { it.unbox?.description ?: "" }
-        .toLiveData(errorSubject)
-    val matchingDescriptions: Observable<List<Transaction>> = categorizeTransactionsDomain.transactionBox.unbox()
-        .flatMapSingle { transaction ->
-            transactionsRepo.findTransactionsWithDescription(transaction.description)
-                .map { it.filter { transaction.id != it.id && !it.isUncategorized } }
-        }
-    val redoTransaction = matchingDescriptions
-        .map { Box(it.maxByOrNull { it.date }) } // This will redo the transaction that happened most recent. But perhaps I should remember when the categorization took place, and redo the most recent.
-    val isRedoAvailable = redoTransaction
-        .map { it.first != null }
-        .nonLazyCache(disposables)
-    val navToSplit = PublishSubject.create<Map<Category, BigDecimal>>()
-    val transactionBox = categorizeTransactionsDomain.transactionBox
-        .toState(disposables, errorSubject)
-    // # Intents
+    // # Input
     fun userSimpleCategorize(category: Category) {
-        categorizeTransactionsDomain.finishTransactionWithCategory(category)
+        categorizeTransactionsDomain.submitCategorization(
+            id = firstTransactionBox.value!!.first!!.id,
+            category = category
+        )
+            .observe(disposables)
     }
     fun userReplay() {
-        Singles.zip(
-            categorizeTransactionsDomain.transactionBox.unbox().toSingle(),
-            redoTransaction.toSingle(),
-        ).subscribeOn(Schedulers.io())
-            .flatMapCompletable { (transaction, redoTransaction) ->
-                categorizeTransactionsDomain.pushTransactionCAs(
-                    id = transaction.id,
-                    categoryAmount = redoTransaction.unbox!!.categoryAmounts,
-                )
-            }
-            .subscribe()
+        categorizeTransactionsDomain.submitCategorization(
+            id = firstTransactionBox.value!!.first!!.id,
+            categoryAmounts = replayTransactionBox.value!!.first!!.categoryAmounts,
+        )
+            .observe(disposables)
     }
     fun userUndo() {
         categorizeTransactionsDomain.undo()
+            .observe(disposables)
     }
-    fun userTryNavSplitWithRedoValues() {
-        redoTransaction.toSingle()
-            .observe(disposables, onSuccess = { navToSplit.onNext(it.first!!.categoryAmounts) })
+    fun userRedo() {
+        categorizeTransactionsDomain.redo()
+            .observe(disposables)
     }
+    fun userNavToSplitWithReplayValues() {
+        navToSplit.onNext(replayTransactionBox.value!!.first!!.categoryAmounts)
+    }
+    // # Internal
+    private val firstTransactionBox =
+        transactionsDomain.uncategorizedSpends
+            .map { Box(it.getOrNull(0)) }
+            .nonLazyCache(disposables)
+    private val replayTransactionBox =
+        firstTransactionBox
+            .unbox()
+            .flatMapSingle { transaction ->
+                transactionsRepo.findTransactionsWithDescription(transaction.description)
+                    .map { it.filter { transaction.id != it.id && !it.isUncategorized } }
+            }
+            .map { Box(it.maxByOrNull { it.date }) } // This will redo the transaction that happened most recent. But perhaps I should remember when the categorization took place, and redo the most recent.
+            .nonLazyCache(disposables)
+    // # Output
+    val isReplayAvailable: Observable<Boolean> = replayTransactionBox
+        .map { it.first != null }
+        .nonLazyCache(disposables)
+    val isUndoAvailable = categorizeTransactionsDomain.isUndoAvailable
+    val isRedoAvailable = categorizeTransactionsDomain.isRedoAvailable
+    val amountToCategorize = firstTransactionBox.unbox()
+        .map { "Amount to categorize: $${it.amount}" }
+        .nonLazyCache(disposables)
+        .divertErrors(errorSubject)
+    val isTransactionAvailable = firstTransactionBox
+        .map { it.unbox != null }
+        .divertErrors(errorSubject)
+    val date = firstTransactionBox
+        .map { it.unbox?.date?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")) ?: "" }
+        .divertErrors(errorSubject)
+    val latestUncategorizedTransactionAmount = firstTransactionBox
+        .map { it.unbox?.defaultAmount?.toString() ?: "" }
+        .divertErrors(errorSubject)
+    val latestUncategorizedTransactionDescription = firstTransactionBox
+        .map { it.unbox?.description ?: "" }
+        .divertErrors(errorSubject)
+    val navToSplit = PublishSubject.create<Map<Category, BigDecimal>>()
+    val transactionBox = firstTransactionBox
+        .nonLazyCache(disposables)
+        .divertErrors(errorSubject)
 }
