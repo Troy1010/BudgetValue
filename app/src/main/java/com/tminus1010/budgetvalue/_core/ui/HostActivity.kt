@@ -1,12 +1,14 @@
 package com.tminus1010.budgetvalue._core.ui
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
-import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartialsUC
@@ -42,23 +44,27 @@ class HostActivity : AppCompatActivity() {
         transactionsVM
     }
 
+    @SuppressLint("RestrictedApi")
+    override fun onStart() {
+        super.onStart()
+        findNavController(R.id.frag_nav_host)
+            .addOnDestinationChangedListener { _, navDestination, _ ->
+                Log.d("budgetvalue.Nav", "${navDestination.label}")
+            }
+    }
+
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         menu.clear()
         menu.add(*menuItemPartials)
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        menuItemPartials.find { item.itemId == it.id }!!.action()
-        return super.onOptionsItemSelected(item)
-    }
-
     val activityResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 try {
-                    val inputStream = contentResolver.openInputStream(result.data!!.data!!)!!
-                    transactionsVM.importTransactions(inputStream)
+                    contentResolver.openInputStream(result.data!!.data!!)!!
+                        .also { inputStream -> transactionsVM.importTransactions(inputStream) }
                     toast("Import successful")
                 } catch (e: Throwable) {
                     hostFrag.handle(e)
