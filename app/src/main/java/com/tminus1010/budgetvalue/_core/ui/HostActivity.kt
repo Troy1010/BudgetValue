@@ -1,6 +1,5 @@
 package com.tminus1010.budgetvalue._core.ui
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
 import android.util.Log
@@ -44,7 +43,6 @@ class HostActivity : AppCompatActivity() {
         transactionsVM
     }
 
-    @SuppressLint("RestrictedApi")
     override fun onStart() {
         super.onStart()
         findNavController(R.id.frag_nav_host)
