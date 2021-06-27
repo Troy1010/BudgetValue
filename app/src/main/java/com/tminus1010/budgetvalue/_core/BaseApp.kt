@@ -10,6 +10,6 @@ open class BaseApp : Application() {
         super.onCreate()
 
         // # Configure Rx
-        RxJavaPlugins.setErrorHandler { throw it.cause?:it }
+        RxJavaPlugins.setErrorHandler { throw it.cause ?: it }
     }
 }
