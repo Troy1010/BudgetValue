@@ -45,6 +45,17 @@ class SourceArrayList<T> : ArrayList<T>() {
         return x
     }
 
+    fun takeLast(): T? {
+        val x =
+            try {
+                this.removeLast()
+            } catch (e: NoSuchElementException) {
+                null
+            }
+        observable.onNext(this)
+        return x
+    }
+
     override fun remove(element: T): Boolean {
         val x = super.remove(element)
         observable.onNext(this)
