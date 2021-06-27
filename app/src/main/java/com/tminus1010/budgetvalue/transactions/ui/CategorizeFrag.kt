@@ -45,7 +45,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     @Inject
     lateinit var categorizeAdvancedDomain: CategorizeAdvancedDomain
     val vb by viewBinding(FragCategorizeBinding::bind)
-    var btns = emptyList<ButtonPartial>()
+    var btns = emptyList<ButtonRVItem>()
         set(value) { field = value; vb.recyclerviewButtons.adapter?.notifyDataSetChanged() }
     var categories = emptyList<Category>()
         set(value) {
@@ -116,7 +116,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         categorySelectionVM.inSelectionMode.observe(viewLifecycleOwner) { inSelectionMode ->
             btns = if (inSelectionMode)
                 listOf(
-                    ButtonPartial("Delete") {
+                    ButtonRVItem("Delete") {
                         AlertDialog.Builder(requireContext())
                             .setMessage(listOf(
                                 "Are you sure you want to delete these categories?\n",
@@ -127,7 +127,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                             .setNegativeButton("No") { _, _ -> }
                             .show()
                     },
-                    ButtonPartial("Split", categorizeTransactionsVM.isTransactionAvailable) {
+                    ButtonRVItem("Split", categorizeTransactionsVM.isTransactionAvailable) {
                         categorizeAdvancedDomain.calcExactSplit(
                             categorySelectionVM.selectedCategories.value!!,
                             categorizeTransactionsVM.transactionBox.value!!.unbox!!.amount
@@ -135,18 +135,18 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                             .also { categorizeTransactionsAdvancedVM.setup(it) }
                         nav.navigate(R.id.action_categorizeFrag_to_splitTransactionFrag)
                     },
-                    ButtonPartial("Clear selection") { categorySelectionVM.clearSelection() },
+                    ButtonRVItem("Clear selection") { categorySelectionVM.clearSelection() },
                 )
             else
                 listOf(
-                    ButtonPartial("Undo",
+                    ButtonRVItem("Undo",
                         isEnabled = categorizeTransactionsVM.isUndoAvailable,
                         onClick = { categorizeTransactionsVM.userUndo() }),
-                    ButtonPartial("Replay",
+                    ButtonRVItem("Replay",
                         isEnabled = categorizeTransactionsVM.isRedoAvailable,
                         onLongClick = { categorizeTransactionsVM.userNavToSplitWithReplayValues() },
                         onClick = { categorizeTransactionsVM.userReplay() }),
-                    ButtonPartial("Make New Category") { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) },
+                    ButtonRVItem("Make New Category") { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) },
                 )
         }
         vb.recyclerviewButtons.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true)
