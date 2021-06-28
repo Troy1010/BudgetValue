@@ -4,7 +4,6 @@ import com.tminus1010.budgetvalue._core.categoryComparator
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.data.ICategoriesRepo
-import com.tminus1010.tmcommonkotlin.core.logz
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import javax.inject.Inject

@@ -5,7 +5,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.tminus1010.budgetvalue._core.extensions.observe2
-import com.tminus1010.tmcommonkotlin.core.logz
 import com.tminus1010.tmcommonkotlin.misc.extensions.easyGetLayoutParams
 import com.tminus1010.tmcommonkotlin.misc.fnName
 
