@@ -20,7 +20,28 @@ class CategorySelectionVM @Inject constructor(
     errorSubject: Subject<Throwable>,
     private val deleteCategoryFromActiveDomainUC: DeleteCategoryFromActiveDomainUC,
 ) : ViewModel() {
-    // # MVI stuff
+    // # Input
+    fun clearSelection() = Completable.fromCallable {
+        intents.onNext(Intents.ClearSelection)
+    }
+
+    fun selectCategory(category: Category) {
+        intents.onNext(Intents.SelectCategory(category))
+    }
+
+    fun unselectCategory(category: Category) {
+        intents.onNext(Intents.UnselectCategory(category))
+    }
+
+    fun deleteSelectedCategories() {
+        state.take(1)
+            .map { it.selectedCategories.map { deleteCategoryFromActiveDomainUC(it) } }
+            .flatMapCompletable { Rx.merge(it) }
+            .andThen(clearSelection())
+            .subscribe()
+    }
+
+    // # Internal
     private sealed class Intents {
         object ClearSelection : Intents()
         class SelectCategory(val category: Category) : Intents()
@@ -29,7 +50,7 @@ class CategorySelectionVM @Inject constructor(
 
     private val intents = PublishSubject.create<Intents>()
 
-    // # State
+    // # Output
     data class State(
         val selectedCategories: Set<Category> = emptySet(),
         val inSelectionMode: Boolean = false,
@@ -63,25 +84,4 @@ class CategorySelectionVM @Inject constructor(
         .map { it.inSelectionMode }
         .distinctUntilChanged()
         .nonLazyCache(disposables)
-
-    // # Intents
-    fun clearSelection() = Completable.fromCallable {
-        intents.onNext(Intents.ClearSelection)
-    }
-
-    fun selectCategory(category: Category) {
-        intents.onNext(Intents.SelectCategory(category))
-    }
-
-    fun unselectCategory(category: Category) {
-        intents.onNext(Intents.UnselectCategory(category))
-    }
-
-    fun deleteSelectedCategories() {
-        state.take(1)
-            .map { it.selectedCategories.map { deleteCategoryFromActiveDomainUC(it) } }
-            .flatMapCompletable { Rx.merge(it) }
-            .andThen(clearSelection())
-            .subscribe()
-    }
 }
