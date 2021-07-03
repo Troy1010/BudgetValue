@@ -55,8 +55,6 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // # Mediation
-        categorySelectionVM.clearSelection()
         // # Some of SelectionMode
         categorySelectionVM.state.observe(viewLifecycleOwner) { state ->
             // ## inSelectionMode
@@ -66,7 +64,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         }
         // # Navigation
         vb.root.bind(categorizeTransactionsVM.navToSplit) {
-            categorizeTransactionsAdvancedVM.setup(it)
+            categorizeTransactionsAdvancedVM.setup(it, categorySelectionVM)
             nav.navigate(R.id.action_categorizeFrag_to_splitTransactionFrag)
         }
         // # TextViews
@@ -140,7 +138,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                                 categorySelectionVM.selectedCategories.value!!,
                                 categorizeTransactionsVM.transactionBox.value!!.unbox!!.amount
                             ).let { it.mapValues { -it.value } }
-                                .also { categorizeTransactionsAdvancedVM.setup(it) }
+                                .also { categorizeTransactionsAdvancedVM.setup(it, categorySelectionVM) }
                             nav.navigate(R.id.action_categorizeFrag_to_splitTransactionFrag)
                         }
                     )
@@ -148,7 +146,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 if (inSelectionMode)
                     ButtonRVItem(
                         title = "Clear selection",
-                        onClick = { categorySelectionVM.clearSelection() }
+                        onClick = { categorySelectionVM.clearSelection().observe(viewLifecycleOwner) }
                     )
                 else null,
                 if (!inSelectionMode)

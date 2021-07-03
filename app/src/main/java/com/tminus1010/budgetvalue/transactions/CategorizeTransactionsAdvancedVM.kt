@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
+import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeTransactionsDomain
@@ -34,6 +35,7 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
         transactionsDomain.uncategorizedSpends
             .map { Box(it.getOrNull(0)) }
             .nonLazyCache(disposables)
+    private lateinit var _categorySelectionVM: CategorySelectionVM
     // # State
     val transactionToPush = firstTransactionBox
         .unbox()
@@ -60,10 +62,12 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
     fun pushRememberedCategories() {
         transactionToPush.take(1)
             .flatMapCompletable { transactionsRepo.pushTransactionCAs(it.id, it.categoryAmounts) }
+            .andThen(_categorySelectionVM.clearSelection())
             .observe(disposables)
     }
     //
-    fun setup(categoryAmounts: Map<Category, BigDecimal>) {
+    fun setup(categoryAmounts: Map<Category, BigDecimal>, categorySelectionVM: CategorySelectionVM) {
+        _categorySelectionVM = categorySelectionVM
         transactionToPush.take(1)
             .observe(disposables) {
                 clearCA()

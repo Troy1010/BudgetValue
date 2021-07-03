@@ -9,6 +9,7 @@ import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue.categories.domain.DeleteCategoryFromActiveDomainUC
 import com.tminus1010.budgetvalue.categories.models.Category
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
@@ -64,7 +65,7 @@ class CategorySelectionVM @Inject constructor(
         .nonLazyCache(disposables)
 
     // # Intents
-    fun clearSelection() {
+    fun clearSelection() = Completable.fromCallable {
         intents.onNext(Intents.ClearSelection)
     }
 
@@ -80,7 +81,7 @@ class CategorySelectionVM @Inject constructor(
         state.take(1)
             .map { it.selectedCategories.map { deleteCategoryFromActiveDomainUC(it) } }
             .flatMapCompletable { Rx.merge(it) }
-            .andThen { clearSelection() }
+            .andThen(clearSelection())
             .subscribe()
     }
 }
