@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.categories
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
+import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.extensions.toLiveData
 import com.tminus1010.budgetvalue._core.middleware.Rx
@@ -75,10 +76,10 @@ class CategorySelectionVM @Inject constructor(
         }
         .nonLazyCache(disposables)
 
-    val selectedCategories: LiveData<Set<Category>> = state
+    val selectedCategories = state
         .map { it.selectedCategories }
         .distinctUntilChanged()
-        .toLiveData(errorSubject)
+        .divertErrors(errorSubject)
 
     val inSelectionMode: Observable<Boolean> = state
         .map { it.inSelectionMode }
