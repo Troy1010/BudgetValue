@@ -68,11 +68,6 @@ android {
     }
 }
 
-// Without this, there is a warning that -Xopt-in=kotlin.RequiresOptIn is required
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-    kotlinOptions.freeCompilerArgs += ["-Xopt-in=kotlin.RequiresOptIn"]
-}
-
 configurations.all {
     // Without this, androidx.test causes junit 4.12 to be used.
     resolutionStrategy.force "junit:junit:4.13.1"
@@ -111,10 +106,15 @@ dependencies {
     testImplementation "org.robolectric:robolectric:4.5.1"
 
     // # TMCommonKotlin
+    //noinspection GradleDynamicVersion
     implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-core:1.1.+'
+    //noinspection GradleDynamicVersion
     implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-rx:1.1.+'
+    //noinspection GradleDynamicVersion
     implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-misc:1.1.+'
+    //noinspection GradleDynamicVersion
     implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-tuple:1.1.+'
+    //noinspection GradleDynamicVersion
     implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-view:1.1.+'
 
     // # Hilt
