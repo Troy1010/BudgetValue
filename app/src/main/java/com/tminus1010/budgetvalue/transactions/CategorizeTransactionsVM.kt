@@ -5,6 +5,7 @@ import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.middleware.unbox
+import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeTransactionsDomain
@@ -52,9 +53,15 @@ class CategorizeTransactionsVM @Inject constructor(
             .observe(disposables)
     }
     fun userNavToSplitWithReplayValues() {
+        _categorySelectionVM.clearSelection()
+        _categorySelectionVM.selectCategories(*replayTransactionBox.value!!.first!!.categoryAmounts.map { it.key }.toTypedArray())
         navToSplit.onNext(replayTransactionBox.value!!.first!!.categoryAmounts)
     }
+    fun setup(categorySelectionVM: CategorySelectionVM) {
+        _categorySelectionVM = categorySelectionVM
+    }
     // # Internal
+    private lateinit var _categorySelectionVM: CategorySelectionVM
     private val firstTransactionBox =
         transactionsDomain.uncategorizedSpends
             .map { Box(it.getOrNull(0)) }

@@ -24,12 +24,12 @@ class CategorySelectionVM @Inject constructor(
         intents.onNext(Intents.ClearSelection)
     }
 
-    fun selectCategory(category: Category) {
-        intents.onNext(Intents.SelectCategory(category))
+    fun selectCategories(vararg categories: Category) {
+        categories.forEach { intents.onNext(Intents.SelectCategory(it)) }
     }
 
-    fun unselectCategory(category: Category) {
-        intents.onNext(Intents.UnselectCategory(category))
+    fun unselectCategories(vararg categories: Category) {
+        categories.forEach { intents.onNext(Intents.UnselectCategory(it)) }
     }
 
     fun deleteSelectedCategories() {

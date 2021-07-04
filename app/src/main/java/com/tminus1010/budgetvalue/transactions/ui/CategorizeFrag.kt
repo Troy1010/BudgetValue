@@ -56,6 +56,8 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // # Mediation
+        categorizeTransactionsVM.setup(categorySelectionVM)
         // # Some of SelectionMode
         categorySelectionVM.state.observe(viewLifecycleOwner) { state ->
             // ## inSelectionMode
@@ -88,9 +90,9 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 holder.vb.btnCategory.apply {
                     val selectionModeAction = {
                         if (category !in categorySelectionVM.selectedCategories.value!!)
-                            categorySelectionVM.selectCategory(category)
+                            categorySelectionVM.selectCategories(category)
                         else
-                            categorySelectionVM.unselectCategory(category)
+                            categorySelectionVM.unselectCategories(category)
                     }
                     text = category.name
                     setOnClickListener {
