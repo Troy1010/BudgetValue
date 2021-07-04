@@ -14,12 +14,8 @@ import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartialsUC
 import com.tminus1010.budgetvalue._core.extensions.add
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
-import com.tminus1010.budgetvalue.categories.CategoriesVM
-import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.transactions.TransactionsVM
-import com.tminus1010.tmcommonkotlin.core.logx
-import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -30,7 +26,6 @@ class HostActivity : AppCompatActivity() {
     @Inject lateinit var getExtraMenuItemPartialsUC: GetExtraMenuItemPartialsUC
     @Inject lateinit var appInitDomain: AppInitDomain
     private val transactionsVM by viewModels<TransactionsVM>()
-    private val categorySelectionVM: CategorySelectionVM by viewModels()
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.frag_nav_host) as HostFrag }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,9 +45,6 @@ class HostActivity : AppCompatActivity() {
         findNavController(R.id.frag_nav_host)
             .addOnDestinationChangedListener { _, navDestination, _ ->
                 Log.d("budgetvalue.Nav", "${navDestination.label}")
-                when (navDestination.id) {
-                    R.id.categorizeFrag -> categorySelectionVM.clearSelection().observe(this)
-                }
             }
     }
 
