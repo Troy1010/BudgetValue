@@ -15,21 +15,23 @@ import com.tminus1010.budgetvalue._core.extensions.add
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
 import com.tminus1010.budgetvalue.categories.CategoriesVM
+import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.transactions.TransactionsVM
+import com.tminus1010.tmcommonkotlin.core.logx
+import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class HostActivity : AppCompatActivity() {
+    private val vb by viewBinding(ActivityHostBinding::inflate)
     @Inject lateinit var getExtraMenuItemPartialsUC: GetExtraMenuItemPartialsUC
     @Inject lateinit var appInitDomain: AppInitDomain
-    val transactionsVM by viewModels<TransactionsVM>()
-    val categoriesVM by viewModels<CategoriesVM>()
-    val vb by viewBinding(ActivityHostBinding::inflate)
+    private val transactionsVM by viewModels<TransactionsVM>()
+    private val categorySelectionVM: CategorySelectionVM by viewModels()
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.frag_nav_host) as HostFrag }
-    val menuItemPartials by lazy { getExtraMenuItemPartialsUC(this) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(vb.root)
@@ -39,7 +41,7 @@ class HostActivity : AppCompatActivity() {
         // In order for NavigationUI.setupWithNavController to work, the ids in R.menu.* must exactly match R.navigation.*
         NavigationUI.setupWithNavController(vb.bottomNavigation, hostFrag.navController)
         //
-        // This line solves (after IMPORT): java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
+        // This line solves (after doing an Import): java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
         transactionsVM
     }
 
@@ -48,12 +50,15 @@ class HostActivity : AppCompatActivity() {
         findNavController(R.id.frag_nav_host)
             .addOnDestinationChangedListener { _, navDestination, _ ->
                 Log.d("budgetvalue.Nav", "${navDestination.label}")
+                when (navDestination.id) {
+                    R.id.categorizeFrag -> categorySelectionVM.clearSelection().observe(this)
+                }
             }
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         menu.clear()
-        menu.add(*menuItemPartials)
+        menu.add(*getExtraMenuItemPartialsUC(this))
         return true
     }
 
