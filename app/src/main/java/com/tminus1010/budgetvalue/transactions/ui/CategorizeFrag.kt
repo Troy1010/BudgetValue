@@ -9,6 +9,7 @@ import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
@@ -37,14 +38,14 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class CategorizeFrag : Fragment(R.layout.frag_categorize) {
-    val categorizeTransactionsVM by activityViewModels<CategorizeTransactionsVM>()
-    val categoriesVM: CategoriesVM by activityViewModels()
-    val transactionsVM by activityViewModels<TransactionsVM>()
-    val categorySelectionVM: CategorySelectionVM by activityViewModels()
-    val categorizeTransactionsAdvancedVM by activityViewModels<CategorizeTransactionsAdvancedVM>()
+    private val vb by viewBinding(FragCategorizeBinding::bind)
+    private val categorizeTransactionsVM by activityViewModels<CategorizeTransactionsVM>()
+    private val categoriesVM: CategoriesVM by activityViewModels()
+    private val transactionsVM by activityViewModels<TransactionsVM>()
+    private val categorySelectionVM: CategorySelectionVM by navGraphViewModels(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
+    private val categorizeTransactionsAdvancedVM by activityViewModels<CategorizeTransactionsAdvancedVM>()
     @Inject
     lateinit var categorizeAdvancedDomain: CategorizeAdvancedDomain
-    val vb by viewBinding(FragCategorizeBinding::bind)
     var btns = emptyList<ButtonRVItem>()
         set(value) { field = value; vb.recyclerviewButtons.adapter?.notifyDataSetChanged() }
     var categories = emptyList<Category>()
