@@ -1,11 +1,9 @@
 package com.tminus1010.budgetvalue.categories
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
-import com.tminus1010.budgetvalue._core.extensions.toLiveData
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue.categories.domain.DeleteCategoryFromActiveDomainUC
 import com.tminus1010.budgetvalue.categories.models.Category
