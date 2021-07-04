@@ -14,7 +14,7 @@ class CategoriesVM @Inject constructor(
     errorSubject: Subject<Throwable>,
     categoriesDomain: CategoriesDomain,
 ) : ViewModel() {
-    // # State
+    // # Output
     val userCategories: Observable<List<Category>> = categoriesDomain.userCategories
         .divertErrors(errorSubject)
 }

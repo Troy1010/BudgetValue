@@ -12,7 +12,7 @@ import javax.inject.Inject
 class ReconciliationsVM @Inject constructor(
     private val reconciliationsRepo: IReconciliationsRepo
 ) : ViewModel() {
-    // # Intents
+    // # Input
     fun delete(reconciliation: Reconciliation) {
         reconciliationsRepo.delete(reconciliation).observe(disposables)
     }

@@ -20,7 +20,7 @@ class ActivePlanVM @Inject constructor(
     private val activePlanDomain: ActivePlanDomain,
     private val plansRepo: IPlansRepo,
 ) : ViewModel() {
-    // # State
+    // # Output
     val defaultAmount = activePlanDomain.defaultAmount
         .map { it.toString() }
         .toState(disposables, errorSubject)

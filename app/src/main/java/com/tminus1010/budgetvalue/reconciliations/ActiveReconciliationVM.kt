@@ -29,7 +29,7 @@ class ActiveReconciliationVM @Inject constructor(
     categoriesDomain: CategoriesDomain,
     private val activeReconciliationDefaultAmountUC: ActiveReconciliationDefaultAmountUC,
 ) : ViewModel() {
-    // # State
+    // # Output
     val activeReconcileCAs2: Observable<Map<Category, Observable<String>>> =
         Rx.combineLatest(reconciliationsRepo.activeReconciliationCAs, categoriesDomain.userCategories)
             // These extra zeros prevent refreshes on hidden additions/removals that happen when a value is set to 0.

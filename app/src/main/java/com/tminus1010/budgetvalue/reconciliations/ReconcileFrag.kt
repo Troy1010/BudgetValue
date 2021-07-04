@@ -39,7 +39,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
     private val vb by viewBinding(FragReconcileBinding::bind)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // # User Intents
+        // # Output
         vb.btnSave.setOnClickListener { activeReconciliationVM.saveReconciliation() }
         // # TMTableView
         val headerRecipeFactory_numbered = ViewItemRecipeFactory3<ItemHeaderIncomeBinding, Pair<String, Observable<String>>>(

@@ -36,7 +36,7 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
             .map { Box(it.getOrNull(0)) }
             .nonLazyCache(disposables)
     private lateinit var _categorySelectionVM: CategorySelectionVM
-    // # State
+    // # Output
     val transactionToPush = firstTransactionBox
         .unbox()
         .switchMap {
