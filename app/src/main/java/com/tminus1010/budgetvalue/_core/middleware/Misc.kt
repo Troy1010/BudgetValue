@@ -12,6 +12,7 @@ import io.reactivex.rxjava3.core.ObservableSource
 import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.functions.Function3
 import io.reactivex.rxjava3.functions.Function4
+import io.reactivex.rxjava3.kotlin.Observables
 import java.lang.reflect.Type
 import java.math.BigDecimal
 
@@ -38,36 +39,6 @@ fun String.toMoneyBigDecimal(): BigDecimal =
 
 fun BigDecimal.nullIfZero(): BigDecimal? =
     if (this.compareTo(BigDecimal.ZERO) == 0) null else this
-
-fun <A, B> zip(a: ObservableSource<A>, b: ObservableSource<B>): Observable<Pair<A, B>> {
-    return Observable.zip(a, b, BiFunction<A, B, Pair<A, B>> { a, b -> Pair(a, b) })
-}
-
-fun <A, B, C> zip(
-    a: ObservableSource<A>,
-    b: ObservableSource<B>,
-    c: ObservableSource<C>,
-): Observable<Triple<A, B, C>> {
-    return Observable.zip(a,
-        b,
-        c,
-        Function3<A, B, C, Triple<A, B, C>> { a, b, c -> Triple(a, b, c) })
-}
-
-fun <A, B, C, D> zip(
-    a: ObservableSource<A>,
-    b: ObservableSource<B>,
-    c: ObservableSource<C>,
-    d: ObservableSource<D>,
-): Observable<Quadruple<A, B, C, D>> {
-    return Observable.zip(a, b, c, d, Function4<A, B, C, D, Quadruple<A, B, C, D>> { a, b, c, d ->
-        Quadruple(
-            a,
-            b,
-            c,
-            d)
-    })
-}
 
 data class IndexAndTuple<T>(
     val index: Int,
