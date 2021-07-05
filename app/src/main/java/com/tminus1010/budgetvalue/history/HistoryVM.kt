@@ -15,6 +15,7 @@ import com.tminus1010.budgetvalue.reconciliations.domain.ActiveReconciliationDef
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -68,7 +69,8 @@ class HistoryVM @Inject constructor(
             .toBehaviorSubject()
 
     // # Active Categories
-    val activeCategories = historyColumnDatas
-        .map { it.fold(HashSet<Category>()) { acc, v -> acc.apply { addAll(v.categoryAmounts.map{ it.key }) } } }
-        .map { it.sortedWith(categoryComparator) }
+    val activeCategories: Observable<List<Category>> =
+        historyColumnDatas
+            .map { it.fold(HashSet<Category>()) { acc, v -> acc.apply { addAll(v.categoryAmounts.map { it.key }) } } }
+            .map { it.sortedWith(categoryComparator) }
 }
