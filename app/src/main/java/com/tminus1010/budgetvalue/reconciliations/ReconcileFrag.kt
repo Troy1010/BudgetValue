@@ -30,12 +30,12 @@ import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
-    private val activeReconciliationVM by activityViewModels<ActiveReconciliationVM>()
-    private val categoriesVM by activityViewModels<CategoriesVM>()
-    private val activePlanVM by activityViewModels<ActivePlanVM>()
-    private val transactionsVM by activityViewModels<TransactionsVM>()
-    private val accountsVM by activityViewModels<AccountsVM>()
-    private val budgetedVM by activityViewModels<BudgetedVM>()
+    private val activeReconciliationVM: ActiveReconciliationVM by activityViewModels()
+    private val categoriesVM: CategoriesVM by activityViewModels()
+    private val activePlanVM: ActivePlanVM by activityViewModels()
+    private val transactionsVM: TransactionsVM by activityViewModels()
+    private val accountsVM: AccountsVM by activityViewModels()
+    private val budgetedVM: BudgetedVM by activityViewModels()
     private val vb by viewBinding(FragReconcileBinding::bind)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -52,7 +52,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
         val reconcileCARecipeFactory = ViewItemRecipeFactory3<ItemTextEditBinding, Pair<Category, Observable<String>?>>(
             { ItemTextEditBinding.inflate(LayoutInflater.from(context)) },
             { (category, d), vb, lifecycle ->
-                if (d==null) return@ViewItemRecipeFactory3
+                if (d == null) return@ViewItemRecipeFactory3
                 d.observe(lifecycle) { vb.editText.easyText = it }
                 vb.editText.onDone { activeReconciliationVM.pushActiveReconcileCA(category, it) }
             }
