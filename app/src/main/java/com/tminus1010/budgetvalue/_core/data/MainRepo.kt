@@ -49,7 +49,7 @@ class MainRepo @Inject constructor(
     override fun fetchAppInitBool(): Boolean =
         sharedPrefWrapper.fetchAppInitBool()
 
-    override fun pushAppInitBool(appInitBool: Boolean) =
+    override fun pushAppInitBool(appInitBool: Boolean): Completable =
         sharedPrefWrapper.pushAppInitBool(appInitBool)
             .subscribeOn(Schedulers.io())
 
@@ -84,7 +84,7 @@ class MainRepo @Inject constructor(
                     .subscribeOn(Schedulers.io())
             }
 
-    override fun clearReconciliations() =
+    override fun clearReconciliations(): Completable =
         miscDAO.clearReconciliations()
             .subscribeOn(Schedulers.io())
 
@@ -147,7 +147,8 @@ class MainRepo @Inject constructor(
             .subscribeOn(Schedulers.io())
 
     override fun findTransactionsWithDescription(description: String): Single<List<Transaction>> =
-        miscDAO.fetchTransactions(description).map { it.map { Transaction.fromDTO(it, categoryAmountsConverter) } }
+        miscDAO.fetchTransactions(description)
+            .map { it.map { Transaction.fromDTO(it, categoryAmountsConverter) } }
             .subscribeOn(Schedulers.io())
 
     override fun getTransaction(id: String): Single<Transaction> =
@@ -156,7 +157,8 @@ class MainRepo @Inject constructor(
             .subscribeOn(Schedulers.io())
 
     override val plans: Observable<List<Plan>> =
-        miscDAO.fetchPlans().map { it.map { Plan.fromDTO(it, categoryAmountsConverter) } }
+        miscDAO.fetchPlans()
+            .map { it.map { Plan.fromDTO(it, categoryAmountsConverter) } }
             .subscribeOn(Schedulers.io())
 
     override fun pushPlan(plan: Plan): Completable =
