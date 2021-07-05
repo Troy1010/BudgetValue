@@ -1,6 +1,5 @@
 package com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3
 
-import com.tminus1010.budgetvalue._core.middleware.arrayListOfZeros
 import java.lang.Math.max
 import kotlin.math.ceil
 
@@ -29,7 +28,7 @@ object ColumnWidthCalculator3 {
             logz("WARNING`minWidths.sum():${minWidths.sum()} > parentWidth:$parentWidth")
         val columnCount = minWidths.size
         // define column widths
-        val columnWidths = arrayListOfZeros(columnCount)
+        val columnWidths = (0 until columnCount).map { 0 }.toMutableList()
         for ((yPos, rowData) in intrinsicWidths.withIndex()) {
             for (xPos in rowData.indices) {
                 columnWidths[xPos] = max(columnWidths[xPos], intrinsicWidths[yPos][xPos])

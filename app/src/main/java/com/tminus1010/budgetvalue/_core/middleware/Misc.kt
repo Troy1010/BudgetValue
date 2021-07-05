@@ -16,14 +16,6 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-fun arrayListOfZeros(size: Int): ArrayList<Int> {
-    val returning = ArrayList<Int>()
-    for (i in 0 until size) {
-        returning.add(0)
-    }
-    return returning
-}
-
 fun generateLipsum(size: Int): List<String> {
     val alphabet = "abcdefghijklmnopqrstuvwxyz"
     val returning = ArrayList<String>()
