@@ -55,6 +55,7 @@ class ActivePlanDomain @Inject constructor(
             { it.itemObservableMap2 }
             .replay(1).refCount()
     override val expectedIncome = activePlan.map { it.amount }
+        .distinctUntilChanged()
     override val defaultAmount =
         Rx.combineLatest(
             expectedIncome,
