@@ -10,7 +10,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.models.Plan
 import com.tminus1010.budgetvalue.reconciliations.models.Reconciliation
 import com.tminus1010.budgetvalue.transactions.models.Transaction
-import com.tminus1010.tmcommonkotlin.misc.extensions.associate
+import com.tminus1010.tmcommonkotlin.core.extensions.associate
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
