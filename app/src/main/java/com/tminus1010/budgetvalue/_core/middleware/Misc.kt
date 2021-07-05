@@ -1,9 +1,7 @@
 package com.tminus1010.budgetvalue._core.middleware
 
-import android.content.res.Resources
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.tmcommonkotlin.rx.extensions.boxStartNull
 import com.tminus1010.tmcommonkotlin.rx.extensions.isCold
 import com.tminus1010.tmcommonkotlin.tuple.*
@@ -12,34 +10,11 @@ import io.reactivex.rxjava3.core.ObservableSource
 import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.functions.Function3
 import io.reactivex.rxjava3.functions.Function4
-import java.io.PrintWriter
-import java.io.StringWriter
 import java.lang.reflect.Type
 import java.math.BigDecimal
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
-
-fun <T, R> Iterable<T>.zipWithDefault(other: Iterable<R>, default: R): List<Pair<T, R>> {
-    val first = iterator()
-    val second = other.iterator()
-    val list = ArrayList<Pair<T, R>>()
-    while (first.hasNext()) {
-        val y = if (second.hasNext()) {
-            second.next()
-        } else {
-            default
-        }
-        list.add(Pair(first.next(), y))
-    }
-    return list
-}
-
-fun View.setDimToWrapContent() {
-    val wrapSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-    this.measure(wrapSpec, wrapSpec)
-    this.layoutParams = RecyclerView.LayoutParams(this.measuredWidth, this.measuredHeight)
-}
 
 fun arrayListOfZeros(size: Int): ArrayList<Int> {
     val returning = ArrayList<Int>()
@@ -176,9 +151,6 @@ fun <T> List<List<T>>.reflectXY(): ArrayList<ArrayList<T>> {
     }
     return returning
 }
-
-fun logThread(prefix: Any?) =
-    logz("$prefix. Thread:${Thread.currentThread().name}")
 
 fun <T, V> List<HashMap<T, V>>.reflectXY(): HashMap<T, ArrayList<V>> {
     val returning = HashMap<T, ArrayList<V>>()
