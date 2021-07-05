@@ -6,9 +6,9 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue._core.categoryComparator
 import com.tminus1010.budgetvalue._core.extensions.add
 import com.tminus1010.budgetvalue._core.extensions.bind
-import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.middleware.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuItemPartial
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
@@ -64,7 +64,7 @@ class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
             nav.navigateUp()
         }
         // # TMTableView
-        val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemTextEditBinding, Pair<Category, BigDecimal>>(
+        val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemTextEditBinding, Map.Entry<Category, BigDecimal>>(
             { ItemTextEditBinding.inflate(LayoutInflater.from(context)) },
             { (category, amount), vb, _ ->
                 vb.editText.setText(amount.toString())
@@ -83,16 +83,17 @@ class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
             }
         )
         categorizeTransactionsAdvancedVM.transactionToPush
-            .map {
+            .map { transaction ->
+                val categoryAmounts = transaction.categoryAmounts.toSortedMap(categoryComparator)
                 val recipes2D = listOf(
                     listOf(recipeFactories.header.createOne("Category"))
                             + recipeFactories.textView.createOne("Default")
-                            + recipeFactories.textView.createMany(it.categoryAmounts.keys.map { it.name }),
+                            + recipeFactories.textView.createMany(categoryAmounts.map { it.key.name }),
                     listOf(recipeFactories.header.createOne("Amount"))
                             + recipeFactories.textViewWithLifecycle.createOne(categorizeTransactionsAdvancedVM.defaultAmount)
-                            + categoryAmountRecipeFactory.createMany(it.categoryAmounts.entries.map { it.key to it.value })
+                            + categoryAmountRecipeFactory.createMany(categoryAmounts.entries)
                 ).reflectXY()
-                val dividerMap = it.categoryAmounts.keys
+                val dividerMap = categoryAmounts.keys
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
                     .associate { it.index to recipeFactories.titledDivider.createOne(it.value.type.name) }
