@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue._core.middleware.Orientation
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView.Decoration
-import com.tminus1010.budgetvalue._core.middleware.measureUnspecified
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView2.SynchronizedScrollListener
+import com.tminus1010.tmcommonkotlin.misc.extensions.measureUnspecified
 import com.tminus1010.tmcommonkotlin.misc.extensions.scrollTo
 
 class OuterRVAdapter3(

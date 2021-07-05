@@ -15,32 +15,6 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-val View.intrinsicHeight2: Int
-    get() {
-        this.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-        return this.measuredHeight
-    }
-
-fun View.measureUnspecified() {
-    this.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-}
-
-fun View.measureExact() {
-    this.measure(View.MeasureSpec.EXACTLY, View.MeasureSpec.EXACTLY)
-}
-
-val View.intrinsicWidth2: Int
-    get() {
-        this.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-        return this.measuredWidth
-    }
-
-val View.exactWidth: Int
-    get() {
-        this.measure(View.MeasureSpec.EXACTLY, View.MeasureSpec.EXACTLY)
-        return this.measuredWidth
-    }
-
 fun <T> make1d(orientation: Orientation, z2dCollection: List<List<T>>): List<T?> {
     val returning = ArrayList<T?>()
     when (orientation) {
