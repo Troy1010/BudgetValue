@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
-import com.tminus1010.budgetvalue._core.middleware.unbox
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
@@ -97,16 +96,16 @@ class CategorizeTransactionsVM @Inject constructor(
         .nonLazyCache(disposables)
         .divertErrors(errorSubject)
     val isTransactionAvailable = firstTransactionBox
-        .map { it.unbox != null }
+        .map { it.first != null }
         .divertErrors(errorSubject)
     val date = firstTransactionBox
-        .map { it.unbox?.date?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")) ?: "" }
+        .map { it.first?.date?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")) ?: "" }
         .divertErrors(errorSubject)
     val latestUncategorizedTransactionAmount = firstTransactionBox
-        .map { it.unbox?.defaultAmount?.toString() ?: "" }
+        .map { it.first?.defaultAmount?.toString() ?: "" }
         .divertErrors(errorSubject)
     val latestUncategorizedTransactionDescription = firstTransactionBox
-        .map { it.unbox?.description ?: "" }
+        .map { it.first?.description ?: "" }
         .divertErrors(errorSubject)
     val navToSplit = PublishSubject.create<Map<Category, BigDecimal>>()
     val transactionBox = firstTransactionBox

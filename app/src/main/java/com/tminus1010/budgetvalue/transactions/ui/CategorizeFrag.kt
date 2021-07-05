@@ -16,8 +16,10 @@ import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.toPX
-import com.tminus1010.budgetvalue._core.middleware.ui.*
-import com.tminus1010.budgetvalue._core.middleware.unbox
+import com.tminus1010.budgetvalue._core.middleware.ui.ButtonRVItem
+import com.tminus1010.budgetvalue._core.middleware.ui.GenViewHolder2
+import com.tminus1010.budgetvalue._core.middleware.ui.LifecycleRVAdapter
+import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._core.ui.data_binding.bindButtonRVItem
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
@@ -139,7 +141,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                         onClick = {
                             categorizeAdvancedDomain.calcExactSplit(
                                 categorySelectionVM.selectedCategories.value!!,
-                                categorizeTransactionsVM.transactionBox.value!!.unbox!!.amount
+                                categorizeTransactionsVM.transactionBox.value!!.first!!.amount
                             ).let { it.mapValues { -it.value } }
                                 .also { categorizeTransactionsAdvancedVM.setup(it, categorySelectionVM) }
                             nav.navigate(R.id.action_categorizeFrag_to_splitTransactionFrag)

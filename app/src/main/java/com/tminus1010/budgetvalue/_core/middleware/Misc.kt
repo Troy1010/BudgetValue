@@ -2,7 +2,10 @@ package com.tminus1010.budgetvalue._core.middleware
 
 import com.tminus1010.tmcommonkotlin.rx.extensions.boxStartNull
 import com.tminus1010.tmcommonkotlin.rx.extensions.isCold
-import com.tminus1010.tmcommonkotlin.tuple.*
+import com.tminus1010.tmcommonkotlin.tuple.Quadruple
+import com.tminus1010.tmcommonkotlin.tuple.Quintuple
+import com.tminus1010.tmcommonkotlin.tuple.Septuple
+import com.tminus1010.tmcommonkotlin.tuple.Sextuple
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableSource
 import io.reactivex.rxjava3.functions.BiFunction
@@ -175,7 +178,7 @@ fun <A, B, C> combineLatestImpatient(
                 observable.skip(1)
             } else observable
         }
-        .map { Triple(it.first.unbox(), it.second.unbox(), it.third.unbox()) }
+        .map { Triple(it.first.first, it.second.first, it.third.first) }
 }
 
 fun <A, B, C, D> combineLatestImpatient(
@@ -200,7 +203,7 @@ fun <A, B, C, D> combineLatestImpatient(
                 observable.skip(1)
             } else observable
         }
-        .map { Quadruple(it.first.unbox(), it.second.unbox(), it.third.unbox(), it.fourth.unbox()) }
+        .map { Quadruple(it.first.first, it.second.first, it.third.first, it.fourth.first) }
 }
 
 fun <A, B, C, D, E> combineLatestImpatient(
@@ -227,7 +230,7 @@ fun <A, B, C, D, E> combineLatestImpatient(
                 observable.skip(1)
             } else observable
         }
-        .map { Quintuple(it.first.unbox(), it.second.unbox(), it.third.unbox(), it.fourth.unbox(), it.fifth.unbox()) }
+        .map { Quintuple(it.first.first, it.second.first, it.third.first, it.fourth.first, it.fifth.first) }
 }
 
 fun <A, B, C, D, E, F> combineLatestImpatient(
@@ -256,7 +259,7 @@ fun <A, B, C, D, E, F> combineLatestImpatient(
                 observable.skip(1)
             } else observable
         }
-        .map { Sextuple(it.first.unbox(), it.second.unbox(), it.third.unbox(), it.fourth.unbox(), it.fifth.unbox(), it.sixth.unbox()) }
+        .map { Sextuple(it.first.first, it.second.first, it.third.first, it.fourth.first, it.fifth.first, it.sixth.first) }
 }
 
 fun <A, B, C, D, E, F, G> combineLatestImpatient(
@@ -287,15 +290,8 @@ fun <A, B, C, D, E, F, G> combineLatestImpatient(
                 observable.skip(1)
             } else observable
         }
-        .map { Septuple(it.first.unbox(), it.second.unbox(), it.third.unbox(), it.fourth.unbox(), it.fifth.unbox(), it.sixth.unbox(), it.seventh.unbox()) }
+        .map { Septuple(it.first.first, it.second.first, it.third.first, it.fourth.first, it.fifth.first, it.sixth.first, it.seventh.first) }
 }
-
-fun <T> Box<T>.unbox(): T {
-    return this.first
-}
-
-val <T> Box<T>.unbox
-    get() = this.first
 
 // untested
 fun <K, V> createMapEntry(key: K, value: V): Map.Entry<K, V> {
