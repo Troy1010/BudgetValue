@@ -1,5 +1,6 @@
 package com.tminus1010.budgetvalue._core.middleware
 
+import com.tminus1010.tmcommonkotlin.core.tryOrNull
 import com.tminus1010.tmcommonkotlin.rx.extensions.boxStartNull
 import com.tminus1010.tmcommonkotlin.rx.extensions.isCold
 import com.tminus1010.tmcommonkotlin.tuple.Quadruple
@@ -33,7 +34,7 @@ fun String.toBigDecimalSafe(): BigDecimal =
 fun String.toMoneyBigDecimal(): BigDecimal =
     toBigDecimalSafe()
         .let { if (it.scale() == 1) it.setScale(2) else it }
-        .let { try { it.setScale(0) } catch (e: Throwable) { it } } // throws error if decimal digits are not zeros.
+        .let { tryOrNull { it.setScale(0) } ?: it } // setScale(0) throws error if digits right of the decimal are not zero.
 
 fun BigDecimal.nullIfZero(): BigDecimal? =
     if (this.compareTo(BigDecimal.ZERO) == 0) null else this
