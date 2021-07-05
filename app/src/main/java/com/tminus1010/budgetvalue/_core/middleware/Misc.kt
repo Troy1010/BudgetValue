@@ -1,18 +1,11 @@
-@file:Suppress("NAME_SHADOWING")
-
 package com.tminus1010.budgetvalue._core.middleware
 
 import android.content.res.Resources
 import android.view.View
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.rx.extensions.boxStartNull
 import com.tminus1010.tmcommonkotlin.rx.extensions.isCold
-import com.tminus1010.tmcommonkotlin.misc.extensions.previous
 import com.tminus1010.tmcommonkotlin.tuple.*
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableSource
@@ -23,61 +16,9 @@ import java.io.PrintWriter
 import java.io.StringWriter
 import java.lang.reflect.Type
 import java.math.BigDecimal
-import java.time.DayOfWeek
-import java.time.LocalDate
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
-
-fun Iterable<Transaction>.getBlocks(numOfWeeks: Int): HashMap<LocalDate, java.util.ArrayList<Transaction>> {
-    val transactionBlocks = HashMap<LocalDate, java.util.ArrayList<Transaction>>()
-    for (transaction in this) {
-        if (transactionBlocks[transaction.date.previous(DayOfWeek.MONDAY)] == null)
-            transactionBlocks[transaction.date.previous(DayOfWeek.MONDAY)] = arrayListOf()
-        transactionBlocks[transaction.date.previous(DayOfWeek.MONDAY)]!!.add(transaction)
-    }
-    //
-    var i = 0
-    var mmm = arrayListOf<Transaction>()
-    var keysToRemove = arrayListOf<LocalDate>()
-    for (x in transactionBlocks.toSortedMap(compareBy { it })) {
-        val transactions = x.value
-        if (i == 0) {
-            mmm = transactions
-        } else {
-            keysToRemove.add(x.key)
-            mmm.addAll(transactions)
-        }
-        i = (i + 1) % numOfWeeks
-    }
-    for (key in keysToRemove) {
-        transactionBlocks.remove(key)
-    }
-    return transactionBlocks
-}
-
-
-fun <T> LiveData<T>.observeOnce(action: (T?) -> Unit) {
-    this.value
-    val observer = object : Observer<T> {
-        override fun onChanged(o: T?) {
-            this@observeOnce.removeObserver(this)
-            action(o)
-        }
-    }
-    this.observeForever(observer)
-}
-
-fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, action: (T?) -> Unit) {
-    this.value
-    val observer = object : Observer<T> {
-        override fun onChanged(o: T?) {
-            this@observeOnce.removeObserver(this)
-            action(o)
-        }
-    }
-    this.observe(lifecycleOwner, observer)
-}
 
 fun <T, R> Iterable<T>.zipWithDefault(other: Iterable<R>, default: R): List<Pair<T, R>> {
     val first = iterator()
@@ -141,13 +82,6 @@ val GridLayoutManager.visibleChildren: HashMap<Int, View>
         return children
     }
 
-
-fun Throwable.narrate(): String {
-    val sw = StringWriter()
-    this.printStackTrace(PrintWriter(sw))
-    return sw.toString()
-}
-
 val View.intrinsicHeight2: Int
     get() {
         this.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
@@ -173,11 +107,6 @@ val View.exactWidth: Int
         this.measure(View.MeasureSpec.EXACTLY, View.MeasureSpec.EXACTLY)
         return this.measuredWidth
     }
-
-fun getExactWidth(x: Any): Int {
-    (x as View).measure(View.MeasureSpec.EXACTLY, View.MeasureSpec.EXACTLY)
-    return x.measuredWidth
-}
 
 fun getScreenWidth(): Int {
     return Resources.getSystem().displayMetrics.widthPixels
