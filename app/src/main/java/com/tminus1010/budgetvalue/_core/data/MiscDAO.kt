@@ -62,12 +62,6 @@ interface MiscDAO {
     @Query("select * from TransactionDTO WHERE id=:id")
     fun getTransaction(id: String): Single<TransactionDTO>
 
-    @Query("select date from TransactionDTO WHERE id=:id")
-    fun getTransactionDate(id: Int): Single<String>
-
-    @Query("UPDATE TransactionDTO SET date=:date WHERE id=:id")
-    fun updateTransactionDate(id: Int, date: String): Completable
-
     @Query("UPDATE TransactionDTO SET categoryAmounts=:categoryAmounts WHERE id=:id")
     fun updateTransactionCategoryAmounts(id: String, categoryAmounts: Map<String, BigDecimal>): Completable
 

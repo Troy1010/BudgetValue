@@ -39,11 +39,11 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     private val vb by viewBinding(FragCategorizeBinding::bind)
-    private val categorizeTransactionsVM by activityViewModels<CategorizeTransactionsVM>()
+    private val categorizeTransactionsVM: CategorizeTransactionsVM by activityViewModels()
     private val categoriesVM: CategoriesVM by activityViewModels()
-    private val transactionsVM by activityViewModels<TransactionsVM>()
+    private val transactionsVM: TransactionsVM by activityViewModels()
     private val categorySelectionVM: CategorySelectionVM by navGraphViewModels(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
-    private val categorizeTransactionsAdvancedVM by activityViewModels<CategorizeTransactionsAdvancedVM>()
+    private val categorizeTransactionsAdvancedVM: CategorizeTransactionsAdvancedVM by activityViewModels()
     @Inject
     lateinit var categorizeAdvancedDomain: CategorizeAdvancedDomain
     var btns = emptyList<ButtonRVItem>()

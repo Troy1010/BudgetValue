@@ -2,11 +2,11 @@ package com.tminus1010.budgetvalue._core.data
 
 import com.tminus1010.budgetvalue._core.middleware.toBigDecimalSafe
 import com.tminus1010.budgetvalue.accounts.models.Account
-import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import com.tminus1010.budgetvalue.categories.data.ICategoriesRepo
+import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.models.Plan
 import com.tminus1010.budgetvalue.reconciliations.models.Reconciliation
 import com.tminus1010.budgetvalue.transactions.models.Transaction
@@ -112,18 +112,12 @@ class MainRepo @Inject constructor(
     override fun delete(transaction: Transaction): Completable =
         miscDAO.delete(transaction.toDTO(categoryAmountsConverter))
 
+    override fun update(transaction: Transaction): Completable =
+        miscDAO.update(transaction.toDTO(categoryAmountsConverter))
+            .subscribeOn(Schedulers.io())
+
     override fun tryPush(transactions: List<Transaction>): Completable =
         miscDAO.tryAdd(transactions.map { it.toDTO(categoryAmountsConverter) })
-
-    override fun pushTransactionCA(transaction: Transaction, category: Category, amount: BigDecimal?): Completable =
-        transaction.categoryAmounts
-            .toMutableMap()
-            .apply { if (amount==null) remove(category) else put(category, amount) }
-            .let { miscDAO.updateTransactionCategoryAmounts(transaction.id, it.mapKeys { it.key.name }) }
-
-    override fun pushTransactionCAs(id: String, categoryAmounts: Map<Category, BigDecimal>): Completable =
-        miscDAO.updateTransactionCategoryAmounts(id, categoryAmounts.mapKeys { it.key.name })
-            .subscribeOn(Schedulers.io())
 
     override fun findTransactionsWithDescription(description: String): Single<List<Transaction>> =
         miscDAO.fetchTransactions(description).map { it.map { Transaction.fromDTO(it, categoryAmountsConverter) } }

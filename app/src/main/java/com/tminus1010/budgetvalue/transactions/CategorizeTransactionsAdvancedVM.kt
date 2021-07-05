@@ -2,14 +2,13 @@ package com.tminus1010.budgetvalue.transactions
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
+import com.tminus1010.budgetvalue._core.extensions.copy
 import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
-import com.tminus1010.budgetvalue.transactions.domain.CategorizeTransactionsDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
-import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import com.tminus1010.tmcommonkotlin.tuple.Box
@@ -43,8 +42,8 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
             intents
                 .scan(it) { acc, v ->
                     when (v) {
-                        is Intents.Clear -> acc.copy(categoryAmounts = emptyMap())
-                        is Intents.Add -> acc.copy(categoryAmounts = acc.categoryAmounts.toMutableMap().also { it[v.category] = v.amount })
+                        is Intents.Clear -> acc.categorize(emptyMap())
+                        is Intents.Add -> acc.categorize(acc.categoryAmounts.copy(v.category to v.amount))
                     }
                 }
         }
@@ -52,7 +51,7 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
     val defaultAmount = transactionToPush
         .map { it.defaultAmount.toString() }
         .divertErrors(errorSubject)
-    // # User Intents
+    // # Input
     fun rememberCA(category: Category, amount: BigDecimal) {
         intents.onNext(Intents.Add(category, amount))
     }
@@ -61,7 +60,7 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
     }
     fun pushRememberedCategories() {
         transactionToPush.take(1)
-            .flatMapCompletable { transactionsRepo.pushTransactionCAs(it.id, it.categoryAmounts) }
+            .flatMapCompletable { transactionsRepo.update(it) }
             .andThen(_categorySelectionVM.clearSelection())
             .observe(disposables)
     }
