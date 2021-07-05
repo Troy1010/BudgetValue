@@ -33,12 +33,14 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
-    @Inject lateinit var categorizeTransactionsAdvancedDomain: CategorizeAdvancedDomain
-    @Inject lateinit var categorizeTransactionsDomain: CategorizeTransactionsDomain
-    val categorizeTransactionsVM by activityViewModels<CategorizeTransactionsVM>()
-    val categoriesVM by activityViewModels<CategoriesVM>()
-    val categorizeTransactionsAdvancedVM by activityViewModels<CategorizeTransactionsAdvancedVM>()
-    val vb by viewBinding(FragSplitTransactionBinding::bind)
+    private val vb by viewBinding(FragSplitTransactionBinding::bind)
+    @Inject
+    lateinit var categorizeTransactionsAdvancedDomain: CategorizeAdvancedDomain
+    @Inject
+    lateinit var categorizeTransactionsDomain: CategorizeTransactionsDomain
+    private val categorizeTransactionsVM: CategorizeTransactionsVM by activityViewModels()
+    private val categoriesVM: CategoriesVM by activityViewModels()
+    private val categorizeTransactionsAdvancedVM: CategorizeTransactionsAdvancedVM by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
