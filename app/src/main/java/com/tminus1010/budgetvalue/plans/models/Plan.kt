@@ -27,7 +27,7 @@ data class Plan(
             localDatePeriod.blockingFirst().startDate,
             localDatePeriod.blockingFirst().endDate,
             amount,
-            categoryAmountsConverter.toString(categoryAmounts)
+            categoryAmountsConverter.toJson(categoryAmounts)
         )
 
     companion object {

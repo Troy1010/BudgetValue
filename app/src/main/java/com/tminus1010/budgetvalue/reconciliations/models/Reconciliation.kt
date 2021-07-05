@@ -17,7 +17,7 @@ data class Reconciliation(
     fun toDTO(categoryAmountsConverter: CategoryAmountsConverter): ReconciliationDTO {
         return ReconciliationDTO(
             localDate = localDate,
-            categoryAmounts = categoryAmountsConverter.toString(categoryAmounts),
+            categoryAmounts = categoryAmountsConverter.toJson(categoryAmounts),
             amount = defaultAmount,
             id = id,)
     }

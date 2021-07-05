@@ -17,7 +17,7 @@ class CategoryAmountsConverter @Inject constructor(
             moshi.fromJson<Map<String, String>>(s)
                 .associate { categoryParser.parseCategory(it.key) to (it.value as Any).toString().toBigDecimal() }
 
-    override fun toString(categoryAmounts: Map<Category, BigDecimal>): String =
+    override fun toJson(categoryAmounts: Map<Category, BigDecimal>): String =
         categoryAmounts
             .associate { it.key.name to it.value.toString() }
             .let { moshi.toJson(it) }

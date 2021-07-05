@@ -44,7 +44,7 @@ data class Transaction(
             date,
             description,
             amount,
-            categoryAmountsConverter.toString(categoryAmounts),
+            categoryAmountsConverter.toJson(categoryAmounts),
             categorizationDate,
             id,
         )

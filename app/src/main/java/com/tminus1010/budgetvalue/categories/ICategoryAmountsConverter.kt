@@ -5,5 +5,5 @@ import java.math.BigDecimal
 
 interface ICategoryAmountsConverter {
     fun toCategoryAmounts(s: String?): Map<Category, BigDecimal>
-    fun toString(categoryAmounts: Map<Category, BigDecimal>): String
+    fun toJson(categoryAmounts: Map<Category, BigDecimal>): String
 }
