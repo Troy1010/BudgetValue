@@ -184,7 +184,12 @@ fun <A, B, C, D> combineLatestImpatient(
     c: Observable<C>,
     d: Observable<D>,
 ): Observable<Quadruple<A?, B?, C?, D?>> {
-    return Rx.combineLatest(a.boxStartNull(), b.boxStartNull(), c.boxStartNull(), d.boxStartNull())
+    return Rx.combineLatest(
+        a.boxStartNull(),
+        b.boxStartNull(),
+        c.boxStartNull(),
+        d.boxStartNull()
+    )
         .compose { observable ->
             // # If no observables are cold, then skip the first emission
             // * The observables start with null so that combineLatest is impatient.
