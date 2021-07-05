@@ -12,7 +12,7 @@ import javax.inject.Inject
 class PlansVM @Inject constructor(
     private val plansRepo: IPlansRepo
 ) : ViewModel() {
-    // # Intents
+    // # Input
     fun deletePlan(plan: Plan) {
         plansRepo.delete(plan)
             .observe(disposables)
