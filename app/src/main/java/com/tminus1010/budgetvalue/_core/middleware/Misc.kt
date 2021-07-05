@@ -1,6 +1,5 @@
 package com.tminus1010.budgetvalue._core.middleware
 
-import android.view.View
 import com.tminus1010.tmcommonkotlin.rx.extensions.boxStartNull
 import com.tminus1010.tmcommonkotlin.rx.extensions.isCold
 import com.tminus1010.tmcommonkotlin.tuple.*
@@ -14,53 +13,6 @@ import java.math.BigDecimal
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
-
-fun <T> make1d(orientation: Orientation, z2dCollection: List<List<T>>): List<T?> {
-    val returning = ArrayList<T?>()
-    when (orientation) {
-        Orientation.VERTICAL -> {
-            for (collection in z2dCollection) {
-                returning.addAll(collection)
-            }
-        }
-        Orientation.HORIZONTAL -> {
-            for (i in 0 until (z2dCollection.map { it.size }.maxOrNull() ?: 0)) {
-                for (collection in z2dCollection) {
-                    returning.add(collection.getOrNull(i))
-                }
-            }
-        }
-    }
-    return returning.toList()
-}
-
-fun <T> generate2dArrayList(
-    xSize: Int,
-    ySize: Int,
-    orientation: Orientation,
-): ArrayList<ArrayList<T?>> {
-    val returning = ArrayList<ArrayList<T?>>()
-    when (orientation) {
-        Orientation.HORIZONTAL -> {
-            for (yPos in 0 until ySize) {
-                returning.add(ArrayList())
-                for (xPos in 0 until xSize) {
-                    returning[yPos].add(null)
-                }
-            }
-        }
-        Orientation.VERTICAL -> {
-            for (xPos in 0 until xSize) {
-                returning.add(ArrayList())
-                for (yPos in 0 until ySize) {
-                    returning[xPos].add(null)
-                }
-            }
-        }
-    }
-    return returning
-}
-
 
 fun <K, V> HashMap<K, V>.sortByList(list: List<K>): SortedMap<K, V> {
     return toSortedMap(compareBy { list.indexOf(it) })
