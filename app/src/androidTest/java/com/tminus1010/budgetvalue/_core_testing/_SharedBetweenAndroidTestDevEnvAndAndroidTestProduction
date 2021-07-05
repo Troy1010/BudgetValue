@@ -1,3 +1,3 @@
 Tests should be in androidTestProduction/
 DevEnvs should be in androidTestDevEnvs/
-Anything that you want to share between both should be in androidTest/
+Anything that you want to share between both should be here in androidTest/

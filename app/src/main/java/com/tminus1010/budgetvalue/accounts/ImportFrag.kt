@@ -22,8 +22,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ImportFrag : Fragment(R.layout.frag_import) {
     @Inject lateinit var launchImportUC: LaunchImportUC
-    val accountsVM: AccountsVM by activityViewModels()
-    val vb by viewBinding(FragImportBinding::bind)
+    private val accountsVM: AccountsVM by activityViewModels()
+    private val vb by viewBinding(FragImportBinding::bind)
     var accounts = emptyList<Account>()
         set(value) {
             val shouldNotifyDataSetChanged = field.size != value.size

@@ -22,7 +22,7 @@ import javax.inject.Singleton
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class DevEnv2 {
+class DevEnv_Main {
     @get:Rule(order = 0)
     var hiltRule = HiltAndroidRule(this)
 
@@ -30,7 +30,7 @@ class DevEnv2 {
     var activityScenarioRule = ActivityScenarioRule(HostActivity::class.java)
 
     @Test
-    fun devEnv2() {
+    fun main() {
         // # Stall forever
         while (true) Thread.sleep(5000)
     }
