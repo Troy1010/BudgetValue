@@ -18,7 +18,7 @@ import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.toPX
 import com.tminus1010.budgetvalue._core.middleware.ui.*
 import com.tminus1010.budgetvalue._core.middleware.unbox
-import com.tminus1010.budgetvalue._core.ui.data_binding.bindButtonPartial
+import com.tminus1010.budgetvalue._core.ui.data_binding.bindButtonRVItem
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
@@ -187,7 +187,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     .let { GenViewHolder2(it) }
 
             override fun onViewAttachedToWindow(holder: GenViewHolder2<ItemButtonBinding>, lifecycle: LifecycleOwner) {
-                holder.vb.btnItem.bindButtonPartial(lifecycle, btns[holder.adapterPosition])
+                holder.vb.btnItem.bindButtonRVItem(lifecycle, btns[holder.adapterPosition])
             }
 
             override fun getItemCount() = btns.size

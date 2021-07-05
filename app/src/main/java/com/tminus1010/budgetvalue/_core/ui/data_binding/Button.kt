@@ -5,7 +5,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonRVItem
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 
-fun Button.bindButtonPartial(lifecycleOwner: LifecycleOwner, buttonRVItem: ButtonRVItem) {
+fun Button.bindButtonRVItem(lifecycleOwner: LifecycleOwner, buttonRVItem: ButtonRVItem) {
     text = buttonRVItem.title
     setOnClickListener { buttonRVItem.onClick() }
     if (buttonRVItem.enabledLiveData != null)
