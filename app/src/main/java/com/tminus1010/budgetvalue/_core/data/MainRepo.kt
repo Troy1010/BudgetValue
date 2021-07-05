@@ -19,9 +19,6 @@ import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/**
- * DTO <-> DomainModel mapping happens here, b/c, why not.
- */
 @Singleton
 class MainRepo @Inject constructor(
     private val sharedPrefWrapper: SharedPrefWrapper,
