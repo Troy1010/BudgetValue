@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue._core.data
 
-import com.tminus1010.budgetvalue._core.middleware.toBigDecimalSafe
+import com.tminus1010.budgetvalue._core.middleware.toBigDecimalOrZero
 import com.tminus1010.budgetvalue.accounts.models.Account
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.ICategoryParser
@@ -108,7 +108,7 @@ class MainRepo @Inject constructor(
 
     override val activeReconciliationCAs: Observable<Map<Category, BigDecimal>> =
         sharedPrefWrapper.activeReconciliationCAs
-            .map { it.associate { categoryParser.parseCategory(it.key) to it.value.toBigDecimalSafe() } }
+            .map { it.associate { categoryParser.parseCategory(it.key) to it.value.toBigDecimalOrZero() } }
             .replay(1).refCount()
             .subscribeOn(Schedulers.io())
 
