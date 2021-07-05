@@ -108,14 +108,6 @@ val View.exactWidth: Int
         return this.measuredWidth
     }
 
-fun getScreenWidth(): Int {
-    return Resources.getSystem().displayMetrics.widthPixels
-}
-
-fun getScreenHeight(): Int {
-    return Resources.getSystem().displayMetrics.heightPixels
-}
-
 fun <T> make1d(orientation: Orientation, z2dCollection: List<List<T>>): List<T?> {
     val returning = ArrayList<T?>()
     when (orientation) {
