@@ -24,10 +24,10 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
-class PlanFrag: Fragment(R.layout.frag_plan) {
-    val vb by viewBinding(FragPlanBinding::bind)
-    val activePlanVM: ActivePlanVM by activityViewModels()
-    val categoriesVM: CategoriesVM by activityViewModels()
+class PlanFrag : Fragment(R.layout.frag_plan) {
+    private val vb by viewBinding(FragPlanBinding::bind)
+    private val activePlanVM: ActivePlanVM by activityViewModels()
+    private val categoriesVM: CategoriesVM by activityViewModels()
     override fun onStart() {
         super.onStart()
         // # TMTableView
@@ -60,7 +60,8 @@ class PlanFrag: Fragment(R.layout.frag_plan) {
                     listOf(recipeFactories.header.createOne("Plan"))
                             + expectedIncomeRecipeFactory.createOne(activePlanVM.expectedIncome)
                             + recipeFactories.textViewWithLifecycle.createOne(activePlanVM.defaultAmount)
-                            + planCAsRecipeFactory.createMany(categories.map { Pair(it, planCAsItemObservableMap[it]) }))
+                            + planCAsRecipeFactory.createMany(categories.map { Pair(it, planCAsItemObservableMap[it]) })
+                )
                     .reflectXY()
                 val dividerMap = categories
                     .withIndex()
