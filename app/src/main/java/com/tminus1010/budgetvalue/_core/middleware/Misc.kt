@@ -10,20 +10,8 @@ import io.reactivex.rxjava3.functions.Function3
 import io.reactivex.rxjava3.functions.Function4
 import java.lang.reflect.Type
 import java.math.BigDecimal
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
-fun <K, V> HashMap<K, V>.sortByList(list: List<K>): SortedMap<K, V> {
-    return toSortedMap(compareBy { list.indexOf(it) })
-}
-
-
-fun <T> Iterable<Iterable<T>>.reflectXY(): ArrayList<ArrayList<T>> {
-    return this.map { it.toList() }.toList().reflectXY()
-}
-
-fun <T> List<List<T>>.reflectXY(): ArrayList<ArrayList<T>> {
+fun <T> List<List<T>>.reflectXY(): List<List<T>> {
     val returning = ArrayList<ArrayList<T>>()
     for (yPos in this.indices) {
         for (xPos in this[yPos].indices) {
@@ -35,20 +23,6 @@ fun <T> List<List<T>>.reflectXY(): ArrayList<ArrayList<T>> {
     }
     return returning
 }
-
-fun <T, V> List<HashMap<T, V>>.reflectXY(): HashMap<T, ArrayList<V>> {
-    val returning = HashMap<T, ArrayList<V>>()
-    for (yPos in this.indices) {
-        for (xPos in this[yPos].keys) {
-            if (returning[xPos] == null)
-                returning[xPos] = arrayListOf()
-            logz("xPos:${xPos} yPos:${yPos} ..adding:${this[yPos][xPos]}")
-            returning[xPos]!!.add(this[yPos][xPos]!!)
-        }
-    }
-    return returning
-}
-
 
 fun String.toBigDecimalSafe(): BigDecimal =
     toBigDecimalOrNull() ?: BigDecimal.ZERO
