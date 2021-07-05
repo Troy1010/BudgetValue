@@ -19,7 +19,7 @@ class ActivePlanVM @Inject constructor(
     private val activePlanDomain: ActivePlanDomain,
     private val plansRepo: IPlansRepo,
 ) : ViewModel() {
-    // # Intents
+    // # Input
     fun pushExpectedIncome(s: String) {
         activePlanDomain.activePlan
             .flatMapCompletable { plansRepo.updatePlanAmount(it, s.toMoneyBigDecimal()) }

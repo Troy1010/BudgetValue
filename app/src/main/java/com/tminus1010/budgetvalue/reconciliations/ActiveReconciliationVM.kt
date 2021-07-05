@@ -43,7 +43,7 @@ class ActiveReconciliationVM @Inject constructor(
     val defaultAmount: Observable<String> = activeReconciliationDefaultAmountUC()
         .map { it.toString() }
         .divertErrors(errorSubject)
-    // # Intents
+    // # Input
     fun pushActiveReconcileCA(category: Category, s: String) {
         reconciliationsRepo.pushActiveReconciliationCA(category to s.toMoneyBigDecimal())
             .subscribe()
