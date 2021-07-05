@@ -1,9 +1,10 @@
 package com.tminus1010.budgetvalue.plans
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue._core.middleware.Rx
+import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue.plans.data.IPlansRepo
 import com.tminus1010.budgetvalue.plans.models.Plan
+import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -13,6 +14,7 @@ class PlansVM @Inject constructor(
 ) : ViewModel() {
     // # Intents
     fun deletePlan(plan: Plan) {
-        Rx.launch { plansRepo.delete(plan) }
+        plansRepo.delete(plan)
+            .observe(disposables)
     }
 }
