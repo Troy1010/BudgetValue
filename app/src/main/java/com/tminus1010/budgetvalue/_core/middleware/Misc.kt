@@ -8,11 +8,6 @@ import com.tminus1010.tmcommonkotlin.tuple.Quintuple
 import com.tminus1010.tmcommonkotlin.tuple.Septuple
 import com.tminus1010.tmcommonkotlin.tuple.Sextuple
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.ObservableSource
-import io.reactivex.rxjava3.functions.BiFunction
-import io.reactivex.rxjava3.functions.Function3
-import io.reactivex.rxjava3.functions.Function4
-import io.reactivex.rxjava3.kotlin.Observables
 import java.lang.reflect.Type
 import java.math.BigDecimal
 
@@ -36,9 +31,6 @@ fun String.toMoneyBigDecimal(): BigDecimal =
     toBigDecimalSafe()
         .let { if (it.scale() == 1) it.setScale(2) else it }
         .let { tryOrNull { it.setScale(0) } ?: it } // setScale(0) throws error if digits right of the decimal are not zero.
-
-fun BigDecimal.nullIfZero(): BigDecimal? =
-    if (this.compareTo(BigDecimal.ZERO) == 0) null else this
 
 data class IndexAndTuple<T>(
     val index: Int,
