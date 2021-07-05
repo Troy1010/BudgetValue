@@ -26,11 +26,11 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue
      * this observable emits an AdditionOrRemoval every time an entry is added or removed.
      */
     val additionOrRemovals: Observable<AdditionOrRemoval<K, V>> = changeSet
-        .filter { it.type == ChangeType.ADD || it.type == ChangeType.REMOVE }
+        .filter { it.type == AddRemEditType.ADD || it.type == AddRemEditType.REMOVE }
         .map {
             val additionOrRemovalType = when (it.type) {
-                ChangeType.ADD -> AdditionOrRemovalType.ADD
-                ChangeType.REMOVE -> AdditionOrRemovalType.REMOVE
+                AddRemEditType.ADD -> AddRemType.ADD
+                AddRemEditType.REMOVE -> AddRemType.REMOVE
                 else -> error("Unexpected ChangeType:$it")
             }
             AdditionOrRemoval(additionOrRemovalType, it.key, it.value)
@@ -56,14 +56,14 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue
 
     val allEdits =
         changeSet
-            .filter { it.type == ChangeType.EDIT }
+            .filter { it.type == AddRemEditType.EDIT }
             .publish().refCount()
     
     fun getEdits(key: K) =
         changeSet
             .filter { it.key == key }
-            .takeUntil { it.type == ChangeType.REMOVE }
-            .filter { it.type == ChangeType.EDIT }
+            .takeUntil { it.type == AddRemEditType.REMOVE }
+            .filter { it.type == AddRemEditType.EDIT }
 
     private fun createItemObservable(key: K, value: V): BehaviorSubject<V> {
         return BehaviorSubject.createDefault(value)
@@ -83,11 +83,11 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue
         super.putAll(from)
         from.forEach { (key, value) ->
             _itemObservableMap[key]?.also { subject ->
-                changePublisher.onNext(Change(ChangeType.EDIT, key, value))
+                changePublisher.onNext(Change(AddRemEditType.EDIT, key, value))
                 subject.onNext(value)
             } ?: run {
                 _itemObservableMap[key] = createItemObservable(key, value)
-                changePublisher.onNext(Change(ChangeType.ADD, key, value))
+                changePublisher.onNext(Change(AddRemEditType.ADD, key, value))
             }
         }
         observableMapPublisher.onNext(_itemObservableMap)
@@ -96,11 +96,11 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue
     override fun put(key: K, value: V): V? {
         val x = super.put(key, value)
         _itemObservableMap[key]?.also { subject ->
-            changePublisher.onNext(Change(ChangeType.EDIT, key, value))
+            changePublisher.onNext(Change(AddRemEditType.EDIT, key, value))
             subject.onNext(value)
         } ?: run {
             _itemObservableMap[key] = createItemObservable(key, value)
-            changePublisher.onNext(Change(ChangeType.ADD, key, value))
+            changePublisher.onNext(Change(AddRemEditType.ADD, key, value))
         }
         observableMapPublisher.onNext(_itemObservableMap)
         return x
@@ -109,13 +109,13 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue
     override fun clear() {
         _itemObservableMap.forEach { (key, subject) ->
             if (exitValue != null) {
-                changePublisher.onNext(Change(ChangeType.EDIT, key, exitValue))
+                changePublisher.onNext(Change(AddRemEditType.EDIT, key, exitValue))
                 subject.onNext(exitValue)
             }
         }
         super.clear()
         _itemObservableMap.forEach { (key, subject) ->
-            changePublisher.onNext(Change(ChangeType.REMOVE, key, subject.value))
+            changePublisher.onNext(Change(AddRemEditType.REMOVE, key, subject.value))
         }
         _itemObservableMap.clear()
         observableMapPublisher.onNext(_itemObservableMap)
@@ -124,13 +124,13 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue
     override fun remove(key: K): V? {
         _itemObservableMap[key]?.also { subject ->
             if (exitValue != null) {
-                changePublisher.onNext(Change(ChangeType.EDIT, key, exitValue))
+                changePublisher.onNext(Change(AddRemEditType.EDIT, key, exitValue))
                 subject.onNext(exitValue)
             }
         }
         val x = super.remove(key)
         _itemObservableMap[key]?.also { subject ->
-            changePublisher.onNext(Change(ChangeType.REMOVE, key, subject.value))
+            changePublisher.onNext(Change(AddRemEditType.REMOVE, key, subject.value))
             _itemObservableMap.remove(key)
             observableMapPublisher.onNext(_itemObservableMap)
         }
