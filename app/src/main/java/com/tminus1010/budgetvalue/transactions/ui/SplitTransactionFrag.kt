@@ -14,7 +14,6 @@ import com.tminus1010.budgetvalue._core.middleware.ui.onDone
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
-import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.FragSplitTransactionBinding
 import com.tminus1010.budgetvalue.databinding.ItemTextEditBinding
@@ -54,10 +53,10 @@ class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
             { ItemTextEditBinding.inflate(LayoutInflater.from(context)) },
             { (category, amount), vb, _ ->
                 vb.editText.setText(amount.toString())
-                vb.editText.onDone { categorizeTransactionsAdvancedVM.rememberCA(category, it.toMoneyBigDecimal()) }
+                vb.editText.onDone { categorizeTransactionsAdvancedVM.userInputCA(category, it.toMoneyBigDecimal()) }
                 vb.editText.setOnCreateContextMenuListener { menu, _, _ ->
                     menu.add(MenuItemPartial("Fill") {
-                        categorizeTransactionsAdvancedVM.rememberCA(category, vb.editText.text.toString().toMoneyBigDecimal() + categorizeTransactionsAdvancedVM.defaultAmount.value!!.toBigDecimal())
+                        categorizeTransactionsAdvancedVM.userInputCA(category, vb.editText.text.toString().toMoneyBigDecimal() + categorizeTransactionsAdvancedVM.defaultAmount.value!!.toBigDecimal())
                     })
                 }
             }

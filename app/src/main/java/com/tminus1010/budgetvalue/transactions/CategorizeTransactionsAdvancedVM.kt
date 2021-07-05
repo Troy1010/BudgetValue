@@ -25,7 +25,7 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
     transactionsDomain: TransactionsDomain
 ) : ViewModel() {
     // # Input
-    fun rememberCA(category: Category, amount: BigDecimal) {
+    fun userInputCA(category: Category, amount: BigDecimal) {
         intents.onNext(Intents.Add(category, amount))
     }
 
@@ -40,15 +40,12 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
             .observe(disposables)
     }
 
-    fun setup(
-        categoryAmounts: Map<Category, BigDecimal>,
-        categorySelectionVM: CategorySelectionVM
-    ) {
+    fun setup(categoryAmounts: Map<Category, BigDecimal>, categorySelectionVM: CategorySelectionVM) {
         _categorySelectionVM = categorySelectionVM
         transactionToPush.take(1)
             .observe(disposables) {
                 clearCA()
-                categoryAmounts.forEach { rememberCA(it.key, it.value) }
+                categoryAmounts.forEach { userInputCA(it.key, it.value) }
             }
     }
 
