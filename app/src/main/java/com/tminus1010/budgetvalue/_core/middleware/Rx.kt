@@ -1,13 +1,9 @@
 package com.tminus1010.budgetvalue._core.middleware
 
 import com.tminus1010.tmcommonkotlin.tuple.*
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableSource
-import io.reactivex.rxjava3.core.Scheduler
-import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.schedulers.Schedulers
 
 object Rx {
     @Suppress("UNCHECKED_CAST")
@@ -132,7 +128,9 @@ object Rx {
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <A> combineLatest(a: ObservableSource<A>): Observable<Box<A>> {
+    fun <A> combineLatest(
+        a: ObservableSource<A>
+    ): Observable<Box<A>> {
         return Observable.combineLatest(
             listOf(a)
         ) {
@@ -144,19 +142,4 @@ object Rx {
 
     fun merge(vararg completables: Completable) = Completable.merge(completables.toList())
     fun merge(completables: List<Completable>): Completable = merge(*completables.toTypedArray())
-
-    @Deprecated("This is a combine latest or something, not a merge.")
-    inline fun <reified A, reified B> merge(a: ObservableSource<A>, b: ObservableSource<B>): Observable<Pair<A?, B?>> {
-        return Observable.merge(a, b)
-            .map { Pair(it as? A, it as? B) }
-    }
-
-    fun launch(scheduler: Scheduler = Schedulers.io(), lambda: () -> Completable): Disposable =
-        lambda().subscribeOn(scheduler).subscribe()
-
-    fun launch2(scheduler: Scheduler = Schedulers.io(), lambda: () -> Unit): Disposable =
-        Completable.fromAction { lambda() }.subscribeOn(scheduler).subscribe()
-
-    fun runBlockingMain(lambda: () -> Unit) =
-        Completable.fromAction { lambda() }.subscribeOn(AndroidSchedulers.mainThread()).blockingAwait()
 }

@@ -74,16 +74,6 @@ fun EditText.onDone(onDone: (String) -> Unit) {
     }
 }
 
-@Deprecated("Use bindText")
-fun TextView.bindIncoming(lifecycleOwner: LifecycleOwner, liveData: LiveData<String>) {
-    Rx.launch2(AndroidSchedulers.mainThread()) { // You might get: "Cannot invoke observe on a background thread" without this.
-        liveData.observe(lifecycleOwner) {
-            easyGetLayoutParams() // You might get: "Attempt to read from field 'int android.view.ViewGroup$LayoutParams.width' on a null object reference" without this.
-            if (text.toString() != it) text = it // is .toString() necessary?
-        }
-    }
-}
-
 fun <T> TextView.bindIncoming(
     observable: Observable<T>,
     toDisplayable: ((T) -> Any?)? = null
