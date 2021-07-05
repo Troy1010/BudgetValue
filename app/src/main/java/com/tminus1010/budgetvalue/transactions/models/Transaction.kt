@@ -59,7 +59,7 @@ data class Transaction(
                 date,
                 description,
                 amount.setScale(2),
-                categoryAmountsConverter.toCategoryAmount(categoryAmounts),
+                categoryAmountsConverter.toCategoryAmounts(categoryAmounts),
                 categorizationDate,
                 id,
             )

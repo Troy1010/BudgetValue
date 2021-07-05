@@ -27,7 +27,7 @@ data class Reconciliation(
             reconciliationDTO.run {
                 Reconciliation(localDate,
                     amount,
-                    categoryAmountsConverter.toCategoryAmount(categoryAmounts),
+                    categoryAmountsConverter.toCategoryAmounts(categoryAmounts),
                     id)
             }
     }

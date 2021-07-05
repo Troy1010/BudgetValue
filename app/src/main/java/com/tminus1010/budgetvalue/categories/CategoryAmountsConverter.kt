@@ -12,7 +12,7 @@ class CategoryAmountsConverter @Inject constructor(
     private val categoryParser: ICategoryParser,
     private val moshi: Moshi
 ) : ICategoryAmountsConverter {
-    override fun toCategoryAmount(s: String?): Map<Category, BigDecimal> =
+    override fun toCategoryAmounts(s: String?): Map<Category, BigDecimal> =
         if (s == null) emptyMap() else
             moshi.fromJson<Map<String, String>>(s)
                 .associate { categoryParser.parseCategory(it.key) to (it.value as Any).toString().toBigDecimal() }

@@ -36,7 +36,7 @@ data class Plan(
                 Plan(
                     Observable.just(LocalDatePeriod(startDate, endDate)),
                     amount,
-                    categoryAmountsConverter.toCategoryAmount(categoryAmounts)
+                    categoryAmountsConverter.toCategoryAmounts(categoryAmounts)
                 )
             }
     }
