@@ -7,7 +7,7 @@ import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
+import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
@@ -21,21 +21,25 @@ import javax.inject.Inject
 @HiltViewModel
 class CategorizeTransactionsAdvancedVM @Inject constructor(
     errorSubject: Subject<Throwable>,
-    private val transactionsRepo: ITransactionsRepo,
+    private val saveTransactionDomain: SaveTransactionDomain,
     transactionsDomain: TransactionsDomain
 ) : ViewModel() {
     // # Input
+    fun userFillIntoCategory(category: Category) {
+        intents.onNext(Intents.FillIntoCategory(category))
+    }
+
     fun userInputCA(category: Category, amount: BigDecimal) {
         intents.onNext(Intents.Add(category, amount))
     }
 
-    fun clearCA() {
+    fun userClearCA() {
         intents.onNext(Intents.Clear)
     }
 
-    fun pushRememberedCategories() {
+    fun userSaveTransaction() {
         transactionToPush.take(1)
-            .flatMapCompletable { transactionsRepo.update(it) }
+            .flatMapCompletable { saveTransactionDomain.saveTransaction(it) }
             .andThen(_categorySelectionVM.clearSelection())
             .observe(disposables)
     }
@@ -44,7 +48,7 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
         _categorySelectionVM = categorySelectionVM
         transactionToPush.take(1)
             .observe(disposables) {
-                clearCA()
+                userClearCA()
                 categoryAmounts.forEach { userInputCA(it.key, it.value) }
             }
     }
@@ -55,6 +59,7 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
     private sealed class Intents {
         object Clear : Intents()
         class Add(val category: Category, val amount: BigDecimal) : Intents()
+        class FillIntoCategory(val category: Category) : Intents()
     }
 
     private val firstTransactionBox =
@@ -70,8 +75,9 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
             intents
                 .scan(it) { acc, v ->
                     when (v) {
-                        is Intents.Clear -> acc.categorize(emptyMap())
+                        Intents.Clear -> acc.categorize(emptyMap())
                         is Intents.Add -> acc.categorize(acc.categoryAmounts.copy(v.category to v.amount))
+                        is Intents.FillIntoCategory -> acc.categorize(v.category)
                     }
                 }
         }

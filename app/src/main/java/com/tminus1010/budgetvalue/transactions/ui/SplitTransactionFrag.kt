@@ -8,6 +8,7 @@ import androidx.fragment.app.activityViewModels
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.add
 import com.tminus1010.budgetvalue._core.extensions.bind
+import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.middleware.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuItemPartial
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
@@ -20,32 +21,46 @@ import com.tminus1010.budgetvalue.databinding.ItemTextEditBinding
 import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsAdvancedVM
 import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsVM
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeAdvancedDomain
-import com.tminus1010.budgetvalue.transactions.domain.CategorizeTransactionsDomain
+import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
     private val vb by viewBinding(FragSplitTransactionBinding::bind)
+
     @Inject
     lateinit var categorizeTransactionsAdvancedDomain: CategorizeAdvancedDomain
+
     @Inject
-    lateinit var categorizeTransactionsDomain: CategorizeTransactionsDomain
+    lateinit var saveTransactionDomain: SaveTransactionDomain
     private val categorizeTransactionsVM: CategorizeTransactionsVM by activityViewModels()
     private val categorizeTransactionsAdvancedVM: CategorizeTransactionsAdvancedVM by activityViewModels()
 
+    // # Internal
+    private var _shouldIgnoreUserInputForDuration = PublishSubject.create<Unit>()
+    private var shouldIgnoreUserInput = _shouldIgnoreUserInputForDuration
+        .flatMap { Observable.just(false).delay(1, TimeUnit.SECONDS).startWithItem(true) }
+        .startWithItem(false)
+        .replay(1).autoConnect()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        shouldIgnoreUserInput.observe(viewLifecycleOwner) {}
         vb.tvAmountToSplit.bind(categorizeTransactionsVM.amountToCategorize) { text = it }
         // # Button
         vb.btnSave.setOnClickListener {
-            categorizeTransactionsAdvancedVM.pushRememberedCategories()
+            if (!shouldIgnoreUserInput.value!!)
+                categorizeTransactionsAdvancedVM.userSaveTransaction()
             nav.navigateUp()
         }
         // # TMTableView
@@ -53,11 +68,17 @@ class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
             { ItemTextEditBinding.inflate(LayoutInflater.from(context)) },
             { (category, amount), vb, _ ->
                 vb.editText.setText(amount.toString())
-                vb.editText.onDone { categorizeTransactionsAdvancedVM.userInputCA(category, it.toMoneyBigDecimal()) }
+                vb.editText.onDone {
+                    if (!shouldIgnoreUserInput.value!!)
+                        categorizeTransactionsAdvancedVM.userInputCA(category, it.toMoneyBigDecimal())
+                }
                 vb.editText.setOnCreateContextMenuListener { menu, _, _ ->
-                    menu.add(MenuItemPartial("Fill") {
-                        categorizeTransactionsAdvancedVM.userInputCA(category, vb.editText.text.toString().toMoneyBigDecimal() + categorizeTransactionsAdvancedVM.defaultAmount.value!!.toBigDecimal())
-                    })
+                    menu.add(
+                        MenuItemPartial("Fill") {
+                            _shouldIgnoreUserInputForDuration.onNext(Unit)
+                            categorizeTransactionsAdvancedVM.userFillIntoCategory(category)
+                        }
+                    )
                 }
             }
         )

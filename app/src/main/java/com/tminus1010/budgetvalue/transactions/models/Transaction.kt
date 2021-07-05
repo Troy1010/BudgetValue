@@ -51,10 +51,7 @@ data class Transaction(
     }
 
     companion object {
-        fun fromDTO(
-            transactionDTO: TransactionDTO,
-            categoryAmountsConverter: CategoryAmountsConverter
-        ) = transactionDTO.run {
+        fun fromDTO(transactionDTO: TransactionDTO, categoryAmountsConverter: CategoryAmountsConverter) = transactionDTO.run {
             Transaction(
                 date,
                 description,

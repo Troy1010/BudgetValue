@@ -7,7 +7,7 @@ import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
-import com.tminus1010.budgetvalue.transactions.domain.CategorizeTransactionsDomain
+import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
@@ -24,13 +24,13 @@ import javax.inject.Inject
 @HiltViewModel
 class CategorizeTransactionsVM @Inject constructor(
     errorSubject: Subject<Throwable>,
-    private val categorizeTransactionsDomain: CategorizeTransactionsDomain,
+    private val saveTransactionDomain: SaveTransactionDomain,
     private val transactionsRepo: ITransactionsRepo,
     transactionsDomain: TransactionsDomain
 ) : ViewModel() {
     // # Input
     fun userSimpleCategorize(category: Category) {
-        categorizeTransactionsDomain.submitCategorization(
+        saveTransactionDomain.saveTransaction(
             firstTransactionBox.value!!.first!!
                 .categorize(category)
         )
@@ -38,7 +38,7 @@ class CategorizeTransactionsVM @Inject constructor(
     }
 
     fun userReplay() {
-        categorizeTransactionsDomain.submitCategorization(
+        saveTransactionDomain.saveTransaction(
             firstTransactionBox.value!!.first!!
                 .categorize(replayTransactionBox.value!!.first!!.categoryAmounts)
         )
@@ -46,12 +46,12 @@ class CategorizeTransactionsVM @Inject constructor(
     }
 
     fun userUndo() {
-        categorizeTransactionsDomain.undo()
+        saveTransactionDomain.undo()
             .observe(disposables)
     }
 
     fun userRedo() {
-        categorizeTransactionsDomain.redo()
+        saveTransactionDomain.redo()
             .observe(disposables)
     }
 
@@ -89,8 +89,8 @@ class CategorizeTransactionsVM @Inject constructor(
         .map { it.first != null }
         .startWithItem(false)
         .nonLazyCache(disposables)
-    val isUndoAvailable = categorizeTransactionsDomain.isUndoAvailable
-    val isRedoAvailable = categorizeTransactionsDomain.isRedoAvailable
+    val isUndoAvailable = saveTransactionDomain.isUndoAvailable
+    val isRedoAvailable = saveTransactionDomain.isRedoAvailable
     val amountToCategorize = firstTransactionBox.unbox()
         .map { "Amount to categorize: $${it.amount}" }
         .nonLazyCache(disposables)

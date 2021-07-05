@@ -9,12 +9,13 @@ import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
 
+// TODO: undo/redo logic should be separate from saveTransaction, maybe?
 @Singleton
-class CategorizeTransactionsDomain @Inject constructor(
+class SaveTransactionDomain @Inject constructor(
     private val transactionsRepo: ITransactionsRepo,
 ) {
     // # Input
-    fun submitCategorization(transaction: Transaction): Completable {
+    fun saveTransaction(transaction: Transaction): Completable {
         return transactionsRepo.getTransaction(transaction.id)
             .flatMapCompletable { oldTransaction ->
                 Redoable(
