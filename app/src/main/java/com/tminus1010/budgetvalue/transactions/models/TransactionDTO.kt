@@ -11,6 +11,7 @@ data class TransactionDTO(
     val description: String,
     val amount: BigDecimal,
     val categoryAmounts: String?,
+    val categorizationDate: LocalDate?,
     @PrimaryKey
     val id: String,
 )

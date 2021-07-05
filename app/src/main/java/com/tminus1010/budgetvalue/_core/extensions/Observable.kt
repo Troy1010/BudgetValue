@@ -54,9 +54,6 @@ private class NonLazyCacheHelper<T>(source: Observable<T>, compositeDisposable: 
 fun <T> Observable<T>.nonLazyCache(compositeDisposable: CompositeDisposable): Observable<T> =
     NonLazyCacheHelper(this, compositeDisposable).cacheOrSource
 
-@Deprecated("pattern is too weird")
-fun <T> Observable<T>.await() = value ?: take(1).blockingLast()
-
 /**
  * Emits the first onNext().
  */

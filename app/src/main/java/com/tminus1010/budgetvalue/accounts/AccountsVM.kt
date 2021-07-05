@@ -18,14 +18,14 @@ class AccountsVM @Inject constructor(
     accountsDomain: AccountsDomain,
     errorSubject: Subject<Throwable>,
 ) : ViewModel() {
-    // # State
+    // # Output
     val accounts = accountsDomain.accounts
         .startWithItem(emptyList())
         .toState(disposables, errorSubject)
     val accountsTotal = accountsDomain.accountsTotal
         .map { it.toString() }
         .toState(disposables, errorSubject)
-    // # Intents
+    // # Input
     fun addAccount() {
         accountsRepo.push(Account("", BigDecimal.ZERO)).launch()
     }

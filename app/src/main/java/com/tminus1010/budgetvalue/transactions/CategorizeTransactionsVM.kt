@@ -5,6 +5,7 @@ import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.middleware.unbox
+import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeTransactionsDomain
@@ -27,34 +28,46 @@ class CategorizeTransactionsVM @Inject constructor(
     private val categorizeTransactionsDomain: CategorizeTransactionsDomain,
     private val transactionsRepo: ITransactionsRepo,
     transactionsDomain: TransactionsDomain
-): ViewModel() {
+) : ViewModel() {
     // # Input
     fun userSimpleCategorize(category: Category) {
         categorizeTransactionsDomain.submitCategorization(
-            id = firstTransactionBox.value!!.first!!.id,
-            category = category
+            firstTransactionBox.value!!.first!!
+                .categorize(category)
         )
             .observe(disposables)
     }
+
     fun userReplay() {
         categorizeTransactionsDomain.submitCategorization(
-            id = firstTransactionBox.value!!.first!!.id,
-            categoryAmounts = replayTransactionBox.value!!.first!!.categoryAmounts,
+            firstTransactionBox.value!!.first!!
+                .categorize(replayTransactionBox.value!!.first!!.categoryAmounts)
         )
             .observe(disposables)
     }
+
     fun userUndo() {
         categorizeTransactionsDomain.undo()
             .observe(disposables)
     }
+
     fun userRedo() {
         categorizeTransactionsDomain.redo()
             .observe(disposables)
     }
+
     fun userNavToSplitWithReplayValues() {
+        _categorySelectionVM.clearSelection()
+        _categorySelectionVM.selectCategories(*replayTransactionBox.value!!.first!!.categoryAmounts.map { it.key }.toTypedArray())
         navToSplit.onNext(replayTransactionBox.value!!.first!!.categoryAmounts)
     }
+
+    fun setup(categorySelectionVM: CategorySelectionVM) {
+        _categorySelectionVM = categorySelectionVM
+    }
+
     // # Internal
+    private lateinit var _categorySelectionVM: CategorySelectionVM
     private val firstTransactionBox =
         transactionsDomain.uncategorizedSpends
             .map { Box(it.getOrNull(0)) }
@@ -64,10 +77,14 @@ class CategorizeTransactionsVM @Inject constructor(
             .unbox()
             .flatMapSingle { transaction ->
                 transactionsRepo.findTransactionsWithDescription(transaction.description)
-                    .map { it.filter { transaction.id != it.id && !it.isUncategorized } }
+                    .map { transactionsWithMatchingDescription ->
+                        transactionsWithMatchingDescription
+                            .filter { transaction.id != it.id && it.categorizationDate != null }
+                            .let { Box(it.maxByOrNull { it.categorizationDate!! }) }
+                    }
             }
-            .map { Box(it.maxByOrNull { it.date }) } // This will redo the transaction that happened most recent. But perhaps I should remember when the categorization took place, and redo the most recent.
             .nonLazyCache(disposables)
+
     // # Output
     val isReplayAvailable: Observable<Boolean> = replayTransactionBox
         .map { it.first != null }

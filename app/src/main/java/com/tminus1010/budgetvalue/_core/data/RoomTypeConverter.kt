@@ -29,10 +29,10 @@ class RoomTypeConverter(val moshi: Moshi) {
         moshi.fromJson(s)
 
     @TypeConverter
-    fun fromDateToString(x: LocalDate): String =
-        x.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))
+    fun fromDateToString(x: LocalDate?): String? =
+        x?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))
 
     @TypeConverter
-    fun fromStringToDate(s: String): LocalDate =
-        LocalDate.parse(s, DateTimeFormatter.ofPattern("MM/dd/yyyy"))
+    fun fromStringToDate(s: String?): LocalDate? =
+        s?.let { LocalDate.parse(s, DateTimeFormatter.ofPattern("MM/dd/yyyy")) }
 }

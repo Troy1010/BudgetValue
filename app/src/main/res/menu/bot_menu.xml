@@ -6,7 +6,7 @@
         android:id="@+id/importFrag"
         android:title="Import" />
     <item
-        android:id="@+id/categorizeFrag"
+        android:id="@+id/categorizeNestedGraph"
         android:title="Categorize" />
     <item
         android:id="@+id/planFrag"

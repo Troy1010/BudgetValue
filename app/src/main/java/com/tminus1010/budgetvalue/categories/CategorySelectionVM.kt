@@ -1,14 +1,14 @@
 package com.tminus1010.budgetvalue.categories
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
+import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
-import com.tminus1010.budgetvalue._core.extensions.toLiveData
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue.categories.domain.DeleteCategoryFromActiveDomainUC
 import com.tminus1010.budgetvalue.categories.models.Category
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
@@ -19,7 +19,28 @@ class CategorySelectionVM @Inject constructor(
     errorSubject: Subject<Throwable>,
     private val deleteCategoryFromActiveDomainUC: DeleteCategoryFromActiveDomainUC,
 ) : ViewModel() {
-    // # MVI stuff
+    // # Input
+    fun clearSelection() = Completable.fromCallable {
+        intents.onNext(Intents.ClearSelection)
+    }
+
+    fun selectCategories(vararg categories: Category) {
+        categories.forEach { intents.onNext(Intents.SelectCategory(it)) }
+    }
+
+    fun unselectCategories(vararg categories: Category) {
+        categories.forEach { intents.onNext(Intents.UnselectCategory(it)) }
+    }
+
+    fun deleteSelectedCategories() {
+        state.take(1)
+            .map { it.selectedCategories.map { deleteCategoryFromActiveDomainUC(it) } }
+            .flatMapCompletable { Rx.merge(it) }
+            .andThen(clearSelection())
+            .subscribe()
+    }
+
+    // # Internal
     private sealed class Intents {
         object ClearSelection : Intents()
         class SelectCategory(val category: Category) : Intents()
@@ -28,7 +49,7 @@ class CategorySelectionVM @Inject constructor(
 
     private val intents = PublishSubject.create<Intents>()
 
-    // # State
+    // # Output
     data class State(
         val selectedCategories: Set<Category> = emptySet(),
         val inSelectionMode: Boolean = false,
@@ -53,34 +74,13 @@ class CategorySelectionVM @Inject constructor(
         }
         .nonLazyCache(disposables)
 
-    val selectedCategories: LiveData<Set<Category>> = state
+    val selectedCategories = state
         .map { it.selectedCategories }
         .distinctUntilChanged()
-        .toLiveData(errorSubject)
+        .divertErrors(errorSubject)
 
     val inSelectionMode: Observable<Boolean> = state
         .map { it.inSelectionMode }
         .distinctUntilChanged()
         .nonLazyCache(disposables)
-
-    // # Intents
-    fun clearSelection() {
-        intents.onNext(Intents.ClearSelection)
-    }
-
-    fun selectCategory(category: Category) {
-        intents.onNext(Intents.SelectCategory(category))
-    }
-
-    fun unselectCategory(category: Category) {
-        intents.onNext(Intents.UnselectCategory(category))
-    }
-
-    fun deleteSelectedCategories() {
-        state.take(1)
-            .map { it.selectedCategories.map { deleteCategoryFromActiveDomainUC(it) } }
-            .flatMapCompletable { Rx.merge(it) }
-            .andThen { clearSelection() }
-            .subscribe()
-    }
 }

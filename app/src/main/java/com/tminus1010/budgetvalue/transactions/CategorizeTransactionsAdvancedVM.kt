@@ -2,13 +2,13 @@ package com.tminus1010.budgetvalue.transactions
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
+import com.tminus1010.budgetvalue._core.extensions.copy
 import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
+import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
-import com.tminus1010.budgetvalue.transactions.domain.CategorizeTransactionsDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
-import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import com.tminus1010.tmcommonkotlin.tuple.Box
@@ -24,25 +24,57 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
     private val transactionsRepo: ITransactionsRepo,
     transactionsDomain: TransactionsDomain
 ) : ViewModel() {
+    // # Input
+    fun rememberCA(category: Category, amount: BigDecimal) {
+        intents.onNext(Intents.Add(category, amount))
+    }
+
+    fun clearCA() {
+        intents.onNext(Intents.Clear)
+    }
+
+    fun pushRememberedCategories() {
+        transactionToPush.take(1)
+            .flatMapCompletable { transactionsRepo.update(it) }
+            .andThen(_categorySelectionVM.clearSelection())
+            .observe(disposables)
+    }
+
+    fun setup(
+        categoryAmounts: Map<Category, BigDecimal>,
+        categorySelectionVM: CategorySelectionVM
+    ) {
+        _categorySelectionVM = categorySelectionVM
+        transactionToPush.take(1)
+            .observe(disposables) {
+                clearCA()
+                categoryAmounts.forEach { rememberCA(it.key, it.value) }
+            }
+    }
+
     // # Internal
     private val intents = PublishSubject.create<Intents>()
+
     private sealed class Intents {
-        object Clear: Intents()
-        class Add(val category: Category, val amount: BigDecimal): Intents()
+        object Clear : Intents()
+        class Add(val category: Category, val amount: BigDecimal) : Intents()
     }
+
     private val firstTransactionBox =
         transactionsDomain.uncategorizedSpends
             .map { Box(it.getOrNull(0)) }
             .nonLazyCache(disposables)
-    // # State
+    private lateinit var _categorySelectionVM: CategorySelectionVM
+
+    // # Output
     val transactionToPush = firstTransactionBox
         .unbox()
         .switchMap {
             intents
                 .scan(it) { acc, v ->
                     when (v) {
-                        is Intents.Clear -> acc.copy(categoryAmounts = emptyMap())
-                        is Intents.Add -> acc.copy(categoryAmounts = acc.categoryAmounts.toMutableMap().also { it[v.category] = v.amount })
+                        is Intents.Clear -> acc.categorize(emptyMap())
+                        is Intents.Add -> acc.categorize(acc.categoryAmounts.copy(v.category to v.amount))
                     }
                 }
         }
@@ -50,24 +82,4 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
     val defaultAmount = transactionToPush
         .map { it.defaultAmount.toString() }
         .divertErrors(errorSubject)
-    // # User Intents
-    fun rememberCA(category: Category, amount: BigDecimal) {
-        intents.onNext(Intents.Add(category, amount))
-    }
-    fun clearCA() {
-        intents.onNext(Intents.Clear)
-    }
-    fun pushRememberedCategories() {
-        transactionToPush.take(1)
-            .flatMapCompletable { transactionsRepo.pushTransactionCAs(it.id, it.categoryAmounts) }
-            .launch()
-    }
-    //
-    fun setup(categoryAmounts: Map<Category, BigDecimal>) {
-        transactionToPush.take(1)
-            .observe(disposables) {
-                clearCA()
-                categoryAmounts.forEach { rememberCA(it.key, it.value) }
-            }
-    }
 }

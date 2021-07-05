@@ -1,12 +1,9 @@
 package com.tminus1010.budgetvalue._core.extensions
 
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.adapter
 
-@OptIn(ExperimentalStdlibApi::class)
 inline fun <reified T> Moshi.toJson(x: T): String =
-    this.adapter<T>().toJson(x)
+    this.adapter(T::class.java).toJson(x)
 
-@OptIn(ExperimentalStdlibApi::class)
 inline fun <reified T> Moshi.fromJson(s: String): T =
-    this.adapter<T>().fromJson(s)!!
+    this.adapter(T::class.java).fromJson(s)!!

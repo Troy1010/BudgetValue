@@ -9,6 +9,7 @@ import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
@@ -17,7 +18,7 @@ import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.toPX
 import com.tminus1010.budgetvalue._core.middleware.ui.*
 import com.tminus1010.budgetvalue._core.middleware.unbox
-import com.tminus1010.budgetvalue._core.ui.data_binding.bindButtonPartial
+import com.tminus1010.budgetvalue._core.ui.data_binding.bindButtonRVItem
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
@@ -37,14 +38,14 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class CategorizeFrag : Fragment(R.layout.frag_categorize) {
-    val categorizeTransactionsVM by activityViewModels<CategorizeTransactionsVM>()
-    val categoriesVM: CategoriesVM by activityViewModels()
-    val transactionsVM by activityViewModels<TransactionsVM>()
-    val categorySelectionVM: CategorySelectionVM by activityViewModels()
-    val categorizeTransactionsAdvancedVM by activityViewModels<CategorizeTransactionsAdvancedVM>()
+    private val vb by viewBinding(FragCategorizeBinding::bind)
+    private val categorizeTransactionsVM: CategorizeTransactionsVM by activityViewModels()
+    private val categoriesVM: CategoriesVM by activityViewModels()
+    private val transactionsVM: TransactionsVM by activityViewModels()
+    private val categorySelectionVM: CategorySelectionVM by navGraphViewModels(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
+    private val categorizeTransactionsAdvancedVM: CategorizeTransactionsAdvancedVM by activityViewModels()
     @Inject
     lateinit var categorizeAdvancedDomain: CategorizeAdvancedDomain
-    val vb by viewBinding(FragCategorizeBinding::bind)
     var btns = emptyList<ButtonRVItem>()
         set(value) { field = value; vb.recyclerviewButtons.adapter?.notifyDataSetChanged() }
     var categories = emptyList<Category>()
@@ -56,7 +57,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Mediation
-        categorySelectionVM.clearSelection()
+        categorizeTransactionsVM.setup(categorySelectionVM)
         // # Some of SelectionMode
         categorySelectionVM.state.observe(viewLifecycleOwner) { state ->
             // ## inSelectionMode
@@ -66,7 +67,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         }
         // # Navigation
         vb.root.bind(categorizeTransactionsVM.navToSplit) {
-            categorizeTransactionsAdvancedVM.setup(it)
+            categorizeTransactionsAdvancedVM.setup(it, categorySelectionVM)
             nav.navigate(R.id.action_categorizeFrag_to_splitTransactionFrag)
         }
         // # TextViews
@@ -89,9 +90,9 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 holder.vb.btnCategory.apply {
                     val selectionModeAction = {
                         if (category !in categorySelectionVM.selectedCategories.value!!)
-                            categorySelectionVM.selectCategory(category)
+                            categorySelectionVM.selectCategories(category)
                         else
-                            categorySelectionVM.unselectCategory(category)
+                            categorySelectionVM.unselectCategories(category)
                     }
                     text = category.name
                     setOnClickListener {
@@ -140,7 +141,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                                 categorySelectionVM.selectedCategories.value!!,
                                 categorizeTransactionsVM.transactionBox.value!!.unbox!!.amount
                             ).let { it.mapValues { -it.value } }
-                                .also { categorizeTransactionsAdvancedVM.setup(it) }
+                                .also { categorizeTransactionsAdvancedVM.setup(it, categorySelectionVM) }
                             nav.navigate(R.id.action_categorizeFrag_to_splitTransactionFrag)
                         }
                     )
@@ -148,7 +149,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 if (inSelectionMode)
                     ButtonRVItem(
                         title = "Clear selection",
-                        onClick = { categorySelectionVM.clearSelection() }
+                        onClick = { categorySelectionVM.clearSelection().observe(viewLifecycleOwner) }
                     )
                 else null,
                 if (!inSelectionMode)
@@ -186,7 +187,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     .let { GenViewHolder2(it) }
 
             override fun onViewAttachedToWindow(holder: GenViewHolder2<ItemButtonBinding>, lifecycle: LifecycleOwner) {
-                holder.vb.btnItem.bindButtonPartial(lifecycle, btns[holder.adapterPosition])
+                holder.vb.btnItem.bindButtonRVItem(lifecycle, btns[holder.adapterPosition])
             }
 
             override fun getItemCount() = btns.size

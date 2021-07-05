@@ -2,12 +2,11 @@ package com.tminus1010.budgetvalue.plans
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
-import com.tminus1010.budgetvalue._core.extensions.await
-import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.data.IPlansRepo
 import com.tminus1010.budgetvalue.plans.domain.ActivePlanDomain
+import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.toState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
@@ -20,7 +19,20 @@ class ActivePlanVM @Inject constructor(
     private val activePlanDomain: ActivePlanDomain,
     private val plansRepo: IPlansRepo,
 ) : ViewModel() {
-    // # State
+    // # Intents
+    fun pushExpectedIncome(s: String) {
+        activePlanDomain.activePlan
+            .flatMapCompletable { plansRepo.updatePlanAmount(it, s.toMoneyBigDecimal()) }
+            .observe(disposables)
+    }
+
+    fun pushActivePlanCA(category: Category, s: String) {
+        activePlanDomain.activePlan
+            .flatMapCompletable { plansRepo.updatePlanCA(it, category, s.toMoneyBigDecimal()) }
+            .observe(disposables)
+    }
+
+    // # Output
     val defaultAmount = activePlanDomain.defaultAmount
         .map { it.toString() }
         .toState(disposables, errorSubject)
@@ -29,13 +41,4 @@ class ActivePlanVM @Inject constructor(
         .toState(disposables, errorSubject)
     val activePlanCAs: Observable<Map<Category, Observable<String>>> = activePlanDomain.activePlanCAs
         .map { it.mapValues { it.value.map { it.toString() } } }
-
-    // # Intents
-    fun pushExpectedIncome(s: String) {
-        Rx.launch { plansRepo.updatePlanAmount(activePlanDomain.activePlan.await(), s.toMoneyBigDecimal()) }
-    }
-
-    fun pushActivePlanCA(category: Category, s: String) {
-        Rx.launch { plansRepo.updatePlanCA(activePlanDomain.activePlan.await(), category, s.toMoneyBigDecimal()) }
-    }
 }

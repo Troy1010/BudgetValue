@@ -13,7 +13,7 @@ class BudgetedVM @Inject constructor(
     errorSubject: Subject<Throwable>,
     budgetedDomain: BudgetedDomain,
 ) : ViewModel() {
-    // # State
+    // # Output
     val defaultAmount: Observable<String> = budgetedDomain.defaultAmount
         .map { it.toString() }
         .divertErrors(errorSubject)
