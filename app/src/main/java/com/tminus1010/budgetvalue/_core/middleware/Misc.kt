@@ -11,19 +11,6 @@ import io.reactivex.rxjava3.core.Observable
 import java.lang.reflect.Type
 import java.math.BigDecimal
 
-fun <T> List<List<T>>.reflectXY(): List<List<T>> {
-    val returning = ArrayList<ArrayList<T>>()
-    for (yPos in this.indices) {
-        for (xPos in this[yPos].indices) {
-            if (xPos >= returning.size) {
-                returning.add(ArrayList())
-            }
-            returning[xPos].add(this[yPos][xPos])
-        }
-    }
-    return returning
-}
-
 fun String.toBigDecimalOrZero(): BigDecimal =
     toBigDecimalOrNull() ?: BigDecimal.ZERO
 

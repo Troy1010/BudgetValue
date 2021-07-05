@@ -6,7 +6,6 @@ import androidx.fragment.app.activityViewModels
 import com.tminus1010.budgetvalue.*
 import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.middleware.Rx
-import com.tminus1010.budgetvalue._core.middleware.reflectXY
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.*
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
@@ -15,6 +14,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.FragPlanBinding
 import com.tminus1010.budgetvalue.databinding.ItemTextEditBinding
 import com.tminus1010.budgetvalue.plans.ActivePlanVM
+import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.misc.extensions.easyGetLayoutParams
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
