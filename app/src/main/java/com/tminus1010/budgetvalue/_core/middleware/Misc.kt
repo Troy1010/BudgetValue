@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue._core.middleware
 
 import android.view.View
-import androidx.recyclerview.widget.GridLayoutManager
 import com.tminus1010.tmcommonkotlin.rx.extensions.boxStartNull
 import com.tminus1010.tmcommonkotlin.rx.extensions.isCold
 import com.tminus1010.tmcommonkotlin.tuple.*
@@ -15,39 +14,6 @@ import java.math.BigDecimal
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
-
-fun generateLipsum(size: Int): List<String> {
-    val alphabet = "abcdefghijklmnopqrstuvwxyz"
-    val returning = ArrayList<String>()
-    for (i in 0 until size) {
-        var s = ""
-        val sizeOfWord = (4..30).random()
-        for (j in 0 until sizeOfWord) {
-            s += alphabet.random()
-        }
-        returning.add(s)
-    }
-    return returning.toList()
-}
-
-fun generateLipsum(): String {
-    return generateLipsum(1)[0]
-}
-
-val GridLayoutManager.visibleChildren: HashMap<Int, View>
-    get() {
-        val children = HashMap<Int, View>()
-        for (childIndex in this.findFirstVisibleItemPosition()..this.findLastVisibleItemPosition()) {
-            val child = this.getChildAt(childIndex)
-            if (child == null) {
-                logz("Warning`GridLayoutManager.visibleChildren`child was null at position:${childIndex}")
-                logz("this.findFirstVisibleItemPosition():${this.findFirstVisibleItemPosition()}, this.findLastVisibleItemPosition():${this.findLastVisibleItemPosition()}")
-            } else {
-                children[childIndex] = child
-            }
-        }
-        return children
-    }
 
 val View.intrinsicHeight2: Int
     get() {
