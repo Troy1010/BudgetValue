@@ -39,7 +39,6 @@ class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
     @Inject
     lateinit var categorizeTransactionsDomain: CategorizeTransactionsDomain
     private val categorizeTransactionsVM: CategorizeTransactionsVM by activityViewModels()
-    private val categoriesVM: CategoriesVM by activityViewModels()
     private val categorizeTransactionsAdvancedVM: CategorizeTransactionsAdvancedVM by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
