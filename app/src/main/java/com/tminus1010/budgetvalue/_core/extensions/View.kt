@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue._core.extensions
 
 import android.view.View
-import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.findViewTreeLifecycleOwner
@@ -21,10 +20,6 @@ fun <V : View, T> V.bind(observable: Observable<T>, lifecycle: LifecycleOwner? =
         lifecycle ?: findViewTreeLifecycleOwner()
         ?: error("Could not find lifecycle. This might happen in Recyclerviews or other unattached views.\nEither attach the view if you can, or otherwise specify a lifecycle as argument.")
     observable.observe(_lifecycle) { lambda(it) }
-}
-
-fun TextView.bindText(liveData: LiveData<String>) {
-    bind(liveData) { easyText = it }
 }
 
 fun View.widthObservable(): Observable<Int> {

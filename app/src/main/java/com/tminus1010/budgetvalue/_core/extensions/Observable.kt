@@ -53,9 +53,3 @@ private class NonLazyCacheHelper<T>(source: Observable<T>, compositeDisposable: 
 
 fun <T> Observable<T>.nonLazyCache(compositeDisposable: CompositeDisposable): Observable<T> =
     NonLazyCacheHelper(this, compositeDisposable).cacheOrSource
-
-/**
- * Emits the first onNext().
- */
-fun <T> Observable<T>.toSingle(): Single<T> =
-    Single.fromObservable(take(1))
