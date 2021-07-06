@@ -24,11 +24,6 @@ data class IndexAndTuple<T>(
     val tuple: T,
 )
 
-data class TypeAndValue(
-    val type: Type,
-    val tuple: Any,
-)
-
 fun <A, B> combineLatestWithIndex(
     a: Observable<A>,
     b: Observable<B>,
