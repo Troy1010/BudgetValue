@@ -20,14 +20,14 @@ class ActivePlanVM @Inject constructor(
     private val plansRepo: IPlansRepo,
 ) : ViewModel() {
     // # Input
-    fun pushExpectedIncome(s: String) {
+    fun userSaveExpectedIncome(s: String) {
         activePlanDomain.activePlan
             .take(1)
             .flatMapCompletable { plansRepo.updatePlanAmount(it, s.toMoneyBigDecimal()) }
             .observe(disposables)
     }
 
-    fun pushActivePlanCA(category: Category, s: String) {
+    fun userSaveActivePlanCA(category: Category, s: String) {
         activePlanDomain.activePlan
             .take(1)
             .flatMapCompletable { plansRepo.updatePlanCA(it, category, s.toMoneyBigDecimal()) }

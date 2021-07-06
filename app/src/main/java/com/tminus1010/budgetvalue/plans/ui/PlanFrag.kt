@@ -36,7 +36,7 @@ class PlanFrag : Fragment(R.layout.frag_plan) {
             { d, vb, lifecycleOwner ->
                 vb.editText.easyGetLayoutParams()
                 vb.editText.bind(d, lifecycleOwner) { setText(it) }
-                vb.editText.onDone { activePlanVM.pushExpectedIncome(it) }
+                vb.editText.onDone { activePlanVM.userSaveExpectedIncome(it) }
             }
         )
         val planCAsRecipeFactory = ViewItemRecipeFactory3<ItemTextEditBinding, Pair<Category, Observable<String>?>>(
@@ -45,7 +45,7 @@ class PlanFrag : Fragment(R.layout.frag_plan) {
                 if (d == null) return@ViewItemRecipeFactory3
                 vb.editText.easyGetLayoutParams()
                 vb.editText.bind(d, lifecycleOwner) { setText(it) }
-                vb.editText.onDone { activePlanVM.pushActivePlanCA(category, it) }
+                vb.editText.onDone { activePlanVM.userSaveActivePlanCA(category, it) }
             }
         )
         Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs)
