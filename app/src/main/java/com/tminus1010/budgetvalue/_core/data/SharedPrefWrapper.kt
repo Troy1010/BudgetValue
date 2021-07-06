@@ -13,13 +13,12 @@ import java.math.BigDecimal
 import javax.inject.Inject
 
 class SharedPrefWrapper @Inject constructor(
-    val sharedPreferences: SharedPreferences,
-    val moshi: Moshi,
+    private val sharedPreferences: SharedPreferences,
+    private val moshi: Moshi,
 ) {
     companion object {
         enum class Key {
             RECONCILE_CATEGORY_AMOUNTS,
-            EXPECTED_INCOME,
             ANCHOR_DATE_OFFSET,
             BLOCK_SIZE,
             APP_INIT_BOOL,
@@ -36,7 +35,7 @@ class SharedPrefWrapper @Inject constructor(
     private val activeReconciliationCAsPublisher = PublishSubject.create<Map<String, String>>()
     val activeReconciliationCAs: BehaviorSubject<Map<String, String>> =
         activeReconciliationCAsPublisher
-            .startWithItem(moshi.fromJson(sharedPreferences.getString(Key.RECONCILE_CATEGORY_AMOUNTS.name, null)?:"{}"))
+            .startWithItem(moshi.fromJson(sharedPreferences.getString(Key.RECONCILE_CATEGORY_AMOUNTS.name, null) ?: "{}"))
             .distinctUntilChanged()
             .toBehaviorSubject()
 
@@ -55,25 +54,11 @@ class SharedPrefWrapper @Inject constructor(
         val (k, v) = kv
         return activeReconciliationCAs.value
             .toMutableMap()
-            .also { if (v==null || v == BigDecimal.ZERO.toString()) it.remove(k) else it[k] = v }
+            .also { if (v == null || v == BigDecimal.ZERO.toString()) it.remove(k) else it[k] = v }
             .let { pushActiveReconciliationCAs(it) }
     }
 
     fun clearActiveReconcileCAs() = pushActiveReconciliationCAs(null)
-
-    // # ExpectedIncome
-
-    fun fetchExpectedIncome(): String =
-        sharedPreferences.getString(Key.EXPECTED_INCOME.name, null) ?: "0"
-
-    fun pushExpectedIncome(expectedIncome: String?): Completable {
-        expectedIncome
-            ?.also { editor.putString(Key.EXPECTED_INCOME.name, it) }
-            ?: editor.remove(Key.EXPECTED_INCOME.name)
-        return Completable.fromAction {
-            editor.commit()
-        }
-    }
 
     // # AnchorDateOffset
 
