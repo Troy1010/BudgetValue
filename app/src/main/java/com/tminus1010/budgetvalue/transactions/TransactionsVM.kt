@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.transactions
 
 import androidx.lifecycle.ViewModel
+import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.toLiveData
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +17,7 @@ class TransactionsVM @Inject constructor(
     val currentSpendBlockCAs = transactionsDomain.currentSpendBlockCAs
     val uncategorizedSpendsSize = transactionsDomain.uncategorizedSpendsSize
         .map { it.toString() }
-        .toLiveData(errorSubject)
+        .divertErrors(errorSubject)
     fun importTransactions(inputStream: InputStream) =
         transactionsDomain.importTransactions(inputStream)
 }
