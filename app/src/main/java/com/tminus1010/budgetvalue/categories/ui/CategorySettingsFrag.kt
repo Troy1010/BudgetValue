@@ -31,6 +31,7 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
         set(value) { field = value.reversed(); vb.recyclerviewButtons.adapter?.notifyDataSetChanged() }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        vb.tvTitle.text = "Settings (${categorySettingsVM.currentCategory.name})"
         // # Button RecyclerView
         vb.recyclerviewButtons.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true)
         vb.recyclerviewButtons.addItemDecoration(LayoutMarginDecoration(8.toPX(requireContext())))
