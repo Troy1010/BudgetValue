@@ -28,7 +28,7 @@ class SharedPrefWrapper @Inject constructor(
         const val BLOCK_SIZE_DEFAULT: Long = 14
     }
 
-    val editor = sharedPreferences.edit()
+    private val editor: SharedPreferences.Editor = sharedPreferences.edit()
 
     // # ActiveReconciliation
 
