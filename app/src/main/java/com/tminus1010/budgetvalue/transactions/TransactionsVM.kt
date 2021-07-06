@@ -2,7 +2,6 @@ package com.tminus1010.budgetvalue.transactions
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.extensions.divertErrors
-import com.tminus1010.budgetvalue._core.extensions.toLiveData
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.Subject
