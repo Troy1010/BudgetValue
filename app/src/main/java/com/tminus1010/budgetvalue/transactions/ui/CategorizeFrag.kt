@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.bind
-import com.tminus1010.budgetvalue._core.extensions.toPX
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonRVItem
 import com.tminus1010.budgetvalue._core.middleware.ui.GenViewHolder2
 import com.tminus1010.budgetvalue._core.middleware.ui.LifecycleRVAdapter
@@ -34,6 +33,7 @@ import com.tminus1010.budgetvalue.transactions.domain.CategorizeAdvancedDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
+import com.tminus1010.tmcommonkotlin.view.extensions.toPX
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
