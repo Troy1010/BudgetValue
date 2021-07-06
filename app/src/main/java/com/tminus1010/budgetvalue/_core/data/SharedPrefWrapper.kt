@@ -4,10 +4,9 @@ import android.content.SharedPreferences
 import com.squareup.moshi.Moshi
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
-import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
+import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -33,11 +32,11 @@ class SharedPrefWrapper @Inject constructor(
     // # ActiveReconciliation
 
     private val activeReconciliationCAsPublisher = PublishSubject.create<Map<String, String>>()
-    val activeReconciliationCAs: BehaviorSubject<Map<String, String>> =
+    val activeReconciliationCAs: Observable<Map<String, String>> =
         activeReconciliationCAsPublisher
             .startWithItem(moshi.fromJson(sharedPreferences.getString(Key.RECONCILE_CATEGORY_AMOUNTS.name, null) ?: "{}"))
             .distinctUntilChanged()
-            .toBehaviorSubject()
+            .replay(1).autoConnect().also { it.subscribe {  } }
 
     fun pushActiveReconciliationCAs(categoryAmounts: Map<String, String>?): Completable {
         categoryAmounts
@@ -52,7 +51,7 @@ class SharedPrefWrapper @Inject constructor(
 
     fun pushActiveReconciliationCA(kv: Pair<String, String?>): Completable {
         val (k, v) = kv
-        return activeReconciliationCAs.value
+        return activeReconciliationCAs.value!!
             .toMutableMap()
             .also { if (v == null || v == BigDecimal.ZERO.toString()) it.remove(k) else it[k] = v }
             .let { pushActiveReconciliationCAs(it) }
