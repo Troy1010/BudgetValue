@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -22,6 +21,7 @@ import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._core.ui.data_binding.bindButtonRVItem
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
+import com.tminus1010.budgetvalue.categories.CategorySettingsVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
@@ -30,6 +30,7 @@ import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsAdvancedVM
 import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsVM
 import com.tminus1010.budgetvalue.transactions.TransactionsVM
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeAdvancedDomain
+import com.tminus1010.tmcommonkotlin.core.logx
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
@@ -46,10 +47,11 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     private val transactionsVM: TransactionsVM by activityViewModels()
     private val categorySelectionVM: CategorySelectionVM by navGraphViewModels(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
     private val categorizeTransactionsAdvancedVM: CategorizeTransactionsAdvancedVM by activityViewModels()
+    private val categorySettingsVM: CategorySettingsVM by navGraphViewModels(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
     @Inject
     lateinit var categorizeAdvancedDomain: CategorizeAdvancedDomain
     var btns = emptyList<ButtonRVItem>()
-        set(value) { field = value; vb.recyclerviewButtons.adapter?.notifyDataSetChanged() }
+        set(value) { field = value.reversed(); vb.recyclerviewButtons.adapter?.notifyDataSetChanged() }
     var categories = emptyList<Category>()
         set(value) {
             val shouldNotifyDataSetChanged = field.size != value.size
@@ -120,22 +122,6 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
             btns = listOfNotNull(
                 if (inSelectionMode)
                     ButtonRVItem(
-                        title = "Delete",
-                        onClick = {
-                            AlertDialog.Builder(requireContext())
-                                .setMessage(listOf(
-                                    "Are you sure you want to delete these categories?\n",
-                                    *categorySelectionVM.selectedCategories.value!!.map { "\t${it.name}" }
-                                        .toTypedArray()
-                                ).joinToString("\n"))
-                                .setPositiveButton("Yes") { _, _ -> categorySelectionVM.deleteSelectedCategories() }
-                                .setNegativeButton("No") { _, _ -> }
-                                .show()
-                        }
-                    )
-                else null,
-                if (inSelectionMode)
-                    ButtonRVItem(
                         title = "Split",
                         isEnabled = categorizeTransactionsVM.isTransactionAvailable,
                         onClick = {
@@ -164,6 +150,17 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     ButtonRVItem(
                         title = "Clear selection",
                         onClick = { categorySelectionVM.clearSelection().observe(viewLifecycleOwner) }
+                    )
+                else null,
+                if (inSelectionMode)
+                    ButtonRVItem(
+                        title = "Settings",
+                        isEnabled = categorySelectionVM.selectedCategories.map { it.size == 1 },
+                        onClick = {
+                            categorySettingsVM.setup(categorySelectionVM.selectedCategories.value!!.first())
+                            categorySelectionVM.clearSelection().subscribe()
+                            nav.navigate(R.id.action_categorizeFrag_to_categorySettingsFrag)
+                        }
                     )
                 else null,
                 if (!inSelectionMode)
