@@ -6,6 +6,7 @@ import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.time.LocalDate
 
 data class Transaction(
@@ -32,11 +33,24 @@ data class Transaction(
                 .filter { it.key != category }
                 .let { categoryAmounts ->
                     categoryAmounts
-                        .copy(category to
-                                amount - categoryAmounts.map { it.value }
-                            .fold(0.toBigDecimal()) { acc, v -> acc + v })
+                        .copy(category to amount - categoryAmounts.values.sum())
                 }
         )
+    }
+
+    fun calcCAsAdjustedForNewTotal(newTotal: BigDecimal): Map<Category, BigDecimal> {
+        val dumpEverythingIntoLast = (defaultAmount.compareTo(BigDecimal.ZERO) == 0)
+        var totalSoFar = BigDecimal.ZERO
+        return (newTotal / amount)
+            .let { ratio ->
+                categoryAmounts.mapValues {
+                    if (dumpEverythingIntoLast && it.key == categoryAmounts.keys.lastOrNull())
+                        newTotal - totalSoFar
+                    else
+                        (it.value * ratio).setScale(2, RoundingMode.HALF_UP)
+                            .also { totalSoFar += it }
+                }
+            }
     }
 
     fun toDTO(categoryAmountsConverter: CategoryAmountsConverter): TransactionDTO {

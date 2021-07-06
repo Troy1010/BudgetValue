@@ -139,6 +139,18 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                         title = "Split",
                         isEnabled = categorizeTransactionsVM.isTransactionAvailable,
                         onClick = {
+                            categorizeTransactionsAdvancedVM.setup(
+                                categoryAmounts = null,
+                                categorySelectionVM = categorySelectionVM)
+                            nav.navigate(R.id.action_categorizeFrag_to_splitTransactionFrag)
+                        }
+                    )
+                else null,
+                if (inSelectionMode)
+                    ButtonRVItem(
+                        title = "Split Exactly",
+                        isEnabled = categorizeTransactionsVM.isTransactionAvailable,
+                        onClick = {
                             categorizeAdvancedDomain.calcExactSplit(
                                 categorySelectionVM.selectedCategories.value!!,
                                 categorizeTransactionsVM.transactionBox.value!!.first!!.amount
@@ -170,8 +182,8 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     ButtonRVItem(
                         title = "Replay",
                         isEnabled = categorizeTransactionsVM.isReplayAvailable,
-                        onLongClick = { categorizeTransactionsVM.userNavToSplitWithReplayValues() },
-                        onClick = { categorizeTransactionsVM.userReplay() })
+                        onLongClick = { categorizeTransactionsVM.userReplay() },
+                        onClick = { categorizeTransactionsVM.userNavToSplitWithReplayValues() })
                 else null,
                 if (!inSelectionMode)
                     ButtonRVItem(

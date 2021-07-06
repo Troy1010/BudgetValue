@@ -40,7 +40,10 @@ class CategorizeTransactionsVM @Inject constructor(
     fun userReplay() {
         saveTransactionDomain.saveTransaction(
             firstTransactionBox.value!!.first!!
-                .categorize(replayTransactionBox.value!!.first!!.categoryAmounts)
+                .categorize(
+                    categoryAmounts = replayTransactionBox.value!!.first!!
+                        .calcCAsAdjustedForNewTotal(firstTransactionBox.value!!.first!!.amount)
+                )
         )
             .observe(disposables)
     }
@@ -58,7 +61,7 @@ class CategorizeTransactionsVM @Inject constructor(
     fun userNavToSplitWithReplayValues() {
         _categorySelectionVM.clearSelection()
         _categorySelectionVM.selectCategories(*replayTransactionBox.value!!.first!!.categoryAmounts.map { it.key }.toTypedArray())
-        navToSplit.onNext(replayTransactionBox.value!!.first!!.categoryAmounts)
+        navToSplit.onNext(replayTransactionBox.value!!.first!!.calcCAsAdjustedForNewTotal(firstTransactionBox.value!!.first!!.amount))
     }
 
     fun setup(categorySelectionVM: CategorySelectionVM) {

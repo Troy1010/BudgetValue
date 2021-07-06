@@ -11,6 +11,7 @@ import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
+import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -44,12 +45,16 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
             .observe(disposables)
     }
 
-    fun setup(categoryAmounts: Map<Category, BigDecimal>, categorySelectionVM: CategorySelectionVM) {
+    fun setup(categoryAmounts: Map<Category, BigDecimal>?, categorySelectionVM: CategorySelectionVM) {
         _categorySelectionVM = categorySelectionVM
         transactionToPush.take(1)
             .observe(disposables) {
-                userClearCA()
-                categoryAmounts.forEach { userInputCA(it.key, it.value) }
+                if (categoryAmounts != null) userClearCA()
+                _categorySelectionVM.selectedCategories.value!!
+                    .filter { it !in transactionToPush.value!!.categoryAmounts.keys }
+                    .forEach { userInputCA(it, BigDecimal.ZERO) }
+                categoryAmounts
+                    ?.forEach { userInputCA(it.key, it.value) }
             }
     }
 
