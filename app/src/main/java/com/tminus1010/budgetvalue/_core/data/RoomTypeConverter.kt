@@ -3,8 +3,8 @@ package com.tminus1010.budgetvalue._core.data
 import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 import com.squareup.moshi.Moshi
-import com.tminus1010.budgetvalue._core.extensions.fromJson
-import com.tminus1010.budgetvalue._core.extensions.toJson
+import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
+import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
