@@ -15,8 +15,8 @@ import javax.inject.Singleton
 class CategoriesDomain @Inject constructor(
     categoriesRepo: ICategoriesRepo
 ) : ICategoriesDomain, ICategoryParser {
-    override val defaultCategory = Category("Default", CategoryType.Misc, BigDecimal.ZERO, true)
-    override val unknownCategory = Category("Unknown", CategoryType.Misc, BigDecimal.ZERO, true)
+    override val defaultCategory = Category("Default", CategoryType.NOT_USER_PICKABLE, BigDecimal.ZERO, true)
+    override val unknownCategory = Category("Unknown", CategoryType.NOT_USER_PICKABLE, BigDecimal.ZERO, true)
 
     override val userCategories: BehaviorSubject<List<Category>> =
         categoriesRepo.userCategories

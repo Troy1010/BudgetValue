@@ -36,6 +36,6 @@ class NewCategoryFrag : Fragment(R.layout.frag_new_category) {
             }
         }
         //
-        vb.spinnerType.adapter = ArrayAdapter(requireContext(), R.layout.item_text_view, CategoryType.values().drop(1))
+        vb.spinnerType.adapter = ArrayAdapter(requireContext(), R.layout.item_text_view, CategoryType.getPickableValues())
     }
 }
