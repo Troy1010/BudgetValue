@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.tminus1010.budgetvalue.*
 import com.tminus1010.budgetvalue._core.extensions.bind
+import com.tminus1010.budgetvalue._core.extensions.easyText
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.*
@@ -34,8 +35,7 @@ class PlanFrag : Fragment(R.layout.frag_plan) {
         val expectedIncomeRecipeFactory = ViewItemRecipeFactory3<ItemTextEditBinding, Observable<String>>(
             { ItemTextEditBinding.inflate(LayoutInflater.from(context)) },
             { d, vb, lifecycleOwner ->
-                vb.editText.easyGetLayoutParams()
-                vb.editText.bind(d, lifecycleOwner) { setText(it) }
+                vb.editText.bind(d, lifecycleOwner) { easyText = it }
                 vb.editText.onDone { activePlanVM.userSaveExpectedIncome(it) }
             }
         )
@@ -43,8 +43,7 @@ class PlanFrag : Fragment(R.layout.frag_plan) {
             { ItemTextEditBinding.inflate(LayoutInflater.from(context)) },
             { (category, d), vb, lifecycleOwner ->
                 if (d == null) return@ViewItemRecipeFactory3
-                vb.editText.easyGetLayoutParams()
-                vb.editText.bind(d, lifecycleOwner) { setText(it) }
+                vb.editText.bind(d, lifecycleOwner) { easyText = it }
                 vb.editText.onDone { activePlanVM.userSaveActivePlanCA(category, it) }
             }
         )
