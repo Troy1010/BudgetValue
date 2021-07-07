@@ -65,7 +65,7 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
                     var didFirstSelectionHappen = AtomicBoolean(false)
                     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                         if (didFirstSelectionHappen.getAndSet(true))
-                            CategoryType.getPickableValues()[position]
+                            (vb.spinner.selectedItem as CategoryType)
                                 .also { categorySettingsVM.userUpdateType(it) }
                     }
 
