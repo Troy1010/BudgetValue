@@ -58,7 +58,7 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
         val categoryTypeRecipeFactory = ViewItemRecipeFactory3<ItemSpinnerBinding, Unit>(
             { ItemSpinnerBinding.inflate(LayoutInflater.from(context)) },
             { _, vb, _ ->
-                val adapter = ArrayAdapter(requireContext(), R.layout.item_text_view, CategoryType.getPickableValues())
+                val adapter = ArrayAdapter(requireContext(), R.layout.item_text_view_2, CategoryType.getPickableValues())
                 vb.spinner.adapter = adapter
                 vb.spinner.setSelection(adapter.getPosition(categorySettingsVM.categoryBox.unbox.type))
                 vb.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
