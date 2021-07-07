@@ -65,8 +65,9 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
                     var didFirstSelectionHappen = AtomicBoolean(false)
                     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                         if (didFirstSelectionHappen.getAndSet(true))
-                            (vb.spinner.selectedItem as CategoryType)
-                                .also { categorySettingsVM.userUpdateType(it) }
+                            categorySettingsVM.userUpdateType(
+                                type = (vb.spinner.selectedItem as CategoryType)
+                            )
                     }
 
                     override fun onNothingSelected(parent: AdapterView<*>?) = Unit
@@ -76,9 +77,9 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
         vb.tmTableView.initialize(
             recipeGrid = listOf(
                 listOf(
-                    recipeFactories.textView.createOne("Default Amount"),
-                    recipeFactories.textView.createOne("Type")
-                ),
+                    "Default Amount",
+                    "Type"
+                ).map { recipeFactories.textView.createOne(it) },
                 listOf(
                     defaultAmountRecipeFactory.createOne(categorySettingsVM.categoryBox.map { it.first?.defaultAmount?.toString() ?: "" }),
                     categoryTypeRecipeFactory.createOne(Unit)
