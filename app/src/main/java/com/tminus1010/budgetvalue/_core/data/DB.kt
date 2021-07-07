@@ -11,7 +11,7 @@ import com.tminus1010.budgetvalue.transactions.models.TransactionDTO
 
 @TypeConverters(RoomTypeConverter::class)
 @Database(entities = [TransactionDTO::class, AccountDTO::class, ReconciliationDTO::class, PlanDTO::class, CategoryDTO::class],
-    version = 33)
+    version = 34)
 abstract class DB : RoomDatabase() {
     abstract fun miscDAO(): MiscDAO
     abstract fun userCategoriesDAO(): UserCategoriesDAO

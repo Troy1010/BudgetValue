@@ -52,7 +52,7 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
                 if (categoryAmounts != null) userClearCA()
                 _categorySelectionVM.selectedCategories.value!!
                     .filter { it !in transactionToPush.value!!.categoryAmounts.keys }
-                    .forEach { userInputCA(it, BigDecimal.ZERO) }
+                    .forEach { userInputCA(it, it.defaultAmount) }
                 categoryAmounts
                     ?.forEach { userInputCA(it.key, it.value) }
             }

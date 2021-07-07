@@ -4,8 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
-import com.tminus1010.budgetvalue._core.middleware.Rx
-import com.tminus1010.budgetvalue.categories.domain.DeleteCategoryFromActiveDomainUC
 import com.tminus1010.budgetvalue.categories.models.Category
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Completable
@@ -17,7 +15,6 @@ import javax.inject.Inject
 @HiltViewModel
 class CategorySelectionVM @Inject constructor(
     errorSubject: Subject<Throwable>,
-    private val deleteCategoryFromActiveDomainUC: DeleteCategoryFromActiveDomainUC,
 ) : ViewModel() {
     // # Input
     fun clearSelection() = Completable.fromCallable {
@@ -30,14 +27,6 @@ class CategorySelectionVM @Inject constructor(
 
     fun unselectCategories(vararg categories: Category) {
         categories.forEach { intents.onNext(Intents.UnselectCategory(it)) }
-    }
-
-    fun deleteSelectedCategories() {
-        state.take(1)
-            .map { it.selectedCategories.map { deleteCategoryFromActiveDomainUC(it) } }
-            .flatMapCompletable { Rx.merge(it) }
-            .andThen(clearSelection())
-            .subscribe()
     }
 
     // # Internal

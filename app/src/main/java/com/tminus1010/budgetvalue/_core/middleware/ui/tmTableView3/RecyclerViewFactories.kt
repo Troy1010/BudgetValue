@@ -40,7 +40,7 @@ val Fragment.recipeFactories
             get() = ViewItemRecipeFactory3(
                 { ItemTextViewBinding.inflate(LayoutInflater.from(requireContext())) },
                 { d, vb, lifecycle ->
-                    if (d==null) return@ViewItemRecipeFactory3
+                    if (d == null) return@ViewItemRecipeFactory3
                     vb.textview.bind(d, lifecycle) { easyText = it }
                 }
             )

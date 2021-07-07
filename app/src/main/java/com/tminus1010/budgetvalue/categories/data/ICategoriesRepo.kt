@@ -5,7 +5,8 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 
 interface ICategoriesRepo {
-    fun fetchUserCategories(): Observable<List<Category>>
+    val userCategories: Observable<List<Category>>
     fun push(category: Category): Completable
     fun delete(category: Category): Completable
+    fun update(category: Category): Completable
 }

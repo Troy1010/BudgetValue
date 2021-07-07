@@ -52,6 +52,11 @@
             android:label="NewCategoryFrag"
             tools:layout="@layout/frag_new_category" />
         <fragment
+            android:id="@+id/categorySettingsFrag"
+            android:name="com.tminus1010.budgetvalue.categories.ui.CategorySettingsFrag"
+            android:label="CategorySettingsFrag"
+            tools:layout="@layout/frag_category_settings" />
+        <fragment
             android:id="@+id/categorizeFrag"
             android:name="com.tminus1010.budgetvalue.transactions.ui.CategorizeFrag"
             android:label="Categorize"
@@ -63,6 +68,10 @@
             <action
                 android:id="@+id/action_categorizeFrag_to_splitTransactionFrag"
                 app:destination="@id/splitTransactionFrag"
+                app:popUpTo="@id/categorizeFrag" />
+            <action
+                android:id="@+id/action_categorizeFrag_to_categorySettingsFrag"
+                app:destination="@id/categorySettingsFrag"
                 app:popUpTo="@id/categorizeFrag" />
         </fragment>
     </navigation>

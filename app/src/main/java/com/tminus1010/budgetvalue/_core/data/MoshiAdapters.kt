@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue._core.data
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.categories.models.CategoryType
 import java.math.BigDecimal
 
 object MoshiAdapters {
@@ -15,10 +16,10 @@ object MoshiAdapters {
         s.toBigDecimal()
 
     @ToJson
-    fun toJson(x: Category.Type): String =
+    fun toJson(x: CategoryType): String =
         x.ordinal.toString()
 
     @FromJson
-    fun fromJson2(s: String): Category.Type =
-        Category.Type.values()[s.toInt()]
+    fun fromJson2(s: String): CategoryType =
+        CategoryType.values()[s.toInt()]
 }
