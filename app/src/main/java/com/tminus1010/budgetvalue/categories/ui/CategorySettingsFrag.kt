@@ -51,7 +51,7 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
         )
         vb.tmTableView.initialize(
             recipeGrid = listOf(
-                listOf(recipeFactories.textView.createOne("Expected Income")),
+                listOf(recipeFactories.textView.createOne("Default Amount")),
                 listOf(expectedIncomeRecipeFactory.createOne(categorySettingsVM.categoryBox.map { it.first?.defaultAmount?.toString() ?: "" }))
             )
                 .reflectXY(),
