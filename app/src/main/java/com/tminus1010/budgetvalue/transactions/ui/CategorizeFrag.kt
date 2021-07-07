@@ -117,6 +117,19 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
             }
         }
         // # Button RecyclerView
+        vb.recyclerviewButtons.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true)
+        vb.recyclerviewButtons.addItemDecoration(LayoutMarginDecoration(8.toPX(requireContext())))
+        vb.recyclerviewButtons.adapter = object : LifecycleRVAdapter<GenViewHolder2<ItemButtonBinding>>() {
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+                ItemButtonBinding.inflate(LayoutInflater.from(requireContext()), parent, false)
+                    .let { GenViewHolder2(it) }
+
+            override fun onViewAttachedToWindow(holder: GenViewHolder2<ItemButtonBinding>, lifecycle: LifecycleOwner) {
+                holder.vb.btnItem.bindButtonRVItem(lifecycle, btns[holder.adapterPosition])
+            }
+
+            override fun getItemCount() = btns.size
+        }
         categorySelectionVM.inSelectionMode.observe(viewLifecycleOwner) { inSelectionMode ->
             btns = listOfNotNull(
                 if (inSelectionMode)
@@ -188,19 +201,6 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     )
                 else null,
             )
-        }
-        vb.recyclerviewButtons.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true)
-        vb.recyclerviewButtons.addItemDecoration(LayoutMarginDecoration(8.toPX(requireContext())))
-        vb.recyclerviewButtons.adapter = object : LifecycleRVAdapter<GenViewHolder2<ItemButtonBinding>>() {
-            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-                ItemButtonBinding.inflate(LayoutInflater.from(requireContext()), parent, false)
-                    .let { GenViewHolder2(it) }
-
-            override fun onViewAttachedToWindow(holder: GenViewHolder2<ItemButtonBinding>, lifecycle: LifecycleOwner) {
-                holder.vb.btnItem.bindButtonRVItem(lifecycle, btns[holder.adapterPosition])
-            }
-
-            override fun getItemCount() = btns.size
         }
     }
 }
