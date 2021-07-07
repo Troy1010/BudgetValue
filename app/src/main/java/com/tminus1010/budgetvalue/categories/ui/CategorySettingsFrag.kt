@@ -41,7 +41,7 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
     private val categorySettingsVM: CategorySettingsVM by navGraphViewModels(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
     var btns = emptyList<ButtonRVItem>()
         set(value) {
-            field = value.reversed(); vb.recyclerviewButtons.adapter?.notifyDataSetChanged()
+            field = value; vb.recyclerviewButtons.adapter?.notifyDataSetChanged()
         }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -119,6 +119,6 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
                 title = "Done",
                 onClick = { nav.navigateUp() }
             ),
-        )
+        ).reversed()
     }
 }

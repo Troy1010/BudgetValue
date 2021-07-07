@@ -41,7 +41,9 @@ class ImportFrag : Fragment(R.layout.frag_import) {
             if (shouldNotifyDataSetChanged) vb.recyclerviewAccounts.adapter?.notifyDataSetChanged()
         }
     var btns = emptyList<ButtonRVItem>()
-        set(value) { field = value.reversed(); vb.recyclerviewButtons.adapter?.notifyDataSetChanged() }
+        set(value) {
+            field = value; vb.recyclerviewButtons.adapter?.notifyDataSetChanged()
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -84,6 +86,6 @@ class ImportFrag : Fragment(R.layout.frag_import) {
                 title = "Add Account",
                 onClick = { accountsVM.addAccount() }
             ),
-        )
+        ).reversed()
     }
 }

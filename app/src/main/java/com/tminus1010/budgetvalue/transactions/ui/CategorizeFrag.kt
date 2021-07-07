@@ -50,7 +50,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     @Inject
     lateinit var categorizeAdvancedDomain: CategorizeAdvancedDomain
     var btns = emptyList<ButtonRVItem>()
-        set(value) { field = value.reversed(); vb.recyclerviewButtons.adapter?.notifyDataSetChanged() }
+        set(value) { field = value; vb.recyclerviewButtons.adapter?.notifyDataSetChanged() }
     var categories = emptyList<Category>()
         set(value) {
             val shouldNotifyDataSetChanged = field.size != value.size
@@ -200,7 +200,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                         onClick = { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) }
                     )
                 else null,
-            )
+            ).reversed()
         }
     }
 }
