@@ -83,8 +83,7 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
                     defaultAmountRecipeFactory.createOne(categorySettingsVM.categoryBox.map { it.first?.defaultAmount?.toString() ?: "" }),
                     categoryTypeRecipeFactory.createOne(Unit)
                 ),
-            )
-                .reflectXY(),
+            ).reflectXY(),
             shouldFitItemWidthsInsideTable = true,
         )
         // # Button RecyclerView
