@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue._core.ui.data_binding
 
-import com.tminus1010.budgetvalue._core.middleware.toMoneyBigDecimal
+import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
 import com.tminus1010.budgetvalue.accounts.AccountsVM
 import com.tminus1010.budgetvalue.accounts.models.Account

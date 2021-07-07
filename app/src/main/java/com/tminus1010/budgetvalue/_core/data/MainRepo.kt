@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue._core.data
 
-import com.tminus1010.budgetvalue._core.middleware.toBigDecimalOrZero
+import com.tminus1010.budgetvalue._core.extensions.toBigDecimalOrZero
 import com.tminus1010.budgetvalue.accounts.models.Account
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.ICategoryParser
@@ -79,8 +79,8 @@ class MainRepo @Inject constructor(
                 miscDAO.updateReconciliationCategoryAmounts(
                     reconciliation.id,
                     it.mapKeys { it.key.name })
-                    .subscribeOn(Schedulers.io())
             }
+            .subscribeOn(Schedulers.io())
 
     override fun clearReconciliations(): Completable =
         miscDAO.clearReconciliations()

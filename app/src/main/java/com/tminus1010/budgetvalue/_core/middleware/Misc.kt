@@ -1,6 +1,5 @@
 package com.tminus1010.budgetvalue._core.middleware
 
-import com.tminus1010.tmcommonkotlin.core.tryOrNull
 import com.tminus1010.tmcommonkotlin.rx.extensions.boxStartNull
 import com.tminus1010.tmcommonkotlin.rx.extensions.isCold
 import com.tminus1010.tmcommonkotlin.tuple.Quadruple
@@ -8,16 +7,6 @@ import com.tminus1010.tmcommonkotlin.tuple.Quintuple
 import com.tminus1010.tmcommonkotlin.tuple.Septuple
 import com.tminus1010.tmcommonkotlin.tuple.Sextuple
 import io.reactivex.rxjava3.core.Observable
-import java.lang.reflect.Type
-import java.math.BigDecimal
-
-fun String.toBigDecimalOrZero(): BigDecimal =
-    toBigDecimalOrNull() ?: BigDecimal.ZERO
-
-fun String.toMoneyBigDecimal(): BigDecimal =
-    toBigDecimalOrZero()
-        .let { if (it.scale() == 1) it.setScale(2) else it }
-        .let { tryOrNull { it.setScale(0) } ?: it } // setScale(0) throws error if digits right of the decimal are not zero.
 
 data class IndexAndTuple<T>(
     val index: Int,
