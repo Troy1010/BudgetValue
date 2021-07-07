@@ -86,7 +86,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                 Pair(recipeGrid, dividerMap)
             }
             .observe(viewLifecycleOwner) { (recipeGrid, dividerMap) ->
-                vb.myTableView1.initialize(
+                vb.tmTableView.initialize(
                     recipeGrid = recipeGrid,
                     shouldFitItemWidthsInsideTable = true,
                     dividerMap = dividerMap,
