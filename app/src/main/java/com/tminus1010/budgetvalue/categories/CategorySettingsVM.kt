@@ -7,6 +7,7 @@ import com.tminus1010.budgetvalue._core.extensions.unbox
 import com.tminus1010.budgetvalue.categories.data.ICategoriesRepo
 import com.tminus1010.budgetvalue.categories.domain.DeleteCategoryFromActiveDomainUC
 import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.categories.models.CategoryType
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
@@ -23,6 +24,10 @@ class CategorySettingsVM @Inject constructor(
     // # Input
     fun userUpdateDefaultAmount(defaultAmount: BigDecimal) {
         categoriesRepo.update(categoryBox.unbox.copy(defaultAmount = defaultAmount))
+            .subscribe()
+    }
+    fun userUpdateType(type: CategoryType) {
+        categoriesRepo.update(categoryBox.unbox.copy(type = type))
             .subscribe()
     }
 
