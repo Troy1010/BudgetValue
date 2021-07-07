@@ -19,7 +19,7 @@ class CategoriesDomain @Inject constructor(
     override val unknownCategory = Category("Unknown", CategoryType.Misc, BigDecimal.ZERO, true)
 
     override val userCategories: BehaviorSubject<List<Category>> =
-        categoriesRepo.fetchUserCategories()
+        categoriesRepo.userCategories
             .map { it.sortedWith(categoryComparator) }
             .toBehaviorSubject(emptyList())
 

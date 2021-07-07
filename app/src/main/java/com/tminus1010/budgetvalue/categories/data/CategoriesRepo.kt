@@ -12,9 +12,11 @@ import javax.inject.Singleton
 class CategoriesRepo @Inject constructor(
     private val userCategoriesDAO: UserCategoriesDAO
 ) : ICategoriesRepo {
-    override fun fetchUserCategories(): Observable<List<Category>> =
-        userCategoriesDAO.fetchUserCategories().map { it.map { Category.fromDTO(it) } }
+    override val userCategories: Observable<List<Category>> =
+        userCategoriesDAO.fetchUserCategories()
             .subscribeOn(Schedulers.io())
+            .map { it.map { Category.fromDTO(it) } }
+            .replay(1).autoConnect()
 
     override fun push(category: Category): Completable =
         userCategoriesDAO.push(category.toDTO())

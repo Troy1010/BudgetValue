@@ -7,7 +7,6 @@ import com.tminus1010.budgetvalue._core.extensions.unbox
 import com.tminus1010.budgetvalue.categories.data.ICategoriesRepo
 import com.tminus1010.budgetvalue.categories.domain.DeleteCategoryFromActiveDomainUC
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.tmcommonkotlin.core.logx
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
@@ -19,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CategorySettingsVM @Inject constructor(
     private val deleteCategoryFromActiveDomainUC: DeleteCategoryFromActiveDomainUC,
-    private val categoriesRepo: ICategoriesRepo
+    private val categoriesRepo: ICategoriesRepo,
 ) : ViewModel() {
     // # Input
     fun userUpdateDefaultAmount(defaultAmount: BigDecimal) {
@@ -42,7 +41,7 @@ class CategorySettingsVM @Inject constructor(
     val categoryBox: Observable<Box<Category?>> =
         Observables.combineLatest(
             categoryName,
-            categoriesRepo.fetchUserCategories()
+            categoriesRepo.userCategories
         )
             .map { (categoryName, categories) -> Box(categories.find { it.name == categoryName }) }
             .nonLazyCache(disposables)
