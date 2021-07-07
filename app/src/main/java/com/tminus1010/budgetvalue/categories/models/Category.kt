@@ -1,16 +1,19 @@
 package com.tminus1010.budgetvalue.categories.models
 
-data class Category (
+import java.math.BigDecimal
+
+data class Category(
     val name: String,
-    val type: Type,
-    val isRequired: Boolean = false
+    val type: CategoryType,
+    val defaultAmount: BigDecimal,
+    val isRequired: Boolean = false,
 ) {
-    override fun toString() = name // for better logs.
-    enum class Type { Misc, Always, Reservoir }
     fun toDTO() =
-        CategoryDTO(name, type.ordinal.toString(), isRequired)
+        CategoryDTO(name, type.ordinal, defaultAmount, isRequired)
+
     companion object {
-        fun fromDTO(categoryDTO: CategoryDTO) =
-            Category(categoryDTO.name, Type.values()[categoryDTO.type.toInt()], categoryDTO.isRequired)
+        fun fromDTO(categoryDTO: CategoryDTO) = categoryDTO.run {
+            Category(name, CategoryType.values()[type], defaultAmount, isRequired)
+        }
     }
 }

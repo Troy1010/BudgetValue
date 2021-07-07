@@ -4,8 +4,10 @@ import com.tminus1010.budgetvalue._core.categoryComparator
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.data.ICategoriesRepo
+import com.tminus1010.budgetvalue.categories.models.CategoryType
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -13,8 +15,8 @@ import javax.inject.Singleton
 class CategoriesDomain @Inject constructor(
     categoriesRepo: ICategoriesRepo
 ) : ICategoriesDomain, ICategoryParser {
-    override val defaultCategory = Category("Default", Category.Type.Misc, true)
-    override val unknownCategory = Category("Unknown", Category.Type.Misc, true)
+    override val defaultCategory = Category("Default", CategoryType.Misc, BigDecimal.ZERO, true)
+    override val unknownCategory = Category("Unknown", CategoryType.Misc, BigDecimal.ZERO, true)
 
     override val userCategories: BehaviorSubject<List<Category>> =
         categoriesRepo.fetchUserCategories()

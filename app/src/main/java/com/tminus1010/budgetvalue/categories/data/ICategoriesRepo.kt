@@ -8,4 +8,5 @@ interface ICategoriesRepo {
     fun fetchUserCategories(): Observable<List<Category>>
     fun push(category: Category): Completable
     fun delete(category: Category): Completable
+    fun update(category: Category): Completable
 }

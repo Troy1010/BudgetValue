@@ -19,4 +19,7 @@ class CategoriesRepo @Inject constructor(
 
     override fun delete(category: Category): Completable =
         userCategoriesDAO.delete(category.toDTO())
+
+    override fun update(category: Category): Completable =
+        userCategoriesDAO.update(category.toDTO())
 }

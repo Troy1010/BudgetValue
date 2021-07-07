@@ -1,9 +1,11 @@
 package com.tminus1010.budgetvalue._shared.app_init
 
 import com.tminus1010.budgetvalue._shared.app_init.data.IAppInitRepo
-import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.data.ICategoriesRepo
+import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.categories.models.CategoryType
 import com.tminus1010.tmcommonkotlin.rx.extensions.launch
+import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,18 +24,18 @@ class AppInitDomain @Inject constructor(
     companion object {
         val initCategories
             get() = listOf(
-                Category("Food", Category.Type.Always),
-                Category("Vanity Food", Category.Type.Reservoir),
-                Category("Improvements", Category.Type.Always),
-                Category("Dentist", Category.Type.Always),
-                Category("Medical Supplies", Category.Type.Always),
-                Category("Misc", Category.Type.Always),
-                Category("Commute", Category.Type.Always),
-                Category("Emergency", Category.Type.Reservoir),
-                Category("Charity", Category.Type.Reservoir),
-                Category("Trips", Category.Type.Reservoir),
-                Category("Christmas", Category.Type.Reservoir),
-                Category("Activities", Category.Type.Reservoir),
+                Category("Food", CategoryType.Always, BigDecimal.ZERO),
+                Category("Vanity Food", CategoryType.Reservoir, BigDecimal.ZERO),
+                Category("Improvements", CategoryType.Always, BigDecimal.ZERO),
+                Category("Dentist", CategoryType.Always, BigDecimal.ZERO),
+                Category("Medical Supplies", CategoryType.Always, BigDecimal.ZERO),
+                Category("Misc", CategoryType.Always, BigDecimal.ZERO),
+                Category("Commute", CategoryType.Always, BigDecimal.ZERO),
+                Category("Emergency", CategoryType.Reservoir, BigDecimal.ZERO),
+                Category("Charity", CategoryType.Reservoir, BigDecimal.ZERO),
+                Category("Trips", CategoryType.Reservoir, BigDecimal.ZERO),
+                Category("Christmas", CategoryType.Reservoir, BigDecimal.ZERO),
+                Category("Activities", CategoryType.Reservoir, BigDecimal.ZERO),
             )
     }
 }

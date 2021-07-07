@@ -1,6 +1,8 @@
 package com.tminus1010.budgetvalue._core.extensions
 
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
+import com.tminus1010.tmcommonkotlin.rx.extensions.value
+import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -41,3 +43,6 @@ private class NonLazyCacheHelper<T>(source: Observable<T>, compositeDisposable: 
 
 fun <T> Observable<T>.nonLazyCache(compositeDisposable: CompositeDisposable): Observable<T> =
     NonLazyCacheHelper(this, compositeDisposable).cacheOrSource
+
+val <T : Any> Observable<Box<T?>>.unbox: T
+    get() = this.value!!.first!!

@@ -30,7 +30,6 @@ import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsAdvancedVM
 import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsVM
 import com.tminus1010.budgetvalue.transactions.TransactionsVM
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeAdvancedDomain
-import com.tminus1010.tmcommonkotlin.core.logx
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
@@ -157,7 +156,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                         title = "Settings",
                         isEnabled = categorySelectionVM.selectedCategories.map { it.size == 1 },
                         onClick = {
-                            categorySettingsVM.setup(categorySelectionVM.selectedCategories.value!!.first())
+                            categorySettingsVM.setup(categorySelectionVM.selectedCategories.value!!.first().name)
                             categorySelectionVM.clearSelection().subscribe()
                             nav.navigate(R.id.action_categorizeFrag_to_categorySettingsFrag)
                         }
