@@ -37,9 +37,9 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 @AndroidEntryPoint
 class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
-    val vb by viewBinding(FragCategorySettingsBinding::bind)
+    private val vb by viewBinding(FragCategorySettingsBinding::bind)
     private val categorySettingsVM: CategorySettingsVM by navGraphViewModels(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
-    var btns = emptyList<ButtonRVItem>()
+    private var btns = emptyList<ButtonRVItem>()
         set(value) {
             field = value; vb.recyclerviewButtons.adapter?.notifyDataSetChanged()
         }
