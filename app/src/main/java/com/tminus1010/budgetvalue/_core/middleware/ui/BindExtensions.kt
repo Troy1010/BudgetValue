@@ -3,14 +3,10 @@ package com.tminus1010.budgetvalue._core.middleware.ui
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.TextView
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
 import com.jakewharton.rxbinding4.view.focusChanges
 import com.jakewharton.rxbinding4.widget.TextViewEditorActionEvent
 import com.jakewharton.rxbinding4.widget.editorActionEvents
 import com.jakewharton.rxbinding4.widget.textChanges
-import com.tminus1010.budgetvalue._core.middleware.Rx
-import com.tminus1010.tmcommonkotlin.misc.extensions.easyGetLayoutParams
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
@@ -53,9 +49,9 @@ fun <T> EditText.bindOutgoing(
         .observeOn(AndroidSchedulers.mainThread())
         .withLatestFrom(this.textChanges()) { _, x -> x.toString() }
         .map { toT(it) }
-        .map { if (validate!=null) validate(it) else it }
+        .map { if (validate != null) validate(it) else it }
         .publish().refCount()
-        .also { if (toDisplayable!=null) this.bindIncoming(it, toDisplayable) }
+        .also { if (toDisplayable != null) this.bindIncoming(it, toDisplayable) }
         .distinctUntilChanged()
         .subscribe(subject)
 }
@@ -63,15 +59,26 @@ fun <T> EditText.bindOutgoing(
 // Transform to output, validate, transform back
 
 fun EditText.onDone(onDone: (String) -> Unit) {
-    setOnEditorActionListener { _, actionId, _ ->
-        if (actionId == EditorInfo.IME_ACTION_DONE) {
-            onDone(text.toString())
-            false
-        } else true
-    }
-    setOnFocusChangeListener { _, hasFocus ->
-        if (!hasFocus) onDone(text.toString())
-    }
+    if (this is IOnEditorActionListener)
+        onEditorActionListener.subscribe { (_, actionId, _) -> // disposable is unhandled
+            if (actionId == EditorInfo.IME_ACTION_DONE)
+                onDone(text.toString())
+        }
+    else
+        setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                onDone(text.toString())
+                false
+            } else true
+        }
+    if (this is IOnFocusChangedOwner)
+        onFocusChanged.subscribe { (_, hasFocus) -> // disposable is unhandled
+            if (!hasFocus) onDone(text.toString())
+        }
+    else
+        setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) onDone(text.toString())
+        }
 }
 
 fun <T> TextView.bindIncoming(
@@ -80,8 +87,8 @@ fun <T> TextView.bindIncoming(
 ): Disposable {
     return observable
         .observeOn(AndroidSchedulers.mainThread())
-        .filter { this.layoutParams!=null } // *An error happens if you try to set text while layoutParams is null. But perhaps this filter should be moved elsewhere.
-        .map { if (toDisplayable!=null) toDisplayable(it).toString() else it.toString() }
+        .filter { this.layoutParams != null } // *An error happens if you try to set text while layoutParams is null. But perhaps this filter should be moved elsewhere.
+        .map { if (toDisplayable != null) toDisplayable(it).toString() else it.toString() }
         .subscribe { this.text = it }
 }
 

@@ -4,16 +4,42 @@ import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
+import android.view.KeyEvent
+import android.view.View
+import android.widget.TextView
 import androidx.appcompat.R
 import androidx.appcompat.widget.AppCompatEditText
-
+import com.tminus1010.budgetvalue._core.middleware.toMoneyBigDecimal
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.PublishSubject
 
 class MoneyEditText @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.editTextStyle,
-) : AppCompatEditText(context, attrs, defStyleAttr) {
+) : AppCompatEditText(context, attrs, defStyleAttr), IOnFocusChangedOwner, IOnEditorActionListener {
+    private val _onFocusChanged = PublishSubject.create<Pair<View, Boolean>>()
+    override val onFocusChanged: Observable<Pair<View, Boolean>> = _onFocusChanged
+    private val _onEditorActionListener = PublishSubject.create<Triple<TextView, Int, KeyEvent>>()
+    override val onEditorActionListener: Observable<Triple<TextView, Int, KeyEvent>> = _onEditorActionListener
+
     init {
+        onDone { s ->
+            s.toMoneyBigDecimal().toString()
+                .also { if (it != s) setText(it) }
+        }
+        setOnEditorActionListener { v, actionId, event ->
+            _onEditorActionListener.onNext(Triple(v, actionId, event))
+            false
+        }
+        setOnFocusChangeListener { v, hasFocus ->
+            val _text = text
+            if (hasFocus) {
+                if (_text?.getOrNull(0) == '0')
+                    _text.delete(0, 1)
+            }
+            _onFocusChanged.onNext(Pair(v, hasFocus))
+        }
         addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
