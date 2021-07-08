@@ -99,8 +99,10 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     }
                     text = category.name
                     setOnClickListener {
-                        if (categorySelectionVM.inSelectionMode.value!!) selectionModeAction()
-                        else categorizeTransactionsVM.userSimpleCategorize(category)
+                        if (categorySelectionVM.inSelectionMode.value!!)
+                            selectionModeAction()
+                        else if (categorizeTransactionsVM.isTransactionAvailable.value!!)
+                            categorizeTransactionsVM.userSimpleCategorize(category)
                     }
                     setOnLongClickListener { selectionModeAction(); true }
                 }
