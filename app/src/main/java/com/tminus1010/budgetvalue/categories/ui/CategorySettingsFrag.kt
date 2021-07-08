@@ -26,7 +26,7 @@ import com.tminus1010.budgetvalue.categories.models.CategoryType
 import com.tminus1010.budgetvalue.databinding.FragCategorySettingsBinding
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
 import com.tminus1010.budgetvalue.databinding.ItemSpinnerBinding
-import com.tminus1010.budgetvalue.databinding.ItemTextEditBinding
+import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
@@ -48,8 +48,8 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
         super.onViewCreated(view, savedInstanceState)
         vb.tvTitle.text = "Settings (${categorySettingsVM.categoryName.value!!})"
         // # TMTableView
-        val defaultAmountRecipeFactory = ViewItemRecipeFactory3<ItemTextEditBinding, Observable<String>>(
-            { ItemTextEditBinding.inflate(LayoutInflater.from(context)) },
+        val defaultAmountRecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Observable<String>>(
+            { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
             { d, vb, lifecycleOwner ->
                 vb.editText.bind(d, lifecycleOwner) { easyText = it }
                 vb.editText.onDone { categorySettingsVM.userUpdateDefaultAmount(it.toMoneyBigDecimal()) }
