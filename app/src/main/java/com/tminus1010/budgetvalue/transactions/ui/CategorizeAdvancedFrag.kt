@@ -19,7 +19,7 @@ import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecip
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
 import com.tminus1010.budgetvalue._core.ui.data_binding.bindButtonRVItem
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.databinding.FragSplitTransactionBinding
+import com.tminus1010.budgetvalue.databinding.FragCategorizeAdvancedBinding
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
 import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
 import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsAdvancedVM
@@ -40,8 +40,8 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
-    private val vb by viewBinding(FragSplitTransactionBinding::bind)
+class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
+    private val vb by viewBinding(FragCategorizeAdvancedBinding::bind)
 
     @Inject
     lateinit var categorizeTransactionsAdvancedDomain: CategorizeAdvancedDomain

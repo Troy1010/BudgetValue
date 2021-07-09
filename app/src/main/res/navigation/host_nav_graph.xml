@@ -44,9 +44,9 @@
         app:startDestination="@id/categorizeFrag">
         <fragment
             android:id="@+id/splitTransactionFrag"
-            android:name="com.tminus1010.budgetvalue.transactions.ui.SplitTransactionFrag"
+            android:name="com.tminus1010.budgetvalue.transactions.ui.CategorizeAdvancedFrag"
             android:label="SplitTransactionFrag"
-            tools:layout="@layout/frag_split_transaction" />
+            tools:layout="@layout/frag_categorize_advanced" />
         <fragment
             android:id="@+id/categorySettingsFrag"
             android:name="com.tminus1010.budgetvalue.categories.ui.CategorySettingsFrag"
