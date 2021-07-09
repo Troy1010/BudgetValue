@@ -29,15 +29,18 @@ class CategorySettingsVM @Inject constructor(
 ) : ViewModel() {
     // # Input
     fun userSetName(categoryName: String) {
-        _categoryToPush.onNext(Box(_categoryToPush.unbox.copy(name = categoryName)))
+        if (categoryName != _categoryToPush.unbox.name)
+            _categoryToPush.onNext(Box(_categoryToPush.unbox.copy(name = categoryName)))
     }
 
     fun userSetDefaultAmount(defaultAmount: BigDecimal) {
-        _categoryToPush.onNext(Box(_categoryToPush.unbox.copy(defaultAmount = defaultAmount)))
+        if (defaultAmount != _categoryToPush.unbox.defaultAmount)
+            _categoryToPush.onNext(Box(_categoryToPush.unbox.copy(defaultAmount = defaultAmount)))
     }
 
     fun userSetType(type: CategoryType) {
-        _categoryToPush.onNext(Box(_categoryToPush.unbox.copy(type = type)))
+        if (type != _categoryToPush.unbox.type)
+            _categoryToPush.onNext(Box(_categoryToPush.unbox.copy(type = type)))
     }
 
     fun userDeleteCategory() {
