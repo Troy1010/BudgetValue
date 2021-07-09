@@ -148,7 +148,8 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                                 nav = nav,
                                 categorizeAdvancedVM = categorizeAdvancedVM,
                                 categorySelectionVM = categorySelectionVM,
-                                categoryAmounts = null
+                                categoryAmounts = null,
+                                replay = null,
                             )
                         }
                     )
@@ -181,7 +182,8 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                                     nav = nav,
                                     categorizeAdvancedVM = categorizeAdvancedVM,
                                     categorySelectionVM = categorySelectionVM,
-                                    categoryAmounts = replay.categorize(categorizeAdvancedVM.transactionToPush.value!!).categoryAmounts
+                                    categoryAmounts = replay.categorize(categorizeAdvancedVM.transactionToPush.value!!).categoryAmounts,
+                                    replay = replay,
                                 )
                             })
                     }

@@ -27,6 +27,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.FragCategorizeAdvancedBinding
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
 import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
+import com.tminus1010.budgetvalue.replay.models.IReplay
 import com.tminus1010.budgetvalue.transactions.CategorizeAdvancedVM
 import com.tminus1010.budgetvalue.transactions.CategorizeVM
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
@@ -46,7 +47,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
     private val vb by viewBinding(FragCategorizeAdvancedBinding::bind)
     private val categorizeVM: CategorizeVM by activityViewModels()
     private val categorizeAdvancedVM: CategorizeAdvancedVM by activityViewModels()
-    private val replayName by lazy { arguments?.get(Key.REPLAY_NAME.name) }
+    private val replayName: String? by lazy { arguments?.getString(Key.REPLAY_NAME.name) }
     private var _shouldIgnoreUserInputForDuration = PublishSubject.create<Unit>()
     private var shouldIgnoreUserInput = _shouldIgnoreUserInputForDuration
         .flatMap { Observable.just(false).delay(1, TimeUnit.SECONDS).startWithItem(true) }
@@ -60,6 +61,8 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         shouldIgnoreUserInput.observe(viewLifecycleOwner) {}
+        vb.tvTitle.text = if (replayName == null) "" else "Replay ($replayName)"
+        vb.tvTitle.visibility = if (replayName == null) View.GONE else View.VISIBLE
         vb.tvAmountToSplit.bind(categorizeVM.amountToCategorize) { text = it }
         // # TMTableView
         val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Map.Entry<Category, BigDecimal>>(
@@ -122,30 +125,49 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
             override fun getItemCount() = btns.size
         }
         btns = listOfNotNull(
+            if (replayName == null)
+                ButtonRVItem(
+                    title = "Setup Auto Replay",
+                    onClick = {
+                        categorizeAdvancedVM.userBeginAutoReplay()
+                        nav.navigateUp()
+                    }
+                )
+            else null,
+            if (replayName == null)
+                ButtonRVItem(
+                    title = "Save Replay",
+                    onClick = {
+                        val editText = EditText(requireContext())
+                        AlertDialog.Builder(requireContext())
+                            .setMessage("What would you like to name this replay?")
+                            .setView(editText)
+                            .setPositiveButton("Yes") { _, _ ->
+                                categorizeAdvancedVM.userSaveReplay(editText.easyText)
+                                nav.navigateUp()
+                            }
+                            .setNegativeButton("No") { _, _ -> }
+                            .show()
+                    }
+                )
+            else null,
+            if (replayName != null)
+                ButtonRVItem(
+                    title = "Delete Replay",
+                    onClick = {
+                        AlertDialog.Builder(requireContext())
+                            .setMessage("Do you really want to delete this replay?")
+                            .setPositiveButton("Yes") { _, _ ->
+                                categorizeAdvancedVM.userDeleteReplay(replayName!!)
+                                nav.navigateUp()
+                            }
+                            .setNegativeButton("No") { _, _ -> }
+                            .show()
+                    }
+                )
+            else null,
             ButtonRVItem(
-                title = "Setup Auto Replay",
-                onClick = {
-                    categorizeAdvancedVM.userBeginAutoReplay()
-                    nav.navigateUp()
-                }
-            ),
-            ButtonRVItem(
-                title = "Save Replay",
-                onClick = {
-                    val editText = EditText(requireContext())
-                    AlertDialog.Builder(requireContext())
-                        .setMessage("What would you like to name this replay?")
-                        .setView(editText)
-                        .setPositiveButton("Yes") { _, _ ->
-                            categorizeAdvancedVM.userSaveReplay(editText.easyText)
-                            nav.navigateUp()
-                        }
-                        .setNegativeButton("No") { _, _ -> }
-                        .show()
-                }
-            ),
-            ButtonRVItem(
-                title = "Save",
+                title = "Submit",
                 onClick = {
                     categorizeAdvancedVM.userSaveTransaction()
                     nav.navigateUp()
@@ -156,7 +178,14 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
 
     enum class Key { REPLAY_NAME }
     companion object {
-        fun navTo(source: Any, nav: NavController, categorizeAdvancedVM: CategorizeAdvancedVM, categorySelectionVM: CategorySelectionVM, categoryAmounts: Map<Category, BigDecimal>?, replayName: String?) {
+        fun navTo(
+            source: Any,
+            nav: NavController,
+            categorizeAdvancedVM: CategorizeAdvancedVM,
+            categorySelectionVM: CategorySelectionVM,
+            categoryAmounts: Map<Category, BigDecimal>?,
+            replay: IReplay?
+        ) {
             categorizeAdvancedVM.setup(
                 categoryAmounts = categoryAmounts,
                 categorySelectionVM = categorySelectionVM
@@ -166,7 +195,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                     is CategorizeFrag -> R.id.action_categorizeFrag_to_categorizeAdvancedFrag
                     else -> R.id.categorizeAdvancedFrag
                 },
-                Bundle().apply { putString(Key.REPLAY_NAME.name, replayName) }
+                Bundle().apply { putString(Key.REPLAY_NAME.name, replay?.name) }
             )
         }
     }

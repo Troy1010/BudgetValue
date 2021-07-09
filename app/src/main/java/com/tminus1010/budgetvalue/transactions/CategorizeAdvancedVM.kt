@@ -68,6 +68,10 @@ class CategorizeAdvancedVM @Inject constructor(
         ).observe(disposables)
     }
 
+    fun userDeleteReplay(replayName: String) {
+        replayRepo.delete(replayName).observe(disposables)
+    }
+
     fun setup(categoryAmounts: Map<Category, BigDecimal>?, categorySelectionVM: CategorySelectionVM) {
         _categorySelectionVM = categorySelectionVM
         transactionToPush.take(1)

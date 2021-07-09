@@ -125,4 +125,7 @@ interface MiscDAO {
 
     @Insert
     fun add(basicReplayDTO: BasicReplayDTO): Completable
+
+    @Query("DELETE FROM BasicReplayDTO WHERE name=:basicReplayName")
+    fun delete(basicReplayName: String): Completable
 }

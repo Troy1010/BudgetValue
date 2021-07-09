@@ -16,6 +16,9 @@ class ReplayRepo @Inject constructor(
     fun add(basicReplay: BasicReplay): Completable =
         miscDAO.add(basicReplay.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
 
+    fun delete(basicReplayName: String): Completable =
+        miscDAO.delete(basicReplayName).subscribeOn(Schedulers.io())
+
     fun fetchReplays(): Observable<List<IReplay>> =
         miscDAO.fetchBasicReplays().subscribeOn(Schedulers.io())
             .map { it.map { BasicReplay.fromDTO(it, categoryAmountsConverter) } }

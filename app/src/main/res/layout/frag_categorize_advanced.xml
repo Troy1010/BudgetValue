@@ -6,6 +6,18 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/tvTitle"
+        style="@style/AppTheme.StandardTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="15dp"
+        android:textColor="@color/colorOnDark"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Replay (NAME)"
+        tools:visibility="visible" />
+
+    <TextView
         android:id="@+id/tvAmountToSplit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,7 +25,7 @@
         android:gravity="center"
         android:textColor="@color/colorOnDark"
         android:textSize="18sp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
         tools:text="Amount to split: $1.6" />
 
     <com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.TMTableView3
