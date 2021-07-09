@@ -9,6 +9,7 @@ import com.tminus1010.budgetvalue.plans.domain.ActivePlanDomain
 import com.tminus1010.budgetvalue.reconciliations.data.ReconciliationsRepo
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,7 +23,7 @@ open class DeleteCategoryFromActiveDomainUC @Inject constructor(
     operator fun invoke(category: Category): Completable =
         Rx.merge(
             activePlanDomain.activePlan.take(1)
-                .flatMapCompletable { plansRepo.updatePlanCA(it, category, null) },
+                .flatMapCompletable { plansRepo.updatePlanCA(it, category, BigDecimal.ZERO) },
             reconciliationRepo.pushActiveReconciliationCA(Pair(category, null)),
             categoriesRepo.delete(category),
         ).subscribeOn(Schedulers.io())

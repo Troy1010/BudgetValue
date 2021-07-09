@@ -5,7 +5,6 @@ import com.tminus1010.budgetvalue._core.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
-import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.plans.models.Plan
 import com.tminus1010.tmcommonkotlin.rx.extensions.total
@@ -17,7 +16,6 @@ import javax.inject.Singleton
 @Singleton
 class ActivePlanDomain @Inject constructor(
     plansRepo: PlansRepo,
-    categoriesDomain: CategoriesDomain,
     datePeriodGetter: DatePeriodGetter,
 ) : ViewModel(), IActivePlanDomain {
     override val activePlan = plansRepo.plans
@@ -31,26 +29,25 @@ class ActivePlanDomain @Inject constructor(
                     lastPlan != null ->
                         Observable.just(
                             Plan(
-                            Observable.just(datePeriodGetter.currentDatePeriod()),
-                            lastPlan.amount,
-                            lastPlan.categoryAmounts)
+                                Observable.just(datePeriodGetter.currentDatePeriod()),
+                                lastPlan.amount,
+                                lastPlan.categoryAmounts
+                            )
                         )
                     else ->
                         Observable.just(
                             Plan(
-                            Observable.just(datePeriodGetter.currentDatePeriod()),
-                            BigDecimal.ZERO,
-                            emptyMap())
+                                Observable.just(datePeriodGetter.currentDatePeriod()),
+                                BigDecimal.ZERO,
+                                emptyMap()
+                            )
                         )
                 }.doOnNext { plansRepo.pushPlan(it).blockingAwait() }
             }
         }
         .replay(1).refCount()
     override val activePlanCAs =
-        Rx.combineLatest(activePlan, categoriesDomain.userCategories)
-            .map { (activePlan, activeCategories) ->
-                activeCategories.associateWith { BigDecimal.ZERO } + activePlan.categoryAmounts
-            }
+        activePlan.map { it.categoryAmounts }
             .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO))
             { it.itemObservableMap2 }
             .replay(1).refCount()

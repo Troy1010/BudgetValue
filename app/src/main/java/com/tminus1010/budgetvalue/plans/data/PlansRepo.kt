@@ -21,18 +21,15 @@ class PlansRepo @Inject constructor(
     fun pushPlan(plan: Plan): Completable =
         miscDAO.add(plan.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
 
-    fun updatePlanCA(plan: Plan, category: Category, amount: BigDecimal?): Completable =
+    fun updatePlanCA(plan: Plan, category: Category, amount: BigDecimal): Completable =
         plan.categoryAmounts
             .toMutableMap()
-            .apply { if (amount == null) remove(category) else put(category, amount) }
+            .apply { if (amount.compareTo(BigDecimal.ZERO) == 0) remove(category) else put(category, amount) }
             .let {
                 miscDAO.updatePlanCategoryAmounts(
                     plan.toDTO(categoryAmountsConverter).startDate,
                     it.mapKeys { it.key.name }).subscribeOn(Schedulers.io())
             }
-
-    fun updatePlanCAs(plan: Plan, categoryAmounts: Map<String, BigDecimal>): Completable =
-        miscDAO.updatePlanCategoryAmounts(plan.toDTO(categoryAmountsConverter).startDate, categoryAmounts).subscribeOn(Schedulers.io())
 
     fun updatePlanAmount(plan: Plan, amount: BigDecimal): Completable =
         miscDAO.updatePlanAmount(plan.toDTO(categoryAmountsConverter).startDate, amount).subscribeOn(Schedulers.io())
