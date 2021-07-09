@@ -5,7 +5,6 @@ import com.tminus1010.budgetvalue._shared.app_init.data.IAppInitRepo
 import com.tminus1010.budgetvalue._shared.date_period_getter.data.ISettingsRepo
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
-import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -22,7 +21,4 @@ abstract class BindingModule {
 
     @Binds
     abstract fun appInitRepo(mainRepo: MainRepo): IAppInitRepo
-
-    @Binds
-    abstract fun transactionsRepo(mainRepo: MainRepo): ITransactionsRepo
 }

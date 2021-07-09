@@ -4,7 +4,7 @@ import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
 import com.tminus1010.budgetvalue.auto_replay.AutoReplayDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.TransactionParser
-import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
+import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.budgetvalue.transactions.models.TransactionsBlock
 import java.io.InputStream
@@ -15,7 +15,7 @@ import javax.inject.Singleton
 
 @Singleton
 class TransactionsDomain @Inject constructor(
-    private val transactionsRepo: ITransactionsRepo,
+    private val transactionsRepo: TransactionsRepo,
     private val datePeriodGetter: DatePeriodGetter,
     private val transactionParser: TransactionParser,
     private val autoReplayDomain: AutoReplayDomain

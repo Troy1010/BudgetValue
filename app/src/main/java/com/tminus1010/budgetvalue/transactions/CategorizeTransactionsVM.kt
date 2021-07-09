@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
+import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -25,7 +25,7 @@ import javax.inject.Inject
 class CategorizeTransactionsVM @Inject constructor(
     errorSubject: Subject<Throwable>,
     private val saveTransactionDomain: SaveTransactionDomain,
-    private val transactionsRepo: ITransactionsRepo,
+    private val transactionsRepo: TransactionsRepo,
     transactionsDomain: TransactionsDomain
 ) : ViewModel() {
     // # Input

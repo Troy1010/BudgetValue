@@ -4,7 +4,7 @@ import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue.auto_replay.data.AutoReplayRepo
 import com.tminus1010.budgetvalue.auto_replay.models.AutoReplay
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
+import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 class AutoReplayDomain @Inject constructor(
     private val autoReplayRepo: AutoReplayRepo,
-    private val transactionsRepo: ITransactionsRepo,
+    private val transactionsRepo: TransactionsRepo,
 ) {
     // # Input
     fun addAutoReplay(description: String, categoryAmounts: Map<Category, BigDecimal>): Completable =
