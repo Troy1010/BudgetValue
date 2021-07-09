@@ -13,8 +13,8 @@ import javax.inject.Singleton
 class AppInitDomain @Inject constructor(
     private val appInitRepo: AppInitRepo,
     private val categoriesRepo: CategoriesRepo
-) : IAppInitializer {
-    override fun appInit() {
+) {
+    fun appInit() {
         if (!appInitRepo.fetchAppInitBool()) {
             initCategories.forEach { categoriesRepo.push(it).launch() }
             appInitRepo.pushAppInitBool(true)
