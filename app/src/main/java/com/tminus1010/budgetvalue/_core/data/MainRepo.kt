@@ -1,8 +1,6 @@
 package com.tminus1010.budgetvalue._core.data
 
 import com.tminus1010.budgetvalue._core.extensions.toBigDecimalOrZero
-import com.tminus1010.budgetvalue.accounts.models.Account
-import com.tminus1010.budgetvalue.auto_replay.models.AutoReplay
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
@@ -28,32 +26,6 @@ class MainRepo @Inject constructor(
     private val categoryParser: ICategoryParser,
     private val categoriesRepo: CategoriesRepo
 ) : IMainRepo, ICategoriesRepo by categoriesRepo {
-    override fun fetchAccounts(): Observable<List<Account>> =
-        miscDAO.fetchAccounts()
-            .subscribeOn(Schedulers.io())
-            .map { it.map { Account.fromDTO(it) } }
-
-    override fun getAccount(id: Int): Observable<Account> =
-        miscDAO.getAccount(id)
-            .subscribeOn(Schedulers.io())
-            .map { Account.fromDTO(it) }
-
-    override fun update(account: Account): Completable =
-        miscDAO.updateAccount(account.toDTO())
-            .subscribeOn(Schedulers.io())
-
-    override fun add(account: Account): Completable =
-        miscDAO.addAccount(account.toDTO())
-            .subscribeOn(Schedulers.io())
-
-    override fun add(autoReplay: AutoReplay): Completable =
-        miscDAO.add(autoReplay.toDTO(categoryAmountsConverter))
-            .subscribeOn(Schedulers.io())
-
-    override fun delete(account: Account): Completable =
-        miscDAO.deleteAccount(account.toDTO())
-            .subscribeOn(Schedulers.io())
-
     override fun fetchAppInitBool(): Boolean =
         sharedPrefWrapper.fetchAppInitBool()
 
@@ -191,9 +163,4 @@ class MainRepo @Inject constructor(
     override fun updatePlanAmount(plan: Plan, amount: BigDecimal): Completable =
         miscDAO.updatePlanAmount(plan.toDTO(categoryAmountsConverter).startDate, amount)
             .subscribeOn(Schedulers.io())
-
-    override fun fetchAutoReplays(): Observable<List<AutoReplay>> =
-        miscDAO.fetchAutoReplays()
-            .subscribeOn(Schedulers.io())
-            .map { it.map { AutoReplay.fromDTO(it, categoryAmountsConverter) } }
 }

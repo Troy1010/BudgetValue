@@ -33,9 +33,7 @@ class ImportFrag : Fragment(R.layout.frag_import) {
     private val vb by viewBinding(FragImportBinding::bind)
     var accounts = emptyList<Account>()
         set(value) {
-            val shouldNotifyDataSetChanged = field.size != value.size
-            field = value
-            if (shouldNotifyDataSetChanged) vb.recyclerviewAccounts.adapter?.notifyDataSetChanged()
+            field = value; vb.recyclerviewAccounts.adapter?.notifyDataSetChanged()
         }
     var btns = emptyList<ButtonRVItem>()
         set(value) {
@@ -54,11 +52,17 @@ class ImportFrag : Fragment(R.layout.frag_import) {
 
             override fun getItemCount() = accounts.size
             override fun onBindViewHolder(holder: GenViewHolder2<ItemAccountBinding>, position: Int) {
-                holder.vb.btnDeleteAccount.setOnClickListener { accountsVM.deleteAccount(accounts[holder.adapterPosition]) }
+                holder.vb.btnDeleteAccount.setOnClickListener { accountsVM.userDeleteAccount(accounts[holder.adapterPosition]) }
                 holder.vb.editTextName.setText(accounts[holder.adapterPosition].name)
-                holder.vb.editTextName.onDone { accountsVM.updateAccount(accounts[holder.adapterPosition].copy(name = it)) }
+                holder.vb.editTextName.onDone {
+                    if (holder.adapterPosition != RecyclerView.NO_POSITION)
+                        accountsVM.userUpdateAccount(accounts[holder.adapterPosition].copy(name = it))
+                }
                 holder.vb.editTextAmount.setText(accounts[holder.adapterPosition].amount.toString())
-                holder.vb.editTextAmount.onDone { accountsVM.updateAccount(accounts[holder.adapterPosition].copy(amount = it.toMoneyBigDecimal())) }
+                holder.vb.editTextAmount.onDone {
+                    if (holder.adapterPosition != RecyclerView.NO_POSITION)
+                        accountsVM.userUpdateAccount(accounts[holder.adapterPosition].copy(amount = it.toMoneyBigDecimal()))
+                }
             }
         }
         // # Button RecyclerView
@@ -82,7 +86,7 @@ class ImportFrag : Fragment(R.layout.frag_import) {
             ),
             ButtonRVItem(
                 title = "Add Account",
-                onClick = { accountsVM.addAccount() }
+                onClick = { accountsVM.userAddAccount() }
             ),
         ).reversed()
     }

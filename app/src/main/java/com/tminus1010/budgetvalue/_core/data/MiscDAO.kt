@@ -32,7 +32,7 @@ interface MiscDAO {
     fun deleteAccount(accountDTO: AccountDTO): Completable
 
     @Update
-    fun updateAccount(accountDTO: AccountDTO): Completable
+    fun update(accountDTO: AccountDTO): Completable
 
     // # Transactions
 

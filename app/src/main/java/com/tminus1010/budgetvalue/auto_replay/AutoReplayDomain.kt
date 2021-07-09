@@ -1,11 +1,10 @@
 package com.tminus1010.budgetvalue.auto_replay
 
 import com.tminus1010.budgetvalue._core.middleware.Rx
-import com.tminus1010.budgetvalue.auto_replay.data.IAutoReplayRepo
+import com.tminus1010.budgetvalue.auto_replay.data.AutoReplayRepo
 import com.tminus1010.budgetvalue.auto_replay.models.AutoReplay
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
-import com.tminus1010.tmcommonkotlin.rx.extensions.doLogx
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -14,7 +13,7 @@ import java.math.BigDecimal
 import javax.inject.Inject
 
 class AutoReplayDomain @Inject constructor(
-    private val autoReplayRepo: IAutoReplayRepo,
+    private val autoReplayRepo: AutoReplayRepo,
     private val transactionsRepo: ITransactionsRepo,
 ) {
     // # Input

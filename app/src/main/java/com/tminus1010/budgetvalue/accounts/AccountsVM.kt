@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.accounts
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
-import com.tminus1010.budgetvalue.accounts.data.IAccountsRepo
+import com.tminus1010.budgetvalue.accounts.data.AccountsRepo
 import com.tminus1010.budgetvalue.accounts.domain.AccountsDomain
 import com.tminus1010.budgetvalue.accounts.models.Account
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -15,28 +15,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountsVM @Inject constructor(
-    private val accountsRepo: IAccountsRepo,
+    private val accountsRepo: AccountsRepo,
     accountsDomain: AccountsDomain,
     errorSubject: Subject<Throwable>,
 ) : ViewModel() {
     // # Input
-    fun addAccount() {
+    fun userAddAccount() {
         accountsRepo.add(Account("", BigDecimal.ZERO)).observe(disposables)
     }
 
-    fun deleteAccount(account: Account) {
+    fun userDeleteAccount(account: Account) {
         accountsRepo.delete(account).observe(disposables)
     }
 
-    fun updateAccount(account: Account) {
-        accountsRepo.getAccount(account.id)
-            .take(1)
-            .flatMapCompletable {
-                if (it == account)
-                    Completable.complete()
-                else
-                    accountsRepo.update(account)
-            }.observe(disposables)
+    fun userUpdateAccount(account: Account) {
+        accountsRepo.update(account).observe(disposables)
     }
 
     // # Output

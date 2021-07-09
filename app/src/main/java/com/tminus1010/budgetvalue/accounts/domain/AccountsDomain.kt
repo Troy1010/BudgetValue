@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.accounts.domain
 
-import com.tminus1010.budgetvalue.accounts.data.IAccountsRepo
+import com.tminus1010.budgetvalue.accounts.data.AccountsRepo
 import com.tminus1010.budgetvalue.accounts.models.Account
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import io.reactivex.rxjava3.core.Observable
@@ -10,7 +10,7 @@ import javax.inject.Singleton
 
 @Singleton
 class AccountsDomain @Inject constructor(
-    accountsRepo: IAccountsRepo
+    accountsRepo: AccountsRepo
 ) {
     val accounts: Observable<List<Account>> = accountsRepo.fetchAccounts()
         .replay(1).refCount()
