@@ -10,8 +10,8 @@ import io.reactivex.rxjava3.core.Completable
 
 data class ViewItemRecipe3<VB : ViewBinding, D : Any?>(
     private val vbLambda: () -> VB,
-    private val data: D,
     private val bindAction: (D, VB, LifecycleOwner) -> Unit,
+    private val data: D? = null,
 ) : IViewItemRecipe3 {
     // This cast allows IViewItemRecipe of different view types to be stored together
     @Suppress("UNCHECKED_CAST")

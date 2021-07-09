@@ -20,6 +20,7 @@ import com.tminus1010.budgetvalue._core.extensions.easyText
 import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.extensions.unbox
 import com.tminus1010.budgetvalue._core.middleware.ui.*
+import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipe3
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
 import com.tminus1010.budgetvalue._core.ui.data_binding.bindButtonRVItem
@@ -68,21 +69,21 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
                 vb.tvTitle.text = "Settings (${it.name})"
             }
         // # TMTableView
-        val defaultAmountRecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Observable<String>>(
+        val defaultAmountRecipe = ViewItemRecipe3<ItemMoneyEditTextBinding, Unit?>(
             { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
-            { d, vb, lifecycleOwner ->
-                vb.editText.bind(d, lifecycleOwner) { easyText = it }
+            { _, vb, lifecycleOwner ->
+                vb.editText.bind(categorySettingsVM.categoryToPush.map { it.defaultAmount.toString() }, lifecycleOwner) { easyText = it }
                 vb.editText.onDone { categorySettingsVM.userSetDefaultAmount(it.toMoneyBigDecimal()) }
             }
         )
-        val categoryNameRecipeFactory = ViewItemRecipeFactory3<ItemEditTextBinding, Observable<String>>(
+        val categoryNameRecipe = ViewItemRecipe3<ItemEditTextBinding, Unit?>(
             { ItemEditTextBinding.inflate(LayoutInflater.from(context)) },
-            { d, vb, lifecycleOwner ->
-                vb.edittext.bind(d, lifecycleOwner) { easyText = it }
+            { _, vb, lifecycleOwner ->
+                vb.edittext.bind(categorySettingsVM.categoryToPush.map { it.name }, lifecycleOwner) { easyText = it }
                 vb.edittext.onDone { categorySettingsVM.userSetName(it) }
             }
         )
-        val categoryTypeRecipeFactory = ViewItemRecipeFactory3<ItemSpinnerBinding, Unit>(
+        val categoryTypeRecipe = ViewItemRecipe3<ItemSpinnerBinding, Unit?>(
             { ItemSpinnerBinding.inflate(LayoutInflater.from(context)) },
             { _, vb, _ ->
                 val adapter = ArrayAdapter(requireContext(), R.layout.item_text_view_2, CategoryType.getPickableValues())
@@ -109,9 +110,9 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
                     "Type"
                 ).map { recipeFactories.textView.createOne(it) },
                 listOfNotNull(
-                    if (isForNewCategory) categoryNameRecipeFactory.createOne(categorySettingsVM.categoryToPush.map { it.name }) else null,
-                    defaultAmountRecipeFactory.createOne(categorySettingsVM.categoryToPush.map { it.defaultAmount.toString() }),
-                    categoryTypeRecipeFactory.createOne(Unit)
+                    if (isForNewCategory) categoryNameRecipe else null,
+                    defaultAmountRecipe,
+                    categoryTypeRecipe
                 ),
             ).reflectXY(),
             shouldFitItemWidthsInsideTable = true,
