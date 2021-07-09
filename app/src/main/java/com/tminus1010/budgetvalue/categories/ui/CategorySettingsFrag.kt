@@ -157,7 +157,7 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
     enum class Key { IsForNewCategory }
 
     companion object {
-        fun navigateTo(nav: NavController, source: Any, categorySettingsVM: CategorySettingsVM, categoryName: String?, isForNewCategory: Boolean) {
+        fun navTo(source: Any, nav: NavController, categorySettingsVM: CategorySettingsVM, categoryName: String?, isForNewCategory: Boolean) {
             categorySettingsVM.setup(
                 categoryName = categoryName
             )

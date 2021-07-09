@@ -121,7 +121,7 @@ interface MiscDAO {
     // # Replays
 
     @Query("select * from BasicReplayDTO")
-    fun fetchReplays(): Observable<List<BasicReplayDTO>>
+    fun fetchBasicReplays(): Observable<List<BasicReplayDTO>>
 
     @Insert
     fun add(basicReplayDTO: BasicReplayDTO): Completable
