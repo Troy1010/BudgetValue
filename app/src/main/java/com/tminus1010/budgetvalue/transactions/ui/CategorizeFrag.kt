@@ -23,6 +23,7 @@ import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.CategorySettingsVM
 import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.categories.ui.CategorySettingsFrag
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
@@ -163,7 +164,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 if (inSelectionMode)
                     ButtonRVItem(
                         title = "Clear selection",
-                        onClick = { categorySelectionVM.clearSelection().observe(viewLifecycleOwner) }
+                        onClick = { categorySelectionVM.clearSelection().subscribe() }
                     )
                 else null,
                 if (inSelectionMode)
@@ -171,9 +172,14 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                         title = "Settings",
                         isEnabled = categorySelectionVM.selectedCategories.map { it.size == 1 },
                         onClick = {
-                            categorySettingsVM.setup(categorySelectionVM.selectedCategories.value!!.first().name)
+                            CategorySettingsFrag.navigateTo(
+                                nav = nav,
+                                source = this,
+                                categorySettingsVM = categorySettingsVM,
+                                categoryName = categorySelectionVM.selectedCategories.value!!.first().name,
+                                isForNewCategory = false
+                            )
                             categorySelectionVM.clearSelection().subscribe()
-                            nav.navigate(R.id.action_categorizeFrag_to_categorySettingsFrag)
                         }
                     )
                 else null,
@@ -199,7 +205,15 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 if (!inSelectionMode)
                     ButtonRVItem(
                         title = "Make New Category",
-                        onClick = { nav.navigate(R.id.action_categorizeFrag_to_newCategoryFrag) }
+                        onClick = {
+                            CategorySettingsFrag.navigateTo(
+                                nav = nav,
+                                source = this,
+                                categorySettingsVM = categorySettingsVM,
+                                categoryName = null,
+                                isForNewCategory = true
+                            )
+                        }
                     )
                 else null,
             ).reversed()
