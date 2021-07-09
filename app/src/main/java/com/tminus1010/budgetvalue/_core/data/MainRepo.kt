@@ -29,8 +29,13 @@ class MainRepo @Inject constructor(
 ) : IMainRepo, ICategoriesRepo by categoriesRepo {
     override fun fetchAccounts(): Observable<List<Account>> =
         miscDAO.fetchAccounts()
-            .map { it.map { Account.fromDTO(it) } }
             .subscribeOn(Schedulers.io())
+            .map { it.map { Account.fromDTO(it) } }
+
+    override fun getAccount(id: Int): Observable<Account> =
+        miscDAO.getAccount(id)
+            .subscribeOn(Schedulers.io())
+            .map { Account.fromDTO(it) }
 
     override fun update(account: Account): Completable =
         miscDAO.updateAccount(account.toDTO())

@@ -8,6 +8,7 @@ import com.tminus1010.budgetvalue.accounts.models.Account
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.toState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.subjects.Subject
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -28,7 +29,14 @@ class AccountsVM @Inject constructor(
     }
 
     fun updateAccount(account: Account) {
-        accountsRepo.update(account).observe(disposables)
+        accountsRepo.getAccount(account.id)
+            .take(1)
+            .flatMapCompletable {
+                if (it == account)
+                    Completable.complete()
+                else
+                    accountsRepo.update(account)
+            }.observe(disposables)
     }
 
     // # Output
