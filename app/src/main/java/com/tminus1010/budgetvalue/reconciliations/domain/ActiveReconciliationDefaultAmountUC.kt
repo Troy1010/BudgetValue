@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.reconciliations.domain
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue.budgeted.domain.BudgetedDomain
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
-import com.tminus1010.budgetvalue.reconciliations.data.IReconciliationsRepo
+import com.tminus1010.budgetvalue.reconciliations.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import io.reactivex.rxjava3.core.Observable
@@ -14,7 +14,7 @@ import javax.inject.Singleton
 @Singleton
 class ActiveReconciliationDefaultAmountUC @Inject constructor(
     plansRepo: PlansRepo,
-    reconciliationsRepo: IReconciliationsRepo,
+    reconciliationsRepo: ReconciliationsRepo,
     budgetedDomain: BudgetedDomain,
     transactionsDomain: TransactionsDomain,
 ) {

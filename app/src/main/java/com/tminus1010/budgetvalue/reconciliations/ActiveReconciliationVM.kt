@@ -8,7 +8,7 @@ import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.reconciliations.data.IReconciliationsRepo
+import com.tminus1010.budgetvalue.reconciliations.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.reconciliations.domain.ActiveReconciliationDefaultAmountUC
 import com.tminus1010.budgetvalue.reconciliations.models.Reconciliation
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
@@ -23,7 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ActiveReconciliationVM @Inject constructor(
     errorSubject: Subject<Throwable>,
-    private val reconciliationsRepo: IReconciliationsRepo,
+    private val reconciliationsRepo: ReconciliationsRepo,
     categoriesDomain: CategoriesDomain,
     private val activeReconciliationDefaultAmountUC: ActiveReconciliationDefaultAmountUC,
 ) : ViewModel() {

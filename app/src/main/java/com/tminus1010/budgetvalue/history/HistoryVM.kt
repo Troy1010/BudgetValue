@@ -10,7 +10,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.history.models.HistoryColumnData
 import com.tminus1010.budgetvalue.history.models.IHistoryColumnData
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
-import com.tminus1010.budgetvalue.reconciliations.data.IReconciliationsRepo
+import com.tminus1010.budgetvalue.reconciliations.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.reconciliations.domain.ActiveReconciliationDefaultAmountUC
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
@@ -23,15 +23,14 @@ import javax.inject.Inject
 @HiltViewModel
 class HistoryVM @Inject constructor(
     plansRepo: PlansRepo,
-    reconciliationDomain: IReconciliationsRepo,
     transactionsDomain: TransactionsDomain,
-    reconciliationRepo: IReconciliationsRepo,
+    reconciliationRepo: ReconciliationsRepo,
     activeReconciliationDefaultAmountUC: ActiveReconciliationDefaultAmountUC,
     budgetedDomain: BudgetedDomain,
     private val datePeriodGetter: DatePeriodGetter
 ) : ViewModel() {
     val historyColumnDatas =
-        Rx.combineLatest(reconciliationDomain.reconciliations, plansRepo.plans, activeReconciliationDefaultAmountUC(), reconciliationRepo.activeReconciliationCAs, transactionsDomain.transactionBlocks, budgetedDomain.budgeted)
+        Rx.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans, activeReconciliationDefaultAmountUC(), reconciliationRepo.activeReconciliationCAs, transactionsDomain.transactionBlocks, budgetedDomain.budgeted)
             .observeOn(Schedulers.computation())
             .throttleLatest(500, TimeUnit.MILLISECONDS)
             .map { (reconciliations, plans, activeReconciliationDefaultAmount, activeReconciliationCAs, transactionBlocks, budgeted) ->
