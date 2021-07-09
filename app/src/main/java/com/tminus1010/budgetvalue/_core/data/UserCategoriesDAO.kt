@@ -4,10 +4,11 @@ import androidx.room.*
 import com.tminus1010.budgetvalue.categories.models.CategoryDTO
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 
 @Dao
 interface UserCategoriesDAO {
-    @Query("select * from `CategoryDTO`")
+    @Query("SELECT * FROM `CategoryDTO`")
     fun fetchUserCategories(): Observable<List<CategoryDTO>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -18,4 +19,7 @@ interface UserCategoriesDAO {
 
     @Update
     fun update(category: CategoryDTO): Completable
+
+    @Query("SELECT COUNT(1) FROM `CategoryDTO` WHERE name=:categoryName")
+    fun hasCategory(categoryName: String): Single<Int>
 }

@@ -17,7 +17,7 @@ import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactori
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.FragSplitTransactionBinding
-import com.tminus1010.budgetvalue.databinding.ItemTextEditBinding
+import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
 import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsAdvancedVM
 import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsVM
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeAdvancedDomain
@@ -64,8 +64,8 @@ class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
             nav.navigateUp()
         }
         // # TMTableView
-        val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemTextEditBinding, Map.Entry<Category, BigDecimal>>(
-            { ItemTextEditBinding.inflate(LayoutInflater.from(context)) },
+        val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Map.Entry<Category, BigDecimal>>(
+            { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
             { (category, amount), vb, _ ->
                 vb.editText.setText(amount.toString())
                 vb.editText.onDone {

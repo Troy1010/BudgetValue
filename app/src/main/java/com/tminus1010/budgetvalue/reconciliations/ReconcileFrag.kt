@@ -49,8 +49,8 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                 d.second.observe(lifecycle) { vb.textviewNumber.text = it }
             }
         )
-        val reconcileCARecipeFactory = ViewItemRecipeFactory3<ItemTextEditBinding, Pair<Category, Observable<String>?>>(
-            { ItemTextEditBinding.inflate(LayoutInflater.from(context)) },
+        val reconcileCARecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Pair<Category, Observable<String>?>>(
+            { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
             { (category, d), vb, lifecycle ->
                 if (d == null) return@ViewItemRecipeFactory3
                 d.observe(lifecycle) { vb.editText.easyText = it }

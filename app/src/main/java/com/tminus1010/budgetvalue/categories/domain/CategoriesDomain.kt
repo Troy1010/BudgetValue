@@ -15,8 +15,9 @@ import javax.inject.Singleton
 class CategoriesDomain @Inject constructor(
     categoriesRepo: ICategoriesRepo
 ) : ICategoriesDomain, ICategoryParser {
-    override val defaultCategory = Category("Default", CategoryType.NOT_USER_PICKABLE, BigDecimal.ZERO, true)
-    override val unknownCategory = Category("Unknown", CategoryType.NOT_USER_PICKABLE, BigDecimal.ZERO, true)
+    // TODO: These can just be provided by CompanionObject
+    override val defaultCategory = CategoriesDomain.defaultCategory
+    override val unknownCategory = CategoriesDomain.unknownCategory
 
     override val userCategories: BehaviorSubject<List<Category>> =
         categoriesRepo.userCategories
@@ -39,5 +40,10 @@ class CategoriesDomain @Inject constructor(
         if (categoryName == defaultCategory.name) error("Should never have to parse \"${defaultCategory.name}\"")
         return nameToCategoryMap.blockingFirst()[categoryName]
             ?: unknownCategory.also { logz("Warning: returning category Unknown for unknown name:$categoryName") }
+    }
+
+    companion object {
+        val defaultCategory = Category("Default", CategoryType.Special, BigDecimal.ZERO, true)
+        val unknownCategory = Category("Unknown", CategoryType.Special, BigDecimal.ZERO, true)
     }
 }

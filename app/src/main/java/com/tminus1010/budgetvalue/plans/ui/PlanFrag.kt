@@ -13,7 +13,7 @@ import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.FragPlanBinding
-import com.tminus1010.budgetvalue.databinding.ItemTextEditBinding
+import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
 import com.tminus1010.budgetvalue.plans.ActivePlanVM
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
@@ -32,15 +32,15 @@ class PlanFrag : Fragment(R.layout.frag_plan) {
     override fun onStart() {
         super.onStart()
         // # TMTableView
-        val expectedIncomeRecipeFactory = ViewItemRecipeFactory3<ItemTextEditBinding, Observable<String>>(
-            { ItemTextEditBinding.inflate(LayoutInflater.from(context)) },
+        val expectedIncomeRecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Observable<String>>(
+            { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
             { d, vb, lifecycleOwner ->
                 vb.editText.bind(d, lifecycleOwner) { easyText = it }
                 vb.editText.onDone { activePlanVM.userSaveExpectedIncome(it) }
             }
         )
-        val planCAsRecipeFactory = ViewItemRecipeFactory3<ItemTextEditBinding, Pair<Category, Observable<String>?>>(
-            { ItemTextEditBinding.inflate(LayoutInflater.from(context)) },
+        val planCAsRecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Pair<Category, Observable<String>?>>(
+            { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
             { (category, d), vb, lifecycleOwner ->
                 if (d == null) return@ViewItemRecipeFactory3
                 vb.editText.bind(d, lifecycleOwner) { easyText = it }

@@ -4,8 +4,8 @@ import java.math.BigDecimal
 
 data class Category(
     val name: String,
-    val type: CategoryType,
-    val defaultAmount: BigDecimal,
+    val type: CategoryType = CategoryType.Always,
+    val defaultAmount: BigDecimal = BigDecimal.ZERO,
     val isRequired: Boolean = false,
 ) {
     fun toDTO() =

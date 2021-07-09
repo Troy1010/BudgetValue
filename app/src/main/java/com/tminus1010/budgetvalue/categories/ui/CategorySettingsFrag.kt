@@ -9,10 +9,12 @@ import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.NavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue._core.InvalidCategoryNameException
 import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.easyText
 import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
@@ -23,17 +25,18 @@ import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactori
 import com.tminus1010.budgetvalue._core.ui.data_binding.bindButtonRVItem
 import com.tminus1010.budgetvalue.categories.CategorySettingsVM
 import com.tminus1010.budgetvalue.categories.models.CategoryType
-import com.tminus1010.budgetvalue.databinding.FragCategorySettingsBinding
-import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
-import com.tminus1010.budgetvalue.databinding.ItemSpinnerBinding
-import com.tminus1010.budgetvalue.databinding.ItemTextEditBinding
+import com.tminus1010.budgetvalue.databinding.*
+import com.tminus1010.budgetvalue.transactions.ui.CategorizeFrag
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
-import com.tminus1010.tmcommonkotlin.rx.extensions.value
+import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toPX
+import com.tminus1010.tmcommonkotlin.view.extensions.toast
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.Subject
 import java.util.concurrent.atomic.AtomicBoolean
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
@@ -44,15 +47,38 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
             field = value; vb.recyclerviewButtons.adapter?.notifyDataSetChanged()
         }
 
+    @Inject
+    lateinit var errorSubject: Subject<Throwable>
+    private val isForNewCategory by lazy { arguments?.getBoolean(Key.IsForNewCategory.name) ?: false }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        vb.tvTitle.text = "Settings (${categorySettingsVM.categoryName.value!!})"
+        errorSubject.observe(viewLifecycleOwner) {
+            when (it) {
+                is InvalidCategoryNameException -> toast("Invalid name")
+                else -> throw it
+            }
+        }
+        categorySettingsVM.navigateUp.observe(viewLifecycleOwner) { nav.navigateUp() }
+        if (isForNewCategory)
+            vb.tvTitle.text = "Create a new Category"
+        else
+            categorySettingsVM.categoryToPush.observe(viewLifecycleOwner) {
+                vb.tvTitle.text = "Settings (${it.first?.name ?: "UNKNOWN"})"
+            }
         // # TMTableView
-        val defaultAmountRecipeFactory = ViewItemRecipeFactory3<ItemTextEditBinding, Observable<String>>(
-            { ItemTextEditBinding.inflate(LayoutInflater.from(context)) },
+        val defaultAmountRecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Observable<String>>(
+            { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
             { d, vb, lifecycleOwner ->
                 vb.editText.bind(d, lifecycleOwner) { easyText = it }
-                vb.editText.onDone { categorySettingsVM.userUpdateDefaultAmount(it.toMoneyBigDecimal()) }
+                vb.editText.onDone { categorySettingsVM.userSetDefaultAmount(it.toMoneyBigDecimal()) }
+            }
+        )
+        val categoryNameRecipeFactory = ViewItemRecipeFactory3<ItemEditTextBinding, Observable<String>>(
+            { ItemEditTextBinding.inflate(LayoutInflater.from(context)) },
+            { d, vb, lifecycleOwner ->
+                vb.edittext.bind(d, lifecycleOwner) { easyText = it }
+                vb.edittext.onDone { categorySettingsVM.userSetName(it) }
             }
         )
         val categoryTypeRecipeFactory = ViewItemRecipeFactory3<ItemSpinnerBinding, Unit>(
@@ -60,12 +86,12 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
             { _, vb, _ ->
                 val adapter = ArrayAdapter(requireContext(), R.layout.item_text_view_2, CategoryType.getPickableValues())
                 vb.spinner.adapter = adapter
-                vb.spinner.setSelection(adapter.getPosition(categorySettingsVM.categoryBox.unbox.type))
+                vb.spinner.setSelection(adapter.getPosition(categorySettingsVM.categoryToPush.unbox.type))
                 vb.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     var didFirstSelectionHappen = AtomicBoolean(false)
                     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                         if (didFirstSelectionHappen.getAndSet(true))
-                            categorySettingsVM.userUpdateType(
+                            categorySettingsVM.userSetType(
                                 type = (vb.spinner.selectedItem as CategoryType)
                             )
                     }
@@ -76,12 +102,14 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
         )
         vb.tmTableView.initialize(
             recipeGrid = listOf(
-                listOf(
+                listOfNotNull(
+                    if (isForNewCategory) "Name" else null,
                     "Default Amount",
                     "Type"
                 ).map { recipeFactories.textView.createOne(it) },
-                listOf(
-                    defaultAmountRecipeFactory.createOne(categorySettingsVM.categoryBox.map { it.first?.defaultAmount?.toString() ?: "" }),
+                listOfNotNull(
+                    if (isForNewCategory) categoryNameRecipeFactory.createOne(categorySettingsVM.categoryToPush.map { it.first!!.name }) else null,
+                    defaultAmountRecipeFactory.createOne(categorySettingsVM.categoryToPush.map { it.first?.defaultAmount?.toString() ?: "" }),
                     categoryTypeRecipeFactory.createOne(Unit)
                 ),
             ).reflectXY(),
@@ -101,12 +129,13 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
 
             override fun getItemCount() = btns.size
         }
-        btns = listOf(
-            ButtonRVItem(
+        btns = listOfNotNull(
+            if (isForNewCategory) null
+            else ButtonRVItem(
                 title = "Delete",
                 onClick = {
                     AlertDialog.Builder(requireContext())
-                        .setMessage("Are you sure you want to delete these categories?\n\t${categorySettingsVM.categoryName.value!!}")
+                        .setMessage("Are you sure you want to delete these categories?\n\t${categorySettingsVM.categoryToPush.unbox.name}")
                         .setPositiveButton("Yes") { _, _ ->
                             categorySettingsVM.userDeleteCategory()
                             nav.navigateUp()
@@ -117,8 +146,25 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
             ),
             ButtonRVItem(
                 title = "Done",
-                onClick = { nav.navigateUp() }
+                onClick = { categorySettingsVM.userSaveCategory() }
             ),
         ).reversed()
+    }
+
+    enum class Key { IsForNewCategory }
+
+    companion object {
+        fun navigateTo(nav: NavController, source: Any, categorySettingsVM: CategorySettingsVM, categoryName: String?, isForNewCategory: Boolean) {
+            categorySettingsVM.setup(
+                categoryName = categoryName
+            )
+            nav.navigate(
+                when (source) {
+                    is CategorizeFrag -> R.id.action_categorizeFrag_to_categorySettingsFrag
+                    else -> R.id.categorySettingsFrag
+                },
+                Bundle().apply { putBoolean(Key.IsForNewCategory.name, isForNewCategory) }
+            )
+        }
     }
 }
