@@ -50,6 +50,7 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
     fun userBeginAutoReplay() {
         transactionToPush.take(1)
             .flatMapCompletable { autoReplayDomain.addAutoReplay(it.description, it.categoryAmounts) }
+            .andThen(_categorySelectionVM.clearSelection())
             .observe(disposables)
     }
 
