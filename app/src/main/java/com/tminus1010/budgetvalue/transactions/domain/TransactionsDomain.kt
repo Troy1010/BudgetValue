@@ -19,13 +19,13 @@ class TransactionsDomain @Inject constructor(
     private val datePeriodGetter: DatePeriodGetter,
     private val transactionParser: TransactionParser,
     private val autoReplayDomain: AutoReplayDomain
-) : ITransactionsDomain {
-    override val transactions = transactionsRepo.transactions
-    override val transactionBlocks = transactions
+) {
+    val transactions = transactionsRepo.transactions
+    val transactionBlocks = transactions
         .map(::getBlocksFromTransactions)
-    override val spends = transactions
+    val spends = transactions
         .map { it.filter { it.isSpend } }
-    override val currentSpendBlockCAs = spends
+    val currentSpendBlockCAs = spends
         .map {
             it
                 .filter { it.date in datePeriodGetter.getDatePeriod(LocalDate.now()) }
@@ -35,11 +35,11 @@ class TransactionsDomain @Inject constructor(
                         .associateWith { (acc[it] ?: BigDecimal.ZERO) + (v[it] ?: BigDecimal.ZERO) }
                 }
         }
-    override val uncategorizedSpends = spends
+    val uncategorizedSpends = spends
         .map { it.filter { it.isUncategorized } }
-    override val uncategorizedSpendsSize = uncategorizedSpends
+    val uncategorizedSpendsSize = uncategorizedSpends
         .map { it.size.toString() }
-    override fun importTransactions(inputStream: InputStream) {
+    fun importTransactions(inputStream: InputStream) {
         autoReplayDomain.autoReplays.flatMapCompletable { autoReplays ->
             transactionsRepo.tryPush(
                 transactionParser.parseToTransactions(inputStream)
@@ -51,7 +51,7 @@ class TransactionsDomain @Inject constructor(
             )
         }.subscribe()
     }
-    override fun getBlocksFromTransactions(transactions: List<Transaction>): List<TransactionsBlock> {
+    fun getBlocksFromTransactions(transactions: List<Transaction>): List<TransactionsBlock> {
         val transactionsRedefined = transactions.sortedBy { it.date }.toMutableList()
         val returning = ArrayList<TransactionsBlock>()
         if (0 !in transactionsRedefined.indices) return returning
