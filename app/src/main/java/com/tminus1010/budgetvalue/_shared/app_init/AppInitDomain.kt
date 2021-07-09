@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue._shared.app_init
 
-import com.tminus1010.budgetvalue._shared.app_init.data.IAppInitRepo
+import com.tminus1010.budgetvalue._shared.app_init.data.AppInitRepo
 import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.models.CategoryType
@@ -11,7 +11,7 @@ import javax.inject.Singleton
 
 @Singleton
 class AppInitDomain @Inject constructor(
-    private val appInitRepo: IAppInitRepo,
+    private val appInitRepo: AppInitRepo,
     private val categoriesRepo: CategoriesRepo
 ) : IAppInitializer {
     override fun appInit() {

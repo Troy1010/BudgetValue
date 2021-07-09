@@ -10,7 +10,9 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class SharedPrefWrapper @Inject constructor(
     private val sharedPreferences: SharedPreferences,
     private val moshi: Moshi,
