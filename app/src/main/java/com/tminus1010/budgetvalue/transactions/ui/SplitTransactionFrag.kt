@@ -18,9 +18,7 @@ import com.tminus1010.budgetvalue._core.middleware.ui.*
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
 import com.tminus1010.budgetvalue._core.ui.data_binding.bindButtonRVItem
-import com.tminus1010.budgetvalue.auto_replay.AutoReplayVM
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.categories.ui.CategorySettingsFrag
 import com.tminus1010.budgetvalue.databinding.FragSplitTransactionBinding
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
 import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
@@ -52,14 +50,15 @@ class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
     lateinit var saveTransactionDomain: SaveTransactionDomain
     private val categorizeTransactionsVM: CategorizeTransactionsVM by activityViewModels()
     private val categorizeTransactionsAdvancedVM: CategorizeTransactionsAdvancedVM by activityViewModels()
-    private val autoReplayVM: AutoReplayVM by activityViewModels()
     private var _shouldIgnoreUserInputForDuration = PublishSubject.create<Unit>()
     private var shouldIgnoreUserInput = _shouldIgnoreUserInputForDuration
         .flatMap { Observable.just(false).delay(1, TimeUnit.SECONDS).startWithItem(true) }
         .startWithItem(false)
         .replay(1).autoConnect()
     var btns = emptyList<ButtonRVItem>()
-        set(value) { field = value; vb.recyclerviewButtons.adapter?.notifyDataSetChanged() }
+        set(value) {
+            field = value; vb.recyclerviewButtons.adapter?.notifyDataSetChanged()
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -129,7 +128,7 @@ class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
             ButtonRVItem(
                 title = "Auto Replay",
                 onClick = {
-                    autoReplayVM.userBeginAutoReplay()
+                    categorizeTransactionsAdvancedVM.userBeginAutoReplay()
                     nav.navigateUp()
                 }
             ),

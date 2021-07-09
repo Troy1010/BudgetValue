@@ -4,6 +4,7 @@ import com.tminus1010.budgetvalue._core.data.MainRepo
 import com.tminus1010.budgetvalue._shared.app_init.data.IAppInitRepo
 import com.tminus1010.budgetvalue._shared.date_period_getter.data.ISettingsRepo
 import com.tminus1010.budgetvalue.accounts.data.IAccountsRepo
+import com.tminus1010.budgetvalue.auto_replay.data.IAutoReplayRepo
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import com.tminus1010.budgetvalue.categories.data.ICategoriesRepo
@@ -42,4 +43,7 @@ abstract class BindingModule {
 
     @Binds
     abstract fun transactionsRepo(mainRepo: MainRepo): ITransactionsRepo
+
+    @Binds
+    abstract fun autoReplayRepo(mainRepo: MainRepo): IAutoReplayRepo
 }

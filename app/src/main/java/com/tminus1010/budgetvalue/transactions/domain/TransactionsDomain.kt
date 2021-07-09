@@ -1,12 +1,12 @@
 package com.tminus1010.budgetvalue.transactions.domain
 
 import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
+import com.tminus1010.budgetvalue.auto_replay.AutoReplayDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.TransactionParser
 import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.budgetvalue.transactions.models.TransactionsBlock
-import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import java.io.InputStream
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -17,7 +17,8 @@ import javax.inject.Singleton
 class TransactionsDomain @Inject constructor(
     private val transactionsRepo: ITransactionsRepo,
     private val datePeriodGetter: DatePeriodGetter,
-    private val transactionParser: TransactionParser
+    private val transactionParser: TransactionParser,
+    private val autoReplayDomain: AutoReplayDomain
 ) : ITransactionsDomain {
     override val transactions = transactionsRepo.transactions
     override val transactionBlocks = transactions
@@ -39,7 +40,16 @@ class TransactionsDomain @Inject constructor(
     override val uncategorizedSpendsSize = uncategorizedSpends
         .map { it.size.toString() }
     override fun importTransactions(inputStream: InputStream) {
-        transactionsRepo.tryPush(transactionParser.parseToTransactions(inputStream)).subscribe()
+        autoReplayDomain.autoReplays.flatMapCompletable { autoReplays ->
+            transactionsRepo.tryPush(
+                transactionParser.parseToTransactions(inputStream)
+                    .map { transaction ->
+                        autoReplays[transaction.description]
+                            ?.let { transaction.copy(categoryAmounts = it) }
+                            ?: transaction
+                    }
+            )
+        }.subscribe()
     }
     override fun getBlocksFromTransactions(transactions: List<Transaction>): List<TransactionsBlock> {
         val transactionsRedefined = transactions.sortedBy { it.date }.toMutableList()

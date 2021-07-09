@@ -2,6 +2,7 @@ package com.tminus1010.budgetvalue._core.data
 
 import com.tminus1010.budgetvalue._core.extensions.toBigDecimalOrZero
 import com.tminus1010.budgetvalue.accounts.models.Account
+import com.tminus1010.budgetvalue.auto_replay.models.AutoReplay
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
@@ -43,6 +44,10 @@ class MainRepo @Inject constructor(
 
     override fun add(account: Account): Completable =
         miscDAO.addAccount(account.toDTO())
+            .subscribeOn(Schedulers.io())
+
+    override fun add(autoReplay: AutoReplay): Completable =
+        miscDAO.add(autoReplay.toDTO(categoryAmountsConverter))
             .subscribeOn(Schedulers.io())
 
     override fun delete(account: Account): Completable =
@@ -186,4 +191,9 @@ class MainRepo @Inject constructor(
     override fun updatePlanAmount(plan: Plan, amount: BigDecimal): Completable =
         miscDAO.updatePlanAmount(plan.toDTO(categoryAmountsConverter).startDate, amount)
             .subscribeOn(Schedulers.io())
+
+    override fun fetchAutoReplays(): Observable<List<AutoReplay>> =
+        miscDAO.fetchAutoReplays()
+            .subscribeOn(Schedulers.io())
+            .map { it.map { AutoReplay.fromDTO(it, categoryAmountsConverter) } }
 }
