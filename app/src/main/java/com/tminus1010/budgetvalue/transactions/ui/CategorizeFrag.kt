@@ -199,8 +199,8 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     ButtonRVItem(
                         title = "Replay",
                         isEnabled = categorizeTransactionsVM.isReplayAvailable,
-                        onLongClick = { categorizeTransactionsVM.userReplay() },
-                        onClick = { categorizeTransactionsVM.userNavToSplitWithReplayValues() })
+                        onLongClick = { categorizeTransactionsVM.userNavToSplitWithReplayValues() },
+                        onClick = { categorizeTransactionsVM.userReplay() })
                 else null,
                 if (!inSelectionMode)
                     ButtonRVItem(
