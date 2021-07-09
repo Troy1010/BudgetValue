@@ -22,7 +22,7 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
-class CategorizeTransactionsVM @Inject constructor(
+class CategorizeVM @Inject constructor(
     errorSubject: Subject<Throwable>,
     private val saveTransactionDomain: SaveTransactionDomain,
     private val transactionsRepo: TransactionsRepo,

@@ -21,7 +21,7 @@ import java.math.BigDecimal
 import javax.inject.Inject
 
 @HiltViewModel
-class CategorizeTransactionsAdvancedVM @Inject constructor(
+class CategorizeAdvancedVM @Inject constructor(
     errorSubject: Subject<Throwable>,
     private val saveTransactionDomain: SaveTransactionDomain,
     transactionsDomain: TransactionsDomain,

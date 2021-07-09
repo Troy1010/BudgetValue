@@ -22,8 +22,8 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.FragCategorizeAdvancedBinding
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
 import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
-import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsAdvancedVM
-import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsVM
+import com.tminus1010.budgetvalue.transactions.CategorizeAdvancedVM
+import com.tminus1010.budgetvalue.transactions.CategorizeVM
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeAdvancedDomain
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
@@ -48,8 +48,8 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
 
     @Inject
     lateinit var saveTransactionDomain: SaveTransactionDomain
-    private val categorizeTransactionsVM: CategorizeTransactionsVM by activityViewModels()
-    private val categorizeTransactionsAdvancedVM: CategorizeTransactionsAdvancedVM by activityViewModels()
+    private val categorizeVM: CategorizeVM by activityViewModels()
+    private val categorizeAdvancedVM: CategorizeAdvancedVM by activityViewModels()
     private var _shouldIgnoreUserInputForDuration = PublishSubject.create<Unit>()
     private var shouldIgnoreUserInput = _shouldIgnoreUserInputForDuration
         .flatMap { Observable.just(false).delay(1, TimeUnit.SECONDS).startWithItem(true) }
@@ -63,7 +63,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         shouldIgnoreUserInput.observe(viewLifecycleOwner) {}
-        vb.tvAmountToSplit.bind(categorizeTransactionsVM.amountToCategorize) { text = it }
+        vb.tvAmountToSplit.bind(categorizeVM.amountToCategorize) { text = it }
         // # TMTableView
         val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Map.Entry<Category, BigDecimal>>(
             { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
@@ -71,19 +71,19 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 vb.editText.setText(amount.toString())
                 vb.editText.onDone {
                     if (!shouldIgnoreUserInput.value!!)
-                        categorizeTransactionsAdvancedVM.userInputCA(category, it.toMoneyBigDecimal())
+                        categorizeAdvancedVM.userInputCA(category, it.toMoneyBigDecimal())
                 }
                 vb.editText.setOnCreateContextMenuListener { menu, _, _ ->
                     menu.add(
                         MenuItemPartial("Fill") {
                             _shouldIgnoreUserInputForDuration.onNext(Unit)
-                            categorizeTransactionsAdvancedVM.userFillIntoCategory(category)
+                            categorizeAdvancedVM.userFillIntoCategory(category)
                         }
                     )
                 }
             }
         )
-        categorizeTransactionsAdvancedVM.transactionToPush
+        categorizeAdvancedVM.transactionToPush
             .map { transaction ->
                 val categoryAmounts = transaction.categoryAmounts.toSortedMap(categoryComparator)
                 val recipes2D = listOf(
@@ -91,7 +91,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                             + recipeFactories.textView.createOne("Default")
                             + recipeFactories.textView.createMany(categoryAmounts.map { it.key.name }),
                     listOf(recipeFactories.header.createOne("Amount"))
-                            + recipeFactories.textViewWithLifecycle.createOne(categorizeTransactionsAdvancedVM.defaultAmount)
+                            + recipeFactories.textViewWithLifecycle.createOne(categorizeAdvancedVM.defaultAmount)
                             + categoryAmountRecipeFactory.createMany(categoryAmounts.entries)
                 ).reflectXY()
                 val dividerMap = categoryAmounts.keys
@@ -128,14 +128,14 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
             ButtonRVItem(
                 title = "Auto Replay",
                 onClick = {
-                    categorizeTransactionsAdvancedVM.userBeginAutoReplay()
+                    categorizeAdvancedVM.userBeginAutoReplay()
                     nav.navigateUp()
                 }
             ),
             ButtonRVItem(
                 title = "Save",
                 onClick = {
-                    categorizeTransactionsAdvancedVM.userSaveTransaction()
+                    categorizeAdvancedVM.userSaveTransaction()
                     nav.navigateUp()
                 }
             ),

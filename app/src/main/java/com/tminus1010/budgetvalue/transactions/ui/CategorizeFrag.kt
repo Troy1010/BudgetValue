@@ -27,8 +27,8 @@ import com.tminus1010.budgetvalue.categories.ui.CategorySettingsFrag
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
-import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsAdvancedVM
-import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsVM
+import com.tminus1010.budgetvalue.transactions.CategorizeAdvancedVM
+import com.tminus1010.budgetvalue.transactions.CategorizeVM
 import com.tminus1010.budgetvalue.transactions.TransactionsVM
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeAdvancedDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -42,11 +42,11 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     private val vb by viewBinding(FragCategorizeBinding::bind)
-    private val categorizeTransactionsVM: CategorizeTransactionsVM by activityViewModels()
+    private val categorizeVM: CategorizeVM by activityViewModels()
     private val categoriesVM: CategoriesVM by activityViewModels()
     private val transactionsVM: TransactionsVM by activityViewModels()
     private val categorySelectionVM: CategorySelectionVM by navGraphViewModels(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
-    private val categorizeTransactionsAdvancedVM: CategorizeTransactionsAdvancedVM by activityViewModels()
+    private val categorizeAdvancedVM: CategorizeAdvancedVM by activityViewModels()
     private val categorySettingsVM: CategorySettingsVM by navGraphViewModels(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
 
     @Inject
@@ -65,7 +65,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Mediation
-        categorizeTransactionsVM.setup(categorySelectionVM)
+        categorizeVM.setup(categorySelectionVM)
         // # Some of SelectionMode
         categorySelectionVM.inSelectionMode.observe(viewLifecycleOwner) { inSelectionMode ->
             // ## inSelectionMode
@@ -74,14 +74,14 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 .forEach { it.alpha = if (inSelectionMode) 0.5F else 1F }
         }
         // # Navigation
-        vb.root.bind(categorizeTransactionsVM.navToSplit) {
-            categorizeTransactionsAdvancedVM.setup(it, categorySelectionVM)
+        vb.root.bind(categorizeVM.navToSplit) {
+            categorizeAdvancedVM.setup(it, categorySelectionVM)
             nav.navigate(R.id.action_categorizeFrag_to_splitTransactionFrag)
         }
         // # TextViews
-        vb.textviewDate.bind(categorizeTransactionsVM.date) { text = it }
-        vb.textviewAmount.bind(categorizeTransactionsVM.latestUncategorizedTransactionAmount) { text = it }
-        vb.textviewDescription.bind(categorizeTransactionsVM.latestUncategorizedTransactionDescription) { text = it }
+        vb.textviewDate.bind(categorizeVM.date) { text = it }
+        vb.textviewAmount.bind(categorizeVM.latestUncategorizedTransactionAmount) { text = it }
+        vb.textviewDescription.bind(categorizeVM.latestUncategorizedTransactionDescription) { text = it }
         vb.textviewAmountLeft.bind(transactionsVM.uncategorizedSpendsSize) { text = it }
         // # Categories RecyclerView
         categoriesVM.userCategories.observe(viewLifecycleOwner) { categories = it }
@@ -103,8 +103,8 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 holder.vb.btnCategory.setOnClickListener {
                     if (categorySelectionVM.inSelectionMode.value!!)
                         selectionModeAction()
-                    else if (categorizeTransactionsVM.isTransactionAvailable.value!!)
-                        categorizeTransactionsVM.userSimpleCategorize(categories[holder.adapterPosition])
+                    else if (categorizeVM.isTransactionAvailable.value!!)
+                        categorizeVM.userSimpleCategorize(categories[holder.adapterPosition])
                 }
                 holder.vb.btnCategory.setOnLongClickListener { selectionModeAction(); true }
             }
@@ -137,9 +137,9 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 if (inSelectionMode)
                     ButtonRVItem(
                         title = "Advanced",
-                        isEnabled = categorizeTransactionsVM.isTransactionAvailable,
+                        isEnabled = categorizeVM.isTransactionAvailable,
                         onClick = {
-                            categorizeTransactionsAdvancedVM.setup(
+                            categorizeAdvancedVM.setup(
                                 categoryAmounts = null,
                                 categorySelectionVM = categorySelectionVM
                             )
@@ -166,14 +166,14 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 if (!inSelectionMode)
                     ButtonRVItem(
                         title = "Redo",
-                        isEnabled = categorizeTransactionsVM.isRedoAvailable,
-                        onClick = { categorizeTransactionsVM.userRedo() })
+                        isEnabled = categorizeVM.isRedoAvailable,
+                        onClick = { categorizeVM.userRedo() })
                 else null,
                 if (!inSelectionMode)
                     ButtonRVItem(
                         title = "Undo",
-                        isEnabled = categorizeTransactionsVM.isUndoAvailable,
-                        onClick = { categorizeTransactionsVM.userUndo() })
+                        isEnabled = categorizeVM.isUndoAvailable,
+                        onClick = { categorizeVM.userUndo() })
                 else null,
                 if (!inSelectionMode)
                     ButtonRVItem(
