@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue._shared.date_period_getter
 
 import com.tminus1010.budgetvalue._core.middleware.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.middleware.Rx
-import com.tminus1010.budgetvalue._shared.date_period_getter.data.ISettingsRepo
+import com.tminus1010.budgetvalue._shared.date_period_getter.data.SettingsRepo
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
 import java.time.LocalDate
@@ -13,7 +13,7 @@ import javax.inject.Singleton
 
 @Singleton
 class DatePeriodGetter @Inject constructor(
-    private val settingsRepo: ISettingsRepo
+    private val settingsRepo: SettingsRepo
 ): IDatePeriodGetter {
     private val anchorDay = LocalDate.of(2020, Month.JULY, 1)
     override fun getDatePeriodObservable(date: LocalDate): Observable<LocalDatePeriod> =
