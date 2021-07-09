@@ -1,9 +1,9 @@
 package com.tminus1010.budgetvalue.categories.models
 
 enum class CategoryType {
-    NOT_USER_PICKABLE, Always, Reservoir;
+    Special, Always, Reservoir;
 
     companion object {
-        fun getPickableValues() = values().filter { it != NOT_USER_PICKABLE }
+        fun getPickableValues() = values().filter { it != Special }
     }
 }

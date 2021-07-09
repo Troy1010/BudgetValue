@@ -43,7 +43,7 @@ class CategoriesDomain @Inject constructor(
     }
 
     companion object {
-        val defaultCategory = Category("Default", CategoryType.NOT_USER_PICKABLE, BigDecimal.ZERO, true)
-        val unknownCategory = Category("Unknown", CategoryType.NOT_USER_PICKABLE, BigDecimal.ZERO, true)
+        val defaultCategory = Category("Default", CategoryType.Special, BigDecimal.ZERO, true)
+        val unknownCategory = Category("Unknown", CategoryType.Special, BigDecimal.ZERO, true)
     }
 }
