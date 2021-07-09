@@ -48,16 +48,20 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     private val categorySelectionVM: CategorySelectionVM by navGraphViewModels(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
     private val categorizeTransactionsAdvancedVM: CategorizeTransactionsAdvancedVM by activityViewModels()
     private val categorySettingsVM: CategorySettingsVM by navGraphViewModels(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
+
     @Inject
     lateinit var categorizeAdvancedDomain: CategorizeAdvancedDomain
     var btns = emptyList<ButtonRVItem>()
-        set(value) { field = value; vb.recyclerviewButtons.adapter?.notifyDataSetChanged() }
+        set(value) {
+            field = value; vb.recyclerviewButtons.adapter?.notifyDataSetChanged()
+        }
     var categories = emptyList<Category>()
         set(value) {
             val shouldNotifyDataSetChanged = field.size != value.size
             field = value
             if (shouldNotifyDataSetChanged) vb.recyclerviewCategories.adapter?.notifyDataSetChanged()
         }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Mediation
@@ -139,21 +143,8 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                         onClick = {
                             categorizeTransactionsAdvancedVM.setup(
                                 categoryAmounts = null,
-                                categorySelectionVM = categorySelectionVM)
-                            nav.navigate(R.id.action_categorizeFrag_to_splitTransactionFrag)
-                        }
-                    )
-                else null,
-                if (inSelectionMode)
-                    ButtonRVItem(
-                        title = "Split Exactly",
-                        isEnabled = categorizeTransactionsVM.isTransactionAvailable,
-                        onClick = {
-                            categorizeAdvancedDomain.calcExactSplit(
-                                categorySelectionVM.selectedCategories.value!!,
-                                categorizeTransactionsVM.transactionBox.value!!.first!!.amount
-                            ).let { it.mapValues { -it.value } }
-                                .also { categorizeTransactionsAdvancedVM.setup(it, categorySelectionVM) }
+                                categorySelectionVM = categorySelectionVM
+                            )
                             nav.navigate(R.id.action_categorizeFrag_to_splitTransactionFrag)
                         }
                     )
