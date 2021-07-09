@@ -58,7 +58,7 @@ data class Transaction(
             date,
             description,
             amount,
-            categoryAmountsConverter.toJson(categoryAmounts),
+            categoryAmountsConverter.toJson(categoryAmounts.filter { it.value.compareTo(BigDecimal.ZERO) != 0 }),
             categorizationDate,
             id,
         )

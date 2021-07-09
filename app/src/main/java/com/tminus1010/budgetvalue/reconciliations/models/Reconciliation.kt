@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.reconciliations.models
 
-import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue._shared.date_period_getter.IDatePeriodGetter
+import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.history.models.IHistoryColumnData
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
@@ -14,22 +14,23 @@ data class Reconciliation(
     override val categoryAmounts: Map<Category, BigDecimal>,
     val id: Int = 0
 ) : IHistoryColumnData {
-    fun toDTO(categoryAmountsConverter: CategoryAmountsConverter): ReconciliationDTO {
-        return ReconciliationDTO(
+    fun toDTO(categoryAmountsConverter: CategoryAmountsConverter): ReconciliationDTO =
+        ReconciliationDTO(
             localDate = localDate,
-            categoryAmounts = categoryAmountsConverter.toJson(categoryAmounts),
+            categoryAmounts = categoryAmountsConverter.toJson(categoryAmounts.filter { it.value.compareTo(BigDecimal.ZERO) != 0 }),
             amount = defaultAmount,
-            id = id,)
-    }
+            id = id,
+        )
 
     companion object {
-        fun fromDTO(reconciliationDTO: ReconciliationDTO, categoryAmountsConverter: CategoryAmountsConverter) =
-            reconciliationDTO.run {
-                Reconciliation(localDate,
-                    amount,
-                    categoryAmountsConverter.toCategoryAmounts(categoryAmounts),
-                    id)
-            }
+        fun fromDTO(reconciliationDTO: ReconciliationDTO, categoryAmountsConverter: CategoryAmountsConverter) = reconciliationDTO.run {
+            Reconciliation(
+                localDate = localDate,
+                defaultAmount = amount,
+                categoryAmounts = categoryAmountsConverter.toCategoryAmounts(categoryAmounts),
+                id = id
+            )
+        }
     }
 
     override val title = "Reconciliation"
