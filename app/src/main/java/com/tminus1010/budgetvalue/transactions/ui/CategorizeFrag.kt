@@ -149,7 +149,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 else null,
                 if (inSelectionMode)
                     ButtonRVItem(
-                        title = "Settings",
+                        title = "Category Settings",
                         isEnabled = categorySelectionVM.selectedCategories.map { it.size == 1 },
                         onClick = {
                             CategorySettingsFrag.navigateTo(
