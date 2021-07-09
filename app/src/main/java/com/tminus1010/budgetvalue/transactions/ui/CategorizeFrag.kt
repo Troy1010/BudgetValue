@@ -111,10 +111,10 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
 
             override fun getItemCount() = categories.size
             override fun onViewAttachedToWindow(holder: GenViewHolder2<ItemCategoryBtnBinding>, lifecycle: LifecycleOwner) {
-                val category = categories[holder.adapterPosition]
+                val categoryName = categories[holder.adapterPosition].name
                 categorySelectionVM.selectedCategories.observe(lifecycle) { selectedCategories ->
                     holder.vb.btnCategory.alpha =
-                        if (selectedCategories.isEmpty() || category in selectedCategories) 1F
+                        if (selectedCategories.isEmpty() || categoryName in selectedCategories.map { it.name }) 1F
                         else 0.5F
                 }
             }
