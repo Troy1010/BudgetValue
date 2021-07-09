@@ -39,7 +39,7 @@ class TransactionsDomain @Inject constructor(
     override val uncategorizedSpendsSize = uncategorizedSpends
         .map { it.size.toString() }
     override fun importTransactions(inputStream: InputStream) {
-        transactionsRepo.tryPush(transactionParser.parseToTransactions(inputStream)).launch()
+        transactionsRepo.tryPush(transactionParser.parseToTransactions(inputStream)).subscribe()
     }
     override fun getBlocksFromTransactions(transactions: List<Transaction>): List<TransactionsBlock> {
         val transactionsRedefined = transactions.sortedBy { it.date }.toMutableList()
