@@ -22,50 +22,28 @@ class ReconciliationsRepo @Inject constructor(
     private val sharedPrefWrapper: SharedPrefWrapper,
     categoryParser: ICategoryParser,
 ) {
-    fun pushReconciliationCA(reconciliation: Reconciliation, category: Category, amount: BigDecimal?): Completable =
-        reconciliation.categoryAmounts
-            .toMutableMap()
-            .apply { if (amount == null) remove(category) else put(category, amount) }
-            .let {
-                miscDAO.updateReconciliationCategoryAmounts(
-                    reconciliation.id,
-                    it.mapKeys { it.key.name })
-            }
-            .subscribeOn(Schedulers.io())
-
     fun clearReconciliations(): Completable =
-        miscDAO.clearReconciliations()
-            .subscribeOn(Schedulers.io())
+        miscDAO.clearReconciliations().subscribeOn(Schedulers.io())
 
     fun push(reconciliation: Reconciliation): Completable =
-        miscDAO.add(reconciliation.toDTO(categoryAmountsConverter))
-            .subscribeOn(Schedulers.io())
+        miscDAO.add(reconciliation.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
 
     fun delete(reconciliation: Reconciliation): Completable =
-        miscDAO.delete(reconciliation.toDTO(categoryAmountsConverter))
-            .subscribeOn(Schedulers.io())
+        miscDAO.delete(reconciliation.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
 
     val reconciliations: Observable<List<Reconciliation>> =
-        miscDAO.fetchReconciliations()
+        miscDAO.fetchReconciliations().subscribeOn(Schedulers.io())
             .map { it.map { Reconciliation.fromDTO(it, categoryAmountsConverter) } }
             .replay(1).refCount()
-            .subscribeOn(Schedulers.io())
 
     val activeReconciliationCAs: Observable<Map<Category, BigDecimal>> =
-        sharedPrefWrapper.activeReconciliationCAs
+        sharedPrefWrapper.activeReconciliationCAs.subscribeOn(Schedulers.io())
             .map { it.associate { categoryParser.parseCategory(it.key) to it.value.toBigDecimalOrZero() } }
             .replay(1).refCount()
-            .subscribeOn(Schedulers.io())
-
-    fun pushActiveReconciliationCAs(categoryAmounts: Map<Category, BigDecimal>): Completable =
-        sharedPrefWrapper.pushActiveReconciliationCAs(categoryAmounts.associate { it.key.name to it.value.toString() })
-            .subscribeOn(Schedulers.io())
 
     fun clearActiveReconcileCAs(): Completable =
-        sharedPrefWrapper.clearActiveReconcileCAs()
-            .subscribeOn(Schedulers.io())
+        sharedPrefWrapper.clearActiveReconcileCAs().subscribeOn(Schedulers.io())
 
     fun pushActiveReconciliationCA(kv: Pair<Category, BigDecimal?>): Completable =
-        sharedPrefWrapper.pushActiveReconciliationCA(Pair(kv.first.name, kv.second.toString()))
-            .subscribeOn(Schedulers.io())
+        sharedPrefWrapper.pushActiveReconciliationCA(Pair(kv.first.name, kv.second.toString())).subscribeOn(Schedulers.io())
 }
