@@ -151,12 +151,6 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 else null,
                 if (inSelectionMode)
                     ButtonRVItem(
-                        title = "Clear selection",
-                        onClick = { categorySelectionVM.clearSelection().subscribe() }
-                    )
-                else null,
-                if (inSelectionMode)
-                    ButtonRVItem(
                         title = "Settings",
                         isEnabled = categorySelectionVM.selectedCategories.map { it.size == 1 },
                         onClick = {
