@@ -30,13 +30,13 @@ import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
+    private val vb by viewBinding(FragReconcileBinding::bind)
     private val activeReconciliationVM: ActiveReconciliationVM by activityViewModels()
     private val categoriesVM: CategoriesVM by activityViewModels()
     private val activePlanVM: ActivePlanVM by activityViewModels()
     private val transactionsVM: TransactionsVM by activityViewModels()
     private val accountsVM: AccountsVM by activityViewModels()
     private val budgetedVM: BudgetedVM by activityViewModels()
-    private val vb by viewBinding(FragReconcileBinding::bind)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Output

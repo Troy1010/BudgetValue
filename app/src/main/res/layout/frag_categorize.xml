@@ -86,7 +86,7 @@
         android:layout_marginHorizontal="16dp"
         android:layout_marginVertical="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layoutManager="LinearLayoutManager"
         tools:itemCount="3"
+        tools:layoutManager="LinearLayoutManager"
         tools:listitem="@layout/item_button" />
 </androidx.constraintlayout.widget.ConstraintLayout>
