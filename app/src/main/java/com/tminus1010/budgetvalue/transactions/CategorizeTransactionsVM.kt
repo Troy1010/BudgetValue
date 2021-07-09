@@ -58,7 +58,7 @@ class CategorizeTransactionsVM @Inject constructor(
             .observe(disposables)
     }
 
-    fun userNavToSplitWithReplayValues() {
+    fun userNavToSplitWithReplayByPercentage() {
         _categorySelectionVM.clearSelection()
         _categorySelectionVM.selectCategories(*replayTransactionBox.value!!.first!!.categoryAmounts.map { it.key }.toTypedArray())
         navToSplit.onNext(replayTransactionBox.value!!.first!!.calcCAsAdjustedForNewTotal(firstTransactionBox.value!!.first!!.amount))
@@ -111,7 +111,4 @@ class CategorizeTransactionsVM @Inject constructor(
         .map { it.first?.description ?: "" }
         .divertErrors(errorSubject)
     val navToSplit = PublishSubject.create<Map<Category, BigDecimal>>()
-    val transactionBox = firstTransactionBox
-        .nonLazyCache(disposables)
-        .divertErrors(errorSubject)
 }
