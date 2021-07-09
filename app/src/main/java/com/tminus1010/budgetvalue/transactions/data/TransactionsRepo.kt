@@ -16,38 +16,30 @@ class TransactionsRepo @Inject constructor(
     private val categoryAmountsConverter: CategoryAmountsConverter,
 ) {
     val transactions: Observable<List<Transaction>> =
-        miscDAO.fetchTransactions()
+        miscDAO.fetchTransactions().subscribeOn(Schedulers.io())
             .map { it.map { Transaction.fromDTO(it, categoryAmountsConverter) } }
             .replay(1).refCount()
-            .subscribeOn(Schedulers.io())
 
     fun tryPush(transaction: Transaction): Completable =
-        miscDAO.tryAdd(transaction.toDTO(categoryAmountsConverter))
-            .subscribeOn(Schedulers.io())
+        miscDAO.tryAdd(transaction.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
 
     fun push(transaction: Transaction): Completable =
-        miscDAO.add(transaction.toDTO(categoryAmountsConverter))
-            .subscribeOn(Schedulers.io())
+        miscDAO.add(transaction.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
 
     fun delete(transaction: Transaction): Completable =
-        miscDAO.delete(transaction.toDTO(categoryAmountsConverter))
-            .subscribeOn(Schedulers.io())
+        miscDAO.delete(transaction.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
 
     fun update(transaction: Transaction): Completable =
-        miscDAO.update(transaction.toDTO(categoryAmountsConverter))
-            .subscribeOn(Schedulers.io())
+        miscDAO.update(transaction.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
 
     fun tryPush(transactions: List<Transaction>): Completable =
-        miscDAO.tryAdd(transactions.map { it.toDTO(categoryAmountsConverter) })
-            .subscribeOn(Schedulers.io())
+        miscDAO.tryAdd(transactions.map { it.toDTO(categoryAmountsConverter) }).subscribeOn(Schedulers.io())
 
     fun findTransactionsWithDescription(description: String): Single<List<Transaction>> =
-        miscDAO.fetchTransactions(description)
+        miscDAO.fetchTransactions(description).subscribeOn(Schedulers.io())
             .map { it.map { Transaction.fromDTO(it, categoryAmountsConverter) } }
-            .subscribeOn(Schedulers.io())
 
     fun getTransaction(id: String): Single<Transaction> =
-        miscDAO.getTransaction(id)
+        miscDAO.getTransaction(id).subscribeOn(Schedulers.io())
             .map { Transaction.fromDTO(it, categoryAmountsConverter) }
-            .subscribeOn(Schedulers.io())
 }
