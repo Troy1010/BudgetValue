@@ -63,11 +63,11 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         // # Mediation
         categorizeTransactionsVM.setup(categorySelectionVM)
         // # Some of SelectionMode
-        categorySelectionVM.state.observe(viewLifecycleOwner) { state ->
+        categorySelectionVM.inSelectionMode.observe(viewLifecycleOwner) { inSelectionMode ->
             // ## inSelectionMode
             vb.root.children
                 .filter { it != vb.recyclerviewCategories && it != vb.recyclerviewButtons }
-                .forEach { it.alpha = if (state.inSelectionMode) 0.5F else 1F }
+                .forEach { it.alpha = if (inSelectionMode) 0.5F else 1F }
         }
         // # Navigation
         vb.root.bind(categorizeTransactionsVM.navToSplit) {
@@ -90,23 +90,20 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     .let { GenViewHolder2(it) }
 
             override fun onBindViewHolder(holder: GenViewHolder2<ItemCategoryBtnBinding>, position: Int) {
-                val category = categories[position]
-                holder.vb.btnCategory.apply {
-                    val selectionModeAction = {
-                        if (category !in categorySelectionVM.selectedCategories.value!!)
-                            categorySelectionVM.selectCategories(category)
-                        else
-                            categorySelectionVM.unselectCategories(category)
-                    }
-                    text = category.name
-                    setOnClickListener {
-                        if (categorySelectionVM.inSelectionMode.value!!)
-                            selectionModeAction()
-                        else if (categorizeTransactionsVM.isTransactionAvailable.value!!)
-                            categorizeTransactionsVM.userSimpleCategorize(category)
-                    }
-                    setOnLongClickListener { selectionModeAction(); true }
+                val selectionModeAction = {
+                    if (categories[holder.adapterPosition] !in categorySelectionVM.selectedCategories.value!!)
+                        categorySelectionVM.selectCategories(categories[holder.adapterPosition])
+                    else
+                        categorySelectionVM.unselectCategories(categories[holder.adapterPosition])
                 }
+                holder.vb.btnCategory.text = categories[holder.adapterPosition].name
+                holder.vb.btnCategory.setOnClickListener {
+                    if (categorySelectionVM.inSelectionMode.value!!)
+                        selectionModeAction()
+                    else if (categorizeTransactionsVM.isTransactionAvailable.value!!)
+                        categorizeTransactionsVM.userSimpleCategorize(categories[holder.adapterPosition])
+                }
+                holder.vb.btnCategory.setOnLongClickListener { selectionModeAction(); true }
             }
 
             override fun getItemCount() = categories.size
