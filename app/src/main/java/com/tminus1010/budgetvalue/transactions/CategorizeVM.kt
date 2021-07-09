@@ -6,6 +6,7 @@ import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.replay.models.IReplay
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
@@ -44,6 +45,13 @@ class CategorizeVM @Inject constructor(
                     categoryAmounts = replayTransactionBox.value!!.first!!
                         .calcCAsAdjustedForNewTotal(firstTransactionBox.value!!.first!!.amount)
                 )
+        )
+            .observe(disposables)
+    }
+
+    fun userReplay(replay: IReplay) {
+        saveTransactionDomain.saveTransaction(
+            replay.categorize(firstTransactionBox.value!!.first!!)
         )
             .observe(disposables)
     }
@@ -95,7 +103,7 @@ class CategorizeVM @Inject constructor(
     val isUndoAvailable = saveTransactionDomain.isUndoAvailable
     val isRedoAvailable = saveTransactionDomain.isRedoAvailable
     val amountToCategorize = firstTransactionBox.unbox()
-        .map { "Amount to categorize: $${it.amount}" }
+        .map { "Amount to split: $${it.amount}" }
         .nonLazyCache(disposables)
         .divertErrors(errorSubject)
     val isTransactionAvailable = firstTransactionBox

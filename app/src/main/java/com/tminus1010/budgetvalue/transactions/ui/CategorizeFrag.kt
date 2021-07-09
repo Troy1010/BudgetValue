@@ -36,6 +36,7 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toPX
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.kotlin.Observables
 import javax.inject.Inject
 
 
@@ -76,7 +77,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         // # Navigation
         vb.root.bind(categorizeVM.navToSplit) {
             categorizeAdvancedVM.setup(it, categorySelectionVM)
-            nav.navigate(R.id.action_categorizeFrag_to_splitTransactionFrag)
+            nav.navigate(R.id.action_categorizeFrag_to_categorizeAdvancedFrag)
         }
         // # TextViews
         vb.textviewDate.bind(categorizeVM.date) { text = it }
@@ -132,18 +133,24 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
 
             override fun getItemCount() = btns.size
         }
-        categorySelectionVM.inSelectionMode.observe(viewLifecycleOwner) { inSelectionMode ->
+        Observables.combineLatest(
+            categorySelectionVM.inSelectionMode,
+            categorizeAdvancedVM.replays,
+        ).observe(viewLifecycleOwner) { (inSelectionMode, replays) ->
             btns = listOfNotNull(
                 if (inSelectionMode)
                     ButtonRVItem(
                         title = "Advanced",
                         isEnabled = categorizeVM.isTransactionAvailable,
                         onClick = {
-                            categorizeAdvancedVM.setup(
+                            CategorizeAdvancedFrag.navTo(
+                                source = this,
+                                nav = nav,
+                                categorizeAdvancedVM = categorizeAdvancedVM,
+                                categorySelectionVM = categorySelectionVM,
                                 categoryAmounts = null,
-                                categorySelectionVM = categorySelectionVM
+                                replay = null,
                             )
-                            nav.navigate(R.id.action_categorizeFrag_to_splitTransactionFrag)
                         }
                     )
                 else null,
@@ -152,9 +159,9 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                         title = "Category Settings",
                         isEnabled = categorySelectionVM.selectedCategories.map { it.size == 1 },
                         onClick = {
-                            CategorySettingsFrag.navigateTo(
-                                nav = nav,
+                            CategorySettingsFrag.navTo(
                                 source = this,
+                                nav = nav,
                                 categorySettingsVM = categorySettingsVM,
                                 categoryName = categorySelectionVM.selectedCategories.value!!.first().name,
                                 isForNewCategory = false
@@ -163,6 +170,24 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                         }
                     )
                 else null,
+                *replays
+                    .filter { !inSelectionMode && it.predicate(categorizeAdvancedVM.transactionToPush.value!!) }
+                    .map { replay ->
+                        ButtonRVItem(
+                            title = "Replay (${replay.name})",
+                            onClick = { categorizeVM.userReplay(replay) },
+                            onLongClick = {
+                                CategorizeAdvancedFrag.navTo(
+                                    source = this,
+                                    nav = nav,
+                                    categorizeAdvancedVM = categorizeAdvancedVM,
+                                    categorySelectionVM = categorySelectionVM,
+                                    categoryAmounts = replay.categorize(categorizeAdvancedVM.transactionToPush.value!!).categoryAmounts,
+                                    replay = replay,
+                                )
+                            })
+                    }
+                    .toTypedArray(),
                 if (!inSelectionMode)
                     ButtonRVItem(
                         title = "Redo",
@@ -179,7 +204,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     ButtonRVItem(
                         title = "Make New Category",
                         onClick = {
-                            CategorySettingsFrag.navigateTo(
+                            CategorySettingsFrag.navTo(
                                 nav = nav,
                                 source = this,
                                 categorySettingsVM = categorySettingsVM,

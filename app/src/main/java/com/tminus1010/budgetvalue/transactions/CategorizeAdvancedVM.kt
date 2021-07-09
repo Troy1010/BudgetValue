@@ -5,9 +5,12 @@ import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.extensions.copy
 import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
-import com.tminus1010.budgetvalue.replay.AutoReplayDomain
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.replay.AutoReplayDomain
+import com.tminus1010.budgetvalue.replay.data.ReplayRepo
+import com.tminus1010.budgetvalue.replay.models.BasicReplay
+import com.tminus1010.budgetvalue.replay.models.IReplay
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -25,7 +28,8 @@ class CategorizeAdvancedVM @Inject constructor(
     errorSubject: Subject<Throwable>,
     private val saveTransactionDomain: SaveTransactionDomain,
     transactionsDomain: TransactionsDomain,
-    private val autoReplayDomain: AutoReplayDomain
+    private val autoReplayDomain: AutoReplayDomain,
+    private val replayRepo: ReplayRepo,
 ) : ViewModel() {
     // # Input
     fun userFillIntoCategory(category: Category) {
@@ -52,6 +56,20 @@ class CategorizeAdvancedVM @Inject constructor(
             .flatMapCompletable { autoReplayDomain.addAutoReplay(it.description, it.categoryAmounts) }
             .andThen(_categorySelectionVM.clearSelection())
             .observe(disposables)
+    }
+
+    fun userSaveReplay(replayName: String) {
+        replayRepo.add(
+            BasicReplay(
+                name = replayName,
+                description = transactionToPush.value!!.description,
+                categoryAmounts = transactionToPush.value!!.categoryAmounts,
+            )
+        ).observe(disposables)
+    }
+
+    fun userDeleteReplay(replayName: String) {
+        replayRepo.delete(replayName).observe(disposables)
     }
 
     fun setup(categoryAmounts: Map<Category, BigDecimal>?, categorySelectionVM: CategorySelectionVM) {
@@ -83,6 +101,9 @@ class CategorizeAdvancedVM @Inject constructor(
     private lateinit var _categorySelectionVM: CategorySelectionVM
 
     // # Output
+    val replays = replayRepo.fetchReplays()
+        .nonLazyCache(disposables)
+
     val transactionToPush = firstTransactionBox
         .unbox()
         .switchMap {
