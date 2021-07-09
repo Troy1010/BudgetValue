@@ -5,6 +5,7 @@ import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.tmcommonkotlin.rx.extensions.doLogx
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -17,7 +18,7 @@ class CategorySelectionVM @Inject constructor(
     errorSubject: Subject<Throwable>,
 ) : ViewModel() {
     // # Input
-    fun clearSelection() = Completable.fromCallable {
+    fun clearSelection(): Completable = Completable.fromCallable {
         intents.onNext(Intents.ClearSelection)
     }
 
@@ -61,6 +62,7 @@ class CategorySelectionVM @Inject constructor(
                 )
             }
         }
+        .doLogx("state")
         .nonLazyCache(disposables)
 
     val selectedCategories = state
@@ -71,5 +73,6 @@ class CategorySelectionVM @Inject constructor(
     val inSelectionMode: Observable<Boolean> = state
         .map { it.inSelectionMode }
         .distinctUntilChanged()
+        .doLogx("inSelectionMode")
         .nonLazyCache(disposables)
 }
