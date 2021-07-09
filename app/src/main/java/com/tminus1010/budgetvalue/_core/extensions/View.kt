@@ -31,6 +31,7 @@ fun View.widthObservable(): Observable<Int> {
         addOnLayoutChangeListener(onLayoutChangeListener)
         downstream.setCancellable { removeOnLayoutChangeListener(onLayoutChangeListener) }
     }.subscribeOn(AndroidSchedulers.mainThread()) // This might not be necessary
+        .filter { it != 0 } // I'm not sure why, but sometimes this emits 0
         .distinctUntilChanged()
 }
 
@@ -43,5 +44,6 @@ fun View.heightObservable(): Observable<Int> {
         addOnLayoutChangeListener(onLayoutChangeListener)
         downstream.setCancellable { removeOnLayoutChangeListener(onLayoutChangeListener) }
     }.subscribeOn(AndroidSchedulers.mainThread()) // This might not be necessary
+        .filter { it != 0 }
         .distinctUntilChanged()
 }
