@@ -12,12 +12,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.LaunchImportUC
-import com.tminus1010.budgetvalue._core.middleware.ui.ButtonRVItem
-import com.tminus1010.budgetvalue._core.middleware.ui.GenViewHolder2
-import com.tminus1010.budgetvalue._core.middleware.ui.LifecycleRVAdapter
-import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
+import com.tminus1010.budgetvalue._core.middleware.ui.*
 import com.tminus1010.budgetvalue._core.ui.HostActivity
-import com.tminus1010.budgetvalue._core.ui.data_binding.bind
 import com.tminus1010.budgetvalue._core.ui.data_binding.bindButtonRVItem
 import com.tminus1010.budgetvalue.accounts.models.Account
 import com.tminus1010.budgetvalue.databinding.FragImportBinding
@@ -49,20 +46,21 @@ class ImportFrag : Fragment(R.layout.frag_import) {
         super.onViewCreated(view, savedInstanceState)
         // # Accounts RecyclerView
         accountsVM.accounts.observe(viewLifecycleOwner) { accounts = it }
-        vb.recyclerviewAccounts.apply {
-            layoutManager = LinearLayoutManager(requireActivity())
-            adapter = object : RecyclerView.Adapter<GenViewHolder2<ItemAccountBinding>>() {
-                override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-                    ItemAccountBinding.inflate(layoutInflater, parent, false)
-                        .let { GenViewHolder2(it) }
+        vb.recyclerviewAccounts.layoutManager = LinearLayoutManager(requireActivity())
+        vb.recyclerviewAccounts.adapter = object : RecyclerView.Adapter<GenViewHolder2<ItemAccountBinding>>() {
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+                ItemAccountBinding.inflate(layoutInflater, parent, false)
+                    .let { GenViewHolder2(it) }
 
-                override fun getItemCount() = accounts.size
-                override fun onBindViewHolder(holder: GenViewHolder2<ItemAccountBinding>, position: Int) {
-                    holder.vb.bind(accounts[holder.adapterPosition], accountsVM)
-                }
+            override fun getItemCount() = accounts.size
+            override fun onBindViewHolder(holder: GenViewHolder2<ItemAccountBinding>, position: Int) {
+                holder.vb.btnDeleteAccount.setOnClickListener { accountsVM.deleteAccount(accounts[holder.adapterPosition]) }
+                holder.vb.editTextName.setText(accounts[holder.adapterPosition].name)
+                holder.vb.editTextName.onDone { accountsVM.updateAccount(accounts[holder.adapterPosition].copy(name = it)) }
+                holder.vb.editTextAmount.setText(accounts[holder.adapterPosition].amount.toString())
+                holder.vb.editTextAmount.onDone { accountsVM.updateAccount(accounts[holder.adapterPosition].copy(amount = it.toMoneyBigDecimal())) }
             }
         }
-
         // # Button RecyclerView
         vb.recyclerviewButtons.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true)
         vb.recyclerviewButtons.addItemDecoration(LayoutMarginDecoration(8.toPX(requireContext())))

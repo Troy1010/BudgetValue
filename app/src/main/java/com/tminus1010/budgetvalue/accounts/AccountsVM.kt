@@ -5,7 +5,6 @@ import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue.accounts.data.IAccountsRepo
 import com.tminus1010.budgetvalue.accounts.domain.AccountsDomain
 import com.tminus1010.budgetvalue.accounts.models.Account
-import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.toState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +20,7 @@ class AccountsVM @Inject constructor(
 ) : ViewModel() {
     // # Input
     fun addAccount() {
-        accountsRepo.push(Account("", BigDecimal.ZERO)).observe(disposables)
+        accountsRepo.add(Account("", BigDecimal.ZERO)).observe(disposables)
     }
 
     fun deleteAccount(account: Account) {

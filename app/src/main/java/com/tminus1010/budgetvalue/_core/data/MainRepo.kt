@@ -36,7 +36,7 @@ class MainRepo @Inject constructor(
         miscDAO.updateAccount(account.toDTO())
             .subscribeOn(Schedulers.io())
 
-    override fun push(account: Account): Completable =
+    override fun add(account: Account): Completable =
         miscDAO.addAccount(account.toDTO())
             .subscribeOn(Schedulers.io())
 
