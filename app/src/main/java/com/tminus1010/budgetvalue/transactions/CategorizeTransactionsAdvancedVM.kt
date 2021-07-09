@@ -10,8 +10,6 @@ import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
-import com.tminus1010.tmcommonkotlin.misc.fnName
-import com.tminus1010.tmcommonkotlin.rx.extensions.doLogx
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
@@ -50,11 +48,8 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
     }
 
     fun userBeginAutoReplay() {
-        logz(fnName)
         transactionToPush.take(1)
-            .doLogx("userBeginAutoReplay`aaa")
             .flatMapCompletable { autoReplayDomain.addAutoReplay(it.description, it.categoryAmounts) }
-            .doLogx("userBeginAutoReplay`zzz")
             .observe(disposables)
     }
 
