@@ -16,6 +16,7 @@
 
     <style name="AppTheme.StandardEditText" parent="@android:style/Widget.EditText">
         <item name="android:textColor">@color/colorOnDark</item>
+        <item name="android:textColorHint">@color/colorOnDarkSoft</item>
     </style>
 
     <style name="MainButtonStyle" parent="Widget.MaterialComponents.Button">

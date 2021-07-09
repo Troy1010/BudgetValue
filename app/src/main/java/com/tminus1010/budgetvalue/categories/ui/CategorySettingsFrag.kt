@@ -79,6 +79,7 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
         val categoryNameRecipe = ViewItemRecipe3<ItemEditTextBinding, Unit?>(
             { ItemEditTextBinding.inflate(LayoutInflater.from(context)) },
             { _, vb, lifecycleOwner ->
+                vb.edittext.hint = "Name"
                 vb.edittext.bind(categorySettingsVM.categoryToPush.map { it.name }, lifecycleOwner) { easyText = it }
                 vb.edittext.onDone { categorySettingsVM.userSetName(it) }
             }
