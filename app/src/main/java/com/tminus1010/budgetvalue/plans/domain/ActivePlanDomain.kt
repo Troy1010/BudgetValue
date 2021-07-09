@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
-import com.tminus1010.budgetvalue.plans.data.IPlansRepo
+import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.plans.models.Plan
 import com.tminus1010.tmcommonkotlin.rx.extensions.total
 import io.reactivex.rxjava3.core.Observable
@@ -16,7 +16,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ActivePlanDomain @Inject constructor(
-    plansRepo: IPlansRepo,
+    plansRepo: PlansRepo,
     categoriesDomain: CategoriesDomain,
     datePeriodGetter: DatePeriodGetter,
 ) : ViewModel(), IActivePlanDomain {

@@ -5,7 +5,6 @@ import com.tminus1010.budgetvalue._shared.app_init.data.IAppInitRepo
 import com.tminus1010.budgetvalue._shared.date_period_getter.data.ISettingsRepo
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
-import com.tminus1010.budgetvalue.plans.data.IPlansRepo
 import com.tminus1010.budgetvalue.reconciliations.data.IReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.data.ITransactionsRepo
 import dagger.Binds
@@ -21,9 +20,6 @@ abstract class BindingModule {
 
     @Binds
     abstract fun reconciliationRepo(mainRepo: MainRepo): IReconciliationsRepo
-
-    @Binds
-    abstract fun plansRepo(mainRepo: MainRepo): IPlansRepo
 
     @Binds
     abstract fun settingsRepo(mainRepo: MainRepo): ISettingsRepo

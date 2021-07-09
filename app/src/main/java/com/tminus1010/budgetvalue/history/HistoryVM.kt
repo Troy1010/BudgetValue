@@ -9,7 +9,7 @@ import com.tminus1010.budgetvalue.budgeted.domain.BudgetedDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.history.models.HistoryColumnData
 import com.tminus1010.budgetvalue.history.models.IHistoryColumnData
-import com.tminus1010.budgetvalue.plans.data.IPlansRepo
+import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.reconciliations.data.IReconciliationsRepo
 import com.tminus1010.budgetvalue.reconciliations.domain.ActiveReconciliationDefaultAmountUC
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HistoryVM @Inject constructor(
-    plansRepo: IPlansRepo,
+    plansRepo: PlansRepo,
     reconciliationDomain: IReconciliationsRepo,
     transactionsDomain: TransactionsDomain,
     reconciliationRepo: IReconciliationsRepo,

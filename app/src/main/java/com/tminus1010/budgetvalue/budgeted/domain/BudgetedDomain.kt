@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.accounts.domain.AccountsDomain
 import com.tminus1010.budgetvalue.budgeted.models.Budgeted
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.plans.data.IPlansRepo
+import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.reconciliations.data.IReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.total
@@ -17,7 +17,7 @@ import javax.inject.Singleton
 
 @Singleton
 class BudgetedDomain @Inject constructor(
-    plansRepo: IPlansRepo,
+    plansRepo: PlansRepo,
     transactionsDomain: TransactionsDomain,
     reconciliationsRepo: IReconciliationsRepo,
     accountsDomain: AccountsDomain,

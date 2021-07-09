@@ -4,7 +4,6 @@ import com.tminus1010.budgetvalue._core.extensions.toBigDecimalOrZero
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.plans.models.Plan
 import com.tminus1010.budgetvalue.reconciliations.models.Reconciliation
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.core.extensions.associate
@@ -73,10 +72,6 @@ class MainRepo @Inject constructor(
         miscDAO.delete(reconciliation.toDTO(categoryAmountsConverter))
             .subscribeOn(Schedulers.io())
 
-    override fun delete(plan: Plan): Completable =
-        miscDAO.delete(plan.toDTO(categoryAmountsConverter))
-            .subscribeOn(Schedulers.io())
-
     override val reconciliations: Observable<List<Reconciliation>> =
         miscDAO.fetchReconciliations()
             .map { it.map { Reconciliation.fromDTO(it, categoryAmountsConverter) } }
@@ -131,33 +126,5 @@ class MainRepo @Inject constructor(
     override fun getTransaction(id: String): Single<Transaction> =
         miscDAO.getTransaction(id)
             .map { Transaction.fromDTO(it, categoryAmountsConverter) }
-            .subscribeOn(Schedulers.io())
-
-    override val plans: Observable<List<Plan>> =
-        miscDAO.fetchPlans()
-            .map { it.map { Plan.fromDTO(it, categoryAmountsConverter) } }
-            .subscribeOn(Schedulers.io())
-
-    override fun pushPlan(plan: Plan): Completable =
-        miscDAO.add(plan.toDTO(categoryAmountsConverter))
-            .subscribeOn(Schedulers.io())
-
-    override fun updatePlanCA(plan: Plan, category: Category, amount: BigDecimal?): Completable =
-        plan.categoryAmounts
-            .toMutableMap()
-            .apply { if (amount == null) remove(category) else put(category, amount) }
-            .let {
-                miscDAO.updatePlanCategoryAmounts(
-                    plan.toDTO(categoryAmountsConverter).startDate,
-                    it.mapKeys { it.key.name })
-                    .subscribeOn(Schedulers.io())
-            }
-
-    override fun updatePlanCAs(plan: Plan, categoryAmounts: Map<String, BigDecimal>): Completable =
-        miscDAO.updatePlanCategoryAmounts(plan.toDTO(categoryAmountsConverter).startDate, categoryAmounts)
-            .subscribeOn(Schedulers.io())
-
-    override fun updatePlanAmount(plan: Plan, amount: BigDecimal): Completable =
-        miscDAO.updatePlanAmount(plan.toDTO(categoryAmountsConverter).startDate, amount)
             .subscribeOn(Schedulers.io())
 }
