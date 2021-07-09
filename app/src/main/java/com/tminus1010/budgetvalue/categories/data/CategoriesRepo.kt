@@ -12,26 +12,26 @@ import javax.inject.Singleton
 @Singleton
 class CategoriesRepo @Inject constructor(
     private val userCategoriesDAO: UserCategoriesDAO
-) : ICategoriesRepo {
-    override val userCategories: Observable<List<Category>> =
+) {
+    val userCategories: Observable<List<Category>> =
         userCategoriesDAO.fetchUserCategories()
             .subscribeOn(Schedulers.io())
             .map { it.map { Category.fromDTO(it) } }
             .replay(1).autoConnect()
 
-    override fun push(category: Category): Completable =
+    fun push(category: Category): Completable =
         userCategoriesDAO.push(category.toDTO())
             .subscribeOn(Schedulers.io())
 
-    override fun delete(category: Category): Completable =
+    fun delete(category: Category): Completable =
         userCategoriesDAO.delete(category.toDTO())
             .subscribeOn(Schedulers.io())
 
-    override fun update(category: Category): Completable =
+    fun update(category: Category): Completable =
         userCategoriesDAO.update(category.toDTO())
             .subscribeOn(Schedulers.io())
 
-    override fun hasCategory(categoryName: String): Single<Boolean> =
+    fun hasCategory(categoryName: String): Single<Boolean> =
         userCategoriesDAO.hasCategory(categoryName)
             .map { it != 0 }
             .subscribeOn(Schedulers.io())

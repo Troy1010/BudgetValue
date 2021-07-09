@@ -3,14 +3,13 @@ package com.tminus1010.budgetvalue.categories
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.InvalidCategoryNameException
-import com.tminus1010.budgetvalue.categories.data.ICategoriesRepo
+import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.domain.DeleteCategoryFromActiveDomainUC
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.models.CategoryType
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
-import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -24,7 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CategorySettingsVM @Inject constructor(
     private val deleteCategoryFromActiveDomainUC: DeleteCategoryFromActiveDomainUC,
-    private val categoriesRepo: ICategoriesRepo,
+    private val categoriesRepo: CategoriesRepo,
     private val errorSubject: Subject<Throwable>,
 ) : ViewModel() {
     // # Input

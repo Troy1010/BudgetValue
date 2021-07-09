@@ -6,7 +6,7 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
-import com.tminus1010.budgetvalue.categories.data.ICategoriesRepo
+import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.models.CategoryType
 import com.tminus1010.budgetvalue.databinding.FragNewCategoryBinding
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class NewCategoryFrag : Fragment(R.layout.frag_new_category) {
-    @Inject lateinit var categoriesRepo: ICategoriesRepo // TODO("use VM")
+    @Inject lateinit var categoriesRepo: CategoriesRepo // TODO("use VM")
     val vb by viewBinding(FragNewCategoryBinding::bind)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

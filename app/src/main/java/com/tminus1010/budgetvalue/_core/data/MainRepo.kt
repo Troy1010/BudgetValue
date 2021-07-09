@@ -3,8 +3,6 @@ package com.tminus1010.budgetvalue._core.data
 import com.tminus1010.budgetvalue._core.extensions.toBigDecimalOrZero
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.ICategoryParser
-import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
-import com.tminus1010.budgetvalue.categories.data.ICategoriesRepo
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.models.Plan
 import com.tminus1010.budgetvalue.reconciliations.models.Reconciliation
@@ -24,8 +22,7 @@ class MainRepo @Inject constructor(
     private val miscDAO: MiscDAO,
     private val categoryAmountsConverter: CategoryAmountsConverter,
     private val categoryParser: ICategoryParser,
-    private val categoriesRepo: CategoriesRepo
-) : IMainRepo, ICategoriesRepo by categoriesRepo {
+) : IMainRepo {
     override fun fetchAppInitBool(): Boolean =
         sharedPrefWrapper.fetchAppInitBool()
 
