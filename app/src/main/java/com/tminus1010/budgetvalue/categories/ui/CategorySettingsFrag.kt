@@ -29,6 +29,7 @@ import com.tminus1010.budgetvalue.databinding.*
 import com.tminus1010.budgetvalue.transactions.ui.CategorizeFrag
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
+import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toPX
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
@@ -64,7 +65,7 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
             vb.tvTitle.text = "Create a new Category"
         else
             categorySettingsVM.categoryToPush.observe(viewLifecycleOwner) {
-                vb.tvTitle.text = "Settings (${it.first?.name ?: "UNKNOWN"})"
+                vb.tvTitle.text = "Settings (${it.name})"
             }
         // # TMTableView
         val defaultAmountRecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Observable<String>>(
@@ -86,7 +87,7 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
             { _, vb, _ ->
                 val adapter = ArrayAdapter(requireContext(), R.layout.item_text_view_2, CategoryType.getPickableValues())
                 vb.spinner.adapter = adapter
-                vb.spinner.setSelection(adapter.getPosition(categorySettingsVM.categoryToPush.unbox.type))
+                vb.spinner.setSelection(adapter.getPosition(categorySettingsVM.categoryToPush.value!!.type))
                 vb.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     var didFirstSelectionHappen = AtomicBoolean(false)
                     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
@@ -108,8 +109,8 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
                     "Type"
                 ).map { recipeFactories.textView.createOne(it) },
                 listOfNotNull(
-                    if (isForNewCategory) categoryNameRecipeFactory.createOne(categorySettingsVM.categoryToPush.map { it.first!!.name }) else null,
-                    defaultAmountRecipeFactory.createOne(categorySettingsVM.categoryToPush.map { it.first?.defaultAmount?.toString() ?: "" }),
+                    if (isForNewCategory) categoryNameRecipeFactory.createOne(categorySettingsVM.categoryToPush.map { it.name }) else null,
+                    defaultAmountRecipeFactory.createOne(categorySettingsVM.categoryToPush.map { it.defaultAmount.toString() }),
                     categoryTypeRecipeFactory.createOne(Unit)
                 ),
             ).reflectXY(),
@@ -135,7 +136,7 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
                 title = "Delete",
                 onClick = {
                     AlertDialog.Builder(requireContext())
-                        .setMessage("Are you sure you want to delete these categories?\n\t${categorySettingsVM.categoryToPush.unbox.name}")
+                        .setMessage("Are you sure you want to delete these categories?\n\t${categorySettingsVM.categoryToPush.value!!.name}")
                         .setPositiveButton("Yes") { _, _ ->
                             categorySettingsVM.userDeleteCategory()
                             nav.navigateUp()
