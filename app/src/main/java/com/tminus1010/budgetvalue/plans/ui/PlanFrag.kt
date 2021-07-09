@@ -59,7 +59,7 @@ class PlanFrag : Fragment(R.layout.frag_plan) {
                     listOf(recipeFactories.header.createOne("Plan"))
                             + expectedIncomeRecipeFactory.createOne(activePlanVM.expectedIncome)
                             + recipeFactories.textViewWithLifecycle.createOne(activePlanVM.defaultAmount)
-                            + planCAsRecipeFactory.createMany(categories.map { Pair(it, planCAsItemObservableMap[it] ?: Observable.just("")) })
+                            + planCAsRecipeFactory.createMany(categories.map { Pair(it, planCAsItemObservableMap[it]) })
                 )
                     .reflectXY()
                 val dividerMap = categories
