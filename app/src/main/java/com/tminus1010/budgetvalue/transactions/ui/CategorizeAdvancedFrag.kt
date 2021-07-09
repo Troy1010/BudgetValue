@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LifecycleOwner
@@ -13,6 +15,7 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.categoryComparator
 import com.tminus1010.budgetvalue._core.extensions.add
 import com.tminus1010.budgetvalue._core.extensions.bind
+import com.tminus1010.budgetvalue._core.extensions.easyText
 import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.middleware.ui.*
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
@@ -21,6 +24,7 @@ import com.tminus1010.budgetvalue._core.ui.data_binding.bindButtonRVItem
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.FragCategorizeAdvancedBinding
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
+import com.tminus1010.budgetvalue.databinding.ItemEditTextBinding
 import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
 import com.tminus1010.budgetvalue.transactions.CategorizeAdvancedVM
 import com.tminus1010.budgetvalue.transactions.CategorizeVM
@@ -126,10 +130,25 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
         }
         btns = listOfNotNull(
             ButtonRVItem(
-                title = "Auto Replay",
+                title = "Setup Auto Replay",
                 onClick = {
                     categorizeAdvancedVM.userBeginAutoReplay()
                     nav.navigateUp()
+                }
+            ),
+            ButtonRVItem(
+                title = "Save Replay",
+                onClick = {
+                    val editText = EditText(requireContext())
+                    AlertDialog.Builder(requireContext())
+                        .setMessage("What would you like to name this replay?")
+                        .setView(editText)
+                        .setPositiveButton("Yes") { _, _ ->
+                            categorizeTransactionsAdvancedVM.userSaveReplay(editText.easyText)
+                            nav.navigateUp()
+                        }
+                        .setNegativeButton("No") { _, _ -> }
+                        .show()
                 }
             ),
             ButtonRVItem(

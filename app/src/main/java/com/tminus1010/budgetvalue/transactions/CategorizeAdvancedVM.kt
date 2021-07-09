@@ -8,8 +8,11 @@ import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue.replay.AutoReplayDomain
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.replay.data.ReplayRepo
+import com.tminus1010.budgetvalue.replay.models.Replay
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
+import com.tminus1010.tmcommonkotlin.misc.fnName
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
@@ -25,7 +28,8 @@ class CategorizeAdvancedVM @Inject constructor(
     errorSubject: Subject<Throwable>,
     private val saveTransactionDomain: SaveTransactionDomain,
     transactionsDomain: TransactionsDomain,
-    private val autoReplayDomain: AutoReplayDomain
+    private val autoReplayDomain: AutoReplayDomain,
+    private val replayRepo: ReplayRepo,
 ) : ViewModel() {
     // # Input
     fun userFillIntoCategory(category: Category) {
@@ -52,6 +56,16 @@ class CategorizeAdvancedVM @Inject constructor(
             .flatMapCompletable { autoReplayDomain.addAutoReplay(it.description, it.categoryAmounts) }
             .andThen(_categorySelectionVM.clearSelection())
             .observe(disposables)
+    }
+
+    fun userSaveReplay(replayName: String) {
+        replayRepo.add(
+            Replay(
+                name = replayName,
+                description = transactionToPush.value!!.description,
+                categoryAmounts = transactionToPush.value!!.categoryAmounts,
+            )
+        ).observe(disposables)
     }
 
     fun setup(categoryAmounts: Map<Category, BigDecimal>?, categorySelectionVM: CategorySelectionVM) {
@@ -83,6 +97,10 @@ class CategorizeAdvancedVM @Inject constructor(
     private lateinit var _categorySelectionVM: CategorySelectionVM
 
     // # Output
+    val replays = replayRepo.fetchReplays()
+        .map { it.associate { it.key to it.categorize } }
+        .nonLazyCache(disposables)
+
     val transactionToPush = firstTransactionBox
         .unbox()
         .switchMap {
