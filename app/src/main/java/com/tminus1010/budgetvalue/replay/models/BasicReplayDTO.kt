@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class ReplayDTO(
+data class BasicReplayDTO(
     @PrimaryKey
     val name: String,
     val description: String,

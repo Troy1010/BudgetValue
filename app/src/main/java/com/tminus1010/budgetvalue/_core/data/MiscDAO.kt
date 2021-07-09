@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue.accounts.models.AccountDTO
 import com.tminus1010.budgetvalue.replay.models.AutoReplayDTO
 import com.tminus1010.budgetvalue.plans.models.PlanDTO
 import com.tminus1010.budgetvalue.reconciliations.models.ReconciliationDTO
-import com.tminus1010.budgetvalue.replay.models.ReplayDTO
+import com.tminus1010.budgetvalue.replay.models.BasicReplayDTO
 import com.tminus1010.budgetvalue.transactions.models.TransactionDTO
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -120,9 +120,9 @@ interface MiscDAO {
 
     // # Replays
 
-    @Query("select * from ReplayDTO")
-    fun fetchReplays(): Observable<List<ReplayDTO>>
+    @Query("select * from BasicReplayDTO")
+    fun fetchReplays(): Observable<List<BasicReplayDTO>>
 
     @Insert
-    fun add(replayDTO: ReplayDTO): Completable
+    fun add(basicReplayDTO: BasicReplayDTO): Completable
 }

@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import java.math.BigDecimal
 
-data class Replay(
+data class BasicReplay(
     override val name: String,
     private val description: String,
     private val categoryAmounts: Map<Category, BigDecimal>,
@@ -21,15 +21,15 @@ data class Replay(
     }
 
     fun toDTO(categoryAmountsConverter: CategoryAmountsConverter) =
-        ReplayDTO(
+        BasicReplayDTO(
             name = name,
             description = description,
             categoryAmounts = categoryAmountsConverter.toJson(categoryAmounts)
         )
 
     companion object {
-        fun fromDTO(replayDTO: ReplayDTO, categoryAmountsConverter: CategoryAmountsConverter) = replayDTO.run {
-            Replay(
+        fun fromDTO(basicReplayDTO: BasicReplayDTO, categoryAmountsConverter: CategoryAmountsConverter) = basicReplayDTO.run {
+            BasicReplay(
                 name = name,
                 description = description,
                 categoryAmounts = categoryAmountsConverter.toCategoryAmounts(categoryAmounts)

@@ -9,10 +9,9 @@ import com.tminus1010.budgetvalue.replay.AutoReplayDomain
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay.data.ReplayRepo
-import com.tminus1010.budgetvalue.replay.models.Replay
+import com.tminus1010.budgetvalue.replay.models.BasicReplay
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
-import com.tminus1010.tmcommonkotlin.misc.fnName
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
@@ -60,7 +59,7 @@ class CategorizeAdvancedVM @Inject constructor(
 
     fun userSaveReplay(replayName: String) {
         replayRepo.add(
-            Replay(
+            BasicReplay(
                 name = replayName,
                 description = transactionToPush.value!!.description,
                 categoryAmounts = transactionToPush.value!!.categoryAmounts,
