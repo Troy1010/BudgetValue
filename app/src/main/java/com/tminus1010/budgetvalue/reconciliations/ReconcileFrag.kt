@@ -76,7 +76,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                             + reconcileCARecipeFactory.createMany(categories.map { it to activeReconciliationCAs[it] }),
                     listOf(headerRecipeFactory_numbered.createOne(Pair("Budgeted", accountsVM.accountsTotal)))
                             + recipeFactories.textViewWithLifecycle.createOne(budgetedVM.defaultAmount)
-                            + recipeFactories.textViewWithLifecycle.createMany(categories.map { budgetedCA[it] })
+                            + recipeFactories.textViewWithLifecycle.createMany(categories.map { budgetedCA[it] ?: Observable.just("0") })
                 ).reflectXY()
                 val dividerMap = categories
                     .withIndex()
