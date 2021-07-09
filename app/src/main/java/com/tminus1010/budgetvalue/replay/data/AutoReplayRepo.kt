@@ -1,7 +1,7 @@
-package com.tminus1010.budgetvalue.auto_replay.data
+package com.tminus1010.budgetvalue.replay.data
 
 import com.tminus1010.budgetvalue._core.data.MiscDAO
-import com.tminus1010.budgetvalue.auto_replay.models.AutoReplay
+import com.tminus1010.budgetvalue.replay.models.AutoReplay
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable

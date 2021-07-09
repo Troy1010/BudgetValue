@@ -5,7 +5,7 @@ import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.extensions.copy
 import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
-import com.tminus1010.budgetvalue.auto_replay.AutoReplayDomain
+import com.tminus1010.budgetvalue.replay.AutoReplayDomain
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain

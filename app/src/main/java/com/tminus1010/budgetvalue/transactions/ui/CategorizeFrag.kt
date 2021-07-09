@@ -136,7 +136,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
             btns = listOfNotNull(
                 if (inSelectionMode)
                     ButtonRVItem(
-                        title = "Split",
+                        title = "Advanced",
                         isEnabled = categorizeTransactionsVM.isTransactionAvailable,
                         onClick = {
                             categorizeTransactionsAdvancedVM.setup(
@@ -174,13 +174,6 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                         title = "Undo",
                         isEnabled = categorizeTransactionsVM.isUndoAvailable,
                         onClick = { categorizeTransactionsVM.userUndo() })
-                else null,
-                if (!inSelectionMode)
-                    ButtonRVItem(
-                        title = "Replay by %",
-                        isEnabled = categorizeTransactionsVM.isReplayAvailable,
-                        onLongClick = { categorizeTransactionsVM.userNavToSplitWithReplayByPercentage() },
-                        onClick = { categorizeTransactionsVM.userReplay() })
                 else null,
                 if (!inSelectionMode)
                     ButtonRVItem(

@@ -1,9 +1,7 @@
-package com.tminus1010.budgetvalue.auto_replay.models
+package com.tminus1010.budgetvalue.replay.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.tminus1010.budgetvalue.categories.models.Category
-import java.math.BigDecimal
 
 @Entity
 data class AutoReplayDTO(

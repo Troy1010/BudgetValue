@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue._core.data
 
 import androidx.room.*
 import com.tminus1010.budgetvalue.accounts.models.AccountDTO
-import com.tminus1010.budgetvalue.auto_replay.models.AutoReplayDTO
+import com.tminus1010.budgetvalue.replay.models.AutoReplayDTO
 import com.tminus1010.budgetvalue.plans.models.PlanDTO
 import com.tminus1010.budgetvalue.reconciliations.models.ReconciliationDTO
 import com.tminus1010.budgetvalue.transactions.models.TransactionDTO

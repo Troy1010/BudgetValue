@@ -4,7 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.tminus1010.budgetvalue.accounts.models.AccountDTO
-import com.tminus1010.budgetvalue.auto_replay.models.AutoReplayDTO
+import com.tminus1010.budgetvalue.replay.models.AutoReplayDTO
 import com.tminus1010.budgetvalue.categories.models.CategoryDTO
 import com.tminus1010.budgetvalue.plans.models.PlanDTO
 import com.tminus1010.budgetvalue.reconciliations.models.ReconciliationDTO

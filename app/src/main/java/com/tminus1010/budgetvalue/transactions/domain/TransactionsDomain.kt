@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.transactions.domain
 
 import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
-import com.tminus1010.budgetvalue.auto_replay.AutoReplayDomain
+import com.tminus1010.budgetvalue.replay.AutoReplayDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.TransactionParser
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo

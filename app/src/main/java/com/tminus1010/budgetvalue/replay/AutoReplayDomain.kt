@@ -1,8 +1,8 @@
-package com.tminus1010.budgetvalue.auto_replay
+package com.tminus1010.budgetvalue.replay
 
 import com.tminus1010.budgetvalue._core.middleware.Rx
-import com.tminus1010.budgetvalue.auto_replay.data.AutoReplayRepo
-import com.tminus1010.budgetvalue.auto_replay.models.AutoReplay
+import com.tminus1010.budgetvalue.replay.data.AutoReplayRepo
+import com.tminus1010.budgetvalue.replay.models.AutoReplay
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle

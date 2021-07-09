@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.auto_replay.models
+package com.tminus1010.budgetvalue.replay.models
 
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.models.Category
