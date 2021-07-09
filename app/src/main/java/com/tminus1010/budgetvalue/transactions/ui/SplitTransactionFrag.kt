@@ -3,20 +3,26 @@ package com.tminus1010.budgetvalue.transactions.ui
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.LifecycleOwner
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.categoryComparator
 import com.tminus1010.budgetvalue._core.extensions.add
 import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
-import com.tminus1010.budgetvalue._core.middleware.ui.MenuItemPartial
-import com.tminus1010.budgetvalue._core.middleware.ui.onDone
+import com.tminus1010.budgetvalue._core.middleware.ui.*
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
-import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue._core.ui.data_binding.bindButtonRVItem
+import com.tminus1010.budgetvalue.auto_replay.AutoReplayVM
 import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.categories.ui.CategorySettingsFrag
 import com.tminus1010.budgetvalue.databinding.FragSplitTransactionBinding
+import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
 import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
 import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsAdvancedVM
 import com.tminus1010.budgetvalue.transactions.CategorizeTransactionsVM
@@ -27,6 +33,7 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
+import com.tminus1010.tmcommonkotlin.view.extensions.toPX
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -45,24 +52,19 @@ class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
     lateinit var saveTransactionDomain: SaveTransactionDomain
     private val categorizeTransactionsVM: CategorizeTransactionsVM by activityViewModels()
     private val categorizeTransactionsAdvancedVM: CategorizeTransactionsAdvancedVM by activityViewModels()
-
-    // # Internal
+    private val autoReplayVM: AutoReplayVM by activityViewModels()
     private var _shouldIgnoreUserInputForDuration = PublishSubject.create<Unit>()
     private var shouldIgnoreUserInput = _shouldIgnoreUserInputForDuration
         .flatMap { Observable.just(false).delay(1, TimeUnit.SECONDS).startWithItem(true) }
         .startWithItem(false)
         .replay(1).autoConnect()
+    var btns = emptyList<ButtonRVItem>()
+        set(value) { field = value; vb.recyclerviewButtons.adapter?.notifyDataSetChanged() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         shouldIgnoreUserInput.observe(viewLifecycleOwner) {}
         vb.tvAmountToSplit.bind(categorizeTransactionsVM.amountToCategorize) { text = it }
-        // # Button
-        vb.btnSave.setOnClickListener {
-            if (!shouldIgnoreUserInput.value!!)
-                categorizeTransactionsAdvancedVM.userSaveTransaction()
-            nav.navigateUp()
-        }
         // # TMTableView
         val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Map.Entry<Category, BigDecimal>>(
             { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
@@ -108,5 +110,36 @@ class SplitTransactionFrag : Fragment(R.layout.frag_split_transaction) {
                     rowFreezeCount = 1,
                 )
             }
+
+        // # Button RecyclerView
+        vb.recyclerviewButtons.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true)
+        vb.recyclerviewButtons.addItemDecoration(LayoutMarginDecoration(8.toPX(requireContext())))
+        vb.recyclerviewButtons.adapter = object : LifecycleRVAdapter<GenViewHolder2<ItemButtonBinding>>() {
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+                ItemButtonBinding.inflate(LayoutInflater.from(requireContext()), parent, false)
+                    .let { GenViewHolder2(it) }
+
+            override fun onViewAttachedToWindow(holder: GenViewHolder2<ItemButtonBinding>, lifecycle: LifecycleOwner) {
+                holder.vb.btnItem.bindButtonRVItem(lifecycle, btns[holder.adapterPosition])
+            }
+
+            override fun getItemCount() = btns.size
+        }
+        btns = listOfNotNull(
+            ButtonRVItem(
+                title = "Auto Replay",
+                onClick = {
+                    autoReplayVM.userBeginAutoReplay()
+                    nav.navigateUp()
+                }
+            ),
+            ButtonRVItem(
+                title = "Save",
+                onClick = {
+                    categorizeTransactionsAdvancedVM.userSaveTransaction()
+                    nav.navigateUp()
+                }
+            ),
+        ).reversed()
     }
 }
