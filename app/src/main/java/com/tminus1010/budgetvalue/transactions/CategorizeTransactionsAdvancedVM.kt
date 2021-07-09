@@ -5,10 +5,13 @@ import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.extensions.copy
 import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
+import com.tminus1010.budgetvalue.auto_replay.AutoReplayDomain
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
+import com.tminus1010.tmcommonkotlin.misc.fnName
+import com.tminus1010.tmcommonkotlin.rx.extensions.doLogx
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
@@ -23,7 +26,8 @@ import javax.inject.Inject
 class CategorizeTransactionsAdvancedVM @Inject constructor(
     errorSubject: Subject<Throwable>,
     private val saveTransactionDomain: SaveTransactionDomain,
-    transactionsDomain: TransactionsDomain
+    transactionsDomain: TransactionsDomain,
+    private val autoReplayDomain: AutoReplayDomain
 ) : ViewModel() {
     // # Input
     fun userFillIntoCategory(category: Category) {
@@ -42,6 +46,15 @@ class CategorizeTransactionsAdvancedVM @Inject constructor(
         transactionToPush.take(1)
             .flatMapCompletable { saveTransactionDomain.saveTransaction(it) }
             .andThen(_categorySelectionVM.clearSelection())
+            .observe(disposables)
+    }
+
+    fun userBeginAutoReplay() {
+        logz(fnName)
+        transactionToPush.take(1)
+            .doLogx("userBeginAutoReplay`aaa")
+            .flatMapCompletable { autoReplayDomain.addAutoReplay(it.description, it.categoryAmounts) }
+            .doLogx("userBeginAutoReplay`zzz")
             .observe(disposables)
     }
 
