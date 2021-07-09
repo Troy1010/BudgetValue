@@ -41,7 +41,6 @@ class AccountsVM @Inject constructor(
 
     // # Output
     val accounts = accountsDomain.accounts
-        .startWithItem(emptyList())
         .toState(disposables, errorSubject)
     val accountsTotal = accountsDomain.accountsTotal
         .map { it.toString() }
