@@ -18,7 +18,7 @@ data class Reconciliation(
         ReconciliationDTO(
             localDate = localDate,
             categoryAmounts = categoryAmountsConverter.toJson(categoryAmounts.filter { it.value.compareTo(BigDecimal.ZERO) != 0 }),
-            amount = defaultAmount,
+            defaultAmount = defaultAmount,
             id = id,
         )
 
@@ -26,7 +26,7 @@ data class Reconciliation(
         fun fromDTO(reconciliationDTO: ReconciliationDTO, categoryAmountsConverter: CategoryAmountsConverter) = reconciliationDTO.run {
             Reconciliation(
                 localDate = localDate,
-                defaultAmount = amount,
+                defaultAmount = defaultAmount,
                 categoryAmounts = categoryAmountsConverter.toCategoryAmounts(categoryAmounts),
                 id = id
             )

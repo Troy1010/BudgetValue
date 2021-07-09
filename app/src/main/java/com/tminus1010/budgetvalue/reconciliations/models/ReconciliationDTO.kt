@@ -8,7 +8,7 @@ import java.time.LocalDate
 @Entity
 data class ReconciliationDTO(
     val localDate: LocalDate,
-    val amount: BigDecimal,
+    val defaultAmount: BigDecimal,
     val categoryAmounts: String?,
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0
