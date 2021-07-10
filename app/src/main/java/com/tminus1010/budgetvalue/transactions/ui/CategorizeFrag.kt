@@ -136,7 +136,8 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         Observables.combineLatest(
             categorySelectionVM.inSelectionMode,
             categorizeAdvancedVM.replays,
-        ).observe(viewLifecycleOwner) { (inSelectionMode, replays) ->
+            categorizeAdvancedVM.transactionToPush,
+        ).observe(viewLifecycleOwner) { (inSelectionMode, replays, transactionToPush) ->
             btns = listOfNotNull(
                 if (inSelectionMode)
                     ButtonRVItem(
@@ -171,7 +172,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     )
                 else null,
                 *replays
-                    .filter { !inSelectionMode && it.predicate(categorizeAdvancedVM.transactionToPush.value!!) }
+                    .filter { !inSelectionMode && it.predicate(transactionToPush) }
                     .map { replay ->
                         ButtonRVItem(
                             title = "Replay (${replay.name})",
@@ -182,7 +183,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                                     nav = nav,
                                     categorizeAdvancedVM = categorizeAdvancedVM,
                                     categorySelectionVM = categorySelectionVM,
-                                    categoryAmounts = replay.categorize(categorizeAdvancedVM.transactionToPush.value!!).categoryAmounts,
+                                    categoryAmounts = replay.categorize(transactionToPush).categoryAmounts,
                                     replay = replay,
                                 )
                             })

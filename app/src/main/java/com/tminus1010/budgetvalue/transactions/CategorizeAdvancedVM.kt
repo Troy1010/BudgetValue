@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.extensions.copy
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
+import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay.ReplayDomain
@@ -54,9 +55,11 @@ class CategorizeAdvancedVM @Inject constructor(
             categoryAmounts = transactionToPush.value!!.categoryAmounts,
             isAutoReplay = true
         )
-        replayRepo.add(replay)
-            .andThen(replayDomain.applyReplayToAllTransactions(replay))
-            .observe(disposables)
+        Rx.merge(
+            replayRepo.add(replay),
+            replayDomain.applyReplayToAllTransactions(replay),
+            _categorySelectionVM.clearSelection(),
+        ).observe(disposables)
     }
 
     fun userSaveReplay(replayName: String) {
