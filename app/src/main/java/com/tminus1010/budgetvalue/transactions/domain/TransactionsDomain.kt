@@ -7,6 +7,7 @@ import com.tminus1010.budgetvalue.transactions.TransactionParser
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.budgetvalue.transactions.models.TransactionsBlock
+import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import java.io.InputStream
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -40,7 +41,7 @@ class TransactionsDomain @Inject constructor(
     val uncategorizedSpendsSize = uncategorizedSpends
         .map { it.size.toString() }
     fun importTransactions(inputStream: InputStream) {
-        autoReplayDomain.autoReplays.flatMapCompletable { autoReplays ->
+        autoReplayDomain.autoReplays.toSingle().flatMapCompletable { autoReplays ->
             transactionsRepo.tryPush(
                 transactionParser.parseToTransactions(inputStream)
                     .map { transaction ->
