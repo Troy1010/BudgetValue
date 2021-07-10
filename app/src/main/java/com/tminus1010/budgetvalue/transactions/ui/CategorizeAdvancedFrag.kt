@@ -13,6 +13,7 @@ import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue._core.InvalidCategoryAmounts
 import com.tminus1010.budgetvalue._core.categoryComparator
 import com.tminus1010.budgetvalue._core.extensions.add
 import com.tminus1010.budgetvalue._core.extensions.bind
@@ -36,11 +37,14 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toPX
+import com.tminus1010.tmcommonkotlin.view.extensions.toast
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.Subject
 import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
@@ -58,12 +62,22 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
             field = value; vb.recyclerviewButtons.adapter?.notifyDataSetChanged()
         }
 
+    @Inject
+    lateinit var errorSubject: Subject<Throwable>
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         shouldIgnoreUserInput.observe(viewLifecycleOwner) {}
         vb.tvTitle.text = if (replayName == null) "" else "Replay ($replayName)"
         vb.tvTitle.visibility = if (replayName == null) View.GONE else View.VISIBLE
         vb.tvAmountToSplit.bind(categorizeVM.amountToCategorize) { text = it }
+        categorizeAdvancedVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
+        errorSubject.observe(viewLifecycleOwner) {
+            if (it is InvalidCategoryAmounts)
+                toast("Invalid category amounts")
+            else
+                throw it
+        }
         // # TMTableView
         val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Map.Entry<Category, BigDecimal>>(
             { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
@@ -129,16 +143,18 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 ButtonRVItem(
                     title = "Setup Auto Replay",
                     onClick = {
-                        val editText = EditText(requireContext())
-                        AlertDialog.Builder(requireContext())
-                            .setMessage("What would you like to name this replay?")
-                            .setView(editText)
-                            .setPositiveButton("Yes") { _, _ ->
-                                categorizeAdvancedVM.userSaveAutoReplay(editText.easyText)
-                                nav.navigateUp()
-                            }
-                            .setNegativeButton("No") { _, _ -> }
-                            .show()
+                        if (categorizeAdvancedVM.areCurrentCAsValid()) {
+                            val editText = EditText(requireContext())
+                            AlertDialog.Builder(requireContext())
+                                .setMessage("What would you like to name this replay?")
+                                .setView(editText)
+                                .setPositiveButton("Yes") { _, _ ->
+                                    categorizeAdvancedVM.userSaveReplay(editText.easyText, true)
+                                }
+                                .setNegativeButton("No") { _, _ -> }
+                                .show()
+                        } else
+                            errorSubject.onNext(InvalidCategoryAmounts(""))
                     }
                 )
             else null,
@@ -146,16 +162,18 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 ButtonRVItem(
                     title = "Save Replay",
                     onClick = {
-                        val editText = EditText(requireContext())
-                        AlertDialog.Builder(requireContext())
-                            .setMessage("What would you like to name this replay?")
-                            .setView(editText)
-                            .setPositiveButton("Yes") { _, _ ->
-                                categorizeAdvancedVM.userSaveReplay(editText.easyText)
-                                nav.navigateUp()
-                            }
-                            .setNegativeButton("No") { _, _ -> }
-                            .show()
+                        if (categorizeAdvancedVM.areCurrentCAsValid()) {
+                            val editText = EditText(requireContext())
+                            AlertDialog.Builder(requireContext())
+                                .setMessage("What would you like to name this replay?")
+                                .setView(editText)
+                                .setPositiveButton("Yes") { _, _ ->
+                                    categorizeAdvancedVM.userSaveReplay(editText.easyText, false)
+                                }
+                                .setNegativeButton("No") { _, _ -> }
+                                .show()
+                        } else
+                            errorSubject.onNext(InvalidCategoryAmounts(""))
                     }
                 )
             else null,

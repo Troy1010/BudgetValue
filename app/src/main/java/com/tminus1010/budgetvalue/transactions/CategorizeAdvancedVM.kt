@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.transactions
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.extensions.copy
+import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
@@ -17,7 +18,10 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.Subject
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -27,6 +31,7 @@ class CategorizeAdvancedVM @Inject constructor(
     transactionsDomain: TransactionsDomain,
     private val replayDomain: ReplayDomain,
     private val replayRepo: ReplayRepo,
+    private val errorSubject: Subject<Throwable>
 ) : ViewModel() {
     // # Input
     fun userFillIntoCategory(category: Category) {
@@ -48,30 +53,33 @@ class CategorizeAdvancedVM @Inject constructor(
             .observe(disposables)
     }
 
-    fun userSaveAutoReplay(replayName: String) {
-        val replay = BasicReplay(
-            name = replayName,
-            description = transactionToPush.value!!.description,
-            categoryAmounts = transactionToPush.value!!.categoryAmounts,
-            isAutoReplay = true
-        )
-        Rx.merge(
-            replayRepo.add(replay),
-            replayDomain.applyReplayToAllTransactions(replay),
-            _categorySelectionVM.clearSelection(),
-        ).observe(disposables)
-    }
-
-    fun userSaveReplay(replayName: String) {
-        replayRepo.add(
+    fun userSaveReplay(replayName: String, isAutoReplay: Boolean) {
+        Single.fromCallable {
             BasicReplay(
                 name = replayName,
                 description = transactionToPush.value!!.description,
-                categoryAmounts = transactionToPush.value!!.categoryAmounts,
-                isAutoReplay = false
+                categoryAmounts = transactionToPush.value!!.categoryAmounts.filter { it.value.compareTo(BigDecimal.ZERO) != 0 },
+                isAutoReplay = isAutoReplay
             )
-        ).observe(disposables)
+        }.subscribeOn(Schedulers.io())
+            .flatMapCompletable { replay ->
+                Rx.merge(
+                    listOfNotNull(
+                        if (isAutoReplay) replayDomain.applyReplayToAllTransactions(replay) else null,
+                        replayRepo.add(replay),
+                        _categorySelectionVM.clearSelection(),
+                    )
+                )
+            }
+            .observe(disposables, onComplete = {
+                navUp.onNext(Unit)
+            }, onError = {
+                errorSubject.onNext(it)
+            })
     }
+
+    fun areCurrentCAsValid(): Boolean =
+        transactionToPush.value!!.categoryAmounts.filter { it.value.compareTo(BigDecimal.ZERO) != 0 } != emptyMap<Category, BigDecimal>()
 
     fun userDeleteReplay(replayName: String) {
         replayRepo.delete(replayName).observe(disposables)
@@ -119,4 +127,5 @@ class CategorizeAdvancedVM @Inject constructor(
     val defaultAmount: Observable<String> =
         transactionToPush
             .map { it.defaultAmount.toString() }
+    val navUp = PublishSubject.create<Unit>()
 }
