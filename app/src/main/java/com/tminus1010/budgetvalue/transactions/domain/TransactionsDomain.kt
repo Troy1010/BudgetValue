@@ -8,6 +8,9 @@ import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.budgetvalue.transactions.models.TransactionsBlock
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
+import com.tminus1010.tmcommonkotlin.tuple.Box
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.Singles
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -24,27 +27,8 @@ class TransactionsDomain @Inject constructor(
     private val transactionParser: TransactionParser,
     private val replayDomain: ReplayDomain
 ) {
-    val transactions = transactionsRepo.transactions
-    val transactionBlocks = transactions
-        .map(::getBlocksFromTransactions)
-    val spends = transactions
-        .map { it.filter { it.isSpend } }
-    val currentSpendBlockCAs = spends
-        .map {
-            it
-                .filter { it.date in datePeriodGetter.getDatePeriod(LocalDate.now()) }
-                .map { it.categoryAmounts }
-                .fold(mapOf<Category, BigDecimal>()) { acc, v ->
-                    mutableSetOf<Category>().apply { addAll(acc.keys); addAll(v.keys) }
-                        .associateWith { (acc[it] ?: BigDecimal.ZERO) + (v[it] ?: BigDecimal.ZERO) }
-                }
-        }
-    val uncategorizedSpends = spends
-        .map { it.filter { it.isUncategorized } }
-    val uncategorizedSpendsSize = uncategorizedSpends
-        .map { it.size.toString() }
-
-    fun importTransactions(inputStream: InputStream) =
+    // # Input
+    fun importTransactions(inputStream: InputStream): Completable =
         Singles.zip(
             replayDomain.autoReplays.toSingle(),
             Single.fromCallable { transactionParser.parseToTransactions(inputStream) }
@@ -59,7 +43,8 @@ class TransactionsDomain @Inject constructor(
             )
         }
 
-    fun getBlocksFromTransactions(transactions: List<Transaction>): List<TransactionsBlock> {
+    // # Internal
+    private fun getBlocksFromTransactions(transactions: List<Transaction>): List<TransactionsBlock> {
         val transactionsRedefined = transactions.sortedBy { it.date }.toMutableList()
         val returning = ArrayList<TransactionsBlock>()
         if (0 !in transactionsRedefined.indices) return returning
@@ -80,4 +65,32 @@ class TransactionsDomain @Inject constructor(
         }
         return returning
     }
+
+    // # Output
+    val transactions = transactionsRepo.transactions
+    val transactionBlocks: Observable<List<TransactionsBlock>> =
+        transactions
+            .map(::getBlocksFromTransactions)
+    private val spends: Observable<List<Transaction>> =
+        transactions
+            .map { it.filter { it.isSpend } }
+            .replay(1).refCount()
+    val currentSpendBlockCAs: Observable<Map<Category, BigDecimal>> =
+        spends
+            .map {
+                it
+                    .filter { it.date in datePeriodGetter.getDatePeriod(LocalDate.now()) }
+                    .map { it.categoryAmounts }
+                    .fold(mapOf()) { acc, v ->
+                        mutableSetOf<Category>().apply { addAll(acc.keys); addAll(v.keys) }
+                            .associateWith { (acc[it] ?: BigDecimal.ZERO) + (v[it] ?: BigDecimal.ZERO) }
+                    }
+            }
+    val uncategorizedSpends: Observable<List<Transaction>> =
+        spends
+            .map { it.filter { it.isUncategorized } }
+    val firstUncategorizedSpend: Observable<Box<Transaction?>> =
+        uncategorizedSpends
+            .map { Box(it.getOrNull(0)) }
+            .replay(1).refCount()
 }

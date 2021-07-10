@@ -10,11 +10,6 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
-/**
- * TransactionParser is able to convert input streams into Transactions.
- * It's unusual that TransactionParser provides the parse methods instead of the
- * read/write methods.. but I do not yet know the best way to get ActivityResults from the repo.
- */
 class TransactionParser @Inject constructor(
     private val categoryAmountsConverter: CategoryAmountsConverter,
 ) : ITransactionParser {
@@ -29,8 +24,10 @@ class TransactionParser @Inject constructor(
             var date: LocalDate? = null
             for ((i, item) in row.withIndex())
                 if (Regex("""^[0-9]{13}${'$'}""").matches(item)) {
-                    date = LocalDate.parse(row[i].substring(0, 8),
-                        DateTimeFormatter.ofPattern("yyyyMMdd"))
+                    date = LocalDate.parse(
+                        row[i].substring(0, 8),
+                        DateTimeFormatter.ofPattern("yyyyMMdd")
+                    )
                     row.removeAt(i)
                     break
                 }

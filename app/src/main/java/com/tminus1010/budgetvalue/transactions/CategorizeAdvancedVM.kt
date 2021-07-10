@@ -3,7 +3,6 @@ package com.tminus1010.budgetvalue.transactions
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.extensions.copy
-import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
@@ -15,16 +14,14 @@ import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
-import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
-import io.reactivex.rxjava3.subjects.Subject
 import java.math.BigDecimal
 import javax.inject.Inject
 
 @HiltViewModel
 class CategorizeAdvancedVM @Inject constructor(
-    errorSubject: Subject<Throwable>,
     private val saveTransactionDomain: SaveTransactionDomain,
     transactionsDomain: TransactionsDomain,
     private val replayDomain: ReplayDomain,
@@ -99,16 +96,11 @@ class CategorizeAdvancedVM @Inject constructor(
         class FillIntoCategory(val category: Category) : Intents()
     }
 
-    private val firstTransactionBox =
-        transactionsDomain.uncategorizedSpends
-            .map { Box(it.getOrNull(0)) }
-            .nonLazyCache(disposables)
     private lateinit var _categorySelectionVM: CategorySelectionVM
 
     // # Output
     val replays = replayRepo.fetchReplays()
-
-    val transactionToPush = firstTransactionBox
+    val transactionToPush = transactionsDomain.firstUncategorizedSpend
         .unbox()
         .switchMap {
             intents
@@ -121,7 +113,7 @@ class CategorizeAdvancedVM @Inject constructor(
                 }
         }
         .nonLazyCache(disposables)
-    val defaultAmount = transactionToPush
-        .map { it.defaultAmount.toString() }
-        .divertErrors(errorSubject)
+    val defaultAmount: Observable<String> =
+        transactionToPush
+            .map { it.defaultAmount.toString() }
 }

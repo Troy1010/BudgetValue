@@ -2,8 +2,8 @@ package com.tminus1010.budgetvalue.transactions
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
-import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
+import com.tminus1010.budgetvalue._core.extensions.unbox
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay.models.IReplay
@@ -17,22 +17,21 @@ import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
-import io.reactivex.rxjava3.subjects.Subject
 import java.math.BigDecimal
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
+// TODO: Some of these input/output are no longer used, can probably be deleted
 @HiltViewModel
 class CategorizeVM @Inject constructor(
-    errorSubject: Subject<Throwable>,
     private val saveTransactionDomain: SaveTransactionDomain,
     private val transactionsRepo: TransactionsRepo,
-    transactionsDomain: TransactionsDomain
+    private val transactionsDomain: TransactionsDomain
 ) : ViewModel() {
     // # Input
     fun userSimpleCategorize(category: Category) {
         saveTransactionDomain.saveTransaction(
-            firstTransactionBox.value!!.first!!
+            transactionsDomain.firstUncategorizedSpend.unbox
                 .categorize(category)
         )
             .observe(disposables)
@@ -40,10 +39,10 @@ class CategorizeVM @Inject constructor(
 
     fun userReplay() {
         saveTransactionDomain.saveTransaction(
-            firstTransactionBox.value!!.first!!
+            transactionsDomain.firstUncategorizedSpend.unbox
                 .categorize(
-                    categoryAmounts = replayTransactionBox.value!!.first!!
-                        .calcCAsAdjustedForNewTotal(firstTransactionBox.value!!.first!!.amount)
+                    categoryAmounts = replayTransactionBox.unbox
+                        .calcCAsAdjustedForNewTotal(transactionsDomain.firstUncategorizedSpend.unbox.amount)
                 )
         )
             .observe(disposables)
@@ -51,7 +50,7 @@ class CategorizeVM @Inject constructor(
 
     fun userReplay(replay: IReplay) {
         saveTransactionDomain.saveTransaction(
-            replay.categorize(firstTransactionBox.value!!.first!!)
+            replay.categorize(transactionsDomain.firstUncategorizedSpend.unbox)
         )
             .observe(disposables)
     }
@@ -69,7 +68,7 @@ class CategorizeVM @Inject constructor(
     fun userNavToSplitWithReplayByPercentage() {
         _categorySelectionVM.clearSelection()
         _categorySelectionVM.selectCategories(*replayTransactionBox.value!!.first!!.categoryAmounts.map { it.key }.toTypedArray())
-        navToSplit.onNext(replayTransactionBox.value!!.first!!.calcCAsAdjustedForNewTotal(firstTransactionBox.value!!.first!!.amount))
+        navToSplit.onNext(replayTransactionBox.value!!.first!!.calcCAsAdjustedForNewTotal(transactionsDomain.firstUncategorizedSpend.unbox.amount))
     }
 
     fun setup(categorySelectionVM: CategorySelectionVM) {
@@ -78,12 +77,8 @@ class CategorizeVM @Inject constructor(
 
     // # Internal
     private lateinit var _categorySelectionVM: CategorySelectionVM
-    private val firstTransactionBox =
-        transactionsDomain.uncategorizedSpends
-            .map { Box(it.getOrNull(0)) }
-            .nonLazyCache(disposables)
     private val replayTransactionBox =
-        firstTransactionBox
+        transactionsDomain.firstUncategorizedSpend
             .unbox()
             .flatMapSingle { transaction ->
                 transactionsRepo.findTransactionsWithDescription(transaction.description)
@@ -102,21 +97,22 @@ class CategorizeVM @Inject constructor(
         .nonLazyCache(disposables)
     val isUndoAvailable = saveTransactionDomain.isUndoAvailable
     val isRedoAvailable = saveTransactionDomain.isRedoAvailable
-    val amountToCategorize = firstTransactionBox.unbox()
-        .map { "Amount to split: $${it.amount}" }
-        .nonLazyCache(disposables)
-        .divertErrors(errorSubject)
-    val isTransactionAvailable = firstTransactionBox
-        .map { it.first != null }
-        .divertErrors(errorSubject)
-    val date = firstTransactionBox
-        .map { it.first?.date?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")) ?: "" }
-        .divertErrors(errorSubject)
-    val latestUncategorizedTransactionAmount = firstTransactionBox
-        .map { it.first?.defaultAmount?.toString() ?: "" }
-        .divertErrors(errorSubject)
-    val latestUncategorizedTransactionDescription = firstTransactionBox
-        .map { it.first?.description ?: "" }
-        .divertErrors(errorSubject)
-    val navToSplit = PublishSubject.create<Map<Category, BigDecimal>>()
+    val amountToCategorize =
+        transactionsDomain.firstUncategorizedSpend
+            .unbox()
+            .map { "Amount to split: $${it.amount}" }
+            .nonLazyCache(disposables)
+    val isTransactionAvailable: Observable<Boolean> =
+        transactionsDomain.firstUncategorizedSpend
+            .map { it.first != null }
+    val date: Observable<String> =
+        transactionsDomain.firstUncategorizedSpend
+            .map { it.first?.date?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")) ?: "" }
+    val latestUncategorizedTransactionAmount: Observable<String> =
+        transactionsDomain.firstUncategorizedSpend
+            .map { it.first?.defaultAmount?.toString() ?: "" }
+    val latestUncategorizedTransactionDescription: Observable<String> =
+        transactionsDomain.firstUncategorizedSpend
+            .map { it.first?.description ?: "" }
+    val navToSplit = PublishSubject.create<Map<Category, BigDecimal>>()!!
 }

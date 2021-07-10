@@ -59,7 +59,7 @@ class HostActivity : AppCompatActivity() {
             if (result.resultCode == Activity.RESULT_OK) {
                 try {
                     contentResolver.openInputStream(result.data!!.data!!)!!
-                        .also { inputStream -> transactionsVM.importTransactions(inputStream) }
+                        .also { inputStream -> transactionsVM.userImportTransactions(inputStream) }
                     toast("Import successful")
                 } catch (e: Throwable) {
                     hostFrag.handle(e)

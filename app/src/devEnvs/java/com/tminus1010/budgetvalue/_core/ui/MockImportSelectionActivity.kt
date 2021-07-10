@@ -39,7 +39,7 @@ class MockImportSelectionActivity : AppCompatActivity(R.layout.activity_mock_imp
                     holder.vb.btnItem.text = "Import Transactions ${holder.adapterPosition}"
                     holder.vb.btnItem.setOnClickListener {
                         assets.open(transactionPathNames[holder.adapterPosition]).buffered()
-                            .also { transactionsVM.importTransactions(it) }
+                            .also { transactionsVM.userImportTransactions(it) }
                         finish()
                     }
                 }
