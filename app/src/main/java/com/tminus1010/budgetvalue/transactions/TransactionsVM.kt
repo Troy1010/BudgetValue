@@ -1,9 +1,11 @@
 package com.tminus1010.budgetvalue.transactions
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
+import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.Subject
@@ -17,8 +19,10 @@ class TransactionsVM @Inject constructor(
     private val transactionsDomain: TransactionsDomain,
 ) : ViewModel() {
     // # Input
-    fun importTransactions(inputStream: InputStream) =
+    fun importTransactions(inputStream: InputStream) {
         transactionsDomain.importTransactions(inputStream)
+            .observe(disposables)
+    }
 
     // # Output
     val currentSpendBlockCAs: Observable<Map<Category, BigDecimal>> =

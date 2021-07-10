@@ -9,6 +9,7 @@ data class BasicReplay(
     override val name: String,
     private val description: String,
     private val categoryAmounts: Map<Category, BigDecimal>,
+    override val isAutoReplay: Boolean,
 ) : IReplay {
     override fun predicate(transaction: Transaction): Boolean =
         transaction.description == description
@@ -20,7 +21,8 @@ data class BasicReplay(
         BasicReplayDTO(
             name = name,
             description = description,
-            categoryAmounts = categoryAmountsConverter.toJson(categoryAmounts)
+            categoryAmounts = categoryAmountsConverter.toJson(categoryAmounts),
+            isAutoReplay = isAutoReplay
         )
 
     companion object {
@@ -28,7 +30,8 @@ data class BasicReplay(
             BasicReplay(
                 name = name,
                 description = description,
-                categoryAmounts = categoryAmountsConverter.toCategoryAmounts(categoryAmounts)
+                categoryAmounts = categoryAmountsConverter.toCategoryAmounts(categoryAmounts),
+                isAutoReplay = isAutoReplay
             )
         }
     }

@@ -6,4 +6,5 @@ interface IReplay {
     val name: String
     fun predicate(transaction: Transaction): Boolean
     fun categorize(transaction: Transaction): Transaction
+    val isAutoReplay: Boolean
 }

@@ -129,8 +129,16 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 ButtonRVItem(
                     title = "Setup Auto Replay",
                     onClick = {
-                        categorizeAdvancedVM.userBeginAutoReplay()
-                        nav.navigateUp()
+                        val editText = EditText(requireContext())
+                        AlertDialog.Builder(requireContext())
+                            .setMessage("What would you like to name this replay?")
+                            .setView(editText)
+                            .setPositiveButton("Yes") { _, _ ->
+                                categorizeAdvancedVM.userSaveAutoReplay(editText.easyText)
+                                nav.navigateUp()
+                            }
+                            .setNegativeButton("No") { _, _ -> }
+                            .show()
                     }
                 )
             else null,
@@ -169,7 +177,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
             ButtonRVItem(
                 title = "Submit",
                 onClick = {
-                    categorizeAdvancedVM.userSaveTransaction()
+                    categorizeAdvancedVM.userSubmitCategorization()
                     nav.navigateUp()
                 }
             ),
