@@ -7,10 +7,9 @@ import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.replay.AutoReplayDomain
+import com.tminus1010.budgetvalue.replay.ReplayDomain
 import com.tminus1010.budgetvalue.replay.data.ReplayRepo
 import com.tminus1010.budgetvalue.replay.models.BasicReplay
-import com.tminus1010.budgetvalue.replay.models.IReplay
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -28,7 +27,7 @@ class CategorizeAdvancedVM @Inject constructor(
     errorSubject: Subject<Throwable>,
     private val saveTransactionDomain: SaveTransactionDomain,
     transactionsDomain: TransactionsDomain,
-    private val autoReplayDomain: AutoReplayDomain,
+    private val replayDomain: ReplayDomain,
     private val replayRepo: ReplayRepo,
 ) : ViewModel() {
     // # Input
@@ -44,17 +43,22 @@ class CategorizeAdvancedVM @Inject constructor(
         intents.onNext(Intents.Clear)
     }
 
-    fun userSaveTransaction() {
+    fun userSubmitCategorization() {
         transactionToPush.take(1)
             .flatMapCompletable { saveTransactionDomain.saveTransaction(it) }
             .andThen(_categorySelectionVM.clearSelection())
             .observe(disposables)
     }
 
-    fun userBeginAutoReplay() {
-        transactionToPush.take(1)
-            .flatMapCompletable { autoReplayDomain.addAutoReplay(it.description, it.categoryAmounts) }
-            .andThen(_categorySelectionVM.clearSelection())
+    fun userSaveAutoReplay(replayName: String) {
+        val replay = BasicReplay(
+            name = replayName,
+            description = transactionToPush.value!!.description,
+            categoryAmounts = transactionToPush.value!!.categoryAmounts,
+            isAutoReplay = true
+        )
+        replayRepo.add(replay)
+            .andThen(replayDomain.applyReplayToAllTransactions(replay))
             .observe(disposables)
     }
 
@@ -64,6 +68,7 @@ class CategorizeAdvancedVM @Inject constructor(
                 name = replayName,
                 description = transactionToPush.value!!.description,
                 categoryAmounts = transactionToPush.value!!.categoryAmounts,
+                isAutoReplay = false
             )
         ).observe(disposables)
     }
@@ -102,7 +107,6 @@ class CategorizeAdvancedVM @Inject constructor(
 
     // # Output
     val replays = replayRepo.fetchReplays()
-        .nonLazyCache(disposables)
 
     val transactionToPush = firstTransactionBox
         .unbox()

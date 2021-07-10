@@ -9,4 +9,5 @@ data class BasicReplayDTO(
     val name: String,
     val description: String,
     val categoryAmounts: String,
+    val isAutoReplay: Boolean
 )

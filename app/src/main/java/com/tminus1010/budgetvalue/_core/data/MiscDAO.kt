@@ -2,7 +2,6 @@ package com.tminus1010.budgetvalue._core.data
 
 import androidx.room.*
 import com.tminus1010.budgetvalue.accounts.models.AccountDTO
-import com.tminus1010.budgetvalue.replay.models.AutoReplayDTO
 import com.tminus1010.budgetvalue.plans.models.PlanDTO
 import com.tminus1010.budgetvalue.reconciliations.models.ReconciliationDTO
 import com.tminus1010.budgetvalue.replay.models.BasicReplayDTO
@@ -109,14 +108,6 @@ interface MiscDAO {
 
     @Query("UPDATE ReconciliationDTO SET categoryAmounts=:categoryAmounts WHERE id=:id")
     fun updateReconciliationCategoryAmounts(id: Int, categoryAmounts: Map<String, BigDecimal>): Completable
-
-    // # AutoReplays
-
-    @Query("select * from AutoReplayDTO")
-    fun fetchAutoReplays(): Observable<List<AutoReplayDTO>>
-
-    @Insert
-    fun add(autoReplayDTO: AutoReplayDTO): Completable
 
     // # Replays
 
