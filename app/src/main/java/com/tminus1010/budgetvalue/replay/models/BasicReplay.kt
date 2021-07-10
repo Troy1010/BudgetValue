@@ -11,6 +11,10 @@ data class BasicReplay(
     private val categoryAmounts: Map<Category, BigDecimal>,
     override val isAutoReplay: Boolean,
 ) : IReplay {
+    init {
+        if (categoryAmounts == emptyMap<Category, BigDecimal>()) error("BasicReplay should not have empty categoryAmounts")
+    }
+
     override fun predicate(transaction: Transaction): Boolean =
         transaction.description == description
 
