@@ -1,6 +1,5 @@
 package com.tminus1010.budgetvalue._core.extensions
 
-import com.tminus1010.tmcommonkotlin.rx.extensions.doLogx
 import io.reactivex.rxjava3.core.Completable
 import junit.framework.TestCase
 import java.util.concurrent.TimeUnit
@@ -16,12 +15,10 @@ class CompletableKtTest : TestCase() {
 
     fun testToDuration_Given2Subscriptions() {
         // # Given
-        val observable = Completable.timer(4, TimeUnit.SECONDS).toDuration().doLogx("aaa")
+        val observable = Completable.timer(4, TimeUnit.SECONDS).toDuration()
         // # When & Then
-        logz("subscriping first")
         val tester1 = observable.test()
         Thread.sleep(400)
-        logz("subscriping second")
         val tester2 = observable.test()
         tester1.await().assertValue { -50 < it - 4000 && it - 4000 < 50 }
         tester2.await().assertValue { -50 < it - 4000 && it - 4000 < 50 }
