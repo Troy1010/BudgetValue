@@ -8,6 +8,9 @@ import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.budgetvalue.transactions.models.TransactionsBlock
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.kotlin.Singles
+import io.reactivex.rxjava3.schedulers.Schedulers
 import java.io.InputStream
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -42,9 +45,12 @@ class TransactionsDomain @Inject constructor(
         .map { it.size.toString() }
 
     fun importTransactions(inputStream: InputStream) =
-        replayDomain.autoReplays.toSingle().flatMapCompletable { autoReplays ->
+        Singles.zip(
+            replayDomain.autoReplays.toSingle(),
+            Single.fromCallable { transactionParser.parseToTransactions(inputStream) }
+        ).subscribeOn(Schedulers.io()).flatMapCompletable { (autoReplays, transactions) ->
             transactionsRepo.tryPush(
-                transactionParser.parseToTransactions(inputStream)
+                transactions
                     .map { transaction ->
                         autoReplays.find { it.predicate(transaction) }
                             ?.categorize(transaction)
