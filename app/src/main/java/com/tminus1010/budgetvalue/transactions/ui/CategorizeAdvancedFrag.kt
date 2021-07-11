@@ -93,7 +93,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
         val checkboxFactory = ViewItemRecipeFactory3<ItemCheckboxBinding, Category>(
             { ItemCheckboxBinding.inflate(LayoutInflater.from(requireContext())) },
             { category, vb, lifecycle ->
-                vb.checkbox.bind(categorizeAdvancedVM.fillCategory, lifecycle) {
+                vb.checkbox.bind(categorizeAdvancedVM.autoFillCategory, lifecycle) {
                     isChecked = category == it
                     isEnabled = category != it
                 }

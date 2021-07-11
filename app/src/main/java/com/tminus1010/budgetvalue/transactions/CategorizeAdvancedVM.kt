@@ -13,6 +13,7 @@ import com.tminus1010.budgetvalue.replay.data.ReplayRepo
 import com.tminus1010.budgetvalue.replay.models.BasicReplay
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
+import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
@@ -59,9 +60,10 @@ class CategorizeAdvancedVM @Inject constructor(
         Single.fromCallable {
             BasicReplay(
                 name = replayName,
-                description = transactionToPush.value!!.description,
-                categoryAmounts = transactionToPush.value!!.categoryAmounts.filter { it.value.compareTo(BigDecimal.ZERO) != 0 },
-                isAutoReplay = isAutoReplay
+                description = transactionToPush_preAutoFill.value!!.description,
+                categoryAmounts = transactionToPush_preAutoFill.value!!.categoryAmounts.filter { it.value.compareTo(BigDecimal.ZERO) != 0 },
+                isAutoReplay = isAutoReplay,
+                autoFillCategory = autoFillCategory.value!!
             )
         }.subscribeOn(Schedulers.io())
             .flatMapCompletable { replay ->
@@ -88,7 +90,7 @@ class CategorizeAdvancedVM @Inject constructor(
     }
 
     fun userSetCategoryForAutoFill(category: Category) {
-        _fillCategory.onNext(category)
+        _autoFillCategory.onNext(category)
     }
 
     fun setup(categoryAmounts: Map<Category, BigDecimal>?, categorySelectionVM: CategorySelectionVM) {
@@ -114,13 +116,10 @@ class CategorizeAdvancedVM @Inject constructor(
     }
 
     private lateinit var _categorySelectionVM: CategorySelectionVM
-
-    // # Output
-    val replays = replayRepo.fetchReplays()
-    val transactionToPush = transactionsDomain.firstUncategorizedSpend
-        .unbox()
-        .switchMap {
-            Observables.combineLatest(
+    private val transactionToPush_preAutoFill: Observable<Transaction> =
+        transactionsDomain.firstUncategorizedSpend
+            .unbox()
+            .switchMap {
                 intents
                     .scan(it) { acc, v ->
                         when (v) {
@@ -128,18 +127,25 @@ class CategorizeAdvancedVM @Inject constructor(
                             is Intents.Add -> acc.categorize(acc.categoryAmounts.copy(v.category to v.amount))
                             is Intents.FillIntoCategory -> acc.categorize(v.category)
                         }
-                    },
-                fillCategory
-            ).map { (transaction, fillCategory) ->
+                    }
+            }
+
+    // # Output
+    val replays = replayRepo.fetchReplays()
+    private val _autoFillCategory = BehaviorSubject.createDefault(CategoriesDomain.defaultCategory)!!
+    val autoFillCategory: Observable<Category> = _autoFillCategory
+        .distinctUntilChanged()
+    val transactionToPush =
+        Observables.combineLatest(
+            transactionToPush_preAutoFill,
+            autoFillCategory
+        )
+            .map { (transaction, fillCategory) ->
                 transaction.categorize(fillCategory)
             }
-        }
-        .nonLazyCache(disposables)
+            .nonLazyCache(disposables)
     val defaultAmount: Observable<String> =
         transactionToPush
             .map { it.defaultAmount.toString() }
     val navUp = PublishSubject.create<Unit>()!!
-    private val _fillCategory = BehaviorSubject.createDefault(CategoriesDomain.defaultCategory)!!
-    val fillCategory: Observable<Category> = _fillCategory
-        .distinctUntilChanged()
 }
