@@ -28,7 +28,6 @@ import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
 import com.tminus1010.budgetvalue.replay.models.IReplay
 import com.tminus1010.budgetvalue.transactions.CategorizeAdvancedVM
 import com.tminus1010.budgetvalue.transactions.CategorizeVM
-import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
@@ -92,14 +91,23 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
         categorizeAdvancedVM.transactionToPush
             .map { transaction ->
                 val categoryAmounts = transaction.categoryAmounts.toSortedMap(categoryComparator)
-                val recipes2D = listOf(
-                    listOf(recipeFactories.header.createOne("Category"))
-                            + recipeFactories.textView.createOne("Default")
-                            + recipeFactories.textView.createMany(categoryAmounts.map { it.key.name }),
-                    listOf(recipeFactories.header.createOne("Amount"))
-                            + recipeFactories.textViewWithLifecycle.createOne(categorizeAdvancedVM.defaultAmount)
-                            + categoryAmountRecipeFactory.createMany(categoryAmounts.entries)
-                ).reflectXY()
+                val recipes2D =
+                    listOf(
+                        listOf(
+                            recipeFactories.header.createOne("Category"),
+                            recipeFactories.header.createOne("Amount"),
+                        ),
+                        listOf(
+                            recipeFactories.textView.createOne("Default"),
+                            recipeFactories.textViewWithLifecycle.createOne(categorizeAdvancedVM.defaultAmount),
+                        ),
+                        *categoryAmounts.map {
+                            listOf(
+                                recipeFactories.textView.createOne(it.key.name),
+                                categoryAmountRecipeFactory.createOne(it),
+                            )
+                        }.toTypedArray(),
+                    )
                 val dividerMap = categoryAmounts.keys
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
