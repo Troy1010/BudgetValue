@@ -23,8 +23,10 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class HostActivity : AppCompatActivity() {
     private val vb by viewBinding(ActivityHostBinding::inflate)
-    @Inject lateinit var getExtraMenuItemPartialsUC: GetExtraMenuItemPartialsUC
-    @Inject lateinit var appInitDomain: AppInitDomain
+    @Inject
+    lateinit var getExtraMenuItemPartialsUC: GetExtraMenuItemPartialsUC
+    @Inject
+    lateinit var appInitDomain: AppInitDomain
     private val transactionsVM: TransactionsVM by viewModels()
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.frag_nav_host) as HostFrag }
     override fun onCreate(savedInstanceState: Bundle?) {
