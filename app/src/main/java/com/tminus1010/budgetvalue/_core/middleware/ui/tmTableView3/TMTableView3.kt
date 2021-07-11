@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
 import androidx.core.view.updateLayoutParams
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
@@ -16,6 +17,7 @@ import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView2.SynchronizedS
 import com.tminus1010.budgetvalue.databinding.TableviewBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.children
 import com.tminus1010.tmcommonkotlin.misc.extensions.clearItemDecorations
+import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.Disposable
 import java.util.concurrent.TimeUnit
@@ -51,7 +53,7 @@ class TMTableView3 @JvmOverloads constructor(
                 .take(1)
                 .timeout(5, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { width ->
+                .observe(findViewTreeLifecycleOwner()!!) { width ->
                     inflateAndBind(
                         RecipeGrid3(recipeGrid, width),
                         dividerMap,
@@ -99,7 +101,7 @@ class TMTableView3 @JvmOverloads constructor(
         // ## Synchronize scrolling
         disposable?.dispose()
         disposable = synchronizedScrollListener.scrollObservable
-            .subscribe { (v, dx) ->
+            .observe(findViewTreeLifecycleOwner()!!) { (v, dx) ->
                 // ### Scroll children in recyclerview_tier1
                 vb.recyclerviewTier1.layoutManager!!.children
                     .filter { it != v }
