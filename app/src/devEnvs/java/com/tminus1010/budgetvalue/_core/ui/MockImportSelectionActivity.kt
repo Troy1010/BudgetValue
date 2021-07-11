@@ -12,12 +12,12 @@ import com.tminus1010.budgetvalue.databinding.ActivityMockImportSelectionBinding
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._core.middleware.ui.GenViewHolder2
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
-import com.tminus1010.budgetvalue.transactions.TransactionsVM
+import com.tminus1010.budgetvalue.transactions.TransactionsMiscVM
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MockImportSelectionActivity : AppCompatActivity(R.layout.activity_mock_import_selection) {
-    val transactionsVM by viewModels<TransactionsVM>()
+    val transactionsVM by viewModels<TransactionsMiscVM>()
     val vb by viewBinding(ActivityMockImportSelectionBinding::inflate)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

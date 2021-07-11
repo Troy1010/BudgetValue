@@ -15,7 +15,7 @@ import com.tminus1010.budgetvalue._core.extensions.add
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
-import com.tminus1010.budgetvalue.transactions.TransactionsVM
+import com.tminus1010.budgetvalue.transactions.TransactionsMiscVM
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -27,7 +27,7 @@ class HostActivity : AppCompatActivity() {
     lateinit var getExtraMenuItemPartialsUC: GetExtraMenuItemPartialsUC
     @Inject
     lateinit var appInitDomain: AppInitDomain
-    private val transactionsVM: TransactionsVM by viewModels()
+    private val transactionsMiscVM: TransactionsMiscVM by viewModels()
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.frag_nav_host) as HostFrag }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +39,7 @@ class HostActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(vb.bottomNavigation, hostFrag.navController)
         //
         // This line solves (after doing an Import): java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
-        transactionsVM
+        transactionsMiscVM
     }
 
     override fun onStart() {
@@ -61,7 +61,7 @@ class HostActivity : AppCompatActivity() {
             if (result.resultCode == Activity.RESULT_OK) {
                 try {
                     contentResolver.openInputStream(result.data!!.data!!)!!
-                        .also { inputStream -> transactionsVM.userImportTransactions(inputStream) }
+                        .also { inputStream -> transactionsMiscVM.userImportTransactions(inputStream) }
                     toast("Import successful")
                 } catch (e: Throwable) {
                     hostFrag.handle(e)

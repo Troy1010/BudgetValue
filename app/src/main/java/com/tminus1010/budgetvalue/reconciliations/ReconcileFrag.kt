@@ -18,14 +18,13 @@ import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.*
 import com.tminus1010.budgetvalue.plans.ActivePlanVM
-import com.tminus1010.budgetvalue.transactions.TransactionsVM
+import com.tminus1010.budgetvalue.transactions.TransactionsMiscVM
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
@@ -34,7 +33,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
     private val activeReconciliationVM: ActiveReconciliationVM by activityViewModels()
     private val categoriesVM: CategoriesVM by activityViewModels()
     private val activePlanVM: ActivePlanVM by activityViewModels()
-    private val transactionsVM: TransactionsVM by activityViewModels()
+    private val transactionsMiscVM: TransactionsMiscVM by activityViewModels()
     private val accountsVM: AccountsVM by activityViewModels()
     private val budgetedVM: BudgetedVM by activityViewModels()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -57,7 +56,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                 vb.editText.onDone { activeReconciliationVM.pushActiveReconcileCA(category, it) }
             }
         )
-        Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs, transactionsVM.currentSpendBlockCAs, activeReconciliationVM.activeReconcileCAs2, budgetedVM.categoryAmounts)
+        Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs, transactionsMiscVM.currentSpendBlockCAs, activeReconciliationVM.activeReconcileCAs2, budgetedVM.categoryAmounts)
             .observeOn(Schedulers.computation())
             .debounce(100, TimeUnit.MILLISECONDS)
             .map { (categories, activePlanCAs, currentSpendBlockCAs, activeReconciliationCAs, budgetedCA) ->

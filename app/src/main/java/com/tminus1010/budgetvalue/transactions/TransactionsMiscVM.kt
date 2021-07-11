@@ -10,7 +10,7 @@ import java.math.BigDecimal
 import javax.inject.Inject
 
 @HiltViewModel
-class TransactionsVM @Inject constructor(
+class TransactionsMiscVM @Inject constructor(
     private val transactionsDomain: TransactionsDomain,
 ) : ViewModel() {
     // # Input

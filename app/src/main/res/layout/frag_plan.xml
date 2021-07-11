@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.TMTableView3
-        android:id="@+id/myTableView_plan"
+        android:id="@+id/tmTableView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

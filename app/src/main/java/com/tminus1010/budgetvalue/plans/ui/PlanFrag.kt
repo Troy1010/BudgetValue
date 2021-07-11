@@ -17,7 +17,6 @@ import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
 import com.tminus1010.budgetvalue.plans.ActivePlanVM
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
-import com.tminus1010.tmcommonkotlin.misc.extensions.easyGetLayoutParams
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
@@ -70,7 +69,7 @@ class PlanFrag : Fragment(R.layout.frag_plan) {
                 Pair(recipes2D, dividerMap)
             }
             .observe(viewLifecycleOwner) { (recipes2D, dividerMap) ->
-                vb.myTableViewPlan.initialize(
+                vb.tmTableView.initialize(
                     recipeGrid = recipes2D,
                     shouldFitItemWidthsInsideTable = true,
                     dividerMap = dividerMap,
