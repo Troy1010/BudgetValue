@@ -58,7 +58,7 @@ class HostActivity : AppCompatActivity() {
         menu.add(
             MenuItem(
                 title = "Transactions",
-                lambda = { nav.navigate(R.id.transactionsFrag) },
+                onClick = { nav.navigate(R.id.transactionsFrag) },
             ),
             *getExtraMenuItemPartialsUC(this)
         )
