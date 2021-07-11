@@ -147,15 +147,15 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 ButtonItem(
                     title = "Setup Auto Replay",
                     onClick = {
-                        if (categorizeAdvancedVM.areCurrentCAsValid()) {
+                        if (categorizeAdvancedVM.areCurrentCAsValid.value!!) {
                             val editText = EditText(requireContext())
                             AlertDialog.Builder(requireContext())
                                 .setMessage("What would you like to name this replay?")
                                 .setView(editText)
-                                .setPositiveButton("Yes") { _, _ ->
+                                .setPositiveButton("Submit") { _, _ ->
                                     categorizeAdvancedVM.userSaveReplay(editText.easyText, true)
                                 }
-                                .setNegativeButton("No") { _, _ -> }
+                                .setNegativeButton("Cancel") { _, _ -> }
                                 .show()
                         } else
                             errorSubject.onNext(InvalidCategoryAmounts(""))
@@ -166,15 +166,15 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 ButtonItem(
                     title = "Save Replay",
                     onClick = {
-                        if (categorizeAdvancedVM.areCurrentCAsValid()) {
+                        if (categorizeAdvancedVM.areCurrentCAsValid.value!!) {
                             val editText = EditText(requireContext())
                             AlertDialog.Builder(requireContext())
                                 .setMessage("What would you like to name this replay?")
                                 .setView(editText)
-                                .setPositiveButton("Yes") { _, _ ->
+                                .setPositiveButton("Submit") { _, _ ->
                                     categorizeAdvancedVM.userSaveReplay(editText.easyText, false)
                                 }
-                                .setNegativeButton("No") { _, _ -> }
+                                .setNegativeButton("Cancel") { _, _ -> }
                                 .show()
                         } else
                             errorSubject.onNext(InvalidCategoryAmounts(""))

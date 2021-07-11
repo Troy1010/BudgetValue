@@ -82,9 +82,6 @@ class CategorizeAdvancedVM @Inject constructor(
             })
     }
 
-    fun areCurrentCAsValid(): Boolean =
-        transactionToPush.value!!.categoryAmounts.filter { it.value.compareTo(BigDecimal.ZERO) != 0 } != emptyMap<Category, BigDecimal>()
-
     fun userDeleteReplay(replayName: String) {
         replayRepo.delete(replayName).observe(disposables)
     }
@@ -148,4 +145,8 @@ class CategorizeAdvancedVM @Inject constructor(
         transactionToPush
             .map { it.defaultAmount.toString() }
     val navUp = PublishSubject.create<Unit>()!!
+    val areCurrentCAsValid: Observable<Boolean> =
+        transactionToPush
+            .map { it.categoryAmounts.filter { it.value.compareTo(BigDecimal.ZERO) != 0 } != emptyMap<Category, BigDecimal>() }
+            .nonLazyCache(disposables)
 }
