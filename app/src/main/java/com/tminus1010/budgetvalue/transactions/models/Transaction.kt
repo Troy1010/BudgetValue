@@ -18,6 +18,7 @@ data class Transaction(
     val id: String,
 ) {
     val isUncategorized get() = categoryAmounts.isNullOrEmpty()
+    val isCategorized get() = !isUncategorized
     val isSpend get() = amount < BigDecimal.ZERO
     val defaultAmount get() = amount - categoryAmounts.values.sum()
     fun categorize(categoryAmounts: Map<Category, BigDecimal>): Transaction {
