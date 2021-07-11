@@ -16,7 +16,6 @@ import com.tminus1010.budgetvalue.databinding.FragErrorBinding
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 @AndroidEntryPoint
 class ErrorFrag : Fragment(R.layout.frag_error) {
@@ -42,13 +41,11 @@ class ErrorFrag : Fragment(R.layout.frag_error) {
         }
         // # Message
         errorVM.message
-            .observeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) {
                 vb.textviewMessage.text = it
             }
         // # Buttons
         errorVM.buttons
-            .observeOn(AndroidSchedulers.mainThread())
             .observe(viewLifecycleOwner) {
                 vb.recyclerviewButtons.adapter?.notifyDataSetChanged()
             }
