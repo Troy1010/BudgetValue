@@ -22,8 +22,10 @@ import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecip
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
+import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.FragCategorizeAdvancedBinding
+import com.tminus1010.budgetvalue.databinding.ItemCheckboxBinding
 import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
 import com.tminus1010.budgetvalue.replay.models.IReplay
 import com.tminus1010.budgetvalue.transactions.CategorizeAdvancedVM
@@ -88,6 +90,18 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 }
             }
         )
+        val checkboxFactory = ViewItemRecipeFactory3<ItemCheckboxBinding, Category>(
+            { ItemCheckboxBinding.inflate(LayoutInflater.from(requireContext())) },
+            { category, vb, lifecycle ->
+                vb.checkbox.bind(categorizeAdvancedVM.fillCategory, lifecycle) {
+                    isChecked = category == it
+                    isEnabled = category != it
+                }
+                vb.checkbox.setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked) categorizeAdvancedVM.userSetCategoryForAutoFill(category)
+                }
+            }
+        )
         categorizeAdvancedVM.transactionToPush
             .map { transaction ->
                 val categoryAmounts = transaction.categoryAmounts.toSortedMap(categoryComparator)
@@ -96,15 +110,18 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                         listOf(
                             recipeFactories.header.createOne("Category"),
                             recipeFactories.header.createOne("Amount"),
+                            recipeFactories.header.createOne("Fill"),
                         ),
                         listOf(
                             recipeFactories.textView.createOne("Default"),
                             recipeFactories.textViewWithLifecycle.createOne(categorizeAdvancedVM.defaultAmount),
+                            checkboxFactory.createOne(CategoriesDomain.defaultCategory),
                         ),
                         *categoryAmounts.map {
                             listOf(
                                 recipeFactories.textView.createOne(it.key.name),
                                 categoryAmountRecipeFactory.createOne(it),
+                                checkboxFactory.createOne(it.key),
                             )
                         }.toTypedArray(),
                     )
