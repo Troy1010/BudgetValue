@@ -3,7 +3,9 @@ package com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
+import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
@@ -23,7 +25,8 @@ class TMTableView3 @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
-    var disposable: Disposable? = null
+    private var disposable: Disposable? = null
+    private var fitItemWidthsInsideTableDisposable: Disposable? = null
 
     /**
      * @param shouldFitItemWidthsInsideTable
@@ -35,7 +38,9 @@ class TMTableView3 @JvmOverloads constructor(
         dividerMap: Map<Int, IViewItemRecipe3> = emptyMap(),
         colFreezeCount: Int = 0,
         rowFreezeCount: Int = 0,
+        shouldWrapContentVertically: Boolean = false, // without this, wrap_content will not wrap the items in the RV, it will wrap the RV itself.
     ) {
+        if (recipeGrid.isEmpty()) error("recipeGrid was empty. This error is thrown b/c without it, an empty recipeGrid causes a no-stacetrace crash after 6s.")
         if (shouldFitItemWidthsInsideTable)
             widthObservable()
                 .take(1)
@@ -48,8 +53,10 @@ class TMTableView3 @JvmOverloads constructor(
                         colFreezeCount,
                         rowFreezeCount,
                         SynchronizedScrollListener(Orientation.HORIZONTAL),
+                        shouldWrapContentVertically,
                     )
                 }
+                .also { fitItemWidthsInsideTableDisposable?.dispose(); fitItemWidthsInsideTableDisposable = it }
         else
             inflateAndBind(
                 RecipeGrid3(recipeGrid),
@@ -57,6 +64,7 @@ class TMTableView3 @JvmOverloads constructor(
                 colFreezeCount,
                 rowFreezeCount,
                 SynchronizedScrollListener(Orientation.HORIZONTAL),
+                shouldWrapContentVertically,
             )
     }
 
@@ -66,12 +74,13 @@ class TMTableView3 @JvmOverloads constructor(
         colFreezeCount: Int,
         rowFreezeCount: Int,
         synchronizedScrollListener: SynchronizedScrollListener,
+        shouldWrapContentVertically: Boolean
     ) {
         removeAllViews()
         val vb = TableviewBinding.inflate(LayoutInflater.from(context), this, true)
         // # Freeze rows
-        if (rowFreezeCount>1) TODO()
-        if (rowFreezeCount==1) {
+        if (rowFreezeCount > 1) TODO()
+        if (rowFreezeCount == 1) {
             vb.recyclerviewColumnheaders.adapter = InnerRVAdapter(recipeGrid, 0)
             vb.recyclerviewColumnheaders.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
             vb.recyclerviewColumnheaders.clearItemDecorations()
@@ -80,6 +89,8 @@ class TMTableView3 @JvmOverloads constructor(
             vb.recyclerviewColumnheaders.addOnScrollListener(synchronizedScrollListener)
         }
         // # Cells
+        if (shouldWrapContentVertically)
+            vb.recyclerviewTier1.updateLayoutParams { height = WRAP_CONTENT }
         vb.recyclerviewTier1.adapter = OuterRVAdapter3(context, recipeGrid, rowFreezeCount, synchronizedScrollListener)
         vb.recyclerviewTier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
         vb.recyclerviewTier1.clearItemDecorations()

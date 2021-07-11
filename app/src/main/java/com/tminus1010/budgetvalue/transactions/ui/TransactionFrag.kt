@@ -17,6 +17,7 @@ import com.tminus1010.budgetvalue.databinding.ItemTextViewBinding
 import com.tminus1010.budgetvalue.transactions.TransactionVM
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
+import com.tminus1010.tmcommonkotlin.view.extensions.toast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -50,17 +51,21 @@ class TransactionFrag : Fragment(R.layout.frag_transaction) {
                 )
             ),
             shouldFitItemWidthsInsideTable = true,
+            shouldWrapContentVertically = true,
         )
         // # TMTableView
-        vb.tmTableView.initialize(
-            recipeGrid = transactionVM.transaction.categoryAmounts.map {
-                listOf(
-                    recipeFactories.textView.createOne(it.key.name),
-                    recipeFactories.textView.createOne(it.value),
-                )
-            },
-            shouldFitItemWidthsInsideTable = true,
-        )
+        if (transactionVM.transaction.categoryAmounts.isEmpty())
+            toast("This transaction is empty")
+        else
+            vb.tmTableView.initialize(
+                recipeGrid = transactionVM.transaction.categoryAmounts.map {
+                    listOf(
+                        recipeFactories.textView.createOne(it.key.name),
+                        recipeFactories.textView.createOne(it.value),
+                    )
+                },
+                shouldFitItemWidthsInsideTable = true,
+            )
     }
 
     companion object {
