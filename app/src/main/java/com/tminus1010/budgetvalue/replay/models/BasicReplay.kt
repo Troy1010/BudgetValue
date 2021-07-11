@@ -11,13 +11,13 @@ data class BasicReplay(
     private val description: String,
     private val categoryAmounts: Map<Category, BigDecimal>,
     override val isAutoReplay: Boolean,
-    private val autoFillCategory: Category
+    override val autoFillCategory: Category
 ) : IReplay {
     override fun predicate(transaction: Transaction): Boolean =
         transaction.description == description
 
     override fun categorize(transaction: Transaction): Transaction =
-        transaction.categorize(categoryAmounts).categorize(autoFillCategory)
+        transaction.categorize(categoryAmounts)
 
     fun toDTO(categoryAmountsConverter: CategoryAmountsConverter) =
         BasicReplayDTO(

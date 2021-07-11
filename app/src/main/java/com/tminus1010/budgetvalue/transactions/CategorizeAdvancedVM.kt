@@ -90,7 +90,9 @@ class CategorizeAdvancedVM @Inject constructor(
         _autoFillCategory.onNext(category)
     }
 
-    fun setup(categoryAmounts: Map<Category, BigDecimal>?, categorySelectionVM: CategorySelectionVM) {
+    fun setup(categoryAmounts: Map<Category, BigDecimal>?, autoFillCategory: Category, categorySelectionVM: CategorySelectionVM) {
+        _autoFillCategory.onNext(autoFillCategory)
+        categoryToKeep.onNext(autoFillCategory)
         _categorySelectionVM = categorySelectionVM
         transactionToPush.take(1)
             .observe(disposables) {
@@ -104,6 +106,11 @@ class CategorizeAdvancedVM @Inject constructor(
     }
 
     // # Internal
+    /**
+     * This categoryToKeep allows the user to switch the autoFillCategory without loosing their ability to switch it back.
+     * .. but it's possible that a lot of this logic could be simplified.
+     */
+    private val categoryToKeep = BehaviorSubject.createDefault(CategoriesDomain.defaultCategory)!! // is this default necessary?
     private val intents = PublishSubject.create<Intents>()
 
     private sealed class Intents {
@@ -117,25 +124,35 @@ class CategorizeAdvancedVM @Inject constructor(
         transactionsDomain.firstUncategorizedSpend
             .unbox()
             .switchMap {
-                intents
-                    .scan(it) { acc, v ->
-                        when (v) {
-                            Intents.Clear -> acc.categorize(emptyMap())
-                            is Intents.Add -> acc.categorize(acc.categoryAmounts.copy(v.category to v.amount))
-                            is Intents.FillIntoCategory -> acc.categorize(v.category)
-                        }
-                    }
+                Observables.combineLatest(
+                    intents
+                        .scan(it) { acc, v ->
+                            when (v) {
+                                Intents.Clear -> acc.categorize(emptyMap())
+                                is Intents.Add -> acc.categorize(acc.categoryAmounts.copy(v.category to v.amount))
+                                is Intents.FillIntoCategory -> acc.categorize(v.category)
+                            }
+                        },
+                    categoryToKeep
+                ).map { (transaction, categoryToKeep) ->
+                    if (categoryToKeep !in transaction.categoryAmounts.keys)
+                        transaction.categorize(transaction.categoryAmounts.copy(categoryToKeep to BigDecimal.ZERO))
+                    else
+                        transaction
+                }
             }
 
     // # Output
     val replays = replayRepo.fetchReplays()
     private val _autoFillCategory = BehaviorSubject.createDefault(CategoriesDomain.defaultCategory)!!
-    val autoFillCategory: Observable<Category> = _autoFillCategory
-        .distinctUntilChanged()
+    val autoFillCategory: Observable<Category> =
+        _autoFillCategory
+            .distinctUntilChanged()
+            .nonLazyCache(disposables)
     val transactionToPush =
         Observables.combineLatest(
             transactionToPush_preAutoFill,
-            autoFillCategory
+            autoFillCategory,
         )
             .map { (transaction, fillCategory) ->
                 transaction.categorize(fillCategory)

@@ -20,6 +20,7 @@ import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.CategorySettingsVM
+import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.ui.CategorySettingsFrag
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
@@ -69,8 +70,15 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         }
         // # Navigation
         vb.root.bind(categorizeVM.navToSplit) {
-            categorizeAdvancedVM.setup(it, categorySelectionVM)
-            nav.navigate(R.id.action_categorizeFrag_to_categorizeAdvancedFrag)
+            CategorizeAdvancedFrag.navTo(
+                source = this,
+                nav = nav,
+                categorizeAdvancedVM = categorizeAdvancedVM,
+                categorySelectionVM = categorySelectionVM,
+                categoryAmounts = it,
+                autoFillCategory = CategoriesDomain.defaultCategory,
+                replay = null
+            )
         }
         // # TextViews
         vb.textviewDate.bind(categorizeVM.date) { text = it }
@@ -131,6 +139,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                                 categorizeAdvancedVM = categorizeAdvancedVM,
                                 categorySelectionVM = categorySelectionVM,
                                 categoryAmounts = null,
+                                autoFillCategory = CategoriesDomain.defaultCategory,
                                 replay = null,
                             )
                         }
@@ -165,6 +174,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                                     categorizeAdvancedVM = categorizeAdvancedVM,
                                     categorySelectionVM = categorySelectionVM,
                                     categoryAmounts = replay.categorize(transactionToPush).categoryAmounts,
+                                    autoFillCategory = replay.autoFillCategory,
                                     replay = replay,
                                 )
                             })

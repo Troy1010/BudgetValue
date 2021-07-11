@@ -214,10 +214,12 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
             categorizeAdvancedVM: CategorizeAdvancedVM,
             categorySelectionVM: CategorySelectionVM,
             categoryAmounts: Map<Category, BigDecimal>?,
-            replay: IReplay?
+            autoFillCategory: Category,
+            replay: IReplay?,
         ) {
             categorizeAdvancedVM.setup(
                 categoryAmounts = categoryAmounts,
+                autoFillCategory = autoFillCategory,
                 categorySelectionVM = categorySelectionVM
             )
             nav.navigate(
