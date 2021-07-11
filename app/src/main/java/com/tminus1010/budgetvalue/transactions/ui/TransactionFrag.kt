@@ -27,7 +27,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class TransactionFrag : Fragment(R.layout.frag_transaction) {
     private val vb by viewBinding(FragTransactionBinding::bind)
     private val transactionVM: TransactionVM by viewModels()
-    val transaction by lazy { transactionVM.transaction }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Mediation
@@ -55,9 +54,9 @@ class TransactionFrag : Fragment(R.layout.frag_transaction) {
         vb.tmTableViewTitle.initialize(
             recipeGrid = listOf(
                 listOf(
-                    clickableTextViewRecipeFactory.createOne(Pair(transaction, transaction.date.toDisplayStr())),
-                    clickableTextViewRecipeFactory.createOne(Pair(transaction, transaction.defaultAmount.toString())),
-                    clickableTextViewRecipeFactory.createOne(Pair(transaction, transaction.description.take(30)))
+                    clickableTextViewRecipeFactory.createOne(Pair(transactionVM.transaction, transactionVM.transaction.date.toDisplayStr())),
+                    clickableTextViewRecipeFactory.createOne(Pair(transactionVM.transaction, transactionVM.transaction.defaultAmount.toString())),
+                    clickableTextViewRecipeFactory.createOne(Pair(transactionVM.transaction, transactionVM.transaction.description.take(30)))
                 )
             ),
             shouldFitItemWidthsInsideTable = true,
@@ -67,12 +66,18 @@ class TransactionFrag : Fragment(R.layout.frag_transaction) {
             toast("This transaction is empty")
         else
             vb.tmTableView.initialize(
-                recipeGrid = transactionVM.transaction.categoryAmounts.map {
+                recipeGrid = listOf(
                     listOf(
-                        recipeFactories.textView.createOne(it.key.name),
-                        recipeFactories.textView.createOne(it.value),
-                    )
-                },
+                        recipeFactories.textView.createOne("Default"),
+                        recipeFactories.textView.createOne(transactionVM.transaction.defaultAmount),
+                    ),
+                    *transactionVM.transaction.categoryAmounts.map {
+                        listOf(
+                            recipeFactories.textView.createOne(it.key.name),
+                            recipeFactories.textView.createOne(it.value),
+                        )
+                    }.toTypedArray()
+                ),
                 shouldFitItemWidthsInsideTable = true,
             )
     }
