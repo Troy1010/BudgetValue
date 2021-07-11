@@ -49,6 +49,14 @@ class CategorizeAdvancedVM @Inject constructor(
         userCategoryAmounts[category] = amount
     }
 
+    fun userSwitchCategoryToPercentage(category: Category) {
+        TODO()
+    }
+
+    fun userSwitchCategoryToNonPercentage(category: Category) {
+        TODO()
+    }
+
     fun userSubmitCategorization() {
         transactionToPush.take(1)
             .flatMapCompletable { saveTransactionDomain.saveTransaction(it) }

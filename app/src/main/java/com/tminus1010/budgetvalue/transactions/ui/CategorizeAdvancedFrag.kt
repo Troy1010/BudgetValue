@@ -84,10 +84,24 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 }
                 vb.editText.setOnCreateContextMenuListener { menu, _, _ ->
                     menu.add(
-                        MenuItem("Fill") {
-                            _shouldIgnoreUserInputForDuration.onNext(Unit)
-                            categorizeAdvancedVM.userFillIntoCategory(category)
-                        }
+                        MenuItem(
+                            title = "Fill",
+                            onClick = {
+                                _shouldIgnoreUserInputForDuration.onNext(Unit)
+                                categorizeAdvancedVM.userFillIntoCategory(category)
+                            }),
+                        MenuItem(
+                            title = "To Percentage",
+                            onClick = {
+                                _shouldIgnoreUserInputForDuration.onNext(Unit)
+                                categorizeAdvancedVM.userSwitchCategoryToPercentage(category)
+                            }),
+                        MenuItem(
+                            title = "To Non-Percentage",
+                            onClick = {
+                                _shouldIgnoreUserInputForDuration.onNext(Unit)
+                                categorizeAdvancedVM.userSwitchCategoryToNonPercentage(category)
+                            }),
                     )
                 }
             }
