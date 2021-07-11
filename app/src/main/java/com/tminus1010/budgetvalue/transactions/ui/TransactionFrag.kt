@@ -34,14 +34,12 @@ class TransactionFrag : Fragment(R.layout.frag_transaction) {
         _transaction?.also { _transaction = null; transactionVM.setup(it) }
         //
         transactionVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
-        vb.buttonsview.setup(
-            listOfNotNull(
-                ButtonRVItem(
-                    title = "Clear",
-                    onClick = { transactionVM.userClearTransaction() }
-                )
-            ).reversed()
-        )
+        vb.buttonsview.buttons = listOfNotNull(
+            ButtonRVItem(
+                title = "Clear",
+                onClick = { transactionVM.userClearTransaction() }
+            )
+        ).reversed()
         // # TMTableView_Title
         val clickableTextViewRecipeFactory = ViewItemRecipeFactory3<ItemTextViewBinding, Pair<Transaction, String>>(
             { ItemTextViewBinding.inflate(LayoutInflater.from(requireContext())) },

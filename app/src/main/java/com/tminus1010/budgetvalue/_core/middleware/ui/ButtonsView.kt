@@ -18,7 +18,7 @@ class ButtonsView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.editTextStyle,
 ) : RecyclerView(context, attrs, defStyleAttr) {
-    private var btns = emptyList<ButtonRVItem>()
+    var buttons = emptyList<ButtonRVItem>()
         set(value) {
             field = value; adapter?.notifyDataSetChanged()
         }
@@ -31,14 +31,10 @@ class ButtonsView @JvmOverloads constructor(
                 GenViewHolder2(ItemButtonBinding.inflate(LayoutInflater.from(context), parent, false))
 
             override fun onViewAttachedToWindow(holder: GenViewHolder2<ItemButtonBinding>, lifecycle: LifecycleOwner) {
-                holder.vb.btnItem.bindButtonRVItem(lifecycle, btns[holder.adapterPosition])
+                holder.vb.btnItem.bindButtonRVItem(lifecycle, buttons[holder.adapterPosition])
             }
 
-            override fun getItemCount() = btns.size
+            override fun getItemCount() = buttons.size
         }
-    }
-
-    fun setup(buttons: List<ButtonRVItem>) {
-        btns = buttons
     }
 }
