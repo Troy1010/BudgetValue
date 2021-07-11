@@ -33,11 +33,11 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toTopOf="@id/recyclerview_buttons"
+        app:layout_constraintBottom_toTopOf="@id/buttonsview"
         app:layout_constraintTop_toBottomOf="@id/tvAmountToSplit" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview_buttons"
+    <com.tminus1010.budgetvalue._core.middleware.ui.ButtonsView
+        android:id="@+id/buttonsview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
