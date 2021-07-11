@@ -1,10 +1,8 @@
 package com.tminus1010.budgetvalue.transactions
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
-import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import java.io.InputStream
@@ -18,7 +16,7 @@ class TransactionsVM @Inject constructor(
     // # Input
     fun userImportTransactions(inputStream: InputStream) {
         transactionsDomain.importTransactions(inputStream)
-            .observe(disposables)
+            .subscribe()
     }
 
     // # Output
