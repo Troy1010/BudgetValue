@@ -8,6 +8,7 @@ data class Category(
     val defaultAmount: BigDecimal = BigDecimal.ZERO,
     val isRequired: Boolean = false,
 ) {
+    override fun toString() = name // for logs
     fun toDTO() =
         CategoryDTO(name, type.ordinal, defaultAmount, isRequired)
 
