@@ -1,9 +1,11 @@
 package com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3
 
+import android.content.Context
 import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.easyText
+import com.tminus1010.budgetvalue.databinding.ItemEmptyBinding
 import com.tminus1010.budgetvalue.databinding.ItemHeaderBinding
 import com.tminus1010.budgetvalue.databinding.ItemTextViewBinding
 import com.tminus1010.budgetvalue.databinding.ItemTitledDividerBinding
@@ -45,3 +47,8 @@ val Fragment.recipeFactories
                 }
             )
     }
+
+fun NothingRecipe(context: Context) = ViewItemRecipe3<ItemEmptyBinding, Unit?>(
+    { ItemEmptyBinding.inflate(LayoutInflater.from(context)) },
+    { _, _, _ -> }
+)
