@@ -7,7 +7,7 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.ErrorVM
 import com.tminus1010.budgetvalue._core.ImportFailedException
 import com.tminus1010.budgetvalue._core.TestException
-import com.tminus1010.budgetvalue._core.middleware.ui.ButtonRVItem
+import com.tminus1010.budgetvalue._core.middleware.ui.ButtonItem
 import com.tminus1010.budgetvalue._core.extensions.getBackStack
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
@@ -19,11 +19,11 @@ class HostFrag : NavHostFragment() {
     @Inject lateinit var app: Application
     val errorVM by activityViewModels<ErrorVM>()
     fun getBackStack() = childFragmentManager.getBackStack()
-    fun handle(e: Throwable, vararg buttonRVItems: ButtonRVItem) {
+    fun handle(e: Throwable, vararg buttonItems: ButtonItem) {
         val buttonPartialsRedef =
             listOf(
-                ButtonRVItem("OK") { nav.navigateUp() }
-            ) + buttonRVItems.toList()
+                ButtonItem("OK") { nav.navigateUp() }
+            ) + buttonItems.toList()
         logz(e)
         when (e) {
             is ImportFailedException -> app.toast("Import failed")

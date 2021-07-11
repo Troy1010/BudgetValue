@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.LaunchImportUC
 import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
-import com.tminus1010.budgetvalue._core.middleware.ui.ButtonRVItem
+import com.tminus1010.budgetvalue._core.middleware.ui.ButtonItem
 import com.tminus1010.budgetvalue._core.middleware.ui.GenViewHolder2
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
@@ -59,11 +59,11 @@ class ImportFrag : Fragment(R.layout.frag_import) {
         }
         // # Button RecyclerView
         vb.buttonsview.buttons = listOfNotNull(
-            ButtonRVItem(
+            ButtonItem(
                 title = "Import",
                 onClick = { launchImportUC(requireActivity() as HostActivity) },
             ),
-            ButtonRVItem(
+            ButtonItem(
                 title = "Add Account",
                 onClick = { accountsVM.userAddAccount() }
             ),

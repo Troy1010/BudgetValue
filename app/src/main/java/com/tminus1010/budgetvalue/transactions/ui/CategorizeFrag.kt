@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.bind
-import com.tminus1010.budgetvalue._core.middleware.ui.ButtonRVItem
+import com.tminus1010.budgetvalue._core.middleware.ui.ButtonItem
 import com.tminus1010.budgetvalue._core.middleware.ui.GenViewHolder2
 import com.tminus1010.budgetvalue._core.middleware.ui.LifecycleRVAdapter
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
@@ -121,7 +121,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         ).observe(viewLifecycleOwner) { (inSelectionMode, replays, transactionToPush) ->
             vb.buttonsview.buttons = listOfNotNull(
                 if (inSelectionMode)
-                    ButtonRVItem(
+                    ButtonItem(
                         title = "Advanced",
                         isEnabled = categorizeVM.isTransactionAvailable,
                         onClick = {
@@ -137,7 +137,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     )
                 else null,
                 if (inSelectionMode)
-                    ButtonRVItem(
+                    ButtonItem(
                         title = "Category Settings",
                         isEnabled = categorySelectionVM.selectedCategories.map { it.size == 1 },
                         onClick = {
@@ -155,7 +155,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 *replays
                     .filter { !inSelectionMode && it.predicate(transactionToPush) }
                     .map { replay ->
-                        ButtonRVItem(
+                        ButtonItem(
                             title = "Replay (${replay.name})",
                             onClick = { categorizeVM.userReplay(replay) },
                             onLongClick = {
@@ -171,19 +171,19 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     }
                     .toTypedArray(),
                 if (!inSelectionMode)
-                    ButtonRVItem(
+                    ButtonItem(
                         title = "Redo",
                         isEnabled = categorizeVM.isRedoAvailable,
                         onClick = { categorizeVM.userRedo() })
                 else null,
                 if (!inSelectionMode)
-                    ButtonRVItem(
+                    ButtonItem(
                         title = "Undo",
                         isEnabled = categorizeVM.isUndoAvailable,
                         onClick = { categorizeVM.userUndo() })
                 else null,
                 if (!inSelectionMode)
-                    ButtonRVItem(
+                    ButtonItem(
                         title = "Make New Category",
                         onClick = {
                             CategorySettingsFrag.navTo(

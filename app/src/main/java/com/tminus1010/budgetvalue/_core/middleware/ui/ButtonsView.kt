@@ -18,7 +18,7 @@ class ButtonsView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.editTextStyle,
 ) : RecyclerView(context, attrs, defStyleAttr) {
-    var buttons = emptyList<ButtonRVItem>()
+    var buttons = emptyList<ButtonItem>()
         set(value) {
             field = value; adapter?.notifyDataSetChanged()
         }

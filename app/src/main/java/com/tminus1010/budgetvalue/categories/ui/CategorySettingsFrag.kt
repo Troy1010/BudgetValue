@@ -14,7 +14,7 @@ import com.tminus1010.budgetvalue._core.InvalidCategoryNameException
 import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.easyText
 import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
-import com.tminus1010.budgetvalue._core.middleware.ui.ButtonRVItem
+import com.tminus1010.budgetvalue._core.middleware.ui.ButtonItem
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipe3
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
@@ -60,7 +60,7 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
         }
         vb.buttonsview.buttons = listOfNotNull(
             if (isForNewCategory) null
-            else ButtonRVItem(
+            else ButtonItem(
                 title = "Delete",
                 onClick = {
                     AlertDialog.Builder(requireContext())
@@ -73,7 +73,7 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
                         .show()
                 }
             ),
-            ButtonRVItem(
+            ButtonItem(
                 title = "Done",
                 onClick = { categorySettingsVM.userSaveCategory() }
             ),
