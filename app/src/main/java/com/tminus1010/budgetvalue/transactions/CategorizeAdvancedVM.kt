@@ -13,6 +13,7 @@ import com.tminus1010.budgetvalue.replay.data.ReplayRepo
 import com.tminus1010.budgetvalue.replay.models.BasicReplay
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
+import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
@@ -59,9 +60,10 @@ class CategorizeAdvancedVM @Inject constructor(
         Single.fromCallable {
             BasicReplay(
                 name = replayName,
-                description = transactionToPush.value!!.description,
-                categoryAmounts = transactionToPush.value!!.categoryAmounts.filter { it.value.compareTo(BigDecimal.ZERO) != 0 },
-                isAutoReplay = isAutoReplay
+                description = transactionToPush_preAutoFill.value!!.description,
+                categoryAmounts = transactionToPush_preAutoFill.value!!.categoryAmounts.filter { it.value.compareTo(BigDecimal.ZERO) != 0 },
+                isAutoReplay = isAutoReplay,
+                autoFillCategory = autoFillCategory.value!!
             )
         }.subscribeOn(Schedulers.io())
             .flatMapCompletable { replay ->
@@ -80,18 +82,17 @@ class CategorizeAdvancedVM @Inject constructor(
             })
     }
 
-    fun areCurrentCAsValid(): Boolean =
-        transactionToPush.value!!.categoryAmounts.filter { it.value.compareTo(BigDecimal.ZERO) != 0 } != emptyMap<Category, BigDecimal>()
-
     fun userDeleteReplay(replayName: String) {
         replayRepo.delete(replayName).observe(disposables)
     }
 
     fun userSetCategoryForAutoFill(category: Category) {
-        _fillCategory.onNext(category)
+        _autoFillCategory.onNext(category)
     }
 
-    fun setup(categoryAmounts: Map<Category, BigDecimal>?, categorySelectionVM: CategorySelectionVM) {
+    fun setup(categoryAmounts: Map<Category, BigDecimal>?, autoFillCategory: Category, categorySelectionVM: CategorySelectionVM) {
+        _autoFillCategory.onNext(autoFillCategory)
+        categoryToKeep.onNext(autoFillCategory)
         _categorySelectionVM = categorySelectionVM
         transactionToPush.take(1)
             .observe(disposables) {
@@ -105,6 +106,11 @@ class CategorizeAdvancedVM @Inject constructor(
     }
 
     // # Internal
+    /**
+     * This categoryToKeep allows the user to switch the autoFillCategory without loosing their ability to switch it back.
+     * .. but it's possible that a lot of this logic could be simplified.
+     */
+    private val categoryToKeep = BehaviorSubject.createDefault(CategoriesDomain.defaultCategory)!! // is this default necessary?
     private val intents = PublishSubject.create<Intents>()
 
     private sealed class Intents {
@@ -114,35 +120,50 @@ class CategorizeAdvancedVM @Inject constructor(
     }
 
     private lateinit var _categorySelectionVM: CategorySelectionVM
+    private val transactionToPush_preAutoFill: Observable<Transaction> =
+        transactionsDomain.firstUncategorizedSpend
+            .unbox()
+            .switchMap {
+                Observables.combineLatest(
+                    intents
+                        .scan(it) { acc, v ->
+                            when (v) {
+                                Intents.Clear -> acc.categorize(emptyMap())
+                                is Intents.Add -> acc.categorize(acc.categoryAmounts.copy(v.category to v.amount))
+                                is Intents.FillIntoCategory -> acc.categorize(v.category)
+                            }
+                        },
+                    categoryToKeep
+                ).map { (transaction, categoryToKeep) ->
+                    if (categoryToKeep != CategoriesDomain.defaultCategory && categoryToKeep !in transaction.categoryAmounts.keys)
+                        transaction.categorize(transaction.categoryAmounts.copy(categoryToKeep to BigDecimal.ZERO))
+                    else
+                        transaction
+                }
+            }
 
     // # Output
     val replays = replayRepo.fetchReplays()
-    val transactionToPush = transactionsDomain.firstUncategorizedSpend
-        .unbox()
-        .switchMap {
-            Observables.combineLatest(
-                intents
-                    .scan(it) { acc, v ->
-                        when (v) {
-                            Intents.Clear -> acc.categorize(emptyMap())
-                            is Intents.Add -> acc.categorize(acc.categoryAmounts.copy(v.category to v.amount))
-                            is Intents.FillIntoCategory -> acc.categorize(v.category)
-                        }
-                    },
-                fillCategory
-            ).map { (transaction, fillCategory) ->
-                if (fillCategory == CategoriesDomain.defaultCategory)
-                    transaction
-                else
-                    transaction.categorize(fillCategory)
+    private val _autoFillCategory = BehaviorSubject.createDefault(CategoriesDomain.defaultCategory)!!
+    val autoFillCategory: Observable<Category> =
+        _autoFillCategory
+            .distinctUntilChanged()
+            .nonLazyCache(disposables)
+    val transactionToPush =
+        Observables.combineLatest(
+            transactionToPush_preAutoFill,
+            autoFillCategory,
+        )
+            .map { (transaction, fillCategory) ->
+                transaction.categorize(fillCategory)
             }
-        }
-        .nonLazyCache(disposables)
+            .nonLazyCache(disposables)
     val defaultAmount: Observable<String> =
         transactionToPush
             .map { it.defaultAmount.toString() }
     val navUp = PublishSubject.create<Unit>()!!
-    private val _fillCategory = BehaviorSubject.createDefault(CategoriesDomain.defaultCategory)!!
-    val fillCategory: Observable<Category> = _fillCategory
-        .distinctUntilChanged()
+    val areCurrentCAsValid: Observable<Boolean> =
+        transactionToPush
+            .map { it.categoryAmounts.filter { it.value.compareTo(BigDecimal.ZERO) != 0 } != emptyMap<Category, BigDecimal>() }
+            .nonLazyCache(disposables)
 }

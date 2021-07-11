@@ -1,10 +1,10 @@
 package com.tminus1010.budgetvalue._core.extensions
 
 import androidx.appcompat.widget.PopupMenu
-import com.tminus1010.budgetvalue._core.middleware.ui.MenuItemPartial
+import com.tminus1010.budgetvalue._core.middleware.ui.MenuItem
 
-fun PopupMenu.show(menuItemPartials: List<MenuItemPartial>) {
+fun PopupMenu.show(menuItems: List<MenuItem>) {
     menu.clear()
-    menu.add(*menuItemPartials.toTypedArray())
+    menu.add(*menuItems.toTypedArray())
     show()
 }

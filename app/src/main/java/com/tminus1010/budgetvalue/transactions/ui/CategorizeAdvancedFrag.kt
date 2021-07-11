@@ -16,7 +16,7 @@ import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.easyText
 import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonItem
-import com.tminus1010.budgetvalue._core.middleware.ui.MenuItemPartial
+import com.tminus1010.budgetvalue._core.middleware.ui.MenuItem
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
@@ -82,7 +82,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 }
                 vb.editText.setOnCreateContextMenuListener { menu, _, _ ->
                     menu.add(
-                        MenuItemPartial("Fill") {
+                        MenuItem("Fill") {
                             _shouldIgnoreUserInputForDuration.onNext(Unit)
                             categorizeAdvancedVM.userFillIntoCategory(category)
                         }
@@ -93,7 +93,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
         val checkboxFactory = ViewItemRecipeFactory3<ItemCheckboxBinding, Category>(
             { ItemCheckboxBinding.inflate(LayoutInflater.from(requireContext())) },
             { category, vb, lifecycle ->
-                vb.checkbox.bind(categorizeAdvancedVM.fillCategory, lifecycle) {
+                vb.checkbox.bind(categorizeAdvancedVM.autoFillCategory, lifecycle) {
                     isChecked = category == it
                     isEnabled = category != it
                 }
@@ -147,15 +147,15 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 ButtonItem(
                     title = "Setup Auto Replay",
                     onClick = {
-                        if (categorizeAdvancedVM.areCurrentCAsValid()) {
+                        if (categorizeAdvancedVM.areCurrentCAsValid.value!!) {
                             val editText = EditText(requireContext())
                             AlertDialog.Builder(requireContext())
                                 .setMessage("What would you like to name this replay?")
                                 .setView(editText)
-                                .setPositiveButton("Yes") { _, _ ->
+                                .setPositiveButton("Submit") { _, _ ->
                                     categorizeAdvancedVM.userSaveReplay(editText.easyText, true)
                                 }
-                                .setNegativeButton("No") { _, _ -> }
+                                .setNegativeButton("Cancel") { _, _ -> }
                                 .show()
                         } else
                             errorSubject.onNext(InvalidCategoryAmounts(""))
@@ -166,15 +166,15 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 ButtonItem(
                     title = "Save Replay",
                     onClick = {
-                        if (categorizeAdvancedVM.areCurrentCAsValid()) {
+                        if (categorizeAdvancedVM.areCurrentCAsValid.value!!) {
                             val editText = EditText(requireContext())
                             AlertDialog.Builder(requireContext())
                                 .setMessage("What would you like to name this replay?")
                                 .setView(editText)
-                                .setPositiveButton("Yes") { _, _ ->
+                                .setPositiveButton("Submit") { _, _ ->
                                     categorizeAdvancedVM.userSaveReplay(editText.easyText, false)
                                 }
-                                .setNegativeButton("No") { _, _ -> }
+                                .setNegativeButton("Cancel") { _, _ -> }
                                 .show()
                         } else
                             errorSubject.onNext(InvalidCategoryAmounts(""))
@@ -214,10 +214,12 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
             categorizeAdvancedVM: CategorizeAdvancedVM,
             categorySelectionVM: CategorySelectionVM,
             categoryAmounts: Map<Category, BigDecimal>?,
-            replay: IReplay?
+            autoFillCategory: Category,
+            replay: IReplay?,
         ) {
             categorizeAdvancedVM.setup(
                 categoryAmounts = categoryAmounts,
+                autoFillCategory = autoFillCategory,
                 categorySelectionVM = categorySelectionVM
             )
             nav.navigate(
