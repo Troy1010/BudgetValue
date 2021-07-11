@@ -131,10 +131,7 @@ class CategorizeAdvancedVM @Inject constructor(
                     },
                 fillCategory
             ).map { (transaction, fillCategory) ->
-                if (fillCategory == CategoriesDomain.defaultCategory)
-                    transaction
-                else
-                    transaction.categorize(fillCategory)
+                transaction.categorize(fillCategory)
             }
         }
         .nonLazyCache(disposables)
