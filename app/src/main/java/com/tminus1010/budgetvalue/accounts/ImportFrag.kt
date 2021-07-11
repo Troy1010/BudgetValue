@@ -47,8 +47,7 @@ class ImportFrag : Fragment(R.layout.frag_import) {
         vb.recyclerviewAccounts.layoutManager = LinearLayoutManager(requireActivity())
         vb.recyclerviewAccounts.adapter = object : RecyclerView.Adapter<GenViewHolder2<ItemAccountBinding>>() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-                ItemAccountBinding.inflate(layoutInflater, parent, false)
-                    .let { GenViewHolder2(it) }
+                GenViewHolder2(ItemAccountBinding.inflate(layoutInflater, parent, false))
 
             override fun getItemCount() = accounts.size
             override fun onBindViewHolder(holder: GenViewHolder2<ItemAccountBinding>, position: Int) {
@@ -70,8 +69,7 @@ class ImportFrag : Fragment(R.layout.frag_import) {
         vb.recyclerviewButtons.addItemDecoration(LayoutMarginDecoration(8.toPX(requireContext())))
         vb.recyclerviewButtons.adapter = object : LifecycleRVAdapter<GenViewHolder2<ItemButtonBinding>>() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-                ItemButtonBinding.inflate(LayoutInflater.from(requireContext()), parent, false)
-                    .let { GenViewHolder2(it) }
+                GenViewHolder2(ItemButtonBinding.inflate(LayoutInflater.from(requireContext()), parent, false))
 
             override fun onViewAttachedToWindow(holder: GenViewHolder2<ItemButtonBinding>, lifecycle: LifecycleOwner) {
                 holder.vb.btnItem.bindButtonRVItem(lifecycle, btns[holder.adapterPosition])
