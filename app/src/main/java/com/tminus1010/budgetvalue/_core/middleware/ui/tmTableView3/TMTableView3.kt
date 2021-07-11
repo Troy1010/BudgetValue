@@ -68,36 +68,36 @@ class TMTableView3 @JvmOverloads constructor(
         synchronizedScrollListener: SynchronizedScrollListener,
     ) {
         removeAllViews()
-        val binding = TableviewBinding.inflate(LayoutInflater.from(context), this, true)
+        val vb = TableviewBinding.inflate(LayoutInflater.from(context), this, true)
         // # Freeze rows
         if (rowFreezeCount>1) TODO()
         if (rowFreezeCount==1) {
-            binding.recyclerviewColumnheaders.adapter = InnerRVAdapter(recipeGrid, 0)
-            binding.recyclerviewColumnheaders.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
-            binding.recyclerviewColumnheaders.clearItemDecorations()
-            binding.recyclerviewColumnheaders.addItemDecoration(InnerFrozenRowDecoration3(context, Orientation.HORIZONTAL, recipeGrid, rowFreezeCount))
-            binding.recyclerviewColumnheaders.clearOnScrollListeners()
-            binding.recyclerviewColumnheaders.addOnScrollListener(synchronizedScrollListener)
+            vb.recyclerviewColumnheaders.adapter = InnerRVAdapter(recipeGrid, 0)
+            vb.recyclerviewColumnheaders.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
+            vb.recyclerviewColumnheaders.clearItemDecorations()
+            vb.recyclerviewColumnheaders.addItemDecoration(InnerFrozenRowDecoration3(context, Orientation.HORIZONTAL, recipeGrid, rowFreezeCount))
+            vb.recyclerviewColumnheaders.clearOnScrollListeners()
+            vb.recyclerviewColumnheaders.addOnScrollListener(synchronizedScrollListener)
         }
         // # Cells
-        binding.recyclerviewTier1.adapter = OuterRVAdapter3(context, recipeGrid, rowFreezeCount, synchronizedScrollListener)
-        binding.recyclerviewTier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
-        binding.recyclerviewTier1.clearItemDecorations()
-        binding.recyclerviewTier1.addItemDecoration(OuterDecoration3(context, Orientation.VERTICAL, dividerMap, recipeGrid, colFreezeCount, rowFreezeCount))
+        vb.recyclerviewTier1.adapter = OuterRVAdapter3(context, recipeGrid, rowFreezeCount, synchronizedScrollListener)
+        vb.recyclerviewTier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
+        vb.recyclerviewTier1.clearItemDecorations()
+        vb.recyclerviewTier1.addItemDecoration(OuterDecoration3(context, Orientation.VERTICAL, dividerMap, recipeGrid, colFreezeCount, rowFreezeCount))
         // ## Synchronize scrolling
         disposable?.dispose()
         disposable = synchronizedScrollListener.scrollObservable
             .subscribe { (v, dx) ->
                 // ### Scroll children in recyclerview_tier1
-                binding.recyclerviewTier1.layoutManager!!.children
+                vb.recyclerviewTier1.layoutManager!!.children
                     .filter { it != v }
                     .forEach {
                         (it as? RecyclerView)
                             ?.also { synchronizedScrollListener.ignoredScrollBy(it, dx, 0) }
                     }
                 // ### Scroll frozen row
-                if (binding.recyclerviewColumnheaders != v) {
-                    synchronizedScrollListener.ignoredScrollBy(binding.recyclerviewColumnheaders, dx, 0)
+                if (vb.recyclerviewColumnheaders != v) {
+                    synchronizedScrollListener.ignoredScrollBy(vb.recyclerviewColumnheaders, dx, 0)
                 }
             }
     }
