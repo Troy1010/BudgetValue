@@ -6,7 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartialsUC
 import com.tminus1010.budgetvalue._core.LaunchImportUC
 import com.tminus1010.budgetvalue._core.TestException
-import com.tminus1010.budgetvalue._core.middleware.ui.MenuItemPartial
+import com.tminus1010.budgetvalue._core.middleware.ui.MenuItem
 import com.tminus1010.budgetvalue._core.ui.HostActivity
 import com.tminus1010.budgetvalue._core.ui.MockImportSelectionActivity
 import dagger.Module
@@ -52,10 +52,10 @@ class DevEnv_Main {
         fun getExtraMenuItemPartialsUC() = object : GetExtraMenuItemPartialsUC() {
             override fun invoke(hostActivity: HostActivity) = hostActivity.run {
                 arrayOf(
-                    MenuItemPartial("Throw Test Error") {
+                    MenuItem("Throw Test Error") {
                         hostFrag.handle(TestException())
                     },
-                    MenuItemPartial("Throw Error") {
+                    MenuItem("Throw Error") {
                         hostFrag.handle(Exception("Zip zoop an error"))
                     },
                 )

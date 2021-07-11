@@ -12,7 +12,7 @@ import androidx.navigation.ui.NavigationUI
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartialsUC
 import com.tminus1010.budgetvalue._core.extensions.add
-import com.tminus1010.budgetvalue._core.middleware.ui.MenuItemPartial
+import com.tminus1010.budgetvalue._core.middleware.ui.MenuItem
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
@@ -56,7 +56,7 @@ class HostActivity : AppCompatActivity() {
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         menu.clear()
         menu.add(
-            MenuItemPartial(
+            MenuItem(
                 title = "Transactions",
                 lambda = { nav.navigate(R.id.transactionsFrag) },
             ),

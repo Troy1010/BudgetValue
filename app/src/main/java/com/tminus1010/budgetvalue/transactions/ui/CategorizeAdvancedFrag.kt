@@ -16,7 +16,7 @@ import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.easyText
 import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonItem
-import com.tminus1010.budgetvalue._core.middleware.ui.MenuItemPartial
+import com.tminus1010.budgetvalue._core.middleware.ui.MenuItem
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
@@ -82,7 +82,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 }
                 vb.editText.setOnCreateContextMenuListener { menu, _, _ ->
                     menu.add(
-                        MenuItemPartial("Fill") {
+                        MenuItem("Fill") {
                             _shouldIgnoreUserInputForDuration.onNext(Unit)
                             categorizeAdvancedVM.userFillIntoCategory(category)
                         }

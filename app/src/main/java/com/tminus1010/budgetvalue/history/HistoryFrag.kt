@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.show
-import com.tminus1010.budgetvalue._core.middleware.ui.MenuItemPartial
+import com.tminus1010.budgetvalue._core.middleware.ui.MenuItem
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
@@ -47,9 +47,9 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
                     listOfNotNull(
                         when {
                             d is Plan && !d.isCurrent(datePeriodGetter) ->
-                                MenuItemPartial("Delete") { plansVM.deletePlan(d) }
+                                MenuItem("Delete") { plansVM.deletePlan(d) }
                             d is Reconciliation ->
-                                MenuItemPartial("Delete") { reconciliationsVM.delete(d) }
+                                MenuItem("Delete") { reconciliationsVM.delete(d) }
                             else -> null
                         },
                     ).also { PopupMenu(requireActivity(), vb.root).show(it) }
