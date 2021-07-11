@@ -12,6 +12,7 @@ import androidx.navigation.ui.NavigationUI
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartialsUC
 import com.tminus1010.budgetvalue._core.extensions.add
+import com.tminus1010.budgetvalue._core.middleware.ui.MenuItemPartial
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
@@ -23,12 +24,15 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class HostActivity : AppCompatActivity() {
     private val vb by viewBinding(ActivityHostBinding::inflate)
+
     @Inject
     lateinit var getExtraMenuItemPartialsUC: GetExtraMenuItemPartialsUC
+
     @Inject
     lateinit var appInitDomain: AppInitDomain
     private val transactionsMiscVM: TransactionsMiscVM by viewModels()
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.frag_nav_host) as HostFrag }
+    private val nav by lazy { findNavController(R.id.frag_nav_host) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(vb.root)
@@ -44,15 +48,20 @@ class HostActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        findNavController(R.id.frag_nav_host)
-            .addOnDestinationChangedListener { _, navDestination, _ ->
-                Log.d("budgetvalue.Nav", "${navDestination.label}")
-            }
+        nav.addOnDestinationChangedListener { _, navDestination, _ ->
+            Log.d("budgetvalue.Nav", "${navDestination.label}")
+        }
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         menu.clear()
-        menu.add(*getExtraMenuItemPartialsUC(this))
+        menu.add(
+            MenuItemPartial(
+                title = "Transactions",
+                lambda = { nav.navigate(R.id.transactionsFrag) },
+            ),
+            *getExtraMenuItemPartialsUC(this)
+        )
         return true
     }
 

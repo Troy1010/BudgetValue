@@ -67,4 +67,18 @@
                 app:popUpTo="@id/categorizeFrag" />
         </fragment>
     </navigation>
+    <fragment
+        android:id="@+id/transactionsFrag"
+        android:name="com.tminus1010.budgetvalue.transactions.ui.TransactionsFrag"
+        android:label="TransactionsFrag"
+        tools:layout="@layout/frag_transactions">
+        <action
+            android:id="@+id/action_transactionsFrag_to_transactionFrag"
+            app:destination="@id/transactionFrag" />
+    </fragment>
+    <fragment
+        android:id="@+id/transactionFrag"
+        android:name="com.tminus1010.budgetvalue.transactions.ui.TransactionFrag"
+        android:label="TransactionFrag"
+        tools:layout="@layout/frag_transaction" />
 </navigation>
