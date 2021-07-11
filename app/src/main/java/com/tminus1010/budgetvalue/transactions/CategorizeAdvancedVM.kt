@@ -135,7 +135,7 @@ class CategorizeAdvancedVM @Inject constructor(
                         },
                     categoryToKeep
                 ).map { (transaction, categoryToKeep) ->
-                    if (categoryToKeep !in transaction.categoryAmounts.keys)
+                    if (categoryToKeep != CategoriesDomain.defaultCategory && categoryToKeep !in transaction.categoryAmounts.keys)
                         transaction.categorize(transaction.categoryAmounts.copy(categoryToKeep to BigDecimal.ZERO))
                     else
                         transaction
