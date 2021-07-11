@@ -8,6 +8,7 @@ import androidx.fragment.app.activityViewModels
 import com.tminus1010.budgetvalue.*
 import com.tminus1010.budgetvalue._core.extensions.easyText
 import com.tminus1010.budgetvalue._core.middleware.Rx
+import com.tminus1010.budgetvalue._core.middleware.ui.ButtonItem
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
@@ -38,8 +39,13 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
     private val budgetedVM: BudgetedVM by activityViewModels()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // # Output
-        vb.btnSave.setOnClickListener { activeReconciliationVM.saveReconciliation() }
+        //
+        vb.buttonsview.buttons = listOf(
+            ButtonItem(
+                title = "Save",
+                onClick = { activeReconciliationVM.saveReconciliation() }
+            )
+        )
         // # TMTableView
         val headerRecipeFactory_numbered = ViewItemRecipeFactory3<ItemHeaderIncomeBinding, Pair<String, Observable<String>>>(
             { ItemHeaderIncomeBinding.inflate(LayoutInflater.from(context)) },
