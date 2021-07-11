@@ -19,6 +19,7 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.kotlin.Observables
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -86,7 +87,7 @@ class CategorizeAdvancedVM @Inject constructor(
         replayRepo.delete(replayName).observe(disposables)
     }
 
-    fun userSetCategoryForFill(category: Category) {
+    fun userSetCategoryForAutoFill(category: Category) {
         _fillCategory.onNext(category)
     }
 
@@ -119,14 +120,22 @@ class CategorizeAdvancedVM @Inject constructor(
     val transactionToPush = transactionsDomain.firstUncategorizedSpend
         .unbox()
         .switchMap {
-            intents
-                .scan(it) { acc, v ->
-                    when (v) {
-                        Intents.Clear -> acc.categorize(emptyMap())
-                        is Intents.Add -> acc.categorize(acc.categoryAmounts.copy(v.category to v.amount))
-                        is Intents.FillIntoCategory -> acc.categorize(v.category)
-                    }
-                }
+            Observables.combineLatest(
+                intents
+                    .scan(it) { acc, v ->
+                        when (v) {
+                            Intents.Clear -> acc.categorize(emptyMap())
+                            is Intents.Add -> acc.categorize(acc.categoryAmounts.copy(v.category to v.amount))
+                            is Intents.FillIntoCategory -> acc.categorize(v.category)
+                        }
+                    },
+                fillCategory
+            ).map { (transaction, fillCategory) ->
+                if (fillCategory == CategoriesDomain.defaultCategory)
+                    transaction
+                else
+                    transaction.categorize(fillCategory)
+            }
         }
         .nonLazyCache(disposables)
     val defaultAmount: Observable<String> =
@@ -135,4 +144,5 @@ class CategorizeAdvancedVM @Inject constructor(
     val navUp = PublishSubject.create<Unit>()!!
     private val _fillCategory = BehaviorSubject.createDefault(CategoriesDomain.defaultCategory)!!
     val fillCategory: Observable<Category> = _fillCategory
+        .distinctUntilChanged()
 }

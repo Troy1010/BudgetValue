@@ -98,7 +98,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                     isEnabled = category != it
                 }
                 vb.checkbox.setOnCheckedChangeListener { _, isChecked ->
-                    if (isChecked) categorizeAdvancedVM.userSetCategoryForFill(category)
+                    if (isChecked) categorizeAdvancedVM.userSetCategoryForAutoFill(category)
                 }
             }
         )
