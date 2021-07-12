@@ -30,6 +30,7 @@ import com.tminus1010.budgetvalue.replay.models.IReplay
 import com.tminus1010.budgetvalue.transactions.CategorizeAdvancedVM
 import com.tminus1010.budgetvalue.transactions.CategorizeVM
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
+import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
@@ -223,14 +224,16 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
 
     enum class Key { REPLAY_NAME }
     companion object {
-        private var _args: Pair<IReplay?, CategorySelectionVM>? = null
+        private var _args: Triple<Transaction, IReplay?, CategorySelectionVM>? = null
         fun navTo(
             source: Any,
             nav: NavController,
             categorySelectionVM: CategorySelectionVM,
+            transaction: Transaction,
             replay: IReplay?,
         ) {
-            _args = Pair(
+            _args = Triple(
+                transaction,
                 replay,
                 categorySelectionVM
             )

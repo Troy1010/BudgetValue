@@ -20,15 +20,14 @@ import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.CategorySettingsVM
-import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.ui.CategorySettingsFrag
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
-import com.tminus1010.budgetvalue.transactions.CategorizeAdvancedVM
 import com.tminus1010.budgetvalue.transactions.CategorizeVM
 import com.tminus1010.budgetvalue.transactions.TransactionsMiscVM
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeAdvancedDomain
+import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
@@ -45,8 +44,10 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     private val categoriesVM: CategoriesVM by activityViewModels()
     private val transactionsMiscVM: TransactionsMiscVM by activityViewModels()
     private val categorySelectionVM: CategorySelectionVM by navGraphViewModels(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
-    private val categorizeAdvancedVM: CategorizeAdvancedVM by activityViewModels()
     private val categorySettingsVM: CategorySettingsVM by navGraphViewModels(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
+
+    @Inject
+    lateinit var transactionsDomain: TransactionsDomain
 
     @Inject
     lateinit var categorizeAdvancedDomain: CategorizeAdvancedDomain
@@ -111,9 +112,8 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         // # Buttons
         Observables.combineLatest(
             categorySelectionVM.inSelectionMode,
-            categorizeAdvancedVM.replays,
-            categorizeAdvancedVM.transactionToPush,
-        ).observe(viewLifecycleOwner) { (inSelectionMode, replays, transactionToPush) ->
+            categorizeVM.matchingReplays,
+        ).observe(viewLifecycleOwner) { (inSelectionMode, matchingReplays) ->
             vb.buttonsview.buttons = listOfNotNull(
                 if (inSelectionMode)
                     ButtonItem(
@@ -124,6 +124,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                                 source = this,
                                 nav = nav,
                                 categorySelectionVM = categorySelectionVM,
+                                transaction = transactionsDomain.firstUncategorizedSpend.value!!.first!!,
                                 replay = null,
                             )
                         }
@@ -145,21 +146,24 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                         }
                     )
                 else null,
-                *replays
-                    .filter { !inSelectionMode && it.predicate(transactionToPush) }
-                    .map { replay ->
-                        ButtonItem(
-                            title = "Replay (${replay.name})",
-                            onClick = { categorizeVM.userReplay(replay) },
-                            onLongClick = {
-                                CategorizeAdvancedFrag.navTo(
-                                    source = this,
-                                    nav = nav,
-                                    categorySelectionVM = categorySelectionVM,
-                                    replay = replay,
-                                )
-                            })
-                    }
+                *(if (inSelectionMode)
+                    emptyList()
+                else
+                    matchingReplays
+                        .map { replay ->
+                            ButtonItem(
+                                title = "Replay (${replay.name})",
+                                onClick = { categorizeVM.userReplay(replay) },
+                                onLongClick = {
+                                    CategorizeAdvancedFrag.navTo(
+                                        source = this,
+                                        nav = nav,
+                                        categorySelectionVM = categorySelectionVM,
+                                        transaction = transactionsDomain.firstUncategorizedSpend.value!!.first!!,
+                                        replay = replay,
+                                    )
+                                })
+                        })
                     .toTypedArray(),
                 if (!inSelectionMode)
                     ButtonItem(
