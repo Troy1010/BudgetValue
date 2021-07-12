@@ -29,6 +29,7 @@ import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
 import com.tminus1010.budgetvalue.replay.models.IReplay
 import com.tminus1010.budgetvalue.transactions.CategorizeAdvancedVM
 import com.tminus1010.budgetvalue.transactions.CategorizeVM
+import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
@@ -38,7 +39,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
-import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -74,10 +74,10 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 throw it
         }
         // # TMTableView
-        val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Pair<Category, BigDecimal>>(
+        val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Map.Entry<Category, AmountFormula>>(
             { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
-            { (category, amount), vb, _ ->
-                vb.editText.setText(amount.toString())
+            { (category, amountFormula), vb, _ ->
+                vb.editText.setText((amountFormula.amount + amountFormula.percentage).toString())
                 vb.editText.onDone {
                     if (!shouldIgnoreUserInput.value!!)
                         categorizeAdvancedVM.userInputCA(category, it.toMoneyBigDecimal())
@@ -135,7 +135,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                         *categoryAmounts.map {
                             listOf(
                                 recipeFactories.textView.createOne(it.key.name),
-                                categoryAmountRecipeFactory.createOne(it.key to it.value.amount + it.value.percentage),
+                                categoryAmountRecipeFactory.createOne(it),
                                 checkboxFactory.createOne(it.key),
                             )
                         }.toTypedArray(),
