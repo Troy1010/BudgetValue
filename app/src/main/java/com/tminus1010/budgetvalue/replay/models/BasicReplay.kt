@@ -1,15 +1,15 @@
 package com.tminus1010.budgetvalue.replay.models
 
-import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
+import com.tminus1010.budgetvalue.categories.CategoryAmountFormulasConverter
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.budgetvalue.transactions.models.Transaction
-import java.math.BigDecimal
 
 data class BasicReplay(
     override val name: String,
     private val description: String,
-    private val categoryAmounts: Map<Category, BigDecimal>,
+    private val categoryAmountFormulas: Map<Category, AmountFormula>,
     override val isAutoReplay: Boolean,
     override val autoFillCategory: Category,
 ) : IReplay {
@@ -17,23 +17,25 @@ data class BasicReplay(
         transaction.description == description
 
     override fun categorize(transaction: Transaction): Transaction =
-        transaction.categorize(categoryAmounts)
+        transaction.categorize(
+            categoryAmountFormulas.mapValues { it.value.calcAmount(transaction.amount) }
+        )
 
-    fun toDTO(categoryAmountsConverter: CategoryAmountsConverter) =
+    fun toDTO(categoryAmountFormulasConverter: CategoryAmountFormulasConverter) =
         BasicReplayDTO(
             name = name,
             description = description,
-            categoryAmounts = categoryAmountsConverter.toJson(categoryAmounts),
+            categoryAmountFormulasStr = categoryAmountFormulasConverter.toJson(categoryAmountFormulas),
             isAutoReplay = isAutoReplay,
             autoFillCategoryName = autoFillCategory.name,
         )
 
     companion object {
-        fun fromDTO(basicReplayDTO: BasicReplayDTO, categoryAmountsConverter: CategoryAmountsConverter, categoryParser: ICategoryParser) = basicReplayDTO.run {
+        fun fromDTO(basicReplayDTO: BasicReplayDTO, categoryAmountFormulasConverter: CategoryAmountFormulasConverter, categoryParser: ICategoryParser) = basicReplayDTO.run {
             BasicReplay(
                 name = name,
                 description = description,
-                categoryAmounts = categoryAmountsConverter.toCategoryAmounts(categoryAmounts),
+                categoryAmountFormulas = categoryAmountFormulasConverter.toCategoryAmountFormulas(categoryAmountFormulasStr),
                 isAutoReplay = isAutoReplay,
                 autoFillCategory = categoryParser.parseCategory(autoFillCategoryName),
             )

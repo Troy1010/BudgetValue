@@ -9,7 +9,7 @@ data class BasicReplayDTO(
     @PrimaryKey
     val name: String,
     val description: String,
-    val categoryAmounts: String,
+    val categoryAmountFormulasStr: String,
     val isAutoReplay: Boolean,
     val autoFillCategoryName: String,
 )

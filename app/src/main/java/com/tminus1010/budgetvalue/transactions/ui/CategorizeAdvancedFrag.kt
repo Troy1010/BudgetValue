@@ -74,7 +74,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 throw it
         }
         // # TMTableView
-        val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Map.Entry<Category, BigDecimal>>(
+        val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Pair<Category, BigDecimal>>(
             { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
             { (category, amount), vb, _ ->
                 vb.editText.setText(amount.toString())
@@ -118,7 +118,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 }
             }
         )
-        categorizeAdvancedVM.categoryAmounts
+        categorizeAdvancedVM.categoryAmountFormulas
             .map { categoryAmounts ->
                 val recipes2D =
                     listOf(
@@ -135,7 +135,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                         *categoryAmounts.map {
                             listOf(
                                 recipeFactories.textView.createOne(it.key.name),
-                                categoryAmountRecipeFactory.createOne(it),
+                                categoryAmountRecipeFactory.createOne(it.key to it.value.amount + it.value.percentage),
                                 checkboxFactory.createOne(it.key),
                             )
                         }.toTypedArray(),

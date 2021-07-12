@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.categoryComparator
 import com.tminus1010.budgetvalue._core.extensions.copy
+import com.tminus1010.budgetvalue._core.extensions.isEqualToZero
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
@@ -16,6 +17,7 @@ import com.tminus1010.budgetvalue.replay.models.BasicReplay
 import com.tminus1010.budgetvalue.replay.models.IReplay
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
+import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
@@ -42,7 +44,7 @@ class CategorizeAdvancedVM @Inject constructor(
 ) : ViewModel() {
     // # Input
     fun userFillIntoCategory(category: Category) {
-        userCategoryAmounts[category] = amount.value!! - categoryAmounts.value!!.values.sum()
+        userCategoryAmounts[category] = amount.value!! - transactionToPush.value!!.categoryAmounts.values.sum()
     }
 
     fun userInputCA(category: Category, amount: BigDecimal) {
@@ -50,11 +52,11 @@ class CategorizeAdvancedVM @Inject constructor(
     }
 
     fun userSwitchCategoryToPercentage(category: Category) {
-        TODO()
+        userCategoryIsPercentage[category] = true
     }
 
     fun userSwitchCategoryToNonPercentage(category: Category) {
-        TODO()
+        userCategoryIsPercentage[category] = false
     }
 
     fun userSubmitCategorization() {
@@ -69,7 +71,7 @@ class CategorizeAdvancedVM @Inject constructor(
             BasicReplay(
                 name = replayName,
                 description = transactionToPush.value!!.description,
-                categoryAmounts = categoryAmounts.value!!.filter { it.value.compareTo(BigDecimal.ZERO) != 0 },
+                categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.amount.isEqualToZero() || !it.value.percentage.isEqualToZero() },
                 isAutoReplay = isAutoReplay,
                 autoFillCategory = autoFillCategory.value!!
             )
@@ -106,6 +108,7 @@ class CategorizeAdvancedVM @Inject constructor(
 
     // # Internal
     private var userCategoryAmounts = SourceHashMap<Category, BigDecimal>()
+    private var userCategoryIsPercentage = SourceHashMap<Category, Boolean>()
     private val userAutoFillCategory = BehaviorSubject.createDefault(CategoriesDomain.defaultCategory)!!
     private var replay = BehaviorSubject.createDefault<Box<IReplay?>>(Box(null))
 
@@ -125,19 +128,20 @@ class CategorizeAdvancedVM @Inject constructor(
         )
             .distinctUntilChanged()
             .nonLazyCache(disposables)
-    val categoryAmounts =
+    val categoryAmountFormulas =
         Rx.combineLatest(
             transactionsDomain.firstUncategorizedSpend.unbox(),
             autoFillCategory,
             amount,
-            Observable.timer(300, TimeUnit.MILLISECONDS).flatMap { _categorySelectionVM.selectedCategories }.retry(),
+            Observable.timer(300, TimeUnit.MILLISECONDS).map { _categorySelectionVM }.retry().flatMap { it.selectedCategories },
             replay,
             userCategoryAmounts.observable,
+            userCategoryIsPercentage.observable,
         )
-            .map { (transaction, autoFillCategory, amount, selectedCategories, replay, userInputCategoryAmounts) ->
+            .map { (transaction, autoFillCategory, amount, selectedCategories, replay, userCategoryAmounts, userCategoryIsPercentage) ->
                 (replay.first?.autoFillCategory?.let { selectedCategories + it } ?: selectedCategories).associateWith { BigDecimal.ZERO }
                     .plus(replay.first?.categorize(transaction)?.categoryAmounts ?: emptyMap())
-                    .plus(userInputCategoryAmounts)
+                    .plus(userCategoryAmounts)
                     .let {
                         if (autoFillCategory == CategoriesDomain.defaultCategory)
                             it
@@ -148,17 +152,27 @@ class CategorizeAdvancedVM @Inject constructor(
                                     categoryAmounts.copy(autoFillCategory to amount - categoryAmounts.values.sum())
                                 }
                     }
+                    .mapValues {
+                        AmountFormula(
+                            amount = if (userCategoryIsPercentage[it.key] ?: false) BigDecimal.ZERO else it.value,
+                            percentage = if (userCategoryIsPercentage[it.key] ?: false) it.value else BigDecimal.ZERO
+                        )
+                    }
             }
-            .startWithItem(emptyMap<Category, BigDecimal>())
+            .startWithItem(emptyMap())
             .map { it.toSortedMap(categoryComparator) }
             .nonLazyCache(disposables)
     val transactionToPush =
         Rx.combineLatest(
             transactionsDomain.firstUncategorizedSpend.unbox(),
-            categoryAmounts,
+            categoryAmountFormulas,
         )
-            .map { (transaction, categoryAmounts) ->
-                transaction.categorize(categoryAmounts.filter { it.value.compareTo(BigDecimal.ZERO) != 0 })
+            .map { (transaction, categoryAmountFormulas) ->
+                transaction.categorize(
+                    categoryAmountFormulas
+                        .filter { !it.value.amount.isEqualToZero() || !it.value.percentage.isEqualToZero() }
+                        .mapValues { it.value.calcAmount(transaction.amount) }
+                )
             }
             .nonLazyCache(disposables)
     val defaultAmount: Observable<String> =
