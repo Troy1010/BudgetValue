@@ -39,6 +39,15 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue
      * this observable emits whenever SourceHashMap is changed. (only once per transaction)
      * It exposes item observables.
      */
+    val observable: BehaviorSubject<Map<K, V>> = changeSet
+        .map { this.toMap() }
+        .startWithItem(this)
+        .toBehaviorSubject()
+
+    /**
+     * this observable emits whenever SourceHashMap is changed. (only once per transaction)
+     * It exposes item observables.
+     */
     val itemObservableMap: BehaviorSubject<Map<K, BehaviorSubject<V>>> = observableMapPublisher
         .startWithItem(_itemObservableMap)
         .map { _itemObservableMap.toMap() }
@@ -58,7 +67,7 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue
         changeSet
             .filter { it.type == AddRemEditType.EDIT }
             .publish().refCount()
-    
+
     fun getEdits(key: K) =
         changeSet
             .filter { it.key == key }
