@@ -6,6 +6,7 @@ import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.Subject
 import java.util.concurrent.Semaphore
 
@@ -22,6 +23,12 @@ fun <K, V, T> Observable<Map<K, V>>.flatMapSourceHashMap(sourceHashMap: SourceHa
             ).also { downstream.setDisposable(it) }
         }
     }
+
+fun <K, V> Observable<Map<K, V>>.toSourceHashMap(disposables: CompositeDisposable, sourceHashMap: SourceHashMap<K, V> = SourceHashMap()): SourceHashMap<K, V> =
+    this
+        .subscribeBy(onNext = { sourceHashMap.adjustTo(it) })
+        .also { disposables += it }
+        .let { sourceHashMap }
 
 fun <T> Observable<T>.divertErrors(errorSubject: Subject<Throwable>): Observable<T> =
     this.onErrorResumeNext { errorSubject.onNext(it); Observable.empty() }
