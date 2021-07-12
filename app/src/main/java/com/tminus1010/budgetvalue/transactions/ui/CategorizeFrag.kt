@@ -63,7 +63,6 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         categorizeVM.setup(categorySelectionVM)
         // # Some of SelectionMode
         categorySelectionVM.inSelectionMode.observe(viewLifecycleOwner) { inSelectionMode ->
-            // ## inSelectionMode
             vb.root.children
                 .filter { it != vb.recyclerviewCategories && it != vb.buttonsview }
                 .forEach { it.alpha = if (inSelectionMode) 0.5F else 1F }
@@ -124,10 +123,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                             CategorizeAdvancedFrag.navTo(
                                 source = this,
                                 nav = nav,
-                                categorizeAdvancedVM = categorizeAdvancedVM,
                                 categorySelectionVM = categorySelectionVM,
-                                categoryAmounts = null,
-                                autoFillCategory = CategoriesDomain.defaultCategory,
                                 replay = null,
                             )
                         }
@@ -159,10 +155,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                                 CategorizeAdvancedFrag.navTo(
                                     source = this,
                                     nav = nav,
-                                    categorizeAdvancedVM = categorizeAdvancedVM,
                                     categorySelectionVM = categorySelectionVM,
-                                    categoryAmounts = replay.categorize(transactionToPush).categoryAmounts,
-                                    autoFillCategory = replay.autoFillCategory,
                                     replay = replay,
                                 )
                             })
