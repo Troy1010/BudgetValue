@@ -8,12 +8,16 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.function.BiFunction
 import java.util.function.Function
 
-class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue: V? = null): HashMap<K, V>() {
-    constructor(exitValue: V?, vararg entries: Pair<K, V>): this(entries.associate { it.first to it.second }, exitValue)
+class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue: V? = null) : HashMap<K, V>() {
+    constructor(exitValue: V?, vararg entries: Pair<K, V>) : this(entries.associate { it.first to it.second }, exitValue)
+
     private val observableMapPublisher = PublishSubject.create<MutableMap<K, BehaviorSubject<V>>>()
     private val changePublisher = PublishSubject.create<Change<K, V>>()
     private val _itemObservableMap = mutableMapOf<K, BehaviorSubject<V>>()
-    init { putAll(map) }
+
+    init {
+        putAll(map)
+    }
     // Currently, there are two patterns available here (I am deciding which one is better):
     //  > subscribe to itemObservableMap for edits, and additionOrRemovals for additions/removals
     //  > subscribe to changeSet for everything, but you'll need to filter for exactly what you
@@ -22,6 +26,7 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue
      * this observable emits a Change every time an entry is added, removed, or edited.
      */
     val changeSet: Observable<Change<K, V>> = changePublisher
+
     /**
      * this observable emits an AdditionOrRemoval every time an entry is added or removed.
      */
@@ -35,6 +40,16 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue
             }
             AdditionOrRemoval(additionOrRemovalType, it.key, it.value)
         }
+
+    /**
+     * this observable emits whenever SourceHashMap is changed. (only once per transaction)
+     * It exposes item observables.
+     */
+    val observable: BehaviorSubject<Map<K, V>> = changeSet
+        .map { this.toMap() }
+        .startWithItem(this)
+        .toBehaviorSubject()
+
     /**
      * this observable emits whenever SourceHashMap is changed. (only once per transaction)
      * It exposes item observables.
@@ -43,6 +58,7 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue
         .startWithItem(_itemObservableMap)
         .map { _itemObservableMap.toMap() }
         .toBehaviorSubject()
+
     /**
      * this observable emits whenever an entry is added or removed. (only once per transaction)
      * It exposes item observables.
@@ -58,7 +74,7 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue
         changeSet
             .filter { it.type == AddRemEditType.EDIT }
             .publish().refCount()
-    
+
     fun getEdits(key: K) =
         changeSet
             .filter { it.key == key }

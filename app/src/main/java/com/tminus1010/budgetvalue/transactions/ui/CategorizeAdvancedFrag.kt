@@ -10,7 +10,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.InvalidCategoryAmounts
-import com.tminus1010.budgetvalue._core.categoryComparator
 import com.tminus1010.budgetvalue._core.extensions.add
 import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.easyText
@@ -60,6 +59,9 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // # Mediation
+        _args?.also { _args = null; categorizeAdvancedVM.setup(it.first, it.second) }
+        //
         shouldIgnoreUserInput.observe(viewLifecycleOwner) {}
         vb.tvTitle.text = if (replayName == null) "" else "Replay ($replayName)"
         vb.tvTitle.visibility = if (replayName == null) View.GONE else View.VISIBLE
@@ -102,9 +104,8 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 }
             }
         )
-        categorizeAdvancedVM.transactionToPush
-            .map { transaction ->
-                val categoryAmounts = transaction.categoryAmounts.toSortedMap(categoryComparator)
+        categorizeAdvancedVM.categoryAmounts
+            .map { categoryAmounts ->
                 val recipes2D =
                     listOf(
                         listOf(
@@ -208,19 +209,16 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
 
     enum class Key { REPLAY_NAME }
     companion object {
+        private var _args: Pair<IReplay?, CategorySelectionVM>? = null
         fun navTo(
             source: Any,
             nav: NavController,
-            categorizeAdvancedVM: CategorizeAdvancedVM,
             categorySelectionVM: CategorySelectionVM,
-            categoryAmounts: Map<Category, BigDecimal>?,
-            autoFillCategory: Category,
             replay: IReplay?,
         ) {
-            categorizeAdvancedVM.setup(
-                categoryAmounts = categoryAmounts,
-                autoFillCategory = autoFillCategory,
-                categorySelectionVM = categorySelectionVM
+            _args = Pair(
+                replay,
+                categorySelectionVM
             )
             nav.navigate(
                 when (source) {
