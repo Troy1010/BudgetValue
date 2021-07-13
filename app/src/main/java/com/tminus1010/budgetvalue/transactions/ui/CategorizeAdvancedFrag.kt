@@ -23,7 +23,7 @@ import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.FragCategorizeAdvancedBinding
 import com.tminus1010.budgetvalue.databinding.ItemCheckboxBinding
-import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
+import com.tminus1010.budgetvalue.databinding.ItemPercentageOrMoneyEditTextBinding
 import com.tminus1010.budgetvalue.replay.models.IReplay
 import com.tminus1010.budgetvalue.transactions.CategorizeAdvancedVM
 import com.tminus1010.budgetvalue.transactions.CategorizeVM
@@ -38,6 +38,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
+import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -73,19 +74,20 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 throw it
         }
         // # TMTableView
-        val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Map.Entry<Category, AmountFormula>>(
-            { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
+        val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemPercentageOrMoneyEditTextBinding, Map.Entry<Category, AmountFormula>>(
+            { ItemPercentageOrMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
             { (category, amountFormula), vb, lifecycle ->
-                vb.editText.bind(categorizeAdvancedVM.autoFillCategory, lifecycle) {
+                vb.tvPercentage.easyVisibility = amountFormula.percentage.compareTo(BigDecimal.ZERO) != 0
+                vb.moneyEditText.bind(categorizeAdvancedVM.autoFillCategory, lifecycle) {
                     isEnabled = category != it
                     setBackgroundColor(context.theme.getColorByAttr(if (isEnabled) R.attr.colorBackground else R.attr.colorBackgroundHighlight))
                 }
-                vb.editText.setText((amountFormula.amount + amountFormula.percentage).toString())
-                vb.editText.onDone {
+                vb.moneyEditText.setText((amountFormula.amount + amountFormula.percentage).toString())
+                vb.moneyEditText.onDone {
                     if (!shouldIgnoreUserInput.value!!)
                         categorizeAdvancedVM.userInputCA(category, it.toMoneyBigDecimal())
                 }
-                vb.editText.setOnCreateContextMenuListener { menu, _, _ ->
+                vb.moneyEditText.setOnCreateContextMenuListener { menu, _, _ ->
                     menu.add(
                         MenuItem(
                             title = "Fill",
