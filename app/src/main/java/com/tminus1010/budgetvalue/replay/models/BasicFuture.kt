@@ -12,6 +12,8 @@ data class BasicFuture(
     override val categoryAmountFormulas: Map<Category, AmountFormula>,
     override val autoFillCategory: Category,
 ) : IFuture {
+    override val shouldDeleteAfterCategorization = true
+
     override fun predicate(transaction: Transaction): Boolean =
         transaction.description == description
 

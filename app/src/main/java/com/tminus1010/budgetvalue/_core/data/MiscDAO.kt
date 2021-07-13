@@ -40,11 +40,11 @@ interface MiscDAO {
     @Query("DELETE FROM TransactionDTO")
     fun clearTransactions(): Completable
 
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    fun add(transactionDTO: TransactionDTO): Completable
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun tryAdd(transactionDTO: TransactionDTO): Completable
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun add(transactionDTO: TransactionDTO): Completable
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun tryAdd(transactionsDTO: List<TransactionDTO>): Completable
