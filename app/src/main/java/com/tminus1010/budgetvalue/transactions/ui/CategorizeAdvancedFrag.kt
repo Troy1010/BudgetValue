@@ -233,12 +233,12 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
 
     enum class Key { REPLAY_NAME }
     companion object {
-        private var _args: Triple<Transaction, IReplay?, CategorySelectionVM>? = null
+        private var _args: Triple<Transaction?, IReplay?, CategorySelectionVM>? = null
         fun navTo(
             source: Any,
             nav: NavController,
             categorySelectionVM: CategorySelectionVM,
-            transaction: Transaction,
+            transaction: Transaction?,
             replay: IReplay?,
         ) {
             _args = Triple(

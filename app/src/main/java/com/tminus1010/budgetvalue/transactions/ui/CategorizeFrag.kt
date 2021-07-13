@@ -117,6 +117,20 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
             vb.buttonsview.buttons = listOfNotNull(
                 if (inSelectionMode)
                     ButtonItem(
+                        title = "Create Future",
+                        onClick = {
+                            CategorizeAdvancedFrag.navTo(
+                                source = this,
+                                nav = nav,
+                                categorySelectionVM = categorySelectionVM,
+                                transaction = transactionsDomain.firstUncategorizedSpend.value!!.first!!,
+                                replay = null,
+                            )
+                        }
+                    )
+                else null,
+                if (inSelectionMode)
+                    ButtonItem(
                         title = "Advanced",
                         isEnabled = categorizeVM.isTransactionAvailable,
                         onClick = {
