@@ -130,6 +130,13 @@ class CategorizeAdvancedVM @Inject constructor(
             }
 
     // # Output
+    val amountToCategorizeMsg =
+        transaction
+            .map { transactionBox ->
+                val transaction = transactionBox.first
+                Box(transaction?.let { "Amount to split: $${transaction.amount}" })
+            }
+            .nonLazyCache(disposables)
     val autoFillCategory: Observable<Category> =
         Observable.merge(
             userAutoFillCategory,

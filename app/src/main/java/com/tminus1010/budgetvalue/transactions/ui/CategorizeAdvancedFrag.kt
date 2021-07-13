@@ -65,8 +65,11 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
         //
         shouldIgnoreUserInput.observe(viewLifecycleOwner) {}
         vb.tvTitle.text = if (replayName == null) "" else "Replay ($replayName)"
-        vb.tvTitle.visibility = if (replayName == null) View.GONE else View.VISIBLE
-        vb.tvAmountToSplit.bind(categorizeVM.amountToCategorizeMsg) { text = it }
+        vb.tvTitle.easyVisibility = replayName != null
+        vb.tvAmountToSplit.bind(categorizeAdvancedVM.amountToCategorizeMsg) {
+            easyVisibility = it.first != null
+            text = it.first ?: ""
+        }
         categorizeAdvancedVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         errorSubject.observe(viewLifecycleOwner) {
             if (it is InvalidCategoryAmounts)
