@@ -8,6 +8,10 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import java.math.BigDecimal
 
 data class CategoryAmountFormulas constructor(val map: Map<Category, AmountFormula> = emptyMap()) : Map<Category, AmountFormula> by map {
+    init {
+        if (CategoriesDomain.defaultCategory in this.keys) error("CategoryAmountFormulas should not have defaultCategory")
+    }
+
     operator fun plus(map: Map<Category, AmountFormula>): CategoryAmountFormulas {
         return CategoryAmountFormulas(map + this)
     }
