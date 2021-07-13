@@ -2,7 +2,6 @@ package com.tminus1010.budgetvalue.transactions
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
-import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.extensions.unbox
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
@@ -11,7 +10,6 @@ import com.tminus1010.budgetvalue.replay.models.IReplay
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
-import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.Observables
@@ -70,11 +68,6 @@ class CategorizeVM @Inject constructor(
             }!!
     val isUndoAvailable = saveTransactionDomain.isUndoAvailable
     val isRedoAvailable = saveTransactionDomain.isRedoAvailable
-    val amountToCategorize =
-        transactionsDomain.firstUncategorizedSpend
-            .unbox()
-            .map { "Amount to split: $${it.amount}" }
-            .nonLazyCache(disposables)
     val isTransactionAvailable: Observable<Boolean> =
         transactionsDomain.firstUncategorizedSpend
             .map { it.first != null }

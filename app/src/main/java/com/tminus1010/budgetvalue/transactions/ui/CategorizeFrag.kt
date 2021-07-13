@@ -123,15 +123,16 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                                 source = this,
                                 nav = nav,
                                 categorySelectionVM = categorySelectionVM,
-                                transaction = transactionsDomain.firstUncategorizedSpend.value!!.first!!,
-                                replay = null,
+                                transaction = null,
+                                replayOrFuture = null,
+                                categorizeAdvancedType = CategorizeAdvancedFrag.CategorizeAdvancedType.CREATE_FUTURE,
                             )
                         }
                     )
                 else null,
                 if (inSelectionMode)
                     ButtonItem(
-                        title = "Advanced",
+                        title = "Create Replay",
                         isEnabled = categorizeVM.isTransactionAvailable,
                         onClick = {
                             CategorizeAdvancedFrag.navTo(
@@ -139,7 +140,8 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                                 nav = nav,
                                 categorySelectionVM = categorySelectionVM,
                                 transaction = transactionsDomain.firstUncategorizedSpend.value!!.first!!,
-                                replay = null,
+                                replayOrFuture = null,
+                                categorizeAdvancedType = CategorizeAdvancedFrag.CategorizeAdvancedType.CREATE_REPLAY,
                             )
                         }
                     )
@@ -174,7 +176,8 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                                         nav = nav,
                                         categorySelectionVM = categorySelectionVM,
                                         transaction = transactionsDomain.firstUncategorizedSpend.value!!.first!!,
-                                        replay = replay,
+                                        replayOrFuture = replay,
+                                        categorizeAdvancedType = CategorizeAdvancedFrag.CategorizeAdvancedType.EDIT,
                                     )
                                 })
                         })

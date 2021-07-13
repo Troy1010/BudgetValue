@@ -5,16 +5,18 @@ import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.budgetvalue.transactions.models.Transaction
+import java.util.*
 
-data class BasicReplay(
+data class BasicFuture(
     override val name: String,
-    private val description: String,
+    private val searchText: String,
     override val categoryAmountFormulas: Map<Category, AmountFormula>,
-    override val isAutoReplay: Boolean,
     override val autoFillCategory: Category,
-) : IReplay {
+) : IFuture {
+    override val shouldDeleteAfterCategorization = true
+
     override fun predicate(transaction: Transaction): Boolean =
-        transaction.description == description
+        searchText.toUpperCase(Locale.ROOT) in transaction.description.toUpperCase(Locale.ROOT)
 
     override fun categorize(transaction: Transaction): Transaction =
         transaction.categorize(
@@ -22,21 +24,19 @@ data class BasicReplay(
         )
 
     fun toDTO(categoryAmountFormulasConverter: CategoryAmountFormulasConverter) =
-        BasicReplayDTO(
+        BasicFutureDTO(
             name = name,
-            description = description,
+            searchText = searchText,
             categoryAmountFormulasStr = categoryAmountFormulasConverter.toJson(categoryAmountFormulas),
-            isAutoReplay = isAutoReplay,
             autoFillCategoryName = autoFillCategory.name,
         )
 
     companion object {
-        fun fromDTO(basicReplayDTO: BasicReplayDTO, categoryAmountFormulasConverter: CategoryAmountFormulasConverter, categoryParser: ICategoryParser) = basicReplayDTO.run {
-            BasicReplay(
+        fun fromDTO(basicFutureDTO: BasicFutureDTO, categoryAmountFormulasConverter: CategoryAmountFormulasConverter, categoryParser: ICategoryParser) = basicFutureDTO.run {
+            BasicFuture(
                 name = name,
-                description = description,
+                searchText = searchText,
                 categoryAmountFormulas = categoryAmountFormulasConverter.toCategoryAmountFormulas(categoryAmountFormulasStr),
-                isAutoReplay = isAutoReplay,
                 autoFillCategory = categoryParser.parseCategory(autoFillCategoryName),
             )
         }

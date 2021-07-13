@@ -7,13 +7,14 @@ import com.tminus1010.budgetvalue.accounts.models.AccountDTO
 import com.tminus1010.budgetvalue.categories.models.CategoryDTO
 import com.tminus1010.budgetvalue.plans.models.PlanDTO
 import com.tminus1010.budgetvalue.reconciliations.models.ReconciliationDTO
+import com.tminus1010.budgetvalue.replay.models.BasicFutureDTO
 import com.tminus1010.budgetvalue.replay.models.BasicReplayDTO
 import com.tminus1010.budgetvalue.transactions.models.TransactionDTO
 
 @TypeConverters(RoomTypeConverter::class)
 @Database(
-    entities = [TransactionDTO::class, AccountDTO::class, ReconciliationDTO::class, PlanDTO::class, CategoryDTO::class, BasicReplayDTO::class],
-    version = 35
+    entities = [TransactionDTO::class, AccountDTO::class, ReconciliationDTO::class, PlanDTO::class, CategoryDTO::class, BasicReplayDTO::class, BasicFutureDTO::class],
+    version = 37
 )
 abstract class DB : RoomDatabase() {
     abstract fun miscDAO(): MiscDAO

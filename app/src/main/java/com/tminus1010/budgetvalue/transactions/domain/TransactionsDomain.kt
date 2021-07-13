@@ -1,8 +1,11 @@
 package com.tminus1010.budgetvalue.transactions.domain
 
+import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay.ReplayDomain
+import com.tminus1010.budgetvalue.replay.data.FutureRepo
+import com.tminus1010.budgetvalue.replay.models.IFuture
 import com.tminus1010.budgetvalue.transactions.TransactionParser
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.models.Transaction
@@ -25,21 +28,26 @@ class TransactionsDomain @Inject constructor(
     private val transactionsRepo: TransactionsRepo,
     private val datePeriodGetter: DatePeriodGetter,
     private val transactionParser: TransactionParser,
-    private val replayDomain: ReplayDomain
+    private val replayDomain: ReplayDomain,
+    private val futureRepo: FutureRepo,
 ) {
     // # Input
     fun importTransactions(inputStream: InputStream): Completable =
         Singles.zip(
+            Single.fromCallable { transactionParser.parseToTransactions(inputStream) },
             replayDomain.autoReplays.toSingle(),
-            Single.fromCallable { transactionParser.parseToTransactions(inputStream) }
-        ).subscribeOn(Schedulers.io()).flatMapCompletable { (autoReplays, transactions) ->
-            transactionsRepo.tryPush(
-                transactions
-                    .map { transaction ->
-                        autoReplays.find { it.predicate(transaction) }
-                            ?.categorize(transaction)
-                            ?: transaction
-                    }
+            futureRepo.fetchFutures().toSingle(),
+        ).subscribeOn(Schedulers.io()).flatMapCompletable { (transactions, autoReplays, futures) ->
+            Rx.merge(
+                transactions.map { transaction ->
+                    val futureOrReplay = (futures.find { it.predicate(transaction) } ?: autoReplays.find { it.predicate(transaction) })
+                    if (futureOrReplay == null)
+                        transactionsRepo.push(transaction)
+                    else
+                        transactionsRepo.push(futureOrReplay.categorize(transaction))
+                            .run { if (futureOrReplay is IFuture && futureOrReplay.shouldDeleteAfterCategorization) andThen(futureRepo.delete(futureOrReplay.name)) else this }
+                            .onErrorComplete() // error occurs when transaction already exists
+                }
             )
         }
 

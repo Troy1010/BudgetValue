@@ -6,12 +6,13 @@ import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.InvalidCategoryAmounts
+import com.tminus1010.budgetvalue._core.InvalidSearchText
 import com.tminus1010.budgetvalue._core.extensions.*
+import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonItem
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuItem
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
@@ -21,17 +22,16 @@ import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.databinding.FragCategorizeAdvancedBinding
-import com.tminus1010.budgetvalue.databinding.ItemCheckboxBinding
-import com.tminus1010.budgetvalue.databinding.ItemPercentageOrMoneyEditTextBinding
+import com.tminus1010.budgetvalue.databinding.*
 import com.tminus1010.budgetvalue.replay.models.IReplay
+import com.tminus1010.budgetvalue.replay.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.CategorizeAdvancedVM
-import com.tminus1010.budgetvalue.transactions.CategorizeVM
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
+import com.tminus1010.tmcommonkotlin.tuple.Box
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,14 +44,13 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
     private val vb by viewBinding(FragCategorizeAdvancedBinding::bind)
-    private val categorizeVM: CategorizeVM by activityViewModels()
     private val categorizeAdvancedVM: CategorizeAdvancedVM by viewModels()
-    private val replayName: String? by lazy { arguments?.getString(Key.REPLAY_NAME.name) }
     private var _shouldIgnoreUserInputForDuration = PublishSubject.create<Unit>()
     private var shouldIgnoreUserInput = _shouldIgnoreUserInputForDuration
         .flatMap { Observable.just(false).delay(1, TimeUnit.SECONDS).startWithItem(true) }
         .startWithItem(false)
         .replay(1).autoConnect()
+    private val categorizeAdvancedType by lazy { CategorizeAdvancedType.values()[arguments?.getInt(Key.CategorizeAdvancedType.name)!!] }
 
     @Inject
     lateinit var errorSubject: Subject<Throwable>
@@ -62,17 +61,52 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
         _args?.also { _args = null; categorizeAdvancedVM.setup(it.first, it.second, it.third) }
         //
         shouldIgnoreUserInput.observe(viewLifecycleOwner) {}
-        vb.tvTitle.text = if (replayName == null) "" else "Replay ($replayName)"
-        vb.tvTitle.visibility = if (replayName == null) View.GONE else View.VISIBLE
-        vb.tvAmountToSplit.bind(categorizeVM.amountToCategorize) { text = it }
+        vb.tvTitle.bind(categorizeAdvancedVM.replayOrFuture) { replayOrFutureBox ->
+            val replayOrFuture = replayOrFutureBox.first
+            easyVisibility = replayOrFuture != null
+            text = replayOrFuture?.name ?: ""
+        }
+        vb.tvAmountToSplit.bind(categorizeAdvancedVM.amountToCategorizeMsg) { amountToCategorizeMsgBox ->
+            val amountToCategorizeMsg = amountToCategorizeMsgBox.first
+            easyVisibility = amountToCategorizeMsg != null
+            text = amountToCategorizeMsg ?: ""
+        }
         categorizeAdvancedVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         errorSubject.observe(viewLifecycleOwner) {
             if (it is InvalidCategoryAmounts)
                 toast("Invalid category amounts")
+            else if (it is InvalidSearchText)
+                toast("Invalid search text")
             else
                 throw it
         }
-        // # TMTableView
+        // # TMTableView OtherInput
+        vb.tmTableViewOtherInput.easyVisibility = categorizeAdvancedType == CategorizeAdvancedType.CREATE_FUTURE
+        val searchTextRecipeFactory = ViewItemRecipeFactory3<ItemEditTextBinding, Unit?>(
+            { ItemEditTextBinding.inflate(LayoutInflater.from(requireContext())) },
+            { d, vb, lifecycle ->
+                vb.edittext.onDone { categorizeAdvancedVM.userSetSearchText(it) }
+            }
+        )
+        if (categorizeAdvancedType == CategorizeAdvancedType.CREATE_FUTURE)
+            Observable.just(Unit)
+                .map {
+                    listOf(
+                        listOf(
+                            recipeFactories.textView.createOne("Search Text"),
+                            searchTextRecipeFactory.createOne(null),
+                        ),
+                    )
+                }
+                .observe(viewLifecycleOwner) { recipeGrid ->
+                    vb.tmTableViewOtherInput.initialize(
+                        recipeGrid = recipeGrid,
+                        shouldFitItemWidthsInsideTable = true,
+                        rowFreezeCount = 1,
+                    )
+                }
+
+        // # TMTableView CategoryAmounts
         val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemPercentageOrMoneyEditTextBinding, Map.Entry<Category, AmountFormula>>(
             { ItemPercentageOrMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
             { (category, amountFormula), vb, lifecycle ->
@@ -97,7 +131,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                                 }),
                             if (amountFormula !is AmountFormula.Percentage)
                                 MenuItem(
-                                    title = "To Percentage",
+                                    title = "Add Percentage",
                                     onClick = {
                                         _shouldIgnoreUserInputForDuration.onNext(Unit)
                                         categorizeAdvancedVM.userSwitchCategoryToPercentage(category)
@@ -105,7 +139,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                             else null,
                             if (amountFormula !is AmountFormula.Value)
                                 MenuItem(
-                                    title = "To Non-Percentage",
+                                    title = "No Percentage",
                                     onClick = {
                                         _shouldIgnoreUserInputForDuration.onNext(Unit)
                                         categorizeAdvancedVM.userSwitchCategoryToNonPercentage(category)
@@ -116,7 +150,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 }
             }
         )
-        val checkboxFactory = ViewItemRecipeFactory3<ItemCheckboxBinding, Category>(
+        val checkboxRecipeFactory = ViewItemRecipeFactory3<ItemCheckboxBinding, Category>(
             { ItemCheckboxBinding.inflate(LayoutInflater.from(requireContext())) },
             { category, vb, lifecycle ->
                 vb.checkbox.bind(categorizeAdvancedVM.autoFillCategory, lifecycle) {
@@ -126,6 +160,13 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 vb.checkbox.setOnCheckedChangeListener { _, isChecked ->
                     if (isChecked) categorizeAdvancedVM.userSetCategoryForAutoFill(category)
                 }
+            }
+        )
+        val defaultAmountRecipeFactory = ViewItemRecipeFactory3<ItemTextViewBinding, Observable<Box<String?>>>(
+            { ItemTextViewBinding.inflate(LayoutInflater.from(requireContext())) },
+            { d, vb, lifecycle ->
+                vb.root.bind(d, lifecycle) { easyVisibility = it.first != null }
+                vb.textview.bind(d, lifecycle) { easyText = it.first ?: "" }
             }
         )
         categorizeAdvancedVM.categoryAmountFormulasToShow
@@ -139,14 +180,14 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                         ),
                         listOf(
                             recipeFactories.textView.createOne("Default"),
-                            recipeFactories.textViewWithLifecycle.createOne(categorizeAdvancedVM.defaultAmount),
-                            checkboxFactory.createOne(CategoriesDomain.defaultCategory),
+                            defaultAmountRecipeFactory.createOne(categorizeAdvancedVM.defaultAmount),
+                            checkboxRecipeFactory.createOne(CategoriesDomain.defaultCategory),
                         ),
                         *categoryAmountFormulasToShow.map {
                             listOf(
                                 recipeFactories.textView.createOne(it.key.name),
                                 categoryAmountRecipeFactory.createOne(it),
-                                checkboxFactory.createOne(it.key),
+                                checkboxRecipeFactory.createOne(it.key),
                             )
                         }.toTypedArray(),
                     )
@@ -157,9 +198,9 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                     .mapKeys { it.key + 2 } // header row, and default row
                 Pair(recipes2D, dividerMap)
             }
-            .observe(viewLifecycleOwner) { (recipes2D, dividerMap) ->
-                vb.tmTableView.initialize(
-                    recipeGrid = recipes2D,
+            .observe(viewLifecycleOwner) { (recipeGrid, dividerMap) ->
+                vb.tmTableViewCategoryAmounts.initialize(
+                    recipeGrid = recipeGrid,
                     shouldFitItemWidthsInsideTable = true,
                     dividerMap = dividerMap,
                     rowFreezeCount = 1,
@@ -167,83 +208,112 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
             }
 
         // # Button RecyclerView
-        vb.buttonsview.buttons = listOfNotNull(
-            if (replayName == null)
-                ButtonItem(
-                    title = "Setup Auto Replay",
-                    onClick = {
-                        if (categorizeAdvancedVM.areCurrentCAsValid.value!!) {
-                            val editText = EditText(requireContext())
-                            AlertDialog.Builder(requireContext())
-                                .setMessage("What would you like to name this replay?")
-                                .setView(editText)
-                                .setPositiveButton("Submit") { _, _ ->
-                                    categorizeAdvancedVM.userSaveReplay(editText.easyText, true)
-                                }
-                                .setNegativeButton("Cancel") { _, _ -> }
-                                .show()
-                        } else
-                            errorSubject.onNext(InvalidCategoryAmounts(""))
-                    }
-                )
-            else null,
-            if (replayName == null)
-                ButtonItem(
-                    title = "Save Replay",
-                    onClick = {
-                        if (categorizeAdvancedVM.areCurrentCAsValid.value!!) {
-                            val editText = EditText(requireContext())
-                            AlertDialog.Builder(requireContext())
-                                .setMessage("What would you like to name this replay?")
-                                .setView(editText)
-                                .setPositiveButton("Submit") { _, _ ->
-                                    categorizeAdvancedVM.userSaveReplay(editText.easyText, false)
-                                }
-                                .setNegativeButton("Cancel") { _, _ -> }
-                                .show()
-                        } else
-                            errorSubject.onNext(InvalidCategoryAmounts(""))
-                    }
-                )
-            else null,
-            if (replayName != null)
-                ButtonItem(
-                    title = "Delete Replay",
-                    onClick = {
-                        AlertDialog.Builder(requireContext())
-                            .setMessage("Do you really want to delete this replay?")
-                            .setPositiveButton("Yes") { _, _ ->
-                                categorizeAdvancedVM.userDeleteReplay(replayName!!)
+        Rx.combineLatest(
+            categorizeAdvancedVM.replayOrFuture,
+            categorizeAdvancedVM.transactionToPush,
+        )
+            .observe(viewLifecycleOwner) { (replayOrFutureBox, transactionToPushBox) ->
+                val replayOrFuture = replayOrFutureBox.first
+                vb.buttonsview.buttons = listOfNotNull(
+                    if (categorizeAdvancedType == CategorizeAdvancedType.CREATE_REPLAY)
+                        ButtonItem(
+                            title = "Setup Auto Replay",
+                            onClick = {
+                                if (categorizeAdvancedVM.areCurrentCAsValid.value!!) {
+                                    val editText = EditText(requireContext())
+                                    AlertDialog.Builder(requireContext())
+                                        .setMessage("What would you like to name this replay?")
+                                        .setView(editText)
+                                        .setPositiveButton("Submit") { _, _ ->
+                                            categorizeAdvancedVM.userSaveReplay(editText.easyText, true)
+                                        }
+                                        .setNegativeButton("Cancel") { _, _ -> }
+                                        .show()
+                                } else
+                                    errorSubject.onNext(InvalidCategoryAmounts(""))
+                            }
+                        )
+                    else null,
+                    if (categorizeAdvancedType == CategorizeAdvancedType.CREATE_REPLAY)
+                        ButtonItem(
+                            title = "Save Replay",
+                            onClick = {
+                                if (categorizeAdvancedVM.areCurrentCAsValid.value!!) {
+                                    val editText = EditText(requireContext())
+                                    AlertDialog.Builder(requireContext())
+                                        .setMessage("What would you like to name this replay?")
+                                        .setView(editText)
+                                        .setPositiveButton("Submit") { _, _ ->
+                                            categorizeAdvancedVM.userSaveReplay(editText.easyText, false)
+                                        }
+                                        .setNegativeButton("Cancel") { _, _ -> }
+                                        .show()
+                                } else
+                                    errorSubject.onNext(InvalidCategoryAmounts(""))
+                            }
+                        )
+                    else null,
+                    if (categorizeAdvancedType == CategorizeAdvancedType.CREATE_FUTURE)
+                        ButtonItem(
+                            title = "Save Future",
+                            onClick = {
+                                if (categorizeAdvancedVM.areCurrentCAsValid.value!!) {
+                                    val editText = EditText(requireContext())
+                                    AlertDialog.Builder(requireContext())
+                                        .setMessage("What would you like to name this future?")
+                                        .setView(editText)
+                                        .setPositiveButton("Submit") { _, _ ->
+                                            categorizeAdvancedVM.userSaveFuture(editText.easyText)
+                                        }
+                                        .setNegativeButton("Cancel") { _, _ -> }
+                                        .show()
+                                } else
+                                    errorSubject.onNext(InvalidCategoryAmounts(""))
+                            }
+                        )
+                    else null,
+                    if (replayOrFuture is IReplay)
+                        ButtonItem(
+                            title = "Delete Replay",
+                            onClick = {
+                                AlertDialog.Builder(requireContext())
+                                    .setMessage("Do you really want to delete this replay?")
+                                    .setPositiveButton("Yes") { _, _ ->
+                                        categorizeAdvancedVM.userDeleteReplay(replayOrFuture.name)
+                                    }
+                                    .setNegativeButton("No") { _, _ -> }
+                                    .show()
+                            }
+                        )
+                    else null,
+                    if (transactionToPushBox.first != null)
+                        ButtonItem(
+                            title = "Submit",
+                            onClick = {
+                                categorizeAdvancedVM.userSubmitCategorization()
                                 nav.navigateUp()
                             }
-                            .setNegativeButton("No") { _, _ -> }
-                            .show()
-                    }
-                )
-            else null,
-            ButtonItem(
-                title = "Submit",
-                onClick = {
-                    categorizeAdvancedVM.userSubmitCategorization()
-                    nav.navigateUp()
-                }
-            ),
-        ).reversed()
+                        )
+                    else null,
+                ).reversed()
+            }
     }
 
-    enum class Key { REPLAY_NAME }
+    enum class Key { CategorizeAdvancedType }
+    enum class CategorizeAdvancedType { CREATE_REPLAY, CREATE_FUTURE, EDIT }
     companion object {
-        private var _args: Triple<Transaction?, IReplay?, CategorySelectionVM>? = null
+        private var _args: Triple<Transaction?, IReplayOrFuture?, CategorySelectionVM>? = null
         fun navTo(
             source: Any,
             nav: NavController,
             categorySelectionVM: CategorySelectionVM,
             transaction: Transaction?,
-            replay: IReplay?,
+            replayOrFuture: IReplayOrFuture?,
+            categorizeAdvancedType: CategorizeAdvancedType
         ) {
             _args = Triple(
                 transaction,
-                replay,
+                replayOrFuture,
                 categorySelectionVM
             )
             nav.navigate(
@@ -251,7 +321,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                     is CategorizeFrag -> R.id.action_categorizeFrag_to_categorizeAdvancedFrag
                     else -> R.id.categorizeAdvancedFrag
                 },
-                Bundle().apply { putString(Key.REPLAY_NAME.name, replay?.name) }
+                Bundle().apply { putInt(Key.CategorizeAdvancedType.name, categorizeAdvancedType.ordinal) }
             )
         }
     }

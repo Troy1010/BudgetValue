@@ -2,8 +2,10 @@ package com.tminus1010.budgetvalue.transactions
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
+import com.tminus1010.budgetvalue._core.InvalidSearchText
 import com.tminus1010.budgetvalue._core.categoryComparator
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
+import com.tminus1010.budgetvalue._core.extensions.unbox
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulas
@@ -11,19 +13,20 @@ import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay.ReplayDomain
+import com.tminus1010.budgetvalue.replay.data.FutureRepo
 import com.tminus1010.budgetvalue.replay.data.ReplayRepo
+import com.tminus1010.budgetvalue.replay.models.BasicFuture
 import com.tminus1010.budgetvalue.replay.models.BasicReplay
-import com.tminus1010.budgetvalue.replay.models.IReplay
+import com.tminus1010.budgetvalue.replay.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
-import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
-import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
@@ -36,22 +39,22 @@ class CategorizeAdvancedVM @Inject constructor(
     private val saveTransactionDomain: SaveTransactionDomain,
     private val replayDomain: ReplayDomain,
     private val replayRepo: ReplayRepo,
+    private val futureRepo: FutureRepo,
     private val errorSubject: Subject<Throwable>,
-    transactionsDomain: TransactionsDomain,
 ) : ViewModel() {
-    // # Setup
-    fun setup(_transaction: Transaction?, _replay: IReplay?, categorySelectionVM: CategorySelectionVM) {
+    // # Input
+    private val shouldLogInput = true
+    fun setup(_transaction: Transaction?, _replay: IReplayOrFuture?, categorySelectionVM: CategorySelectionVM) {
+        if (shouldLogInput) logz("_transaction:$_transaction _replay:$_replay categorySelectionVM:$categorySelectionVM")
         _categorySelectionVM = categorySelectionVM
-        replay.onNext(Box(_replay))
-        _transaction?.also { transaction.onNext(it) }
+        _replayOrFuture.onNext(Box(_replay))
+        transaction.onNext(Box(_transaction))
         userCategoryAmounts.clear()
         userCategoryIsPercentage.clear()
     }
-    private lateinit var _categorySelectionVM: CategorySelectionVM
 
-    // # Input
     fun userFillIntoCategory(category: Category) {
-        val amount = transactionToPush.value!!.calcFillAmount(category)
+        val amount = categoryAmountFormulas.value!!.calcFillAmount(category, transactionToPush.unbox.amount)
         if (amount.compareTo(BigDecimal.ZERO) == 0)
             userCategoryAmounts.remove(category)
         else
@@ -74,7 +77,7 @@ class CategorizeAdvancedVM @Inject constructor(
     }
 
     fun userSubmitCategorization() {
-        saveTransactionDomain.saveTransaction(transactionToPush.value!!)
+        saveTransactionDomain.saveTransaction(transactionToPush.unbox)
             .andThen(_categorySelectionVM.clearSelection())
             .observe(disposables)
     }
@@ -82,7 +85,7 @@ class CategorizeAdvancedVM @Inject constructor(
     fun userSaveReplay(replayName: String, isAutoReplay: Boolean) {
         val replay = BasicReplay(
             name = replayName,
-            description = transaction.value!!.description,
+            description = transaction.unbox.description,
             categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
             isAutoReplay = isAutoReplay,
             autoFillCategory = autoFillCategory.value!!,
@@ -101,20 +104,56 @@ class CategorizeAdvancedVM @Inject constructor(
             })
     }
 
+    fun userSaveFuture(replayName: String) {
+        Single.fromCallable {
+            if (userSearchText.value.isEmpty()) InvalidSearchText("Search text was empty")
+            BasicFuture(
+                name = replayName,
+                searchText = userSearchText.value,
+                categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
+                autoFillCategory = autoFillCategory.value!!,
+            )
+        }
+            .flatMapCompletable { future ->
+                Rx.merge(
+                    listOfNotNull(
+                        futureRepo.add(future),
+                        _categorySelectionVM.clearSelection(),
+                    )
+                )
+            }
+            .observe(disposables, onComplete = {
+                navUp.onNext(Unit)
+            }, onError = {
+                errorSubject.onNext(it)
+            })
+    }
+
     fun userDeleteReplay(replayName: String) {
-        replayRepo.delete(replayName).observe(disposables)
+        replayRepo.delete(replayName)
+            .observe(disposables, onComplete = {
+                navUp.onNext(Unit)
+            }, onError = {
+                errorSubject.onNext(it)
+            })
     }
 
     fun userSetCategoryForAutoFill(category: Category) {
         userAutoFillCategory.onNext(category)
     }
 
+    fun userSetSearchText(s: String) {
+        userSearchText.onNext(s)
+    }
+
     // # Internal
     private val userCategoryAmounts = SourceHashMap<Category, BigDecimal>()
     private val userCategoryIsPercentage = SourceHashMap<Category, Boolean>()
     private val userAutoFillCategory = BehaviorSubject.createDefault(CategoriesDomain.defaultCategory)!!
-    private val transaction = BehaviorSubject.create<Transaction>()
-    private val replay = BehaviorSubject.createDefault<Box<IReplay?>>(Box(null))
+    private val userSearchText = BehaviorSubject.createDefault("")!!
+    private val transaction = BehaviorSubject.createDefault(Box<Transaction?>(null))
+    private val _replayOrFuture = BehaviorSubject.createDefault(Box<IReplayOrFuture?>(null))
+    private lateinit var _categorySelectionVM: CategorySelectionVM
     private val userCategoryAmountFormulas =
         Rx.combineLatest(
             userCategoryAmounts.observable,
@@ -131,10 +170,18 @@ class CategorizeAdvancedVM @Inject constructor(
             }
 
     // # Output
+    val replayOrFuture = _replayOrFuture
+    val amountToCategorizeMsg =
+        transaction
+            .map { transactionBox ->
+                val transaction = transactionBox.first
+                Box(transaction?.let { "Amount to split: $${transaction.amount}" })
+            }
+            .nonLazyCache(disposables)
     val autoFillCategory: Observable<Category> =
         Observable.merge(
             userAutoFillCategory,
-            replay.map { it.first?.autoFillCategory ?: CategoriesDomain.defaultCategory },
+            _replayOrFuture.map { it.first?.autoFillCategory ?: CategoriesDomain.defaultCategory },
         )
             .distinctUntilChanged()
             .nonLazyCache(disposables)
@@ -142,13 +189,15 @@ class CategorizeAdvancedVM @Inject constructor(
         Rx.combineLatest(
             transaction,
             autoFillCategory,
-            replay,
+            _replayOrFuture,
             userCategoryAmountFormulas
         )
-            .map { (transaction, autoFillCategory, replay, userCategoryAmountFormulas) ->
-                CategoryAmountFormulas(replay.first?.categorize(transaction)?.categoryAmounts?.mapValues { AmountFormula.Value(it.value) } ?: emptyMap())
+            .map { (transactionBox, autoFillCategory, replayBox, userCategoryAmountFormulas) ->
+                val transaction = transactionBox.first
+                val replay = replayBox.first
+                CategoryAmountFormulas(replay?.categoryAmountFormulas ?: emptyMap())
                     .plus(userCategoryAmountFormulas.filter { !it.value.isZero() })
-                    .fillIntoCategory(autoFillCategory, transaction.amount)
+                    .run { if (transaction != null) fillIntoCategory(autoFillCategory, transaction.amount) else this }
             }
             .startWithItem(CategoryAmountFormulas())
             .nonLazyCache(disposables)
@@ -165,21 +214,22 @@ class CategorizeAdvancedVM @Inject constructor(
             }
             .map { it.toSortedMap(categoryComparator) }
             .nonLazyCache(disposables)
-    private val transactionToPush =
+    val transactionToPush =
         Rx.combineLatest(
-            transactionsDomain.firstUncategorizedSpend.unbox(),
+            transaction,
             categoryAmountFormulas,
         )
-            .map { (transaction, categoryAmountFormulas) ->
-                transaction.categorize(categoryAmountFormulas.mapValues { it.value.calcAmount(transaction.amount) })
+            .map { (transactionBox, categoryAmountFormulas) ->
+                val transaction = transactionBox.first
+                Box(transaction?.categorize(categoryAmountFormulas.mapValues { it.value.calcAmount(transaction.amount) }))
             }
             .nonLazyCache(disposables)
-    val defaultAmount: Observable<String> =
+    val defaultAmount: Observable<Box<String?>> =
         transactionToPush
-            .map { it.defaultAmount.toString() }
+            .map { Box(it.first?.defaultAmount?.toString()) }
     val areCurrentCAsValid: Observable<Boolean> =
-        transactionToPush
-            .map { it.categoryAmounts != emptyMap<Category, BigDecimal>() }
+        categoryAmountFormulas
+            .map { it.isNotEmpty() }
             .nonLazyCache(disposables)
     val navUp = PublishSubject.create<Unit>()!!
 }
