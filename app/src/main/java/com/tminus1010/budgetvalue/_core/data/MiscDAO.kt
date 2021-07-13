@@ -4,6 +4,7 @@ import androidx.room.*
 import com.tminus1010.budgetvalue.accounts.models.AccountDTO
 import com.tminus1010.budgetvalue.plans.models.PlanDTO
 import com.tminus1010.budgetvalue.reconciliations.models.ReconciliationDTO
+import com.tminus1010.budgetvalue.replay.models.BasicFutureDTO
 import com.tminus1010.budgetvalue.replay.models.BasicReplayDTO
 import com.tminus1010.budgetvalue.transactions.models.TransactionDTO
 import io.reactivex.rxjava3.core.Completable
@@ -119,4 +120,15 @@ interface MiscDAO {
 
     @Query("DELETE FROM BasicReplayDTO WHERE name=:basicReplayName")
     fun delete(basicReplayName: String): Completable
+
+    // # Futures
+
+    @Query("select * from BasicFutureDTO")
+    fun fetchBasicFutures(): Observable<List<BasicFutureDTO>>
+
+    @Insert
+    fun add(basicFutureDTO: BasicFutureDTO): Completable
+
+    @Query("DELETE FROM BasicFutureDTO WHERE name=:basicFutureName")
+    fun deleteFuture(basicFutureName: String): Completable
 }

@@ -25,6 +25,7 @@ import com.tminus1010.budgetvalue.databinding.FragCategorizeAdvancedBinding
 import com.tminus1010.budgetvalue.databinding.ItemCheckboxBinding
 import com.tminus1010.budgetvalue.databinding.ItemPercentageOrMoneyEditTextBinding
 import com.tminus1010.budgetvalue.replay.models.IReplay
+import com.tminus1010.budgetvalue.replay.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.CategorizeAdvancedVM
 import com.tminus1010.budgetvalue.transactions.CategorizeVM
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
@@ -233,13 +234,13 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
 
     enum class Key { REPLAY_NAME }
     companion object {
-        private var _args: Triple<Transaction?, IReplay?, CategorySelectionVM>? = null
+        private var _args: Triple<Transaction?, IReplayOrFuture?, CategorySelectionVM>? = null
         fun navTo(
             source: Any,
             nav: NavController,
             categorySelectionVM: CategorySelectionVM,
             transaction: Transaction?,
-            replay: IReplay?,
+            replay: IReplayOrFuture?,
         ) {
             _args = Triple(
                 transaction,

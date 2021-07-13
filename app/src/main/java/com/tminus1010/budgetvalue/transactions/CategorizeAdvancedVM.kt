@@ -13,7 +13,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay.ReplayDomain
 import com.tminus1010.budgetvalue.replay.data.ReplayRepo
 import com.tminus1010.budgetvalue.replay.models.BasicReplay
-import com.tminus1010.budgetvalue.replay.models.IReplay
+import com.tminus1010.budgetvalue.replay.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
@@ -40,9 +40,9 @@ class CategorizeAdvancedVM @Inject constructor(
     transactionsDomain: TransactionsDomain,
 ) : ViewModel() {
     // # Setup
-    fun setup(_transaction: Transaction?, _replay: IReplay?, categorySelectionVM: CategorySelectionVM) {
+    fun setup(_transaction: Transaction?, _replay: IReplayOrFuture?, categorySelectionVM: CategorySelectionVM) {
         _categorySelectionVM = categorySelectionVM
-        replay.onNext(Box(_replay))
+        replayOrFuture.onNext(Box(_replay))
         _transaction?.also { transaction.onNext(it) }
         userCategoryAmounts.clear()
         userCategoryIsPercentage.clear()
@@ -114,7 +114,7 @@ class CategorizeAdvancedVM @Inject constructor(
     private val userCategoryIsPercentage = SourceHashMap<Category, Boolean>()
     private val userAutoFillCategory = BehaviorSubject.createDefault(CategoriesDomain.defaultCategory)!!
     private val transaction = BehaviorSubject.create<Transaction>()
-    private val replay = BehaviorSubject.createDefault<Box<IReplay?>>(Box(null))
+    private val replayOrFuture = BehaviorSubject.createDefault<Box<IReplayOrFuture?>>(Box(null))
     private val userCategoryAmountFormulas =
         Rx.combineLatest(
             userCategoryAmounts.observable,
@@ -134,7 +134,7 @@ class CategorizeAdvancedVM @Inject constructor(
     val autoFillCategory: Observable<Category> =
         Observable.merge(
             userAutoFillCategory,
-            replay.map { it.first?.autoFillCategory ?: CategoriesDomain.defaultCategory },
+            replayOrFuture.map { it.first?.autoFillCategory ?: CategoriesDomain.defaultCategory },
         )
             .distinctUntilChanged()
             .nonLazyCache(disposables)
@@ -142,7 +142,7 @@ class CategorizeAdvancedVM @Inject constructor(
         Rx.combineLatest(
             transaction,
             autoFillCategory,
-            replay,
+            replayOrFuture,
             userCategoryAmountFormulas
         )
             .map { (transaction, autoFillCategory, replay, userCategoryAmountFormulas) ->

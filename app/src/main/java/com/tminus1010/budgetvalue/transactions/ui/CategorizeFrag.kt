@@ -123,7 +123,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                                 source = this,
                                 nav = nav,
                                 categorySelectionVM = categorySelectionVM,
-                                transaction = transactionsDomain.firstUncategorizedSpend.value!!.first!!,
+                                transaction = null,
                                 replay = null,
                             )
                         }
