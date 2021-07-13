@@ -70,7 +70,7 @@ class CategorizeVM @Inject constructor(
             }!!
     val isUndoAvailable = saveTransactionDomain.isUndoAvailable
     val isRedoAvailable = saveTransactionDomain.isRedoAvailable
-    val amountToCategorize =
+    val amountToCategorizeMsg =
         transactionsDomain.firstUncategorizedSpend
             .unbox()
             .map { "Amount to split: $${it.amount}" }
