@@ -21,10 +21,7 @@ import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.databinding.FragCategorizeAdvancedBinding
-import com.tminus1010.budgetvalue.databinding.ItemCheckboxBinding
-import com.tminus1010.budgetvalue.databinding.ItemPercentageOrMoneyEditTextBinding
-import com.tminus1010.budgetvalue.databinding.ItemTextViewBinding
+import com.tminus1010.budgetvalue.databinding.*
 import com.tminus1010.budgetvalue.replay.models.IReplay
 import com.tminus1010.budgetvalue.replay.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.CategorizeAdvancedVM
@@ -81,22 +78,30 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 throw it
         }
         // # TMTableView OtherInput
-        Observable.just(Unit)
-            .map {
-                listOf(
+        vb.tmTableViewOtherInput.easyVisibility = categorizeAdvancedType == CategorizeAdvancedType.CREATE_FUTURE
+        val searchTextRecipeFactory = ViewItemRecipeFactory3<ItemEditTextBinding, Unit?>(
+            { ItemEditTextBinding.inflate(LayoutInflater.from(requireContext())) },
+            { d, vb, lifecycle ->
+                vb.edittext.onDone { categorizeAdvancedVM.userSetSearchText(it) }
+            }
+        )
+        if (categorizeAdvancedType == CategorizeAdvancedType.CREATE_FUTURE)
+            Observable.just(Unit)
+                .map {
                     listOf(
-                        recipeFactories.textView.createOne("Input"),
-                        recipeFactories.textView.createOne("userInput"),
-                    ),
-                )
-            }
-            .observe(viewLifecycleOwner) { recipeGrid ->
-                vb.tmTableViewOtherInput.initialize(
-                    recipeGrid = recipeGrid,
-                    shouldFitItemWidthsInsideTable = true,
-                    rowFreezeCount = 1,
-                )
-            }
+                        listOf(
+                            recipeFactories.textView.createOne("Search Text"),
+                            searchTextRecipeFactory.createOne(null),
+                        ),
+                    )
+                }
+                .observe(viewLifecycleOwner) { recipeGrid ->
+                    vb.tmTableViewOtherInput.initialize(
+                        recipeGrid = recipeGrid,
+                        shouldFitItemWidthsInsideTable = true,
+                        rowFreezeCount = 1,
+                    )
+                }
 
         // # TMTableView CategoryAmounts
         val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemPercentageOrMoneyEditTextBinding, Map.Entry<Category, AmountFormula>>(

@@ -135,10 +135,15 @@ class CategorizeAdvancedVM @Inject constructor(
         userAutoFillCategory.onNext(category)
     }
 
+    fun userSetSearchText(s: String) {
+        userSearchText.onNext(s)
+    }
+
     // # Internal
     private val userCategoryAmounts = SourceHashMap<Category, BigDecimal>()
     private val userCategoryIsPercentage = SourceHashMap<Category, Boolean>()
     private val userAutoFillCategory = BehaviorSubject.createDefault(CategoriesDomain.defaultCategory)!!
+    private val userSearchText = BehaviorSubject.createDefault("")!!
     private val transaction = BehaviorSubject.createDefault(Box<Transaction?>(null))
     private val _replayOrFuture = BehaviorSubject.createDefault(Box<IReplayOrFuture?>(null))
     private lateinit var _categorySelectionVM: CategorySelectionVM
