@@ -8,7 +8,7 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import java.math.BigDecimal
 
 class CategoryAmountFormulas private constructor(hashMap: HashMap<Category, AmountFormula> = HashMap()) : Map<Category, AmountFormula> by hashMap {
-    constructor(map: Map<Category, AmountFormula> = emptyMap()) : this(HashMap(map))
+    constructor(map: Map<Category, AmountFormula> = emptyMap()) : this(HashMap(map.filter { !it.value.isZero() }))
 
     fun Map<Category, AmountFormula>.calcFillAmountFormula(fillCategory: Category, amount: BigDecimal): AmountFormula {
         return AmountFormula(
