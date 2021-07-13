@@ -42,11 +42,18 @@ class CategorizeAdvancedVM @Inject constructor(
 ) : ViewModel() {
     // # Input
     fun userFillIntoCategory(category: Category) {
-        userCategoryAmounts[category] = transactionToPush.value!!.calcFillAmount(category)
+        val amount = transactionToPush.value!!.calcFillAmount(category)
+        if (amount.compareTo(BigDecimal.ZERO) == 0)
+            userCategoryAmounts.remove(category)
+        else
+            userCategoryAmounts[category] = amount
     }
 
     fun userInputCA(category: Category, amount: BigDecimal) {
-        userCategoryAmounts[category] = amount
+        if (amount.compareTo(BigDecimal.ZERO) == 0)
+            userCategoryAmounts.remove(category)
+        else
+            userCategoryAmounts[category] = amount
     }
 
     fun userSwitchCategoryToPercentage(category: Category) {
@@ -143,7 +150,7 @@ class CategorizeAdvancedVM @Inject constructor(
                                 .let { it.copy(autoFillCategory to it.calcFillAmountFormula(autoFillCategory, transaction.amount)) }
                     }
             }
-            .doOnNext { if (it.any { it.value.percentage == BigDecimal.ZERO && it.value.amount == BigDecimal.ZERO }) error("") }
+            .doOnNext { if (it.any { it.value.percentage == BigDecimal.ZERO && it.value.amount == BigDecimal.ZERO }) error("found an empty categoryAmountFormula") }
             .startWithItem(emptyMap())
             .nonLazyCache(disposables)
     val categoryAmountFormulasToShow =
