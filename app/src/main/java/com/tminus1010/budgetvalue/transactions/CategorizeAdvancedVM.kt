@@ -42,7 +42,7 @@ class CategorizeAdvancedVM @Inject constructor(
     fun setup(_transaction: Transaction?, _replay: IReplayOrFuture?, categorySelectionVM: CategorySelectionVM) {
         if (shouldLogInput) logz("_transaction:$_transaction _replay:$_replay categorySelectionVM:$categorySelectionVM")
         _categorySelectionVM = categorySelectionVM
-        replayOrFuture.onNext(Box(_replay))
+        _replayOrFuture.onNext(Box(_replay))
         transaction.onNext(Box(_transaction))
         userCategoryAmounts.clear()
         userCategoryIsPercentage.clear()
@@ -117,7 +117,7 @@ class CategorizeAdvancedVM @Inject constructor(
     private val userCategoryIsPercentage = SourceHashMap<Category, Boolean>()
     private val userAutoFillCategory = BehaviorSubject.createDefault(CategoriesDomain.defaultCategory)!!
     private val transaction = BehaviorSubject.createDefault(Box<Transaction?>(null))
-    private val replayOrFuture = BehaviorSubject.createDefault(Box<IReplayOrFuture?>(null))
+    private val _replayOrFuture = BehaviorSubject.createDefault(Box<IReplayOrFuture?>(null))
     private lateinit var _categorySelectionVM: CategorySelectionVM
     private val userCategoryAmountFormulas =
         Rx.combineLatest(
@@ -135,6 +135,7 @@ class CategorizeAdvancedVM @Inject constructor(
             }
 
     // # Output
+    val replayOrFuture = _replayOrFuture
     val amountToCategorizeMsg =
         transaction
             .map { transactionBox ->
@@ -145,7 +146,7 @@ class CategorizeAdvancedVM @Inject constructor(
     val autoFillCategory: Observable<Category> =
         Observable.merge(
             userAutoFillCategory,
-            replayOrFuture.map { it.first?.autoFillCategory ?: CategoriesDomain.defaultCategory },
+            _replayOrFuture.map { it.first?.autoFillCategory ?: CategoriesDomain.defaultCategory },
         )
             .distinctUntilChanged()
             .nonLazyCache(disposables)
@@ -153,7 +154,7 @@ class CategorizeAdvancedVM @Inject constructor(
         Rx.combineLatest(
             transaction,
             autoFillCategory,
-            replayOrFuture,
+            _replayOrFuture,
             userCategoryAmountFormulas
         )
             .map { (transactionBox, autoFillCategory, replayBox, userCategoryAmountFormulas) ->

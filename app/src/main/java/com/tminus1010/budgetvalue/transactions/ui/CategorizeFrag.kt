@@ -124,14 +124,14 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                                 nav = nav,
                                 categorySelectionVM = categorySelectionVM,
                                 transaction = null,
-                                replay = null,
+                                replayOrFuture = null,
                             )
                         }
                     )
                 else null,
                 if (inSelectionMode)
                     ButtonItem(
-                        title = "Advanced",
+                        title = "Create Replay",
                         isEnabled = categorizeVM.isTransactionAvailable,
                         onClick = {
                             CategorizeAdvancedFrag.navTo(
@@ -139,7 +139,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                                 nav = nav,
                                 categorySelectionVM = categorySelectionVM,
                                 transaction = transactionsDomain.firstUncategorizedSpend.value!!.first!!,
-                                replay = null,
+                                replayOrFuture = null,
                             )
                         }
                     )
@@ -174,7 +174,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                                         nav = nav,
                                         categorySelectionVM = categorySelectionVM,
                                         transaction = transactionsDomain.firstUncategorizedSpend.value!!.first!!,
-                                        replay = replay,
+                                        replayOrFuture = replay,
                                     )
                                 })
                         })
