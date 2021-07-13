@@ -16,6 +16,7 @@ import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonItem
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuItem
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
+import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipe3
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
@@ -82,10 +83,17 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
         }
         // # TMTableView OtherInput
         vb.tmTableViewOtherInput.easyVisibility = categorizeAdvancedType == CategorizeAdvancedType.CREATE_FUTURE
-        val searchTextRecipeFactory = ViewItemRecipeFactory3<ItemEditTextBinding, Unit?>(
+        val searchTextRecipe = ViewItemRecipe3<ItemEditTextBinding, Unit?>(
             { ItemEditTextBinding.inflate(LayoutInflater.from(requireContext())) },
-            { d, vb, lifecycle ->
+            { _, vb, _ ->
                 vb.edittext.onDone { categorizeAdvancedVM.userSetSearchText(it) }
+            }
+        )
+        val totalGuessRecipe = ViewItemRecipe3<ItemEditTextBinding, Unit?>(
+            { ItemEditTextBinding.inflate(LayoutInflater.from(requireContext())) },
+            { _, vb, _ ->
+                vb.edittext.setText("0")
+                vb.edittext.onDone { categorizeAdvancedVM.userSetTotalGuess(it.toMoneyBigDecimal()) }
             }
         )
         if (categorizeAdvancedType == CategorizeAdvancedType.CREATE_FUTURE)
@@ -94,7 +102,11 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                     listOf(
                         listOf(
                             recipeFactories.textView.createOne("Search Text"),
-                            searchTextRecipeFactory.createOne(null),
+                            searchTextRecipe,
+                        ),
+                        listOf(
+                            recipeFactories.textView.createOne("Total Guess"),
+                            totalGuessRecipe,
                         ),
                     )
                 }

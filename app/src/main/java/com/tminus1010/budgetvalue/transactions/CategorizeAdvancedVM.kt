@@ -5,6 +5,7 @@ import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.InvalidSearchText
 import com.tminus1010.budgetvalue._core.categoryComparator
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
+import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.extensions.unbox
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
@@ -146,11 +147,16 @@ class CategorizeAdvancedVM @Inject constructor(
         userSearchText.onNext(s)
     }
 
+    fun userSetTotalGuess(bigDecimal: BigDecimal) {
+        userTotalGuess.onNext(bigDecimal)
+    }
+
     // # Internal
     private val userCategoryAmounts = SourceHashMap<Category, BigDecimal>()
     private val userCategoryIsPercentage = SourceHashMap<Category, Boolean>()
     private val userAutoFillCategory = BehaviorSubject.createDefault(CategoriesDomain.defaultCategory)!!
     private val userSearchText = BehaviorSubject.createDefault("")!!
+    private val userTotalGuess = BehaviorSubject.createDefault(BigDecimal.ZERO)!!
     private val transaction = BehaviorSubject.createDefault(Box<Transaction?>(null))
     private val _replayOrFuture = BehaviorSubject.createDefault(Box<IReplayOrFuture?>(null))
     private lateinit var _categorySelectionVM: CategorySelectionVM
