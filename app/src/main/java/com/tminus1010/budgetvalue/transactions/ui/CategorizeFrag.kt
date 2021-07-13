@@ -125,6 +125,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                                 categorySelectionVM = categorySelectionVM,
                                 transaction = null,
                                 replayOrFuture = null,
+                                categorizeAdvancedType = CategorizeAdvancedFrag.CategorizeAdvancedType.CREATE_FUTURE,
                             )
                         }
                     )
@@ -140,6 +141,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                                 categorySelectionVM = categorySelectionVM,
                                 transaction = transactionsDomain.firstUncategorizedSpend.value!!.first!!,
                                 replayOrFuture = null,
+                                categorizeAdvancedType = CategorizeAdvancedFrag.CategorizeAdvancedType.CREATE_REPLAY,
                             )
                         }
                     )
@@ -175,6 +177,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                                         categorySelectionVM = categorySelectionVM,
                                         transaction = transactionsDomain.firstUncategorizedSpend.value!!.first!!,
                                         replayOrFuture = replay,
+                                        categorizeAdvancedType = CategorizeAdvancedFrag.CategorizeAdvancedType.EDIT,
                                     )
                                 })
                         })

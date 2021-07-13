@@ -51,6 +51,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
         .flatMap { Observable.just(false).delay(1, TimeUnit.SECONDS).startWithItem(true) }
         .startWithItem(false)
         .replay(1).autoConnect()
+    private val categorizeAdvancedType by lazy { CategorizeAdvancedType.values()[arguments?.getInt(Key.CategorizeAdvancedType.name)!!] }
 
     @Inject
     lateinit var errorSubject: Subject<Throwable>
@@ -184,7 +185,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
             .observe(viewLifecycleOwner) { replayOrFutureBox ->
                 val replayOrFuture = replayOrFutureBox.first
                 vb.buttonsview.buttons = listOfNotNull(
-                    if (replayOrFuture == null)
+                    if (categorizeAdvancedType == CategorizeAdvancedType.CREATE_REPLAY)
                         ButtonItem(
                             title = "Setup Auto Replay",
                             onClick = {
@@ -203,7 +204,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                             }
                         )
                     else null,
-                    if (replayOrFuture == null)
+                    if (categorizeAdvancedType == CategorizeAdvancedType.CREATE_REPLAY)
                         ButtonItem(
                             title = "Save Replay",
                             onClick = {
@@ -214,6 +215,25 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                                         .setView(editText)
                                         .setPositiveButton("Submit") { _, _ ->
                                             categorizeAdvancedVM.userSaveReplay(editText.easyText, false)
+                                        }
+                                        .setNegativeButton("Cancel") { _, _ -> }
+                                        .show()
+                                } else
+                                    errorSubject.onNext(InvalidCategoryAmounts(""))
+                            }
+                        )
+                    else null,
+                    if (categorizeAdvancedType == CategorizeAdvancedType.CREATE_FUTURE)
+                        ButtonItem(
+                            title = "Save Future",
+                            onClick = {
+                                if (categorizeAdvancedVM.areCurrentCAsValid.value!!) {
+                                    val editText = EditText(requireContext())
+                                    AlertDialog.Builder(requireContext())
+                                        .setMessage("What would you like to name this future?")
+                                        .setView(editText)
+                                        .setPositiveButton("Submit") { _, _ ->
+                                            categorizeAdvancedVM.userSaveFuture(editText.easyText)
                                         }
                                         .setNegativeButton("Cancel") { _, _ -> }
                                         .show()
@@ -247,6 +267,8 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
             }
     }
 
+    enum class Key { CategorizeAdvancedType }
+    enum class CategorizeAdvancedType { CREATE_REPLAY, CREATE_FUTURE, EDIT }
     companion object {
         private var _args: Triple<Transaction?, IReplayOrFuture?, CategorySelectionVM>? = null
         fun navTo(
@@ -255,6 +277,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
             categorySelectionVM: CategorySelectionVM,
             transaction: Transaction?,
             replayOrFuture: IReplayOrFuture?,
+            categorizeAdvancedType: CategorizeAdvancedType
         ) {
             _args = Triple(
                 transaction,
@@ -265,7 +288,8 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 when (source) {
                     is CategorizeFrag -> R.id.action_categorizeFrag_to_categorizeAdvancedFrag
                     else -> R.id.categorizeAdvancedFrag
-                }
+                },
+                Bundle().apply { putInt(Key.CategorizeAdvancedType.name, categorizeAdvancedType.ordinal) }
             )
         }
     }

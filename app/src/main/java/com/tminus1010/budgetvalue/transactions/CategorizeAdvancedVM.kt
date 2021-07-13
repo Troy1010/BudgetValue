@@ -12,7 +12,9 @@ import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay.ReplayDomain
+import com.tminus1010.budgetvalue.replay.data.FutureRepo
 import com.tminus1010.budgetvalue.replay.data.ReplayRepo
+import com.tminus1010.budgetvalue.replay.models.BasicFuture
 import com.tminus1010.budgetvalue.replay.models.BasicReplay
 import com.tminus1010.budgetvalue.replay.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
@@ -35,6 +37,7 @@ class CategorizeAdvancedVM @Inject constructor(
     private val saveTransactionDomain: SaveTransactionDomain,
     private val replayDomain: ReplayDomain,
     private val replayRepo: ReplayRepo,
+    private val futureRepo: FutureRepo,
     private val errorSubject: Subject<Throwable>,
 ) : ViewModel() {
     // # Input
@@ -89,6 +92,26 @@ class CategorizeAdvancedVM @Inject constructor(
             listOfNotNull(
                 if (replay.isAutoReplay) replayDomain.applyReplayToAllTransactions(replay) else null,
                 replayRepo.add(replay),
+                _categorySelectionVM.clearSelection(),
+            )
+        )
+            .observe(disposables, onComplete = {
+                navUp.onNext(Unit)
+            }, onError = {
+                errorSubject.onNext(it)
+            })
+    }
+
+    fun userSaveFuture(replayName: String) {
+        val future = BasicFuture(
+            name = replayName,
+            description = transaction.unbox.description,
+            categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
+            autoFillCategory = autoFillCategory.value!!,
+        )
+        Rx.merge(
+            listOfNotNull(
+                futureRepo.add(future),
                 _categorySelectionVM.clearSelection(),
             )
         )
