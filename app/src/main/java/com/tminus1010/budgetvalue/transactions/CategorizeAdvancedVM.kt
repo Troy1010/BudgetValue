@@ -2,6 +2,7 @@ package com.tminus1010.budgetvalue.transactions
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
+import com.tminus1010.budgetvalue._core.InvalidSearchText
 import com.tminus1010.budgetvalue._core.categoryComparator
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.extensions.unbox
@@ -25,6 +26,7 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
@@ -103,18 +105,23 @@ class CategorizeAdvancedVM @Inject constructor(
     }
 
     fun userSaveFuture(replayName: String) {
-        val future = BasicFuture(
-            name = replayName,
-            description = transaction.unbox.description,
-            categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
-            autoFillCategory = autoFillCategory.value!!,
-        )
-        Rx.merge(
-            listOfNotNull(
-                futureRepo.add(future),
-                _categorySelectionVM.clearSelection(),
+        Single.fromCallable {
+            if (userSearchText.value.isEmpty()) InvalidSearchText("Search text was empty")
+            BasicFuture(
+                name = replayName,
+                searchText = userSearchText.value,
+                categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
+                autoFillCategory = autoFillCategory.value!!,
             )
-        )
+        }
+            .flatMapCompletable { future ->
+                Rx.merge(
+                    listOfNotNull(
+                        futureRepo.add(future),
+                        _categorySelectionVM.clearSelection(),
+                    )
+                )
+            }
             .observe(disposables, onComplete = {
                 navUp.onNext(Unit)
             }, onError = {

@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 data class BasicFutureDTO(
     @PrimaryKey
     val name: String,
-    val description: String,
+    val searchText: String,
     val categoryAmountFormulasStr: String,
     val autoFillCategoryName: String,
 )

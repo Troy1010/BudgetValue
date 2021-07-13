@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.InvalidCategoryAmounts
+import com.tminus1010.budgetvalue._core.InvalidSearchText
 import com.tminus1010.budgetvalue._core.extensions.*
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonItem
@@ -74,6 +75,8 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
         errorSubject.observe(viewLifecycleOwner) {
             if (it is InvalidCategoryAmounts)
                 toast("Invalid category amounts")
+            else if (it is InvalidSearchText)
+                toast("Invalid search text")
             else
                 throw it
         }
