@@ -120,12 +120,12 @@ class CategorizeAdvancedVM @Inject constructor(
             userCategoryIsPercentage.observable,
         )
             .map { (userCategoryAmounts, userCategoryIsPercentage) ->
-                userCategoryAmounts
-                    .mapValues {
-                        AmountFormula(
-                            amount = if (userCategoryIsPercentage[it.key] ?: false) BigDecimal.ZERO else it.value,
-                            percentage = if (userCategoryIsPercentage[it.key] ?: false) it.value else BigDecimal.ZERO
-                        )
+                (userCategoryAmounts.keys + userCategoryIsPercentage.keys)
+                    .associateWith {
+                        if (userCategoryIsPercentage[it] ?: false)
+                            AmountFormula.Percentage(userCategoryAmounts[it] ?: BigDecimal.ZERO)
+                        else
+                            AmountFormula.Value(userCategoryAmounts[it] ?: BigDecimal.ZERO)
                     }
             }
 
@@ -145,7 +145,7 @@ class CategorizeAdvancedVM @Inject constructor(
             userCategoryAmountFormulas
         )
             .map { (transaction, autoFillCategory, replay, userCategoryAmountFormulas) ->
-                CategoryAmountFormulas(replay.first?.categorize(transaction)?.categoryAmounts?.mapValues { AmountFormula(it.value) } ?: emptyMap())
+                CategoryAmountFormulas(replay.first?.categorize(transaction)?.categoryAmounts?.mapValues { AmountFormula.Value(it.value) } ?: emptyMap())
                     .plus(userCategoryAmountFormulas)
                     .fillIntoCategory(autoFillCategory, transaction.amount)
             }
@@ -158,7 +158,7 @@ class CategorizeAdvancedVM @Inject constructor(
         )
             .map { (categoryAmountFormulas, selectedCategories) ->
                 selectedCategories
-                    .associateWith { AmountFormula(BigDecimal.ZERO, BigDecimal.ZERO) }
+                    .associateWith { AmountFormula.Value(BigDecimal.ZERO) }
                     .plus(categoryAmountFormulas)
             }
             .map { it.toSortedMap(categoryComparator) }

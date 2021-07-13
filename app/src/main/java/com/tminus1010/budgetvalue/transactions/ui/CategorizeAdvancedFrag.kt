@@ -38,7 +38,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
-import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -77,12 +76,12 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
         val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemPercentageOrMoneyEditTextBinding, Map.Entry<Category, AmountFormula>>(
             { ItemPercentageOrMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
             { (category, amountFormula), vb, lifecycle ->
-                vb.tvPercentage.easyVisibility = amountFormula.percentage.compareTo(BigDecimal.ZERO) != 0
+                vb.tvPercentage.easyVisibility = amountFormula is AmountFormula.Percentage
                 vb.moneyEditText.bind(categorizeAdvancedVM.autoFillCategory, lifecycle) {
                     isEnabled = category != it
                     setBackgroundColor(context.theme.getColorByAttr(if (isEnabled) R.attr.colorBackground else R.attr.colorBackgroundHighlight))
                 }
-                vb.moneyEditText.setText((amountFormula.amount + amountFormula.percentage).toString())
+                vb.moneyEditText.setText(amountFormula.toDisplayStr())
                 vb.moneyEditText.onDone {
                     if (!shouldIgnoreUserInput.value!!)
                         categorizeAdvancedVM.userInputCA(category, it.toMoneyBigDecimal())

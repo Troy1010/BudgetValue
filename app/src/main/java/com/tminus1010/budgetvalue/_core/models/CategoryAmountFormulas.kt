@@ -7,14 +7,10 @@ import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import java.math.BigDecimal
 
-class CategoryAmountFormulas private constructor(hashMap: HashMap<Category, AmountFormula> = HashMap()) : Map<Category, AmountFormula> by hashMap {
-    constructor(map: Map<Category, AmountFormula> = emptyMap()) : this(HashMap(map.filter { !it.value.isZero() }))
+data class CategoryAmountFormulas constructor(val map: Map<Category, AmountFormula> = emptyMap()) : Map<Category, AmountFormula> by map {
 
     fun Map<Category, AmountFormula>.calcFillAmountFormula(fillCategory: Category, amount: BigDecimal): AmountFormula {
-        return AmountFormula(
-            (amount - this.filter { it.key != fillCategory }.map { it.value.calcAmount(amount) }.sum()),
-            BigDecimal.ZERO,
-        )
+        return AmountFormula.Value(amount - this.filter { it.key != fillCategory }.map { it.value.calcAmount(amount) }.sum())
     }
 
     operator fun plus(map: Map<Category, AmountFormula>): CategoryAmountFormulas {

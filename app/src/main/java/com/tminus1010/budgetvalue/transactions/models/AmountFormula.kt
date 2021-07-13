@@ -6,29 +6,34 @@ import java.math.RoundingMode
 /**
  * Everything needed to calculate an amount
  */
-data class AmountFormula(
-    // Could be a value or a percentage, depending on isPercentage
-    val amount: BigDecimal,
-    val percentage: BigDecimal,
-) {
-    constructor(amount: BigDecimal) : this(amount, BigDecimal.ZERO)
+sealed class AmountFormula {
+    abstract fun calcAmount(total: BigDecimal): BigDecimal
+    abstract fun isZero(): Boolean
+    abstract fun toDTO(): String
+    abstract fun toDisplayStr(): String
+    data class Value(val amount: BigDecimal) : AmountFormula() {
+        override fun calcAmount(total: BigDecimal) = amount
+        override fun isZero() = amount.compareTo(BigDecimal.ZERO) == 0
+        override fun toDTO() = "$amount:Value"
+        override fun toDisplayStr() = amount.toString()
+    }
 
-    fun calcAmount(total: BigDecimal): BigDecimal =
-        (amount + total.abs() * percentage / BigDecimal("100")).setScale(2, RoundingMode.HALF_UP)
-
-    fun toDTO(): String =
-        "$amount:$percentage"
-
-    fun isZero() = (amount + percentage).compareTo(BigDecimal.ZERO) == 0
+    data class Percentage(val percentage: BigDecimal) : AmountFormula() {
+        override fun calcAmount(total: BigDecimal) = (total.abs() * percentage / BigDecimal("100")).setScale(2, RoundingMode.HALF_UP)
+        override fun isZero() = percentage.compareTo(BigDecimal.ZERO) == 0
+        override fun toDTO() = "$percentage:Percentage"
+        override fun toDisplayStr() = percentage.toString()
+    }
 
     companion object {
         fun fromDTO(s: String) =
             s.split(":")
                 .let {
-                    AmountFormula(
-                        amount = it[0].toBigDecimal(),
-                        percentage = it[1].toBigDecimal()
-                    )
+                    when (it[1]) {
+                        "Value" -> Value(it[0].toBigDecimal())
+                        "Percentage" -> Value(it[0].toBigDecimal())
+                        else -> error("Unhandled string")
+                    }
                 }
     }
 }

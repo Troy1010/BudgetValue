@@ -17,10 +17,3 @@ fun <K, V> Map<K, V>.copy(vararg keyValues: Pair<K, V>): Map<K, V> {
     )
 }
 
-fun Map<Category, AmountFormula>.calcFillAmountFormula(fillCategory: Category, amount: BigDecimal): AmountFormula {
-    return AmountFormula(
-        (amount - this.filter { it.key != fillCategory }.map { it.value.calcAmount(amount) }.sum()),
-        BigDecimal.ZERO,
-    )
-}
-
