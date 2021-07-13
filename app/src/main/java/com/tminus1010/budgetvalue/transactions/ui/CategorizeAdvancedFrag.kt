@@ -7,6 +7,7 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.InvalidCategoryAmounts
@@ -47,7 +48,7 @@ import javax.inject.Inject
 class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
     private val vb by viewBinding(FragCategorizeAdvancedBinding::bind)
     private val categorizeVM: CategorizeVM by activityViewModels()
-    private val categorizeAdvancedVM: CategorizeAdvancedVM by activityViewModels()
+    private val categorizeAdvancedVM: CategorizeAdvancedVM by viewModels()
     private val replayName: String? by lazy { arguments?.getString(Key.REPLAY_NAME.name) }
     private var _shouldIgnoreUserInputForDuration = PublishSubject.create<Unit>()
     private var shouldIgnoreUserInput = _shouldIgnoreUserInputForDuration
@@ -61,7 +62,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Mediation
-        _args?.also { _args = null; categorizeAdvancedVM.setup(it.first, it.second) }
+        _args?.also { _args = null; categorizeAdvancedVM.setup(it.first, it.second, it.third) }
         //
         shouldIgnoreUserInput.observe(viewLifecycleOwner) {}
         vb.tvTitle.text = if (replayName == null) "" else "Replay ($replayName)"
@@ -119,8 +120,8 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 }
             }
         )
-        categorizeAdvancedVM.categoryAmountFormulas
-            .map { categoryAmounts ->
+        categorizeAdvancedVM.categoryAmountFormulasToShow
+            .map { categoryAmountFormulasToShow ->
                 val recipes2D =
                     listOf(
                         listOf(
@@ -133,7 +134,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                             recipeFactories.textViewWithLifecycle.createOne(categorizeAdvancedVM.defaultAmount),
                             checkboxFactory.createOne(CategoriesDomain.defaultCategory),
                         ),
-                        *categoryAmounts.map {
+                        *categoryAmountFormulasToShow.map {
                             listOf(
                                 recipeFactories.textView.createOne(it.key.name),
                                 categoryAmountRecipeFactory.createOne(it),
@@ -141,7 +142,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                             )
                         }.toTypedArray(),
                     )
-                val dividerMap = categoryAmounts.keys
+                val dividerMap = categoryAmountFormulasToShow.keys
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
                     .associate { it.index to recipeFactories.titledDivider.createOne(it.value.type.name) }
