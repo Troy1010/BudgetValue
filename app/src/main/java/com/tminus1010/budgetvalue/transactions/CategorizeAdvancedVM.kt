@@ -176,7 +176,7 @@ class CategorizeAdvancedVM @Inject constructor(
             }
 
     // # Output
-    val replayOrFuture = _replayOrFuture
+    val replayOrFuture = _replayOrFuture!!
     val amountToCategorizeMsg =
         transaction
             .map { transactionBox ->
