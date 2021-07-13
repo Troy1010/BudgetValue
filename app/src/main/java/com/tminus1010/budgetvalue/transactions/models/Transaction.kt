@@ -29,6 +29,12 @@ data class Transaction(
         )
     }
 
+    fun calcFillAmount(fillCategory: Category): BigDecimal {
+        return categoryAmounts
+            .filter { it.key != fillCategory }
+            .let { categoryAmounts -> amount - categoryAmounts.values.sum() }
+    }
+
     fun categorize(category: Category): Transaction {
         if (category == CategoriesDomain.defaultCategory) return this
         return categorize(

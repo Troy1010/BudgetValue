@@ -6,23 +6,23 @@ import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.extensions.unbox
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.replay.data.ReplayRepo
 import com.tminus1010.budgetvalue.replay.models.IReplay
-import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
-import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.kotlin.Observables
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
 class CategorizeVM @Inject constructor(
     private val saveTransactionDomain: SaveTransactionDomain,
-    private val transactionsRepo: TransactionsRepo,
-    private val transactionsDomain: TransactionsDomain
+    private val transactionsDomain: TransactionsDomain,
+    replayRepo: ReplayRepo,
 ) : ViewModel() {
     // # Input
     fun userSimpleCategorize(category: Category) {
@@ -56,20 +56,18 @@ class CategorizeVM @Inject constructor(
 
     // # Internal
     private lateinit var _categorySelectionVM: CategorySelectionVM
-    private val replayTransactionBox =
-        transactionsDomain.firstUncategorizedSpend
-            .unbox()
-            .flatMapSingle { transaction ->
-                transactionsRepo.findTransactionsWithDescription(transaction.description)
-                    .map { transactionsWithMatchingDescription ->
-                        transactionsWithMatchingDescription
-                            .filter { transaction.id != it.id && it.categorizationDate != null }
-                            .let { Box(it.maxByOrNull { it.categorizationDate!! }) }
-                    }
-            }
-            .nonLazyCache(disposables)
 
     // # Output
+    val matchingReplays =
+        Observables.combineLatest(
+            replayRepo.fetchReplays(),
+            transactionsDomain.firstUncategorizedSpend,
+        )
+            .map { (replays, transactionBox) ->
+                transactionBox.first
+                    ?.let { transaction -> replays.filter { it.predicate(transaction) } }
+                    ?: emptyList()
+            }!!
     val isUndoAvailable = saveTransactionDomain.isUndoAvailable
     val isRedoAvailable = saveTransactionDomain.isRedoAvailable
     val amountToCategorize =

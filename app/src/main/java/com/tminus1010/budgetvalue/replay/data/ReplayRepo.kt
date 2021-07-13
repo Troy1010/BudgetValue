@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.replay.data
 
 import com.tminus1010.budgetvalue._core.data.MiscDAO
-import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
+import com.tminus1010.budgetvalue.categories.CategoryAmountFormulasConverter
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.replay.models.BasicReplay
 import com.tminus1010.budgetvalue.replay.models.IReplay
@@ -12,16 +12,16 @@ import javax.inject.Inject
 
 class ReplayRepo @Inject constructor(
     private val miscDAO: MiscDAO,
-    private val categoryAmountsConverter: CategoryAmountsConverter,
+    private val categoryAmountFormulasConverter: CategoryAmountFormulasConverter,
     private val categoryParser: ICategoryParser,
 ) {
     fun add(basicReplay: BasicReplay): Completable =
-        miscDAO.add(basicReplay.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
+        miscDAO.add(basicReplay.toDTO(categoryAmountFormulasConverter)).subscribeOn(Schedulers.io())
 
     fun delete(basicReplayName: String): Completable =
         miscDAO.delete(basicReplayName).subscribeOn(Schedulers.io())
 
     fun fetchReplays(): Observable<List<IReplay>> =
         miscDAO.fetchBasicReplays().subscribeOn(Schedulers.io())
-            .map { it.map { BasicReplay.fromDTO(it, categoryAmountsConverter, categoryParser) } }
+            .map { it.map { BasicReplay.fromDTO(it, categoryAmountFormulasConverter, categoryParser) } }
 }

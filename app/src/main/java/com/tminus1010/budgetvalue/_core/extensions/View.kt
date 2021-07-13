@@ -27,7 +27,7 @@ fun View.widthObservable(): Observable<Int> {
         val onLayoutChangeListener = View.OnLayoutChangeListener { v: View, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
             downstream.onNext(right - left)
         }
-        downstream.onNext( right - left)
+        downstream.onNext(right - left)
         addOnLayoutChangeListener(onLayoutChangeListener)
         downstream.setCancellable { removeOnLayoutChangeListener(onLayoutChangeListener) }
     }.subscribeOn(AndroidSchedulers.mainThread()) // This might not be necessary
@@ -47,3 +47,9 @@ fun View.heightObservable(): Observable<Int> {
         .filter { it != 0 }
         .distinctUntilChanged()
 }
+
+var View.easyVisibility: Boolean
+    get() = visibility == View.VISIBLE
+    set(value) {
+        visibility = if (value) View.VISIBLE else View.GONE
+    }

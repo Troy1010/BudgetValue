@@ -1,4 +1,5 @@
 <resources>
+
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <item name="colorPrimary">#2D882D</item>
         <item name="colorPrimaryVariant">#55AA55</item>
@@ -7,11 +8,13 @@
         <item name="colorSecondaryVariant">#5EC2B7</item>
         <item name="colorOnSecondary">@color/colorOnLight</item>
         <item name="colorBackground">@color/colorBackground</item>
+        <item name="colorBackgroundHighlight">@color/colorBackgroundHighlight</item>
         <item name="colorOnBackground">@color/colorOnDark</item>
         <item name="android:colorBackground">@color/colorBackground</item>
     </style>
 
     <style name="AppTheme.StandardTextView">
+        <item name="android:textColor">?colorOnBackground</item>
         <item name="android:textSize">22sp</item>
         <item name="android:gravity">center</item>
     </style>

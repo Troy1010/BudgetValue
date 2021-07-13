@@ -2,4 +2,5 @@
 <resources>
     <attr name="colorBackground" format="color" />
     <attr name="colorOnBackground" format="color" />
+    <attr name="colorBackgroundHighlight" format="color" />
 </resources>

@@ -7,13 +7,11 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.InvalidCategoryAmounts
-import com.tminus1010.budgetvalue._core.extensions.add
-import com.tminus1010.budgetvalue._core.extensions.bind
-import com.tminus1010.budgetvalue._core.extensions.easyText
-import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
+import com.tminus1010.budgetvalue._core.extensions.*
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonItem
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuItem
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
@@ -25,10 +23,12 @@ import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.FragCategorizeAdvancedBinding
 import com.tminus1010.budgetvalue.databinding.ItemCheckboxBinding
-import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
+import com.tminus1010.budgetvalue.databinding.ItemPercentageOrMoneyEditTextBinding
 import com.tminus1010.budgetvalue.replay.models.IReplay
 import com.tminus1010.budgetvalue.transactions.CategorizeAdvancedVM
 import com.tminus1010.budgetvalue.transactions.CategorizeVM
+import com.tminus1010.budgetvalue.transactions.models.AmountFormula
+import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
@@ -38,7 +38,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
-import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -46,7 +45,7 @@ import javax.inject.Inject
 class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
     private val vb by viewBinding(FragCategorizeAdvancedBinding::bind)
     private val categorizeVM: CategorizeVM by activityViewModels()
-    private val categorizeAdvancedVM: CategorizeAdvancedVM by activityViewModels()
+    private val categorizeAdvancedVM: CategorizeAdvancedVM by viewModels()
     private val replayName: String? by lazy { arguments?.getString(Key.REPLAY_NAME.name) }
     private var _shouldIgnoreUserInputForDuration = PublishSubject.create<Unit>()
     private var shouldIgnoreUserInput = _shouldIgnoreUserInputForDuration
@@ -60,7 +59,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Mediation
-        _args?.also { _args = null; categorizeAdvancedVM.setup(it.first, it.second) }
+        _args?.also { _args = null; categorizeAdvancedVM.setup(it.first, it.second, it.third) }
         //
         shouldIgnoreUserInput.observe(viewLifecycleOwner) {}
         vb.tvTitle.text = if (replayName == null) "" else "Replay ($replayName)"
@@ -74,20 +73,45 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 throw it
         }
         // # TMTableView
-        val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Map.Entry<Category, BigDecimal>>(
-            { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
-            { (category, amount), vb, _ ->
-                vb.editText.setText(amount.toString())
-                vb.editText.onDone {
+        val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemPercentageOrMoneyEditTextBinding, Map.Entry<Category, AmountFormula>>(
+            { ItemPercentageOrMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
+            { (category, amountFormula), vb, lifecycle ->
+                vb.tvPercentage.easyVisibility = amountFormula is AmountFormula.Percentage
+                vb.moneyEditText.bind(categorizeAdvancedVM.autoFillCategory, lifecycle) {
+                    isEnabled = category != it
+                    setBackgroundColor(context.theme.getColorByAttr(if (isEnabled) R.attr.colorBackground else R.attr.colorBackgroundHighlight))
+                }
+                vb.moneyEditText.setText(amountFormula.toDisplayStr())
+                vb.moneyEditText.onDone {
                     if (!shouldIgnoreUserInput.value!!)
                         categorizeAdvancedVM.userInputCA(category, it.toMoneyBigDecimal())
                 }
-                vb.editText.setOnCreateContextMenuListener { menu, _, _ ->
+                vb.moneyEditText.setOnCreateContextMenuListener { menu, _, _ ->
                     menu.add(
-                        MenuItem("Fill") {
-                            _shouldIgnoreUserInputForDuration.onNext(Unit)
-                            categorizeAdvancedVM.userFillIntoCategory(category)
-                        }
+                        *listOfNotNull(
+                            MenuItem(
+                                title = "Fill",
+                                onClick = {
+                                    _shouldIgnoreUserInputForDuration.onNext(Unit)
+                                    categorizeAdvancedVM.userFillIntoCategory(category)
+                                }),
+                            if (amountFormula !is AmountFormula.Percentage)
+                                MenuItem(
+                                    title = "To Percentage",
+                                    onClick = {
+                                        _shouldIgnoreUserInputForDuration.onNext(Unit)
+                                        categorizeAdvancedVM.userSwitchCategoryToPercentage(category)
+                                    })
+                            else null,
+                            if (amountFormula !is AmountFormula.Value)
+                                MenuItem(
+                                    title = "To Non-Percentage",
+                                    onClick = {
+                                        _shouldIgnoreUserInputForDuration.onNext(Unit)
+                                        categorizeAdvancedVM.userSwitchCategoryToNonPercentage(category)
+                                    })
+                            else null,
+                        ).toTypedArray()
                     )
                 }
             }
@@ -104,8 +128,8 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 }
             }
         )
-        categorizeAdvancedVM.categoryAmounts
-            .map { categoryAmounts ->
+        categorizeAdvancedVM.categoryAmountFormulasToShow
+            .map { categoryAmountFormulasToShow ->
                 val recipes2D =
                     listOf(
                         listOf(
@@ -118,7 +142,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                             recipeFactories.textViewWithLifecycle.createOne(categorizeAdvancedVM.defaultAmount),
                             checkboxFactory.createOne(CategoriesDomain.defaultCategory),
                         ),
-                        *categoryAmounts.map {
+                        *categoryAmountFormulasToShow.map {
                             listOf(
                                 recipeFactories.textView.createOne(it.key.name),
                                 categoryAmountRecipeFactory.createOne(it),
@@ -126,7 +150,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                             )
                         }.toTypedArray(),
                     )
-                val dividerMap = categoryAmounts.keys
+                val dividerMap = categoryAmountFormulasToShow.keys
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
                     .associate { it.index to recipeFactories.titledDivider.createOne(it.value.type.name) }
@@ -209,14 +233,16 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
 
     enum class Key { REPLAY_NAME }
     companion object {
-        private var _args: Pair<IReplay?, CategorySelectionVM>? = null
+        private var _args: Triple<Transaction?, IReplay?, CategorySelectionVM>? = null
         fun navTo(
             source: Any,
             nav: NavController,
             categorySelectionVM: CategorySelectionVM,
+            transaction: Transaction?,
             replay: IReplay?,
         ) {
-            _args = Pair(
+            _args = Triple(
+                transaction,
                 replay,
                 categorySelectionVM
             )
