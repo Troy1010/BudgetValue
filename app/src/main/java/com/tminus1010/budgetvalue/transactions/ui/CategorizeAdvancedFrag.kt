@@ -80,7 +80,25 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
             else
                 throw it
         }
-        // # TMTableView
+        // # TMTableView OtherInput
+        Observable.just(Unit)
+            .map {
+                listOf(
+                    listOf(
+                        recipeFactories.textView.createOne("Input"),
+                        recipeFactories.textView.createOne("userInput"),
+                    ),
+                )
+            }
+            .observe(viewLifecycleOwner) { recipeGrid ->
+                vb.tmTableViewOtherInput.initialize(
+                    recipeGrid = recipeGrid,
+                    shouldFitItemWidthsInsideTable = true,
+                    rowFreezeCount = 1,
+                )
+            }
+
+        // # TMTableView CategoryAmounts
         val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemPercentageOrMoneyEditTextBinding, Map.Entry<Category, AmountFormula>>(
             { ItemPercentageOrMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
             { (category, amountFormula), vb, lifecycle ->
@@ -105,7 +123,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                                 }),
                             if (amountFormula !is AmountFormula.Percentage)
                                 MenuItem(
-                                    title = "To Percentage",
+                                    title = "Add Percentage",
                                     onClick = {
                                         _shouldIgnoreUserInputForDuration.onNext(Unit)
                                         categorizeAdvancedVM.userSwitchCategoryToPercentage(category)
@@ -113,7 +131,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                             else null,
                             if (amountFormula !is AmountFormula.Value)
                                 MenuItem(
-                                    title = "To Non-Percentage",
+                                    title = "No Percentage",
                                     onClick = {
                                         _shouldIgnoreUserInputForDuration.onNext(Unit)
                                         categorizeAdvancedVM.userSwitchCategoryToNonPercentage(category)
@@ -172,9 +190,9 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                     .mapKeys { it.key + 2 } // header row, and default row
                 Pair(recipes2D, dividerMap)
             }
-            .observe(viewLifecycleOwner) { (recipes2D, dividerMap) ->
-                vb.tmTableView.initialize(
-                    recipeGrid = recipes2D,
+            .observe(viewLifecycleOwner) { (recipeGrid, dividerMap) ->
+                vb.tmTableViewCategoryAmounts.initialize(
+                    recipeGrid = recipeGrid,
                     shouldFitItemWidthsInsideTable = true,
                     dividerMap = dividerMap,
                     rowFreezeCount = 1,
