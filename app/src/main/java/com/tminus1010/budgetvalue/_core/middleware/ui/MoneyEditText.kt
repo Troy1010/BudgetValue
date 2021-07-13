@@ -27,7 +27,7 @@ class MoneyEditText @JvmOverloads constructor(
     init {
         easyText = "0"
         onDone { s ->
-            s.toMoneyBigDecimal().toString()
+            s.toMoneyBigDecimal().stripTrailingZeros().toString()
                 .also { if (it != s) setText(it) }
         }
         setOnEditorActionListener { v, actionId, event ->
