@@ -11,10 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.InvalidCategoryAmounts
-import com.tminus1010.budgetvalue._core.extensions.add
-import com.tminus1010.budgetvalue._core.extensions.bind
-import com.tminus1010.budgetvalue._core.extensions.easyText
-import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
+import com.tminus1010.budgetvalue._core.extensions.*
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonItem
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuItem
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
@@ -78,7 +75,11 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
         // # TMTableView
         val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Map.Entry<Category, AmountFormula>>(
             { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
-            { (category, amountFormula), vb, _ ->
+            { (category, amountFormula), vb, lifecycle ->
+                vb.editText.bind(categorizeAdvancedVM.autoFillCategory, lifecycle) {
+                    isEnabled = category != it
+                    setBackgroundColor(context.theme.getColorByAttr(if (isEnabled) R.attr.colorBackground else R.attr.colorBackgroundHighlight))
+                }
                 vb.editText.setText((amountFormula.amount + amountFormula.percentage).toString())
                 vb.editText.onDone {
                     if (!shouldIgnoreUserInput.value!!)
