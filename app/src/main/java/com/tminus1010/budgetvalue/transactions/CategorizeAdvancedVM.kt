@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.categoryComparator
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
+import com.tminus1010.budgetvalue._core.extensions.unbox
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulas
@@ -39,17 +40,17 @@ class CategorizeAdvancedVM @Inject constructor(
     private val errorSubject: Subject<Throwable>,
     transactionsDomain: TransactionsDomain,
 ) : ViewModel() {
-    // # Setup
+    // # Input
+    private val shouldLogInput = true
     fun setup(_transaction: Transaction?, _replay: IReplayOrFuture?, categorySelectionVM: CategorySelectionVM) {
+        if (shouldLogInput) logz("_transaction:$_transaction _replay:$_replay categorySelectionVM:$categorySelectionVM")
         _categorySelectionVM = categorySelectionVM
         replayOrFuture.onNext(Box(_replay))
-        _transaction?.also { transaction.onNext(it) }
+        transaction.onNext(Box(_transaction))
         userCategoryAmounts.clear()
         userCategoryIsPercentage.clear()
     }
-    private lateinit var _categorySelectionVM: CategorySelectionVM
 
-    // # Input
     fun userFillIntoCategory(category: Category) {
         val amount = transactionToPush.value!!.calcFillAmount(category)
         if (amount.compareTo(BigDecimal.ZERO) == 0)
@@ -82,7 +83,7 @@ class CategorizeAdvancedVM @Inject constructor(
     fun userSaveReplay(replayName: String, isAutoReplay: Boolean) {
         val replay = BasicReplay(
             name = replayName,
-            description = transaction.value!!.description,
+            description = transaction.unbox.description,
             categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
             isAutoReplay = isAutoReplay,
             autoFillCategory = autoFillCategory.value!!,
@@ -113,8 +114,9 @@ class CategorizeAdvancedVM @Inject constructor(
     private val userCategoryAmounts = SourceHashMap<Category, BigDecimal>()
     private val userCategoryIsPercentage = SourceHashMap<Category, Boolean>()
     private val userAutoFillCategory = BehaviorSubject.createDefault(CategoriesDomain.defaultCategory)!!
-    private val transaction = BehaviorSubject.create<Transaction>()
-    private val replayOrFuture = BehaviorSubject.createDefault<Box<IReplayOrFuture?>>(Box(null))
+    private val transaction = BehaviorSubject.createDefault(Box<Transaction?>(null))
+    private val replayOrFuture = BehaviorSubject.createDefault(Box<IReplayOrFuture?>(null))
+    private lateinit var _categorySelectionVM: CategorySelectionVM
     private val userCategoryAmountFormulas =
         Rx.combineLatest(
             userCategoryAmounts.observable,
@@ -145,10 +147,12 @@ class CategorizeAdvancedVM @Inject constructor(
             replayOrFuture,
             userCategoryAmountFormulas
         )
-            .map { (transaction, autoFillCategory, replay, userCategoryAmountFormulas) ->
-                CategoryAmountFormulas(replay.first?.categorize(transaction)?.categoryAmounts?.mapValues { AmountFormula.Value(it.value) } ?: emptyMap())
+            .map { (transactionBox, autoFillCategory, replayBox, userCategoryAmountFormulas) ->
+                val transaction = transactionBox.first
+                val replay = replayBox.first
+                CategoryAmountFormulas(replay?.categoryAmountFormulas ?: emptyMap())
                     .plus(userCategoryAmountFormulas.filter { !it.value.isZero() })
-                    .fillIntoCategory(autoFillCategory, transaction.amount)
+                    .run { if (transaction != null) fillIntoCategory(autoFillCategory, transaction.amount) else this }
             }
             .startWithItem(CategoryAmountFormulas())
             .nonLazyCache(disposables)

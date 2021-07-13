@@ -9,7 +9,7 @@ import com.tminus1010.budgetvalue.transactions.models.Transaction
 data class BasicReplay(
     override val name: String,
     private val description: String,
-    private val categoryAmountFormulas: Map<Category, AmountFormula>,
+    override val categoryAmountFormulas: Map<Category, AmountFormula>,
     override val isAutoReplay: Boolean,
     override val autoFillCategory: Category,
 ) : IReplay {
