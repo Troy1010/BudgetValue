@@ -3,8 +3,6 @@ package com.tminus1010.budgetvalue.transactions
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.categoryComparator
-import com.tminus1010.budgetvalue._core.extensions.calcFillAmountFormula
-import com.tminus1010.budgetvalue._core.extensions.copy
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
@@ -149,16 +147,9 @@ class CategorizeAdvancedVM @Inject constructor(
             .map { (transaction, autoFillCategory, replay, userCategoryAmountFormulas) ->
                 CategoryAmountFormulas(replay.first?.categorize(transaction)?.categoryAmounts?.mapValues { AmountFormula(it.value) } ?: emptyMap())
                     .plus(userCategoryAmountFormulas)
-                    .let {
-                        if (autoFillCategory == CategoriesDomain.defaultCategory)
-                            it
-                        else
-                            it
-                                .filter { it.key != autoFillCategory }
-                                .let { it.copy(autoFillCategory to it.calcFillAmountFormula(autoFillCategory, transaction.amount)) }
-                    }
+                    .fillIntoCategory(autoFillCategory, transaction.amount)
             }
-            .startWithItem(emptyMap())
+            .startWithItem(CategoryAmountFormulas())
             .nonLazyCache(disposables)
     val categoryAmountFormulasToShow =
         Rx.combineLatest(

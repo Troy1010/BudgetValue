@@ -1,11 +1,15 @@
 package com.tminus1010.budgetvalue._core.models
 
+import com.tminus1010.budgetvalue._core.extensions.copy
+import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import java.math.BigDecimal
 
-class CategoryAmountFormulas(map: Map<Category, AmountFormula> = emptyMap()) : HashMap<Category, AmountFormula>(map) {
+class CategoryAmountFormulas private constructor(hashMap: HashMap<Category, AmountFormula> = HashMap()) : Map<Category, AmountFormula> by hashMap {
+    constructor(map: Map<Category, AmountFormula> = emptyMap()) : this(HashMap(map))
+
     fun Map<Category, AmountFormula>.calcFillAmountFormula(fillCategory: Category, amount: BigDecimal): AmountFormula {
         return AmountFormula(
             (amount - this.filter { it.key != fillCategory }.map { it.value.calcAmount(amount) }.sum()),
@@ -13,18 +17,17 @@ class CategoryAmountFormulas(map: Map<Category, AmountFormula> = emptyMap()) : H
         )
     }
 
-    override fun put(key: Category, value: AmountFormula): AmountFormula? {
-        return if (value.isZero())
-            remove(key)
-        else
-            super.put(key, value)
-    }
-
-    override fun putAll(from: Map<out Category, AmountFormula>) {
-        super.putAll(from.filter { !it.value.isZero() })
-    }
-
     operator fun plus(map: Map<Category, AmountFormula>): CategoryAmountFormulas {
-        return this.apply { putAll(map) }
+        return CategoryAmountFormulas(map + this)
+    }
+
+    fun fillIntoCategory(category: Category, amount: BigDecimal): CategoryAmountFormulas {
+        return if (category == CategoriesDomain.defaultCategory)
+            this
+        else
+            this
+                .filter { it.key != category }
+                .let { it.copy(category to it.calcFillAmountFormula(category, amount)) }
+                .let { CategoryAmountFormulas(it) }
     }
 }
