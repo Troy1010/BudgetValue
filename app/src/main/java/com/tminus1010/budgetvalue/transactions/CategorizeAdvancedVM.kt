@@ -3,8 +3,8 @@ package com.tminus1010.budgetvalue.transactions
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.categoryComparator
+import com.tminus1010.budgetvalue._core.extensions.calcFillAmountFormula
 import com.tminus1010.budgetvalue._core.extensions.copy
-import com.tminus1010.budgetvalue._core.extensions.isEqualToZero
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
@@ -19,7 +19,6 @@ import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.budgetvalue.transactions.models.Transaction
-import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
@@ -129,21 +128,19 @@ class CategorizeAdvancedVM @Inject constructor(
             .map { (transaction, autoFillCategory, replay, userCategoryAmounts, userCategoryIsPercentage) ->
                 (replay.first?.categorize(transaction)?.categoryAmounts ?: emptyMap())
                     .plus(userCategoryAmounts)
+                    .mapValues {
+                        AmountFormula(
+                            amount = if (userCategoryIsPercentage[it.key] ?: false) BigDecimal.ZERO else it.value,
+                            percentage = if (userCategoryIsPercentage[it.key] ?: false) it.value else BigDecimal.ZERO
+                        )
+                    }
                     .let {
                         if (autoFillCategory == CategoriesDomain.defaultCategory)
                             it
                         else
                             it
                                 .filter { it.key != autoFillCategory }
-                                .let { categoryAmounts ->
-                                    categoryAmounts.copy(autoFillCategory to transaction.amount - categoryAmounts.values.sum())
-                                }
-                    }
-                    .mapValues {
-                        AmountFormula(
-                            amount = if (userCategoryIsPercentage[it.key] ?: false) BigDecimal.ZERO else it.value,
-                            percentage = if (userCategoryIsPercentage[it.key] ?: false) it.value else BigDecimal.ZERO
-                        )
+                                .let { it.copy(autoFillCategory to it.calcFillAmountFormula(autoFillCategory, transaction.amount)) }
                     }
             }
             .doOnNext { if (it.any { it.value.percentage == BigDecimal.ZERO && it.value.amount == BigDecimal.ZERO }) error("") }
