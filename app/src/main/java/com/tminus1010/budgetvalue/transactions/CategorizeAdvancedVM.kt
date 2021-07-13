@@ -16,11 +16,9 @@ import com.tminus1010.budgetvalue.replay.data.ReplayRepo
 import com.tminus1010.budgetvalue.replay.models.BasicReplay
 import com.tminus1010.budgetvalue.replay.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
-import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
-import com.tminus1010.tmcommonkotlin.rx.extensions.unbox
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,7 +36,6 @@ class CategorizeAdvancedVM @Inject constructor(
     private val replayDomain: ReplayDomain,
     private val replayRepo: ReplayRepo,
     private val errorSubject: Subject<Throwable>,
-    transactionsDomain: TransactionsDomain,
 ) : ViewModel() {
     // # Input
     private val shouldLogInput = true
@@ -52,7 +49,7 @@ class CategorizeAdvancedVM @Inject constructor(
     }
 
     fun userFillIntoCategory(category: Category) {
-        val amount = transactionToPush.value!!.calcFillAmount(category)
+        val amount = categoryAmountFormulas.value!!.calcFillAmount(category, transactionToPush.unbox.amount)
         if (amount.compareTo(BigDecimal.ZERO) == 0)
             userCategoryAmounts.remove(category)
         else
@@ -75,7 +72,7 @@ class CategorizeAdvancedVM @Inject constructor(
     }
 
     fun userSubmitCategorization() {
-        saveTransactionDomain.saveTransaction(transactionToPush.value!!)
+        saveTransactionDomain.saveTransaction(transactionToPush.unbox)
             .andThen(_categorySelectionVM.clearSelection())
             .observe(disposables)
     }
@@ -171,19 +168,20 @@ class CategorizeAdvancedVM @Inject constructor(
             .nonLazyCache(disposables)
     private val transactionToPush =
         Rx.combineLatest(
-            transactionsDomain.firstUncategorizedSpend.unbox(),
+            transaction,
             categoryAmountFormulas,
         )
-            .map { (transaction, categoryAmountFormulas) ->
-                transaction.categorize(categoryAmountFormulas.mapValues { it.value.calcAmount(transaction.amount) })
+            .map { (transactionBox, categoryAmountFormulas) ->
+                val transaction = transactionBox.first
+                Box(transaction?.categorize(categoryAmountFormulas.mapValues { it.value.calcAmount(transaction.amount) }))
             }
             .nonLazyCache(disposables)
-    val defaultAmount: Observable<String> =
+    val defaultAmount: Observable<Box<String?>> =
         transactionToPush
-            .map { it.defaultAmount.toString() }
+            .map { Box(it.first?.defaultAmount?.toString()) }
     val areCurrentCAsValid: Observable<Boolean> =
-        transactionToPush
-            .map { it.categoryAmounts != emptyMap<Category, BigDecimal>() }
+        categoryAmountFormulas
+            .map { it.isNotEmpty() }
             .nonLazyCache(disposables)
     val navUp = PublishSubject.create<Unit>()!!
 }

@@ -9,7 +9,7 @@ import com.tminus1010.budgetvalue.transactions.models.Transaction
 data class BasicFuture(
     override val name: String,
     private val description: String,
-    private val categoryAmountFormulas: Map<Category, AmountFormula>,
+    override val categoryAmountFormulas: Map<Category, AmountFormula>,
     override val autoFillCategory: Category,
 ) : IFuture {
     override fun predicate(transaction: Transaction): Boolean =

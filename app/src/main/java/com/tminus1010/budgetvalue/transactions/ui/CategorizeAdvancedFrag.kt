@@ -24,7 +24,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.FragCategorizeAdvancedBinding
 import com.tminus1010.budgetvalue.databinding.ItemCheckboxBinding
 import com.tminus1010.budgetvalue.databinding.ItemPercentageOrMoneyEditTextBinding
-import com.tminus1010.budgetvalue.replay.models.IReplay
+import com.tminus1010.budgetvalue.databinding.ItemTextViewBinding
 import com.tminus1010.budgetvalue.replay.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.CategorizeAdvancedVM
 import com.tminus1010.budgetvalue.transactions.CategorizeVM
@@ -33,6 +33,7 @@ import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
+import com.tminus1010.tmcommonkotlin.tuple.Box
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
 import dagger.hilt.android.AndroidEntryPoint
@@ -117,7 +118,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 }
             }
         )
-        val checkboxFactory = ViewItemRecipeFactory3<ItemCheckboxBinding, Category>(
+        val checkboxRecipeFactory = ViewItemRecipeFactory3<ItemCheckboxBinding, Category>(
             { ItemCheckboxBinding.inflate(LayoutInflater.from(requireContext())) },
             { category, vb, lifecycle ->
                 vb.checkbox.bind(categorizeAdvancedVM.autoFillCategory, lifecycle) {
@@ -127,6 +128,13 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 vb.checkbox.setOnCheckedChangeListener { _, isChecked ->
                     if (isChecked) categorizeAdvancedVM.userSetCategoryForAutoFill(category)
                 }
+            }
+        )
+        val defaultAmountRecipeFactory = ViewItemRecipeFactory3<ItemTextViewBinding, Observable<Box<String?>>>(
+            { ItemTextViewBinding.inflate(LayoutInflater.from(requireContext())) },
+            { d, vb, lifecycle ->
+                vb.root.bind(d, lifecycle) { easyVisibility = it.first != null }
+                vb.textview.bind(d, lifecycle) { easyText = it.first ?: "" }
             }
         )
         categorizeAdvancedVM.categoryAmountFormulasToShow
@@ -140,14 +148,14 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                         ),
                         listOf(
                             recipeFactories.textView.createOne("Default"),
-                            recipeFactories.textViewWithLifecycle.createOne(categorizeAdvancedVM.defaultAmount),
-                            checkboxFactory.createOne(CategoriesDomain.defaultCategory),
+                            defaultAmountRecipeFactory.createOne(categorizeAdvancedVM.defaultAmount),
+                            checkboxRecipeFactory.createOne(CategoriesDomain.defaultCategory),
                         ),
                         *categoryAmountFormulasToShow.map {
                             listOf(
                                 recipeFactories.textView.createOne(it.key.name),
                                 categoryAmountRecipeFactory.createOne(it),
-                                checkboxFactory.createOne(it.key),
+                                checkboxRecipeFactory.createOne(it.key),
                             )
                         }.toTypedArray(),
                     )
