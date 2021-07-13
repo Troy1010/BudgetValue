@@ -8,6 +8,7 @@ import com.tminus1010.budgetvalue._core.extensions.copy
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
+import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
@@ -115,6 +116,20 @@ class CategorizeAdvancedVM @Inject constructor(
     private lateinit var _categorySelectionVM: CategorySelectionVM
     private val transaction = BehaviorSubject.create<Transaction>()
     private val replay = BehaviorSubject.createDefault<Box<IReplay?>>(Box(null))
+    private val userCategoryAmountFormulas =
+        Rx.combineLatest(
+            userCategoryAmounts.observable,
+            userCategoryIsPercentage.observable,
+        )
+            .map { (userCategoryAmounts, userCategoryIsPercentage) ->
+                userCategoryAmounts
+                    .mapValues {
+                        AmountFormula(
+                            amount = if (userCategoryIsPercentage[it.key] ?: false) BigDecimal.ZERO else it.value,
+                            percentage = if (userCategoryIsPercentage[it.key] ?: false) it.value else BigDecimal.ZERO
+                        )
+                    }
+            }
 
     // # Output
     val autoFillCategory: Observable<Category> =
@@ -129,18 +144,11 @@ class CategorizeAdvancedVM @Inject constructor(
             transaction,
             autoFillCategory,
             replay,
-            userCategoryAmounts.observable,
-            userCategoryIsPercentage.observable,
+            userCategoryAmountFormulas
         )
-            .map { (transaction, autoFillCategory, replay, userCategoryAmounts, userCategoryIsPercentage) ->
-                (replay.first?.categorize(transaction)?.categoryAmounts ?: emptyMap())
-                    .plus(userCategoryAmounts)
-                    .mapValues {
-                        AmountFormula(
-                            amount = if (userCategoryIsPercentage[it.key] ?: false) BigDecimal.ZERO else it.value,
-                            percentage = if (userCategoryIsPercentage[it.key] ?: false) it.value else BigDecimal.ZERO
-                        )
-                    }
+            .map { (transaction, autoFillCategory, replay, userCategoryAmountFormulas) ->
+                CategoryAmountFormulas(replay.first?.categorize(transaction)?.categoryAmounts?.mapValues { AmountFormula(it.value) } ?: emptyMap())
+                    .plus(userCategoryAmountFormulas)
                     .let {
                         if (autoFillCategory == CategoriesDomain.defaultCategory)
                             it
@@ -150,7 +158,6 @@ class CategorizeAdvancedVM @Inject constructor(
                                 .let { it.copy(autoFillCategory to it.calcFillAmountFormula(autoFillCategory, transaction.amount)) }
                     }
             }
-            .doOnNext { if (it.any { it.value.percentage == BigDecimal.ZERO && it.value.amount == BigDecimal.ZERO }) error("found an empty categoryAmountFormula") }
             .startWithItem(emptyMap())
             .nonLazyCache(disposables)
     val categoryAmountFormulasToShow =

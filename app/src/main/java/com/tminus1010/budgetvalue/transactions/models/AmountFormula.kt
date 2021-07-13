@@ -11,11 +11,15 @@ data class AmountFormula(
     val amount: BigDecimal,
     val percentage: BigDecimal,
 ) {
+    constructor(amount: BigDecimal) : this(amount, BigDecimal.ZERO)
+
     fun calcAmount(total: BigDecimal): BigDecimal =
         (amount + total.abs() * percentage / BigDecimal("100")).setScale(2, RoundingMode.HALF_UP)
 
     fun toDTO(): String =
         "$amount:$percentage"
+
+    fun isZero() = (amount + percentage).compareTo(BigDecimal.ZERO) == 0
 
     companion object {
         fun fromDTO(s: String) =
