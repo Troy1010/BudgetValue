@@ -11,6 +11,7 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.InvalidCategoryAmounts
 import com.tminus1010.budgetvalue._core.extensions.*
+import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonItem
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuItem
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
@@ -181,8 +182,11 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
             }
 
         // # Button RecyclerView
-        categorizeAdvancedVM.replayOrFuture
-            .observe(viewLifecycleOwner) { replayOrFutureBox ->
+        Rx.combineLatest(
+            categorizeAdvancedVM.replayOrFuture,
+            categorizeAdvancedVM.transactionToPush,
+        )
+            .observe(viewLifecycleOwner) { (replayOrFutureBox, transactionToPushBox) ->
                 val replayOrFuture = replayOrFutureBox.first
                 vb.buttonsview.buttons = listOfNotNull(
                     if (categorizeAdvancedType == CategorizeAdvancedType.CREATE_REPLAY)
@@ -256,13 +260,15 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                             }
                         )
                     else null,
-                    ButtonItem(
-                        title = "Submit",
-                        onClick = {
-                            categorizeAdvancedVM.userSubmitCategorization()
-                            nav.navigateUp()
-                        }
-                    ),
+                    if (transactionToPushBox.first != null)
+                        ButtonItem(
+                            title = "Submit",
+                            onClick = {
+                                categorizeAdvancedVM.userSubmitCategorization()
+                                nav.navigateUp()
+                            }
+                        )
+                    else null,
                 ).reversed()
             }
     }

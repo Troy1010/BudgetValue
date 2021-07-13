@@ -202,7 +202,7 @@ class CategorizeAdvancedVM @Inject constructor(
             }
             .map { it.toSortedMap(categoryComparator) }
             .nonLazyCache(disposables)
-    private val transactionToPush =
+    val transactionToPush =
         Rx.combineLatest(
             transaction,
             categoryAmountFormulas,
