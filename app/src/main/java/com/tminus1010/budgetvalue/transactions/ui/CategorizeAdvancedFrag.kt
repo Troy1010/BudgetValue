@@ -226,7 +226,6 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                             .setMessage("Do you really want to delete this replay?")
                             .setPositiveButton("Yes") { _, _ ->
                                 categorizeAdvancedVM.userDeleteReplay(replayName!!)
-                                nav.navigateUp()
                             }
                             .setNegativeButton("No") { _, _ -> }
                             .show()

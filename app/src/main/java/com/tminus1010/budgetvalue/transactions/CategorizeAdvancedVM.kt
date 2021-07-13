@@ -100,7 +100,12 @@ class CategorizeAdvancedVM @Inject constructor(
     }
 
     fun userDeleteReplay(replayName: String) {
-        replayRepo.delete(replayName).observe(disposables)
+        replayRepo.delete(replayName)
+            .observe(disposables, onComplete = {
+                navUp.onNext(Unit)
+            }, onError = {
+                errorSubject.onNext(it)
+            })
     }
 
     fun userSetCategoryForAutoFill(category: Category) {
