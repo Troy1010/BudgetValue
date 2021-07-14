@@ -89,9 +89,18 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
         )
         val totalGuessRecipe = ViewItemRecipe3<ItemMoneyEditTextBinding, Unit?>(
             { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(requireContext())) },
-            { _, vb, _ ->
-                vb.edittext.setText("0")
+            { _, vb, lifecycle ->
+                vb.edittext.bind(categorizeAdvancedVM.total.take(1), lifecycle) { setText("0") }
                 vb.edittext.onDone { categorizeAdvancedVM.userSetTotalGuess(it.toMoneyBigDecimal()) }
+            }
+        )
+        val isPermanentRecipe = ViewItemRecipe3<ItemCheckboxBinding, Unit?>(
+            { ItemCheckboxBinding.inflate(LayoutInflater.from(requireContext())) },
+            { _, vb, lifecycle ->
+                vb.checkbox.bind(categorizeAdvancedVM.isPermanent.take(1), lifecycle) { isChecked = it }
+                vb.checkbox.setOnCheckedChangeListener { _, isChecked ->
+                    categorizeAdvancedVM.userSetIsPermanent(isChecked)
+                }
             }
         )
         if (categorizeAdvancedType == CategorizeAdvancedType.CREATE_FUTURE)
@@ -105,6 +114,10 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                         listOf(
                             recipeFactories.textView.createOne("Total Guess"),
                             totalGuessRecipe,
+                        ),
+                        listOf(
+                            recipeFactories.textView.createOne("Is Permanent"),
+                            isPermanentRecipe,
                         ),
                     )
                 }

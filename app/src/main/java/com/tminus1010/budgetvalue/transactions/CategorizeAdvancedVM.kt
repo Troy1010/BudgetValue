@@ -149,12 +149,17 @@ class CategorizeAdvancedVM @Inject constructor(
         userTotalGuess.onNext(bigDecimal)
     }
 
+    fun userSetIsPermanent(boolean: Boolean) {
+        userIsPermanent.onNext(boolean)
+    }
+
     // # Internal
     private val userCategoryAmounts = SourceHashMap<Category, BigDecimal>()
     private val userCategoryIsPercentage = SourceHashMap<Category, Boolean>()
     private val userAutoFillCategory = BehaviorSubject.createDefault(CategoriesDomain.defaultCategory)!!
     private val userSearchText = BehaviorSubject.createDefault("")!!
     private val userTotalGuess = BehaviorSubject.create<BigDecimal>()!!
+    private val userIsPermanent = BehaviorSubject.createDefault(true)!!
     private val transaction = BehaviorSubject.createDefault(Box<Transaction?>(null))
     private val _replayOrFuture = BehaviorSubject.createDefault(Box<IReplayOrFuture?>(null))
     private lateinit var _categorySelectionVM: CategorySelectionVM
@@ -172,7 +177,7 @@ class CategorizeAdvancedVM @Inject constructor(
                             AmountFormula.Value(userCategoryAmounts[it] ?: BigDecimal.ZERO)
                     }
             }
-    private val total =
+    val total =
         combineLatestImpatient(
             transaction,
             userTotalGuess,
@@ -182,6 +187,7 @@ class CategorizeAdvancedVM @Inject constructor(
             .nonLazyCache(disposables)
 
     // # Output
+    val isPermanent: Observable<Boolean> = userIsPermanent
     val replayOrFuture = _replayOrFuture!!
     val amountToCategorizeMsg =
         transaction
