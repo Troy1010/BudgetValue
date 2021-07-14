@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.replay
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue.replay.data.ReplayRepo
 import com.tminus1010.budgetvalue.replay.models.IReplay
+import com.tminus1010.budgetvalue.replay.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import io.reactivex.rxjava3.core.Completable
@@ -20,7 +21,7 @@ class ReplayDomain @Inject constructor(
             .map { it.filter { it.isAutoReplay } }
             .replay(1).autoConnect()
 
-    fun applyReplayToAllTransactions(replay: IReplay): Completable =
+    fun applyReplayToAllTransactions(replay: IReplayOrFuture): Completable =
         transactionsRepo.transactions.toSingle()
             .flatMapCompletable { transactions ->
                 Rx.merge(
