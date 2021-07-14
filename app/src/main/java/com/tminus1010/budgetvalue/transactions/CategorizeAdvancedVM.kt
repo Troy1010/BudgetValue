@@ -81,9 +81,9 @@ class CategorizeAdvancedVM @Inject constructor(
             .observe(disposables)
     }
 
-    fun userSaveReplay(replayName: String, isAutoReplay: Boolean) {
+    fun userSaveReplay(name: String, isAutoReplay: Boolean) {
         val replay = BasicReplay(
-            name = replayName,
+            name = name,
             description = transaction.unbox.description,
             categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
             isAutoReplay = isAutoReplay,
@@ -91,7 +91,7 @@ class CategorizeAdvancedVM @Inject constructor(
         )
         Rx.merge(
             listOfNotNull(
-                if (replay.isAutoReplay) replayDomain.applyReplayToAllTransactions(replay) else null,
+                if (replay.isAutoReplay) replayDomain.applyReplayOrFutureToAllTransactions(replay) else null,
                 replayRepo.add(replay),
                 _categorySelectionVM.clearSelection(),
             )
@@ -103,11 +103,11 @@ class CategorizeAdvancedVM @Inject constructor(
             })
     }
 
-    fun userSaveFuture(replayName: String) {
+    fun userSaveFuture(name: String) {
         Single.fromCallable {
             if (userSearchText.value.isEmpty()) InvalidSearchText("Search text was empty")
             BasicFuture(
-                name = replayName,
+                name = name,
                 searchText = userSearchText.value,
                 categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
                 autoFillCategory = autoFillCategory.value!!,
@@ -117,6 +117,7 @@ class CategorizeAdvancedVM @Inject constructor(
             .flatMapCompletable { future ->
                 Rx.merge(
                     listOfNotNull(
+                        if (!future.shouldDeleteAfterCategorization) replayDomain.applyReplayOrFutureToAllTransactions(future) else null,
                         futureRepo.add(future),
                         _categorySelectionVM.clearSelection(),
                     )

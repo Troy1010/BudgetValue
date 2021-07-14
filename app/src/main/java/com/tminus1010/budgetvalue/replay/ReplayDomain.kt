@@ -21,7 +21,7 @@ class ReplayDomain @Inject constructor(
             .map { it.filter { it.isAutoReplay } }
             .replay(1).autoConnect()
 
-    fun applyReplayToAllTransactions(replay: IReplayOrFuture): Completable =
+    fun applyReplayOrFutureToAllTransactions(replay: IReplayOrFuture): Completable =
         transactionsRepo.transactions.toSingle()
             .flatMapCompletable { transactions ->
                 Rx.merge(
