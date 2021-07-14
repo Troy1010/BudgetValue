@@ -45,7 +45,7 @@ class TransactionsDomain @Inject constructor(
                         transactionsRepo.push(transaction)
                     else
                         transactionsRepo.push(futureOrReplay.categorize(transaction))
-                            .run { if (futureOrReplay is IFuture && futureOrReplay.shouldDeleteAfterCategorization) andThen(futureRepo.delete(futureOrReplay.name)) else this }
+                            .run { if (futureOrReplay is IFuture && !futureOrReplay.isPermanent) andThen(futureRepo.delete(futureOrReplay.name)) else this }
                             .onErrorComplete() // error occurs when transaction already exists
                 }
             )

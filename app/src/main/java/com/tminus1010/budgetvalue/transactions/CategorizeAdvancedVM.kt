@@ -111,13 +111,13 @@ class CategorizeAdvancedVM @Inject constructor(
                 searchText = userSearchText.value,
                 categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
                 autoFillCategory = autoFillCategory.value!!,
-                shouldDeleteAfterCategorization = !isPermanent.value!!
+                isPermanent = isPermanent.value!!
             )
         }
             .flatMapCompletable { future ->
                 Rx.merge(
                     listOfNotNull(
-                        if (!future.shouldDeleteAfterCategorization) replayDomain.applyReplayOrFutureToUncategorizedSpends(future) else null,
+                        if (future.isPermanent) replayDomain.applyReplayOrFutureToUncategorizedSpends(future) else null,
                         futureRepo.add(future),
                         _categorySelectionVM.clearSelection(),
                     )
