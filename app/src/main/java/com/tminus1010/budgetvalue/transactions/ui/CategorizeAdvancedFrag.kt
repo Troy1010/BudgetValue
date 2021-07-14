@@ -61,13 +61,11 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
         _args?.also { _args = null; categorizeAdvancedVM.setup(it.first, it.second, it.third) }
         //
         shouldIgnoreUserInput.observe(viewLifecycleOwner) {}
-        vb.tvTitle.bind(categorizeAdvancedVM.replayOrFuture) { replayOrFutureBox ->
-            val replayOrFuture = replayOrFutureBox.first
+        vb.tvTitle.bind(categorizeAdvancedVM.replayOrFuture) { (replayOrFuture) ->
             easyVisibility = replayOrFuture != null
             text = replayOrFuture?.name ?: ""
         }
-        vb.tvAmountToSplit.bind(categorizeAdvancedVM.amountToCategorizeMsg) { amountToCategorizeMsgBox ->
-            val amountToCategorizeMsg = amountToCategorizeMsgBox.first
+        vb.tvAmountToSplit.bind(categorizeAdvancedVM.amountToCategorizeMsg) { (amountToCategorizeMsg) ->
             easyVisibility = amountToCategorizeMsg != null
             text = amountToCategorizeMsg ?: ""
         }
