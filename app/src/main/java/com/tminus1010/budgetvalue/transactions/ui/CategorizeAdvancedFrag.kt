@@ -91,8 +91,8 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
         val totalGuessRecipe = ViewItemRecipe3<ItemMoneyEditTextBinding, Unit?>(
             { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(requireContext())) },
             { _, vb, _ ->
-                vb.editText.setText("0")
-                vb.editText.onDone { categorizeAdvancedVM.userSetTotalGuess(it.toMoneyBigDecimal()) }
+                vb.edittext.setText("0")
+                vb.edittext.onDone { categorizeAdvancedVM.userSetTotalGuess(it.toMoneyBigDecimal()) }
             }
         )
         if (categorizeAdvancedType == CategorizeAdvancedType.CREATE_FUTURE)

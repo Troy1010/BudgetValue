@@ -6,20 +6,20 @@
     android:layout_height="wrap_content">
 
     <EditText
-        android:id="@+id/editText_name"
+        android:id="@+id/edittextName"
         style="@style/AppTheme.StandardEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:imeOptions="actionDone"
         android:inputType="textPersonName"
         android:text="Name"
-        app:layout_constraintEnd_toStartOf="@+id/editText_amount"
+        app:layout_constraintEnd_toStartOf="@+id/edittextAmount"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.tminus1010.budgetvalue._core.middleware.ui.MoneyEditText
-        android:id="@+id/editText_amount"
+        android:id="@+id/edittextAmount"
         style="@style/AppTheme.StandardEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
         android:inputType="numberDecimal"
         app:layout_constraintEnd_toStartOf="@+id/btn_delete_account"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/editText_name"
+        app:layout_constraintStart_toEndOf="@+id/edittextName"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button

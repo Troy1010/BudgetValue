@@ -82,8 +82,8 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
         val defaultAmountRecipe = ViewItemRecipe3<ItemMoneyEditTextBinding, Unit?>(
             { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
             { _, vb, lifecycleOwner ->
-                vb.editText.bind(categorySettingsVM.categoryToPush.map { it.defaultAmount.toString() }, lifecycleOwner) { easyText = it }
-                vb.editText.onDone { categorySettingsVM.userSetDefaultAmount(it.toMoneyBigDecimal()) }
+                vb.edittext.bind(categorySettingsVM.categoryToPush.map { it.defaultAmount.toString() }, lifecycleOwner) { easyText = it }
+                vb.edittext.onDone { categorySettingsVM.userSetDefaultAmount(it.toMoneyBigDecimal()) }
             }
         )
         val categoryNameRecipe = ViewItemRecipe3<ItemEditTextBinding, Unit?>(

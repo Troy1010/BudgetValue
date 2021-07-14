@@ -58,8 +58,8 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
             { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
             { (category, d), vb, lifecycle ->
                 if (d == null) return@ViewItemRecipeFactory3
-                d.observe(lifecycle) { vb.editText.easyText = it }
-                vb.editText.onDone { activeReconciliationVM.pushActiveReconcileCA(category, it) }
+                d.observe(lifecycle) { vb.edittext.easyText = it }
+                vb.edittext.onDone { activeReconciliationVM.pushActiveReconcileCA(category, it) }
             }
         )
         Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs, transactionsMiscVM.currentSpendBlockCAs, activeReconciliationVM.activeReconcileCAs2, budgetedVM.categoryAmounts)

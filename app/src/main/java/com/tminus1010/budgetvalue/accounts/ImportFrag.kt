@@ -45,13 +45,13 @@ class ImportFrag : Fragment(R.layout.frag_import) {
             override fun getItemCount() = accounts.size
             override fun onBindViewHolder(holder: GenViewHolder2<ItemAccountBinding>, position: Int) {
                 holder.vb.btnDeleteAccount.setOnClickListener { accountsVM.userDeleteAccount(accounts[holder.adapterPosition]) }
-                holder.vb.editTextName.setText(accounts[holder.adapterPosition].name)
-                holder.vb.editTextName.onDone {
+                holder.vb.edittextName.setText(accounts[holder.adapterPosition].name)
+                holder.vb.edittextName.onDone {
                     if (holder.adapterPosition != RecyclerView.NO_POSITION)
                         accountsVM.userUpdateAccount(accounts[holder.adapterPosition].copy(name = it))
                 }
-                holder.vb.editTextAmount.setText(accounts[holder.adapterPosition].amount.toString())
-                holder.vb.editTextAmount.onDone {
+                holder.vb.edittextAmount.setText(accounts[holder.adapterPosition].amount.toString())
+                holder.vb.edittextAmount.onDone {
                     if (holder.adapterPosition != RecyclerView.NO_POSITION)
                         accountsVM.userUpdateAccount(accounts[holder.adapterPosition].copy(amount = it.toMoneyBigDecimal()))
                 }
