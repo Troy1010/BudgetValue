@@ -97,6 +97,24 @@ fun <A, B, C, D> mergeCombineWithIndex(
         .skip(1)
 }
 
+fun <A, B> combineLatestImpatient(
+    a: Observable<A>,
+    b: Observable<B>,
+): Observable<Pair<A?, B?>> {
+    return Rx.combineLatest(a.boxStartNull(), b.boxStartNull())
+        .compose { observable ->
+            // # If no observables are cold, then skip the first emission
+            // * The observables start with null so that combineLatest is impatient.
+            //   However, we cannot assume that the first emission will be that initial skippable
+            //   tuple of nulls, because cold observables will emit their latest value even at the
+            //   first emission.
+            if (listOf(a, b).none { it.isCold() }) {
+                observable.skip(1)
+            } else observable
+        }
+        .map { Pair(it.first.first, it.second.first) }
+}
+
 fun <A, B, C> combineLatestImpatient(
     a: Observable<A>,
     b: Observable<B>,
@@ -230,7 +248,7 @@ fun <A, B, C, D, E, F, G> combineLatestImpatient(
 
 // untested
 fun <K, V> createMapEntry(key: K, value: V): Map.Entry<K, V> {
-    return object: Map.Entry<K, V> {
+    return object : Map.Entry<K, V> {
         override val key: K
             get() = key
         override val value: V
