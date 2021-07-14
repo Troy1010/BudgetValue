@@ -13,13 +13,13 @@ import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.replay.ReplayDomain
 import com.tminus1010.budgetvalue.replay.data.FutureRepo
 import com.tminus1010.budgetvalue.replay.data.ReplayRepo
 import com.tminus1010.budgetvalue.replay.models.BasicFuture
 import com.tminus1010.budgetvalue.replay.models.BasicReplay
 import com.tminus1010.budgetvalue.replay.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
+import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -38,10 +38,10 @@ import javax.inject.Inject
 @HiltViewModel
 class CategorizeAdvancedVM @Inject constructor(
     private val saveTransactionDomain: SaveTransactionDomain,
-    private val replayDomain: ReplayDomain,
     private val replayRepo: ReplayRepo,
     private val futureRepo: FutureRepo,
     private val errorSubject: Subject<Throwable>,
+    private val transactionsDomain: TransactionsDomain
 ) : ViewModel() {
     // # Input
     fun setup(_transaction: Transaction?, _replay: IReplayOrFuture?, categorySelectionVM: CategorySelectionVM) {
@@ -91,7 +91,7 @@ class CategorizeAdvancedVM @Inject constructor(
         )
         Rx.merge(
             listOfNotNull(
-                if (replay.isAutoReplay) replayDomain.applyReplayOrFutureToUncategorizedSpends(replay) else null,
+                if (replay.isAutoReplay) transactionsDomain.applyReplayOrFutureToUncategorizedSpends(replay) else null,
                 replayRepo.add(replay),
                 _categorySelectionVM.clearSelection(),
             )
@@ -117,7 +117,7 @@ class CategorizeAdvancedVM @Inject constructor(
             .flatMapCompletable { future ->
                 Rx.merge(
                     listOfNotNull(
-                        if (future.isPermanent) replayDomain.applyReplayOrFutureToUncategorizedSpends(future) else null,
+                        if (future.isPermanent) transactionsDomain.applyReplayOrFutureToUncategorizedSpends(future) else null,
                         futureRepo.add(future),
                         _categorySelectionVM.clearSelection(),
                     )
