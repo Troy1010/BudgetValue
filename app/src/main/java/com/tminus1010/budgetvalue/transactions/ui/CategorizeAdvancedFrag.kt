@@ -32,7 +32,6 @@ import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
-import com.tminus1010.tmcommonkotlin.tuple.Box
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
 import dagger.hilt.android.AndroidEntryPoint
@@ -89,11 +88,11 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 vb.edittext.onDone { categorizeAdvancedVM.userSetSearchText(it) }
             }
         )
-        val totalGuessRecipe = ViewItemRecipe3<ItemEditTextBinding, Unit?>(
-            { ItemEditTextBinding.inflate(LayoutInflater.from(requireContext())) },
+        val totalGuessRecipe = ViewItemRecipe3<ItemMoneyEditTextBinding, Unit?>(
+            { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(requireContext())) },
             { _, vb, _ ->
-                vb.edittext.setText("0")
-                vb.edittext.onDone { categorizeAdvancedVM.userSetTotalGuess(it.toMoneyBigDecimal()) }
+                vb.editText.setText("0")
+                vb.editText.onDone { categorizeAdvancedVM.userSetTotalGuess(it.toMoneyBigDecimal()) }
             }
         )
         if (categorizeAdvancedType == CategorizeAdvancedType.CREATE_FUTURE)
@@ -174,11 +173,10 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 }
             }
         )
-        val defaultAmountRecipeFactory = ViewItemRecipeFactory3<ItemTextViewBinding, Observable<Box<String?>>>(
+        val defaultAmountRecipe = ViewItemRecipe3<ItemTextViewBinding, Unit?>(
             { ItemTextViewBinding.inflate(LayoutInflater.from(requireContext())) },
-            { d, vb, lifecycle ->
-                vb.root.bind(d, lifecycle) { easyVisibility = it.first != null }
-                vb.textview.bind(d, lifecycle) { easyText = it.first ?: "" }
+            { _, vb, lifecycle ->
+                vb.textview.bind(categorizeAdvancedVM.defaultAmount, lifecycle) { easyText = it }
             }
         )
         categorizeAdvancedVM.categoryAmountFormulasToShow
@@ -192,7 +190,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                         ),
                         listOf(
                             recipeFactories.textView.createOne("Default"),
-                            defaultAmountRecipeFactory.createOne(categorizeAdvancedVM.defaultAmount),
+                            defaultAmountRecipe,
                             checkboxRecipeFactory.createOne(CategoriesDomain.defaultCategory),
                         ),
                         *categoryAmountFormulasToShow.map {

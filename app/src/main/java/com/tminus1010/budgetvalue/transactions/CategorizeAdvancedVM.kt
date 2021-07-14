@@ -5,9 +5,9 @@ import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.InvalidSearchText
 import com.tminus1010.budgetvalue._core.categoryComparator
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
-import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.extensions.unbox
 import com.tminus1010.budgetvalue._core.middleware.Rx
+import com.tminus1010.budgetvalue._core.middleware.combineLatestImpatient
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
@@ -44,9 +44,7 @@ class CategorizeAdvancedVM @Inject constructor(
     private val errorSubject: Subject<Throwable>,
 ) : ViewModel() {
     // # Input
-    private val shouldLogInput = true
     fun setup(_transaction: Transaction?, _replay: IReplayOrFuture?, categorySelectionVM: CategorySelectionVM) {
-        if (shouldLogInput) logz("_transaction:$_transaction _replay:$_replay categorySelectionVM:$categorySelectionVM")
         _categorySelectionVM = categorySelectionVM
         _replayOrFuture.onNext(Box(_replay))
         transaction.onNext(Box(_transaction))
@@ -55,7 +53,7 @@ class CategorizeAdvancedVM @Inject constructor(
     }
 
     fun userFillIntoCategory(category: Category) {
-        val amount = categoryAmountFormulas.value!!.calcFillAmount(category, transactionToPush.unbox.amount)
+        val amount = categoryAmountFormulas.value!!.calcFillAmount(category, total.value!!)
         if (amount.compareTo(BigDecimal.ZERO) == 0)
             userCategoryAmounts.remove(category)
         else
@@ -156,7 +154,7 @@ class CategorizeAdvancedVM @Inject constructor(
     private val userCategoryIsPercentage = SourceHashMap<Category, Boolean>()
     private val userAutoFillCategory = BehaviorSubject.createDefault(CategoriesDomain.defaultCategory)!!
     private val userSearchText = BehaviorSubject.createDefault("")!!
-    private val userTotalGuess = BehaviorSubject.createDefault(BigDecimal.ZERO)!!
+    private val userTotalGuess = BehaviorSubject.create<BigDecimal>()!!
     private val transaction = BehaviorSubject.createDefault(Box<Transaction?>(null))
     private val _replayOrFuture = BehaviorSubject.createDefault(Box<IReplayOrFuture?>(null))
     private lateinit var _categorySelectionVM: CategorySelectionVM
@@ -174,6 +172,14 @@ class CategorizeAdvancedVM @Inject constructor(
                             AmountFormula.Value(userCategoryAmounts[it] ?: BigDecimal.ZERO)
                     }
             }
+    private val total =
+        combineLatestImpatient(
+            transaction,
+            userTotalGuess,
+        ).map { (transaction, totalGuess) ->
+            totalGuess ?: transaction?.first?.amount ?: BigDecimal.ZERO
+        }
+            .nonLazyCache(disposables)
 
     // # Output
     val replayOrFuture = _replayOrFuture!!
@@ -193,17 +199,16 @@ class CategorizeAdvancedVM @Inject constructor(
             .nonLazyCache(disposables)
     private val categoryAmountFormulas =
         Rx.combineLatest(
-            transaction,
             autoFillCategory,
             _replayOrFuture,
-            userCategoryAmountFormulas
+            userCategoryAmountFormulas,
+            total,
         )
-            .map { (transactionBox, autoFillCategory, replayBox, userCategoryAmountFormulas) ->
-                val transaction = transactionBox.first
+            .map { (autoFillCategory, replayBox, userCategoryAmountFormulas, total) ->
                 val replay = replayBox.first
                 CategoryAmountFormulas(replay?.categoryAmountFormulas ?: emptyMap())
                     .plus(userCategoryAmountFormulas.filter { !it.value.isZero() })
-                    .run { if (transaction != null) fillIntoCategory(autoFillCategory, transaction.amount) else this }
+                    .fillIntoCategory(autoFillCategory, total)
             }
             .startWithItem(CategoryAmountFormulas())
             .nonLazyCache(disposables)
@@ -230,9 +235,14 @@ class CategorizeAdvancedVM @Inject constructor(
                 Box(transaction?.categorize(categoryAmountFormulas.mapValues { it.value.calcAmount(transaction.amount) }))
             }
             .nonLazyCache(disposables)
-    val defaultAmount: Observable<Box<String?>> =
-        transactionToPush
-            .map { Box(it.first?.defaultAmount?.toString()) }
+    val defaultAmount =
+        Rx.combineLatest(
+            categoryAmountFormulas,
+            total,
+        )
+            .map { (categoryAmountFormulas, total) ->
+                categoryAmountFormulas.defaultAmount(total).toString()
+            }!!
     val areCurrentCAsValid: Observable<Boolean> =
         categoryAmountFormulas
             .map { it.isNotEmpty() }
