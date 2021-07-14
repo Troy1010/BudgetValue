@@ -91,7 +91,7 @@ class CategorizeAdvancedVM @Inject constructor(
         )
         Rx.merge(
             listOfNotNull(
-                if (replay.isAutoReplay) replayDomain.applyReplayOrFutureToAllTransactions(replay) else null,
+                if (replay.isAutoReplay) replayDomain.applyReplayOrFutureToUncategorizedSpends(replay) else null,
                 replayRepo.add(replay),
                 _categorySelectionVM.clearSelection(),
             )
@@ -117,7 +117,7 @@ class CategorizeAdvancedVM @Inject constructor(
             .flatMapCompletable { future ->
                 Rx.merge(
                     listOfNotNull(
-                        if (!future.shouldDeleteAfterCategorization) replayDomain.applyReplayOrFutureToAllTransactions(future) else null,
+                        if (!future.shouldDeleteAfterCategorization) replayDomain.applyReplayOrFutureToUncategorizedSpends(future) else null,
                         futureRepo.add(future),
                         _categorySelectionVM.clearSelection(),
                     )
