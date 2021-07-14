@@ -73,12 +73,11 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
         }
         categorizeAdvancedVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         errorSubject.observe(viewLifecycleOwner) {
-            if (it is InvalidCategoryAmounts)
-                toast("Invalid category amounts")
-            else if (it is InvalidSearchText)
-                toast("Invalid search text")
-            else
-                throw it
+            when (it) {
+                is InvalidCategoryAmounts -> toast("Invalid category amounts")
+                is InvalidSearchText -> toast("Invalid search text")
+                else -> throw it
+            }
         }
         // # TMTableView OtherInput
         vb.tmTableViewOtherInput.easyVisibility = categorizeAdvancedType == CategorizeAdvancedType.CREATE_FUTURE
