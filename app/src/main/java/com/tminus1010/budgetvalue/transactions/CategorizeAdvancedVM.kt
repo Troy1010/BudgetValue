@@ -111,6 +111,7 @@ class CategorizeAdvancedVM @Inject constructor(
                 searchText = userSearchText.value,
                 categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
                 autoFillCategory = autoFillCategory.value!!,
+                shouldDeleteAfterCategorization = !isPermanent.value!!
             )
         }
             .flatMapCompletable { future ->

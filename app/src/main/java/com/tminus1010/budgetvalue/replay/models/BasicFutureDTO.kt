@@ -10,4 +10,5 @@ data class BasicFutureDTO(
     val searchText: String,
     val categoryAmountFormulasStr: String,
     val autoFillCategoryName: String,
+    val shouldDeleteAfterCategorization: Boolean,
 )
