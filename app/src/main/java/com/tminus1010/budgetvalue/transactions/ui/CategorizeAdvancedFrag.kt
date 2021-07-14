@@ -142,7 +142,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                                 }),
                             if (amountFormula !is AmountFormula.Percentage)
                                 MenuItem(
-                                    title = "Add Percentage",
+                                    title = "Percentage",
                                     onClick = {
                                         _shouldIgnoreUserInputForDuration.onNext(Unit)
                                         categorizeAdvancedVM.userSwitchCategoryToPercentage(category)
