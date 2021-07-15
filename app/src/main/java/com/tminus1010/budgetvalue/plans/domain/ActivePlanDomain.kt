@@ -49,7 +49,7 @@ class ActivePlanDomain @Inject constructor(
     override val activePlanCAs =
         activePlan.map { it.categoryAmounts }
             .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO))
-            { it.itemObservableMap2 }
+            { it.itemObservableMap }
             .replay(1).refCount()
     override val expectedIncome = activePlan.map { it.amount }
         .distinctUntilChanged()

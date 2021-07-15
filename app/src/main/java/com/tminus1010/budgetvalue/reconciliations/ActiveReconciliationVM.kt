@@ -35,7 +35,7 @@ class ActiveReconciliationVM @Inject constructor(
                 activeCategories.associateWith { BigDecimal.ZERO } + activeReconcileCAs
             }
             .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO))
-            { it.itemObservableMap2 }
+            { it.itemObservableMap }
             .map { it.mapValues { it.value.map { it.toString() }.divertErrors(errorSubject) } }
             .replay(1).refCount()
     val defaultAmount: Observable<String> = activeReconciliationDefaultAmountUC()
