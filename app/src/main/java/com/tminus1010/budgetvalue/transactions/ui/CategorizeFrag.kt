@@ -44,7 +44,6 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     private val categoriesVM: CategoriesVM by activityViewModels()
     private val transactionsMiscVM: TransactionsMiscVM by activityViewModels()
     private val categorySelectionVM: CategorySelectionVM by navGraphViewModels(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
-    private val categorySettingsVM: CategorySettingsVM by navGraphViewModels(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
 
     @Inject
     lateinit var transactionsDomain: TransactionsDomain
@@ -154,7 +153,6 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                             CategorySettingsFrag.navTo(
                                 source = this,
                                 nav = nav,
-                                categorySettingsVM = categorySettingsVM,
                                 categoryName = categorySelectionVM.selectedCategories.value!!.first().name,
                                 isForNewCategory = false
                             )
@@ -201,7 +199,6 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                             CategorySettingsFrag.navTo(
                                 nav = nav,
                                 source = this,
-                                categorySettingsVM = categorySettingsVM,
                                 categoryName = null,
                                 isForNewCategory = true
                             )

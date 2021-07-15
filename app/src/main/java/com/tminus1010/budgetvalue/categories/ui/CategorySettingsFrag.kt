@@ -7,8 +7,8 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
-import androidx.navigation.navGraphViewModels
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.InvalidCategoryNameException
 import com.tminus1010.budgetvalue._core.extensions.*
@@ -29,6 +29,7 @@ import com.tminus1010.budgetvalue.transactions.ui.CategorizeFrag
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
+import com.tminus1010.tmcommonkotlin.tuple.Box
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,7 +41,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
     private val vb by viewBinding(FragCategorySettingsBinding::bind)
-    private val categorySettingsVM: CategorySettingsVM by navGraphViewModels(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
+    private val categorySettingsVM: CategorySettingsVM by viewModels()
 
     @Inject
     lateinit var errorSubject: Subject<Throwable>
@@ -48,6 +49,9 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // # Mediation
+        _setupArgs?.also { _setupArgs = null; categorySettingsVM.setup(it.first) }
+        //
         errorSubject.observe(viewLifecycleOwner) {
             when (it) {
                 is InvalidCategoryNameException -> toast("Invalid name")
@@ -154,9 +158,10 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
     enum class Key { IsForNewCategory }
 
     companion object {
-        fun navTo(source: Any, nav: NavController, categorySettingsVM: CategorySettingsVM, categoryName: String?, isForNewCategory: Boolean) {
-            categorySettingsVM.setup(
-                categoryName = categoryName
+        private var _setupArgs: Box<String?>? = null
+        fun navTo(source: Any, nav: NavController, categoryName: String?, isForNewCategory: Boolean) {
+            _setupArgs = Box(
+                categoryName
             )
             nav.navigate(
                 when (source) {
