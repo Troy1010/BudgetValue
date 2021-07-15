@@ -74,7 +74,11 @@ class CategorizeAdvancedVM @Inject constructor(
     fun userSubmitCategorization() {
         saveTransactionDomain.saveTransaction(transactionToPush.unbox)
             .andThen(_categorySelectionVM.clearSelection())
-            .observe(disposables)
+            .observe(disposables, onComplete = {
+                navUp.onNext(Unit)
+            }, onError = {
+                errorSubject.onNext(it)
+            })
     }
 
     fun userSaveReplay(name: String) {

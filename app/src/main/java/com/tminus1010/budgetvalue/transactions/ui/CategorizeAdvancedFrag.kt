@@ -286,7 +286,6 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                             title = "Submit",
                             onClick = {
                                 categorizeAdvancedVM.userSubmitCategorization()
-                                nav.navigateUp()
                             }
                         )
                     else null,
