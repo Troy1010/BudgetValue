@@ -162,6 +162,10 @@ class CategorizeAdvancedVM @Inject constructor(
     private val transaction = BehaviorSubject.createDefault(Box<Transaction?>(null))
     private val _replayOrFuture = BehaviorSubject.createDefault(Box<IReplayOrFuture?>(null))
     private lateinit var _categorySelectionVM: CategorySelectionVM
+    private val categorySelectionVM = Observable.timer(100, TimeUnit.MILLISECONDS)
+        .map { _categorySelectionVM }
+        .retry() // error if setup() has not yet been called.
+        .replay(1).refCount()!!
     private val userCategoryAmountFormulas =
         Rx.combineLatest(
             userCategoryAmounts.observable,
@@ -207,7 +211,7 @@ class CategorizeAdvancedVM @Inject constructor(
             _replayOrFuture,
             userCategoryAmountFormulas,
             total,
-            Observable.timer(300, TimeUnit.MILLISECONDS).map { _categorySelectionVM }.retry().flatMap { it.selectedCategories },
+            categorySelectionVM.flatMap { it.selectedCategories },
         )
             .map { (autoFillCategory, replayBox, userCategoryAmountFormulas, total, selectedCategories) ->
                 val replay = replayBox.first
@@ -221,7 +225,7 @@ class CategorizeAdvancedVM @Inject constructor(
         Rx.combineLatest(
             categoryAmountFormulas,
             userCategoryAmountFormulas,
-            Observable.timer(300, TimeUnit.MILLISECONDS).map { _categorySelectionVM }.retry().flatMap { it.selectedCategories },
+            categorySelectionVM.flatMap { it.selectedCategories },
         )
             .map { (categoryAmountFormulas, userCategoryAmountFormulas, selectedCategories) ->
                 userCategoryAmountFormulas
