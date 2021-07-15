@@ -8,6 +8,7 @@ import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.domain.DeleteCategoryFromActiveDomainUC
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.models.CategoryType
+import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +18,6 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
-import java.math.BigDecimal
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,9 +32,9 @@ class CategorySettingsVM @Inject constructor(
             _categoryToPush.onNext(_categoryToPush.value!!.copy(name = categoryName))
     }
 
-    fun userSetDefaultAmount(defaultAmount: BigDecimal) {
-        if (defaultAmount != _categoryToPush.value!!.defaultAmount)
-            _categoryToPush.onNext(_categoryToPush.value!!.copy(defaultAmount = defaultAmount))
+    fun userSetDefaultAmountFormula(defaultAmountFormula: AmountFormula) {
+        if (defaultAmountFormula != _categoryToPush.value!!.defaultAmountFormula)
+            _categoryToPush.onNext(_categoryToPush.value!!.copy(defaultAmountFormula = defaultAmountFormula))
     }
 
     fun userSetType(type: CategoryType) {

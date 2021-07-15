@@ -21,10 +21,7 @@ import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactori
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.categories.CategorySettingsVM
 import com.tminus1010.budgetvalue.categories.models.CategoryType
-import com.tminus1010.budgetvalue.databinding.FragCategorySettingsBinding
-import com.tminus1010.budgetvalue.databinding.ItemEditTextBinding
-import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
-import com.tminus1010.budgetvalue.databinding.ItemSpinnerBinding
+import com.tminus1010.budgetvalue.databinding.*
 import com.tminus1010.budgetvalue.transactions.ui.CategorizeFrag
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -79,11 +76,11 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
             ),
         ).reversed()
         // # TMTableView
-        val defaultAmountRecipe = ViewItemRecipe3<ItemMoneyEditTextBinding, Unit?>(
+        val defaultAmountRecipe = ViewItemRecipe3<ItemPercentageOrMoneyEditTextBinding, Unit?>(
             { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
             { _, vb, lifecycleOwner ->
                 vb.edittext.bind(categorySettingsVM.categoryToPush.map { it.defaultAmount.toString() }, lifecycleOwner) { easyText = it }
-                vb.edittext.onDone { categorySettingsVM.userSetDefaultAmount(it.toMoneyBigDecimal()) }
+                vb.edittext.onDone { categorySettingsVM.userSetDefaultAmountFormula(it.toMoneyBigDecimal()) }
             }
         )
         val categoryNameRecipe = ViewItemRecipe3<ItemEditTextBinding, Unit?>(

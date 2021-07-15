@@ -2,13 +2,12 @@ package com.tminus1010.budgetvalue.categories.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.math.BigDecimal
 
 @Entity
-data class CategoryDTO (
+data class CategoryDTO(
     @PrimaryKey
     val name: String,
     val type: Int,
-    val defaultAmount: BigDecimal,
+    val defaultAmountFormula: String,
     val isRequired: Boolean = false,
 )
