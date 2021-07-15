@@ -10,7 +10,6 @@ data class BasicReplay(
     override val name: String,
     private val description: String,
     override val categoryAmountFormulas: Map<Category, AmountFormula>,
-    override val isAutoReplay: Boolean,
     override val autoFillCategory: Category,
 ) : IReplay {
     override fun predicate(transaction: Transaction): Boolean =
@@ -26,7 +25,6 @@ data class BasicReplay(
             name = name,
             description = description,
             categoryAmountFormulasStr = categoryAmountFormulasConverter.toJson(categoryAmountFormulas),
-            isAutoReplay = isAutoReplay,
             autoFillCategoryName = autoFillCategory.name,
         )
 
@@ -36,7 +34,6 @@ data class BasicReplay(
                 name = name,
                 description = description,
                 categoryAmountFormulas = categoryAmountFormulasConverter.toCategoryAmountFormulas(categoryAmountFormulasStr),
-                isAutoReplay = isAutoReplay,
                 autoFillCategory = categoryParser.parseCategory(autoFillCategoryName),
             )
         }

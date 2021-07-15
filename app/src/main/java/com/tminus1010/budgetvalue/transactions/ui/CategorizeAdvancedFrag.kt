@@ -12,7 +12,6 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.InvalidCategoryAmounts
 import com.tminus1010.budgetvalue._core.InvalidSearchText
 import com.tminus1010.budgetvalue._core.extensions.*
-import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonItem
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuItem
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
@@ -24,6 +23,7 @@ import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.*
+import com.tminus1010.budgetvalue.replay.models.IFuture
 import com.tminus1010.budgetvalue.replay.models.IReplay
 import com.tminus1010.budgetvalue.replay.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.CategorizeAdvancedVM
@@ -227,32 +227,9 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
             }
 
         // # Button RecyclerView
-        Rx.combineLatest(
-            categorizeAdvancedVM.replayOrFuture,
-            categorizeAdvancedVM.transactionToPush,
-        )
-            .observe(viewLifecycleOwner) { (replayOrFutureBox, transactionToPushBox) ->
-                val replayOrFuture = replayOrFutureBox.first
+        categorizeAdvancedVM.replayOrFuture
+            .observe(viewLifecycleOwner) { (replayOrFuture) ->
                 vb.buttonsview.buttons = listOfNotNull(
-                    if (categorizeAdvancedType == CategorizeAdvancedType.CREATE_REPLAY)
-                        ButtonItem(
-                            title = "Setup Auto Replay",
-                            onClick = {
-                                if (categorizeAdvancedVM.areCurrentCAsValid.value!!) {
-                                    val editText = EditText(requireContext())
-                                    AlertDialog.Builder(requireContext())
-                                        .setMessage("What would you like to name this replay?")
-                                        .setView(editText)
-                                        .setPositiveButton("Submit") { _, _ ->
-                                            categorizeAdvancedVM.userSaveReplay(editText.easyText, true)
-                                        }
-                                        .setNegativeButton("Cancel") { _, _ -> }
-                                        .show()
-                                } else
-                                    errorSubject.onNext(InvalidCategoryAmounts(""))
-                            }
-                        )
-                    else null,
                     if (categorizeAdvancedType == CategorizeAdvancedType.CREATE_REPLAY)
                         ButtonItem(
                             title = "Save Replay",
@@ -263,7 +240,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                                         .setMessage("What would you like to name this replay?")
                                         .setView(editText)
                                         .setPositiveButton("Submit") { _, _ ->
-                                            categorizeAdvancedVM.userSaveReplay(editText.easyText, false)
+                                            categorizeAdvancedVM.userSaveReplay(editText.easyText)
                                         }
                                         .setNegativeButton("Cancel") { _, _ -> }
                                         .show()
@@ -305,7 +282,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                             }
                         )
                     else null,
-                    if (transactionToPushBox.first != null)
+                    if (categorizeAdvancedType != CategorizeAdvancedType.CREATE_FUTURE)
                         ButtonItem(
                             title = "Submit",
                             onClick = {
