@@ -1,7 +1,9 @@
 package com.tminus1010.budgetvalue.reconciliations
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.extensions.flatMapSourceHashMap
+import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
@@ -48,19 +50,22 @@ class ActiveReconciliationVM @Inject constructor(
     }
 
     // # Output
-    val activeReconcileCAs: Observable<Map<Category, Observable<String>>> =
+    val activeReconcileCAs =
         Rx.combineLatest(
             reconciliationsRepo.activeReconciliationCAs,
-            categoriesDomain.userCategories
+            categoriesDomain.userCategories,
         )
             // These extra zeros prevent refreshes on hidden additions/removals that happen when a value is set to 0.
             .map { (activeReconcileCAs, activeCategories) ->
                 activeCategories.associateWith { BigDecimal.ZERO }
                     .plus(activeReconcileCAs)
             }
+            .nonLazyCache(disposables)
+    val activeReconcileCAsToShow: Observable<Map<Category, Observable<String>>> =
+        activeReconcileCAs
             .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO)) { it.itemObservableMap }
             .map { it.mapValues { it.value.map { it.toString() } } }
-            .replay(1).refCount()
+            .nonLazyCache(disposables)
     val defaultAmount: Observable<String> = activeReconciliationDefaultAmountUC()
         .map { it.toString() }
 }
