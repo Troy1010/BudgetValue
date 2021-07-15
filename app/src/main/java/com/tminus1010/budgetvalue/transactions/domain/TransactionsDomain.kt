@@ -6,6 +6,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay.ReplayDomain
 import com.tminus1010.budgetvalue.replay.data.FutureRepo
 import com.tminus1010.budgetvalue.replay.models.IFuture
+import com.tminus1010.budgetvalue.replay.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.TransactionParser
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.models.Transaction
@@ -45,11 +46,21 @@ class TransactionsDomain @Inject constructor(
                         transactionsRepo.push(transaction)
                     else
                         transactionsRepo.push(futureOrReplay.categorize(transaction))
-                            .run { if (futureOrReplay is IFuture && futureOrReplay.shouldDeleteAfterCategorization) andThen(futureRepo.delete(futureOrReplay.name)) else this }
+                            .run { if (futureOrReplay is IFuture && !futureOrReplay.isPermanent) andThen(futureRepo.delete(futureOrReplay.name)) else this }
                             .onErrorComplete() // error occurs when transaction already exists
                 }
             )
         }
+
+    fun applyReplayOrFutureToUncategorizedSpends(replay: IReplayOrFuture): Completable =
+        uncategorizedSpends.toSingle()
+            .flatMapCompletable { transactions ->
+                Rx.merge(
+                    transactions
+                        .filter { replay.predicate(it) }
+                        .map { transactionsRepo.update(replay.categorize(it)) }
+                )
+            }
 
     // # Internal
     private fun getBlocksFromTransactions(transactions: List<Transaction>): List<TransactionsBlock> {

@@ -12,9 +12,8 @@ data class BasicFuture(
     private val searchText: String,
     override val categoryAmountFormulas: Map<Category, AmountFormula>,
     override val autoFillCategory: Category,
+    override val isPermanent: Boolean,
 ) : IFuture {
-    override val shouldDeleteAfterCategorization = true
-
     override fun predicate(transaction: Transaction): Boolean =
         searchText.toUpperCase(Locale.ROOT) in transaction.description.toUpperCase(Locale.ROOT)
 
@@ -29,6 +28,7 @@ data class BasicFuture(
             searchText = searchText,
             categoryAmountFormulasStr = categoryAmountFormulasConverter.toJson(categoryAmountFormulas),
             autoFillCategoryName = autoFillCategory.name,
+            isPermanent = isPermanent,
         )
 
     companion object {
@@ -38,6 +38,7 @@ data class BasicFuture(
                 searchText = searchText,
                 categoryAmountFormulas = categoryAmountFormulasConverter.toCategoryAmountFormulas(categoryAmountFormulasStr),
                 autoFillCategory = categoryParser.parseCategory(autoFillCategoryName),
+                isPermanent = isPermanent
             )
         }
     }

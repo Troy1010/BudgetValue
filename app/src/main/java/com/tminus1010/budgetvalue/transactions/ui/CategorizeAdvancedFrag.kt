@@ -61,13 +61,11 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
         _args?.also { _args = null; categorizeAdvancedVM.setup(it.first, it.second, it.third) }
         //
         shouldIgnoreUserInput.observe(viewLifecycleOwner) {}
-        vb.tvTitle.bind(categorizeAdvancedVM.replayOrFuture) { replayOrFutureBox ->
-            val replayOrFuture = replayOrFutureBox.first
+        vb.tvTitle.bind(categorizeAdvancedVM.replayOrFuture) { (replayOrFuture) ->
             easyVisibility = replayOrFuture != null
             text = replayOrFuture?.name ?: ""
         }
-        vb.tvAmountToSplit.bind(categorizeAdvancedVM.amountToCategorizeMsg) { amountToCategorizeMsgBox ->
-            val amountToCategorizeMsg = amountToCategorizeMsgBox.first
+        vb.tvAmountToSplit.bind(categorizeAdvancedVM.amountToCategorizeMsg) { (amountToCategorizeMsg) ->
             easyVisibility = amountToCategorizeMsg != null
             text = amountToCategorizeMsg ?: ""
         }
@@ -83,15 +81,23 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
         vb.tmTableViewOtherInput.easyVisibility = categorizeAdvancedType == CategorizeAdvancedType.CREATE_FUTURE
         val searchTextRecipe = ViewItemRecipe3<ItemEditTextBinding, Unit?>(
             { ItemEditTextBinding.inflate(LayoutInflater.from(requireContext())) },
-            { _, vb, _ ->
+            { _, vb, lifecycle ->
+                vb.edittext.bind(categorizeAdvancedVM.searchText, lifecycle) { if (text.toString() != it) setText(it) }
                 vb.edittext.onDone { categorizeAdvancedVM.userSetSearchText(it) }
             }
         )
         val totalGuessRecipe = ViewItemRecipe3<ItemMoneyEditTextBinding, Unit?>(
             { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(requireContext())) },
-            { _, vb, _ ->
-                vb.edittext.setText("0")
+            { _, vb, lifecycle ->
+                vb.edittext.bind(categorizeAdvancedVM.total, lifecycle) { if (text.toString() != it.toString()) setText(it.toString()) }
                 vb.edittext.onDone { categorizeAdvancedVM.userSetTotalGuess(it.toMoneyBigDecimal()) }
+            }
+        )
+        val isPermanentRecipe = ViewItemRecipe3<ItemCheckboxBinding, Unit?>(
+            { ItemCheckboxBinding.inflate(LayoutInflater.from(requireContext())) },
+            { _, vb, lifecycle ->
+                vb.checkbox.bind(categorizeAdvancedVM.isPermanent.take(1), lifecycle) { isChecked = it }
+                vb.checkbox.setOnCheckedChangeListener { _, isChecked -> categorizeAdvancedVM.userSetIsPermanent(isChecked) }
             }
         )
         if (categorizeAdvancedType == CategorizeAdvancedType.CREATE_FUTURE)
@@ -105,6 +111,10 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                         listOf(
                             recipeFactories.textView.createOne("Total Guess"),
                             totalGuessRecipe,
+                        ),
+                        listOf(
+                            recipeFactories.textView.createOne("Is Permanent"),
+                            isPermanentRecipe,
                         ),
                     )
                 }
@@ -144,7 +154,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                                     title = "Percentage",
                                     onClick = {
                                         _shouldIgnoreUserInputForDuration.onNext(Unit)
-                                        categorizeAdvancedVM.userSwitchCategoryToPercentage(category)
+                                        categorizeAdvancedVM.userSwitchCategoryIsPercentage(category, true)
                                     })
                             else null,
                             if (amountFormula !is AmountFormula.Value)
@@ -152,7 +162,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                                     title = "No Percentage",
                                     onClick = {
                                         _shouldIgnoreUserInputForDuration.onNext(Unit)
-                                        categorizeAdvancedVM.userSwitchCategoryToNonPercentage(category)
+                                        categorizeAdvancedVM.userSwitchCategoryIsPercentage(category, false)
                                     })
                             else null,
                         ).toTypedArray()
