@@ -23,7 +23,6 @@ import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.*
-import com.tminus1010.budgetvalue.replay.models.IFuture
 import com.tminus1010.budgetvalue.replay.models.IReplay
 import com.tminus1010.budgetvalue.replay.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.CategorizeAdvancedVM
@@ -230,7 +229,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
         categorizeAdvancedVM.replayOrFuture
             .observe(viewLifecycleOwner) { (replayOrFuture) ->
                 vb.buttonsview.buttons = listOfNotNull(
-                    if (categorizeAdvancedType == CategorizeAdvancedType.CREATE_REPLAY)
+                    if (categorizeAdvancedType == CategorizeAdvancedType.SPLIT)
                         ButtonItem(
                             title = "Save Replay",
                             onClick = {
@@ -296,7 +295,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
     }
 
     enum class Key { CategorizeAdvancedType }
-    enum class CategorizeAdvancedType { CREATE_REPLAY, CREATE_FUTURE, EDIT }
+    enum class CategorizeAdvancedType { SPLIT, CREATE_FUTURE, EDIT }
     companion object {
         private var _args: Triple<Transaction?, IReplayOrFuture?, CategorySelectionVM>? = null
         fun navTo(

@@ -132,7 +132,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 else null,
                 if (inSelectionMode)
                     ButtonItem(
-                        title = "Create Replay",
+                        title = "Split",
                         isEnabled = categorizeVM.isTransactionAvailable,
                         onClick = {
                             CategorizeAdvancedFrag.navTo(
@@ -141,7 +141,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                                 categorySelectionVM = categorySelectionVM,
                                 transaction = transactionsDomain.firstUncategorizedSpend.value!!.first!!,
                                 replayOrFuture = null,
-                                categorizeAdvancedType = CategorizeAdvancedFrag.CategorizeAdvancedType.CREATE_REPLAY,
+                                categorizeAdvancedType = CategorizeAdvancedFrag.CategorizeAdvancedType.SPLIT,
                             )
                         }
                     )
