@@ -209,20 +209,21 @@ class CategorizeAdvancedVM @Inject constructor(
             _replayOrFuture,
             userCategoryAmountFormulas,
             total,
+            Observable.timer(300, TimeUnit.MILLISECONDS).map { _categorySelectionVM }.retry().flatMap { it.selectedCategories },
         )
-            .map { (autoFillCategory, replayBox, userCategoryAmountFormulas, total) ->
+            .map { (autoFillCategory, replayBox, userCategoryAmountFormulas, total, selectedCategories) ->
                 val replay = replayBox.first
                 CategoryAmountFormulas(replay?.categoryAmountFormulas ?: emptyMap())
                     .plus(userCategoryAmountFormulas.filter { !it.value.isZero() })
+                    .plus(selectedCategories.filter { !it.defaultAmountFormula.isZero() }.associateWith { it.defaultAmountFormula })
                     .fillIntoCategory(autoFillCategory, total)
             }
-            .startWithItem(CategoryAmountFormulas())
             .nonLazyCache(disposables)
     val categoryAmountFormulasToShow =
         Rx.combineLatest(
             categoryAmountFormulas,
             userCategoryAmountFormulas,
-            Observable.timer(300, TimeUnit.MILLISECONDS).map { _categorySelectionVM }.retry().flatMap { it.selectedCategories }
+            Observable.timer(300, TimeUnit.MILLISECONDS).map { _categorySelectionVM }.retry().flatMap { it.selectedCategories },
         )
             .map { (categoryAmountFormulas, userCategoryAmountFormulas, selectedCategories) ->
                 userCategoryAmountFormulas
