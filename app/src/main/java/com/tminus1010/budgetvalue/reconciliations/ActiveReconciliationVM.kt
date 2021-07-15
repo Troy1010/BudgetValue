@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue.reconciliations
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.middleware.Rx
@@ -15,14 +14,12 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.Singles
-import io.reactivex.rxjava3.subjects.Subject
 import java.math.BigDecimal
 import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class ActiveReconciliationVM @Inject constructor(
-    errorSubject: Subject<Throwable>,
     private val reconciliationsRepo: ReconciliationsRepo,
     categoriesDomain: CategoriesDomain,
     private val activeReconciliationDefaultAmountUC: ActiveReconciliationDefaultAmountUC,
@@ -51,7 +48,7 @@ class ActiveReconciliationVM @Inject constructor(
     }
 
     // # Output
-    val activeReconcileCAs2: Observable<Map<Category, Observable<String>>> =
+    val activeReconcileCAs: Observable<Map<Category, Observable<String>>> =
         Rx.combineLatest(
             reconciliationsRepo.activeReconciliationCAs,
             categoriesDomain.userCategories
@@ -61,9 +58,8 @@ class ActiveReconciliationVM @Inject constructor(
                 activeCategories.associateWith { BigDecimal.ZERO } + activeReconcileCAs
             }
             .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO)) { it.itemObservableMap }
-            .map { it.mapValues { it.value.map { it.toString() }.divertErrors(errorSubject) } }
+            .map { it.mapValues { it.value.map { it.toString() } } }
             .replay(1).refCount()
     val defaultAmount: Observable<String> = activeReconciliationDefaultAmountUC()
         .map { it.toString() }
-        .divertErrors(errorSubject)
 }
