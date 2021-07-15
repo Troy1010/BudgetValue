@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.replay.models
+package com.tminus1010.budgetvalue.replay_or_future.models
 
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula

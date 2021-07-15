@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.replay.models
+package com.tminus1010.budgetvalue.replay_or_future.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

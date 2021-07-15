@@ -12,11 +12,11 @@ import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.replay.data.FuturesRepo
-import com.tminus1010.budgetvalue.replay.data.ReplayRepo
-import com.tminus1010.budgetvalue.replay.models.BasicFuture
-import com.tminus1010.budgetvalue.replay.models.BasicReplay
-import com.tminus1010.budgetvalue.replay.models.IReplayOrFuture
+import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
+import com.tminus1010.budgetvalue.replay_or_future.data.ReplayRepo
+import com.tminus1010.budgetvalue.replay_or_future.models.BasicFuture
+import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplay
+import com.tminus1010.budgetvalue.replay_or_future.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula

@@ -5,8 +5,8 @@ import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.extensions.unbox
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.replay.data.ReplayRepo
-import com.tminus1010.budgetvalue.replay.models.IReplay
+import com.tminus1010.budgetvalue.replay_or_future.data.ReplayRepo
+import com.tminus1010.budgetvalue.replay_or_future.models.IReplay
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe

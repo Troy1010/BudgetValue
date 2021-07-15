@@ -23,8 +23,8 @@ import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.*
-import com.tminus1010.budgetvalue.replay.models.IReplay
-import com.tminus1010.budgetvalue.replay.models.IReplayOrFuture
+import com.tminus1010.budgetvalue.replay_or_future.models.IReplay
+import com.tminus1010.budgetvalue.replay_or_future.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.CategorizeAdvancedVM
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.budgetvalue.transactions.models.Transaction

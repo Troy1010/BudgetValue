@@ -1,10 +1,10 @@
-package com.tminus1010.budgetvalue.replay.data
+package com.tminus1010.budgetvalue.replay_or_future.data
 
 import com.tminus1010.budgetvalue._core.data.MiscDAO
 import com.tminus1010.budgetvalue.categories.CategoryAmountFormulasConverter
 import com.tminus1010.budgetvalue.categories.ICategoryParser
-import com.tminus1010.budgetvalue.replay.models.BasicReplay
-import com.tminus1010.budgetvalue.replay.models.IReplay
+import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplay
+import com.tminus1010.budgetvalue.replay_or_future.models.IReplay
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
