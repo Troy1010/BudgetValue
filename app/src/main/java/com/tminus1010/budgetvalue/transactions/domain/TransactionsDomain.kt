@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.transactions.domain
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.replay.data.FutureRepo
+import com.tminus1010.budgetvalue.replay.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.TransactionParser
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
@@ -27,20 +27,20 @@ class TransactionsDomain @Inject constructor(
     private val transactionsRepo: TransactionsRepo,
     private val datePeriodGetter: DatePeriodGetter,
     private val transactionParser: TransactionParser,
-    private val futureRepo: FutureRepo,
+    private val futuresRepo: FuturesRepo,
 ) {
     // # Input
     fun importTransactions(inputStream: InputStream): Completable =
         Singles.zip(
             Single.fromCallable { transactionParser.parseToTransactions(inputStream) },
-            futureRepo.fetchFutures().toSingle(),
+            futuresRepo.fetchFutures().toSingle(),
         ).subscribeOn(Schedulers.io()).flatMapCompletable { (transactions, futures) ->
             Rx.merge(
                 transactions.map { transaction ->
                     futures.find { it.predicate(transaction) }
                         ?.let { future ->
                             transactionsRepo.push(future.categorize(transaction))
-                                .run { if (!future.isPermanent) andThen(futureRepo.delete(future.name)) else this }
+                                .run { if (!future.isPermanent) andThen(futuresRepo.delete(future.name)) else this }
                                 .onErrorComplete() // error occurs when transaction already exists
                         }
                         ?: transactionsRepo.push(transaction)
