@@ -50,7 +50,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
             )
         )
         // # TMTableView
-        val headerRecipeFactory_numbered = ViewItemRecipeFactory3<ItemHeaderIncomeBinding, Pair<String, Observable<String>>>(
+        val numberedHeaderRecipeFactory = ViewItemRecipeFactory3<ItemHeaderIncomeBinding, Pair<String, Observable<String>>>(
             { ItemHeaderIncomeBinding.inflate(LayoutInflater.from(context)) },
             { d, vb, lifecycle ->
                 vb.textviewHeader.text = d.first
@@ -86,7 +86,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                     listOf(recipeFactories.header.createOne("Category"))
                             + recipeFactories.textView.createOne("Default")
                             + recipeFactories.textView.createMany(categories.map { it.name }),
-                    listOf(headerRecipeFactory_numbered.createOne(Pair("Plan", activePlanVM.expectedIncome)))
+                    listOf(numberedHeaderRecipeFactory.createOne(Pair("Plan", activePlanVM.expectedIncome)))
                             + recipeFactories.textViewWithLifecycle.createOne(activePlanVM.defaultAmount)
                             + recipeFactories.textViewWithLifecycle.createMany(categories.map { activePlanCAs[it] }),
                     listOf(recipeFactories.header.createOne("Actual"))
@@ -95,7 +95,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                     listOf(recipeFactories.header.createOne("Reconcile"))
                             + recipeFactories.textViewWithLifecycle.createOne(activeReconciliationVM.defaultAmount)
                             + reconcileCARecipeFactory.createMany(categories.map { it to activeReconciliationCAs[it] }),
-                    listOf(headerRecipeFactory_numbered.createOne(Pair("Budgeted", accountsVM.accountsTotal)))
+                    listOf(numberedHeaderRecipeFactory.createOne(Pair("Budgeted", accountsVM.accountsTotal)))
                             + recipeFactories.textViewWithLifecycle.createOne(budgetedVM.defaultAmount)
                             + budgetedRecipeFactory.createMany(categories.map { budgetedCA[it] })
                 ).reflectXY()
