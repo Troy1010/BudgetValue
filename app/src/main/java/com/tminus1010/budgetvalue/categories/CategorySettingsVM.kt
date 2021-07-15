@@ -3,13 +3,17 @@ package com.tminus1010.budgetvalue.categories
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.InvalidCategoryNameException
+import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
+import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.domain.DeleteCategoryFromActiveDomainUC
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.models.CategoryType
+import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
+import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -27,23 +31,39 @@ class CategorySettingsVM @Inject constructor(
     private val errorSubject: Subject<Throwable>,
 ) : ViewModel() {
     // # Input
-    fun userSetName(categoryName: String) {
-        if (categoryName != _categoryToPush.value!!.name)
-            _categoryToPush.onNext(_categoryToPush.value!!.copy(name = categoryName))
+    // if categoryName is null, we are making a new category
+    fun setup(categoryName: String?) {
+        if (categoryName == null)
+            _categoryToPush.onNext(Category(""))
+        else
+            categoriesRepo.userCategories
+                .take(1)
+                .map { it.find { it.name == categoryName }!! }
+                .observe(disposables) { _categoryToPush.onNext(it) }
     }
 
-    fun userSetDefaultAmount(defaultAmount: BigDecimal) {
-        if (defaultAmount != _categoryToPush.value!!.defaultAmount)
-            _categoryToPush.onNext(_categoryToPush.value!!.copy(defaultAmount = defaultAmount))
+    fun userSetName(categoryName: String) {
+        if (categoryName != _categoryToPush.value!!.name)
+            _categoryToPush.onNext(categoryToPush.value!!.copy(name = categoryName))
+    }
+
+    private val userDefaultAmountFormulaValue = BehaviorSubject.create<BigDecimal>()
+    fun userSetDefaultAmountFormulaValue(defaultAmountFormulaValue: BigDecimal) {
+        userDefaultAmountFormulaValue.onNext(defaultAmountFormulaValue)
+    }
+
+    private val userDefaultAmountFormulaIsPercentage = BehaviorSubject.createDefault(false)
+    fun userSetDefaultAmountFormulaIsPercentage(isPercentage: Boolean) {
+        userDefaultAmountFormulaIsPercentage.onNext(isPercentage)
     }
 
     fun userSetType(type: CategoryType) {
         if (type != _categoryToPush.value!!.type)
-            _categoryToPush.onNext(_categoryToPush.value!!.copy(type = type))
+            _categoryToPush.onNext(categoryToPush.value!!.copy(type = type))
     }
 
     fun userDeleteCategory() {
-        deleteCategoryFromActiveDomainUC(_categoryToPush.value!!)
+        deleteCategoryFromActiveDomainUC(categoryToPush.value!!)
             .subscribe()
     }
 
@@ -63,25 +83,26 @@ class CategorySettingsVM @Inject constructor(
             }
             .subscribeBy(
                 onComplete = { navigateUp.onNext(Unit) },
-                onError = { errorSubject.onNext(it) }
+                onError = { errorSubject.onNext(it) },
             )
     }
 
-    // if categoryName is null, we are making a new category
-    fun setup(categoryName: String?) {
-        if (categoryName == null)
-            _categoryToPush.onNext(Category(""))
-        else
-            categoriesRepo.userCategories
-                .take(1)
-                .map { it.find { it.name == categoryName }!! }
-                .observe(disposables) { _categoryToPush.onNext(it) }
-    }
-
-    // # Internal
-    private val _categoryToPush = BehaviorSubject.create<Category>()
-
     // # Output
+    private val _categoryToPush = BehaviorSubject.create<Category>()
     val navigateUp: PublishSubject<Unit> = PublishSubject.create()
-    val categoryToPush: Observable<Category> = _categoryToPush
+    val categoryToPush: Observable<Category> =
+        Rx.combineLatest(
+            _categoryToPush,
+            userDefaultAmountFormulaValue.map { Box(it) }.startWithItem(Box(null)),
+            userDefaultAmountFormulaIsPercentage.map { Box(it) }.startWithItem(Box(null)),
+        ).map { (categoryToPush, amountFormulaValueBox, amountFormulaIsPercentageBox) ->
+            val defaultAmountFormula = if (amountFormulaValueBox.first != null && amountFormulaIsPercentageBox.first != null)
+                (if (amountFormulaIsPercentageBox.first) AmountFormula.Percentage(amountFormulaValueBox.first) else AmountFormula.Value(amountFormulaValueBox.first))
+            else null
+            if (defaultAmountFormula != null)
+                categoryToPush.copy(defaultAmountFormula = defaultAmountFormula)
+            else
+                categoryToPush
+        }
+            .nonLazyCache(disposables)
 }

@@ -7,14 +7,13 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
-import androidx.navigation.navGraphViewModels
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.InvalidCategoryNameException
-import com.tminus1010.budgetvalue._core.extensions.bind
-import com.tminus1010.budgetvalue._core.extensions.easyText
-import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
+import com.tminus1010.budgetvalue._core.extensions.*
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonItem
+import com.tminus1010.budgetvalue._core.middleware.ui.MenuItem
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipe3
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
@@ -22,13 +21,15 @@ import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.categories.CategorySettingsVM
 import com.tminus1010.budgetvalue.categories.models.CategoryType
 import com.tminus1010.budgetvalue.databinding.FragCategorySettingsBinding
+import com.tminus1010.budgetvalue.databinding.ItemAmountFormulaBinding
 import com.tminus1010.budgetvalue.databinding.ItemEditTextBinding
-import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
 import com.tminus1010.budgetvalue.databinding.ItemSpinnerBinding
+import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.budgetvalue.transactions.ui.CategorizeFrag
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
+import com.tminus1010.tmcommonkotlin.tuple.Box
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,7 +41,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
     private val vb by viewBinding(FragCategorySettingsBinding::bind)
-    private val categorySettingsVM: CategorySettingsVM by navGraphViewModels(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
+    private val categorySettingsVM: CategorySettingsVM by viewModels()
 
     @Inject
     lateinit var errorSubject: Subject<Throwable>
@@ -48,6 +49,9 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // # Mediation
+        _setupArgs?.also { _setupArgs = null; categorySettingsVM.setup(it.first) }
+        //
         errorSubject.observe(viewLifecycleOwner) {
             when (it) {
                 is InvalidCategoryNameException -> toast("Invalid name")
@@ -79,11 +83,32 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
             ),
         ).reversed()
         // # TMTableView
-        val defaultAmountRecipe = ViewItemRecipe3<ItemMoneyEditTextBinding, Unit?>(
-            { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
+        val defaultAmountFormulaValueRecipe = ViewItemRecipe3<ItemAmountFormulaBinding, Unit?>(
+            { ItemAmountFormulaBinding.inflate(LayoutInflater.from(context)) },
             { _, vb, lifecycleOwner ->
-                vb.edittext.bind(categorySettingsVM.categoryToPush.map { it.defaultAmount.toString() }, lifecycleOwner) { easyText = it }
-                vb.edittext.onDone { categorySettingsVM.userSetDefaultAmount(it.toMoneyBigDecimal()) }
+                vb.moneyEditText.bind(categorySettingsVM.categoryToPush, lifecycleOwner) { easyText = it.defaultAmountFormula.toDisplayStr() }
+                vb.moneyEditText.onDone { categorySettingsVM.userSetDefaultAmountFormulaValue(it.toMoneyBigDecimal()) }
+                vb.tvPercentage.bind(categorySettingsVM.categoryToPush, lifecycleOwner) { easyVisibility = it.defaultAmountFormula is AmountFormula.Percentage }
+                vb.moneyEditText.setOnCreateContextMenuListener { menu, _, _ ->
+                    menu.add(
+                        *listOfNotNull(
+                            if (categorySettingsVM.categoryToPush.value!!.defaultAmountFormula !is AmountFormula.Percentage)
+                                MenuItem(
+                                    title = "Percentage",
+                                    onClick = {
+                                        categorySettingsVM.userSetDefaultAmountFormulaIsPercentage(true)
+                                    })
+                            else null,
+                            if (categorySettingsVM.categoryToPush.value!!.defaultAmountFormula !is AmountFormula.Value)
+                                MenuItem(
+                                    title = "No Percentage",
+                                    onClick = {
+                                        categorySettingsVM.userSetDefaultAmountFormulaIsPercentage(false)
+                                    })
+                            else null,
+                        ).toTypedArray()
+                    )
+                }
             }
         )
         val categoryNameRecipe = ViewItemRecipe3<ItemEditTextBinding, Unit?>(
@@ -122,7 +147,7 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
                 ).map { recipeFactories.textView.createOne(it) },
                 listOfNotNull(
                     if (isForNewCategory) categoryNameRecipe else null,
-                    defaultAmountRecipe,
+                    defaultAmountFormulaValueRecipe,
                     categoryTypeRecipe
                 ),
             ).reflectXY(),
@@ -133,9 +158,10 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
     enum class Key { IsForNewCategory }
 
     companion object {
-        fun navTo(source: Any, nav: NavController, categorySettingsVM: CategorySettingsVM, categoryName: String?, isForNewCategory: Boolean) {
-            categorySettingsVM.setup(
-                categoryName = categoryName
+        private var _setupArgs: Box<String?>? = null
+        fun navTo(source: Any, nav: NavController, categoryName: String?, isForNewCategory: Boolean) {
+            _setupArgs = Box(
+                categoryName
             )
             nav.navigate(
                 when (source) {

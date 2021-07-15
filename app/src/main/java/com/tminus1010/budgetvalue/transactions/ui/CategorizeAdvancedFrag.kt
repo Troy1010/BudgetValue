@@ -57,7 +57,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Mediation
-        _args?.also { _args = null; categorizeAdvancedVM.setup(it.first, it.second, it.third) }
+        _setupArgs?.also { _setupArgs = null; categorizeAdvancedVM.setup(it.first, it.second, it.third) }
         //
         shouldIgnoreUserInput.observe(viewLifecycleOwner) {}
         vb.tvTitle.bind(categorizeAdvancedVM.replayOrFuture) { (replayOrFuture) ->
@@ -126,8 +126,8 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 }
 
         // # TMTableView CategoryAmounts
-        val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemPercentageOrMoneyEditTextBinding, Map.Entry<Category, AmountFormula>>(
-            { ItemPercentageOrMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
+        val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemAmountFormulaBinding, Map.Entry<Category, AmountFormula>>(
+            { ItemAmountFormulaBinding.inflate(LayoutInflater.from(context)) },
             { (category, amountFormula), vb, lifecycle ->
                 vb.tvPercentage.easyVisibility = amountFormula is AmountFormula.Percentage
                 vb.moneyEditText.bind(categorizeAdvancedVM.autoFillCategory, lifecycle) {
@@ -297,7 +297,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
     enum class Key { CategorizeAdvancedType }
     enum class CategorizeAdvancedType { SPLIT, CREATE_FUTURE, EDIT }
     companion object {
-        private var _args: Triple<Transaction?, IReplayOrFuture?, CategorySelectionVM>? = null
+        private var _setupArgs: Triple<Transaction?, IReplayOrFuture?, CategorySelectionVM>? = null
         fun navTo(
             source: Any,
             nav: NavController,
@@ -306,7 +306,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
             replayOrFuture: IReplayOrFuture?,
             categorizeAdvancedType: CategorizeAdvancedType
         ) {
-            _args = Triple(
+            _setupArgs = Triple(
                 transaction,
                 replayOrFuture,
                 categorySelectionVM
