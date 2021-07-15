@@ -3,5 +3,5 @@
     style="@style/MainButtonStyle.CategoryButtonStyle"
     android:id="@+id/btn_category"
     android:layout_width="match_parent"
-    android:layout_height="65dp"
+    android:layout_height="55dp"
     android:padding="2dp" />
