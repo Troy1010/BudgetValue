@@ -222,7 +222,7 @@ class CategorizeAdvancedVM @Inject constructor(
         )
             .map { (categoryAmountFormulas, userCategoryAmountFormulas, selectedCategories) ->
                 userCategoryAmountFormulas
-                    .plus(selectedCategories.associateWith { AmountFormula.Value(BigDecimal.ZERO) })
+                    .plus(selectedCategories.associateWith { it.defaultAmountFormula })
                     .plus(categoryAmountFormulas)
             }
             .map { it.toSortedMap(categoryComparator) }
