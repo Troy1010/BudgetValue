@@ -8,6 +8,6 @@ data class CategoryDTO(
     @PrimaryKey
     val name: String,
     val type: Int,
-    val defaultAmountFormula: String,
+    val defaultAmountFormulaStr: String,
     val isRequired: Boolean = false,
 )
