@@ -27,25 +27,12 @@ class ActiveReconciliationVM @Inject constructor(
     categoriesDomain: CategoriesDomain,
     private val activeReconciliationDefaultAmountUC: ActiveReconciliationDefaultAmountUC,
 ) : ViewModel() {
-    // # Output
-    val activeReconcileCAs2: Observable<Map<Category, Observable<String>>> =
-        Rx.combineLatest(reconciliationsRepo.activeReconciliationCAs, categoriesDomain.userCategories)
-            // These extra zeros prevent refreshes on hidden additions/removals that happen when a value is set to 0.
-            .map { (activeReconcileCAs, activeCategories) ->
-                activeCategories.associateWith { BigDecimal.ZERO } + activeReconcileCAs
-            }
-            .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO))
-            { it.itemObservableMap }
-            .map { it.mapValues { it.value.map { it.toString() }.divertErrors(errorSubject) } }
-            .replay(1).refCount()
-    val defaultAmount: Observable<String> = activeReconciliationDefaultAmountUC()
-        .map { it.toString() }
-        .divertErrors(errorSubject)
     // # Input
     fun pushActiveReconcileCA(category: Category, s: String) {
         reconciliationsRepo.pushActiveReconciliationCA(category to s.toMoneyBigDecimal())
             .subscribe()
     }
+
     fun saveReconciliation() {
         Singles.zip(
             activeReconciliationDefaultAmountUC().toSingle(),
@@ -62,4 +49,21 @@ class ActiveReconciliationVM @Inject constructor(
             .andThen(reconciliationsRepo.clearActiveReconcileCAs())
             .subscribe()
     }
+
+    // # Output
+    val activeReconcileCAs2: Observable<Map<Category, Observable<String>>> =
+        Rx.combineLatest(
+            reconciliationsRepo.activeReconciliationCAs,
+            categoriesDomain.userCategories
+        )
+            // These extra zeros prevent refreshes on hidden additions/removals that happen when a value is set to 0.
+            .map { (activeReconcileCAs, activeCategories) ->
+                activeCategories.associateWith { BigDecimal.ZERO } + activeReconcileCAs
+            }
+            .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO)) { it.itemObservableMap }
+            .map { it.mapValues { it.value.map { it.toString() }.divertErrors(errorSubject) } }
+            .replay(1).refCount()
+    val defaultAmount: Observable<String> = activeReconciliationDefaultAmountUC()
+        .map { it.toString() }
+        .divertErrors(errorSubject)
 }
