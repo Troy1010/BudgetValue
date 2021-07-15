@@ -153,7 +153,7 @@ class CategorizeAdvancedVM @Inject constructor(
         userIsPermanent.onNext(boolean)
     }
 
-    // # Internal
+    // # Output
     private val userCategoryAmounts = SourceHashMap<Category, BigDecimal>()
     private val transaction = BehaviorSubject.createDefault(Box<Transaction?>(null))
     private val _replayOrFuture = BehaviorSubject.createDefault(Box<IReplayOrFuture?>(null))
@@ -172,8 +172,6 @@ class CategorizeAdvancedVM @Inject constructor(
                             AmountFormula.Value(userCategoryAmounts[it] ?: BigDecimal.ZERO)
                     }
             }
-
-    // # Output
     val searchText =
         Observable.merge(
             transaction.map { it.first?.description ?: "" },
@@ -229,7 +227,7 @@ class CategorizeAdvancedVM @Inject constructor(
             }
             .map { it.toSortedMap(categoryComparator) }
             .nonLazyCache(disposables)
-    val transactionToPush =
+    private val transactionToPush =
         Rx.combineLatest(
             transaction,
             categoryAmountFormulas,
