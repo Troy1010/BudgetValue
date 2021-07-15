@@ -15,7 +15,7 @@ data class Category(
 
     companion object {
         fun fromDTO(categoryDTO: CategoryDTO) = categoryDTO.run {
-            Category(name, CategoryType.values()[type], AmountFormula.fromDTO(defaultAmountFormula), isRequired)
+            Category(name, CategoryType.values()[type], AmountFormula.fromDTO(defaultAmountFormulaStr), isRequired)
         }
     }
 }
