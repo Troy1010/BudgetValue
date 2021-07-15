@@ -1,5 +1,6 @@
 package com.tminus1010.budgetvalue.transactions.ui
 
+import android.database.sqlite.SQLiteConstraintException
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -73,6 +74,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
             when (it) {
                 is InvalidCategoryAmounts -> toast("Invalid category amounts")
                 is InvalidSearchText -> toast("Invalid search text")
+                is SQLiteConstraintException -> toast("Invalid duplicate name")
                 else -> throw it
             }
         }

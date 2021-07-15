@@ -88,12 +88,8 @@ class CategorizeAdvancedVM @Inject constructor(
             categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
             autoFillCategory = autoFillCategory.value!!,
         )
-        Rx.merge(
-            listOfNotNull(
-                replayRepo.add(replay),
-                _categorySelectionVM.clearSelection(),
-            )
-        )
+        replayRepo.add(replay)
+            .andThen(_categorySelectionVM.clearSelection())
             .observe(disposables, onComplete = {
                 navUp.onNext(Unit)
             }, onError = {
