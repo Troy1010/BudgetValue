@@ -10,8 +10,7 @@ data class Category(
     val isRequired: Boolean = false,
 ) {
     override fun toString() = name // for logs
-    fun toDTO() =
-        CategoryDTO(name, type.ordinal, defaultAmountFormula.toDTO(), isRequired)
+    fun toDTO() = CategoryDTO(name, type.ordinal, defaultAmountFormula.toDTO(), isRequired)
 
     companion object {
         fun fromDTO(categoryDTO: CategoryDTO) = categoryDTO.run {
