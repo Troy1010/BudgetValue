@@ -16,7 +16,7 @@ data class CategoryAmountFormulas constructor(private val map: Map<Category, Amo
     }
 
     operator fun plus(map: Map<Category, AmountFormula>): CategoryAmountFormulas {
-        return CategoryAmountFormulas(map + this)
+        return CategoryAmountFormulas(this.toMutableMap().apply { putAll(map) })
     }
 
     fun fillIntoCategory(fillCategory: Category, totalAmount: BigDecimal): CategoryAmountFormulas {

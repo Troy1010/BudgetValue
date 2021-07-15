@@ -180,6 +180,7 @@ class CategorizeAdvancedVM @Inject constructor(
                             AmountFormula.Value(userCategoryAmounts[it] ?: BigDecimal.ZERO)
                     }
             }
+            .nonLazyCache(disposables)
     val searchText =
         Observable.merge(
             transaction.map { it.first?.description ?: "" },
@@ -216,20 +217,18 @@ class CategorizeAdvancedVM @Inject constructor(
             .map { (autoFillCategory, replayBox, userCategoryAmountFormulas, total, selectedCategories) ->
                 val replay = replayBox.first
                 CategoryAmountFormulas(replay?.categoryAmountFormulas ?: emptyMap())
-                    .plus(userCategoryAmountFormulas.filter { !it.value.isZero() })
                     .plus(selectedCategories.filter { !it.defaultAmountFormula.isZero() }.associateWith { it.defaultAmountFormula })
+                    .plus(userCategoryAmountFormulas.filter { !it.value.isZero() })
                     .fillIntoCategory(autoFillCategory, total)
             }
             .nonLazyCache(disposables)
     val categoryAmountFormulasToShow =
         Rx.combineLatest(
             categoryAmountFormulas,
-            userCategoryAmountFormulas,
             categorySelectionVM.flatMap { it.selectedCategories },
         )
-            .map { (categoryAmountFormulas, userCategoryAmountFormulas, selectedCategories) ->
-                userCategoryAmountFormulas
-                    .plus(selectedCategories.associateWith { it.defaultAmountFormula })
+            .map { (categoryAmountFormulas, selectedCategories) ->
+                selectedCategories.filter { it.defaultAmountFormula.isZero() }.associateWith { it.defaultAmountFormula }
                     .plus(categoryAmountFormulas)
             }
             .map { it.toSortedMap(categoryComparator) }
