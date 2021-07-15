@@ -1,11 +1,11 @@
 package com.tminus1010.budgetvalue._shared.app_init
 
+import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._shared.app_init.data.AppInitRepo
 import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.models.CategoryType
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
-import com.tminus1010.tmcommonkotlin.rx.extensions.launch
 import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,8 +17,9 @@ class AppInitDomain @Inject constructor(
 ) {
     fun appInit() {
         if (!appInitRepo.fetchAppInitBool()) {
-            initCategories.forEach { categoriesRepo.push(it).launch() }
-            appInitRepo.pushAppInitBool(true)
+            Rx.merge(initCategories.map { categoriesRepo.push(it) })
+                .andThen(appInitRepo.pushAppInitBool(true))
+                .subscribe()
         }
     }
 
