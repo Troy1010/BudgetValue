@@ -192,9 +192,7 @@ class CategorizeAdvancedVM @Inject constructor(
     val replayOrFuture = _replayOrFuture!!
     val amountToCategorizeMsg =
         transaction
-            .map { (transaction) ->
-                Box(transaction?.let { "Amount to split: $${transaction.amount}" })
-            }
+            .map { (transaction) -> Box(transaction?.let { "Amount to split: $${transaction.amount}" }) }
             .nonLazyCache(disposables)
     val autoFillCategory: Observable<Category> =
         Observable.merge(
