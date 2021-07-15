@@ -236,25 +236,6 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 vb.buttonsview.buttons = listOfNotNull(
                     if (categorizeAdvancedType == CategorizeAdvancedType.CREATE_REPLAY)
                         ButtonItem(
-                            title = "Setup Auto Replay",
-                            onClick = {
-                                if (categorizeAdvancedVM.areCurrentCAsValid.value!!) {
-                                    val editText = EditText(requireContext())
-                                    AlertDialog.Builder(requireContext())
-                                        .setMessage("What would you like to name this replay?")
-                                        .setView(editText)
-                                        .setPositiveButton("Submit") { _, _ ->
-                                            categorizeAdvancedVM.userSaveReplay(editText.easyText, true)
-                                        }
-                                        .setNegativeButton("Cancel") { _, _ -> }
-                                        .show()
-                                } else
-                                    errorSubject.onNext(InvalidCategoryAmounts(""))
-                            }
-                        )
-                    else null,
-                    if (categorizeAdvancedType == CategorizeAdvancedType.CREATE_REPLAY)
-                        ButtonItem(
                             title = "Save Replay",
                             onClick = {
                                 if (categorizeAdvancedVM.areCurrentCAsValid.value!!) {
@@ -263,7 +244,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                                         .setMessage("What would you like to name this replay?")
                                         .setView(editText)
                                         .setPositiveButton("Submit") { _, _ ->
-                                            categorizeAdvancedVM.userSaveReplay(editText.easyText, false)
+                                            categorizeAdvancedVM.userSaveReplay(editText.easyText)
                                         }
                                         .setNegativeButton("Cancel") { _, _ -> }
                                         .show()

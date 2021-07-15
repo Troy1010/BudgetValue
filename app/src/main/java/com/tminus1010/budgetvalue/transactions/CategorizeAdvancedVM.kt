@@ -77,17 +77,15 @@ class CategorizeAdvancedVM @Inject constructor(
             .observe(disposables)
     }
 
-    fun userSaveReplay(name: String, isAutoReplay: Boolean) {
+    fun userSaveReplay(name: String) {
         val replay = BasicReplay(
             name = name,
             description = transaction.unbox.description,
             categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
-            isAutoReplay = isAutoReplay,
             autoFillCategory = autoFillCategory.value!!,
         )
         Rx.merge(
             listOfNotNull(
-                if (replay.isAutoReplay) transactionsDomain.applyReplayOrFutureToUncategorizedSpends(replay) else null,
                 replayRepo.add(replay),
                 _categorySelectionVM.clearSelection(),
             )
