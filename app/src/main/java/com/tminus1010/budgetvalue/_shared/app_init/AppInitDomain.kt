@@ -28,6 +28,7 @@ class AppInitDomain @Inject constructor(
             get() = listOf(
                 Category("Food", CategoryType.Always, AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Vanity Food", CategoryType.Reservoir, AmountFormula.Value(BigDecimal.ZERO)),
+                Category("Rent", CategoryType.Always, AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Improvements", CategoryType.Always, AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Dentist", CategoryType.Always, AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Medical Supplies", CategoryType.Always, AmountFormula.Value(BigDecimal.ZERO)),
