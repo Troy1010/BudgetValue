@@ -128,46 +128,48 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 }
 
         // # TMTableView CategoryAmounts
-        val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemAmountFormulaBinding, Map.Entry<Category, AmountFormula>>(
+        val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemAmountFormulaBinding, Map.Entry<Category, Observable<AmountFormula>>>(
             { ItemAmountFormulaBinding.inflate(LayoutInflater.from(context)) },
             { (category, amountFormula), vb, lifecycle ->
-                vb.tvPercentage.easyVisibility = amountFormula is AmountFormula.Percentage
                 vb.moneyEditText.bind(categorizeAdvancedVM.autoFillCategory, lifecycle) {
                     isEnabled = category != it
                     setBackgroundColor(context.theme.getColorByAttr(if (isEnabled) R.attr.colorBackground else R.attr.colorBackgroundHighlight))
                 }
-                vb.moneyEditText.setText(amountFormula.toDisplayStr())
                 vb.moneyEditText.onDone {
                     if (!shouldIgnoreUserInput.value!!)
                         categorizeAdvancedVM.userInputCA(category, it.toMoneyBigDecimal())
                 }
-                vb.moneyEditText.setOnCreateContextMenuListener { menu, _, _ ->
-                    menu.add(
-                        *listOfNotNull(
-                            MenuItem(
-                                title = "Fill",
-                                onClick = {
-                                    _shouldIgnoreUserInputForDuration.onNext(Unit)
-                                    categorizeAdvancedVM.userFillIntoCategory(category)
-                                }),
-                            if (amountFormula !is AmountFormula.Percentage)
+                amountFormula.observe(lifecycle) { _amountFormula ->
+                    vb.tvPercentage.easyVisibility = _amountFormula is AmountFormula.Percentage
+                    vb.moneyEditText.setText(_amountFormula.toDisplayStr())
+                    vb.moneyEditText.setOnCreateContextMenuListener { menu, _, _ ->
+                        menu.add(
+                            *listOfNotNull(
                                 MenuItem(
-                                    title = "Percentage",
+                                    title = "Fill",
                                     onClick = {
                                         _shouldIgnoreUserInputForDuration.onNext(Unit)
-                                        categorizeAdvancedVM.userSwitchCategoryIsPercentage(category, true)
-                                    })
-                            else null,
-                            if (amountFormula !is AmountFormula.Value)
-                                MenuItem(
-                                    title = "No Percentage",
-                                    onClick = {
-                                        _shouldIgnoreUserInputForDuration.onNext(Unit)
-                                        categorizeAdvancedVM.userSwitchCategoryIsPercentage(category, false)
-                                    })
-                            else null,
-                        ).toTypedArray()
-                    )
+                                        categorizeAdvancedVM.userFillIntoCategory(category)
+                                    }),
+                                if (_amountFormula !is AmountFormula.Percentage)
+                                    MenuItem(
+                                        title = "Percentage",
+                                        onClick = {
+                                            _shouldIgnoreUserInputForDuration.onNext(Unit)
+                                            categorizeAdvancedVM.userSwitchCategoryIsPercentage(category, true)
+                                        })
+                                else null,
+                                if (_amountFormula !is AmountFormula.Value)
+                                    MenuItem(
+                                        title = "No Percentage",
+                                        onClick = {
+                                            _shouldIgnoreUserInputForDuration.onNext(Unit)
+                                            categorizeAdvancedVM.userSwitchCategoryIsPercentage(category, false)
+                                        })
+                                else null,
+                            ).toTypedArray()
+                        )
+                    }
                 }
             }
         )

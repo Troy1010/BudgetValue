@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.transactions
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.InvalidSearchText
-import com.tminus1010.budgetvalue._core.categoryComparator
+import com.tminus1010.budgetvalue._core.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.extensions.unbox
 import com.tminus1010.budgetvalue._core.middleware.Rx
@@ -227,7 +227,7 @@ class CategorizeAdvancedVM @Inject constructor(
                 selectedCategories.filter { it.defaultAmountFormula.isZero() }.associateWith { it.defaultAmountFormula }
                     .plus(categoryAmountFormulas)
             }
-            .map { it.toSortedMap(categoryComparator) }
+            .flatMapSourceHashMap { it.itemObservableMap }
             .nonLazyCache(disposables)
     private val transactionToPush =
         Rx.combineLatest(

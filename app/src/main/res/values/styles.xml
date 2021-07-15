@@ -10,6 +10,7 @@
         <item name="colorBackground">@color/colorBackground</item>
         <item name="colorBackgroundHighlight">@color/colorBackgroundHighlight</item>
         <item name="colorOnBackground">@color/colorOnDark</item>
+        <item name="colorOnError">@color/colorErrorRed</item>
         <item name="android:colorBackground">@color/colorBackground</item>
     </style>
 

@@ -18,6 +18,4 @@ class BudgetedVM @Inject constructor(
         .map { it.toString() }
         .divertErrors(errorSubject)
     val categoryAmounts = budgetedDomain.categoryAmountsObservableMap
-        .map { it.mapValues { it.value.map { it.toString() }.divertErrors(errorSubject) } }
-        .divertErrors(errorSubject)
 }

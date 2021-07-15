@@ -6,7 +6,9 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.tminus1010.budgetvalue.*
+import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.easyText
+import com.tminus1010.budgetvalue._core.extensions.getColorByAttr
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonItem
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
@@ -26,6 +28,7 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
@@ -57,10 +60,23 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
         val reconcileCARecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Pair<Category, Observable<String>?>>(
             { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
             { (category, d), vb, lifecycle ->
+                vb.edittext.onDone { activeReconciliationVM.pushActiveReconcileCA(category, it) }
                 if (d == null) return@ViewItemRecipeFactory3
                 d.observe(lifecycle) { vb.edittext.easyText = it }
-                vb.edittext.onDone { activeReconciliationVM.pushActiveReconcileCA(category, it) }
             }
+        )
+        val budgetedRecipeFactory = ViewItemRecipeFactory3<ItemTextViewBinding, Observable<BigDecimal>?>(
+            { ItemTextViewBinding.inflate(LayoutInflater.from(requireContext())) },
+            { d, vb, lifecycle ->
+                if (d == null) return@ViewItemRecipeFactory3
+                vb.textview.bind(d, lifecycle) {
+                    easyText = it.toString()
+                    if (it < BigDecimal.ZERO)
+                        setTextColor(context.theme.getColorByAttr(R.attr.colorOnError))
+                    else
+                        setTextColor(context.theme.getColorByAttr(R.attr.colorOnBackground))
+                }
+            },
         )
         Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs, transactionsMiscVM.currentSpendBlockCAs, activeReconciliationVM.activeReconcileCAs2, budgetedVM.categoryAmounts)
             .observeOn(Schedulers.computation())
@@ -81,7 +97,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
                             + reconcileCARecipeFactory.createMany(categories.map { it to activeReconciliationCAs[it] }),
                     listOf(headerRecipeFactory_numbered.createOne(Pair("Budgeted", accountsVM.accountsTotal)))
                             + recipeFactories.textViewWithLifecycle.createOne(budgetedVM.defaultAmount)
-                            + recipeFactories.textViewWithLifecycle.createMany(categories.map { budgetedCA[it] })
+                            + budgetedRecipeFactory.createMany(categories.map { budgetedCA[it] })
                 ).reflectXY()
                 val dividerMap = categories
                     .withIndex()
