@@ -55,7 +55,8 @@ class ActiveReconciliationVM @Inject constructor(
         )
             // These extra zeros prevent refreshes on hidden additions/removals that happen when a value is set to 0.
             .map { (activeReconcileCAs, activeCategories) ->
-                activeCategories.associateWith { BigDecimal.ZERO } + activeReconcileCAs
+                activeCategories.associateWith { BigDecimal.ZERO }
+                    .plus(activeReconcileCAs)
             }
             .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO)) { it.itemObservableMap }
             .map { it.mapValues { it.value.map { it.toString() } } }
