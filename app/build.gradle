@@ -131,7 +131,7 @@ dependencies {
 //    kaptDevelopment 'com.google.dagger:hilt-android-compiler:2.33-beta'
 
     // # Room
-    def room_version = "2.3.0-alpha03" // this version of room supports Rx3
+    def room_version = "2.4.0-alpha03" // this version of room supports Rx3
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     // ## Room & Kotlin/Coroutines
