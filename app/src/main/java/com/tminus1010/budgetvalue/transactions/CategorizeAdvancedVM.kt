@@ -84,7 +84,7 @@ class CategorizeAdvancedVM @Inject constructor(
     fun userSaveReplay(name: String) {
         val replay = BasicReplay(
             name = name,
-            description = transaction.unbox.description,
+            searchText = transaction.unbox.description,
             categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
             autoFillCategory = autoFillCategory.value!!,
         )

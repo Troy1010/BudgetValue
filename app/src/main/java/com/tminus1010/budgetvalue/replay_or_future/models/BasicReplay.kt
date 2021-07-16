@@ -8,12 +8,12 @@ import com.tminus1010.budgetvalue.transactions.models.Transaction
 
 data class BasicReplay(
     override val name: String,
-    private val description: String,
+    private val searchText: String,
     override val categoryAmountFormulas: Map<Category, AmountFormula>,
     override val autoFillCategory: Category,
 ) : IReplay {
     override fun predicate(transaction: Transaction): Boolean =
-        transaction.description == description
+        searchText in transaction.description
 
     override fun categorize(transaction: Transaction): Transaction =
         transaction.categorize(
@@ -23,7 +23,7 @@ data class BasicReplay(
     fun toDTO(categoryAmountFormulasConverter: CategoryAmountFormulasConverter) =
         BasicReplayDTO(
             name = name,
-            description = description,
+            searchText = searchText,
             categoryAmountFormulasStr = categoryAmountFormulasConverter.toJson(categoryAmountFormulas),
             autoFillCategoryName = autoFillCategory.name,
         )
@@ -32,7 +32,7 @@ data class BasicReplay(
         fun fromDTO(basicReplayDTO: BasicReplayDTO, categoryAmountFormulasConverter: CategoryAmountFormulasConverter, categoryParser: ICategoryParser) = basicReplayDTO.run {
             BasicReplay(
                 name = name,
-                description = description,
+                searchText = searchText,
                 categoryAmountFormulas = categoryAmountFormulasConverter.toCategoryAmountFormulas(categoryAmountFormulasStr),
                 autoFillCategory = categoryParser.parseCategory(autoFillCategoryName),
             )
