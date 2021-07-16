@@ -40,6 +40,7 @@ class AppInitDomain @Inject constructor(
                 Category("Christmas", CategoryType.Reservoir, AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Activities", CategoryType.Reservoir, AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Haircuts", CategoryType.Reservoir, AmountFormula.Value(BigDecimal.ZERO)),
+                Category("Unknown", CategoryType.Always, AmountFormula.Value(BigDecimal.ZERO)),
             )
     }
 }
