@@ -71,7 +71,7 @@ class CategorySettingsVM @Inject constructor(
         Completable.fromCallable {
             if (categoryToPush.value!!.name == "" ||
                 categoryToPush.value!!.name.equals(CategoriesDomain.defaultCategory.name, ignoreCase = true) ||
-                categoryToPush.value!!.name.equals(CategoriesDomain.unknownCategory.name, ignoreCase = true)
+                categoryToPush.value!!.name.equals(CategoriesDomain.unrecognizedCategory.name, ignoreCase = true)
             ) throw InvalidCategoryNameException()
         }
             .andThen(categoriesRepo.hasCategory(categoryToPush.value!!.name))

@@ -16,10 +16,14 @@ import javax.inject.Singleton
 class CategoriesDomain @Inject constructor(
     categoriesRepo: CategoriesRepo
 ) : ICategoryParser {
-    // TODO: These can just be provided by CompanionObject
-    val defaultCategory = CategoriesDomain.defaultCategory
-    val unknownCategory = CategoriesDomain.unknownCategory
+    // # Input
+    override fun parseCategory(categoryName: String): Category {
+        if (categoryName == defaultCategory.name) error("Should never have to parse \"${defaultCategory.name}\"")
+        return nameToCategoryMap.blockingFirst()[categoryName]
+            ?: unrecognizedCategory.also { logz("Warning: returning category Unrecognized for unrecognized name:$categoryName") }
+    }
 
+    // # Output
     val userCategories: BehaviorSubject<List<Category>> =
         categoriesRepo.userCategories
             .map { it.sortedWith(categoryComparator) }
@@ -27,24 +31,18 @@ class CategoriesDomain @Inject constructor(
 
     val categories: BehaviorSubject<List<Category>> =
         userCategories
-            .map { it + defaultCategory + unknownCategory }
+            .map { it + defaultCategory + unrecognizedCategory }
             .map { it.sortedWith(categoryComparator) }
             .toBehaviorSubject()
 
-    val nameToCategoryMap =
+    private val nameToCategoryMap =
         userCategories
             .skip(1)
             .map { it.associateBy { it.name } as HashMap<String, Category> }
             .replay(1).apply { connect() }
 
-    override fun parseCategory(categoryName: String): Category {
-        if (categoryName == defaultCategory.name) error("Should never have to parse \"${defaultCategory.name}\"")
-        return nameToCategoryMap.blockingFirst()[categoryName]
-            ?: unknownCategory.also { logz("Warning: returning category Unknown for unknown name:$categoryName") }
-    }
-
     companion object {
         val defaultCategory = Category("Default", CategoryType.Special, AmountFormula.Value(BigDecimal.ZERO), true)
-        val unknownCategory = Category("Unknown", CategoryType.Special, AmountFormula.Value(BigDecimal.ZERO), true)
+        val unrecognizedCategory = Category("Unrecognized", CategoryType.Special, AmountFormula.Value(BigDecimal.ZERO), true)
     }
 }
