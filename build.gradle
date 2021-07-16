@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = "1.4.31"
+    ext.kotlin_version = "1.5.0"
     repositories {
         mavenLocal()
         google()
@@ -7,21 +7,22 @@ buildscript {
     }
     dependencies {
         // # Gradle + Android
-        classpath "com.android.tools.build:gradle:4.1.2"
+        classpath "com.android.tools.build:gradle:4.2.2"
         // # Gradle + Kotlin
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // # TMCommonKotlinDSL
+        //noinspection GradleDynamicVersion
         classpath "com.tminus1010.tmcommonkotlin:tmcommonkotlin-dsl:+"
-        // # Hilt // TODO("don't use +")
-        classpath "com.google.dagger:hilt-android-gradle-plugin:+"
+        // # Hilt
+        classpath "com.google.dagger:hilt-android-gradle-plugin:2.37"
     }
 }
 
 allprojects {
     repositories {
+        mavenLocal()
         google()
         jcenter()
-        mavenLocal()
     }
 }
 
