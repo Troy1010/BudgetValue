@@ -15,7 +15,7 @@ data class BasicFuture(
     override val isPermanent: Boolean,
 ) : IFuture {
     override fun predicate(transaction: Transaction): Boolean =
-        searchText.toUpperCase(Locale.ROOT) in transaction.description.toUpperCase(Locale.ROOT)
+        searchText.uppercase(Locale.ROOT) in transaction.description.uppercase(Locale.ROOT)
 
     override fun categorize(transaction: Transaction): Transaction =
         transaction.categorize(

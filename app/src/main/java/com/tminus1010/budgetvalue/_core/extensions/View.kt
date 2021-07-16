@@ -24,7 +24,7 @@ fun <V : View, T> V.bind(observable: Observable<T>, lifecycle: LifecycleOwner? =
 
 fun View.widthObservable(): Observable<Int> {
     return Observable.create<Int> { downstream ->
-        val onLayoutChangeListener = View.OnLayoutChangeListener { v: View, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+        val onLayoutChangeListener = View.OnLayoutChangeListener { _: View, left, _, right, _, _, _, _, _ ->
             downstream.onNext(right - left)
         }
         downstream.onNext(right - left)
@@ -37,7 +37,7 @@ fun View.widthObservable(): Observable<Int> {
 
 fun View.heightObservable(): Observable<Int> {
     return Observable.create<Int> { downstream ->
-        val onLayoutChangeListener = View.OnLayoutChangeListener { v: View, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+        val onLayoutChangeListener = View.OnLayoutChangeListener { _: View, _, top, _, bottom, _, _, _, _ ->
             downstream.onNext(bottom - top)
         }
         downstream.onNext(bottom - top)
