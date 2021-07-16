@@ -7,10 +7,10 @@ import com.tminus1010.budgetvalue._core.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.extensions.unbox
 import com.tminus1010.budgetvalue._core.middleware.Rx
+import com.tminus1010.budgetvalue._core.middleware.mergeCombineWithIndex
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
-import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
@@ -133,7 +133,7 @@ class CategorizeAdvancedVM @Inject constructor(
             })
     }
 
-    private val userAutoFillCategory = BehaviorSubject.createDefault(CategoriesDomain.defaultCategory)!!
+    private val userAutoFillCategory = BehaviorSubject.create<Category>()!!
     fun userSetCategoryForAutoFill(category: Category) {
         userAutoFillCategory.onNext(category)
     }
@@ -195,11 +195,25 @@ class CategorizeAdvancedVM @Inject constructor(
         transaction
             .map { (transaction) -> Box(transaction?.let { "Amount to split: $${transaction.amount}" }) }
             .nonLazyCache(disposables)
-    val autoFillCategory: Observable<Category> =
-        Observable.merge(
+    val autoFillCategory =
+        mergeCombineWithIndex(
             userAutoFillCategory,
-            _replayOrFuture.map { it.first?.autoFillCategory ?: CategoriesDomain.defaultCategory },
-        )
+            Rx.combineLatest(
+                _replayOrFuture,
+                categorySelectionVM.flatMap { it.selectedCategories }
+            ),
+        ).map { (i, userAutoFillCategory, replayOrFutureAndSelectedCategories) ->
+            when (i) {
+                0 -> userAutoFillCategory!!
+                1 -> {
+                    val (replayOrFuture, selectedCategories) = replayOrFutureAndSelectedCategories!!
+                    replayOrFuture.first?.autoFillCategory
+                        ?: selectedCategories.find { it.defaultAmountFormula == BigDecimal.ZERO }
+                        ?: selectedCategories[0]
+                }
+                else -> error("unhandled index")
+            }
+        }
             .distinctUntilChanged()
             .nonLazyCache(disposables)
     private val categoryAmountFormulas =

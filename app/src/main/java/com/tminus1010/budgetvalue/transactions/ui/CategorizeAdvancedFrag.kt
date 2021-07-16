@@ -16,12 +16,12 @@ import com.tminus1010.budgetvalue._core.extensions.*
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonItem
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuItem
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
+import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.NothingRecipe
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipe3
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
-import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.*
 import com.tminus1010.budgetvalue.replay_or_future.models.IReplay
@@ -203,7 +203,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                         listOf(
                             recipeFactories.textView.createOne("Default"),
                             defaultAmountRecipe,
-                            checkboxRecipeFactory.createOne(CategoriesDomain.defaultCategory),
+                            NothingRecipe(requireContext()),
                         ),
                         *categoryAmountFormulasToShow.map {
                             listOf(
