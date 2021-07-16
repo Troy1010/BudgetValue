@@ -10,7 +10,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
-class ReplayRepo @Inject constructor(
+class ReplaysRepo @Inject constructor(
     private val miscDAO: MiscDAO,
     private val categoryAmountFormulasConverter: CategoryAmountFormulasConverter,
     private val categoryParser: ICategoryParser,

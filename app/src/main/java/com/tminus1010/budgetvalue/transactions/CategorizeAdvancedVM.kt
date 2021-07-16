@@ -13,7 +13,7 @@ import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
-import com.tminus1010.budgetvalue.replay_or_future.data.ReplayRepo
+import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicFuture
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplay
 import com.tminus1010.budgetvalue.replay_or_future.models.IReplayOrFuture
@@ -37,7 +37,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CategorizeAdvancedVM @Inject constructor(
     private val saveTransactionDomain: SaveTransactionDomain,
-    private val replayRepo: ReplayRepo,
+    private val replaysRepo: ReplaysRepo,
     private val futuresRepo: FuturesRepo,
     private val errorSubject: Subject<Throwable>,
     private val transactionsDomain: TransactionsDomain
@@ -88,7 +88,7 @@ class CategorizeAdvancedVM @Inject constructor(
             categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
             autoFillCategory = autoFillCategory.value!!,
         )
-        replayRepo.add(replay)
+        replaysRepo.add(replay)
             .andThen(_categorySelectionVM.clearSelection())
             .observe(disposables, onComplete = {
                 navUp.onNext(Unit)
@@ -125,7 +125,7 @@ class CategorizeAdvancedVM @Inject constructor(
     }
 
     fun userDeleteReplay(replayName: String) {
-        replayRepo.delete(replayName)
+        replaysRepo.delete(replayName)
             .observe(disposables, onComplete = {
                 navUp.onNext(Unit)
             }, onError = {
