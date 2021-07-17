@@ -36,9 +36,7 @@ import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -132,7 +130,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 vb.moneyEditText.onDone { categorizeAdvancedVM.userInputCA(category, it.toMoneyBigDecimal()) }
                 amountFormula.observe(lifecycle) { _amountFormula ->
                     vb.tvPercentage.easyVisibility = _amountFormula is AmountFormula.Percentage
-                    this.vb.root.requestFocus() // required for onDone to not accidentally capture the new text.
+                    getView()?.requestFocus() // required for onDone to not accidentally capture the new text.
                     vb.moneyEditText.setText(_amountFormula.toDisplayStr())
                     vb.moneyEditText.setOnCreateContextMenuListener { menu, _, _ ->
                         menu.add(
