@@ -16,7 +16,6 @@ import com.tminus1010.budgetvalue._core.extensions.*
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonItem
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuItem
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.NothingRecipe
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipe3
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
@@ -163,12 +162,6 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 }
             }
         )
-        val defaultAmountRecipe = ViewItemRecipe3<ItemTextViewBinding, Unit?>(
-            { ItemTextViewBinding.inflate(LayoutInflater.from(requireContext())) },
-            { _, vb, lifecycle ->
-                vb.textview.bind(categorizeAdvancedVM.defaultAmount, lifecycle) { easyText = it }
-            }
-        )
         categorizeAdvancedVM.categoryAmountFormulasToShow
             .map { categoryAmountFormulasToShow ->
                 val recipes2D =
@@ -177,11 +170,6 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                             recipeFactories.header.createOne("Category"),
                             recipeFactories.header.createOne("Amount"),
                             recipeFactories.header.createOne("Fill"),
-                        ),
-                        listOf(
-                            recipeFactories.textView.createOne("Default"),
-                            defaultAmountRecipe,
-                            NothingRecipe(requireContext()),
                         ),
                         *categoryAmountFormulasToShow.map {
                             listOf(
@@ -195,7 +183,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
                     .associate { it.index to recipeFactories.titledDivider.createOne(it.value.type.name) }
-                    .mapKeys { it.key + 2 } // header row, and default row
+                    .mapKeys { it.key + 1 } // header row
                 Pair(recipes2D, dividerMap)
             }
             .observe(viewLifecycleOwner) { (recipeGrid, dividerMap) ->
