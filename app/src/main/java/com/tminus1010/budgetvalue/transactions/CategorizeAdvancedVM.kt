@@ -48,8 +48,6 @@ class CategorizeAdvancedVM @Inject constructor(
         _categorySelectionVM = categorySelectionVM
         _replayOrFuture.onNext(Box(_replay))
         transaction.onNext(Box(_transaction))
-        userCategoryAmounts.clear()
-        userCategoryIsPercentage.clear()
     }
 
     fun userFillIntoCategory(category: Category) {
