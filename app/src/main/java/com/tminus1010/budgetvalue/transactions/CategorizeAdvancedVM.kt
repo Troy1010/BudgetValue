@@ -207,7 +207,7 @@ class CategorizeAdvancedVM @Inject constructor(
                 1 -> {
                     val (replayOrFuture, selectedCategories) = replayOrFutureAndSelectedCategories!!
                     replayOrFuture.first?.autoFillCategory
-                        ?: selectedCategories.find { it.defaultAmountFormula == BigDecimal.ZERO }
+                        ?: selectedCategories.find { it.defaultAmountFormula.isZero() }
                         ?: selectedCategories.getOrNull(0)
                         ?: CategoriesDomain.defaultCategory
                 }
