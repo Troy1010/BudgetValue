@@ -141,6 +141,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 }
                 amountFormula.observe(lifecycle) { _amountFormula ->
                     vb.tvPercentage.easyVisibility = _amountFormula is AmountFormula.Percentage
+                    this.vb.root.requestFocus() // required for onDone to not accidentally capture the new text.
                     vb.moneyEditText.setText(_amountFormula.toDisplayStr())
                     vb.moneyEditText.setOnCreateContextMenuListener { menu, _, _ ->
                         menu.add(
