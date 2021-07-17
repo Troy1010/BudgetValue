@@ -45,11 +45,6 @@ import javax.inject.Inject
 class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
     private val vb by viewBinding(FragCategorizeAdvancedBinding::bind)
     private val categorizeAdvancedVM: CategorizeAdvancedVM by viewModels()
-    private var _shouldIgnoreUserInputForDuration = PublishSubject.create<Unit>()
-    private var shouldIgnoreUserInput = _shouldIgnoreUserInputForDuration
-        .flatMap { Observable.just(false).delay(1, TimeUnit.SECONDS).startWithItem(true) }
-        .startWithItem(false)
-        .replay(1).autoConnect()
     private val categorizeAdvancedType by lazy { CategorizeAdvancedType.values()[arguments?.getInt(Key.CategorizeAdvancedType.name)!!] }
 
     @Inject
@@ -60,7 +55,6 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
         // # Mediation
         _setupArgs?.also { _setupArgs = null; categorizeAdvancedVM.setup(it.first, it.second, it.third) }
         //
-        shouldIgnoreUserInput.observe(viewLifecycleOwner) {}
         vb.tvTitle.bind(categorizeAdvancedVM.replayOrFuture) { (replayOrFuture) ->
             easyVisibility = replayOrFuture != null
             text = replayOrFuture?.name ?: ""
@@ -135,10 +129,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                     isEnabled = category != it
                     setBackgroundColor(context.theme.getColorByAttr(if (isEnabled) R.attr.colorBackground else R.attr.colorBackgroundHighlight))
                 }
-                vb.moneyEditText.onDone {
-                    if (!shouldIgnoreUserInput.value!!)
-                        categorizeAdvancedVM.userInputCA(category, it.toMoneyBigDecimal())
-                }
+                vb.moneyEditText.onDone { categorizeAdvancedVM.userInputCA(category, it.toMoneyBigDecimal()) }
                 amountFormula.observe(lifecycle) { _amountFormula ->
                     vb.tvPercentage.easyVisibility = _amountFormula is AmountFormula.Percentage
                     this.vb.root.requestFocus() // required for onDone to not accidentally capture the new text.
@@ -149,18 +140,12 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                                 if (_amountFormula !is AmountFormula.Percentage)
                                     MenuItem(
                                         title = "Percentage",
-                                        onClick = {
-                                            _shouldIgnoreUserInputForDuration.onNext(Unit)
-                                            categorizeAdvancedVM.userSwitchCategoryIsPercentage(category, true)
-                                        })
+                                        onClick = { categorizeAdvancedVM.userSwitchCategoryIsPercentage(category, true) })
                                 else null,
                                 if (_amountFormula !is AmountFormula.Value)
                                     MenuItem(
                                         title = "No Percentage",
-                                        onClick = {
-                                            _shouldIgnoreUserInputForDuration.onNext(Unit)
-                                            categorizeAdvancedVM.userSwitchCategoryIsPercentage(category, false)
-                                        })
+                                        onClick = { categorizeAdvancedVM.userSwitchCategoryIsPercentage(category, false) })
                                 else null,
                             ).toTypedArray()
                         )
