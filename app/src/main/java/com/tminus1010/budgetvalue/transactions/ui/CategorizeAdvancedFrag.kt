@@ -146,12 +146,6 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                     vb.moneyEditText.setOnCreateContextMenuListener { menu, _, _ ->
                         menu.add(
                             *listOfNotNull(
-                                MenuItem(
-                                    title = "Fill",
-                                    onClick = {
-                                        _shouldIgnoreUserInputForDuration.onNext(Unit)
-                                        categorizeAdvancedVM.userFillIntoCategory(category)
-                                    }),
                                 if (_amountFormula !is AmountFormula.Percentage)
                                     MenuItem(
                                         title = "Percentage",
