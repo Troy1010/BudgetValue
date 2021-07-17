@@ -29,8 +29,8 @@ class ReplaysVM @Inject constructor(
     }
 
     // # Output
-    private var searchText = ""
+    lateinit var searchText: String
     val replays: Observable<List<IReplay>> =
         replaysRepo.fetchReplays()
-    val navUp = PublishSubject.create<Unit>()
+    val navUp = PublishSubject.create<Unit>()!!
 }
