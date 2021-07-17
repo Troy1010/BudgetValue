@@ -65,7 +65,15 @@
                 android:id="@+id/action_categorizeFrag_to_categorySettingsFrag"
                 app:destination="@id/categorySettingsFrag"
                 app:popUpTo="@id/categorizeFrag" />
+            <action
+                android:id="@+id/action_categorizeFrag_to_replaysFrag"
+                app:destination="@id/replaysFrag" />
         </fragment>
+        <fragment
+            android:id="@+id/replaysFrag"
+            android:name="com.tminus1010.budgetvalue.replay_or_future.ReplaysFrag"
+            android:label="ReplaysFrag"
+            tools:layout="@layout/frag_replays" />
     </navigation>
     <fragment
         android:id="@+id/transactionsFrag"

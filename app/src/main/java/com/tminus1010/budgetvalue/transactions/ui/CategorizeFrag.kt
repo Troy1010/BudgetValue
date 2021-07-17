@@ -13,17 +13,18 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.bind
+import com.tminus1010.budgetvalue._core.extensions.unbox
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonItem
 import com.tminus1010.budgetvalue._core.middleware.ui.GenViewHolder2
 import com.tminus1010.budgetvalue._core.middleware.ui.LifecycleRVAdapter
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
-import com.tminus1010.budgetvalue.categories.CategorySettingsVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.ui.CategorySettingsFrag
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
+import com.tminus1010.budgetvalue.replay_or_future.ReplaysFrag
 import com.tminus1010.budgetvalue.transactions.CategorizeVM
 import com.tminus1010.budgetvalue.transactions.TransactionsMiscVM
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeAdvancedDomain
@@ -180,6 +181,13 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                                 })
                         })
                     .toTypedArray(),
+                if (!inSelectionMode)
+                    ButtonItem(
+                        title = "Browse Replays",
+                        onClick = {
+                            ReplaysFrag.navTo(nav, transactionsDomain.firstUncategorizedSpend.unbox.description)
+                        })
+                else null,
                 if (!inSelectionMode)
                     ButtonItem(
                         title = "Redo",

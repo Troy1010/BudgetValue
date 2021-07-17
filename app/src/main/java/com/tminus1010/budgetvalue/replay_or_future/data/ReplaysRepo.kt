@@ -24,4 +24,7 @@ class ReplaysRepo @Inject constructor(
     fun fetchReplays(): Observable<List<IReplay>> =
         miscDAO.fetchBasicReplays().subscribeOn(Schedulers.io())
             .map { it.map { BasicReplay.fromDTO(it, categoryAmountFormulasConverter, categoryParser) } }
+
+    fun update(basicReplay: BasicReplay): Completable =
+        miscDAO.update(basicReplay.toDTO(categoryAmountFormulasConverter)).subscribeOn(Schedulers.io())
 }
