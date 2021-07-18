@@ -227,7 +227,7 @@ class CategorizeAdvancedVM @Inject constructor(
     private val categoryAmountFormulasToPush =
         categoryAmountFormulas
             .map { categoryAmountFormulas ->
-                CategoryAmountFormulas(categoryAmountFormulas.filter { it.value.isZero() })
+                CategoryAmountFormulas(categoryAmountFormulas.filter { !it.value.isZero() })
             }
             .nonLazyCache(disposables)
     val categoryAmountFormulasToShow =
