@@ -236,9 +236,11 @@ class CategorizeAdvancedVM @Inject constructor(
         Rx.combineLatest(
             categoryAmountFormulas,
             categorySelectionVM.flatMap { it.selectedCategories },
+            userCategoryAmountFormulas,
         )
-            .map { (categoryAmountFormulas, selectedCategories) ->
+            .map { (categoryAmountFormulas, selectedCategories, userCategoryAmountFormulas) ->
                 selectedCategories.filter { it.defaultAmountFormula.isZero() }.associateWith { it.defaultAmountFormula }
+                    .plus(userCategoryAmountFormulas.filter { it.value.isZero() })
                     .plus(categoryAmountFormulas)
             }
             .flatMapSourceHashMap { it.itemObservableMap }
