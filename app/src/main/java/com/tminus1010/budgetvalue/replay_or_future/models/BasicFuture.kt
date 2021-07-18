@@ -1,5 +1,6 @@
 package com.tminus1010.budgetvalue.replay_or_future.models
 
+import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.categories.CategoryAmountFormulasConverter
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.models.Category
@@ -16,10 +17,12 @@ data class BasicFuture(
 ) : IFuture {
     override fun predicate(transaction: Transaction): Boolean =
         searchText.uppercase(Locale.ROOT) in transaction.description.uppercase(Locale.ROOT)
-
+    
     override fun categorize(transaction: Transaction): Transaction =
         transaction.categorize(
-            categoryAmountFormulas.mapValues { it.value.calcAmount(transaction.amount) }
+            CategoryAmountFormulas(categoryAmountFormulas)
+                .fillIntoCategory(autoFillCategory, transaction.amount)
+                .mapValues { it.value.calcAmount(transaction.amount) }
         )
 
     fun toDTO(categoryAmountFormulasConverter: CategoryAmountFormulasConverter) =

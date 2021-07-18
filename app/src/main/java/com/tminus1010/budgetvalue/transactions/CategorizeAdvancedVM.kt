@@ -210,18 +210,15 @@ class CategorizeAdvancedVM @Inject constructor(
             .nonLazyCache(disposables)
     private val categoryAmountFormulas =
         Rx.combineLatest(
-            autoFillCategory,
             _replayOrFuture,
             userCategoryAmountFormulas,
-            total,
             categorySelectionVM.flatMap { it.selectedCategories },
         )
-            .map { (autoFillCategory, replayBox, userCategoryAmountFormulas, total, selectedCategories) ->
+            .map { (replayBox, userCategoryAmountFormulas, selectedCategories) ->
                 val replay = replayBox.first
                 CategoryAmountFormulas(replay?.categoryAmountFormulas ?: emptyMap())
                     .plus(selectedCategories.associateWith { it.defaultAmountFormula })
                     .plus(userCategoryAmountFormulas)
-                    .fillIntoCategory(autoFillCategory, total)
             }
             .nonLazyCache(disposables)
     private val categoryAmountFormulasToPush =
@@ -231,8 +228,14 @@ class CategorizeAdvancedVM @Inject constructor(
             }
             .nonLazyCache(disposables)
     val categoryAmountFormulasToShow =
-        categoryAmountFormulas
-            .map { it.toMap() }
+        Rx.combineLatest(
+            categoryAmountFormulas,
+            autoFillCategory,
+            total,
+        )
+            .map { (categoryAmountFormulas, autoFillCategory, total) ->
+                categoryAmountFormulas.fillIntoCategory(autoFillCategory, total).toMap()
+            }
             .flatMapSourceHashMap { it.itemObservableMap }
             .nonLazyCache(disposables)
     private val transactionToPush =
