@@ -184,6 +184,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 if (!inSelectionMode)
                     ButtonItem(
                         title = "Browse Replays",
+                        isEnabled = transactionsDomain.firstUncategorizedSpend.map { it.first != null },
                         onClick = {
                             ReplaysFrag.navTo(nav, transactionsDomain.firstUncategorizedSpend.unbox.description)
                         })
