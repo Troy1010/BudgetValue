@@ -31,7 +31,7 @@ sealed class AmountFormula {
                 .let {
                     when (it[1]) {
                         "Value" -> Value(it[0].toBigDecimal())
-                        "Percentage" -> Value(it[0].toBigDecimal())
+                        "Percentage" -> Percentage(it[0].toBigDecimal())
                         else -> error("Unhandled string")
                     }
                 }
