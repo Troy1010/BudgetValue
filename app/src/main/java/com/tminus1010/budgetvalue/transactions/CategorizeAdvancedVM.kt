@@ -191,7 +191,7 @@ class CategorizeAdvancedVM @Inject constructor(
             userAutoFillCategory,
             Rx.combineLatest(
                 _replayOrFuture,
-                categorySelectionVM.flatMap { it.selectedCategories }
+                categorySelectionVM.flatMap { it.selectedCategories },
             ),
         ).map { (i, userAutoFillCategory, replayOrFutureAndSelectedCategories) ->
             when (i) {
