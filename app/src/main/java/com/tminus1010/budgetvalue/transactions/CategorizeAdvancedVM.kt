@@ -51,7 +51,7 @@ class CategorizeAdvancedVM @Inject constructor(
     }
 
     fun userFillIntoCategory(category: Category) {
-        val amount = categoryAmountFormulas.value!!.calcFillAmount(category, total.value!!)
+        val amount = categoryAmountFormulasToPush.value!!.calcFillAmount(category, total.value!!)
         if (amount.compareTo(BigDecimal.ZERO) == 0)
             userCategoryAmounts.remove(category)
         else
@@ -84,7 +84,7 @@ class CategorizeAdvancedVM @Inject constructor(
         val replay = BasicReplay(
             name = name,
             searchTexts = listOf(transaction.unbox.description),
-            categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
+            categoryAmountFormulas = categoryAmountFormulasToPush.value!!.filter { !it.value.isZero() },
             autoFillCategory = autoFillCategory.value!!,
         )
         replaysRepo.add(replay)
@@ -102,7 +102,7 @@ class CategorizeAdvancedVM @Inject constructor(
             BasicFuture(
                 name = name,
                 searchText = searchText.value!!,
-                categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
+                categoryAmountFormulas = categoryAmountFormulasToPush.value!!.filter { !it.value.isZero() },
                 autoFillCategory = autoFillCategory.value!!,
                 isPermanent = isPermanent.value!!
             )
@@ -227,22 +227,20 @@ class CategorizeAdvancedVM @Inject constructor(
             .map { (autoFillCategory, replayBox, userCategoryAmountFormulas, total, selectedCategories) ->
                 val replay = replayBox.first
                 CategoryAmountFormulas(replay?.categoryAmountFormulas ?: emptyMap())
-                    .plus(selectedCategories.filter { !it.defaultAmountFormula.isZero() }.associateWith { it.defaultAmountFormula })
-                    .plus(userCategoryAmountFormulas.filter { !it.value.isZero() })
+                    .plus(selectedCategories.associateWith { it.defaultAmountFormula })
+                    .plus(userCategoryAmountFormulas)
                     .fillIntoCategory(autoFillCategory, total)
             }
             .nonLazyCache(disposables)
-    val categoryAmountFormulasToShow =
-        Rx.combineLatest(
-            categoryAmountFormulas,
-            categorySelectionVM.flatMap { it.selectedCategories },
-            userCategoryAmountFormulas,
-        )
-            .map { (categoryAmountFormulas, selectedCategories, userCategoryAmountFormulas) ->
-                selectedCategories.filter { it.defaultAmountFormula.isZero() }.associateWith { it.defaultAmountFormula }
-                    .plus(userCategoryAmountFormulas.filter { it.value.isZero() })
-                    .plus(categoryAmountFormulas)
+    private val categoryAmountFormulasToPush =
+        categoryAmountFormulas
+            .map { categoryAmountFormulas ->
+                CategoryAmountFormulas(categoryAmountFormulas.filter { it.value.isZero() })
             }
+            .nonLazyCache(disposables)
+    val categoryAmountFormulasToShow =
+        categoryAmountFormulas
+            .map { it.toMap() }
             .flatMapSourceHashMap { it.itemObservableMap }
             .nonLazyCache(disposables)
     private val transactionToPush =
