@@ -48,8 +48,8 @@ class TransactionsFrag : Fragment(R.layout.frag_transactions) {
                 transactions.map { transaction ->
                     listOf<IViewItemRecipe3>(
                         clickableTextViewRecipeFactory.createOne(Pair(transaction, transaction.date.toDisplayStr())),
-                        clickableTextViewRecipeFactory.createOne(Pair(transaction, transaction.defaultAmount.toString())),
-                        clickableTextViewRecipeFactory.createOne(Pair(transaction, transaction.description.take(30)))
+                        clickableTextViewRecipeFactory.createOne(Pair(transaction, transaction.amount.toString())),
+                        clickableTextViewRecipeFactory.createOne(Pair(transaction, transaction.description.take(30))),
                     )
                 }
             }
