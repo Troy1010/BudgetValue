@@ -50,14 +50,6 @@ class CategorizeAdvancedVM @Inject constructor(
         transaction.onNext(Box(_transaction))
     }
 
-    fun userFillIntoCategory(category: Category) {
-        val amount = categoryAmountFormulasToPush.value!!.calcFillAmount(category, total.value!!)
-        if (amount.compareTo(BigDecimal.ZERO) == 0)
-            userCategoryAmounts.remove(category)
-        else
-            userCategoryAmounts[category] = amount
-    }
-
     fun userInputCA(category: Category, amount: BigDecimal) {
         if (amount.compareTo(BigDecimal.ZERO) == 0)
             userCategoryAmounts.remove(category)
