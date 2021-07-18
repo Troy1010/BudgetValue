@@ -181,7 +181,7 @@ class CategorizeAdvancedVM @Inject constructor(
         )
             .nonLazyCache(disposables)
     val isPermanent: Observable<Boolean> = userIsPermanent
-    val replayOrFuture = _replayOrFuture!!
+    val replayOrFuture: Observable<Box<IReplayOrFuture?>> = _replayOrFuture!!
     val amountToCategorizeMsg =
         transaction
             .map { (transaction) -> Box(transaction?.let { "Amount to split: $${transaction.amount}" }) }
