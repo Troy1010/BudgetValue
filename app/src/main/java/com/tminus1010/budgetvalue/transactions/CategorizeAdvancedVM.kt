@@ -21,6 +21,7 @@ import com.tminus1010.budgetvalue.replay_or_future.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
+import com.tminus1010.budgetvalue.transactions.models.SearchType
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
@@ -144,6 +145,11 @@ class CategorizeAdvancedVM @Inject constructor(
         userIsPermanent.onNext(boolean)
     }
 
+    val userSearchType = BehaviorSubject.create<SearchType>()!!
+    fun userSetSearchType(searchType: SearchType) {
+        userSearchType.onNext(searchType)
+    }
+
     // # Output
     private val userCategoryAmounts = SourceHashMap<Category, BigDecimal>()
     private val transaction = BehaviorSubject.createDefault(Box<Transaction?>(null))
@@ -167,6 +173,10 @@ class CategorizeAdvancedVM @Inject constructor(
                             AmountFormula.Value(userCategoryAmounts[it] ?: BigDecimal.ZERO)
                     }
             }
+            .nonLazyCache(disposables)
+    val searchType =
+        userSearchType
+            .startWithItem(SearchType.DESCRIPTION)
             .nonLazyCache(disposables)
     val searchText =
         Observable.merge(

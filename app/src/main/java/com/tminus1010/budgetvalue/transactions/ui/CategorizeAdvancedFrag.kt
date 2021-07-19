@@ -4,6 +4,8 @@ import android.database.sqlite.SQLiteConstraintException
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -27,6 +29,7 @@ import com.tminus1010.budgetvalue.replay_or_future.models.IReplay
 import com.tminus1010.budgetvalue.replay_or_future.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.CategorizeAdvancedVM
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
+import com.tminus1010.budgetvalue.transactions.models.SearchType
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -36,6 +39,7 @@ import com.tminus1010.tmcommonkotlin.view.extensions.toast
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.Subject
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -92,16 +96,42 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 vb.checkbox.setOnCheckedChangeListener { _, isChecked -> categorizeAdvancedVM.userSetIsPermanent(isChecked) }
             }
         )
+        val searchTypeRecipe = ViewItemRecipe3<ItemSpinnerBinding, Unit?>(
+            { ItemSpinnerBinding.inflate(LayoutInflater.from(requireContext())) },
+            { _, vb, lifecycle ->
+                val adapter = ArrayAdapter(requireContext(), R.layout.item_text_view_without_highlight, SearchType.values())
+                vb.spinner.adapter = adapter
+                vb.spinner.setSelection(adapter.getPosition(categorizeAdvancedVM.searchType.value!!))
+                vb.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    var didFirstSelectionHappen = AtomicBoolean(false)
+                    override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                        if (didFirstSelectionHappen.getAndSet(true))
+                            categorizeAdvancedVM.userSetSearchType((vb.spinner.selectedItem as SearchType))
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>?) = Unit
+                }
+            }
+        )
         if (categorizeAdvancedType == CategorizeAdvancedType.CREATE_FUTURE)
-            Observable.just(Unit)
-                .map {
-                    listOf(
+            categorizeAdvancedVM.searchType
+                .map { searchType ->
+                    listOfNotNull(
                         listOf(
+                            recipeFactories.textView.createOne("Search Type"),
+                            searchTypeRecipe,
+                        ),
+                        if (searchType == SearchType.DESCRIPTION) listOf(
                             recipeFactories.textView.createOne("Search Text"),
                             searchTextRecipe,
-                        ),
+                        ) else null,
                         listOf(
-                            recipeFactories.textView.createOne("Total Guess"),
+                            ViewItemRecipe3(
+                                { ItemTextViewBinding.inflate(LayoutInflater.from(requireContext())) },
+                                { _: Any?, vb, lifecycle ->
+                                    vb.textview.bind(categorizeAdvancedVM.searchType, lifecycle) { easyText = if (it == SearchType.TOTAL) "Search Total" else "Total Guess" }
+                                }
+                            ),
                             totalGuessRecipe,
                         ),
                         listOf(
