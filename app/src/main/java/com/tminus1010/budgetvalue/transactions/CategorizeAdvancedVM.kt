@@ -18,6 +18,7 @@ import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicFuture
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplay
 import com.tminus1010.budgetvalue.replay_or_future.models.IReplayOrFuture
+import com.tminus1010.budgetvalue.replay_or_future.models.TotalFuture
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
@@ -92,13 +93,22 @@ class CategorizeAdvancedVM @Inject constructor(
     fun userSaveFuture(name: String) {
         Single.fromCallable {
             if (searchText.value!!.isEmpty()) InvalidSearchText("Search text was empty")
-            BasicFuture(
-                name = name,
-                searchText = searchText.value!!,
-                categoryAmountFormulas = categoryAmountFormulasToPush.value!!.filter { !it.value.isZero() },
-                autoFillCategory = autoFillCategory.value!!,
-                isPermanent = isPermanent.value!!
-            )
+            when (searchType.value!!) {
+                SearchType.DESCRIPTION -> BasicFuture(
+                    name = name,
+                    searchText = searchText.value!!,
+                    categoryAmountFormulas = categoryAmountFormulasToPush.value!!.filter { !it.value.isZero() },
+                    autoFillCategory = autoFillCategory.value!!,
+                    isPermanent = isPermanent.value!!
+                )
+                SearchType.TOTAL -> TotalFuture(
+                    name = name,
+                    searchTotal = total.value!!,
+                    categoryAmountFormulas = categoryAmountFormulasToPush.value!!.filter { !it.value.isZero() },
+                    autoFillCategory = autoFillCategory.value!!,
+                    isPermanent = isPermanent.value!!
+                )
+            }
         }
             .flatMapCompletable { future ->
                 Rx.merge(
@@ -145,7 +155,7 @@ class CategorizeAdvancedVM @Inject constructor(
         userIsPermanent.onNext(boolean)
     }
 
-    val userSearchType = BehaviorSubject.create<SearchType>()!!
+    private val userSearchType = BehaviorSubject.create<SearchType>()!!
     fun userSetSearchType(searchType: SearchType) {
         userSearchType.onNext(searchType)
     }

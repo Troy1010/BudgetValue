@@ -19,7 +19,7 @@ object RepoRoomDBModule {
     @Singleton
     fun providesDatabase(application: Application, moshi: Moshi): DB {
         return Room.databaseBuilder(application, DB::class.java, "BudgetValueDB")
-            .addMigrations(Migrations.MIGRATION_40_41(moshi))
+//            .addMigrations(Migrations.MIGRATION_40_41(moshi))
             .addTypeConverter(RoomTypeConverter(moshi))
             .fallbackToDestructiveMigration()
             .build()

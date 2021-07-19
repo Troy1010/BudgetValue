@@ -40,7 +40,7 @@ class TransactionsDomain @Inject constructor(
                     futures.find { it.predicate(transaction) }
                         ?.let { future ->
                             transactionsRepo.push(future.categorize(transaction))
-                                .run { if (!future.isPermanent) andThen(futuresRepo.delete(future.name)) else this }
+                                .run { if (!future.isPermanent) andThen(futuresRepo.delete(future)) else this }
                                 .onErrorComplete() // error occurs when transaction already exists
                         }
                         ?: transactionsRepo.push(transaction)
