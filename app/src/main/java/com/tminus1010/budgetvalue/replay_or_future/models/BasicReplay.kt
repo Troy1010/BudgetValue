@@ -1,6 +1,5 @@
 package com.tminus1010.budgetvalue.replay_or_future.models
 
-import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.categories.CategoryAmountFormulasConverter
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.models.Category
@@ -15,13 +14,6 @@ data class BasicReplay(
 ) : IReplay {
     override fun predicate(transaction: Transaction): Boolean =
         searchTexts.any { it in transaction.description }
-
-    override fun categorize(transaction: Transaction): Transaction =
-        transaction.categorize(
-            CategoryAmountFormulas(categoryAmountFormulas)
-                .fillIntoCategory(autoFillCategory, transaction.amount)
-                .mapValues { it.value.calcAmount(transaction.amount) }
-        )
 
     fun toDTO(categoryAmountFormulasConverter: CategoryAmountFormulasConverter) =
         BasicReplayDTO(

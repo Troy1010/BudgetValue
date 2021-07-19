@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue.replay_or_future.models
 
 import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
-import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.categories.CategoryAmountFormulasConverter
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.models.Category
@@ -18,13 +17,6 @@ data class TotalFuture(
 ) : IFuture {
     override fun predicate(transaction: Transaction): Boolean =
         searchTotal.compareTo(transaction.amount) != 0
-
-    override fun categorize(transaction: Transaction): Transaction =
-        transaction.categorize(
-            CategoryAmountFormulas(categoryAmountFormulas)
-                .fillIntoCategory(autoFillCategory, transaction.amount)
-                .mapValues { it.value.calcAmount(transaction.amount) }
-        )
 
     fun toDTO(categoryAmountFormulasConverter: CategoryAmountFormulasConverter) =
         TotalFutureDTO(

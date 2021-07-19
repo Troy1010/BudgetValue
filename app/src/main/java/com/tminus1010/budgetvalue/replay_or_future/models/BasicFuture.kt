@@ -17,13 +17,6 @@ data class BasicFuture(
 ) : IFuture {
     override fun predicate(transaction: Transaction): Boolean =
         searchText.uppercase(Locale.ROOT) in transaction.description.uppercase(Locale.ROOT)
-    
-    override fun categorize(transaction: Transaction): Transaction =
-        transaction.categorize(
-            CategoryAmountFormulas(categoryAmountFormulas)
-                .fillIntoCategory(autoFillCategory, transaction.amount)
-                .mapValues { it.value.calcAmount(transaction.amount) }
-        )
 
     fun toDTO(categoryAmountFormulasConverter: CategoryAmountFormulasConverter) =
         BasicFutureDTO(
