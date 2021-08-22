@@ -98,7 +98,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
         )
         val searchTypeRecipe = ViewItemRecipe3<ItemSpinnerBinding, Unit?>(
             { ItemSpinnerBinding.inflate(LayoutInflater.from(requireContext())) },
-            { _, vb, lifecycle ->
+            { _, vb, _ ->
                 val adapter = ArrayAdapter(requireContext(), R.layout.item_text_view_without_highlight, SearchType.values())
                 vb.spinner.adapter = adapter
                 vb.spinner.setSelection(adapter.getPosition(categorizeAdvancedVM.searchType.value!!))

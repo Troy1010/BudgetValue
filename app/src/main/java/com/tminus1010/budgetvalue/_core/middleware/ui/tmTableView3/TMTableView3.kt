@@ -47,7 +47,11 @@ class TMTableView3 @JvmOverloads constructor(
         colFreezeCount: Int = 0,
         rowFreezeCount: Int = 0,
     ) {
-        if (recipeGrid.isEmpty()) error("recipeGrid was empty. This error is thrown b/c without it, an empty recipeGrid causes a no-stacetrace crash after 6s.")
+        // For some reason, without this, an empty recipeGrid will result in a no-stacktrace crash after 6s.
+        if (recipeGrid.isEmpty()) {
+            removeAllViews()
+            return
+        }
         if (shouldFitItemWidthsInsideTable)
             widthObservable()
                 .take(1)
