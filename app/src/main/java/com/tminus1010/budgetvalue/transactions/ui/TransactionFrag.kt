@@ -9,7 +9,7 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.easyText
 import com.tminus1010.budgetvalue._core.extensions.getColorByAttr
-import com.tminus1010.budgetvalue._core.middleware.ui.ButtonItem
+import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
@@ -34,7 +34,7 @@ class TransactionFrag : Fragment(R.layout.frag_transaction) {
         //
         transactionVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         vb.buttonsview.buttons = listOfNotNull(
-            ButtonItem(
+            ButtonVMItem(
                 title = "Clear",
                 onClick = { transactionVM.userClearTransaction() }
             )

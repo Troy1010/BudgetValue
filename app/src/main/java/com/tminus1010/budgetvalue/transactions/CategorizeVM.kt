@@ -48,12 +48,10 @@ class CategorizeVM @Inject constructor(
             .observe(disposables)
     }
 
+    private lateinit var _categorySelectionVM: CategorySelectionVM
     fun setup(categorySelectionVM: CategorySelectionVM) {
         _categorySelectionVM = categorySelectionVM
     }
-
-    // # Internal
-    private lateinit var _categorySelectionVM: CategorySelectionVM
 
     // # Output
     val matchingReplays =

@@ -10,7 +10,7 @@ import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.easyText
 import com.tminus1010.budgetvalue._core.extensions.getColorByAttr
 import com.tminus1010.budgetvalue._core.middleware.Rx
-import com.tminus1010.budgetvalue._core.middleware.ui.ButtonItem
+import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
@@ -44,7 +44,7 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
         super.onViewCreated(view, savedInstanceState)
         //
         vb.buttonsview.buttons = listOf(
-            ButtonItem(
+            ButtonVMItem(
                 title = "Save",
                 onClick = { activeReconciliationVM.saveReconciliation() }
             )

@@ -14,7 +14,7 @@ import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.unbox
-import com.tminus1010.budgetvalue._core.middleware.ui.ButtonItem
+import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
 import com.tminus1010.budgetvalue._core.middleware.ui.GenViewHolder2
 import com.tminus1010.budgetvalue._core.middleware.ui.LifecycleRVAdapter
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
@@ -116,7 +116,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         ).observe(viewLifecycleOwner) { (inSelectionMode, matchingReplays) ->
             vb.buttonsview.buttons = listOfNotNull(
                 if (inSelectionMode)
-                    ButtonItem(
+                    ButtonVMItem(
                         title = "Create Future",
                         onClick = {
                             CategorizeAdvancedFrag.navTo(
@@ -131,7 +131,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     )
                 else null,
                 if (inSelectionMode)
-                    ButtonItem(
+                    ButtonVMItem(
                         title = "Split",
                         isEnabled = categorizeVM.isTransactionAvailable,
                         onClick = {
@@ -147,7 +147,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     )
                 else null,
                 if (inSelectionMode)
-                    ButtonItem(
+                    ButtonVMItem(
                         title = "Category Settings",
                         isEnabled = categorySelectionVM.selectedCategories.map { it.size == 1 },
                         onClick = {
@@ -166,7 +166,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 else
                     matchingReplays
                         .map { replay ->
-                            ButtonItem(
+                            ButtonVMItem(
                                 title = "Replay (${replay.name})",
                                 onClick = { categorizeVM.userReplay(replay) },
                                 onLongClick = {
@@ -182,7 +182,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                         })
                     .toTypedArray(),
                 if (!inSelectionMode)
-                    ButtonItem(
+                    ButtonVMItem(
                         title = "Browse Replays",
                         isEnabled = transactionsDomain.firstUncategorizedSpend.map { it.first != null },
                         onClick = {
@@ -190,19 +190,19 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                         })
                 else null,
                 if (!inSelectionMode)
-                    ButtonItem(
+                    ButtonVMItem(
                         title = "Redo",
                         isEnabled = categorizeVM.isRedoAvailable,
                         onClick = { categorizeVM.userRedo() })
                 else null,
                 if (!inSelectionMode)
-                    ButtonItem(
+                    ButtonVMItem(
                         title = "Undo",
                         isEnabled = categorizeVM.isUndoAvailable,
                         onClick = { categorizeVM.userUndo() })
                 else null,
                 if (!inSelectionMode)
-                    ButtonItem(
+                    ButtonVMItem(
                         title = "Make New Category",
                         onClick = {
                             CategorySettingsFrag.navTo(

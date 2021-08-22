@@ -12,7 +12,7 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.InvalidCategoryNameException
 import com.tminus1010.budgetvalue._core.extensions.*
-import com.tminus1010.budgetvalue._core.middleware.ui.ButtonItem
+import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuItem
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipe3
@@ -64,7 +64,7 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
         }
         vb.buttonsview.buttons = listOfNotNull(
             if (isForNewCategory) null
-            else ButtonItem(
+            else ButtonVMItem(
                 title = "Delete",
                 onClick = {
                     AlertDialog.Builder(requireContext())
@@ -77,7 +77,7 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
                         .show()
                 }
             ),
-            ButtonItem(
+            ButtonVMItem(
                 title = "Done",
                 onClick = { categorySettingsVM.userSaveCategory() }
             ),

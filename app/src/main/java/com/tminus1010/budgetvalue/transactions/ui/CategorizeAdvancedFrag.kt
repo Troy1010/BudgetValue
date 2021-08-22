@@ -15,7 +15,7 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.InvalidCategoryAmounts
 import com.tminus1010.budgetvalue._core.InvalidSearchText
 import com.tminus1010.budgetvalue._core.extensions.*
-import com.tminus1010.budgetvalue._core.middleware.ui.ButtonItem
+import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuItem
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipe3
@@ -230,7 +230,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
             .observe(viewLifecycleOwner) { (replayOrFuture) ->
                 vb.buttonsview.buttons = listOfNotNull(
                     if (categorizeAdvancedType == CategorizeAdvancedType.SPLIT)
-                        ButtonItem(
+                        ButtonVMItem(
                             title = "Save Replay",
                             onClick = {
                                 if (categorizeAdvancedVM.areCurrentCAsValid.value!!) {
@@ -249,7 +249,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                         )
                     else null,
                     if (categorizeAdvancedType == CategorizeAdvancedType.CREATE_FUTURE)
-                        ButtonItem(
+                        ButtonVMItem(
                             title = "Save Future",
                             onClick = {
                                 if (categorizeAdvancedVM.areCurrentCAsValid.value!!) {
@@ -268,7 +268,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                         )
                     else null,
                     if (replayOrFuture is IReplay)
-                        ButtonItem(
+                        ButtonVMItem(
                             title = "Delete Replay",
                             onClick = {
                                 AlertDialog.Builder(requireContext())
@@ -282,7 +282,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                         )
                     else null,
                     if (categorizeAdvancedType != CategorizeAdvancedType.CREATE_FUTURE)
-                        ButtonItem(
+                        ButtonVMItem(
                             title = "Submit",
                             onClick = {
                                 categorizeAdvancedVM.userSubmitCategorization()
