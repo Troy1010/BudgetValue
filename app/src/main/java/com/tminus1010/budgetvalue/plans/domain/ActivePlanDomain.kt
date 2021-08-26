@@ -22,14 +22,14 @@ class ActivePlanDomain @Inject constructor(
         .flatMap {
             // If the last plan is a valid active plan, use that. Otherwise, copy some of the last plan's properties if it exists or create a new one, and push it.
             val lastPlan = it.lastOrNull()
-            if (lastPlan != null && lastPlan.localDatePeriod.blockingFirst() == datePeriodGetter.currentDatePeriod())
+            if (lastPlan != null && lastPlan.localDatePeriod == datePeriodGetter.currentDatePeriod())
                 Observable.just(lastPlan)
             else {
                 when {
                     lastPlan != null ->
                         Observable.just(
                             Plan(
-                                Observable.just(datePeriodGetter.currentDatePeriod()),
+                                datePeriodGetter.currentDatePeriod(),
                                 lastPlan.amount,
                                 lastPlan.categoryAmounts
                             )
@@ -37,7 +37,7 @@ class ActivePlanDomain @Inject constructor(
                     else ->
                         Observable.just(
                             Plan(
-                                Observable.just(datePeriodGetter.currentDatePeriod()),
+                                datePeriodGetter.currentDatePeriod(),
                                 BigDecimal.ZERO,
                                 emptyMap()
                             )

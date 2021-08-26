@@ -39,7 +39,7 @@ class HistoryVM @Inject constructor(
                 transactionBlocks?.forEach { if (!datePeriodGetter.isDatePeriodValid(it.datePeriod)) error("datePeriod was not valid:${it.datePeriod}") }
                 transactionBlocks?.forEach { blockPeriods.add(it.datePeriod) }
                 reconciliations?.forEach { blockPeriods.add(datePeriodGetter.getDatePeriod(it.localDate)) }
-                plans?.forEach { blockPeriods.add(it.localDatePeriod.blockingFirst()) }
+                plans?.forEach { blockPeriods.add(it.localDatePeriod) }
                 // # Define historyColumnDatas
                 val historyColumnDatas = arrayListOf<IHistoryColumnData>()
                 // ## Add TransactionBlocks, Reconciliations, Plans
@@ -47,7 +47,7 @@ class HistoryVM @Inject constructor(
                     listOfNotNull(
                         transactionBlocks?.filter { it.datePeriod == blockPeriod }, // TODO("sort by sortDate")
                         reconciliations?.filter { it.localDate in blockPeriod },
-                        plans?.filter { it.localDatePeriod.blockingFirst().startDate in blockPeriod }
+                        plans?.filter { it.localDatePeriod.startDate in blockPeriod }
                     ).flatten().also { historyColumnDatas.addAll(it) }
                 }
                 // ## Add Active Reconciliation
