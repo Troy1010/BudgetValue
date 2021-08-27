@@ -1,6 +1,8 @@
 package com.tminus1010.budgetvalue._core.extensions
 
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
+import com.tminus1010.budgetvalue._core.models.CategoryAmounts
+import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Observable
@@ -8,7 +10,12 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.Subject
+import java.math.BigDecimal
 import java.util.concurrent.Semaphore
+
+@JvmName("flatMapSourceHashMap2")
+fun <T> Observable<CategoryAmounts>.flatMapSourceHashMap(sourceHashMap: SourceHashMap<Category, BigDecimal> = SourceHashMap(), outputChooser: (SourceHashMap<Category, BigDecimal>) -> Observable<T>, ): Observable<T> =
+    flatMapSourceHashMap(sourceHashMap, outputChooser)
 
 fun <K, V, T> Observable<Map<K, V>>.flatMapSourceHashMap(sourceHashMap: SourceHashMap<K, V> = SourceHashMap(), outputChooser: (SourceHashMap<K, V>) -> Observable<T>): Observable<T> =
     compose { upstream ->

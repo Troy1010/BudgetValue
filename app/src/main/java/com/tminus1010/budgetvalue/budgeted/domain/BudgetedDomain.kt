@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.budgeted.domain
 import com.tminus1010.budgetvalue._core.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
+import com.tminus1010.budgetvalue._core.models.CategoryAmounts
 import com.tminus1010.budgetvalue.accounts.domain.AccountsDomain
 import com.tminus1010.budgetvalue.budgeted.models.Budgeted
 import com.tminus1010.budgetvalue.categories.models.Category
@@ -27,29 +28,26 @@ class BudgetedDomain @Inject constructor(
             reconciliationsRepo.reconciliations,
             plansRepo.plans,
             transactionsDomain.transactionBlocks,
-            reconciliationsRepo.activeReconciliationCAs
+            reconciliationsRepo.activeReconciliationCAs,
         )
             .throttleLatest(1, TimeUnit.SECONDS)
             .map { (reconciliations, plans, transactionBlocks, activeReconcileCAs) ->
                 (reconciliations + plans + transactionBlocks)
                     .map { it.categoryAmounts }
                     .plus(activeReconcileCAs)
-                    .fold(hashMapOf<Category, BigDecimal>()) { acc, map ->
-                        map.forEach { (k, v) -> acc[k] = (acc[k] ?: BigDecimal.ZERO) + v }
-                        acc
-                    }
-                    .toMap()
+                    .fold(CategoryAmounts()) { acc, map -> acc.addTogether(map) }
             }!!
     val categoryAmountsObservableMap =
         categoryAmounts
-            .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO))
-            { it.itemObservableMap }
+            .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO)) { it.itemObservableMap }
     val defaultAmount =
         Rx.combineLatest(
             accountsDomain.accountsTotal,
             categoryAmountsObservableMap.switchMap { it.values.total() },
         )
-            .map { it.first - it.second }
+            .map { (accountsTotal, categoryAmountsTotal) ->
+                accountsTotal - categoryAmountsTotal
+            }
             .replay(1).refCount()!!
     val budgeted =
         Rx.combineLatest(categoryAmounts, defaultAmount)
