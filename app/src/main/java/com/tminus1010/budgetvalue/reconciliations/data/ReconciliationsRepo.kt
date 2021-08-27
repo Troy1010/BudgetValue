@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.reconciliations.data
 import com.tminus1010.budgetvalue._core.data.MiscDAO
 import com.tminus1010.budgetvalue._core.data.SharedPrefWrapper
 import com.tminus1010.budgetvalue._core.extensions.toBigDecimalOrZero
+import com.tminus1010.budgetvalue._core.models.CategoryAmounts
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.models.Category
@@ -36,10 +37,11 @@ class ReconciliationsRepo @Inject constructor(
             .map { it.map { Reconciliation.fromDTO(it, categoryAmountsConverter) } }
             .replay(1).refCount()
 
-    val activeReconciliationCAs: Observable<Map<Category, BigDecimal>> =
+    val activeReconciliationCAs =
         sharedPrefWrapper.activeReconciliationCAs.subscribeOn(Schedulers.io())
             .map { it.associate { categoryParser.parseCategory(it.key) to it.value.toBigDecimalOrZero() } }
-            .replay(1).refCount()
+            .map { CategoryAmounts(it) }
+            .replay(1).refCount()!!
 
     fun clearActiveReconcileCAs(): Completable =
         sharedPrefWrapper.clearActiveReconcileCAs().subscribeOn(Schedulers.io())
