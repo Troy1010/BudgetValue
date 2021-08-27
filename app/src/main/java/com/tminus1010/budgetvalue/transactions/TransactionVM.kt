@@ -12,11 +12,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TransactionVM @Inject constructor(
-    private val saveTransactionDomain: SaveTransactionDomain
+    private val saveTransactionDomain: SaveTransactionDomain,
 ) : ViewModel() {
     // # Input
-    fun setup(_transaction: Transaction) {
-        transaction = _transaction
+    fun setup(transaction: Transaction) {
+        this.transaction = transaction
     }
 
     fun userClearTransaction() {
