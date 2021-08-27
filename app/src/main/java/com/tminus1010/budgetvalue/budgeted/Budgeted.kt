@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.budgeted.models
+package com.tminus1010.budgetvalue.budgeted
 
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.history.models.IHistoryColumnData

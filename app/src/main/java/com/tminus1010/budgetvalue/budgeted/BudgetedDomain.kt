@@ -1,12 +1,10 @@
-package com.tminus1010.budgetvalue.budgeted.domain
+package com.tminus1010.budgetvalue.budgeted
 
 import com.tminus1010.budgetvalue._core.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
 import com.tminus1010.budgetvalue.accounts.domain.AccountsDomain
-import com.tminus1010.budgetvalue.budgeted.models.Budgeted
-import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.reconciliations.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
