@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.reconciliations.domain
 
 import androidx.annotation.VisibleForTesting
+import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
 import com.tminus1010.budgetvalue.accounts.domain.AccountsDomain
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
@@ -10,7 +11,6 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import com.tminus1010.tmcommonkotlin.rx.nonLazy
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.kotlin.Observables
 import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,17 +24,15 @@ class ActiveReconciliationDefaultAmountUC @Inject constructor(
     accountsDomain: AccountsDomain,
 ) {
     private val defaultAmount =
-        Observables.combineLatest(
-            Observables.combineLatest(
-                plansRepo.plans,
-                reconciliationsRepo.reconciliations,
-                transactionsDomain.transactionBlocks,
-            ).map { it.first + it.second + it.third },
+        Rx.combineLatest(
+            plansRepo.plans,
+            reconciliationsRepo.reconciliations,
+            transactionsDomain.transactionBlocks,
             accountsDomain.accountsTotal,
             reconciliationsRepo.activeReconciliationCAs,
         )
-            .map { (historyColumnDatas, accountsTotal, activeReconciliationCAs) ->
-                calcActiveReconciliationDefaultAmount(accountsTotal, historyColumnDatas.map { it.totalAmount() }, activeReconciliationCAs)
+            .map { (plans, reconciliations, transactionBlocks, accountsTotal, activeReconciliationCAs) ->
+                calcActiveReconciliationDefaultAmount(accountsTotal, (plans + reconciliations + transactionBlocks).map { it.totalAmount() }, activeReconciliationCAs)
             }
             .replayNonError(1).nonLazy()
 
