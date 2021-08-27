@@ -1,31 +1,52 @@
 package com.tminus1010.budgetvalue.reconciliations.domain
 
-import com.tminus1010.budgetvalue._core.middleware.Rx
-import com.tminus1010.budgetvalue.budgeted.domain.BudgetedDomain
+import com.tminus1010.budgetvalue._core.models.CategoryAmounts
+import com.tminus1010.budgetvalue.accounts.domain.AccountsDomain
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.reconciliations.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.kotlin.Observables
 import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ActiveReconciliationDefaultAmountUC @Inject constructor(
-    plansRepo: PlansRepo,
-    reconciliationsRepo: ReconciliationsRepo,
-    budgetedDomain: BudgetedDomain,
-    transactionsDomain: TransactionsDomain,
+class ActiveReconciliationDefaultAmountUC(
+    historyTotalAmounts: Observable<List<BigDecimal>>,
+    accountsTotal: Observable<BigDecimal>,
+    activeReconciliationCAs: Observable<CategoryAmounts>,
 ) {
-    // This calculation is a bit confusing. Take a look at ManualCalculationsForTests for clarification
+    @Inject
+    constructor(
+        plansRepo: PlansRepo,
+        reconciliationsRepo: ReconciliationsRepo,
+        transactionsDomain: TransactionsDomain,
+        accountsDomain: AccountsDomain,
+    ) : this(
+        Observable.merge(
+            plansRepo.plans,
+            reconciliationsRepo.reconciliations,
+            transactionsDomain.transactionBlocks
+        ).map { it.map { it.totalAmount() } },
+        accountsDomain.accountsTotal,
+        reconciliationsRepo.activeReconciliationCAs
+            .map { CategoryAmounts(it) },
+    )
+
+    private val totalAmount =
+        Observables.combineLatest(accountsTotal, historyTotalAmounts)
+            .map { (accountsTotal, historyTotalAmounts) ->
+                accountsTotal - historyTotalAmounts.sum()
+            }
+
     private val defaultAmount =
-        Rx.combineLatest(plansRepo.plans, reconciliationsRepo.reconciliations, transactionsDomain.transactionBlocks, budgetedDomain.defaultAmount)
-            .map { (plans, reconciliations, transactionBlocks, budgetedDefaultAmount) ->
-                (plans.map { it.amount } +
-                        reconciliations.map { it.defaultAmount } +
-                        transactionBlocks.map { it.defaultAmount })
-                    .let { budgetedDefaultAmount - it.sum() }
-            }.replay(1).also { it.connect() } // TODO: No lifecycle to give to..? Seems like a coding error. Shouldn't this be in a VM?
+        Observables.combineLatest(totalAmount, activeReconciliationCAs)
+            .map { (totalAmount, activeReconciliationCAs) ->
+                activeReconciliationCAs.defaultAmount(totalAmount)
+            }
+            .replay(1).autoConnect()
+
     operator fun invoke(): Observable<BigDecimal> = defaultAmount
 }
