@@ -21,9 +21,14 @@ class BudgetedDomain @Inject constructor(
     transactionsDomain: TransactionsDomain,
     reconciliationsRepo: ReconciliationsRepo,
     accountsDomain: AccountsDomain,
-) : IBudgetedDomain {
-    override val categoryAmounts =
-        Rx.combineLatest(reconciliationsRepo.reconciliations, plansRepo.plans, transactionsDomain.transactionBlocks, reconciliationsRepo.activeReconciliationCAs)
+) {
+    val categoryAmounts =
+        Rx.combineLatest(
+            reconciliationsRepo.reconciliations,
+            plansRepo.plans,
+            transactionsDomain.transactionBlocks,
+            reconciliationsRepo.activeReconciliationCAs
+        )
             .throttleLatest(1, TimeUnit.SECONDS)
             .map { (reconciliations, plans, transactionBlocks, activeReconcileCAs) ->
                 (reconciliations + plans + transactionBlocks)
@@ -35,17 +40,18 @@ class BudgetedDomain @Inject constructor(
                     }
                     .toMap()
             }!!
-    override val categoryAmountsObservableMap =
+    val categoryAmountsObservableMap =
         categoryAmounts
             .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO))
             { it.itemObservableMap }
-    override val defaultAmount =
+    val defaultAmount =
         Rx.combineLatest(
             accountsDomain.accountsTotal,
             categoryAmountsObservableMap.switchMap { it.values.total() },
-        ).map { it.first - it.second }
+        )
+            .map { it.first - it.second }
             .replay(1).refCount()!!
-    override val budgeted =
+    val budgeted =
         Rx.combineLatest(categoryAmounts, defaultAmount)
             .map { Budgeted(it.first, it.second) }
             .replay(1).refCount()!!
