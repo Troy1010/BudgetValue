@@ -8,9 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.databinding.ActivityMockImportSelectionBinding
-import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._core.middleware.ui.GenViewHolder2
+import com.tminus1010.budgetvalue.databinding.ActivityMockImportSelectionBinding
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
 import com.tminus1010.budgetvalue.transactions.TransactionsMiscVM
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MockImportSelectionActivity : AppCompatActivity(R.layout.activity_mock_import_selection) {
     val transactionsVM by viewModels<TransactionsMiscVM>()
-    val vb by viewBinding(ActivityMockImportSelectionBinding::inflate)
+    val vb by lazy { ActivityMockImportSelectionBinding.inflate(layoutInflater) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(vb.root)

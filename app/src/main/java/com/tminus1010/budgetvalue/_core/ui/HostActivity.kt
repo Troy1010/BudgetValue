@@ -13,7 +13,6 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartialsUC
 import com.tminus1010.budgetvalue._core.extensions.add
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuItem
-import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.transactions.TransactionsMiscVM
@@ -23,7 +22,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class HostActivity : AppCompatActivity() {
-    private val vb by viewBinding(ActivityHostBinding::inflate)
+    private val vb by lazy { ActivityHostBinding.inflate(layoutInflater) }
 
     @Inject
     lateinit var getExtraMenuItemPartialsUC: GetExtraMenuItemPartialsUC
