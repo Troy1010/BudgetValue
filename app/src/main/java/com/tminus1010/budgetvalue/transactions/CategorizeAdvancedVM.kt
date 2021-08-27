@@ -43,7 +43,7 @@ class CategorizeAdvancedVM @Inject constructor(
     private val replaysRepo: ReplaysRepo,
     private val futuresRepo: FuturesRepo,
     private val errorSubject: Subject<Throwable>,
-    private val transactionsDomain: TransactionsDomain
+    private val transactionsDomain: TransactionsDomain,
 ) : ViewModel() {
     // # Input
     fun setup(_transaction: Transaction?, _replay: IReplayOrFuture?, categorySelectionVM: CategorySelectionVM) {
@@ -67,11 +67,10 @@ class CategorizeAdvancedVM @Inject constructor(
     fun userSubmitCategorization() {
         saveTransactionDomain.saveTransaction(transactionToPush.unbox)
             .andThen(_categorySelectionVM.clearSelection())
-            .observe(disposables, onComplete = {
-                navUp.onNext(Unit)
-            }, onError = {
-                errorSubject.onNext(it)
-            })
+            .observe(disposables,
+                onComplete = { navUp.onNext(Unit) },
+                onError = { errorSubject.onNext(it) }
+            )
     }
 
     fun userSaveReplay(name: String) {
@@ -83,11 +82,10 @@ class CategorizeAdvancedVM @Inject constructor(
         )
         replaysRepo.add(replay)
             .andThen(_categorySelectionVM.clearSelection())
-            .observe(disposables, onComplete = {
-                navUp.onNext(Unit)
-            }, onError = {
-                errorSubject.onNext(it)
-            })
+            .observe(disposables,
+                onComplete = { navUp.onNext(Unit) },
+                onError = { errorSubject.onNext(it) }
+            )
     }
 
     fun userSaveFuture(name: String) {
@@ -119,20 +117,18 @@ class CategorizeAdvancedVM @Inject constructor(
                     )
                 )
             }
-            .observe(disposables, onComplete = {
-                navUp.onNext(Unit)
-            }, onError = {
-                errorSubject.onNext(it)
-            })
+            .observe(disposables,
+                onComplete = { navUp.onNext(Unit) },
+                onError = { errorSubject.onNext(it) }
+            )
     }
 
     fun userDeleteReplay(replayName: String) {
         replaysRepo.delete(replayName)
-            .observe(disposables, onComplete = {
-                navUp.onNext(Unit)
-            }, onError = {
-                errorSubject.onNext(it)
-            })
+            .observe(disposables,
+                onComplete = { navUp.onNext(Unit) },
+                onError = { errorSubject.onNext(it) }
+            )
     }
 
     private val userAutoFillCategory = BehaviorSubject.create<Category>()!!
