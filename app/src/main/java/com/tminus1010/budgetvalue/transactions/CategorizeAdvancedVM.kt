@@ -77,7 +77,7 @@ class CategorizeAdvancedVM @Inject constructor(
         val replay = BasicReplay(
             name = name,
             searchTexts = listOf(transaction.unbox.description),
-            categoryAmountFormulas = categoryAmountFormulasToPush.value!!.filter { !it.value.isZero() },
+            categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
             autoFillCategory = autoFillCategory.value!!,
         )
         replaysRepo.add(replay)
@@ -95,14 +95,14 @@ class CategorizeAdvancedVM @Inject constructor(
                 SearchType.DESCRIPTION -> BasicFuture(
                     name = name,
                     searchText = searchText.value!!,
-                    categoryAmountFormulas = categoryAmountFormulasToPush.value!!.filter { !it.value.isZero() },
+                    categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
                     autoFillCategory = autoFillCategory.value!!,
                     isPermanent = isPermanent.value!!
                 )
                 SearchType.TOTAL -> TotalFuture(
                     name = name,
                     searchTotal = total.value!!,
-                    categoryAmountFormulas = categoryAmountFormulasToPush.value!!.filter { !it.value.isZero() },
+                    categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
                     autoFillCategory = autoFillCategory.value!!,
                     isPermanent = isPermanent.value!!
                 )
@@ -238,12 +238,10 @@ class CategorizeAdvancedVM @Inject constructor(
                     .plus(userCategoryAmountFormulas)
             }
             .nonLazyCache(disposables)
-    private val categoryAmountFormulasToPush =
-        categoryAmountFormulas
-            .map { categoryAmountFormulas ->
-                CategoryAmountFormulas(categoryAmountFormulas.filter { !it.value.isZero() })
-            }
-            .nonLazyCache(disposables)
+
+    /**
+     * Different from categoryAmountFormulas, b/c there can be a value under the autoFillCategory
+     */
     val categoryAmountFormulasToShow =
         Rx.combineLatest(
             categoryAmountFormulas,
