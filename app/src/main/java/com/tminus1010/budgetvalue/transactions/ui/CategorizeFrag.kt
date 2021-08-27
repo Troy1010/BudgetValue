@@ -24,6 +24,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.ui.CategorySettingsFrag
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
+import com.tminus1010.budgetvalue.replay_or_future.CreateFutureFrag
 import com.tminus1010.budgetvalue.replay_or_future.ReplaysFrag
 import com.tminus1010.budgetvalue.transactions.CategorizeVM
 import com.tminus1010.budgetvalue.transactions.TransactionsMiscVM
@@ -181,6 +182,13 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                                 })
                         })
                     .toTypedArray(),
+                if (!inSelectionMode)
+                    ButtonVMItem(
+                        title = "Create Future",
+                        onClick = {
+                            CreateFutureFrag.navTo(nav)
+                        })
+                else null,
                 if (!inSelectionMode)
                     ButtonVMItem(
                         title = "Browse Replays",

@@ -68,12 +68,19 @@
             <action
                 android:id="@+id/action_categorizeFrag_to_replaysFrag"
                 app:destination="@id/replaysFrag" />
+            <action
+                android:id="@+id/action_categorizeFrag_to_createFutureFrag"
+                app:destination="@id/createFutureFrag" />
         </fragment>
         <fragment
             android:id="@+id/replaysFrag"
             android:name="com.tminus1010.budgetvalue.replay_or_future.ReplaysFrag"
             android:label="ReplaysFrag"
             tools:layout="@layout/frag_replays" />
+        <fragment
+            android:id="@+id/createFutureFrag"
+            android:name="com.tminus1010.budgetvalue.replay_or_future.CreateFutureFrag"
+            android:label="CreateFutureFrag" />
     </navigation>
     <fragment
         android:id="@+id/transactionsFrag"
