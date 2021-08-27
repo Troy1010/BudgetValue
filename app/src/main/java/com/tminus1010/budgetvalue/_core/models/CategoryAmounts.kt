@@ -18,6 +18,15 @@ data class CategoryAmounts constructor(private val map: Map<Category, BigDecimal
         return CategoryAmounts(this.toMutableMap().apply { putAll(map) })
     }
 
+    fun addTogether(other: Map<Category, BigDecimal>): CategoryAmounts {
+        return listOf(this, other)
+            .fold(hashMapOf<Category, BigDecimal>()) { acc, map ->
+                map.forEach { (k, v) -> acc[k] = (acc[k] ?: BigDecimal.ZERO) + v }
+                acc
+            }
+            .let { CategoryAmounts(it) }
+    }
+
     fun fillIntoCategory(fillCategory: Category, totalAmount: BigDecimal): CategoryAmounts {
         return if (fillCategory == CategoriesDomain.defaultCategory)
             this
