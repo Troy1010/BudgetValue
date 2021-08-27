@@ -156,7 +156,7 @@ class CategorizeAdvancedVM @Inject constructor(
         userSearchType.onNext(searchType)
     }
 
-    // # Output
+    // # Internal
     private val userCategoryAmounts = SourceHashMap<Category, BigDecimal>()
     private val transaction = BehaviorSubject.createDefault(Box<Transaction?>(null))
     private val _replayOrFuture = BehaviorSubject.createDefault(Box<IReplayOrFuture?>(null))
@@ -180,6 +180,7 @@ class CategorizeAdvancedVM @Inject constructor(
                     }
             }
             .nonLazyCache(disposables)
+    // # Output
     val searchType =
         userSearchType
             .startWithItem(SearchType.DESCRIPTION)
