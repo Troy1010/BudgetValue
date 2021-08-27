@@ -15,6 +15,7 @@ class TransactionsVM @Inject constructor(
     fun userTryNavToTransaction(transaction: Transaction) {
         navToTransation.onNext(transaction)
     }
+
     // # Output
     val transactions = transactionsDomain.transactions
     val navToTransation = PublishSubject.create<Transaction>()!!
