@@ -1,6 +1,5 @@
 package com.tminus1010.budgetvalue._core.models
 
-import com.tminus1010.budgetvalue._core.extensions.copy
 import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
@@ -24,9 +23,15 @@ data class CategoryAmountFormulas constructor(private val map: Map<Category, Amo
             this
         else
             this
-                .filter { it.key != fillCategory }
-                .copy(fillCategory to AmountFormula.Value(calcFillAmount(fillCategory, totalAmount)))
+                .mapValues { getAmountFormula(it.key, it.value, fillCategory, totalAmount) }
                 .let { CategoryAmountFormulas(it) }
+    }
+
+    fun getAmountFormula(category: Category, amountFormula: AmountFormula, fillCategory: Category, totalAmount: BigDecimal): AmountFormula {
+        return when {
+            category == fillCategory -> AmountFormula.Value(calcFillAmount(fillCategory, totalAmount))
+            else -> amountFormula
+        }
     }
 
     fun calcFillAmount(fillCategory: Category, totalAmount: BigDecimal): BigDecimal {
