@@ -8,7 +8,7 @@ import com.tminus1010.budgetvalue.replay_or_future.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.TransactionParser
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.models.Transaction
-import com.tminus1010.budgetvalue.transactions.models.TransactionsBlock
+import com.tminus1010.budgetvalue.transactions.models.TransactionBlock
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Completable
@@ -59,9 +59,9 @@ class TransactionsDomain @Inject constructor(
             }
 
     // # Internal
-    private fun getBlocksFromTransactions(transactions: List<Transaction>): List<TransactionsBlock> {
+    private fun getBlocksFromTransactions(transactions: List<Transaction>): List<TransactionBlock> {
         val transactionsRedefined = transactions.sortedBy { it.date }.toMutableList()
-        val returning = ArrayList<TransactionsBlock>()
+        val returning = ArrayList<TransactionBlock>()
         if (0 !in transactionsRedefined.indices) return returning
         var datePeriod = datePeriodGetter.getDatePeriod(transactionsRedefined[0].date)
         while (datePeriod.startDate <= transactionsRedefined.last().date) {
@@ -74,7 +74,7 @@ class TransactionsDomain @Inject constructor(
                         transaction.categoryAmounts.forEach { acc.second[it.key] = it.value + (acc.second[it.key] ?: BigDecimal.ZERO) }
                         Pair(acc.first + transaction.amount, acc.second)
                     }
-                    .let { TransactionsBlock(datePeriod, it.first, it.second) }
+                    .let { TransactionBlock(datePeriod, it.first, it.second) }
             if (transactionsRedefined.isEmpty()) break
             datePeriod = datePeriodGetter.getDatePeriod(transactionsRedefined[0].date)
         }
@@ -83,7 +83,7 @@ class TransactionsDomain @Inject constructor(
 
     // # Output
     val transactions = transactionsRepo.transactions
-    val transactionBlocks: Observable<List<TransactionsBlock>> =
+    val transactionBlocks: Observable<List<TransactionBlock>> =
         transactions
             .map(::getBlocksFromTransactions)
     private val spends: Observable<List<Transaction>> =

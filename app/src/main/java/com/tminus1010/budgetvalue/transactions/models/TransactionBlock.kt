@@ -8,7 +8,7 @@ import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import java.math.BigDecimal
 
-data class TransactionsBlock(
+data class TransactionBlock(
     val datePeriod: LocalDatePeriod,
     val amount: BigDecimal,
     override val categoryAmounts: Map<Category, BigDecimal>

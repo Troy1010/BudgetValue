@@ -7,7 +7,7 @@ import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.models.Plan
 import com.tminus1010.budgetvalue.reconciliations.models.Reconciliation
-import com.tminus1010.budgetvalue.transactions.models.TransactionsBlock
+import com.tminus1010.budgetvalue.transactions.models.TransactionBlock
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
@@ -47,12 +47,12 @@ object Givens {
         )
     )
     val givenReconciliations = listOf(givenReconciliation1, givenReconciliation2).toObservable()
-    val givenTransactionBlock1 = TransactionsBlock(
+    val givenTransactionBlock1 = TransactionBlock(
         datePeriod = LocalDatePeriod(LocalDate.now().plus(Period.ofWeeks(2)), Period.ofWeeks(2)),
         amount = (-110).toBigDecimal(),
         categoryAmounts = emptyMap()
     )
-    val givenTransactionBlock2 = TransactionsBlock(
+    val givenTransactionBlock2 = TransactionBlock(
         datePeriod = LocalDatePeriod(LocalDate.now().plus(Period.ofWeeks(2)), Period.ofWeeks(2)),
         amount = (-16).toBigDecimal(),
         categoryAmounts = mapOf(
