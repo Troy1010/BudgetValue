@@ -2,9 +2,10 @@ package com.tminus1010.budgetvalue.categories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
-import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceArrayList
 import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.tmcommonkotlin.rx.nonLazy
+import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -30,10 +31,10 @@ class CategorySelectionVM @Inject constructor() : ViewModel() {
 
     // # Output
     val selectedCategories = _selectedCategories.observable
-        .nonLazyCache(disposables)
+        .replayNonError(1).nonLazy(disposables)
 
     val inSelectionMode: Observable<Boolean> = _selectedCategories.observable
         .map { it.isNotEmpty() }
         .distinctUntilChanged()
-        .nonLazyCache(disposables)
+        .replayNonError(1).nonLazy(disposables)
 }
