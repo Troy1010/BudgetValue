@@ -9,6 +9,7 @@ import com.tminus1010.budgetvalue._core.extensions.unbox
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.mergeCombineWithIndex
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
+import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulaVMItem
 import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
@@ -238,20 +239,19 @@ class CategorizeAdvancedVM @Inject constructor(
                     .plus(userCategoryAmountFormulas)
             }
             .nonLazyCache(disposables)
-
-    /**
-     * Different from categoryAmountFormulas, b/c there can be a value under the autoFillCategory
-     */
-    val categoryAmountFormulasToShow =
+    private val fillCategoryAmountFormula =
         Rx.combineLatest(
             categoryAmountFormulas,
             fillCategory,
             total,
         )
-            .map { (categoryAmountFormulas, autoFillCategory, total) ->
-                categoryAmountFormulas.fillIntoCategory(autoFillCategory, total).toMap()
-            }
+            .map { (categoryAmountFormulas, fillCategory, total) ->
+                Pair(fillCategory, categoryAmountFormulas.fillIntoCategory(fillCategory, total)[fillCategory]!!)
+            }!!
+    val categoryAmountFormulaVMItems : Observable<List<CategoryAmountFormulaVMItem>> =
+        categoryAmountFormulas
             .flatMapSourceHashMap { it.itemObservableMap }
+            .map { it.map { (k, v) -> CategoryAmountFormulaVMItem(k, v, fillCategoryAmountFormula) } }
             .nonLazyCache(disposables)
     private val transactionToPush =
         Rx.combineLatest(

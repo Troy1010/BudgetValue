@@ -22,6 +22,7 @@ import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecip
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulaVMItem
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.*
@@ -149,9 +150,11 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 }
 
         // # TMTableView CategoryAmounts
-        val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemAmountFormulaBinding, Map.Entry<Category, Observable<AmountFormula>>>(
+        val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemAmountFormulaBinding, CategoryAmountFormulaVMItem>(
             { ItemAmountFormulaBinding.inflate(LayoutInflater.from(context)) },
-            { (category, amountFormula), vb, lifecycle ->
+            { categoryAmountFormulaVMItem, vb, lifecycle ->
+                val category = categoryAmountFormulaVMItem.category
+                val amountFormula = categoryAmountFormulaVMItem.amountFormula
                 vb.moneyEditText.bind(categorizeAdvancedVM.fillCategory, lifecycle) {
                     isEnabled = category != it
                     setBackgroundColor(context.theme.getColorByAttr(if (isEnabled) R.attr.colorBackground else R.attr.colorBackgroundHighlight))
@@ -192,8 +195,8 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 }
             }
         )
-        categorizeAdvancedVM.categoryAmountFormulasToShow
-            .map { categoryAmountFormulasToShow ->
+        categorizeAdvancedVM.categoryAmountFormulaVMItems
+            .map { categoryAmountFormulaVMItems ->
                 val recipes2D =
                     listOf(
                         listOf(
@@ -201,15 +204,15 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                             recipeFactories.header.createOne("Amount"),
                             recipeFactories.header.createOne("Fill"),
                         ),
-                        *categoryAmountFormulasToShow.map {
+                        *categoryAmountFormulaVMItems.map {
                             listOf(
-                                recipeFactories.textView.createOne(it.key.name),
+                                recipeFactories.textView.createOne(it.category.name),
                                 categoryAmountRecipeFactory.createOne(it),
-                                checkboxRecipeFactory.createOne(it.key),
+                                checkboxRecipeFactory.createOne(it.category),
                             )
                         }.toTypedArray(),
                     )
-                val dividerMap = categoryAmountFormulasToShow.keys
+                val dividerMap = categoryAmountFormulaVMItems.map { it.category }
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
                     .associate { it.index to recipeFactories.titledDivider.createOne(it.value.type.name) }
