@@ -152,7 +152,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
         val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemAmountFormulaBinding, Map.Entry<Category, Observable<AmountFormula>>>(
             { ItemAmountFormulaBinding.inflate(LayoutInflater.from(context)) },
             { (category, amountFormula), vb, lifecycle ->
-                vb.moneyEditText.bind(categorizeAdvancedVM.autoFillCategory, lifecycle) {
+                vb.moneyEditText.bind(categorizeAdvancedVM.fillCategory, lifecycle) {
                     isEnabled = category != it
                     setBackgroundColor(context.theme.getColorByAttr(if (isEnabled) R.attr.colorBackground else R.attr.colorBackgroundHighlight))
                 }
@@ -183,7 +183,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
         val checkboxRecipeFactory = ViewItemRecipeFactory3<ItemCheckboxBinding, Category>(
             { ItemCheckboxBinding.inflate(LayoutInflater.from(requireContext())) },
             { category, vb, lifecycle ->
-                vb.checkbox.bind(categorizeAdvancedVM.autoFillCategory, lifecycle) {
+                vb.checkbox.bind(categorizeAdvancedVM.fillCategory, lifecycle) {
                     isChecked = category == it
                     isEnabled = category != it
                 }

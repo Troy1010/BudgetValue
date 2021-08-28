@@ -9,11 +9,11 @@ interface IReplayOrFuture {
     val name: String
     fun predicate(transaction: Transaction): Boolean
     val categoryAmountFormulas: Map<Category, AmountFormula>
-    val autoFillCategory: Category
+    val fillCategory: Category
     fun categorize(transaction: Transaction): Transaction =
         transaction.categorize(
             CategoryAmountFormulas(categoryAmountFormulas)
-                .fillIntoCategory(autoFillCategory, transaction.amount)
+                .fillIntoCategory(fillCategory, transaction.amount)
                 .mapValues { it.value.calcAmount(transaction.amount) }
         )
 }

@@ -1,6 +1,5 @@
 package com.tminus1010.budgetvalue.replay_or_future.models
 
-import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.categories.CategoryAmountFormulasConverter
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.models.Category
@@ -12,7 +11,7 @@ data class BasicFuture(
     override val name: String,
     private val searchText: String,
     override val categoryAmountFormulas: Map<Category, AmountFormula>,
-    override val autoFillCategory: Category,
+    override val fillCategory: Category,
     override val isPermanent: Boolean,
 ) : IFuture {
     override fun predicate(transaction: Transaction): Boolean =
@@ -23,7 +22,7 @@ data class BasicFuture(
             name = name,
             searchText = searchText,
             categoryAmountFormulasStr = categoryAmountFormulasConverter.toJson(categoryAmountFormulas),
-            autoFillCategoryName = autoFillCategory.name,
+            autoFillCategoryName = fillCategory.name,
             isPermanent = isPermanent,
         )
 
@@ -33,7 +32,7 @@ data class BasicFuture(
                 name = name,
                 searchText = searchText,
                 categoryAmountFormulas = categoryAmountFormulasConverter.toCategoryAmountFormulas(categoryAmountFormulasStr),
-                autoFillCategory = categoryParser.parseCategory(autoFillCategoryName),
+                fillCategory = categoryParser.parseCategory(autoFillCategoryName),
                 isPermanent = isPermanent
             )
         }

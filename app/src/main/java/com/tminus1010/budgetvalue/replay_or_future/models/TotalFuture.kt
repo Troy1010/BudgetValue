@@ -12,7 +12,7 @@ data class TotalFuture(
     override val name: String,
     private val searchTotal: BigDecimal,
     override val categoryAmountFormulas: Map<Category, AmountFormula>,
-    override val autoFillCategory: Category,
+    override val fillCategory: Category,
     override val isPermanent: Boolean,
 ) : IFuture {
     override fun predicate(transaction: Transaction): Boolean =
@@ -23,7 +23,7 @@ data class TotalFuture(
             name = name,
             searchTotal = searchTotal.toString(),
             categoryAmountFormulasStr = categoryAmountFormulasConverter.toJson(categoryAmountFormulas),
-            autoFillCategoryName = autoFillCategory.name,
+            autoFillCategoryName = fillCategory.name,
             isPermanent = isPermanent,
         )
 
@@ -33,7 +33,7 @@ data class TotalFuture(
                 name = name,
                 searchTotal = searchTotal.toMoneyBigDecimal(),
                 categoryAmountFormulas = categoryAmountFormulasConverter.toCategoryAmountFormulas(categoryAmountFormulasStr),
-                autoFillCategory = categoryParser.parseCategory(autoFillCategoryName),
+                fillCategory = categoryParser.parseCategory(autoFillCategoryName),
                 isPermanent = isPermanent
             )
         }

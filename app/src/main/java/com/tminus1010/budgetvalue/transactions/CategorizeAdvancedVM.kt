@@ -78,7 +78,7 @@ class CategorizeAdvancedVM @Inject constructor(
             name = name,
             searchTexts = listOf(transaction.unbox.description),
             categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
-            autoFillCategory = autoFillCategory.value!!,
+            fillCategory = fillCategory.value!!,
         )
         replaysRepo.add(replay)
             .andThen(_categorySelectionVM.clearSelection())
@@ -96,14 +96,14 @@ class CategorizeAdvancedVM @Inject constructor(
                     name = name,
                     searchText = searchText.value!!,
                     categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
-                    autoFillCategory = autoFillCategory.value!!,
+                    fillCategory = fillCategory.value!!,
                     isPermanent = isPermanent.value!!
                 )
                 SearchType.TOTAL -> TotalFuture(
                     name = name,
                     searchTotal = total.value!!,
                     categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
-                    autoFillCategory = autoFillCategory.value!!,
+                    fillCategory = fillCategory.value!!,
                     isPermanent = isPermanent.value!!
                 )
             }
@@ -203,7 +203,7 @@ class CategorizeAdvancedVM @Inject constructor(
         transaction
             .map { (transaction) -> Box(transaction?.let { "Amount to split: $${transaction.amount}" }) }
             .nonLazyCache(disposables)
-    val autoFillCategory =
+    val fillCategory =
         mergeCombineWithIndex(
             userAutoFillCategory,
             Rx.combineLatest(
@@ -215,7 +215,7 @@ class CategorizeAdvancedVM @Inject constructor(
                 0 -> userAutoFillCategory!!
                 1 -> {
                     val (replayOrFuture, selectedCategories) = replayOrFutureAndSelectedCategories!!
-                    replayOrFuture.first?.autoFillCategory
+                    replayOrFuture.first?.fillCategory
                         ?: selectedCategories.find { it.defaultAmountFormula.isZero() }
                         ?: selectedCategories.getOrNull(0)
                         ?: CategoriesDomain.defaultCategory
@@ -245,7 +245,7 @@ class CategorizeAdvancedVM @Inject constructor(
     val categoryAmountFormulasToShow =
         Rx.combineLatest(
             categoryAmountFormulas,
-            autoFillCategory,
+            fillCategory,
             total,
         )
             .map { (categoryAmountFormulas, autoFillCategory, total) ->

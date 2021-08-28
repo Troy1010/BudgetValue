@@ -10,7 +10,7 @@ data class BasicReplay(
     override val name: String,
     val searchTexts: List<String>,
     override val categoryAmountFormulas: Map<Category, AmountFormula>,
-    override val autoFillCategory: Category,
+    override val fillCategory: Category,
 ) : IReplay {
     override fun predicate(transaction: Transaction): Boolean =
         searchTexts.any { it in transaction.description }
@@ -20,7 +20,7 @@ data class BasicReplay(
             name = name,
             searchTextsStr = searchTexts.joinToString("`"),
             categoryAmountFormulasStr = categoryAmountFormulasConverter.toJson(categoryAmountFormulas),
-            autoFillCategoryName = autoFillCategory.name,
+            autoFillCategoryName = fillCategory.name,
         )
 
     companion object {
@@ -29,7 +29,7 @@ data class BasicReplay(
                 name = name,
                 searchTexts = searchTextsStr.split("`"),
                 categoryAmountFormulas = categoryAmountFormulasConverter.toCategoryAmountFormulas(categoryAmountFormulasStr),
-                autoFillCategory = categoryParser.parseCategory(autoFillCategoryName),
+                fillCategory = categoryParser.parseCategory(autoFillCategoryName),
             )
         }
     }
