@@ -40,9 +40,9 @@ class ActiveReconciliationDefaultAmountUC @Inject constructor(
 
     companion object {
         /**
-         * Take a look at ManualCalculationsForTests for clarification about this.
+         * For clarification, take a look at the ManualCalculationsForTests excel sheet.
          */
-        @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+        @VisibleForTesting
         fun calcActiveReconciliationDefaultAmount(plans: List<Plan>, reconciliations: List<Reconciliation>, transactionBlocks: List<TransactionBlock>, accountsTotal: BigDecimal, activeReconciliationCAs: CategoryAmounts): BigDecimal {
             val historyTotalAmounts = (plans + reconciliations + transactionBlocks).map { it.totalAmount() }
             return activeReconciliationCAs.defaultAmount(accountsTotal - historyTotalAmounts.sum())
