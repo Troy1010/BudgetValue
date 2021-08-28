@@ -1,23 +1,48 @@
 package com.tminus1010.budgetvalue._core.models
 
-import com.tminus1010.budgetvalue.Givens
+import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
-import junit.framework.TestCase
+import org.junit.Assert.assertEquals
+import org.junit.Test
 import java.math.BigDecimal
 
-class CategoryAmountFormulasTest : TestCase() {
+class CategoryAmountFormulasTest {
 
+    @Test
     fun testDefaultAmount() {
         // # Given
         val categoryAmounts = CategoryAmountFormulas(
-            Givens.givenCategories2[0] to AmountFormula.Value(BigDecimal("-16.5")),
-            Givens.givenCategories2[1] to AmountFormula.Value(BigDecimal("-2.5")),
-            Givens.givenCategories2[2] to AmountFormula.Value(BigDecimal("-30")),
-            Givens.givenCategories2[3] to AmountFormula.Value(BigDecimal("-200")),
+            AppInitDomain.initCategories[0] to AmountFormula.Value(BigDecimal("-16.5")),
+            AppInitDomain.initCategories[1] to AmountFormula.Value(BigDecimal("-2.5")),
+            AppInitDomain.initCategories[2] to AmountFormula.Value(BigDecimal("-30")),
+            AppInitDomain.initCategories[3] to AmountFormula.Value(BigDecimal("-200")),
         )
         // # When
-        val result = categoryAmounts.defaultAmount(BigDecimal("-300"))
+        val actual = categoryAmounts.defaultAmount(BigDecimal("-300"))
         // # Then
-        assertEquals(BigDecimal("-51"), result)
+        assertEquals(BigDecimal("-51"), actual)
+    }
+
+    @Test
+    fun fillIntoCategory() {
+        // # Given
+        val categoryAmounts = CategoryAmountFormulas(
+            AppInitDomain.initCategories[0] to AmountFormula.Value(BigDecimal("-16.5")),
+            AppInitDomain.initCategories[1] to AmountFormula.Value(BigDecimal("-2.5")),
+            AppInitDomain.initCategories[2] to AmountFormula.Value(BigDecimal("-30")),
+            AppInitDomain.initCategories[3] to AmountFormula.Value(BigDecimal("-200")),
+        )
+        // # When
+        val actual = categoryAmounts.fillIntoCategory(AppInitDomain.initCategories[0], BigDecimal("-300"))
+        // # Then
+        assertEquals(
+            CategoryAmountFormulas(
+                AppInitDomain.initCategories[0] to AmountFormula.Value(BigDecimal("-67.5")),
+                AppInitDomain.initCategories[1] to AmountFormula.Value(BigDecimal("-2.5")),
+                AppInitDomain.initCategories[2] to AmountFormula.Value(BigDecimal("-30")),
+                AppInitDomain.initCategories[3] to AmountFormula.Value(BigDecimal("-200")),
+            ),
+            actual
+        )
     }
 }
