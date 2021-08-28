@@ -15,9 +15,9 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.Period
 
-object Givens {
+object Given {
     val givenCategories = Observable.just(AppInitDomain.initCategories)
-    val givenCategories2 = AppInitDomain.initCategories
+    val categories = AppInitDomain.initCategories
 //    val givenPlan1 = Plan(
 //        localDatePeriod = Observable.just(LocalDatePeriod(LocalDate.now(), Period.ofWeeks(2))),
 //        amount = 60.toBigDecimal(),
