@@ -113,10 +113,9 @@ class CreateFutureVM @Inject constructor(
     val categoryAmountFormulaVMItems: Observable<List<CategoryAmountFormulaVMItem>> =
         categoryAmountFormulas.flatMapSourceHashMap { it.itemObservableMap }
             .map { categoryAmountFormulaItemObservables ->
-                categoryAmountFormulaItemObservables
-                    .map { (category, amountFormula) ->
-                        CategoryAmountFormulaVMItem(category, amountFormula, fillCategoryAmountFormula)
-                    }
+                categoryAmountFormulaItemObservables.map { (category, amountFormula) ->
+                    CategoryAmountFormulaVMItem(category, amountFormula, fillCategoryAmountFormula)
+                }
             }
             .nonLazyCache(disposables)
 }
