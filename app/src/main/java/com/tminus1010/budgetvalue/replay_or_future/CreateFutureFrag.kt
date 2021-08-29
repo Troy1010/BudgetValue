@@ -15,7 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
     private val vb by viewBinding(FragCreateFutureBinding::bind)
-    val createFutureVM: CreateFutureVM by viewModels()
+    private val createFutureVM: CreateFutureVM by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
