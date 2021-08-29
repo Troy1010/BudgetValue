@@ -5,17 +5,17 @@ import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.tmcommonkotlin.rx.extensions.pairwise
 import io.reactivex.rxjava3.core.Observable
 
-class CategoryAmountFormulaVMItem(
+data class CategoryAmountFormulaVMItem(
     val category: Category,
-    amountFormula: Observable<AmountFormula>,
-    fillCategoryAmountFormula: Observable<Pair<Category, AmountFormula>>,
+    private val _amountFormula: Observable<AmountFormula>,
+    private val fillCategoryAmountFormula: Observable<Pair<Category, AmountFormula>>,
 ) {
     /**
      * should emit when amountFormula emits, or when the fillCategory changes from or to this.category.
      */
     val amountFormula: Observable<AmountFormula> =
         Observable.combineLatest(
-            amountFormula,
+            _amountFormula,
             fillCategoryAmountFormula
                 .pairwise()
                 .filter { listOf(it.first.first, it.second.first).any { it == category } }
