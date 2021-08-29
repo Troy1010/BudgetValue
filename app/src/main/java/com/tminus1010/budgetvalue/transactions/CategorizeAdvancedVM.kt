@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.InvalidSearchText
 import com.tminus1010.budgetvalue._core.extensions.flatMapSourceHashMap
+import com.tminus1010.budgetvalue._core.extensions.isZero
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.extensions.unbox
 import com.tminus1010.budgetvalue._core.middleware.Rx
@@ -53,8 +54,9 @@ class CategorizeAdvancedVM @Inject constructor(
         transaction.onNext(Box(_transaction))
     }
 
+    private val userCategoryAmounts = SourceHashMap<Category, BigDecimal>()
     fun userInputCA(category: Category, amount: BigDecimal) {
-        if (amount.compareTo(BigDecimal.ZERO) == 0)
+        if (amount.isZero)
             userCategoryAmounts.remove(category)
         else
             userCategoryAmounts[category] = amount
@@ -158,7 +160,6 @@ class CategorizeAdvancedVM @Inject constructor(
     }
 
     // # Internal
-    private val userCategoryAmounts = SourceHashMap<Category, BigDecimal>()
     private val transaction = BehaviorSubject.createDefault(Box<Transaction?>(null))
     private val _replayOrFuture = BehaviorSubject.createDefault(Box<IReplayOrFuture?>(null))
     private lateinit var _categorySelectionVM: CategorySelectionVM
