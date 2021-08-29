@@ -56,16 +56,6 @@ class CreateFutureVMTest {
             createFutureVM.fillCategoryAmountFormula.value,
         )
         assertEquals(
-            givenSelectedCategories.map { category ->
-                CategoryAmountFormulaVMItem(
-                    category,
-                    createFutureVM.categoryAmountFormulasItemObservableMap.map { it[category] }.value!!,
-                    createFutureVM.fillCategoryAmountFormula,
-                )
-            },
-            createFutureVM.categoryAmountFormulaVMItems.value,
-        )
-        assertEquals(
             Given.categories[2],
             createFutureVM.fillCategory.value,
         )
