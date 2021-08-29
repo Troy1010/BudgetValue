@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue.replay_or_future
 
 import com.tminus1010.budgetvalue.Given
-import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulaVMItem
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
@@ -38,22 +37,20 @@ class CreateFutureVMTest {
         createFutureVM.userSetFillCategory(Given.categories[2])
         // # Then
         assertEquals(
-            listOf(
-                AmountFormula.Value(BigDecimal("0")),
-                AmountFormula.Percentage(BigDecimal("0.1")),
-                AmountFormula.Value(BigDecimal("0")),
-                AmountFormula.Value(BigDecimal("1")),
-            ),
-            givenSelectedCategories.map { category ->
-                createFutureVM.categoryAmountFormulasItemObservableMap.map { it[category] }.value!!.value!!
-            },
-        )
-        assertEquals(
             Pair(
                 Given.categories[2],
                 AmountFormula.Value(BigDecimal("-1.00")),
             ),
             createFutureVM.fillCategoryAmountFormula.value,
+        )
+        assertEquals(
+            mapOf(
+                Given.categories[0] to AmountFormula.Value(BigDecimal("0")),
+                Given.categories[1] to AmountFormula.Percentage(BigDecimal("0.1")),
+                Given.categories[2] to AmountFormula.Value(BigDecimal("0")),
+                Given.categories[3] to AmountFormula.Value(BigDecimal("1")),
+            ),
+            createFutureVM.categoryAmountFormulas.value,
         )
         assertEquals(
             Given.categories[2],

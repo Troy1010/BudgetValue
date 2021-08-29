@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.replay_or_future
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
+import com.tminus1010.budgetvalue.BuildConfig
 import com.tminus1010.budgetvalue._core.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue._core.extensions.isZero
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
@@ -17,6 +18,7 @@ import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.kotlin.Observables
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.SingleSubject
 import java.math.BigDecimal
@@ -73,7 +75,8 @@ class CreateFutureVM @Inject constructor(
             }
             .nonLazyCache(disposables)
 
-    private val categoryAmountFormulas =
+    @VisibleForTesting
+    val categoryAmountFormulas =
         Rx.combineLatest(
             userCategoryAmountFormulas,
             selectedCategories.toObservable(),
@@ -109,16 +112,13 @@ class CreateFutureVM @Inject constructor(
                 Pair(fillCategory, categoryAmountFormulas.fillIntoCategory(fillCategory, total)[fillCategory]!!)
             }!!
 
-    @VisibleForTesting
-    val categoryAmountFormulasItemObservableMap =
-        categoryAmountFormulas.flatMapSourceHashMap { it.itemObservableMap }
-
     val categoryAmountFormulaVMItems: Observable<List<CategoryAmountFormulaVMItem>> =
-        categoryAmountFormulasItemObservableMap
+        categoryAmountFormulas.flatMapSourceHashMap { it.itemObservableMap }
             .map { categoryAmountFormulaItemObservables ->
-                categoryAmountFormulaItemObservables.toList().map { (category, amountFormula) ->
-                    CategoryAmountFormulaVMItem(category, amountFormula, fillCategoryAmountFormula)
-                }
+                categoryAmountFormulaItemObservables
+                    .map { (category, amountFormula) ->
+                        CategoryAmountFormulaVMItem(category, amountFormula, fillCategoryAmountFormula)
+                    }
             }
             .nonLazyCache(disposables)
 }
