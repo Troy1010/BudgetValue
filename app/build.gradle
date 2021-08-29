@@ -60,6 +60,10 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    lintOptions {
+        error("VisibleForTests")
+    }
 }
 
 dependencies {
