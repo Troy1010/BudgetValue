@@ -1,14 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        style="@style/AppTheme.StandardTextView"
+    <com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.TMTableView3
+        android:id="@+id/tmTableViewOtherInput"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="Hello"
-        android:textSize="90sp" />
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.TMTableView3
+        android:id="@+id/tmTableViewCategoryAmounts"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toTopOf="@id/buttonsview"
+        app:layout_constraintTop_toBottomOf="@id/tmTableViewOtherInput" />
+
+    <com.tminus1010.budgetvalue._core.middleware.ui.ButtonsView
+        android:id="@+id/buttonsview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:itemCount="3"
+        tools:layoutManager="LinearLayoutManager"
+        tools:listitem="@layout/item_button" />
 </androidx.constraintlayout.widget.ConstraintLayout>
