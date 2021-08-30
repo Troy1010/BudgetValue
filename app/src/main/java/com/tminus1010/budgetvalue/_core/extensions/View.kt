@@ -53,3 +53,10 @@ var View.easyVisibility: Boolean
     set(value) {
         visibility = if (value) View.VISIBLE else View.GONE
     }
+
+
+var View.lifecycle: LifecycleOwner?
+    get() = findViewTreeLifecycleOwner()
+    set(value) {
+        setTag(androidx.lifecycle.runtime.R.id.view_tree_lifecycle_owner, value)
+    }
