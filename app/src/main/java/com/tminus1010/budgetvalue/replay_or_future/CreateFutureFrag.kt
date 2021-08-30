@@ -40,16 +40,16 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
         createFutureVM.setup(categorySelectionVM)
         createFutureVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         // # bind methods
-        val bindItemHeaderBinding = { d: String, vb: ItemHeaderBinding, _: LifecycleOwner ->
+        val bindItemHeaderBinding = { d: String, vb: ItemHeaderBinding ->
             vb.textview.text = d
         }
-        val bindItemTextViewBinding = { d: String, vb: ItemTextViewBinding, _: LifecycleOwner ->
+        val bindItemTextViewBinding = { d: String, vb: ItemTextViewBinding ->
             vb.textview.text = d
         }
-        val bindItemEditTextBinding = { d: Observable<String>, vb: ItemEditTextBinding, lifecycle: LifecycleOwner ->
+        val bindItemEditTextBinding = { d: Observable<String>, vb: ItemEditTextBinding ->
             vb.edittext.bind(d) { easyText = it }
         }
-        val bindItemSpinnerBinding = { _: Unit, vb: ItemSpinnerBinding, _: LifecycleOwner ->
+        val bindItemSpinnerBinding = { _: Unit, vb: ItemSpinnerBinding ->
             val adapter = ArrayAdapter(requireContext(), R.layout.item_text_view_without_highlight, SearchType.values())
             vb.spinner.adapter = adapter
             vb.spinner.setSelection(adapter.getPosition(createFutureVM.searchType.value!!))
@@ -63,23 +63,23 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
                 override fun onNothingSelected(parent: AdapterView<*>?) = Unit
             }
         }
-        val bindItemMoneyEditTextBinding = { d: String, vb: ItemMoneyEditTextBinding, _: LifecycleOwner ->
+        val bindItemMoneyEditTextBinding = { d: String, vb: ItemMoneyEditTextBinding ->
             vb.moneyedittext.easyText = d
             vb.moneyedittext.onDone { createFutureVM.userSetTotalGuess(it) }
         }
-        val bindItemMoneyEditTextBinding2 = { d: Observable<String>, vb: ItemMoneyEditTextBinding, lifecycle: LifecycleOwner ->
+        val bindItemMoneyEditTextBinding2 = { d: Observable<String>, vb: ItemMoneyEditTextBinding ->
             vb.moneyedittext.bind(d) { easyText = it }
             vb.moneyedittext.onDone { createFutureVM.userSetTotalGuess(it) }
         }
-        val bindItemAmountFormulaBinding = { d: CategoryAmountFormulaVMItem, vb: ItemAmountFormulaBinding, lifecycle: LifecycleOwner ->
+        val bindItemAmountFormulaBinding = { d: CategoryAmountFormulaVMItem, vb: ItemAmountFormulaBinding ->
             val category = d.category
             val amountFormula = d.amountFormula
-            vb.moneyEditText.bind(createFutureVM.fillCategory, lifecycle) {
+            vb.moneyEditText.bind(createFutureVM.fillCategory) {
                 isEnabled = category != it
                 setBackgroundColor(context.theme.getColorByAttr(if (isEnabled) R.attr.colorBackground else R.attr.colorBackgroundHighlight))
             }
             vb.moneyEditText.onDone { createFutureVM.userInputCA(category, it.toMoneyBigDecimal()) }
-            amountFormula.observe(lifecycle) { _amountFormula ->
+            amountFormula.observe(vb.root.lifecycle!!) { _amountFormula ->
                 vb.tvPercentage.easyVisibility = _amountFormula is AmountFormula.Percentage
                 getView()?.requestFocus() // required for onDone to not accidentally capture the new text.
                 vb.moneyEditText.setText(_amountFormula.toDisplayStr())
@@ -102,8 +102,8 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
             }
             Unit
         }
-        val bindItemCheckboxBinding = { d: Category, vb: ItemCheckboxBinding, lifecycle: LifecycleOwner ->
-            vb.checkbox.bind(createFutureVM.fillCategory, lifecycle) {
+        val bindItemCheckboxBinding = { d: Category, vb: ItemCheckboxBinding ->
+            vb.checkbox.bind(createFutureVM.fillCategory) {
                 isChecked = d == it
                 isEnabled = d != it
             }

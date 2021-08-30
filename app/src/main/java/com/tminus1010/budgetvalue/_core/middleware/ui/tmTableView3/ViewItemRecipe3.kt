@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewbinding.ViewBinding
+import com.tminus1010.budgetvalue._core.extensions.lifecycle
 import com.tminus1010.budgetvalue._core.middleware.ui.ExposedLifecycleOwner
 import com.tminus1010.tmcommonkotlin.misc.extensions.measureUnspecified
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -35,8 +36,8 @@ data class ViewItemRecipe3<VB : ViewBinding, D : Any?>(
         }
     }
 
-    override fun bind(vb: ViewBinding, lifecycle: LifecycleOwner) {
-        _bind(vb, lifecycle)
+    override fun bind(vb: ViewBinding) {
+        _bind(vb, vb.root.lifecycle!!)
     }
 
     override fun bindImpatiently(vb: ViewBinding) {

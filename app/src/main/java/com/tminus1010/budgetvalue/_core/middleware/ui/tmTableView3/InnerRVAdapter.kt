@@ -20,6 +20,6 @@ class InnerRVAdapter(
 
     override fun onViewAttachedToWindow(holder: GenViewHolder2<ViewBinding>, lifecycle: LifecycleOwner) {
         holder.vb.root.lifecycle = lifecycle
-        recipeGrid[j][holder.adapterPosition].bind(holder.vb, lifecycle)
+        recipeGrid[j][holder.adapterPosition].bind(holder.vb)
     }
 }
