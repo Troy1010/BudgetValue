@@ -16,6 +16,7 @@ import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
+import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -50,6 +51,11 @@ class CreateFutureVM @Inject constructor(
     private val userSetFillCategory = BehaviorSubject.create<Category>()!!
     fun userSetFillCategory(category: Category) {
         userSetFillCategory.onNext(category)
+    }
+
+    private val userSetTotalGuess = BehaviorSubject.create<BigDecimal>()
+    fun userSetTotalGuess(amount: String) {
+        userSetTotalGuess.onNext(BigDecimal(amount))
     }
 
     fun userSubmit() {
@@ -88,6 +94,11 @@ class CreateFutureVM @Inject constructor(
             .nonLazyCache(disposables)
 
     // # Output
+    val totalGuessHeader = "Total Guess"
+    val totalGuess =
+        userSetTotalGuess
+            .startWithItem(BigDecimal.ZERO)!!
+            .replayNonError(1)
     val buttonVMItems =
         listOf(
             ButtonVMItem(
@@ -95,7 +106,7 @@ class CreateFutureVM @Inject constructor(
                 onClick = ::userSubmit
             )
         )
-    val navUp = PublishSubject.create<Unit>()
+    val navUp = PublishSubject.create<Unit>()!!
 
     val fillCategory =
         userSetFillCategory

@@ -34,16 +34,16 @@ class PlanFrag : Fragment(R.layout.frag_plan) {
         val expectedIncomeRecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Observable<String>>(
             { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
             { d, vb, lifecycleOwner ->
-                vb.edittext.bind(d, lifecycleOwner) { easyText = it }
-                vb.edittext.onDone { activePlanVM.userSaveExpectedIncome(it) }
+                vb.moneyedittext.bind(d, lifecycleOwner) { easyText = it }
+                vb.moneyedittext.onDone { activePlanVM.userSaveExpectedIncome(it) }
             }
         )
         val planCAsRecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Pair<Category, Observable<String>?>>(
             { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
             { (category, d), vb, lifecycleOwner ->
-                vb.edittext.onDone { activePlanVM.userSaveActivePlanCA(category, it) }
+                vb.moneyedittext.onDone { activePlanVM.userSaveActivePlanCA(category, it) }
                 if (d == null) return@ViewItemRecipeFactory3
-                vb.edittext.bind(d, lifecycleOwner) { easyText = it }
+                vb.moneyedittext.bind(d, lifecycleOwner) { easyText = it }
             }
         )
         Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs)

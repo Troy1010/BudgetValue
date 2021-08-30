@@ -35,6 +35,7 @@ class CreateFutureVMTest {
         createFutureVM.userInputCA(Given.categories[3], BigDecimal("-1"))
         createFutureVM.userInputCA(Given.categories[3], BigDecimal("1"))
         createFutureVM.userSetFillCategory(Given.categories[2])
+        createFutureVM.userSetTotalGuess(BigDecimal("578"))
         // # Then
         assertEquals(
             Pair(
@@ -55,6 +56,10 @@ class CreateFutureVMTest {
         assertEquals(
             Given.categories[2],
             createFutureVM.fillCategory.value,
+        )
+        assertEquals(
+            BigDecimal("578"),
+            createFutureVM.totalGuess.value,
         )
     }
 

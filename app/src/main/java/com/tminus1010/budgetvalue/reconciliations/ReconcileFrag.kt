@@ -60,9 +60,9 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
         val reconcileCARecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Pair<Category, Observable<String>?>>(
             { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
             { (category, d), vb, lifecycle ->
-                vb.edittext.onDone { activeReconciliationVM.pushActiveReconcileCA(category, it) }
+                vb.moneyedittext.onDone { activeReconciliationVM.pushActiveReconcileCA(category, it) }
                 if (d == null) return@ViewItemRecipeFactory3
-                d.observe(lifecycle) { vb.edittext.easyText = it }
+                d.observe(lifecycle) { vb.moneyedittext.easyText = it }
             }
         )
         val budgetedRecipeFactory = ViewItemRecipeFactory3<ItemTextViewBinding, Observable<BigDecimal>?>(

@@ -37,8 +37,15 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
         val bindItemHeaderBinding = { d: String, vb: ItemHeaderBinding, _: LifecycleOwner ->
             vb.textview.text = d
         }
-        val bindItemTextViewBinding = { d: Category, vb: ItemTextViewBinding, _: LifecycleOwner ->
-            vb.textview.text = d.name
+        val bindItemTextViewBinding = { d: String, vb: ItemTextViewBinding, _: LifecycleOwner ->
+            vb.textview.text = d
+        }
+        val bindItemEditTextBinding = { d: String, vb: ItemEditTextBinding, _: LifecycleOwner ->
+            vb.edittext.easyText = d
+        }
+        val bindItemMoneyEditTextBinding = { d: String, vb: ItemMoneyEditTextBinding, _: LifecycleOwner ->
+            vb.moneyedittext.easyText = d
+            vb.moneyedittext.onDone { createFutureVM.userSetTotalGuess(it) }
         }
         val bindItemAmountFormulaBinding = { d: CategoryAmountFormulaVMItem, vb: ItemAmountFormulaBinding, lifecycle: LifecycleOwner ->
             val category = d.category
@@ -81,7 +88,21 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
             }
         }
         // # TMTableView OtherUserInput
-        createFutureVM.fillCategoryAmountFormula
+        createFutureVM.totalGuess
+            .map { totalGuess ->
+                listOf(
+                    listOf(
+                        viewItemRecipe(bindItemTextViewBinding, createFutureVM.totalGuessHeader),
+                        viewItemRecipe(bindItemMoneyEditTextBinding, totalGuess.toString()),
+                    )
+                )
+            }
+            .observe(viewLifecycleOwner) { recipeGrid ->
+                vb.tmTableViewOtherInput.initialize(
+                    recipeGrid,
+                    shouldFitItemWidthsInsideTable = true
+                )
+            }
         // # TMTableView CategoryAmounts
         createFutureVM.categoryAmountFormulaVMItems
             .map { categoryAmountFormulaVMItems ->
@@ -93,7 +114,7 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
                     ),
                     *categoryAmountFormulaVMItems.map {
                         listOf(
-                            viewItemRecipe(bindItemTextViewBinding, it.category),
+                            viewItemRecipe(bindItemTextViewBinding, it.category.name),
                             viewItemRecipe(bindItemAmountFormulaBinding, it),
                             viewItemRecipe(bindItemCheckboxBinding, it.category),
                         )
