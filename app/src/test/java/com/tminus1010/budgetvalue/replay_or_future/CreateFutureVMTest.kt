@@ -31,23 +31,23 @@ class CreateFutureVMTest {
         createFutureVM.setup(givenCategorySelectionVM)
         createFutureVM.userSetFillCategory(Given.categories[1])
         createFutureVM.userSwitchCategoryIsPercentage(Given.categories[1], true)
-        createFutureVM.userInputCA(Given.categories[1], BigDecimal("0.1"))
+        createFutureVM.userInputCA(Given.categories[1], BigDecimal("10"))
         createFutureVM.userInputCA(Given.categories[3], BigDecimal("-1"))
         createFutureVM.userInputCA(Given.categories[3], BigDecimal("1"))
         createFutureVM.userSetFillCategory(Given.categories[2])
-        createFutureVM.userSetTotalGuess(BigDecimal("578"))
+        createFutureVM.userSetTotalGuess("100")
         // # Then
         assertEquals(
             Pair(
                 Given.categories[2],
-                AmountFormula.Value(BigDecimal("-1.00")),
+                AmountFormula.Value(BigDecimal("89.00")),
             ),
             createFutureVM.fillCategoryAmountFormula.value,
         )
         assertEquals(
             mapOf(
                 Given.categories[0] to AmountFormula.Value(BigDecimal("0")),
-                Given.categories[1] to AmountFormula.Percentage(BigDecimal("0.1")),
+                Given.categories[1] to AmountFormula.Percentage(BigDecimal("10")),
                 Given.categories[2] to AmountFormula.Value(BigDecimal("0")),
                 Given.categories[3] to AmountFormula.Value(BigDecimal("1")),
             ),
@@ -58,7 +58,7 @@ class CreateFutureVMTest {
             createFutureVM.fillCategory.value,
         )
         assertEquals(
-            BigDecimal("578"),
+            BigDecimal("100.00"),
             createFutureVM.totalGuess.value,
         )
     }
