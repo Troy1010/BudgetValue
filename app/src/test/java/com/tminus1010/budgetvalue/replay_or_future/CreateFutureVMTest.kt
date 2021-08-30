@@ -2,6 +2,8 @@ package com.tminus1010.budgetvalue.replay_or_future
 
 import com.tminus1010.budgetvalue.Given
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
+import com.tminus1010.budgetvalue.categories.ICategoryParser
+import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import io.mockk.every
@@ -27,14 +29,18 @@ class CreateFutureVMTest {
             every { selectedCategories } returns Observable.just(givenSelectedCategories)
         }
         // # When
-        val createFutureVM = CreateFutureVM()
+        val createFutureVM = CreateFutureVM(object : ICategoryParser {
+            override fun parseCategory(categoryName: String): Category {
+                return Given.categories.find { it.name == categoryName }!!
+            }
+        })
         createFutureVM.setup(givenCategorySelectionVM)
-        createFutureVM.userSetFillCategory(Given.categories[1])
+        createFutureVM.userSetFillCategory(Given.categories[1].name)
         createFutureVM.userSwitchCategoryIsPercentage(Given.categories[1], true)
         createFutureVM.userInputCA(Given.categories[1], BigDecimal("10"))
         createFutureVM.userInputCA(Given.categories[3], BigDecimal("-1"))
         createFutureVM.userInputCA(Given.categories[3], BigDecimal("1"))
-        createFutureVM.userSetFillCategory(Given.categories[2])
+        createFutureVM.userSetFillCategory(Given.categories[2].name)
         createFutureVM.userSetTotalGuess("100")
         // # Then
         assertEquals(

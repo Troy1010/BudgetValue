@@ -12,12 +12,12 @@ import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
 import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulaVMItem
 import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
+import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.budgetvalue.transactions.models.SearchType
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
-import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -28,7 +28,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateFutureVM @Inject constructor(
-
+    private val categoryParser: ICategoryParser,
 ) : ViewModel() {
     // # Workarounds
     fun setup(categorySelectionVM: CategorySelectionVM) {
@@ -50,8 +50,8 @@ class CreateFutureVM @Inject constructor(
     }
 
     private val userSetFillCategory = BehaviorSubject.create<Category>()!!
-    fun userSetFillCategory(category: Category) {
-        userSetFillCategory.onNext(category)
+    fun userSetFillCategory(categoryName: String) {
+        userSetFillCategory.onNext(categoryParser.parseCategory(categoryName))
     }
 
     private val userSetTotalGuess = BehaviorSubject.create<BigDecimal>()
