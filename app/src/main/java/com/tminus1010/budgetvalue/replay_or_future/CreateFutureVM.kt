@@ -55,7 +55,7 @@ class CreateFutureVM @Inject constructor(
 
     private val userSetTotalGuess = BehaviorSubject.create<BigDecimal>()
     fun userSetTotalGuess(amount: String) {
-        userSetTotalGuess.onNext(BigDecimal(amount))
+        userSetTotalGuess.onNext(BigDecimal(amount).setScale(2))
     }
 
     fun userSubmit() {
@@ -64,7 +64,6 @@ class CreateFutureVM @Inject constructor(
 
     // # Internal
     private val selectedCategories = SingleSubject.create<List<Category>>()
-    private val total: Observable<BigDecimal> = Observable.just(BigDecimal.ZERO)
     private val userCategoryAmountFormulas =
         Rx.combineLatest(
             userCategoryAmounts.observable,
@@ -98,6 +97,7 @@ class CreateFutureVM @Inject constructor(
     val totalGuess =
         userSetTotalGuess
             .startWithItem(BigDecimal.ZERO)!!
+            .distinctUntilChanged()
             .replayNonError(1)
     val buttonVMItems =
         listOf(
@@ -126,7 +126,7 @@ class CreateFutureVM @Inject constructor(
         Rx.combineLatest(
             categoryAmountFormulas,
             fillCategory,
-            total,
+            totalGuess,
         )
             .map { (categoryAmountFormulas, fillCategory, total) ->
                 Pair(fillCategory, categoryAmountFormulas.fillIntoCategory(fillCategory, total)[fillCategory]!!)
