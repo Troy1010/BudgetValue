@@ -121,6 +121,9 @@ class CreateFutureVM @Inject constructor(
                 Pair(fillCategory, categoryAmountFormulas.fillIntoCategory(fillCategory, total)[fillCategory]!!)
             }!!
 
+    val categoryHeader = "Category"
+    val amountHeader = "Amount"
+    val fillHeader = "Fill"
     val categoryAmountFormulaVMItems: Observable<List<CategoryAmountFormulaVMItem>> =
         categoryAmountFormulas.flatMapSourceHashMap { it.itemObservableMap }
             .map { categoryAmountFormulaItemObservables ->

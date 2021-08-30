@@ -9,7 +9,6 @@ import androidx.navigation.NavController
 import androidx.navigation.navGraphViewModels
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.*
-import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuItem
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
@@ -88,9 +87,9 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
             .map { categoryAmountFormulaVMItems ->
                 listOf(
                     listOf(
-                        viewItemRecipe(bindItemHeaderBinding, "Category"),
-                        viewItemRecipe(bindItemHeaderBinding, "Amount"),
-                        viewItemRecipe(bindItemHeaderBinding, "Fill"),
+                        viewItemRecipe(bindItemHeaderBinding, createFutureVM.categoryHeader),
+                        viewItemRecipe(bindItemHeaderBinding, createFutureVM.amountHeader),
+                        viewItemRecipe(bindItemHeaderBinding, createFutureVM.fillHeader),
                     ),
                     *categoryAmountFormulaVMItems.map {
                         listOf(
