@@ -24,6 +24,7 @@ data class ViewItemRecipe3_<VB : ViewBinding, D : Any> constructor(
     override fun createVB(): VB = inflate(LayoutInflater.from(context))
     override fun createImpatientlyBoundView(): View = createVB().also { bindImpatiently(it) }.root
 
+    @Suppress("UNCHECKED_CAST")
     private fun _bind(vb: ViewBinding, _lifecycle: LifecycleOwner) {
         return try {
             bind(d, vb as VB, _lifecycle)
