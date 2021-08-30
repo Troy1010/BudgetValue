@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewbinding.ViewBinding
+import com.tminus1010.budgetvalue._core.extensions.lifecycle
 import com.tminus1010.budgetvalue._core.middleware.ui.GenViewHolder2
 import com.tminus1010.budgetvalue._core.middleware.ui.LifecycleRVAdapter
 
@@ -18,6 +19,7 @@ class InnerRVAdapter(
     override fun getItemCount() = recipeGrid[0].size
 
     override fun onViewAttachedToWindow(holder: GenViewHolder2<ViewBinding>, lifecycle: LifecycleOwner) {
+        holder.vb.root.lifecycle = lifecycle
         recipeGrid[j][holder.adapterPosition].bind(holder.vb, lifecycle)
     }
 }

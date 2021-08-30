@@ -47,7 +47,6 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
             vb.textview.text = d
         }
         val bindItemEditTextBinding = { d: Observable<String>, vb: ItemEditTextBinding, lifecycle: LifecycleOwner ->
-            vb.edittext.lifecycle = lifecycle
             vb.edittext.bind(d) { easyText = it }
         }
         val bindItemSpinnerBinding = { _: Unit, vb: ItemSpinnerBinding, _: LifecycleOwner ->
@@ -69,7 +68,6 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
             vb.moneyedittext.onDone { createFutureVM.userSetTotalGuess(it) }
         }
         val bindItemMoneyEditTextBinding2 = { d: Observable<String>, vb: ItemMoneyEditTextBinding, lifecycle: LifecycleOwner ->
-            vb.moneyedittext.lifecycle = lifecycle
             vb.moneyedittext.bind(d) { easyText = it }
             vb.moneyedittext.onDone { createFutureVM.userSetTotalGuess(it) }
         }

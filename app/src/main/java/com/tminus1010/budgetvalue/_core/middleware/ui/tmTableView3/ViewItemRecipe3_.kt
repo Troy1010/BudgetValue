@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewbinding.ViewBinding
+import com.tminus1010.budgetvalue._core.extensions.lifecycle
 import com.tminus1010.budgetvalue._core.middleware.ui.ExposedLifecycleOwner
 import com.tminus1010.tmcommonkotlin.misc.extensions.measureUnspecified
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -41,6 +42,7 @@ data class ViewItemRecipe3_<VB : ViewBinding, D : Any?> constructor(
 
     override fun bindImpatiently(vb: ViewBinding) {
         val _lifecycle = ExposedLifecycleOwner().apply { emitResume() }
+        vb.root.lifecycle = _lifecycle
         _bind(vb, _lifecycle)
         _lifecycle.emitDestroy()
     }

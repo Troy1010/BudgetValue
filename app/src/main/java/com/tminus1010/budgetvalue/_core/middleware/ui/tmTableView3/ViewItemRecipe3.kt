@@ -41,6 +41,7 @@ data class ViewItemRecipe3<VB : ViewBinding, D : Any?>(
 
     override fun bindImpatiently(vb: ViewBinding) {
         val _lifecycle = ExposedLifecycleOwner().apply { emitResume() }
+        vb.root.lifecycle = _lifecycle
         _bind(vb, _lifecycle)
         _lifecycle.emitDestroy()
     }
