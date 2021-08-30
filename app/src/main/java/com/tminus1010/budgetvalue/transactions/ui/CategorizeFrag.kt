@@ -119,6 +119,12 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 if (inSelectionMode)
                     ButtonVMItem(
                         title = "Create Future",
+                        onClick = { CreateFutureFrag.navTo(nav) }
+                    )
+                else null,
+                if (inSelectionMode)
+                    ButtonVMItem(
+                        title = "Create Future old",
                         onClick = {
                             CategorizeAdvancedFrag.navTo(
                                 source = this,
@@ -182,13 +188,6 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                                 })
                         })
                     .toTypedArray(),
-                if (!inSelectionMode)
-                    ButtonVMItem(
-                        title = "Create Future",
-                        onClick = {
-                            CreateFutureFrag.navTo(nav)
-                        })
-                else null,
                 if (!inSelectionMode)
                     ButtonVMItem(
                         title = "Browse Replays",

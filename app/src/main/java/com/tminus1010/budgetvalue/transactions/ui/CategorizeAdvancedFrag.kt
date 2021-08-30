@@ -38,7 +38,6 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.Subject
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
@@ -306,7 +305,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
             categorySelectionVM: CategorySelectionVM,
             transaction: Transaction?,
             replayOrFuture: IReplayOrFuture?,
-            categorizeAdvancedType: CategorizeAdvancedType
+            categorizeAdvancedType: CategorizeAdvancedType,
         ) {
             _setupArgs = Triple(
                 transaction,
