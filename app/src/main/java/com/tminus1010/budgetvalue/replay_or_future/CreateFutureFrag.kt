@@ -9,6 +9,7 @@ import androidx.navigation.NavController
 import androidx.navigation.navGraphViewModels
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.*
+import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuItem
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
@@ -18,6 +19,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.*
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
+import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -29,7 +31,10 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // # TMTableView CategoryAmounts
+        //
+        createFutureVM.setup(categorySelectionVM)
+        createFutureVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
+        // # bind methods
         val bindItemHeaderBinding = { d: String, vb: ItemHeaderBinding, _: LifecycleOwner ->
             vb.textview.text = d
         }
@@ -76,7 +81,9 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
                 if (isChecked) createFutureVM.userSetFillCategory(d)
             }
         }
-        createFutureVM.setup(categorySelectionVM)
+        // # TMTableView OtherUserInput
+        createFutureVM.fillCategoryAmountFormula
+        // # TMTableView CategoryAmounts
         createFutureVM.categoryAmountFormulaVMItems
             .map { categoryAmountFormulaVMItems ->
                 listOf(
@@ -100,6 +107,8 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
                     shouldFitItemWidthsInsideTable = true
                 )
             }
+        // # ButtonsView
+        vb.buttonsview.buttons = createFutureVM.buttonVMItems
     }
 
     companion object {

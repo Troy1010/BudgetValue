@@ -8,6 +8,7 @@ import com.tminus1010.budgetvalue._core.extensions.isZero
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
+import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
 import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulaVMItem
 import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
@@ -18,6 +19,7 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.SingleSubject
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -86,6 +88,15 @@ class CreateFutureVM @Inject constructor(
             .nonLazyCache(disposables)
 
     // # Output
+    val buttonVMItems =
+        listOf(
+            ButtonVMItem(
+                "Submit",
+                onClick = ::userSubmit
+            )
+        )
+    val navUp = PublishSubject.create<Unit>()
+
     val fillCategory =
         userSetFillCategory
             .startWith(
