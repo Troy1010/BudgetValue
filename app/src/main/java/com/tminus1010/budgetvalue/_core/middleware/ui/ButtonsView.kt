@@ -9,7 +9,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
-import com.tminus1010.budgetvalue._core.ui.data_binding.bindButtonRVItem
+import com.tminus1010.budgetvalue._core.extensions.lifecycleOwner
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
 import com.tminus1010.tmcommonkotlin.view.extensions.toPX
 
@@ -30,8 +30,9 @@ class ButtonsView @JvmOverloads constructor(
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
                 GenViewHolder2(ItemButtonBinding.inflate(LayoutInflater.from(context), parent, false))
 
-            override fun onViewAttachedToWindow(holder: GenViewHolder2<ItemButtonBinding>, lifecycle: LifecycleOwner) {
-                holder.vb.btnItem.bindButtonRVItem(lifecycle, buttons[holder.adapterPosition])
+            override fun onViewAttachedToWindow(holder: GenViewHolder2<ItemButtonBinding>, lifecycleOwner: LifecycleOwner) {
+                holder.vb.root.lifecycleOwner = lifecycleOwner
+                buttons[holder.adapterPosition].bind(holder.vb.btnItem)
             }
 
             override fun getItemCount() = buttons.size
