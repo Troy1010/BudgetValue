@@ -18,6 +18,7 @@ interface IRecipeFactories {
     val textViewWithLifecycle: ViewItemRecipeFactory3<ItemTextViewBinding, Observable<String>?>
 }
 
+@Deprecated("use viewItemRecipe pattern instead")
 val Fragment.recipeFactories
     get() = object : IRecipeFactories {
         override val titledDivider: ViewItemRecipeFactory3<ItemTitledDividerBinding, String>
