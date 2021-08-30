@@ -10,7 +10,7 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.measureUnspecified
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 
-data class ViewItemRecipe3_<VB : ViewBinding, D : Any> constructor(
+data class ViewItemRecipe3_<VB : ViewBinding, D : Any?> constructor(
     val context: Context,
     val inflate: (LayoutInflater) -> VB,
     val bind: ((D, VB, LifecycleOwner) -> Unit),

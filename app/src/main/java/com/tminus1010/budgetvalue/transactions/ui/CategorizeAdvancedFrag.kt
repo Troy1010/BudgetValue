@@ -121,7 +121,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                             recipeFactories.textView.createOne("Search Type"),
                             searchTypeRecipe,
                         ),
-                        if (searchType == SearchType.DESCRIPTION) listOf(
+                        if (searchType == SearchType.DESCRIPTION_AND_TOTAL) listOf(
                             recipeFactories.textView.createOne("Search Text"),
                             searchTextRecipe,
                         ) else null,

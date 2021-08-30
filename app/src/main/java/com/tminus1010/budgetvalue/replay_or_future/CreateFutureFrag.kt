@@ -2,6 +2,8 @@ package com.tminus1010.budgetvalue.replay_or_future
 
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
@@ -17,9 +19,13 @@ import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.*
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
+import com.tminus1010.budgetvalue.transactions.models.SearchType
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
+import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.core.Observable
+import java.util.concurrent.atomic.AtomicBoolean
 
 
 @AndroidEntryPoint
@@ -40,11 +46,31 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
         val bindItemTextViewBinding = { d: String, vb: ItemTextViewBinding, _: LifecycleOwner ->
             vb.textview.text = d
         }
-        val bindItemEditTextBinding = { d: String, vb: ItemEditTextBinding, _: LifecycleOwner ->
-            vb.edittext.easyText = d
+        val bindItemEditTextBinding = { d: Observable<String>, vb: ItemEditTextBinding, lifecycle: LifecycleOwner ->
+            vb.edittext.lifecycle = lifecycle
+            vb.edittext.bind(d) { easyText = it }
+        }
+        val bindItemSpinnerBinding = { _: Unit, vb: ItemSpinnerBinding, _: LifecycleOwner ->
+            val adapter = ArrayAdapter(requireContext(), R.layout.item_text_view_without_highlight, SearchType.values())
+            vb.spinner.adapter = adapter
+            vb.spinner.setSelection(adapter.getPosition(createFutureVM.searchType.value!!))
+            vb.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                var didFirstSelectionHappen = AtomicBoolean(false)
+                override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                    if (didFirstSelectionHappen.getAndSet(true))
+                        createFutureVM.userSetSearchType((vb.spinner.selectedItem as SearchType))
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) = Unit
+            }
         }
         val bindItemMoneyEditTextBinding = { d: String, vb: ItemMoneyEditTextBinding, _: LifecycleOwner ->
             vb.moneyedittext.easyText = d
+            vb.moneyedittext.onDone { createFutureVM.userSetTotalGuess(it) }
+        }
+        val bindItemMoneyEditTextBinding2 = { d: Observable<String>, vb: ItemMoneyEditTextBinding, lifecycle: LifecycleOwner ->
+            vb.moneyedittext.lifecycle = lifecycle
+            vb.moneyedittext.bind(d) { easyText = it }
             vb.moneyedittext.onDone { createFutureVM.userSetTotalGuess(it) }
         }
         val bindItemAmountFormulaBinding = { d: CategoryAmountFormulaVMItem, vb: ItemAmountFormulaBinding, lifecycle: LifecycleOwner ->
@@ -88,21 +114,23 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
             }
         }
         // # TMTableView OtherUserInput
-        createFutureVM.totalGuess
-            .map { totalGuess ->
+        vb.tmTableViewOtherInput.initialize(
+            listOf(
                 listOf(
-                    listOf(
-                        viewItemRecipe(bindItemTextViewBinding, createFutureVM.totalGuessHeader),
-                        viewItemRecipe(bindItemMoneyEditTextBinding, totalGuess.toString()),
-                    )
-                )
-            }
-            .observe(viewLifecycleOwner) { recipeGrid ->
-                vb.tmTableViewOtherInput.initialize(
-                    recipeGrid,
-                    shouldFitItemWidthsInsideTable = true
-                )
-            }
+                    viewItemRecipe(bindItemTextViewBinding, createFutureVM.totalGuessHeader),
+                    viewItemRecipe(bindItemMoneyEditTextBinding2, createFutureVM.totalGuess.map { it.toString() }),
+                ),
+                listOf(
+                    viewItemRecipe(bindItemTextViewBinding, createFutureVM.searchTypeHeader),
+                    viewItemRecipe(bindItemSpinnerBinding),
+                ),
+                listOf(
+                    viewItemRecipe(bindItemTextViewBinding, createFutureVM.searchDescriptionHeader),
+                    viewItemRecipe(bindItemEditTextBinding, createFutureVM.searchDescription),
+                ),
+            ),
+            shouldFitItemWidthsInsideTable = true
+        )
         // # TMTableView CategoryAmounts
         createFutureVM.categoryAmountFormulaVMItems
             .map { categoryAmountFormulaVMItems ->

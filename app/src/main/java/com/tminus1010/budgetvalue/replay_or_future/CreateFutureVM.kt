@@ -15,6 +15,7 @@ import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
+import com.tminus1010.budgetvalue.transactions.models.SearchType
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -58,6 +59,16 @@ class CreateFutureVM @Inject constructor(
         userSetTotalGuess.onNext(BigDecimal(amount).setScale(2))
     }
 
+    private val userSetSearchType = BehaviorSubject.create<SearchType>()
+    fun userSetSearchType(searchType: SearchType) {
+        userSetSearchType.onNext(searchType)
+    }
+
+    private val userSetSearchDescription = BehaviorSubject.create<String>()
+    fun userSetSearchDescription(searchDescription: String) {
+        userSetSearchDescription.onNext(searchDescription)
+    }
+
     fun userSubmit() {
         TODO()
     }
@@ -96,9 +107,17 @@ class CreateFutureVM @Inject constructor(
     val totalGuessHeader = "Total Guess"
     val totalGuess =
         userSetTotalGuess
-            .startWithItem(BigDecimal.ZERO)!!
-            .distinctUntilChanged()
-            .replayNonError(1)
+            .startWithItem(BigDecimal.ZERO)
+            .distinctUntilChanged()!!
+    val searchTypeHeader = "Search Type"
+    val searchType =
+        userSetSearchType
+            .startWithItem(SearchType.DESCRIPTION_AND_TOTAL)!!
+    val searchDescriptionHeader = "Description"
+    val searchDescription =
+        userSetSearchDescription
+            .startWithItem("")
+            .distinctUntilChanged()!!
     val buttonVMItems =
         listOf(
             ButtonVMItem(

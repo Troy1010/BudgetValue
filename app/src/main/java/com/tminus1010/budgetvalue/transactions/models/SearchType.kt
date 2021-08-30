@@ -1,5 +1,3 @@
 package com.tminus1010.budgetvalue.transactions.models
 
-enum class SearchType {
-    DESCRIPTION, TOTAL
-}
+enum class SearchType { DESCRIPTION_AND_TOTAL, TOTAL }
