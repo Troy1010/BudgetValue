@@ -55,7 +55,7 @@ var View.easyVisibility: Boolean
     }
 
 
-var View.lifecycle: LifecycleOwner?
+var View.lifecycleOwner: LifecycleOwner?
     get() = findViewTreeLifecycleOwner()
     set(value) {
         setTag(androidx.lifecycle.runtime.R.id.view_tree_lifecycle_owner, value)

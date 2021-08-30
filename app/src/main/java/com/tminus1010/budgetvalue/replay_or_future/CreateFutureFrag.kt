@@ -79,7 +79,7 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
                 setBackgroundColor(context.theme.getColorByAttr(if (isEnabled) R.attr.colorBackground else R.attr.colorBackgroundHighlight))
             }
             vb.moneyEditText.onDone { createFutureVM.userInputCA(category, it.toMoneyBigDecimal()) }
-            amountFormula.observe(vb.root.lifecycle!!) { _amountFormula ->
+            amountFormula.observe(vb.root.lifecycleOwner!!) { _amountFormula ->
                 vb.tvPercentage.easyVisibility = _amountFormula is AmountFormula.Percentage
                 getView()?.requestFocus() // required for onDone to not accidentally capture the new text.
                 vb.moneyEditText.setText(_amountFormula.toDisplayStr())
