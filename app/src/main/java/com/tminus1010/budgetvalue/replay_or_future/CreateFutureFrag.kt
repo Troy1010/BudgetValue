@@ -14,14 +14,17 @@ import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.*
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulaVMItem
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
+import com.tminus1010.budgetvalue.choose_transaction_description.ChooseTransactionDescriptionFrag
 import com.tminus1010.budgetvalue.databinding.FragCreateFutureBinding
 import com.tminus1010.budgetvalue.databinding.ItemAmountFormulaBinding
+import com.tminus1010.budgetvalue.databinding.ItemEditTextBinding
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.budgetvalue.transactions.models.SearchType
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.core.Observable
 
 
 @AndroidEntryPoint
@@ -54,18 +57,32 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
                             if (_amountFormula !is AmountFormula.Percentage)
                                 MenuItem(
                                     title = "Percentage",
-                                    onClick = { createFutureVM.userSwitchCategoryIsPercentage(category, true) })
+                                    onClick = { createFutureVM.userSwitchCategoryIsPercentage(category, true) },
+                                )
                             else null,
                             if (_amountFormula !is AmountFormula.Value)
                                 MenuItem(
                                     title = "No Percentage",
-                                    onClick = { createFutureVM.userSwitchCategoryIsPercentage(category, false) })
+                                    onClick = { createFutureVM.userSwitchCategoryIsPercentage(category, false) },
+                                )
                             else null,
                         ).toTypedArray()
                     )
                 }
             }
             Unit
+        }
+        val bindSearchDescription = { d: Observable<String>, vb: ItemEditTextBinding ->
+            vb.edittext.bind(d) { easyText = it }
+            vb.edittext.onDone(createFutureVM::userSetSearchDescription)
+            vb.edittext.setOnCreateContextMenuListener { menu, _, _ ->
+                menu.add(
+                    MenuItem(
+                        title = "Copy selection from history",
+                        onClick = { ChooseTransactionDescriptionFrag.navTo(nav) },
+                    )
+                )
+            }
         }
         // # TMTableView OtherUserInput
         vb.tmTableViewOtherInput.initialize(
@@ -80,7 +97,7 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
                 ),
                 listOf(
                     viewItemRecipe(bindItemTextViewBinding, createFutureVM.searchDescriptionHeader),
-                    viewItemRecipe(bindItemEditTextBinding(createFutureVM::userSetSearchDescription), createFutureVM.searchDescription),
+                    viewItemRecipe(bindSearchDescription, createFutureVM.searchDescription),
                 ),
             ),
             shouldFitItemWidthsInsideTable = true

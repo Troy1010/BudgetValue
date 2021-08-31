@@ -80,7 +80,17 @@
         <fragment
             android:id="@+id/createFutureFrag"
             android:name="com.tminus1010.budgetvalue.replay_or_future.CreateFutureFrag"
-            android:label="CreateFutureFrag" />
+            android:label="CreateFutureFrag"
+            tools:layout="@layout/frag_create_future">
+            <action
+                android:id="@+id/action_createFutureFrag_to_chooseTransactionDescriptionFrag"
+                app:destination="@id/chooseTransactionDescriptionFrag" />
+        </fragment>
+        <fragment
+            android:id="@+id/chooseTransactionDescriptionFrag"
+            android:name="com.tminus1010.budgetvalue.choose_transaction_description.ChooseTransactionDescriptionFrag"
+            android:label="ChooseTransactionDescriptionFrag"
+            tools:layout="@layout/frag_transactions" />
     </navigation>
     <fragment
         android:id="@+id/transactionsFrag"
