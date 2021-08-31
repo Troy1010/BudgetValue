@@ -24,7 +24,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 @AndroidEntryPoint
 class TransactionsFrag : Fragment(R.layout.frag_transactions) {
     private val vb by viewBinding(FragTransactionsBinding::bind)
-    private val transactionsVM: TransactionsVM by activityViewModels()
+    private val transactionsVM by activityViewModels<TransactionsVM>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
