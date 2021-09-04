@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.replay_or_future
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
+import com.tminus1010.budgetvalue._core.extensions.cold
 import com.tminus1010.budgetvalue._core.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue._core.extensions.isZero
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
@@ -15,9 +16,14 @@ import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
+import com.tminus1010.budgetvalue.replay_or_future.models.BasicFuture
+import com.tminus1010.budgetvalue.replay_or_future.models.IFuture
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.budgetvalue.transactions.models.SearchType
+import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
+import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -29,6 +35,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateFutureVM @Inject constructor(
     private val categoryParser: ICategoryParser,
+    private val futuresRepo: FuturesRepo
 ) : ViewModel() {
     // # Workarounds
     fun setup(categorySelectionVM: CategorySelectionVM) {
@@ -70,7 +77,17 @@ class CreateFutureVM @Inject constructor(
     }
 
     fun userSubmit() {
-        TODO()
+        futuresRepo.add(
+            BasicFuture(
+                name = generateUniqueID(),
+                searchText = searchDescription.value,
+                categoryAmountFormulas = categoryAmountFormulas.value,
+                fillCategory = fillCategory.value,
+                isPermanent = false,
+            )
+        )
+            .andThen { navUp.onNext(Unit) }
+            .subscribe()
     }
 
     // # Internal
@@ -102,6 +119,7 @@ class CreateFutureVM @Inject constructor(
                     .plus(userCategoryAmountFormulas)
             }
             .nonLazyCache(disposables)
+            .cold()
 
     // # Output
     val totalGuessHeader = "Total Guess"
@@ -117,7 +135,8 @@ class CreateFutureVM @Inject constructor(
     val searchDescription =
         userSetSearchDescription
             .startWithItem("")
-            .distinctUntilChanged()!!
+            .distinctUntilChanged()
+            .cold()
     val buttonVMItems =
         listOf(
             ButtonVMItem(
@@ -139,6 +158,7 @@ class CreateFutureVM @Inject constructor(
             )
             .distinctUntilChanged()
             .nonLazyCache(disposables)
+            .cold()
 
     @VisibleForTesting
     val fillCategoryAmountFormula =

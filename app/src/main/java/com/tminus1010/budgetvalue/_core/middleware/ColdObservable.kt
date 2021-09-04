@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue._core.middleware
 
-import io.reactivex.rxjava3.core.ObservableSource
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observer
 import io.reactivex.rxjava3.disposables.Disposable
 
@@ -9,7 +9,7 @@ import io.reactivex.rxjava3.disposables.Disposable
  *
  * This class does not guarantee that it wraps a
  */
-class ColdObservable<T : Any>(observable: ObservableSource<T>) : ObservableSource<T> by observable {
+class ColdObservable<T : Any>(private val observable: Observable<T>) : Observable<T>() {
     val value: T
         get() {
             var returning: T? = null
@@ -36,4 +36,8 @@ class ColdObservable<T : Any>(observable: ObservableSource<T>) : ObservableSourc
             error?.also { throw it }
             return returning!!
         }
+
+    override fun subscribeActual(observer: Observer<in T>?) {
+        observable.subscribe(observer)
+    }
 }
