@@ -59,6 +59,14 @@ class HostActivity : AppCompatActivity() {
                 title = "Transactions",
                 onClick = { nav.navigate(R.id.transactionsFrag) },
             ),
+            MenuItem(
+                title = "Futures",
+                onClick = { TODO() },
+            ),
+            MenuItem(
+                title = "Replays",
+                onClick = { TODO() },
+            ),
             *getExtraMenuItemPartialsUC(this)
         )
         return true
