@@ -35,7 +35,8 @@ class FuturesReviewFrag : Fragment(R.layout.frag_futures_review) {
                         )
                     }.toTypedArray()
                 ),
-                shouldFitItemWidthsInsideTable = true
+                shouldFitItemWidthsInsideTable = true,
+                rowFreezeCount = 1,
             )
         }
     }
