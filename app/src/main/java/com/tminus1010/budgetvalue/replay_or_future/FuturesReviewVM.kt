@@ -19,4 +19,6 @@ class FuturesReviewVM @Inject constructor(
 ) : ViewModel() {
     val futures =
         futuresRepo.fetchFutures()
+    val nameHeader = "Name"
+    val isPermanentHeader = "Is Permanent"
 }

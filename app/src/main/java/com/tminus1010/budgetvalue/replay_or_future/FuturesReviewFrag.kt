@@ -8,6 +8,7 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.viewItemRecipe
+import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.bindItemHeaderBinding
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.bindItemTextViewBinding
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragFuturesReviewBinding
@@ -22,11 +23,19 @@ class FuturesReviewFrag : Fragment(R.layout.frag_futures_review) {
         super.onViewCreated(view, savedInstanceState)
         vb.tmTableViewFutures.bind(futuresReviewVM.futures) {
             initialize(
-                it.map {
+                listOf(
                     listOf(
-                        viewItemRecipe(bindItemTextViewBinding, it.name)
-                    )
-                }
+                        viewItemRecipe(bindItemHeaderBinding, futuresReviewVM.nameHeader),
+                        viewItemRecipe(bindItemHeaderBinding, futuresReviewVM.isPermanentHeader),
+                    ),
+                    *it.map {
+                        listOf(
+                            viewItemRecipe(bindItemTextViewBinding, it.name),
+                            viewItemRecipe(bindItemTextViewBinding, it.isPermanent.toString()),
+                        )
+                    }.toTypedArray()
+                ),
+                shouldFitItemWidthsInsideTable = true
             )
         }
     }
