@@ -11,14 +11,14 @@ import io.reactivex.rxjava3.core.Observable
 fun <V : View, T> V.bind(liveData: LiveData<T>, lifecycle: LifecycleOwner? = null, lambda: V.(T) -> Unit) {
     val _lifecycle =
         lifecycle ?: findViewTreeLifecycleOwner()
-        ?: error("Could not find lifecycle. This might happen in Recyclerviews or other unattached views.\nEither attach the view if you can, or otherwise specify a lifecycle as argument.")
+        ?: error("Could not find lifecycle. This might happen in Recyclerviews or other unattached views.\nEither attach the view, add a lifecycle to the view, or specify a lifecycle as argument.")
     liveData.observe(_lifecycle) { lambda(it) }
 }
 
 fun <V : View, T> V.bind(observable: Observable<T>, lifecycle: LifecycleOwner? = null, lambda: V.(T) -> Unit) {
     val _lifecycle =
         lifecycle ?: findViewTreeLifecycleOwner()
-        ?: error("Could not find lifecycle. This might happen in Recyclerviews or other unattached views.\nEither attach the view if you can, or otherwise specify a lifecycle as argument.")
+        ?: error("Could not find lifecycle. This might happen in Recyclerviews or other unattached views.\nEither attach the view, add a lifecycle to the view, or specify a lifecycle as argument.")
     observable.observe(_lifecycle) { lambda(it) }
 }
 
