@@ -77,7 +77,8 @@
             android:name="com.tminus1010.budgetvalue.replay_or_future.ReplaysFrag"
             android:label="ReplaysFrag"
             tools:layout="@layout/frag_replays" />
-        <navigation android:id="@+id/createFutureNestedGraph"
+        <navigation
+            android:id="@+id/createFutureNestedGraph"
             app:startDestination="@id/createFutureFrag">
             <fragment
                 android:id="@+id/chooseTransactionDescriptionFrag"
@@ -113,5 +114,14 @@
         android:id="@+id/futuresReviewFrag"
         android:name="com.tminus1010.budgetvalue.replay_or_future.FuturesReviewFrag"
         android:label="FuturesReviewFrag"
-        tools:layout="@layout/frag_futures_review" />
+        tools:layout="@layout/frag_futures_review">
+        <action
+            android:id="@+id/action_futuresReviewFrag_to_futureDetailsFrag"
+            app:destination="@id/futureDetailsFrag" />
+    </fragment>
+    <fragment
+        android:id="@+id/futureDetailsFrag"
+        android:name="com.tminus1010.budgetvalue.replay_or_future.FutureDetailsFrag"
+        android:label="FutureDetailsFrag"
+        tools:layout="@layout/frag_create_future" />
 </navigation>
