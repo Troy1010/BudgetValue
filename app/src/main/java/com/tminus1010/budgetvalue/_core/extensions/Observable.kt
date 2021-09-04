@@ -1,5 +1,6 @@
 package com.tminus1010.budgetvalue._core.extensions
 
+import com.tminus1010.budgetvalue._core.middleware.ColdObservable
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulas
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
@@ -66,3 +67,6 @@ fun <T> Observable<T>.nonLazyCache(compositeDisposable: CompositeDisposable): Ob
 
 val <T : Any> Observable<Box<T?>>.unbox: T
     get() = this.value!!.first!!
+
+fun <T : Any> Observable<T>.cold(): ColdObservable<T> =
+    ColdObservable(this)
