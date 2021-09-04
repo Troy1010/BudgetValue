@@ -15,6 +15,7 @@ import com.tminus1010.budgetvalue._core.extensions.add
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuItem
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
+import com.tminus1010.budgetvalue.replay_or_future.FuturesReviewFrag
 import com.tminus1010.budgetvalue.transactions.TransactionsMiscVM
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
 import dagger.hilt.android.AndroidEntryPoint
@@ -61,7 +62,7 @@ class HostActivity : AppCompatActivity() {
             ),
             MenuItem(
                 title = "Futures",
-                onClick = { TODO() },
+                onClick = { FuturesReviewFrag.navTo(nav) },
             ),
             MenuItem(
                 title = "Replays",

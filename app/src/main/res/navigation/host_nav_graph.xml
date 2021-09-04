@@ -109,4 +109,9 @@
         android:name="com.tminus1010.budgetvalue.transactions.ui.TransactionFrag"
         android:label="TransactionFrag"
         tools:layout="@layout/frag_transaction" />
+    <fragment
+        android:id="@+id/futuresReviewFrag"
+        android:name="com.tminus1010.budgetvalue.replay_or_future.FuturesReviewFrag"
+        android:label="FuturesReviewFrag"
+        tools:layout="@layout/frag_futures_review" />
 </navigation>
