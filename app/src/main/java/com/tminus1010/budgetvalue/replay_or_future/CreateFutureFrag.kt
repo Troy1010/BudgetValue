@@ -3,7 +3,6 @@ package com.tminus1010.budgetvalue.replay_or_future
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.navGraphViewModels
 import com.tminus1010.budgetvalue.R
@@ -30,7 +29,7 @@ import io.reactivex.rxjava3.core.Observable
 @AndroidEntryPoint
 class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
     private val vb by viewBinding(FragCreateFutureBinding::bind)
-    private val createFutureVM by viewModels<CreateFutureVM>()
+    private val createFutureVM by navGraphViewModels<CreateFutureVM>(R.id.createFutureNestedGraph) { defaultViewModelProviderFactory }
     private val categorySelectionVM by navGraphViewModels<CategorySelectionVM>(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -132,7 +131,7 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
 
     companion object {
         fun navTo(nav: NavController) {
-            nav.navigate(R.id.createFutureFrag)
+            nav.navigate(R.id.createFutureNestedGraph)
         }
     }
 }
