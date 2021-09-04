@@ -18,22 +18,22 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ChooseTransactionDescriptionFrag : Fragment(R.layout.frag_transactions) {
-    private val vb by viewBinding(FragTransactionsBinding::bind)
-    private val transactionsVM by activityViewModels<TransactionsVM>()
+//    private val vb by viewBinding(FragTransactionsBinding::bind)
+//    private val transactionsVM by activityViewModels<TransactionsVM>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        vb.tmTableView.initialize(
-            recipeGrid = (transactionsVM.transactions.value ?: emptyList())
-                .distinctBy { it.description }
-                .map { transaction ->
-                    listOf<IViewItemRecipe3>(
-                        viewItemRecipe(bindItemTextViewBinding, transaction.date.toDisplayStr()),
-                        viewItemRecipe(bindItemTextViewBinding, transaction.amount.toString()),
-                        viewItemRecipe(bindItemTextViewBinding, transaction.description.take(30)),
-                    )
-                },
-            shouldFitItemWidthsInsideTable = true,
-        )
+//        vb.tmTableView.initialize(
+//            recipeGrid = (transactionsVM.transactions.value ?: emptyList())
+//                .distinctBy { it.description }
+//                .map { transaction ->
+//                    listOf<IViewItemRecipe3>(
+//                        viewItemRecipe(bindItemTextViewBinding, transaction.date.toDisplayStr()),
+//                        viewItemRecipe(bindItemTextViewBinding, transaction.amount.toString()),
+//                        viewItemRecipe(bindItemTextViewBinding, transaction.description.take(30)),
+//                    )
+//                },
+//            shouldFitItemWidthsInsideTable = true,
+//        )
 
 //        val clickableTextViewRecipeFactory = ViewItemRecipeFactory3<ItemTextViewBinding, Pair<Transaction, String>>(
 //            { ItemTextViewBinding.inflate(LayoutInflater.from(requireContext())) },
@@ -68,6 +68,7 @@ class ChooseTransactionDescriptionFrag : Fragment(R.layout.frag_transactions) {
 
     companion object {
         fun navTo(nav: NavController) {
+            logz("qwer")
             nav.navigate(R.id.chooseTransactionDescriptionFrag)
         }
     }
