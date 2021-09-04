@@ -7,7 +7,6 @@ import com.tminus1010.budgetvalue._core.extensions.cold
 import com.tminus1010.budgetvalue._core.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue._core.extensions.isZero
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
-import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
 import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulaVMItem
@@ -18,12 +17,10 @@ import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicFuture
-import com.tminus1010.budgetvalue.replay_or_future.models.IFuture
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.budgetvalue.transactions.models.SearchType
 import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
-import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -35,10 +32,12 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateFutureVM @Inject constructor(
     private val categoryParser: ICategoryParser,
-    private val futuresRepo: FuturesRepo
+    private val futuresRepo: FuturesRepo,
 ) : ViewModel() {
     // # Workarounds
+    lateinit var categorySelectionVM: CategorySelectionVM
     fun setup(categorySelectionVM: CategorySelectionVM) {
+        this.categorySelectionVM = categorySelectionVM
         categorySelectionVM.selectedCategories.observe(disposables) { selectedCategories.onSuccess(it) }
     }
 
@@ -86,6 +85,7 @@ class CreateFutureVM @Inject constructor(
                 isPermanent = false,
             )
         )
+            .andThen(categorySelectionVM.clearSelection())
             .andThen { navUp.onNext(Unit) }
             .subscribe()
     }
