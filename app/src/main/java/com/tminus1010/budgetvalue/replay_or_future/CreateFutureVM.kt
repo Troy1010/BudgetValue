@@ -93,31 +93,25 @@ class CreateFutureVM @Inject constructor(
     // # Internal
     private val selectedCategories = SingleSubject.create<List<Category>>()
     private val userCategoryAmountFormulas =
-        Rx.combineLatest(
-            userCategoryAmounts.observable,
-            userCategoryIsPercentage.observable,
-        )
-            .map { (userCategoryAmounts, userCategoryIsPercentage) ->
-                (userCategoryAmounts.keys + userCategoryIsPercentage.keys)
-                    .associateWith {
-                        if (userCategoryIsPercentage[it] ?: false)
-                            AmountFormula.Percentage(userCategoryAmounts[it] ?: BigDecimal.ZERO)
-                        else
-                            AmountFormula.Value(userCategoryAmounts[it] ?: BigDecimal.ZERO)
-                    }
-            }
+        Observable.combineLatest(userCategoryAmounts.observable, userCategoryIsPercentage.observable)
+        { userCategoryAmounts, userCategoryIsPercentage ->
+            (userCategoryAmounts.keys + userCategoryIsPercentage.keys)
+                .associateWith {
+                    if (userCategoryIsPercentage[it] ?: false)
+                        AmountFormula.Percentage(userCategoryAmounts[it] ?: BigDecimal.ZERO)
+                    else
+                        AmountFormula.Value(userCategoryAmounts[it] ?: BigDecimal.ZERO)
+                }
+        }
             .nonLazyCache(disposables)
 
     @VisibleForTesting
     val categoryAmountFormulas =
-        Rx.combineLatest(
-            userCategoryAmountFormulas,
-            selectedCategories.toObservable(),
-        )
-            .map { (userCategoryAmountFormulas, selectedCategories) ->
-                CategoryAmountFormulas(selectedCategories.associateWith { it.defaultAmountFormula })
-                    .plus(userCategoryAmountFormulas)
-            }
+        Observable.combineLatest(userCategoryAmountFormulas, selectedCategories.toObservable())
+        { userCategoryAmountFormulas, selectedCategories ->
+            CategoryAmountFormulas(selectedCategories.associateWith { it.defaultAmountFormula })
+                .plus(userCategoryAmountFormulas)
+        }
             .nonLazyCache(disposables)
             .cold()
 
@@ -162,14 +156,10 @@ class CreateFutureVM @Inject constructor(
 
     @VisibleForTesting
     val fillCategoryAmountFormula =
-        Rx.combineLatest(
-            categoryAmountFormulas,
-            fillCategory,
-            totalGuess,
-        )
-            .map { (categoryAmountFormulas, fillCategory, total) ->
-                Pair(fillCategory, categoryAmountFormulas.fillIntoCategory(fillCategory, total)[fillCategory]!!)
-            }!!
+        Observable.combineLatest(categoryAmountFormulas, fillCategory, totalGuess)
+        { categoryAmountFormulas, fillCategory, total ->
+            Pair(fillCategory, categoryAmountFormulas.fillIntoCategory(fillCategory, total)[fillCategory]!!)
+        }!!
 
     val categoryHeader = "Category"
     val amountHeader = "Amount"
