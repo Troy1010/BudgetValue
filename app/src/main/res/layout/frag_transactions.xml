@@ -7,4 +7,12 @@
         android:id="@+id/tmTableView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/tvNoTransactionHistory"
+        style="@style/AppTheme.StandardTextView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="There is no transaction history available.\nTo see transaction history, import transactions."
+        android:visibility="gone" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,36 +1,50 @@
 package com.tminus1010.budgetvalue._core.models
 
+import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
+import com.tminus1010.budgetvalue._core.middleware.ColdObservable
+import com.tminus1010.budgetvalue._core.middleware.ui.MenuVMItem
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
-import com.tminus1010.tmcommonkotlin.rx.extensions.pairwise
 import io.reactivex.rxjava3.core.Observable
+import java.math.BigDecimal
 
 data class CategoryAmountFormulaVMItem(
     val category: Category,
     private val _amountFormula: Observable<AmountFormula>,
-    private val fillCategoryAmountFormula: Observable<Pair<Category, AmountFormula>>,
+    private val fillCategory: Observable<Category>,
+    private val fillAmountFormula: ColdObservable<AmountFormula>,
+    private val userSetCategoryIsPercentage: (Category, Boolean) -> Unit,
+    private val userInputCA: (Category, BigDecimal) -> Unit,
 ) {
-    /**
-     * should emit when amountFormula emits, or when the fillCategory changes from or to this.category.
-     */
-    val amountFormula: Observable<AmountFormula> =
-        Observable.combineLatest(
-            _amountFormula,
-            fillCategoryAmountFormula
-                .pairwise()
-                .filter { listOf(it.first.first, it.second.first).any { it == category } }
-                .map { it.second }
-                .startWith(fillCategoryAmountFormula.take(1)),
-            ::getAmountFormula
-        )
+    val isFillCategory =
+        fillCategory
+            .map { it == category }
+            .distinctUntilChanged()!!
 
-    /**
-     * If category == fillCategory, use the fillCategory's amountFormula instead.
-     */
-    private fun getAmountFormula(amountFormula: AmountFormula, fillCategoryAmount: Pair<Category, AmountFormula>): AmountFormula {
-        return if (fillCategoryAmount.first == category)
-            fillCategoryAmount.second
-        else
-            amountFormula
+    val amountFormula: Observable<AmountFormula> =
+        isFillCategory
+            .switchMap { if (it) fillAmountFormula else _amountFormula }
+
+    fun userSetAmount(s: String) {
+        userInputCA(category, s.toMoneyBigDecimal())
     }
+
+    val menuVMItems: Observable<List<MenuVMItem>> =
+        amountFormula
+            .map {
+                listOfNotNull(
+                    if (it !is AmountFormula.Percentage)
+                        MenuVMItem(
+                            title = "Percentage",
+                            onClick = { userSetCategoryIsPercentage(category, true) },
+                        )
+                    else null,
+                    if (it !is AmountFormula.Value)
+                        MenuVMItem(
+                            title = "No Percentage",
+                            onClick = { userSetCategoryIsPercentage(category, false) },
+                        )
+                    else null,
+                )
+            }
 }

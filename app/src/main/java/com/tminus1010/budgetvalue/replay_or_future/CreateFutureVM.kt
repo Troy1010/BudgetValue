@@ -3,28 +3,29 @@ package com.tminus1010.budgetvalue.replay_or_future
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
+import androidx.navigation.NavController
 import com.tminus1010.budgetvalue._core.extensions.cold
 import com.tminus1010.budgetvalue._core.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue._core.extensions.isZero
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
-import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
+import com.tminus1010.budgetvalue._core.middleware.ui.MenuVMItem
 import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulaVMItem
 import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.choose_transaction_description.ChooseTransactionDescriptionFrag
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicFuture
-import com.tminus1010.budgetvalue.replay_or_future.models.IFuture
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.budgetvalue.transactions.models.SearchType
 import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
-import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -35,10 +36,12 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateFutureVM @Inject constructor(
     private val categoryParser: ICategoryParser,
-    private val futuresRepo: FuturesRepo
+    private val futuresRepo: FuturesRepo,
 ) : ViewModel() {
     // # Workarounds
+    lateinit var categorySelectionVM: CategorySelectionVM
     fun setup(categorySelectionVM: CategorySelectionVM) {
+        this.categorySelectionVM = categorySelectionVM
         categorySelectionVM.selectedCategories.observe(disposables) { selectedCategories.onSuccess(it) }
     }
 
@@ -52,7 +55,7 @@ class CreateFutureVM @Inject constructor(
     }
 
     private val userCategoryIsPercentage = SourceHashMap<Category, Boolean>()
-    fun userSwitchCategoryIsPercentage(category: Category, isPercentage: Boolean) {
+    fun userSetCategoryIsPercentage(category: Category, isPercentage: Boolean) {
         userCategoryIsPercentage[category] = isPercentage
     }
 
@@ -86,7 +89,8 @@ class CreateFutureVM @Inject constructor(
                 isPermanent = false,
             )
         )
-            .andThen { navUp.onNext(Unit) }
+            .andThen(categorySelectionVM.clearSelection())
+            .andThen(Completable.fromAction { navUp.onNext(Unit) })
             .subscribe()
     }
 
@@ -120,17 +124,25 @@ class CreateFutureVM @Inject constructor(
     val totalGuess =
         userSetTotalGuess
             .startWithItem(BigDecimal.ZERO)
-            .distinctUntilChanged()!!
+            .distinctUntilChanged()
+            .cold()
     val searchTypeHeader = "Search Type"
     val searchType =
         userSetSearchType
-            .startWithItem(SearchType.DESCRIPTION_AND_TOTAL)!!
+            .startWithItem(SearchType.TOTAL)!!
+            .cold()
     val searchDescriptionHeader = "Description"
     val searchDescription =
         userSetSearchDescription
             .startWithItem("")
             .distinctUntilChanged()
             .cold()
+    val searchDescriptionMenuVMItems = listOf(
+        MenuVMItem(
+            title = "Copy selection from history",
+            onClick = { navTo.onNext(ChooseTransactionDescriptionFrag.Companion::navTo) },
+        )
+    )
     val buttonVMItems =
         listOf(
             ButtonVMItem(
@@ -139,6 +151,7 @@ class CreateFutureVM @Inject constructor(
             )
         )
     val navUp = PublishSubject.create<Unit>()!!
+    val navTo = PublishSubject.create<(NavController) -> Unit>()!!
 
     val fillCategory =
         userSetFillCategory
@@ -155,11 +168,12 @@ class CreateFutureVM @Inject constructor(
             .cold()
 
     @VisibleForTesting
-    val fillCategoryAmountFormula =
+    val fillAmountFormula =
         Observable.combineLatest(categoryAmountFormulas, fillCategory, totalGuess)
         { categoryAmountFormulas, fillCategory, total ->
-            Pair(fillCategory, categoryAmountFormulas.fillIntoCategory(fillCategory, total)[fillCategory]!!)
-        }!!
+            categoryAmountFormulas.fillIntoCategory(fillCategory, total)[fillCategory]!!
+        }
+            .cold()
 
     val categoryHeader = "Category"
     val amountHeader = "Amount"
@@ -168,7 +182,7 @@ class CreateFutureVM @Inject constructor(
         categoryAmountFormulas.flatMapSourceHashMap { it.itemObservableMap }
             .map { categoryAmountFormulaItemObservables ->
                 categoryAmountFormulaItemObservables.map { (category, amountFormula) ->
-                    CategoryAmountFormulaVMItem(category, amountFormula, fillCategoryAmountFormula)
+                    CategoryAmountFormulaVMItem(category, amountFormula, fillCategory, fillAmountFormula, ::userSetCategoryIsPercentage, ::userInputCA)
                 }
             }
             .nonLazyCache(disposables)

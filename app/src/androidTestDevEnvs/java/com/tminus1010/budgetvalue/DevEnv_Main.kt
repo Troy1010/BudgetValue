@@ -6,15 +6,18 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartialsUC
 import com.tminus1010.budgetvalue._core.LaunchImportUC
 import com.tminus1010.budgetvalue._core.TestException
-import com.tminus1010.budgetvalue._core.middleware.ui.MenuItem
+import com.tminus1010.budgetvalue._core.middleware.ui.MenuVMItem
 import com.tminus1010.budgetvalue._core.ui.HostActivity
 import com.tminus1010.budgetvalue._core.ui.MockImportSelectionActivity
+import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
+import com.tminus1010.budgetvalue._shared.app_init.data.AppInitRepo
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.components.SingletonComponent
+import io.reactivex.rxjava3.core.Completable
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -49,13 +52,18 @@ class DevEnv_Main {
 
         @Provides
         @Singleton
-        fun getExtraMenuItemPartialsUC() = object : GetExtraMenuItemPartialsUC() {
+        fun getExtraMenuItemPartialsUC(appInitRepo: AppInitRepo, appInitDomain: AppInitDomain) = object : GetExtraMenuItemPartialsUC() {
             override fun invoke(hostActivity: HostActivity) = hostActivity.run {
                 arrayOf(
-                    MenuItem("Throw Test Error") {
+                    MenuVMItem("Redo App Init") {
+                        appInitRepo.pushAppInitBool(false)
+                            .andThen(Completable.fromAction { appInitDomain.appInit() })
+                            .subscribe()
+                    },
+                    MenuVMItem("Throw Test Error") {
                         hostFrag.handle(TestException())
                     },
-                    MenuItem("Throw Error") {
+                    MenuVMItem("Throw Error") {
                         hostFrag.handle(Exception("Zip zoop an error"))
                     },
                 )

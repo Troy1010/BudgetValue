@@ -16,7 +16,7 @@ import com.tminus1010.budgetvalue._core.InvalidCategoryAmounts
 import com.tminus1010.budgetvalue._core.InvalidSearchText
 import com.tminus1010.budgetvalue._core.extensions.*
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
-import com.tminus1010.budgetvalue._core.middleware.ui.MenuItem
+import com.tminus1010.budgetvalue._core.middleware.ui.MenuVMItem
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipe3
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
@@ -167,12 +167,12 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                         menu.add(
                             *listOfNotNull(
                                 if (_amountFormula !is AmountFormula.Percentage)
-                                    MenuItem(
+                                    MenuVMItem(
                                         title = "Percentage",
                                         onClick = { categorizeAdvancedVM.userSwitchCategoryIsPercentage(category, true) })
                                 else null,
                                 if (_amountFormula !is AmountFormula.Value)
-                                    MenuItem(
+                                    MenuVMItem(
                                         title = "No Percentage",
                                         onClick = { categorizeAdvancedVM.userSwitchCategoryIsPercentage(category, false) })
                                 else null,

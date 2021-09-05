@@ -12,9 +12,10 @@ import androidx.navigation.ui.NavigationUI
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartialsUC
 import com.tminus1010.budgetvalue._core.extensions.add
-import com.tminus1010.budgetvalue._core.middleware.ui.MenuItem
+import com.tminus1010.budgetvalue._core.middleware.ui.MenuVMItem
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
+import com.tminus1010.budgetvalue.replay_or_future.FuturesReviewFrag
 import com.tminus1010.budgetvalue.transactions.TransactionsMiscVM
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
 import dagger.hilt.android.AndroidEntryPoint
@@ -55,9 +56,17 @@ class HostActivity : AppCompatActivity() {
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         menu.clear()
         menu.add(
-            MenuItem(
+            MenuVMItem(
                 title = "Transactions",
                 onClick = { nav.navigate(R.id.transactionsFrag) },
+            ),
+            MenuVMItem(
+                title = "Futures",
+                onClick = { FuturesReviewFrag.navTo(nav) },
+            ),
+            MenuVMItem(
+                title = "Replays",
+                onClick = { TODO() },
             ),
             *getExtraMenuItemPartialsUC(this)
         )

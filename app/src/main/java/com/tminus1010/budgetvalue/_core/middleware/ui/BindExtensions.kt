@@ -18,7 +18,7 @@ fun <T> EditText.bind(
     subject: Subject<T>,
     toT: (String) -> T,
     validate: ((T) -> T)? = null,
-    toDisplayable: ((T) -> Any)? = null
+    toDisplayable: ((T) -> Any)? = null,
 ) {
     bindIncoming(subject, toDisplayable)
     bindOutgoing(subject, toT, validate)

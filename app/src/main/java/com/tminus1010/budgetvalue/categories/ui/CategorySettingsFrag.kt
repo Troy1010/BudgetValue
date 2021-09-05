@@ -13,7 +13,7 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.InvalidCategoryNameException
 import com.tminus1010.budgetvalue._core.extensions.*
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
-import com.tminus1010.budgetvalue._core.middleware.ui.MenuItem
+import com.tminus1010.budgetvalue._core.middleware.ui.MenuVMItem
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipe3
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
@@ -93,14 +93,14 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
                     menu.add(
                         *listOfNotNull(
                             if (categorySettingsVM.categoryToPush.value!!.defaultAmountFormula !is AmountFormula.Percentage)
-                                MenuItem(
+                                MenuVMItem(
                                     title = "Percentage",
                                     onClick = {
                                         categorySettingsVM.userSetDefaultAmountFormulaIsPercentage(true)
                                     })
                             else null,
                             if (categorySettingsVM.categoryToPush.value!!.defaultAmountFormula !is AmountFormula.Value)
-                                MenuItem(
+                                MenuVMItem(
                                     title = "No Percentage",
                                     onClick = {
                                         categorySettingsVM.userSetDefaultAmountFormulaIsPercentage(false)
