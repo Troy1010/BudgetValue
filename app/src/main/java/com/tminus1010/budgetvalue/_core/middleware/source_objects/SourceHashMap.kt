@@ -1,5 +1,6 @@
 package com.tminus1010.budgetvalue._core.middleware.source_objects
 
+import com.tminus1010.budgetvalue._core.extensions.copy
 import com.tminus1010.tmcommonkotlin.core.extensions.removeIf
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
@@ -58,7 +59,7 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue
         .map { _itemObservableMap }
         .startWithItem(_itemObservableMap)
         .map { it.toMap() }
-        .retry(100) // avoids Concurrent Modification problems
+        .retry(100) // Duct-tape solution to avoid Concurrent Modification errors, but those might not exist anymore
         .toBehaviorSubject()
 
     val allEdits =
@@ -90,8 +91,8 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue
         super.putAll(from)
         from.forEach { (key, value) ->
             _itemObservableMap[key]?.also { subject ->
-                changePublisher.onNext(Change(AddRemEditType.EDIT, key, value))
                 subject.onNext(value)
+                changePublisher.onNext(Change(AddRemEditType.EDIT, key, value))
             } ?: run {
                 _itemObservableMap[key] = createItemObservable(key, value)
                 changePublisher.onNext(Change(AddRemEditType.ADD, key, value))
@@ -103,8 +104,8 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue
     override fun put(key: K, value: V): V? {
         val x = super.put(key, value)
         _itemObservableMap[key]?.also { subject ->
-            changePublisher.onNext(Change(AddRemEditType.EDIT, key, value))
             subject.onNext(value)
+            changePublisher.onNext(Change(AddRemEditType.EDIT, key, value))
         } ?: run {
             _itemObservableMap[key] = createItemObservable(key, value)
             changePublisher.onNext(Change(AddRemEditType.ADD, key, value))
@@ -116,29 +117,30 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue
     override fun clear() {
         _itemObservableMap.forEach { (key, subject) ->
             if (exitValue != null) {
-                changePublisher.onNext(Change(AddRemEditType.EDIT, key, exitValue))
                 subject.onNext(exitValue)
+                changePublisher.onNext(Change(AddRemEditType.EDIT, key, exitValue))
             }
         }
         super.clear()
-        _itemObservableMap.forEach { (key, subject) ->
+        val temp = _itemObservableMap.copy()
+        _itemObservableMap.clear()
+        temp.forEach { (key, subject) ->
             changePublisher.onNext(Change(AddRemEditType.REMOVE, key, subject.value))
         }
-        _itemObservableMap.clear()
         observableMapPublisher.onNext(_itemObservableMap)
     }
 
     override fun remove(key: K): V? {
         _itemObservableMap[key]?.also { subject ->
             if (exitValue != null) {
-                changePublisher.onNext(Change(AddRemEditType.EDIT, key, exitValue))
                 subject.onNext(exitValue)
+                changePublisher.onNext(Change(AddRemEditType.EDIT, key, exitValue))
             }
         }
         val x = super.remove(key)
         _itemObservableMap[key]?.also { subject ->
-            changePublisher.onNext(Change(AddRemEditType.REMOVE, key, subject.value))
             _itemObservableMap.remove(key)
+            changePublisher.onNext(Change(AddRemEditType.REMOVE, key, subject.value))
             observableMapPublisher.onNext(_itemObservableMap)
         }
         return x
