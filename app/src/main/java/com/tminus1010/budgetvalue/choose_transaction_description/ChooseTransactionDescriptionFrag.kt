@@ -21,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class ChooseTransactionDescriptionFrag : Fragment(R.layout.frag_transactions) {
     private val vb by viewBinding(FragTransactionsBinding::bind)
     private val transactionsVM by activityViewModels<TransactionsVM>()
-    private val createFutureVM by navGraphViewModels<CreateFutureVM>(R.id.createFutureNestedGraph) { defaultViewModelProviderFactory }
+    private val createFutureVM by navGraphViewModels<CreateFutureVM>(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb.tvNoTransactionHistory.easyVisibility = transactionsVM.transactions.value!!.isEmpty()
