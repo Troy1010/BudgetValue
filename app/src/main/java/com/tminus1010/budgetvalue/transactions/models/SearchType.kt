@@ -1,3 +1,7 @@
 package com.tminus1010.budgetvalue.transactions.models
 
-enum class SearchType { DESCRIPTION_AND_TOTAL, TOTAL }
+enum class SearchType(val displayStr: String) {
+    DESCRIPTION_AND_TOTAL("Description and Total"), TOTAL("Total");
+
+    override fun toString() = displayStr
+}

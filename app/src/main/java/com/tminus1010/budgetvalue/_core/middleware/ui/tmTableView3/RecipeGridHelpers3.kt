@@ -32,6 +32,7 @@ interface IRowHeightProvider3 {
 class RowHeightProvider3(val recipes2d: List<List<IViewItemRecipe3>>): IRowHeightProvider3 {
     private val rowHeights = HashMap<Int, Int>()
     init {
+        RecipeGrid3.assert2dGrid(recipes2d)
         Completable.fromCallable {
             recipes2d.indices.forEach { getRowHeight(it) }
         }.subscribeOn(AndroidSchedulers.mainThread()).subscribe()

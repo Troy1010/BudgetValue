@@ -19,15 +19,18 @@ class RecipeGrid3(
     private val fixedWidth: Int? = null,
 ) : List<List<IViewItemRecipe3>> by recipes2d,
     IRowHeightProvider3 by RowHeightProvider3(recipes2d),
-    IColumnWidthsProvider3 by if (fixedWidth==null) ColWidthsProvider3(recipes2d) else ColWidthsProviderFixedWidth3(recipes2d, fixedWidth) {
-    init {
-        // # Assert that all inner lists have equal size
-        recipes2d.pairwise().forEach { if (it.first.size != it.second.size) error("All sub-lists must be equal size.") }
-    }
+    IColumnWidthsProvider3 by if (fixedWidth == null) ColWidthsProvider3(recipes2d) else ColWidthsProviderFixedWidth3(recipes2d, fixedWidth) {
 
     fun createResizedView(i: Int, j: Int): ViewBinding {
         return recipes2d[j][i].createVB()
             .apply { root.easySetWidth(getColumnWidth(i)) }
             .apply { root.easySetHeight(getRowHeight(j)) }
+    }
+
+    companion object {
+        fun assert2dGrid(recipes2d: List<List<IViewItemRecipe3>>) {
+            // # Assert that all inner lists have equal size
+            recipes2d.pairwise().forEach { if (it.first.size != it.second.size) error("All sub-lists must be equal size.") }
+        }
     }
 }

@@ -3,10 +3,7 @@ package com.tminus1010.budgetvalue.transactions
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.InvalidSearchText
-import com.tminus1010.budgetvalue._core.extensions.flatMapSourceHashMap
-import com.tminus1010.budgetvalue._core.extensions.isZero
-import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
-import com.tminus1010.budgetvalue._core.extensions.unbox
+import com.tminus1010.budgetvalue._core.extensions.*
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.mergeCombineWithIndex
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
@@ -104,7 +101,7 @@ class CategorizeAdvancedVM @Inject constructor(
                 )
                 SearchType.TOTAL -> TotalFuture(
                     name = name,
-                    searchTotal = total.value!!,
+                    searchTotal = total.value,
                     categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
                     fillCategory = fillCategory.value!!,
                     isPermanent = isPermanent.value!!
@@ -144,7 +141,7 @@ class CategorizeAdvancedVM @Inject constructor(
         userSearchText.onNext(s)
     }
 
-    private val userTotalGuess = BehaviorSubject.create<BigDecimal>()!!
+    private val userTotalGuess = BehaviorSubject.createDefault(BigDecimal.ZERO)!!
     fun userSetTotalGuess(bigDecimal: BigDecimal) {
         userTotalGuess.onNext(bigDecimal)
     }
@@ -182,6 +179,7 @@ class CategorizeAdvancedVM @Inject constructor(
                     }
             }
             .nonLazyCache(disposables)
+
     // # Output
     val searchType =
         userSearchType
@@ -199,6 +197,7 @@ class CategorizeAdvancedVM @Inject constructor(
             userTotalGuess,
         )
             .nonLazyCache(disposables)
+            .cold()
     val isPermanent: Observable<Boolean> = userIsPermanent
     val replayOrFuture: Observable<Box<IReplayOrFuture?>> = _replayOrFuture!!
     val amountToCategorizeMsg =
@@ -240,19 +239,21 @@ class CategorizeAdvancedVM @Inject constructor(
                     .plus(userCategoryAmountFormulas)
             }
             .nonLazyCache(disposables)
-    private val fillCategoryAmountFormula =
+    private val fillAmountFormula =
         Rx.combineLatest(
             categoryAmountFormulas,
             fillCategory,
             total,
         )
             .map { (categoryAmountFormulas, fillCategory, total) ->
-                Pair(fillCategory, categoryAmountFormulas.fillIntoCategory(fillCategory, total)[fillCategory]!!)
-            }!!
-    val categoryAmountFormulaVMItems : Observable<List<CategoryAmountFormulaVMItem>> =
+                categoryAmountFormulas.fillIntoCategory(fillCategory, total)[fillCategory]!!
+            }
+            .startWithItem(AmountFormula.Value(BigDecimal.ZERO)) // This might not be necessary
+            .cold()
+    val categoryAmountFormulaVMItems: Observable<List<CategoryAmountFormulaVMItem>> =
         categoryAmountFormulas
             .flatMapSourceHashMap { it.itemObservableMap }
-            .map { it.map { (k, v) -> CategoryAmountFormulaVMItem(k, v, fillCategoryAmountFormula) } }
+            .map { it.map { (k, v) -> CategoryAmountFormulaVMItem(k, v, fillCategory, fillAmountFormula, ::userSwitchCategoryIsPercentage, ::userInputCA) } }
             .nonLazyCache(disposables)
     private val transactionToPush =
         Rx.combineLatest(

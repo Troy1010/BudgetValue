@@ -7,23 +7,20 @@ import androidx.navigation.NavController
 import androidx.navigation.navGraphViewModels
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.*
-import com.tminus1010.budgetvalue._core.middleware.ui.MenuItem
+import com.tminus1010.budgetvalue._core.middleware.ui.MenuVMItem
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.*
+import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.*
+import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.bindItemCheckboxBinding
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulaVMItem
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
-import com.tminus1010.budgetvalue.choose_transaction_description.ChooseTransactionDescriptionFrag
 import com.tminus1010.budgetvalue.databinding.FragCreateFutureBinding
 import com.tminus1010.budgetvalue.databinding.ItemAmountFormulaBinding
-import com.tminus1010.budgetvalue.databinding.ItemEditTextBinding
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.budgetvalue.transactions.models.SearchType
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
-import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.core.Observable
 
 
 @AndroidEntryPoint
@@ -37,84 +34,43 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
         //
         createFutureVM.setup(categorySelectionVM)
         createFutureVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
-        // # bind methods
-        val bindItemAmountFormulaBinding = { d: CategoryAmountFormulaVMItem, vb: ItemAmountFormulaBinding ->
-            val category = d.category
-            val amountFormula = d.amountFormula
-            vb.moneyEditText.bind(createFutureVM.fillCategory) {
-                isEnabled = category != it
-                setBackgroundColor(context.theme.getColorByAttr(if (isEnabled) R.attr.colorBackground else R.attr.colorBackgroundHighlight))
-            }
-            vb.moneyEditText.onDone { createFutureVM.userInputCA(category, it.toMoneyBigDecimal()) }
-            amountFormula.observe(vb.root.lifecycleOwner!!) { _amountFormula ->
-                vb.tvPercentage.easyVisibility = _amountFormula is AmountFormula.Percentage
-                getView()?.requestFocus() // required for onDone to not accidentally capture the new text.
-                vb.moneyEditText.setText(_amountFormula.toDisplayStr())
-                vb.moneyEditText.setOnCreateContextMenuListener { menu, _, _ ->
-                    menu.add(
-                        *listOfNotNull(
-                            if (_amountFormula !is AmountFormula.Percentage)
-                                MenuItem(
-                                    title = "Percentage",
-                                    onClick = { createFutureVM.userSwitchCategoryIsPercentage(category, true) },
-                                )
-                            else null,
-                            if (_amountFormula !is AmountFormula.Value)
-                                MenuItem(
-                                    title = "No Percentage",
-                                    onClick = { createFutureVM.userSwitchCategoryIsPercentage(category, false) },
-                                )
-                            else null,
-                        ).toTypedArray()
-                    )
-                }
-            }
-            Unit
-        }
-        val bindSearchDescription = { d: Observable<String>, vb: ItemEditTextBinding ->
-            vb.edittext.bind(d) { easyText = it }
-            vb.edittext.onDone(createFutureVM::userSetSearchDescription)
-            vb.edittext.setOnCreateContextMenuListener { menu, _, _ ->
-                menu.add(
-                    MenuItem(
-                        title = "Copy selection from history",
-                        onClick = { ChooseTransactionDescriptionFrag.navTo(nav) },
-                    )
-                )
-            }
-        }
+        createFutureVM.navTo.observe(viewLifecycleOwner) { it(nav) }
         // # TMTableView OtherUserInput
-        vb.tmTableViewOtherInput.initialize(
-            listOf(
-                listOf(
-                    viewItemRecipe(bindItemTextViewBinding, createFutureVM.totalGuessHeader),
-                    viewItemRecipe(bindItemMoneyEditTextBinding2(createFutureVM::userSetTotalGuess), createFutureVM.totalGuess.map { it.toString() }),
+        vb.tmTableViewOtherInput.bind(createFutureVM.searchType) { searchType ->
+            initialize(
+                listOfNotNull(
+                    listOf(
+                        itemTextViewRF().create(createFutureVM.totalGuessHeader),
+                        itemMoneyEditTextRF().create(createFutureVM.totalGuess.map { it.toString() }, createFutureVM::userSetTotalGuess),
+                    ),
+                    listOf(
+                        itemTextViewRF().create(createFutureVM.searchTypeHeader),
+                        itemSpinnerRF().create(SearchType.values(), createFutureVM.searchType.value, createFutureVM::userSetSearchType),
+                    ),
+                    if (searchType == SearchType.DESCRIPTION_AND_TOTAL)
+                        listOf(
+                            itemTextViewRF().create(createFutureVM.searchDescriptionHeader),
+                            itemEditTextRF().create(createFutureVM.searchDescription, createFutureVM::userSetSearchDescription, createFutureVM.searchDescriptionMenuVMItems),
+                        )
+                    else null,
                 ),
-                listOf(
-                    viewItemRecipe(bindItemTextViewBinding, createFutureVM.searchTypeHeader),
-                    viewItemRecipe(bindItemSpinnerBinding(SearchType.values(), createFutureVM::userSetSearchType), createFutureVM.searchType.value!!),
-                ),
-                listOf(
-                    viewItemRecipe(bindItemTextViewBinding, createFutureVM.searchDescriptionHeader),
-                    viewItemRecipe(bindSearchDescription, createFutureVM.searchDescription),
-                ),
-            ),
-            shouldFitItemWidthsInsideTable = true
-        )
+                shouldFitItemWidthsInsideTable = true
+            )
+        }
         // # TMTableView CategoryAmounts
         createFutureVM.categoryAmountFormulaVMItems
             .map { categoryAmountFormulaVMItems ->
                 listOf(
                     listOf(
-                        viewItemRecipe(bindItemHeaderBinding, createFutureVM.categoryHeader),
-                        viewItemRecipe(bindItemHeaderBinding, createFutureVM.amountHeader),
-                        viewItemRecipe(bindItemHeaderBinding, createFutureVM.fillHeader),
+                        itemHeaderRF().create(createFutureVM.categoryHeader),
+                        itemHeaderRF().create(createFutureVM.amountHeader),
+                        itemHeaderRF().create(createFutureVM.fillHeader),
                     ),
                     *categoryAmountFormulaVMItems.map {
                         listOf(
-                            viewItemRecipe(bindItemTextViewBinding, it.category.name),
-                            viewItemRecipe(bindItemAmountFormulaBinding, it),
-                            viewItemRecipe(bindItemCheckboxBinding(it.category.name, createFutureVM::userSetFillCategory), createFutureVM.fillCategory.map { fillCategory -> fillCategory == it.category }),
+                            itemTextViewRF().create(it.category.name),
+                            itemAmountFormulaRF().create(it, createFutureVM.fillCategory, { getView()?.requestFocus() }, it.menuVMItems),
+                            itemCheckboxRF().create(it.isFillCategory, it.category.name, createFutureVM::userSetFillCategory),
                         )
                     }.toTypedArray(),
                 )
