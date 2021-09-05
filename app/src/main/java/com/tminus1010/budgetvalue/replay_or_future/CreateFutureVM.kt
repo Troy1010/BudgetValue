@@ -29,7 +29,6 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
-import io.reactivex.rxjava3.subjects.SingleSubject
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -42,7 +41,7 @@ class CreateFutureVM @Inject constructor(
     lateinit var categorySelectionVM: CategorySelectionVM
     fun setup(categorySelectionVM: CategorySelectionVM) {
         this.categorySelectionVM = categorySelectionVM
-        categorySelectionVM.selectedCategories.observe(disposables) { selectedCategories.onSuccess(it) }
+        categorySelectionVM.selectedCategories.observe(disposables) { selectedCategories.onNext(it) }
     }
 
     // # Input
@@ -95,11 +94,12 @@ class CreateFutureVM @Inject constructor(
     }
 
     // # Internal
-    private val selectedCategories = SingleSubject.create<List<Category>>()
+    private val selectedCategories = PublishSubject.create<List<Category>>()
     private val userCategoryAmountFormulas =
-        Observable.combineLatest(userCategoryAmounts.observable, userCategoryIsPercentage.observable)
-        { userCategoryAmounts, userCategoryIsPercentage ->
+        Observable.combineLatest(userCategoryAmounts.observable, userCategoryIsPercentage.observable, selectedCategories)
+        { userCategoryAmounts, userCategoryIsPercentage, selectedCategories ->
             (userCategoryAmounts.keys + userCategoryIsPercentage.keys)
+                .filter { it in selectedCategories }
                 .associateWith {
                     if (userCategoryIsPercentage[it] ?: false)
                         AmountFormula.Percentage(userCategoryAmounts[it] ?: BigDecimal.ZERO)
@@ -111,7 +111,7 @@ class CreateFutureVM @Inject constructor(
 
     @VisibleForTesting
     val categoryAmountFormulas =
-        Observable.combineLatest(userCategoryAmountFormulas, selectedCategories.toObservable())
+        Observable.combineLatest(userCategoryAmountFormulas, selectedCategories)
         { userCategoryAmountFormulas, selectedCategories ->
             CategoryAmountFormulas(selectedCategories.associateWith { it.defaultAmountFormula })
                 .plus(userCategoryAmountFormulas)
@@ -154,15 +154,13 @@ class CreateFutureVM @Inject constructor(
     val navTo = PublishSubject.create<(NavController) -> Unit>()!!
 
     val fillCategory =
-        userSetFillCategory
-            .startWith(
-                selectedCategories
-                    .map { selectedCategories ->
-                        selectedCategories.find { it.defaultAmountFormula.isZero() }
-                            ?: selectedCategories.getOrNull(0)
-                            ?: CategoriesDomain.defaultCategory
-                    }
-            )
+        selectedCategories
+            .map { selectedCategories ->
+                selectedCategories.find { it.defaultAmountFormula.isZero() }
+                    ?: selectedCategories.getOrNull(0)
+                    ?: CategoriesDomain.defaultCategory
+            }
+            .switchMap { userSetFillCategory.startWithItem(it) }
             .distinctUntilChanged()
             .nonLazyCache(disposables)
             .cold()
@@ -179,7 +177,8 @@ class CreateFutureVM @Inject constructor(
     val amountHeader = "Amount"
     val fillHeader = "Fill"
     val categoryAmountFormulaVMItems: Observable<List<CategoryAmountFormulaVMItem>> =
-        categoryAmountFormulas.flatMapSourceHashMap { it.itemObservableMap }
+        categoryAmountFormulas
+            .flatMapSourceHashMap { it.itemObservableMap }
             .map { categoryAmountFormulaItemObservables ->
                 categoryAmountFormulaItemObservables.map { (category, amountFormula) ->
                     CategoryAmountFormulaVMItem(category, amountFormula, fillCategory, fillAmountFormula, ::userSetCategoryIsPercentage, ::userInputCA)
