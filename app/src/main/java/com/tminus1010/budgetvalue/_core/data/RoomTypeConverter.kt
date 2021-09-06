@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue._core.data
 import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 import com.squareup.moshi.Moshi
+import com.tminus1010.budgetvalue.replay_or_future.models.TerminationStatus
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import java.math.BigDecimal
@@ -35,4 +36,12 @@ class RoomTypeConverter(val moshi: Moshi) {
     @TypeConverter
     fun fromStringToDate(s: String?): LocalDate? =
         s?.let { LocalDate.parse(s, DateTimeFormatter.ofPattern("MM/dd/yyyy")) }
+
+    @TypeConverter
+    fun toJson(x: TerminationStatus): String =
+        moshi.toJson(x)
+
+    @TypeConverter
+    fun fromJson(s: String): TerminationStatus? =
+        moshi.fromJson(s)
 }
