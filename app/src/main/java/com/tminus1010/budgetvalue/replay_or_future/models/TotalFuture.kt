@@ -1,5 +1,7 @@
 package com.tminus1010.budgetvalue.replay_or_future.models
 
+import androidx.annotation.VisibleForTesting
+import com.tminus1010.budgetvalue._core.extensions.easyEquals
 import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.categories.CategoryAmountFormulasConverter
 import com.tminus1010.budgetvalue.categories.ICategoryParser
@@ -10,13 +12,14 @@ import java.math.BigDecimal
 
 data class TotalFuture(
     override val name: String,
-    private val searchTotal: BigDecimal,
+    @VisibleForTesting
+    val searchTotal: BigDecimal,
     override val categoryAmountFormulas: Map<Category, AmountFormula>,
     override val fillCategory: Category,
-    override val isPermanent: Boolean,
+    override val terminationStatus: TerminationStatus,
 ) : IFuture {
     override fun predicate(transaction: Transaction): Boolean =
-        searchTotal.compareTo(transaction.amount) != 0
+        searchTotal.easyEquals(transaction.amount)
 
     fun toDTO(categoryAmountFormulasConverter: CategoryAmountFormulasConverter) =
         TotalFutureDTO(
@@ -24,7 +27,7 @@ data class TotalFuture(
             searchTotal = searchTotal.toString(),
             categoryAmountFormulasStr = categoryAmountFormulasConverter.toJson(categoryAmountFormulas),
             autoFillCategoryName = fillCategory.name,
-            isPermanent = isPermanent,
+            terminationStatus = terminationStatus,
         )
 
     companion object {
@@ -34,7 +37,7 @@ data class TotalFuture(
                 searchTotal = searchTotal.toMoneyBigDecimal(),
                 categoryAmountFormulas = categoryAmountFormulasConverter.toCategoryAmountFormulas(categoryAmountFormulasStr),
                 fillCategory = categoryParser.parseCategory(autoFillCategoryName),
-                isPermanent = isPermanent
+                terminationStatus = terminationStatus
             )
         }
     }

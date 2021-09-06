@@ -136,6 +136,9 @@ interface MiscDAO {
     @Query("DELETE FROM BasicFutureDTO WHERE name=:name")
     fun deleteBasicFuture(name: String): Completable
 
+    @Update
+    fun update(basicFutureDTO: BasicFutureDTO): Completable
+
     @Query("select * from TotalFutureDTO")
     fun fetchTotalFutures(): Observable<List<TotalFutureDTO>>
 
@@ -144,4 +147,7 @@ interface MiscDAO {
 
     @Query("DELETE FROM TotalFutureDTO WHERE name=:name")
     fun deleteTotalFuture(name: String): Completable
+
+    @Update
+    fun update(totalFutureDTO: TotalFutureDTO): Completable
 }

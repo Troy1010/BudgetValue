@@ -14,10 +14,7 @@ import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
-import com.tminus1010.budgetvalue.replay_or_future.models.BasicFuture
-import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplay
-import com.tminus1010.budgetvalue.replay_or_future.models.IReplayOrFuture
-import com.tminus1010.budgetvalue.replay_or_future.models.TotalFuture
+import com.tminus1010.budgetvalue.replay_or_future.models.*
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
@@ -97,14 +94,14 @@ class CategorizeAdvancedVM @Inject constructor(
                     searchText = searchText.value!!,
                     categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
                     fillCategory = fillCategory.value!!,
-                    isPermanent = isPermanent.value!!
+                    terminationStatus = if (isPermanent.value!!) TerminationStatus.PERMANENT else TerminationStatus.WAITING_FOR_MATCH,
                 )
                 SearchType.TOTAL -> TotalFuture(
                     name = name,
                     searchTotal = total.value,
                     categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
                     fillCategory = fillCategory.value!!,
-                    isPermanent = isPermanent.value!!
+                    terminationStatus = if (isPermanent.value!!) TerminationStatus.PERMANENT else TerminationStatus.WAITING_FOR_MATCH,
                 )
                 else -> TODO()
             }
@@ -112,7 +109,7 @@ class CategorizeAdvancedVM @Inject constructor(
             .flatMapCompletable { future ->
                 Rx.merge(
                     listOfNotNull(
-                        if (future.isPermanent) transactionsDomain.applyReplayOrFutureToUncategorizedSpends(future) else null,
+                        if (future.terminationStatus == TerminationStatus.PERMANENT) transactionsDomain.applyReplayOrFutureToUncategorizedSpends(future) else null,
                         futuresRepo.add(future),
                         _categorySelectionVM.clearSelection(),
                     )

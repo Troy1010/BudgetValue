@@ -26,12 +26,12 @@ class FuturesReviewFrag : Fragment(R.layout.frag_futures_review) {
                 listOf(
                     listOf(
                         viewItemRecipe(bindItemHeaderBinding, futuresReviewVM.nameHeader),
-                        viewItemRecipe(bindItemHeaderBinding, futuresReviewVM.isPermanentHeader),
+                        viewItemRecipe(bindItemHeaderBinding, futuresReviewVM.terminationStatusHeader),
                     ),
                     *it.map {
                         listOf(
                             viewItemRecipe(bindItemTextViewBinding, it.name),
-                            viewItemRecipe(bindItemTextViewBinding, it.isPermanent.toString()),
+                            viewItemRecipe(bindItemTextViewBinding, it.terminationStatus.displayStr),
                         )
                     }.toTypedArray()
                 ),

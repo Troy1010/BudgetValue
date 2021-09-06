@@ -29,11 +29,15 @@ class CreateFutureVMTest {
             every { selectedCategories } returns Observable.just(givenSelectedCategories)
         }
         // # When
-        val createFutureVM = CreateFutureVM(object : ICategoryParser {
-            override fun parseCategory(categoryName: String): Category {
-                return Given.categories.find { it.name == categoryName }!!
-            }
-        })
+        val createFutureVM =
+            CreateFutureVM(
+                object : ICategoryParser {
+                    override fun parseCategory(categoryName: String): Category {
+                        return Given.categories.find { it.name == categoryName }!!
+                    }
+                },
+                mockk()
+            )
         createFutureVM.setup(givenCategorySelectionVM)
         createFutureVM.userSetFillCategory(Given.categories[1].name)
         createFutureVM.userSetCategoryIsPercentage(Given.categories[1], true)
