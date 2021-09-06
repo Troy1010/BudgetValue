@@ -12,5 +12,5 @@ class FuturesReviewVM @Inject constructor(
     val futures =
         futuresRepo.fetchFutures()
     val nameHeader = "Name"
-    val isPermanentHeader = "Is Permanent"
+    val terminationStatusHeader = "Termination Status"
 }

@@ -12,7 +12,7 @@ data class BasicFuture(
     private val searchText: String,
     override val categoryAmountFormulas: Map<Category, AmountFormula>,
     override val fillCategory: Category,
-    override val isPermanent: Boolean,
+    override val terminationStatus: TerminationStatus,
 ) : IFuture {
     override fun predicate(transaction: Transaction): Boolean =
         searchText.uppercase(Locale.ROOT) in transaction.description.uppercase(Locale.ROOT)
@@ -23,7 +23,7 @@ data class BasicFuture(
             searchText = searchText,
             categoryAmountFormulasStr = categoryAmountFormulasConverter.toJson(categoryAmountFormulas),
             autoFillCategoryName = fillCategory.name,
-            isPermanent = isPermanent,
+            terminationStatus = terminationStatus,
         )
 
     companion object {
@@ -33,7 +33,7 @@ data class BasicFuture(
                 searchText = searchText,
                 categoryAmountFormulas = categoryAmountFormulasConverter.toCategoryAmountFormulas(categoryAmountFormulasStr),
                 fillCategory = categoryParser.parseCategory(autoFillCategoryName),
-                isPermanent = isPermanent
+                terminationStatus = terminationStatus
             )
         }
     }

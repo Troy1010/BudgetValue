@@ -5,6 +5,7 @@ import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.models.IReplayOrFuture
+import com.tminus1010.budgetvalue.replay_or_future.models.TerminationStatus
 import com.tminus1010.budgetvalue.transactions.TransactionParser
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.models.Transaction
@@ -40,7 +41,7 @@ class TransactionsDomain @Inject constructor(
                     futures.find { it.predicate(transaction) }
                         ?.let { future ->
                             transactionsRepo.push(future.categorize(transaction))
-                                .run { if (!future.isPermanent) andThen(futuresRepo.delete(future)) else this }
+                                .run { if (future.terminationStatus == TerminationStatus.WAITING_FOR_MATCH) andThen(futuresRepo.delete(future)) else this }
                                 .onErrorComplete() // error occurs when transaction already exists
                         }
                         ?: transactionsRepo.push(transaction)

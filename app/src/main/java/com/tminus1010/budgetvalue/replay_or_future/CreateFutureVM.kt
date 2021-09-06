@@ -20,6 +20,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.choose_transaction_description.ChooseTransactionDescriptionFrag
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicFuture
+import com.tminus1010.budgetvalue.replay_or_future.models.TerminationStatus
 import com.tminus1010.budgetvalue.replay_or_future.models.TotalFuture
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.budgetvalue.transactions.models.SearchType
@@ -91,7 +92,7 @@ class CreateFutureVM @Inject constructor(
                         searchTotal = totalGuess.value,
                         categoryAmountFormulas = categoryAmountFormulas.value,
                         fillCategory = fillCategory.value,
-                        isPermanent = false,
+                        terminationStatus = TerminationStatus.WAITING_FOR_MATCH,
                     )
                 SearchType.DESCRIPTION ->
                     BasicFuture(
@@ -99,7 +100,7 @@ class CreateFutureVM @Inject constructor(
                         searchText = searchDescription.value,
                         categoryAmountFormulas = categoryAmountFormulas.value,
                         fillCategory = fillCategory.value,
-                        isPermanent = false,
+                        terminationStatus = TerminationStatus.WAITING_FOR_MATCH,
                     )
             }
         )

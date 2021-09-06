@@ -10,5 +10,5 @@ data class BasicFutureDTO(
     val searchText: String,
     val categoryAmountFormulasStr: String,
     val autoFillCategoryName: String,
-    val isPermanent: Boolean,
+    val terminationStatus: TerminationStatus
 )
