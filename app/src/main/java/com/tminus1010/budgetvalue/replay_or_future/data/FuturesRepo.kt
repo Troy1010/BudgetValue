@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue.replay_or_future.data
 
 import com.tminus1010.budgetvalue._core.data.MiscDAO
-import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue.categories.CategoryAmountFormulasConverter
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicFuture
@@ -42,10 +41,11 @@ class FuturesRepo @Inject constructor(
         }.subscribeOn(Schedulers.io())
 
     fun fetchFutures(): Observable<List<IFuture>> =
-        Rx.combineLatest(
+        Observable.combineLatest(
             miscDAO.fetchBasicFutures().subscribeOn(Schedulers.io())
                 .map { it.map { BasicFuture.fromDTO(it, categoryAmountFormulasConverter, categoryParser) } },
             miscDAO.fetchTotalFutures().subscribeOn(Schedulers.io())
                 .map { it.map { TotalFuture.fromDTO(it, categoryAmountFormulasConverter, categoryParser) } },
-        ).subscribeOn(Schedulers.io()).map { it.first + it.second }
+        ) { basicFutures, totalFutures -> basicFutures + totalFutures }
+            .subscribeOn(Schedulers.io())
 }
