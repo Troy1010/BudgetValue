@@ -92,7 +92,7 @@ class CategorizeAdvancedVM @Inject constructor(
         Single.fromCallable {
             if (searchText.value!!.isEmpty()) InvalidSearchText("Search text was empty")
             when (searchType.value!!) {
-                SearchType.DESCRIPTION_AND_TOTAL -> BasicFuture(
+                SearchType.DESCRIPTION -> BasicFuture(
                     name = name,
                     searchText = searchText.value!!,
                     categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
@@ -106,6 +106,7 @@ class CategorizeAdvancedVM @Inject constructor(
                     fillCategory = fillCategory.value!!,
                     isPermanent = isPermanent.value!!
                 )
+                else -> TODO()
             }
         }
             .flatMapCompletable { future ->

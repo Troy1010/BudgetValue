@@ -20,6 +20,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.choose_transaction_description.ChooseTransactionDescriptionFrag
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicFuture
+import com.tminus1010.budgetvalue.replay_or_future.models.TotalFuture
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.budgetvalue.transactions.models.SearchType
 import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
@@ -78,15 +79,29 @@ class CreateFutureVM @Inject constructor(
         userSetSearchDescription.onNext(searchDescription)
     }
 
+    @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
     fun userSubmit() {
         futuresRepo.add(
-            BasicFuture(
-                name = generateUniqueID(),
-                searchText = searchDescription.value,
-                categoryAmountFormulas = categoryAmountFormulas.value,
-                fillCategory = fillCategory.value,
-                isPermanent = false,
-            )
+            when (searchType.value) {
+                SearchType.DESCRIPTION_AND_TOTAL ->
+                    TODO()
+                SearchType.TOTAL ->
+                    TotalFuture(
+                        name = generateUniqueID(),
+                        searchTotal = totalGuess.value,
+                        categoryAmountFormulas = categoryAmountFormulas.value,
+                        fillCategory = fillCategory.value,
+                        isPermanent = false,
+                    )
+                SearchType.DESCRIPTION ->
+                    BasicFuture(
+                        name = generateUniqueID(),
+                        searchText = searchDescription.value,
+                        categoryAmountFormulas = categoryAmountFormulas.value,
+                        fillCategory = fillCategory.value,
+                        isPermanent = false,
+                    )
+            }
         )
             .andThen(categorySelectionVM.clearSelection())
             .andThen(Completable.fromAction { navUp.onNext(Unit) })
@@ -169,7 +184,8 @@ class CreateFutureVM @Inject constructor(
     val fillAmountFormula =
         Observable.combineLatest(categoryAmountFormulas, fillCategory, totalGuess)
         { categoryAmountFormulas, fillCategory, total ->
-            categoryAmountFormulas.fillIntoCategory(fillCategory, total)[fillCategory]!!
+            categoryAmountFormulas.fillIntoCategory(fillCategory, total)[fillCategory]
+                ?: AmountFormula.Value(BigDecimal.ZERO) // Occurs when fillCategory is defaultCategory
         }
             .cold()
 
