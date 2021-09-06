@@ -14,9 +14,6 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.kotlin.Singles
-import io.reactivex.rxjava3.schedulers.Schedulers
 import java.io.InputStream
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -32,22 +29,24 @@ class TransactionsDomain @Inject constructor(
 ) {
     // # Input
     fun importTransactions(inputStream: InputStream): Completable =
-        Singles.zip(
-            Single.fromCallable { transactionParser.parseToTransactions(inputStream) },
-            futuresRepo.fetchFutures().toSingle(),
-        ).subscribeOn(Schedulers.io()).flatMapCompletable { (transactions, futures) ->
+        importTransactions(transactionParser.parseToTransactions(inputStream))
+
+    fun importTransactions(transactions: List<Transaction>): Completable {
+        return futuresRepo.fetchFutures().toSingle().map { futures ->
             Rx.merge(
                 transactions.map { transaction ->
                     futures.find { it.predicate(transaction) }
                         ?.let { future ->
                             transactionsRepo.push(future.categorize(transaction))
-                                .run { if (future.terminationStatus == TerminationStatus.WAITING_FOR_MATCH) andThen(futuresRepo.delete(future)) else this }
+                                .run { if (future.terminationStatus == TerminationStatus.WAITING_FOR_MATCH) andThen(futuresRepo.setTerminationStatus(future, TerminationStatus.TERMINATED)) else this }
                                 .onErrorComplete() // error occurs when transaction already exists
                         }
                         ?: transactionsRepo.push(transaction)
                 }
             )
         }
+            .flatMapCompletable { it }
+    }
 
     fun applyReplayOrFutureToUncategorizedSpends(replay: IReplayOrFuture): Completable =
         uncategorizedSpends.toSingle()

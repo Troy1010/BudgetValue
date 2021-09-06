@@ -10,6 +10,9 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.LocalDate
 
+/**
+ * the [id] is the entire row of information for that transaction
+ */
 data class Transaction(
     val date: LocalDate,
     val description: String,

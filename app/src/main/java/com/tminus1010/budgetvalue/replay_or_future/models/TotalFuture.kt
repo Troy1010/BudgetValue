@@ -1,5 +1,6 @@
 package com.tminus1010.budgetvalue.replay_or_future.models
 
+import androidx.annotation.VisibleForTesting
 import com.tminus1010.budgetvalue._core.extensions.easyEquals
 import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.categories.CategoryAmountFormulasConverter
@@ -11,7 +12,8 @@ import java.math.BigDecimal
 
 data class TotalFuture(
     override val name: String,
-    private val searchTotal: BigDecimal,
+    @VisibleForTesting
+    val searchTotal: BigDecimal,
     override val categoryAmountFormulas: Map<Category, AmountFormula>,
     override val fillCategory: Category,
     override val terminationStatus: TerminationStatus,

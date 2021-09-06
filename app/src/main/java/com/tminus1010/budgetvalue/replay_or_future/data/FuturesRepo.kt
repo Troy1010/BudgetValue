@@ -6,6 +6,7 @@ import com.tminus1010.budgetvalue.categories.CategoryAmountFormulasConverter
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicFuture
 import com.tminus1010.budgetvalue.replay_or_future.models.IFuture
+import com.tminus1010.budgetvalue.replay_or_future.models.TerminationStatus
 import com.tminus1010.budgetvalue.replay_or_future.models.TotalFuture
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -17,15 +18,24 @@ class FuturesRepo @Inject constructor(
     private val categoryAmountFormulasConverter: CategoryAmountFormulasConverter,
     private val categoryParser: ICategoryParser,
 ) {
-    fun add(future: IFuture): Completable =
-        when(future) {
+    fun add(future: IFuture): Completable {
+        return when (future) {
             is BasicFuture -> miscDAO.add(future.toDTO(categoryAmountFormulasConverter))
             is TotalFuture -> miscDAO.add(future.toDTO(categoryAmountFormulasConverter))
             else -> error("unhandled IFuture")
         }.subscribeOn(Schedulers.io())
+    }
+
+    fun setTerminationStatus(future: IFuture, terminationStatus: TerminationStatus): Completable {
+        return when (future) {
+            is BasicFuture -> miscDAO.update(future.copy(terminationStatus = terminationStatus).toDTO(categoryAmountFormulasConverter))
+            is TotalFuture -> miscDAO.update(future.copy(terminationStatus = terminationStatus).toDTO(categoryAmountFormulasConverter))
+            else -> error("unhandled IFuture")
+        }.subscribeOn(Schedulers.io())
+    }
 
     fun delete(future: IFuture): Completable =
-        when(future) {
+        when (future) {
             is BasicFuture -> miscDAO.deleteBasicFuture(future.name)
             is TotalFuture -> miscDAO.deleteTotalFuture(future.name)
             else -> error("unhandled IFuture")
