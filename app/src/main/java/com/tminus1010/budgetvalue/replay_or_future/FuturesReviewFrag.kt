@@ -7,11 +7,12 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.bind
-import com.tminus1010.budgetvalue._core.extensions.viewItemRecipe
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.bindItemHeaderBinding
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.bindItemTextViewBinding
+import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.itemHeaderRF
+import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.itemTextViewRF
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragFuturesReviewBinding
+import com.tminus1010.budgetvalue.replay_or_future.models.BasicFuture
+import com.tminus1010.budgetvalue.replay_or_future.models.TotalFuture
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,13 +26,21 @@ class FuturesReviewFrag : Fragment(R.layout.frag_futures_review) {
             initialize(
                 listOf(
                     listOf(
-                        viewItemRecipe(bindItemHeaderBinding, futuresReviewVM.nameHeader),
-                        viewItemRecipe(bindItemHeaderBinding, futuresReviewVM.terminationStatusHeader),
+                        itemHeaderRF().create(futuresReviewVM.nameHeader),
+                        itemHeaderRF().create(futuresReviewVM.terminationStatusHeader),
+                        itemHeaderRF().create(futuresReviewVM.searchByHeader),
                     ),
                     *it.map {
                         listOf(
-                            viewItemRecipe(bindItemTextViewBinding, it.name),
-                            viewItemRecipe(bindItemTextViewBinding, it.terminationStatus.displayStr),
+                            itemTextViewRF().create(it.name),
+                            itemTextViewRF().create(it.terminationStatus.displayStr),
+                            itemTextViewRF().create(
+                                when (it) {
+                                    is BasicFuture -> it.searchText.take(10)
+                                    is TotalFuture -> it.searchTotal.toString()
+                                    else -> error("Unhandled IFuture:$it")
+                                }
+                            )
                         )
                     }.toTypedArray()
                 ),

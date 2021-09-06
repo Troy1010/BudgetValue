@@ -13,5 +13,6 @@ class FuturesReviewVM @Inject constructor(
         futuresRepo.fetchFutures()
             .map { it.sortedBy { it.terminationStatus.ordinal } }!!
     val nameHeader = "Name"
-    val terminationStatusHeader = "Termination Status"
+    val terminationStatusHeader = "Status"
+    val searchByHeader = "Search by"
 }

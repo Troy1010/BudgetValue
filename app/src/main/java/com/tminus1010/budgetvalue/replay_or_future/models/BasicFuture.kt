@@ -9,7 +9,7 @@ import java.util.*
 
 data class BasicFuture(
     override val name: String,
-    private val searchText: String,
+    val searchText: String,
     override val categoryAmountFormulas: Map<Category, AmountFormula>,
     override val fillCategory: Category,
     override val terminationStatus: TerminationStatus,
