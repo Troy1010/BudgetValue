@@ -14,11 +14,11 @@ import java.util.*
 class RoomTypeConverter(val moshi: Moshi) {
     @TypeConverter
     fun fromBigDecimalToString(x: BigDecimal): String =
-        x.toString()
+        moshi.toJson(x)
 
     @TypeConverter
     fun toBigDecimal(s: String): BigDecimal =
-        s.toBigDecimal()
+        moshi.fromJson(s)
 
     @TypeConverter
     fun fromCategoryAmountsToString(x: Map<String, BigDecimal>): String =
