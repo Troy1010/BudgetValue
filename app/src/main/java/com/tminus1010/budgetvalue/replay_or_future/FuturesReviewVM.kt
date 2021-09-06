@@ -11,6 +11,7 @@ class FuturesReviewVM @Inject constructor(
 ) : ViewModel() {
     val futures =
         futuresRepo.fetchFutures()
+            .map { it.sortedBy { it.terminationStatus.ordinal } }!!
     val nameHeader = "Name"
     val terminationStatusHeader = "Termination Status"
 }
