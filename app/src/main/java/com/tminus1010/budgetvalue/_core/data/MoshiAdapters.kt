@@ -9,6 +9,8 @@ import com.tminus1010.budgetvalue.replay_or_future.models.TerminationStatus
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import java.math.BigDecimal
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 object MoshiAdapters {
     val basicMoshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
@@ -45,7 +47,7 @@ object MoshiAdapters {
             .plus("`")
             .plus(
                 if (x is TerminationStatus.TERMINATED)
-                    basicMoshi.toJson(x.terminationDate)
+                    toJson(x.terminationDate)
                 else ""
             )
 
@@ -54,7 +56,7 @@ object MoshiAdapters {
         when (s.takeWhile { it != '`' }.toLong()) {
             TerminationStatus.TERMINATED.ordinal ->
                 TerminationStatus.TERMINATED(
-                    terminationDate = basicMoshi.fromJson(s.dropWhile { it != '`' }.drop(1))
+                    terminationDate = fromJson4(s.dropWhile { it != '`' }.drop(1))
                 )
             TerminationStatus.PERMANENT.ordinal ->
                 TerminationStatus.PERMANENT
@@ -62,4 +64,17 @@ object MoshiAdapters {
                 TerminationStatus.WAITING_FOR_MATCH
             else -> error("Unrecognized ordinal:${s.takeWhile { it != '`' }.toLong()}")
         }
+
+    /**
+     * [LocalDate]
+     */
+    val dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
+
+    @ToJson
+    fun toJson(x: LocalDate?): String? =
+        x?.format(dateFormatter)
+
+    @FromJson
+    fun fromJson4(s: String): LocalDate =
+        s.let { LocalDate.parse(s, dateFormatter) }
 }

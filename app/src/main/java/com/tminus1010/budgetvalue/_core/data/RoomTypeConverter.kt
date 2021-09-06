@@ -8,7 +8,6 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import java.math.BigDecimal
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 @ProvidedTypeConverter
@@ -31,11 +30,11 @@ class RoomTypeConverter(val moshi: Moshi) {
 
     @TypeConverter
     fun fromDateToString(x: LocalDate?): String? =
-        x?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))
+        moshi.toJson(x)
 
     @TypeConverter
     fun fromStringToDate(s: String?): LocalDate? =
-        s?.let { LocalDate.parse(s, DateTimeFormatter.ofPattern("MM/dd/yyyy")) }
+        moshi.fromJson(s)
 
     @TypeConverter
     fun toJson(x: TerminationStatus): String =
