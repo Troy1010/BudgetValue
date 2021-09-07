@@ -25,13 +25,14 @@ import com.tminus1010.budgetvalue.replay_or_future.models.TotalFuture
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.budgetvalue.transactions.models.SearchType
 import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
-import com.tminus1010.tmcommonkotlin.rx.extensions.observe
+import com.tminus1010.tmcommonkotlin.rx.extensions.retryWithDelay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,9 +42,10 @@ class CreateFutureVM @Inject constructor(
 ) : ViewModel() {
     // # Workarounds
     lateinit var categorySelectionVM: CategorySelectionVM
-    fun setup(categorySelectionVM: CategorySelectionVM) {
+    lateinit var selfDestruct: () -> Unit
+    fun setup(categorySelectionVM: CategorySelectionVM, selfDestruct: () -> Unit) {
+        this.selfDestruct = selfDestruct
         this.categorySelectionVM = categorySelectionVM
-        categorySelectionVM.selectedCategories.observe(disposables) { selectedCategories.onNext(it) }
     }
 
     // # Input
@@ -105,12 +107,14 @@ class CreateFutureVM @Inject constructor(
             }
         )
             .andThen(categorySelectionVM.clearSelection())
-            .andThen(Completable.fromAction { navUp.onNext(Unit) })
+            .andThen(Completable.fromAction { navUp.onNext(Unit); selfDestruct() })
             .subscribe()
     }
 
     // # Internal
-    private val selectedCategories = PublishSubject.create<List<Category>>()
+    private val selectedCategories =
+        Observable.defer { categorySelectionVM.selectedCategories }
+            .retryWithDelay(200, TimeUnit.MILLISECONDS, 99999)
     private val userCategoryAmountFormulas =
         Observable.combineLatest(userCategoryAmounts.observable, userCategoryIsPercentage.observable, selectedCategories)
         { userCategoryAmounts, userCategoryIsPercentage, selectedCategories ->

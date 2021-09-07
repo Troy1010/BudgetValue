@@ -14,6 +14,7 @@ import com.tminus1010.budgetvalue.databinding.FragCreateFutureBinding
 import com.tminus1010.budgetvalue.transactions.models.SearchType
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
+import com.tminus1010.tmcommonkotlin.view.extensions.remove
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -26,7 +27,7 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //
-        createFutureVM.setup(categorySelectionVM)
+        createFutureVM.setup(categorySelectionVM) { nav.getBackStackEntry(R.id.categorizeNestedGraph).viewModelStore.remove<CreateFutureVM>() }
         createFutureVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         createFutureVM.navTo.observe(viewLifecycleOwner) { it(nav) }
         // # TMTableView OtherUserInput
