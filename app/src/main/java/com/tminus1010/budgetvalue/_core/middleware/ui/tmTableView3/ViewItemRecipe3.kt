@@ -24,7 +24,7 @@ data class ViewItemRecipe3<VB : ViewBinding, D : Any?>(
 
     override fun createVB(): ViewBinding = vbLambda()
     override fun createImpatientlyBoundView(): View = createVB().also { bindImpatiently(it) }.root
-    override fun intrinsicHeight2(width: Int): Int {
+    override fun intrinsicHeight(width: Int): Int {
         TODO("Not yet implemented")
     }
 

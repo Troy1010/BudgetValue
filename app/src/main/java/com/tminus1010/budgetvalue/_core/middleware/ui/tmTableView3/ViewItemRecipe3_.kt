@@ -23,7 +23,7 @@ data class ViewItemRecipe3_<VB : ViewBinding, D : Any?> constructor(
 
     override fun createVB(): VB = inflate(LayoutInflater.from(context))
     override fun createImpatientlyBoundView(): View = createVB().also { bindImpatiently(it) }.root
-    override fun intrinsicHeight2(width: Int): Int {
+    override fun intrinsicHeight(width: Int): Int {
         TODO("Not yet implemented")
     }
 

@@ -21,7 +21,12 @@ data class ViewItemRecipe3__<VB : ViewBinding> constructor(
     override val intrinsicHeight: Int
         get() = createImpatientlyBoundView().apply { measureUnspecified() }.measuredHeight
 
-    override fun intrinsicHeight2(width: Int): Int {
+    /**
+     * This intrinsicHeight depends on a specified width.
+     *
+     * Useful for TextViews which will have more height if the text does not fit in the width.
+     */
+    override fun intrinsicHeight(width: Int): Int {
         return createImpatientlyBoundView()
             .apply {
                 measure(

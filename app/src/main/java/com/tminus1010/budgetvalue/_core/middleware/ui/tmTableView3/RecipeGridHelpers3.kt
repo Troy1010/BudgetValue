@@ -38,7 +38,7 @@ class RowHeightProvider3(val recipes2d: List<List<IViewItemRecipe3>>, val column
     override fun getRowHeight(j: Int): Int {
         return rowHeights[j] ?: recipes2d[j]
             .withIndex()
-            .fold(0) { acc, (i, v) -> max(acc, v.intrinsicHeight2(columnHeightProvider.getColumnWidth(i))) }
+            .fold(0) { acc, (i, v) -> max(acc, v.intrinsicHeight(columnHeightProvider.getColumnWidth(i))) }
             .also { rowHeights[j] = it }
     }
 }
