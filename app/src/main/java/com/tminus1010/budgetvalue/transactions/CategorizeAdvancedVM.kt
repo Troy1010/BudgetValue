@@ -2,7 +2,6 @@ package com.tminus1010.budgetvalue.transactions
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
-import com.tminus1010.budgetvalue._core.InvalidSearchText
 import com.tminus1010.budgetvalue._core.extensions.*
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.mergeCombineWithIndex
@@ -12,20 +11,17 @@ import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
-import com.tminus1010.budgetvalue.replay_or_future.models.*
+import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplay
+import com.tminus1010.budgetvalue.replay_or_future.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
-import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
-import com.tminus1010.budgetvalue.transactions.models.SearchType
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
@@ -37,9 +33,7 @@ import javax.inject.Inject
 class CategorizeAdvancedVM @Inject constructor(
     private val saveTransactionDomain: SaveTransactionDomain,
     private val replaysRepo: ReplaysRepo,
-    private val futuresRepo: FuturesRepo,
     private val errorSubject: Subject<Throwable>,
-    private val transactionsDomain: TransactionsDomain,
 ) : ViewModel() {
     // # Input
     fun setup(_transaction: Transaction?, _replay: IReplayOrFuture?, categorySelectionVM: CategorySelectionVM) {
@@ -85,42 +79,6 @@ class CategorizeAdvancedVM @Inject constructor(
             )
     }
 
-    fun userSaveFuture(name: String) {
-        Single.fromCallable {
-            if (searchText.value!!.isEmpty()) InvalidSearchText("Search text was empty")
-            when (searchType.value!!) {
-                SearchType.DESCRIPTION -> BasicFuture(
-                    name = name,
-                    searchText = searchText.value!!,
-                    categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
-                    fillCategory = fillCategory.value!!,
-                    terminationStatus = if (isPermanent.value!!) TerminationStatus.PERMANENT else TerminationStatus.WAITING_FOR_MATCH,
-                )
-                SearchType.TOTAL -> TotalFuture(
-                    name = name,
-                    searchTotal = total.value,
-                    categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
-                    fillCategory = fillCategory.value!!,
-                    terminationStatus = if (isPermanent.value!!) TerminationStatus.PERMANENT else TerminationStatus.WAITING_FOR_MATCH,
-                )
-                else -> TODO()
-            }
-        }
-            .flatMapCompletable { future ->
-                Rx.merge(
-                    listOfNotNull(
-                        if (future.terminationStatus == TerminationStatus.PERMANENT) transactionsDomain.applyReplayOrFutureToUncategorizedSpends(future) else null,
-                        futuresRepo.add(future),
-                        _categorySelectionVM.clearSelection(),
-                    )
-                )
-            }
-            .observe(disposables,
-                onComplete = { navUp.onNext(Unit) },
-                onError = { errorSubject.onNext(it) }
-            )
-    }
-
     fun userDeleteReplay(replayName: String) {
         replaysRepo.delete(replayName)
             .observe(disposables,
@@ -132,26 +90,6 @@ class CategorizeAdvancedVM @Inject constructor(
     private val userAutoFillCategory = BehaviorSubject.create<Category>()!!
     fun userSetCategoryForAutoFill(category: Category) {
         userAutoFillCategory.onNext(category)
-    }
-
-    private val userSearchText = BehaviorSubject.createDefault("")!!
-    fun userSetSearchText(s: String) {
-        userSearchText.onNext(s)
-    }
-
-    private val userTotalGuess = BehaviorSubject.createDefault(BigDecimal.ZERO)!!
-    fun userSetTotalGuess(bigDecimal: BigDecimal) {
-        userTotalGuess.onNext(bigDecimal)
-    }
-
-    private val userIsPermanent = BehaviorSubject.createDefault(false)!!
-    fun userSetIsPermanent(boolean: Boolean) {
-        userIsPermanent.onNext(boolean)
-    }
-
-    private val userSearchType = BehaviorSubject.create<SearchType>()!!
-    fun userSetSearchType(searchType: SearchType) {
-        userSearchType.onNext(searchType)
     }
 
     // # Internal
@@ -177,26 +115,12 @@ class CategorizeAdvancedVM @Inject constructor(
                     }
             }
             .nonLazyCache(disposables)
-
-    // # Output
-    val searchType =
-        userSearchType
-            .startWithItem(SearchType.DESCRIPTION_AND_TOTAL)
-            .nonLazyCache(disposables)
-    val searchText =
-        Observable.merge(
-            transaction.map { it.first?.description ?: "" },
-            userSearchText,
-        )
-            .nonLazyCache(disposables)
-    val total =
-        Observable.merge(
-            transaction.map { it.first?.amount ?: BigDecimal.ZERO },
-            userTotalGuess,
-        )
+    private val total =
+        transaction.map { it.first?.amount ?: BigDecimal.ZERO }
             .nonLazyCache(disposables)
             .cold()
-    val isPermanent: Observable<Boolean> = userIsPermanent
+
+    // # Output
     val replayOrFuture: Observable<Box<IReplayOrFuture?>> = _replayOrFuture!!
     val amountToCategorizeMsg =
         transaction
