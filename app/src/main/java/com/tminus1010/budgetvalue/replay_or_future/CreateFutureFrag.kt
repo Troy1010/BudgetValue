@@ -12,6 +12,7 @@ import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.databinding.FragCreateFutureBinding
 import com.tminus1010.budgetvalue.transactions.models.SearchType
+import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.remove
@@ -59,7 +60,7 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
         // # TMTableView CategoryAmounts
         createFutureVM.categoryAmountFormulaVMItems
             .map { categoryAmountFormulaVMItems ->
-                listOf(
+                val recipeGrid = listOf(
                     listOf(
                         itemHeaderRF().create(createFutureVM.categoryHeader),
                         itemHeaderRF().create(createFutureVM.amountHeader),
@@ -73,11 +74,18 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
                         )
                     }.toTypedArray(),
                 )
+                val dividerMap = categoryAmountFormulaVMItems.map { it.category }
+                    .withIndex()
+                    .distinctUntilChangedWith(compareBy { it.value.type })
+                    .associate { it.index to itemTitledDividerRB().create(it.value.type.name) }
+                    .mapKeys { it.key + 1 } // header row
+                Pair(recipeGrid, dividerMap)
             }
-            .observe(viewLifecycleOwner) { recipeGrid ->
+            .observe(viewLifecycleOwner) { (recipeGrid, dividerMap) ->
                 vb.tmTableViewCategoryAmounts.initialize(
                     recipeGrid,
-                    shouldFitItemWidthsInsideTable = true
+                    shouldFitItemWidthsInsideTable = true,
+                    dividerMap = dividerMap
                 )
             }
         // # ButtonsView
