@@ -1,6 +1,5 @@
 package com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3
 
-import com.tminus1010.tmcommonkotlin.core.logx
 import java.lang.Math.max
 import kotlin.math.floor
 
@@ -24,7 +23,6 @@ object ColumnWidthCalculator3 {
     ): List<Int> {
         val minWidths = generateMinWidths(viewItemRecipe2D.first())
         val intrinsicWidths = generateIntrinsicWidths(viewItemRecipe2D)
-            .also { it.getOrNull(1).logx("intrinsicWidths[1]") }
 
         if (minWidths.sum() > parentWidth)
             logz("WARNING`minWidths.sum():${minWidths.sum()} > parentWidth:$parentWidth")
@@ -65,6 +63,5 @@ object ColumnWidthCalculator3 {
         if (columnWidths.sum() != parentWidth)
             logz("WARNING`columnWidths.sum():${columnWidths.sum()} != parentWidth:$parentWidth")
         return columnWidths
-            .logx("columnWidths")
     }
 }
