@@ -8,7 +8,7 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.itemHeaderRF
-import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.itemTextViewRF
+import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.itemTextViewRB
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragFuturesReviewBinding
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicFuture
@@ -32,9 +32,9 @@ class FuturesReviewFrag : Fragment(R.layout.frag_futures_review) {
                     ),
                     *it.map {
                         listOf(
-                            itemTextViewRF().create(it.name),
-                            itemTextViewRF().create(it.terminationStatus.displayStr),
-                            itemTextViewRF().create(
+                            itemTextViewRB().create(it.name),
+                            itemTextViewRB().style(10).create(it.terminationStatus.displayStr),
+                            itemTextViewRB().create(
                                 when (it) {
                                     is BasicFuture -> it.searchText.take(10)
                                     is TotalFuture -> it.searchTotal.toString()

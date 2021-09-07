@@ -2,7 +2,6 @@ package com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlin.math.max
 
 
@@ -29,17 +28,17 @@ class ColWidthsProvider3(val recipes2d: List<List<IViewItemRecipe3>>): IColumnWi
 interface IRowHeightProvider3 {
     fun getRowHeight(j: Int): Int
 }
-class RowHeightProvider3(val recipes2d: List<List<IViewItemRecipe3>>): IRowHeightProvider3 {
+class RowHeightProvider3(val recipes2d: List<List<IViewItemRecipe3>>, val columnHeightProvider: IColumnWidthsProvider3): IRowHeightProvider3 {
     private val rowHeights = HashMap<Int, Int>()
     init {
-        RecipeGrid3.assert2dGrid(recipes2d)
         Completable.fromCallable {
             recipes2d.indices.forEach { getRowHeight(it) }
         }.subscribeOn(AndroidSchedulers.mainThread()).subscribe()
     }
     override fun getRowHeight(j: Int): Int {
         return rowHeights[j] ?: recipes2d[j]
-            .fold(0) { acc, v -> max(acc, v.intrinsicHeight) }
+            .withIndex()
+            .fold(0) { acc, (i, v) -> max(acc, v.intrinsicHeight2(columnHeightProvider.getColumnWidth(i))) }
             .also { rowHeights[j] = it }
     }
 }

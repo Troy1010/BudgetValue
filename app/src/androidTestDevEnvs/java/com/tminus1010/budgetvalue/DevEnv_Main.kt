@@ -19,7 +19,7 @@ import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
-import com.tminus1010.tmcommonkotlin.view.extensions.toast
+import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -92,7 +92,7 @@ class DevEnv_Main {
                                         )
                                     )
                                 else
-                                    Completable.fromCallable { application.toast("No TotalFutures found") }.subscribeOn(AndroidSchedulers.mainThread())
+                                    Completable.fromCallable { application.easyToast("No TotalFutures found") }.subscribeOn(AndroidSchedulers.mainThread())
                             }
                             .subscribe()
                     },

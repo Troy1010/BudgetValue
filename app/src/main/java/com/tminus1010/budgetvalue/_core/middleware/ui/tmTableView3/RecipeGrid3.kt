@@ -18,7 +18,7 @@ class RecipeGrid3(
     private val recipes2d: List<List<IViewItemRecipe3>>,
     private val fixedWidth: Int? = null,
 ) : List<List<IViewItemRecipe3>> by recipes2d,
-    IRowHeightProvider3 by RowHeightProvider3(recipes2d),
+    IRowHeightProvider3,
     IColumnWidthsProvider3 by if (fixedWidth == null) ColWidthsProvider3(recipes2d) else ColWidthsProviderFixedWidth3(recipes2d, fixedWidth) {
 
     fun createResizedView(i: Int, j: Int): ViewBinding {
@@ -33,4 +33,7 @@ class RecipeGrid3(
             recipes2d.pairwise().forEach { if (it.first.size != it.second.size) error("All sub-lists must be equal size.") }
         }
     }
+
+    val rowHeightProvider = RowHeightProvider3(recipes2d, this)
+    override fun getRowHeight(j: Int): Int = rowHeightProvider.getRowHeight(j)
 }

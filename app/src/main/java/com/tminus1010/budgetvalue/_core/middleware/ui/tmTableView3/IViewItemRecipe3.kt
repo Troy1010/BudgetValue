@@ -9,4 +9,5 @@ interface IViewItemRecipe3 {
     fun createVB(): ViewBinding
     fun bind(vb: ViewBinding)
     fun createImpatientlyBoundView(): View
+    fun intrinsicHeight2(width: Int): Int
 }

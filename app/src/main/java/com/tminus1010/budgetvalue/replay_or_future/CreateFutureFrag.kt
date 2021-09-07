@@ -34,16 +34,16 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
             initialize(
                 listOfNotNull(
                     listOf(
-                        itemTextViewRF().create(createFutureVM.totalGuessHeader),
+                        itemTextViewRB().create(createFutureVM.totalGuessHeader),
                         itemMoneyEditTextRF().create(createFutureVM.totalGuess.map { it.toString() }, createFutureVM::userSetTotalGuess),
                     ),
                     listOf(
-                        itemTextViewRF().create(createFutureVM.searchTypeHeader),
+                        itemTextViewRB().create(createFutureVM.searchTypeHeader),
                         itemSpinnerRF().create(SearchType.values(), createFutureVM.searchType.value, createFutureVM::userSetSearchType),
                     ),
                     if (searchType == SearchType.DESCRIPTION_AND_TOTAL)
                         listOf(
-                            itemTextViewRF().create(createFutureVM.searchDescriptionHeader),
+                            itemTextViewRB().create(createFutureVM.searchDescriptionHeader),
                             itemEditTextRF().create(createFutureVM.searchDescription, createFutureVM::userSetSearchDescription, createFutureVM.searchDescriptionMenuVMItems),
                         )
                     else null,
@@ -62,7 +62,7 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
                     ),
                     *categoryAmountFormulaVMItems.map {
                         listOf(
-                            itemTextViewRF().create(it.category.name),
+                            itemTextViewRB().create(it.category.name),
                             itemAmountFormulaRF().create(it, createFutureVM.fillCategory, { getView()?.requestFocus() }, it.menuVMItems),
                             itemCheckboxRF().create(it.isFillCategory, it.category.name, createFutureVM::userSetFillCategory),
                         )
