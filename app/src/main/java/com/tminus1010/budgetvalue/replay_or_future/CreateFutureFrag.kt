@@ -48,6 +48,10 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
                             itemEditTextRF().create(createFutureVM.searchDescription, createFutureVM::userSetSearchDescription, createFutureVM.searchDescriptionMenuVMItems),
                         )
                     else null,
+                    listOf(
+                        itemTextViewRB().create(createFutureVM.isPermanentHeader),
+                        itemCheckboxRF().create(createFutureVM.isPermanent.value, createFutureVM::userSetIsPermanent),
+                    ),
                 ),
                 shouldFitItemWidthsInsideTable = true
             )

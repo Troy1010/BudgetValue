@@ -82,6 +82,11 @@ class CreateFutureVM @Inject constructor(
         userSetSearchDescription.onNext(searchDescription)
     }
 
+    private val userSetIsPermanent = BehaviorSubject.create<Boolean>()
+    fun userSetIsPermanent(b: Boolean) {
+        userSetIsPermanent.onNext(b)
+    }
+
     @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
     fun userSubmit() {
         futuresRepo.add(
@@ -94,7 +99,7 @@ class CreateFutureVM @Inject constructor(
                         searchTotal = totalGuess.value,
                         categoryAmountFormulas = categoryAmountFormulas.value,
                         fillCategory = fillCategory.value,
-                        terminationStatus = TerminationStatus.WAITING_FOR_MATCH,
+                        terminationStatus = if (isPermanent.value) TerminationStatus.PERMANENT else TerminationStatus.WAITING_FOR_MATCH,
                     )
                 SearchType.DESCRIPTION ->
                     BasicFuture(
@@ -102,7 +107,7 @@ class CreateFutureVM @Inject constructor(
                         searchText = searchDescription.value,
                         categoryAmountFormulas = categoryAmountFormulas.value,
                         fillCategory = fillCategory.value,
-                        terminationStatus = TerminationStatus.WAITING_FOR_MATCH,
+                        terminationStatus = if (isPermanent.value) TerminationStatus.PERMANENT else TerminationStatus.WAITING_FOR_MATCH,
                     )
             }
         )
@@ -140,6 +145,12 @@ class CreateFutureVM @Inject constructor(
             .cold()
 
     // # Output
+    val isPermanentHeader = "Is Permanent"
+    val isPermanent =
+        userSetIsPermanent
+            .startWithItem(false)
+            .distinctUntilChanged()
+            .cold()
     val totalGuessHeader = "Total Guess"
     val totalGuess =
         userSetTotalGuess

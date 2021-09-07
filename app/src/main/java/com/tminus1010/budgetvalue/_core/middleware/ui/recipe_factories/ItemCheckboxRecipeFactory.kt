@@ -22,4 +22,13 @@ class ItemCheckboxRecipeFactory(private val context: Context) {
             }
         }
     }
+
+    fun create(initialIsChecked: Boolean, lambda: (Boolean) -> Unit): IViewItemRecipe3 {
+        return ViewItemRecipe3__(context, inflate) { vb ->
+            vb.checkbox.isChecked = initialIsChecked
+            vb.checkbox.setOnCheckedChangeListener { _, isChecked ->
+                lambda(isChecked)
+            }
+        }
+    }
 }
