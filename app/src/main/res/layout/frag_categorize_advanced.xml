@@ -29,25 +29,12 @@
         tools:text="Amount to split: $1.6" />
 
     <com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.TMTableView3
-        android:id="@+id/tmTableViewOtherInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/barrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="tmTableViewOtherInput,tvAmountToSplit" />
-
-    <com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.TMTableView3
         android:id="@+id/tmTableViewCategoryAmounts"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
         app:layout_constraintBottom_toTopOf="@id/buttonsview"
-        app:layout_constraintTop_toBottomOf="@id/barrier" />
+        app:layout_constraintTop_toBottomOf="@id/tvAmountToSplit" />
 
     <com.tminus1010.budgetvalue._core.middleware.ui.ButtonsView
         android:id="@+id/buttonsview"

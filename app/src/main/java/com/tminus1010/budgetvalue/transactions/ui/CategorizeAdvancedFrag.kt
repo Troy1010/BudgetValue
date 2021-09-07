@@ -73,80 +73,6 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 else -> throw it
             }
         }
-        // # TMTableView OtherInput
-        vb.tmTableViewOtherInput.easyVisibility = categorizeAdvancedType == CategorizeAdvancedType.CREATE_FUTURE
-        val searchTextRecipe = ViewItemRecipe3<ItemEditTextBinding, Unit?>(
-            { ItemEditTextBinding.inflate(LayoutInflater.from(requireContext())) },
-            { _, vb, lifecycle ->
-                vb.edittext.bind(categorizeAdvancedVM.searchText, lifecycle) { if (text.toString() != it) setText(it) }
-                vb.edittext.onDone { categorizeAdvancedVM.userSetSearchText(it) }
-            }
-        )
-        val totalGuessRecipe = ViewItemRecipe3<ItemMoneyEditTextBinding, Unit?>(
-            { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(requireContext())) },
-            { _, vb, lifecycle ->
-                vb.moneyedittext.bind(categorizeAdvancedVM.total, lifecycle) { if (text.toString() != it.toString()) setText(it.toString()) }
-                vb.moneyedittext.onDone { categorizeAdvancedVM.userSetTotalGuess(it.toMoneyBigDecimal()) }
-            }
-        )
-        val isPermanentRecipe = ViewItemRecipe3<ItemCheckboxBinding, Unit?>(
-            { ItemCheckboxBinding.inflate(LayoutInflater.from(requireContext())) },
-            { _, vb, lifecycle ->
-                vb.checkbox.bind(categorizeAdvancedVM.isPermanent.take(1), lifecycle) { isChecked = it }
-                vb.checkbox.setOnCheckedChangeListener { _, isChecked -> categorizeAdvancedVM.userSetIsPermanent(isChecked) }
-            }
-        )
-        val searchTypeRecipe = ViewItemRecipe3<ItemSpinnerBinding, Unit?>(
-            { ItemSpinnerBinding.inflate(LayoutInflater.from(requireContext())) },
-            { _, vb, _ ->
-                val adapter = ArrayAdapter(requireContext(), R.layout.item_text_view_without_highlight, SearchType.values())
-                vb.spinner.adapter = adapter
-                vb.spinner.setSelection(adapter.getPosition(categorizeAdvancedVM.searchType.value!!))
-                vb.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                    var didFirstSelectionHappen = AtomicBoolean(false)
-                    override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                        if (didFirstSelectionHappen.getAndSet(true))
-                            categorizeAdvancedVM.userSetSearchType((vb.spinner.selectedItem as SearchType))
-                    }
-
-                    override fun onNothingSelected(parent: AdapterView<*>?) = Unit
-                }
-            }
-        )
-        if (categorizeAdvancedType == CategorizeAdvancedType.CREATE_FUTURE)
-            categorizeAdvancedVM.searchType
-                .map { searchType ->
-                    listOfNotNull(
-                        listOf(
-                            recipeFactories.textView.createOne("Search Type"),
-                            searchTypeRecipe,
-                        ),
-                        if (searchType == SearchType.DESCRIPTION_AND_TOTAL) listOf(
-                            recipeFactories.textView.createOne("Search Text"),
-                            searchTextRecipe,
-                        ) else null,
-                        listOf(
-                            ViewItemRecipe3(
-                                { ItemTextViewBinding.inflate(LayoutInflater.from(requireContext())) },
-                                { _: Any?, vb, lifecycle ->
-                                    vb.textview.bind(categorizeAdvancedVM.searchType, lifecycle) { easyText = if (it == SearchType.TOTAL) "Search Total" else "Total Guess" }
-                                }
-                            ),
-                            totalGuessRecipe,
-                        ),
-                        listOf(
-                            recipeFactories.textView.createOne("Is Permanent"),
-                            isPermanentRecipe,
-                        ),
-                    )
-                }
-                .observe(viewLifecycleOwner) { recipeGrid ->
-                    vb.tmTableViewOtherInput.initialize(
-                        recipeGrid = recipeGrid,
-                        shouldFitItemWidthsInsideTable = true,
-                        rowFreezeCount = 1,
-                    )
-                }
 
         // # TMTableView CategoryAmounts
         val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemAmountFormulaBinding, CategoryAmountFormulaVMItem>(
@@ -250,25 +176,6 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                             }
                         )
                     else null,
-                    if (categorizeAdvancedType == CategorizeAdvancedType.CREATE_FUTURE)
-                        ButtonVMItem(
-                            title = "Save Future",
-                            onClick = {
-                                if (categorizeAdvancedVM.areCurrentCAsValid.value!!) {
-                                    val editText = EditText(requireContext())
-                                    AlertDialog.Builder(requireContext())
-                                        .setMessage("What would you like to name this future?")
-                                        .setView(editText)
-                                        .setPositiveButton("Submit") { _, _ ->
-                                            categorizeAdvancedVM.userSaveFuture(editText.easyText)
-                                        }
-                                        .setNegativeButton("Cancel") { _, _ -> }
-                                        .show()
-                                } else
-                                    errorSubject.onNext(InvalidCategoryAmounts(""))
-                            }
-                        )
-                    else null,
                     if (replayOrFuture is IReplay)
                         ButtonVMItem(
                             title = "Delete Replay",
@@ -283,20 +190,18 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                             }
                         )
                     else null,
-                    if (categorizeAdvancedType != CategorizeAdvancedType.CREATE_FUTURE)
                         ButtonVMItem(
                             title = "Submit",
                             onClick = {
                                 categorizeAdvancedVM.userSubmitCategorization()
                             }
-                        )
-                    else null,
+                        ),
                 ).reversed()
             }
     }
 
     enum class Key { CategorizeAdvancedType }
-    enum class CategorizeAdvancedType { SPLIT, CREATE_FUTURE, EDIT }
+    enum class CategorizeAdvancedType { SPLIT, EDIT }
     companion object {
         private var _setupArgs: Triple<Transaction?, IReplayOrFuture?, CategorySelectionVM>? = null
         fun navTo(

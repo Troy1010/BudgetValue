@@ -124,21 +124,6 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 else null,
                 if (inSelectionMode)
                     ButtonVMItem(
-                        title = "Create Future old",
-                        onClick = {
-                            CategorizeAdvancedFrag.navTo(
-                                source = this,
-                                nav = nav,
-                                categorySelectionVM = categorySelectionVM,
-                                transaction = transactionsDomain.firstUncategorizedSpend.value?.first,
-                                replayOrFuture = null,
-                                categorizeAdvancedType = CategorizeAdvancedFrag.CategorizeAdvancedType.CREATE_FUTURE,
-                            )
-                        }
-                    )
-                else null,
-                if (inSelectionMode)
-                    ButtonVMItem(
                         title = "Split",
                         isEnabled = categorizeVM.isTransactionAvailable,
                         onClick = {
