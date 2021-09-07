@@ -52,6 +52,9 @@ class TMTableView3 @JvmOverloads constructor(
             removeAllViews()
             return
         }
+        //
+        RecipeGrid3.assert2dGrid(recipeGrid)
+        //
         if (shouldFitItemWidthsInsideTable)
             widthObservable()
                 .take(1)

@@ -8,7 +8,7 @@ import androidx.navigation.NavController
 import androidx.navigation.navGraphViewModels
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.easyVisibility
-import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.itemTextViewRF
+import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.itemTextViewRB
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragTransactionsBinding
 import com.tminus1010.budgetvalue.replay_or_future.CreateFutureVM
@@ -30,7 +30,7 @@ class ChooseTransactionDescriptionFrag : Fragment(R.layout.frag_transactions) {
                 .distinctBy { it.description }
                 .map { transaction ->
                     listOf(
-                        itemTextViewRF().create(transaction.description) {
+                        itemTextViewRB().create(transaction.description) {
                             createFutureVM.userSetSearchDescription(transaction.description)
                             nav.navigateUp()
                         },

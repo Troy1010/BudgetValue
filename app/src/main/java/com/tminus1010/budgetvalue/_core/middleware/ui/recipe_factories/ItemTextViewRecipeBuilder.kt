@@ -7,26 +7,36 @@ import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.IViewItemRecipe3
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipe3__
 import com.tminus1010.budgetvalue.databinding.ItemTextViewBinding
+import com.tminus1010.tmcommonkotlin.view.extensions.toPX
 import io.reactivex.rxjava3.core.Observable
 
-fun Fragment.itemTextViewRF() = ItemTextViewRecipeFactory(requireContext())
+fun Fragment.itemTextViewRB() = ItemTextViewRecipeBuilder(requireContext())
 
-class ItemTextViewRecipeFactory(private val context: Context) {
-    private val inflate: (LayoutInflater) -> ItemTextViewBinding = ItemTextViewBinding::inflate
+class ItemTextViewRecipeBuilder(private val context: Context) {
+    private var styler: ((ItemTextViewBinding) -> Unit)? = null
+    fun style(horizontalPaddingDP: Int): ItemTextViewRecipeBuilder {
+        val horizontalPaddingPX = horizontalPaddingDP.toPX(context)
+        styler = { vb ->
+            vb.textview.setPadding(horizontalPaddingPX, 0, horizontalPaddingPX, 0)
+            vb.textview.requestLayout()
+        }
+        return this
+    }
+
     fun create(s: String): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, inflate) { vb ->
+        return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, styler) { vb ->
             vb.textview.text = s
         }
     }
 
     fun create(d: Observable<String>): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, inflate) { vb ->
+        return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, styler) { vb ->
             vb.textview.bind(d) { text = it }
         }
     }
 
     fun create(s: String, onClick: () -> Unit): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, inflate) { vb ->
+        return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, styler) { vb ->
             vb.textview.text = s
             vb.textview.setOnClickListener { onClick() }
         }
