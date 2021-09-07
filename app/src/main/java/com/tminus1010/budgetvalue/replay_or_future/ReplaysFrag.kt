@@ -15,7 +15,6 @@ import com.tminus1010.budgetvalue.databinding.FragReplaysBinding
 import com.tminus1010.budgetvalue.databinding.ItemTextViewBinding
 import com.tminus1010.budgetvalue.replay_or_future.models.IReplay
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
-import com.tminus1010.tmcommonkotlin.tuple.Box
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -27,8 +26,6 @@ class ReplaysFrag : Fragment(R.layout.frag_replays) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // # Mediation
-        _setupArgs?.also { _setupArgs = null; replaysVM.setup(it.first) }
         //
         replaysVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         // # TMTableView
@@ -57,11 +54,7 @@ class ReplaysFrag : Fragment(R.layout.frag_replays) {
     }
 
     companion object {
-        private var _setupArgs: Box<String>? = null
-        fun navTo(nav: NavController, searchText: String) {
-            _setupArgs = Box(
-                searchText
-            )
+        fun navTo(nav: NavController) {
             nav.navigate(R.id.replaysFrag)
         }
     }

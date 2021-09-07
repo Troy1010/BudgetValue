@@ -16,8 +16,10 @@ import com.tminus1010.budgetvalue._core.middleware.ui.MenuVMItem
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.replay_or_future.FuturesReviewFrag
+import com.tminus1010.budgetvalue.replay_or_future.ReplaysFrag
 import com.tminus1010.budgetvalue.transactions.TransactionsMiscVM
-import com.tminus1010.tmcommonkotlin.view.extensions.toast
+import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
+import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -30,6 +32,10 @@ class HostActivity : AppCompatActivity() {
 
     @Inject
     lateinit var appInitDomain: AppInitDomain
+
+    @Inject
+    lateinit var transactionsDomain: TransactionsDomain
+
     private val transactionsMiscVM: TransactionsMiscVM by viewModels()
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.frag_nav_host) as HostFrag }
     private val nav by lazy { findNavController(R.id.frag_nav_host) }
@@ -66,7 +72,7 @@ class HostActivity : AppCompatActivity() {
             ),
             MenuVMItem(
                 title = "Replays",
-                onClick = { TODO() },
+                onClick = { ReplaysFrag.navTo(nav) },
             ),
             *getExtraMenuItemPartialsUC(this)
         )
@@ -79,7 +85,7 @@ class HostActivity : AppCompatActivity() {
                 try {
                     contentResolver.openInputStream(result.data!!.data!!)!!
                         .also { inputStream -> transactionsMiscVM.userImportTransactions(inputStream) }
-                    toast("Import successful")
+                    easyToast("Import successful")
                 } catch (e: Throwable) {
                     hostFrag.handle(e)
                 }

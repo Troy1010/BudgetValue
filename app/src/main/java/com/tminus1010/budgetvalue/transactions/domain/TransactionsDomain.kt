@@ -1,5 +1,6 @@
 package com.tminus1010.budgetvalue.transactions.domain
 
+import com.tminus1010.budgetvalue._core.extensions.cold
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
 import com.tminus1010.budgetvalue.categories.models.Category
@@ -109,8 +110,10 @@ class TransactionsDomain @Inject constructor(
     val uncategorizedSpends: Observable<List<Transaction>> =
         spends
             .map { it.filter { it.isUncategorized } }
-    val firstUncategorizedSpend: Observable<Box<Transaction?>> =
+    val firstUncategorizedSpend =
         uncategorizedSpends
             .map { Box(it.getOrNull(0)) }
+            .startWithItem(Box(null))
             .replay(1).refCount()
+            .cold()
 }

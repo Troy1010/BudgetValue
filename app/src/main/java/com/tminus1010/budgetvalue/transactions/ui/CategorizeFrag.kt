@@ -175,14 +175,6 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     .toTypedArray(),
                 if (!inSelectionMode)
                     ButtonVMItem(
-                        title = "Browse Replays",
-                        isEnabled = transactionsDomain.firstUncategorizedSpend.map { it.first != null },
-                        onClick = {
-                            ReplaysFrag.navTo(nav, transactionsDomain.firstUncategorizedSpend.unbox.description)
-                        })
-                else null,
-                if (!inSelectionMode)
-                    ButtonVMItem(
                         title = "Redo",
                         isEnabled = categorizeVM.isRedoAvailable,
                         onClick = { categorizeVM.userRedo() })
