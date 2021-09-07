@@ -38,7 +38,7 @@ object Rx {
         c: ObservableSource<C>,
         d: ObservableSource<D>,
         e: ObservableSource<E>,
-        f: ObservableSource<F>
+        f: ObservableSource<F>,
     ): Observable<Sextuple<A, B, C, D, E, F>> {
         return Observable.combineLatest(
             listOf(a, b, c, d, e, f)
@@ -129,7 +129,7 @@ object Rx {
 
     @Suppress("UNCHECKED_CAST")
     fun <A> combineLatest(
-        a: ObservableSource<A>
+        a: ObservableSource<A>,
     ): Observable<Box<A>> {
         return Observable.combineLatest(
             listOf(a)
@@ -140,6 +140,6 @@ object Rx {
         }
     }
 
-    fun merge(vararg completables: Completable) = Completable.merge(completables.toList())
-    fun merge(completables: List<Completable>): Completable = merge(*completables.toTypedArray())
+    fun merge(vararg completables: Completable?) = Completable.merge(completables.toList().filterNotNull())
+    fun merge(completables: List<Completable?>): Completable = merge(*completables.filterNotNull().toTypedArray())
 }

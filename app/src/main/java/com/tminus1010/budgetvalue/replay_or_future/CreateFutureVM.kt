@@ -8,6 +8,7 @@ import com.tminus1010.budgetvalue._core.extensions.cold
 import com.tminus1010.budgetvalue._core.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue._core.extensions.isZero
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
+import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuVMItem
@@ -91,28 +92,32 @@ class CreateFutureVM @Inject constructor(
 
     @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
     fun userSubmit() {
-        futuresRepo.add(
-            when (searchType.value) {
-                SearchType.DESCRIPTION_AND_TOTAL ->
-                    TODO()
-                SearchType.TOTAL ->
-                    TotalFuture(
-                        name = generateUniqueID(),
-                        searchTotal = totalGuess.value,
-                        categoryAmountFormulas = categoryAmountFormulas.value,
-                        fillCategory = fillCategory.value,
-                        terminationStatus = if (isPermanent.value) TerminationStatus.PERMANENT else TerminationStatus.WAITING_FOR_MATCH,
-                    )
-                SearchType.DESCRIPTION ->
-                    BasicFuture(
-                        name = generateUniqueID(),
-                        searchText = searchDescription.value,
-                        categoryAmountFormulas = categoryAmountFormulas.value,
-                        fillCategory = fillCategory.value,
-                        terminationStatus = if (isPermanent.value) TerminationStatus.PERMANENT else TerminationStatus.WAITING_FOR_MATCH,
-                    )
+        when (searchType.value) {
+            SearchType.DESCRIPTION_AND_TOTAL ->
+                TODO()
+            SearchType.TOTAL ->
+                TotalFuture(
+                    name = generateUniqueID(),
+                    searchTotal = totalGuess.value,
+                    categoryAmountFormulas = categoryAmountFormulas.value,
+                    fillCategory = fillCategory.value,
+                    terminationStatus = if (isPermanent.value) TerminationStatus.PERMANENT else TerminationStatus.WAITING_FOR_MATCH,
+                )
+            SearchType.DESCRIPTION ->
+                BasicFuture(
+                    name = generateUniqueID(),
+                    searchText = searchDescription.value,
+                    categoryAmountFormulas = categoryAmountFormulas.value,
+                    fillCategory = fillCategory.value,
+                    terminationStatus = if (isPermanent.value) TerminationStatus.PERMANENT else TerminationStatus.WAITING_FOR_MATCH,
+                )
+        }
+            .let { newFuture ->
+                Rx.merge(
+                    futuresRepo.add(newFuture),
+                    if (newFuture.terminationStatus == TerminationStatus.PERMANENT) transactionsDomain.applyReplayOrFutureToUncategorizedSpends(newFuture) else null,
+                )
             }
-        )
             .andThen(categorySelectionVM.clearSelection())
             .andThen(Completable.fromAction { navUp.onNext(Unit); selfDestruct() })
             .subscribe()
