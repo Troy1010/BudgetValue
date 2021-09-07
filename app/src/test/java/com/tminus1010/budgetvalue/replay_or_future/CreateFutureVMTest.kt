@@ -5,7 +5,6 @@ import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
-import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.rxjava3.android.plugins.RxAndroidPlugins
@@ -62,7 +61,7 @@ class CreateFutureVMTest {
         )
         assertEquals(
             BigDecimal("100.00"),
-            createFutureVM.totalGuess.value,
+            createFutureVM._totalGuess.value,
         )
     }
 
