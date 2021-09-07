@@ -25,7 +25,14 @@ data class ViewItemRecipe3<VB : ViewBinding, D : Any?>(
     override fun createVB(): ViewBinding = vbLambda()
     override fun createImpatientlyBoundView(): View = createVB().also { bindImpatiently(it) }.root
     override fun intrinsicHeight(width: Int): Int {
-        TODO("Not yet implemented")
+        return createImpatientlyBoundView()
+            .apply {
+                measure(
+                    View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.AT_MOST),
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                )
+            }
+            .measuredHeight
     }
 
 

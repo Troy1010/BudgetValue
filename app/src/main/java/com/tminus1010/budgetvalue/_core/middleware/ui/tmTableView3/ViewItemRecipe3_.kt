@@ -24,7 +24,14 @@ data class ViewItemRecipe3_<VB : ViewBinding, D : Any?> constructor(
     override fun createVB(): VB = inflate(LayoutInflater.from(context))
     override fun createImpatientlyBoundView(): View = createVB().also { bindImpatiently(it) }.root
     override fun intrinsicHeight(width: Int): Int {
-        TODO("Not yet implemented")
+        return createImpatientlyBoundView()
+            .apply {
+                measure(
+                    View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.AT_MOST),
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                )
+            }
+            .measuredHeight
     }
 
     @Suppress("UNCHECKED_CAST")
