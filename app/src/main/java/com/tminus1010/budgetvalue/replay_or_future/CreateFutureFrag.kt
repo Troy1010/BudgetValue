@@ -43,7 +43,7 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
                         itemTextViewRB().create(createFutureVM.searchTypeHeader),
                         itemSpinnerRF().create(SearchType.values(), createFutureVM.searchType.value, createFutureVM::userSetSearchType),
                     ),
-                    if (searchType == SearchType.DESCRIPTION_AND_TOTAL)
+                    if (listOf(SearchType.DESCRIPTION_AND_TOTAL, SearchType.DESCRIPTION).any { it == searchType })
                         listOf(
                             itemTextViewRB().create(createFutureVM.searchDescriptionHeader),
                             itemEditTextRF().create(createFutureVM.searchDescription, createFutureVM::userSetSearchDescription, createFutureVM.searchDescriptionMenuVMItems),

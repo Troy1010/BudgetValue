@@ -22,6 +22,7 @@ import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicFuture
 import com.tminus1010.budgetvalue.replay_or_future.models.TerminationStatus
 import com.tminus1010.budgetvalue.replay_or_future.models.TotalFuture
+import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.budgetvalue.transactions.models.SearchType
 import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
@@ -39,6 +40,7 @@ import javax.inject.Inject
 class CreateFutureVM @Inject constructor(
     private val categoryParser: ICategoryParser,
     private val futuresRepo: FuturesRepo,
+    private val transactionsDomain: TransactionsDomain,
 ) : ViewModel() {
     // # Workarounds
     lateinit var categorySelectionVM: CategorySelectionVM
@@ -165,7 +167,7 @@ class CreateFutureVM @Inject constructor(
     val searchDescriptionHeader = "Description"
     val searchDescription =
         userSetSearchDescription
-            .startWithItem("")
+            .startWithItem(transactionsDomain.firstUncategorizedSpend.value.first?.description ?: "")
             .distinctUntilChanged()
             .cold()
     val searchDescriptionMenuVMItems = listOf(
