@@ -13,10 +13,10 @@ import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulaVMItem
 import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.ICategoryParser
-import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.tmcommonkotlin.rx.extensions.retryWithDelay
+import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
@@ -35,7 +35,7 @@ abstract class CategoryAmountFormulaVMItemsBaseVM : ViewModel() {
     lateinit var categorySelectionVM: CategorySelectionVM
 
     // # Input
-    private val userCategoryAmounts = SourceHashMap<Category, BigDecimal>()
+    protected val userCategoryAmounts = SourceHashMap<Category, BigDecimal>()
     fun userInputCA(category: Category, amount: BigDecimal) {
         if (amount.isZero)
             userCategoryAmounts.remove(category)
@@ -43,39 +43,40 @@ abstract class CategoryAmountFormulaVMItemsBaseVM : ViewModel() {
             userCategoryAmounts[category] = amount
     }
 
-    private val userCategoryIsPercentage = SourceHashMap<Category, Boolean>()
+    protected val userCategoryIsPercentage = SourceHashMap<Category, Boolean>()
     fun userSetCategoryIsPercentage(category: Category, isPercentage: Boolean) {
         userCategoryIsPercentage[category] = isPercentage
     }
 
-    private val userSetFillCategory = BehaviorSubject.create<Category>()!!
+    protected val userSetFillCategory = BehaviorSubject.create<Box<Category?>>()!!
     fun userSetFillCategory(categoryName: String) {
-        userSetFillCategory.onNext(categoryParser.parseCategory(categoryName))
+        userSetFillCategory.onNext(Box(categoryParser.parseCategory(categoryName)))
     }
 
     // # Internal
-    private val selectedCategories =
+    protected val selectedCategories =
         Observable.defer { categorySelectionVM.selectedCategories }
-            .retryWithDelay(200, TimeUnit.MILLISECONDS, 99999)
+            .retryWithDelay(200, TimeUnit.MILLISECONDS)
 
     // # Output
     val totalGuessHeader = "Total Guess"
-    abstract val _totalGuess: ColdObservable<BigDecimal>
+    protected abstract val _totalGuess: ColdObservable<BigDecimal>
     val totalGuess = Observable.defer { _totalGuess }.cold()
 
-    val fillCategory =
+    open val _fillCategory =
         selectedCategories
             .map { selectedCategories ->
-                selectedCategories.find { it.defaultAmountFormula.isZero() }
-                    ?: selectedCategories.getOrNull(0)
-                    ?: CategoriesDomain.defaultCategory
+                (selectedCategories.find { it.defaultAmountFormula.isZero() }
+                    ?: selectedCategories.getOrNull(0))
+                    .let { Box(it) }
             }
             .switchMap { userSetFillCategory.startWithItem(it) }
             .distinctUntilChanged()
             .nonLazyCache(disposables)
             .cold()
+    val fillCategory = Observable.defer { _fillCategory }.cold()
 
-    private val userCategoryAmountFormulas =
+    protected val userCategoryAmountFormulas =
         Observable.combineLatest(userCategoryAmounts.observable, userCategoryIsPercentage.observable, selectedCategories)
         { userCategoryAmounts, userCategoryIsPercentage, selectedCategories ->
             (userCategoryAmounts.keys + userCategoryIsPercentage.keys)
@@ -90,7 +91,7 @@ abstract class CategoryAmountFormulaVMItemsBaseVM : ViewModel() {
             .nonLazyCache(disposables)
 
     @VisibleForTesting
-    val categoryAmountFormulas =
+    open val _categoryAmountFormulas =
         Observable.combineLatest(userCategoryAmountFormulas, selectedCategories)
         { userCategoryAmountFormulas, selectedCategories ->
             CategoryAmountFormulas(selectedCategories.associateWith { it.defaultAmountFormula })
@@ -98,13 +99,15 @@ abstract class CategoryAmountFormulaVMItemsBaseVM : ViewModel() {
         }
             .nonLazyCache(disposables)
             .cold()
+    val categoryAmountFormulas = Observable.defer { _categoryAmountFormulas }.cold()
 
     @VisibleForTesting
     val fillAmountFormula =
         Observable.combineLatest(categoryAmountFormulas, fillCategory, totalGuess)
-        { categoryAmountFormulas, fillCategory, total ->
-            categoryAmountFormulas.fillIntoCategory(fillCategory, total)[fillCategory]
-                ?: AmountFormula.Value(BigDecimal.ZERO) // Occurs when fillCategory is defaultCategory
+        { categoryAmountFormulas, (fillCategory), total ->
+            fillCategory
+                ?.let { categoryAmountFormulas.fillIntoCategory(fillCategory, total)[fillCategory] }
+                ?: AmountFormula.Value(BigDecimal.ZERO)
         }
             .cold()
 

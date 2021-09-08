@@ -15,6 +15,7 @@ import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulaVMItem
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.ItemAmountFormulaBinding
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
+import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Observable
 
 fun Fragment.itemAmountFormulaRF() = ItemAmountFormulaRecipeFactory(requireContext())
@@ -22,8 +23,8 @@ fun Fragment.itemAmountFormulaRF() = ItemAmountFormulaRecipeFactory(requireConte
 class ItemAmountFormulaRecipeFactory(private val context: Context) {
     val inflate: (LayoutInflater) -> ItemAmountFormulaBinding = ItemAmountFormulaBinding::inflate
 
-    fun create(d: CategoryAmountFormulaVMItem, fillCategory: Observable<Category>, requestRootView: () -> Unit, menuItems: Observable<List<MenuVMItem>>): IViewItemRecipe3 = ViewItemRecipe3__(context, inflate) { vb ->
-        vb.root.bind(fillCategory) { isEnabled = d.category != it }
+    fun create(d: CategoryAmountFormulaVMItem, fillCategory: Observable<Box<Category?>>, requestRootView: () -> Unit, menuItems: Observable<List<MenuVMItem>>): IViewItemRecipe3 = ViewItemRecipe3__(context, inflate) { vb ->
+        vb.root.bind(fillCategory) { (it) -> isEnabled = d.category != it }
         vb.moneyEditText.onDone(d::userSetAmount)
         vb.moneyEditText.bind(menuItems) { setOnCreateContextMenuListener { menu, _, _ -> menu.add(it) } }
         vb.tvPercentage.bind(d.amountFormula) { easyVisibility = it is AmountFormula.Percentage }

@@ -53,11 +53,11 @@ class CreateFutureVMTest {
                 Given.categories[2] to AmountFormula.Value(BigDecimal("0")),
                 Given.categories[3] to AmountFormula.Value(BigDecimal("1")),
             ),
-            createFutureVM.categoryAmountFormulas.value,
+            createFutureVM._categoryAmountFormulas.value,
         )
         assertEquals(
             Given.categories[2],
-            createFutureVM.fillCategory.value,
+            createFutureVM._fillCategory.value,
         )
         assertEquals(
             BigDecimal("100.00"),

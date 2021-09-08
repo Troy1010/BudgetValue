@@ -37,7 +37,7 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
                 listOfNotNull(
                     listOf(
                         itemTextViewRB().create(createFutureVM.totalGuessHeader),
-                        itemMoneyEditTextRF().create(createFutureVM._totalGuess.map { it.toString() }, createFutureVM::userSetTotalGuess),
+                        itemMoneyEditTextRF().create(createFutureVM.totalGuess.map { it.toString() }, createFutureVM::userSetTotalGuess),
                     ),
                     listOf(
                         itemTextViewRB().create(createFutureVM.searchTypeHeader),

@@ -2,10 +2,7 @@ package com.tminus1010.budgetvalue.transactions.ui
 
 import android.database.sqlite.SQLiteConstraintException
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -14,23 +11,19 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.InvalidCategoryAmounts
 import com.tminus1010.budgetvalue._core.InvalidSearchText
-import com.tminus1010.budgetvalue._core.extensions.*
+import com.tminus1010.budgetvalue._core.extensions.bind
+import com.tminus1010.budgetvalue._core.extensions.easyText
+import com.tminus1010.budgetvalue._core.extensions.easyVisibility
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
-import com.tminus1010.budgetvalue._core.middleware.ui.MenuVMItem
-import com.tminus1010.budgetvalue._core.middleware.ui.onDone
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipe3
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
+import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.itemAmountFormulaRF
+import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.itemCheckboxRF
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
-import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulaVMItem
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
-import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.databinding.*
+import com.tminus1010.budgetvalue.databinding.FragCategorizeAdvancedBinding
 import com.tminus1010.budgetvalue.replay_or_future.models.IReplay
 import com.tminus1010.budgetvalue.replay_or_future.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.CategorizeAdvancedVM
-import com.tminus1010.budgetvalue.transactions.models.AmountFormula
-import com.tminus1010.budgetvalue.transactions.models.SearchType
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -39,7 +32,6 @@ import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.subjects.Subject
-import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -75,51 +67,6 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
         }
 
         // # TMTableView CategoryAmounts
-        val categoryAmountRecipeFactory = ViewItemRecipeFactory3<ItemAmountFormulaBinding, CategoryAmountFormulaVMItem>(
-            { ItemAmountFormulaBinding.inflate(LayoutInflater.from(context)) },
-            { categoryAmountFormulaVMItem, vb, lifecycle ->
-                val category = categoryAmountFormulaVMItem.category
-                val amountFormula = categoryAmountFormulaVMItem.amountFormula
-                vb.moneyEditText.bind(categorizeAdvancedVM.fillCategory, lifecycle) {
-                    isEnabled = category != it
-                    setBackgroundColor(context.theme.getColorByAttr(if (isEnabled) R.attr.colorBackground else R.attr.colorBackgroundHighlight))
-                }
-                vb.moneyEditText.onDone { categorizeAdvancedVM.userInputCA(category, it.toMoneyBigDecimal()) }
-                amountFormula.observe(lifecycle) { _amountFormula ->
-                    vb.tvPercentage.easyVisibility = _amountFormula is AmountFormula.Percentage
-                    getView()?.requestFocus() // required for onDone to not accidentally capture the new text.
-                    vb.moneyEditText.setText(_amountFormula.toDisplayStr())
-                    vb.moneyEditText.setOnCreateContextMenuListener { menu, _, _ ->
-                        menu.add(
-                            *listOfNotNull(
-                                if (_amountFormula !is AmountFormula.Percentage)
-                                    MenuVMItem(
-                                        title = "Percentage",
-                                        onClick = { categorizeAdvancedVM.userSwitchCategoryIsPercentage(category, true) })
-                                else null,
-                                if (_amountFormula !is AmountFormula.Value)
-                                    MenuVMItem(
-                                        title = "No Percentage",
-                                        onClick = { categorizeAdvancedVM.userSwitchCategoryIsPercentage(category, false) })
-                                else null,
-                            ).toTypedArray()
-                        )
-                    }
-                }
-            }
-        )
-        val checkboxRecipeFactory = ViewItemRecipeFactory3<ItemCheckboxBinding, Category>(
-            { ItemCheckboxBinding.inflate(LayoutInflater.from(requireContext())) },
-            { category, vb, lifecycle ->
-                vb.checkbox.bind(categorizeAdvancedVM.fillCategory, lifecycle) {
-                    isChecked = category == it
-                    isEnabled = category != it
-                }
-                vb.checkbox.setOnCheckedChangeListener { _, isChecked ->
-                    if (isChecked) categorizeAdvancedVM.userSetCategoryForAutoFill(category)
-                }
-            }
-        )
         categorizeAdvancedVM.categoryAmountFormulaVMItems
             .map { categoryAmountFormulaVMItems ->
                 val recipes2D =
@@ -132,8 +79,8 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                         *categoryAmountFormulaVMItems.map {
                             listOf(
                                 recipeFactories.textView.createOne(it.category.name),
-                                categoryAmountRecipeFactory.createOne(it),
-                                checkboxRecipeFactory.createOne(it.category),
+                                itemAmountFormulaRF().create(it, categorizeAdvancedVM.fillCategory, { getView()?.requestFocus() }, it.menuVMItems),
+                                itemCheckboxRF().create(it.isFillCategory, it.category.name, categorizeAdvancedVM::userSetFillCategory),
                             )
                         }.toTypedArray(),
                     )
@@ -190,12 +137,12 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                             }
                         )
                     else null,
-                        ButtonVMItem(
-                            title = "Submit",
-                            onClick = {
-                                categorizeAdvancedVM.userSubmitCategorization()
-                            }
-                        ),
+                    ButtonVMItem(
+                        title = "Submit",
+                        onClick = {
+                            categorizeAdvancedVM.userSubmitCategorization()
+                        }
+                    ),
                 ).reversed()
             }
     }

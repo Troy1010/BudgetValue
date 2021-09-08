@@ -66,7 +66,7 @@ class CreateFutureVM @Inject constructor(
                     name = generateUniqueID(),
                     searchTotal = _totalGuess.value,
                     categoryAmountFormulas = categoryAmountFormulas.value,
-                    fillCategory = fillCategory.value,
+                    fillCategory = fillCategory.value.first!!,
                     terminationStatus = if (isPermanent.value) TerminationStatus.PERMANENT else TerminationStatus.WAITING_FOR_MATCH,
                 )
             SearchType.DESCRIPTION ->
@@ -74,7 +74,7 @@ class CreateFutureVM @Inject constructor(
                     name = generateUniqueID(),
                     searchText = searchDescription.value,
                     categoryAmountFormulas = categoryAmountFormulas.value,
-                    fillCategory = fillCategory.value,
+                    fillCategory = fillCategory.value.first!!,
                     terminationStatus = if (isPermanent.value) TerminationStatus.PERMANENT else TerminationStatus.WAITING_FOR_MATCH,
                 )
         }
