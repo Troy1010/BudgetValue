@@ -11,6 +11,11 @@
         app:popUpTo="@id/importFrag"
         app:popUpToInclusive="true" />
     <fragment
+        android:id="@+id/replaysFrag"
+        android:name="com.tminus1010.budgetvalue.replay_or_future.ReplaysFrag"
+        android:label="ReplaysFrag"
+        tools:layout="@layout/frag_replays" />
+    <fragment
         android:id="@+id/importFrag"
         android:name="com.tminus1010.budgetvalue.accounts.ImportFrag"
         android:label="Import"
@@ -66,17 +71,9 @@
                 app:destination="@id/categorySettingsFrag"
                 app:popUpTo="@id/categorizeFrag" />
             <action
-                android:id="@+id/action_categorizeFrag_to_replaysFrag"
-                app:destination="@id/replaysFrag" />
-            <action
                 android:id="@+id/action_categorizeFrag_to_createFutureFrag"
                 app:destination="@id/createFutureNestedGraph" />
         </fragment>
-        <fragment
-            android:id="@+id/replaysFrag"
-            android:name="com.tminus1010.budgetvalue.replay_or_future.ReplaysFrag"
-            android:label="ReplaysFrag"
-            tools:layout="@layout/frag_replays" />
         <navigation
             android:id="@+id/createFutureNestedGraph"
             app:startDestination="@id/createFutureFrag">
