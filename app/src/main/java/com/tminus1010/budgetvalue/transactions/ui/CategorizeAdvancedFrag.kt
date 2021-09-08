@@ -15,10 +15,7 @@ import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.easyText
 import com.tminus1010.budgetvalue._core.extensions.easyVisibility
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
-import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.itemAmountFormulaRF
-import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.itemCheckboxRF
-import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.itemHeaderRF
-import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.itemTextViewRB
+import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.*
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
@@ -89,7 +86,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 val dividerMap = categoryAmountFormulaVMItems.map { it.category }
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
-                    .associate { it.index to recipeFactories.titledDivider.createOne(it.value.type.name) }
+                    .associate { (k, v) -> k to itemTitledDividerRB().create(v.type.name) }
                     .mapKeys { it.key + 1 } // header row
                 Pair(recipes2D, dividerMap)
             }
@@ -110,7 +107,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                         ButtonVMItem(
                             title = "Save Replay",
                             onClick = {
-                                if (categorizeAdvancedVM.areCurrentCAsValid.value!!) {
+                                if (categorizeAdvancedVM.areCurrentCAsValid.value) {
                                     val editText = EditText(requireContext())
                                     AlertDialog.Builder(requireContext())
                                         .setMessage("What would you like to name this replay?")

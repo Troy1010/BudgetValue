@@ -119,9 +119,10 @@ class CategorizeAdvancedVM @Inject constructor(
         { categoryAmountFormulas, total ->
             categoryAmountFormulas.defaultAmount(total).toString()
         }!!
-    val areCurrentCAsValid: Observable<Boolean> =
+    val areCurrentCAsValid =
         categoryAmountFormulas
             .map { it.isNotEmpty() }
             .nonLazyCache(disposables)
+            .cold()
     val navUp = PublishSubject.create<Unit>()!!
 }
