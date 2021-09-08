@@ -17,6 +17,8 @@ import com.tminus1010.budgetvalue._core.extensions.easyVisibility
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
 import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.itemAmountFormulaRF
 import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.itemCheckboxRF
+import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.itemHeaderRF
+import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.itemTextViewRB
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
@@ -72,13 +74,13 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 val recipes2D =
                     listOf(
                         listOf(
-                            recipeFactories.header.createOne("Category"),
-                            recipeFactories.header.createOne("Amount"),
-                            recipeFactories.header.createOne("Fill"),
+                            itemHeaderRF().create("Category"),
+                            itemHeaderRF().create("Amount"),
+                            itemHeaderRF().create("Fill"),
                         ),
                         *categoryAmountFormulaVMItems.map {
                             listOf(
-                                recipeFactories.textView.createOne(it.category.name),
+                                itemTextViewRB().create(it.category.name),
                                 itemAmountFormulaRF().create(it, categorizeAdvancedVM.fillCategory, { getView()?.requestFocus() }, it.menuVMItems),
                                 itemCheckboxRF().create(it.isFillCategory, it.category.name, categorizeAdvancedVM::userSetFillCategory),
                             )
