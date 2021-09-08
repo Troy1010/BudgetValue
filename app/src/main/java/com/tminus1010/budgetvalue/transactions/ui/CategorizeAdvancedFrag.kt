@@ -14,13 +14,10 @@ import com.tminus1010.budgetvalue._core.InvalidSearchText
 import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.easyText
 import com.tminus1010.budgetvalue._core.extensions.easyVisibility
-import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
 import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.*
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.databinding.FragCategorizeAdvancedBinding
-import com.tminus1010.budgetvalue.replay_or_future.models.IReplay
 import com.tminus1010.budgetvalue.replay_or_future.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.CategorizeAdvancedVM
 import com.tminus1010.budgetvalue.transactions.models.Transaction
@@ -45,7 +42,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Mediation
-        _setupArgs?.also { _setupArgs = null; categorizeAdvancedVM.setup(it.first, it.second, it.third) }
+        _setupArgs?.also { _setupArgs = null; categorizeAdvancedVM.setup(it.first, it.second, it.third, categorizeAdvancedType) }
         //
         vb.tvTitle.bind(categorizeAdvancedVM.replayOrFuture) { (replayOrFuture) ->
             easyVisibility = replayOrFuture != null
@@ -63,6 +60,25 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
                 is SQLiteConstraintException -> easyToast("Invalid duplicate name")
                 else -> throw it
             }
+        }
+        categorizeAdvancedVM.deleteReplayDialogBox.observe(viewLifecycleOwner) {
+            AlertDialog.Builder(requireContext())
+                .setMessage("Do you really want to delete this replay?")
+                .setPositiveButton("Yes") { _, _ -> categorizeAdvancedVM.userDeleteReplay(categorizeAdvancedVM.replayOrFuture.value?.first?.name ?: "") }
+                .setNegativeButton("No") { _, _ -> }
+                .show()
+        }
+        categorizeAdvancedVM.saveReplayDialogBox.observe(viewLifecycleOwner) {
+            if (categorizeAdvancedVM.areCurrentCAsValid.value) {
+                val editText = EditText(requireContext())
+                AlertDialog.Builder(requireContext())
+                    .setMessage("What would you like to name this replay?")
+                    .setView(editText)
+                    .setPositiveButton("Submit") { _, _ -> categorizeAdvancedVM.userSaveReplay(editText.easyText) }
+                    .setNegativeButton("Cancel") { _, _ -> }
+                    .show()
+            } else
+                errorSubject.onNext(InvalidCategoryAmounts(""))
         }
 
         // # TMTableView CategoryAmounts
@@ -100,50 +116,7 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
             }
 
         // # Button RecyclerView
-        categorizeAdvancedVM.replayOrFuture
-            .observe(viewLifecycleOwner) { (replayOrFuture) ->
-                vb.buttonsview.buttons = listOfNotNull(
-                    if (categorizeAdvancedType == CategorizeAdvancedType.SPLIT)
-                        ButtonVMItem(
-                            title = "Save Replay",
-                            onClick = {
-                                if (categorizeAdvancedVM.areCurrentCAsValid.value) {
-                                    val editText = EditText(requireContext())
-                                    AlertDialog.Builder(requireContext())
-                                        .setMessage("What would you like to name this replay?")
-                                        .setView(editText)
-                                        .setPositiveButton("Submit") { _, _ ->
-                                            categorizeAdvancedVM.userSaveReplay(editText.easyText)
-                                        }
-                                        .setNegativeButton("Cancel") { _, _ -> }
-                                        .show()
-                                } else
-                                    errorSubject.onNext(InvalidCategoryAmounts(""))
-                            }
-                        )
-                    else null,
-                    if (replayOrFuture is IReplay)
-                        ButtonVMItem(
-                            title = "Delete Replay",
-                            onClick = {
-                                AlertDialog.Builder(requireContext())
-                                    .setMessage("Do you really want to delete this replay?")
-                                    .setPositiveButton("Yes") { _, _ ->
-                                        categorizeAdvancedVM.userDeleteReplay(replayOrFuture.name)
-                                    }
-                                    .setNegativeButton("No") { _, _ -> }
-                                    .show()
-                            }
-                        )
-                    else null,
-                    ButtonVMItem(
-                        title = "Submit",
-                        onClick = {
-                            categorizeAdvancedVM.userSubmitCategorization()
-                        }
-                    ),
-                ).reversed()
-            }
+        vb.buttonsview.buttons = categorizeAdvancedVM.buttons
     }
 
     enum class Key { CategorizeAdvancedType }

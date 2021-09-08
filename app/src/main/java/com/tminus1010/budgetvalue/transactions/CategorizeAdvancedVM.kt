@@ -5,16 +5,18 @@ import com.tminus1010.budgetvalue._core.extensions.cold
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.extensions.unbox
 import com.tminus1010.budgetvalue._core.middleware.ColdObservable
-import com.tminus1010.budgetvalue._core.middleware.Rx
+import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
 import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.replay_or_future.CategoryAmountFormulaVMItemsBaseVM
 import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplay
+import com.tminus1010.budgetvalue.replay_or_future.models.IReplay
 import com.tminus1010.budgetvalue.replay_or_future.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
 import com.tminus1010.budgetvalue.transactions.models.Transaction
+import com.tminus1010.budgetvalue.transactions.ui.CategorizeAdvancedFrag
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,11 +35,13 @@ class CategorizeAdvancedVM @Inject constructor(
     override val categoryParser: ICategoryParser,
 ) : CategoryAmountFormulaVMItemsBaseVM() {
     // # Input
-    fun setup(_transaction: Transaction?, _replay: IReplayOrFuture?, categorySelectionVM: CategorySelectionVM) {
+    lateinit var categorizeAdvancedType: CategorizeAdvancedFrag.CategorizeAdvancedType
+    fun setup(_transaction: Transaction?, _replay: IReplayOrFuture?, categorySelectionVM: CategorySelectionVM, categorizeAdvancedType: CategorizeAdvancedFrag.CategorizeAdvancedType) {
         this.categorySelectionVM = categorySelectionVM
         _categorySelectionVM = categorySelectionVM
         _replayOrFuture.onNext(Box(_replay))
         transaction.onNext(Box(_transaction))
+        this.categorizeAdvancedType = categorizeAdvancedType
     }
 
     fun userSubmitCategorization() {
@@ -105,14 +109,10 @@ class CategorizeAdvancedVM @Inject constructor(
         }
             .cold()
     private val transactionToPush =
-        Rx.combineLatest(
-            transaction,
-            categoryAmountFormulas,
-        )
-            .map { (transactionBox, categoryAmountFormulas) ->
-                val transaction = transactionBox.first
-                Box(transaction?.categorize(categoryAmountFormulas.mapValues { it.value.calcAmount(transaction.amount) }))
-            }
+        Observable.combineLatest(transaction, categoryAmountFormulas)
+        { (transaction), categoryAmountFormulas ->
+            Box(transaction?.categorize(categoryAmountFormulas.mapValues { it.value.calcAmount(transaction.amount) }))
+        }
             .nonLazyCache(disposables)
     val defaultAmount =
         Observable.combineLatest(categoryAmountFormulas, totalGuess)
@@ -125,4 +125,27 @@ class CategorizeAdvancedVM @Inject constructor(
             .nonLazyCache(disposables)
             .cold()
     val navUp = PublishSubject.create<Unit>()!!
+
+    val deleteReplayDialogBox = PublishSubject.create<Unit>()!!
+    val saveReplayDialogBox = PublishSubject.create<Unit>()!!
+
+    val buttons
+        get() = listOfNotNull(
+            if (categorizeAdvancedType == CategorizeAdvancedFrag.CategorizeAdvancedType.SPLIT)
+                ButtonVMItem(
+                    title = "Save Replay",
+                    onClick = { saveReplayDialogBox.onNext(Unit) }
+                )
+            else null,
+            if (replayOrFuture is IReplay)
+                ButtonVMItem(
+                    title = "Delete Replay",
+                    onClick = { deleteReplayDialogBox.onNext(Unit) }
+                )
+            else null,
+            ButtonVMItem(
+                title = "Submit",
+                onClick = ::userSubmitCategorization
+            ),
+        )
 }
