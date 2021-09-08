@@ -28,8 +28,8 @@ import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
+import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
-import com.tminus1010.tmcommonkotlin.view.extensions.toast
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.subjects.Subject
 import javax.inject.Inject
@@ -59,9 +59,9 @@ class CategorizeAdvancedFrag : Fragment(R.layout.frag_categorize_advanced) {
         categorizeAdvancedVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         errorSubject.observe(viewLifecycleOwner) {
             when (it) {
-                is InvalidCategoryAmounts -> toast("Invalid category amounts")
-                is InvalidSearchText -> toast("Invalid search text")
-                is SQLiteConstraintException -> toast("Invalid duplicate name")
+                is InvalidCategoryAmounts -> easyToast("Invalid category amounts")
+                is InvalidSearchText -> easyToast("Invalid search text")
+                is SQLiteConstraintException -> easyToast("Invalid duplicate name")
                 else -> throw it
             }
         }
