@@ -30,7 +30,7 @@ class ButtonsView @JvmOverloads constructor(
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
                 GenViewHolder2(ItemButtonBinding.inflate(LayoutInflater.from(context), parent, false))
 
-            override fun onViewAttachedToWindow(holder: GenViewHolder2<ItemButtonBinding>, lifecycleOwner: LifecycleOwner) {
+            override fun onViewAttachedToWindow(holder: GenViewHolder2<ItemButtonBinding>, lifecycle: LifecycleOwner) {
                 holder.vb.root.lifecycleOwner = lifecycleOwner
                 buttons[holder.adapterPosition].bind(holder.vb.btnItem)
             }

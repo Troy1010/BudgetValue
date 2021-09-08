@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.bind
-import com.tminus1010.budgetvalue._core.extensions.unbox
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
 import com.tminus1010.budgetvalue._core.middleware.ui.GenViewHolder2
 import com.tminus1010.budgetvalue._core.middleware.ui.LifecycleRVAdapter
@@ -25,7 +24,6 @@ import com.tminus1010.budgetvalue.categories.ui.CategorySettingsFrag
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
 import com.tminus1010.budgetvalue.replay_or_future.CreateFutureFrag
-import com.tminus1010.budgetvalue.replay_or_future.ReplaysFrag
 import com.tminus1010.budgetvalue.transactions.CategorizeVM
 import com.tminus1010.budgetvalue.transactions.TransactionsMiscVM
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeAdvancedDomain
@@ -126,16 +124,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     ButtonVMItem(
                         title = "Split",
                         isEnabled = categorizeVM.isTransactionAvailable,
-                        onClick = {
-                            CategorizeAdvancedFrag.navTo(
-                                source = this,
-                                nav = nav,
-                                categorySelectionVM = categorySelectionVM,
-                                transaction = transactionsDomain.firstUncategorizedSpend.value!!.first!!,
-                                replayOrFuture = null,
-                                categorizeAdvancedType = CategorizeAdvancedFrag.CategorizeAdvancedType.SPLIT,
-                            )
-                        }
+                        onClick = { SplitFrag.navTo(nav, transactionsDomain.firstUncategorizedSpend.value!!.first!!) }
                     )
                 else null,
                 if (inSelectionMode)
