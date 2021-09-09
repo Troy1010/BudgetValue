@@ -14,7 +14,11 @@
         android:id="@+id/replaysFrag"
         android:name="com.tminus1010.budgetvalue.replay_or_future.ReplaysFrag"
         android:label="ReplaysFrag"
-        tools:layout="@layout/frag_replays" />
+        tools:layout="@layout/frag_replays" >
+        <action
+            android:id="@+id/action_replaysFrag_to_replayFrag"
+            app:destination="@id/replayFrag" />
+    </fragment>
     <fragment
         android:id="@+id/importFrag"
         android:name="com.tminus1010.budgetvalue.accounts.ImportFrag"
@@ -129,4 +133,9 @@
         android:name="com.tminus1010.budgetvalue.replay_or_future.FutureDetailsFrag"
         android:label="FutureDetailsFrag"
         tools:layout="@layout/frag_create_future" />
+    <fragment
+        android:id="@+id/replayFrag"
+        android:name="com.tminus1010.budgetvalue.transactions.ui.ReplayFrag"
+        android:label="ReplayFrag"
+        tools:layout="@layout/frag_categorize_advanced" />
 </navigation>

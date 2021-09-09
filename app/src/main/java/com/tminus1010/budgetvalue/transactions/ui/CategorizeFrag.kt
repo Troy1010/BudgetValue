@@ -151,13 +151,9 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                                 title = "Replay (${replay.name})",
                                 onClick = { categorizeVM.userReplay(replay) },
                                 onLongClick = {
-                                    CategorizeAdvancedFrag.navTo(
-                                        source = this,
+                                    ReplayFrag.navTo(
                                         nav = nav,
-                                        categorySelectionVM = categorySelectionVM,
-                                        transaction = transactionsDomain.firstUncategorizedSpend.value!!.first!!,
                                         replayOrFuture = replay,
-                                        categorizeAdvancedType = CategorizeAdvancedFrag.CategorizeAdvancedType.EDIT,
                                     )
                                 })
                         })
