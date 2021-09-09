@@ -154,7 +154,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                                 onLongClick = {
                                     ReplayFrag.navTo(
                                         nav = nav,
-                                        replayOrFuture = replay as BasicReplay,
+                                        replay = replay as BasicReplay,
                                     )
                                 })
                         })

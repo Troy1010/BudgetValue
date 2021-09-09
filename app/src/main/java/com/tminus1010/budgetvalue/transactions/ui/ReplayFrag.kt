@@ -105,9 +105,9 @@ class ReplayFrag : Fragment(R.layout.frag_categorize_advanced) {
         private var _setupArgs: Box<BasicReplay>? = null
         fun navTo(
             nav: NavController,
-            replayOrFuture: BasicReplay,
+            replay: BasicReplay,
         ) {
-            _setupArgs = Box(replayOrFuture)
+            _setupArgs = Box(replay)
             nav.navigate(R.id.replayFrag)
         }
     }
