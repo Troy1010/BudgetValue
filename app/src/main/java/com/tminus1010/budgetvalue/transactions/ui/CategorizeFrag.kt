@@ -24,6 +24,7 @@ import com.tminus1010.budgetvalue.categories.ui.CategorySettingsFrag
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
 import com.tminus1010.budgetvalue.replay_or_future.CreateFutureFrag
+import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplay
 import com.tminus1010.budgetvalue.transactions.CategorizeVM
 import com.tminus1010.budgetvalue.transactions.TransactionsMiscVM
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeAdvancedDomain
@@ -153,7 +154,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                                 onLongClick = {
                                     ReplayFrag.navTo(
                                         nav = nav,
-                                        replayOrFuture = replay,
+                                        replayOrFuture = replay as BasicReplay,
                                     )
                                 })
                         })

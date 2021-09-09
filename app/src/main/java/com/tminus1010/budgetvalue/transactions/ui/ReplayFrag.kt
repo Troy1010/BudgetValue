@@ -17,6 +17,7 @@ import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.*
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.databinding.FragCategorizeAdvancedBinding
+import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplay
 import com.tminus1010.budgetvalue.replay_or_future.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.ReplayVM
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
@@ -54,10 +55,8 @@ class ReplayFrag : Fragment(R.layout.frag_categorize_advanced) {
         }
         // # State
         vb.buttonsview.buttons = replayVM.buttons
-        vb.tvTitle.bind(replayVM.replayOrFuture) { (replayOrFuture) ->
-            easyVisibility = replayOrFuture != null
-            text = replayOrFuture?.name ?: ""
-        }
+        vb.tvTitle.easyVisibility = true
+        vb.tvTitle.bind(replayVM.replay) { text = it.name }
         vb.tvAmountToSplit.bind(replayVM.amountToCategorizeMsg) { (amountToCategorizeMsg) ->
             easyVisibility = amountToCategorizeMsg != null
             text = amountToCategorizeMsg ?: ""
@@ -65,7 +64,7 @@ class ReplayFrag : Fragment(R.layout.frag_categorize_advanced) {
         replayVM.deleteReplayDialogBox.observe(viewLifecycleOwner) {
             AlertDialog.Builder(requireContext())
                 .setMessage("Do you really want to delete this replay?")
-                .setPositiveButton("Yes") { _, _ -> replayVM.userDeleteReplay(replayVM.replayOrFuture.value?.first?.name ?: "") }
+                .setPositiveButton("Yes") { _, _ -> replayVM.userDeleteReplay(replayVM.replay.value?.name ?: "") }
                 .setNegativeButton("No") { _, _ -> }
                 .show()
         }
@@ -106,10 +105,10 @@ class ReplayFrag : Fragment(R.layout.frag_categorize_advanced) {
     }
 
     companion object {
-        private var _setupArgs: Box<IReplayOrFuture>? = null
+        private var _setupArgs: Box<BasicReplay>? = null
         fun navTo(
             nav: NavController,
-            replayOrFuture: IReplayOrFuture,
+            replayOrFuture: BasicReplay,
         ) {
             _setupArgs = Box(replayOrFuture)
             nav.navigate(R.id.replayFrag)

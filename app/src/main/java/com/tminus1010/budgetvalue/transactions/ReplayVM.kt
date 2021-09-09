@@ -2,19 +2,17 @@ package com.tminus1010.budgetvalue.transactions
 
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.extensions.cold
-import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
-import com.tminus1010.budgetvalue._core.extensions.unbox
 import com.tminus1010.budgetvalue._core.middleware.ColdObservable
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
 import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.ICategoryParser
+import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay_or_future.CategoryAmountFormulaVMItemsBaseVM
 import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplay
-import com.tminus1010.budgetvalue.replay_or_future.models.IReplayOrFuture
-import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
+import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
@@ -31,19 +29,19 @@ class ReplayVM @Inject constructor(
     override val categoryParser: ICategoryParser,
 ) : CategoryAmountFormulaVMItemsBaseVM() {
     // # Input
-    fun setup(_replay: IReplayOrFuture, categorySelectionVM: CategorySelectionVM) {
+    fun setup(_replay: BasicReplay, categorySelectionVM: CategorySelectionVM) {
         this.categorySelectionVM = categorySelectionVM
-        _replayOrFuture.onNext(Box(_replay))
+        this._replay.onNext(_replay)
     }
 
     fun userSaveReplay(name: String) {
-        val replay = BasicReplay(
+        val _replay = BasicReplay(
             name = name,
-            searchTexts = listOf(transaction.unbox.description),
+            searchTexts = replay.value!!.searchTexts,
             categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
             fillCategory = _fillCategory.value.first!!,
         )
-        replaysRepo.add(replay)
+        replaysRepo.add(_replay)
             .andThen(categorySelectionVM.clearSelection())
             .observe(disposables,
                 onComplete = { navUp.onNext(Unit) },
@@ -60,37 +58,37 @@ class ReplayVM @Inject constructor(
     }
 
     // # Internal
-    private val transaction = BehaviorSubject.createDefault(Box<Transaction?>(null))
-    private val _replayOrFuture = BehaviorSubject.createDefault(Box<IReplayOrFuture?>(null))
+    private val _replay = BehaviorSubject.create<BasicReplay>()
 
     // # Output
     override val _totalGuess: ColdObservable<BigDecimal> =
-        transaction.map { (it) -> it?.amount ?: BigDecimal.ZERO }
-            .nonLazyCache(disposables)
+        Observable.just(BigDecimal.ZERO)
             .cold()
-    val replayOrFuture: Observable<Box<IReplayOrFuture?>> = _replayOrFuture!!
+    val replay: Observable<BasicReplay> = _replay!!
+    val searchTexts =
+        replay
+            .map { replayOrFuture ->
+                replayOrFuture.searchTexts
+            }!!
+
     override val _selectedCategories =
-        Observable.combineLatest(super._selectedCategories, replayOrFuture)
-        { selectedCategories, (replayOrFuture) ->
-            selectedCategories
-                .run { if (replayOrFuture == null) this else plus(replayOrFuture.fillCategory) }
+        Observable.combineLatest(super._selectedCategories, replay)
+        { selectedCategories, replay ->
+            selectedCategories.plus(replay.fillCategory)
         }
     val amountToCategorizeMsg =
-        transaction
-            .map { (transaction) -> Box(transaction?.let { "Amount to split: $${transaction.amount}" }) }
-            .nonLazyCache(disposables)
+        Observable.just(Box(null))!!
     override val _fillCategory =
-        Observable.combineLatest(super._fillCategory, replayOrFuture)
-        { (fillCategory), (replayOrFuture) ->
-            Box(fillCategory ?: replayOrFuture?.fillCategory)
+        Observable.combineLatest(super._fillCategory, replay)
+        { (fillCategory), replay ->
+            Box<Category?>(fillCategory ?: replay.fillCategory)
         }
             .cold()
     override val _categoryAmountFormulas =
-        Observable.combineLatest(super._categoryAmountFormulas, replayOrFuture)
-        { categoryAmountFormulas, (replayOrFuture) ->
-            replayOrFuture?.categoryAmountFormulas
-                ?.plus(categoryAmountFormulas)
-                ?: categoryAmountFormulas
+        Observable.combineLatest(super._categoryAmountFormulas, replay)
+        { categoryAmountFormulas, replay ->
+            replay.categoryAmountFormulas
+                .plus(categoryAmountFormulas)
         }
             .map { CategoryAmountFormulas(it) }
             .cold()
@@ -102,6 +100,10 @@ class ReplayVM @Inject constructor(
     val navUp = PublishSubject.create<Unit>()!!
     val deleteReplayDialogBox = PublishSubject.create<Unit>()!!
     val buttons = listOf(
+        ButtonVMItem(
+            title = "Save Replay",
+            onClick = { userSaveReplay(replay.value!!.name) }
+        ),
         ButtonVMItem(
             title = "Delete Replay",
             onClick = { deleteReplayDialogBox.onNext(Unit) }
