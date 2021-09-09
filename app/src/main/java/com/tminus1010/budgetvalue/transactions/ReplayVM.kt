@@ -2,6 +2,7 @@ package com.tminus1010.budgetvalue.transactions
 
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.extensions.cold
+import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.middleware.ColdObservable
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
 import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulas
@@ -29,6 +30,7 @@ class ReplayVM @Inject constructor(
     override val categoryParser: ICategoryParser,
 ) : CategoryAmountFormulaVMItemsBaseVM() {
     // # Input
+    private val _replay = BehaviorSubject.create<BasicReplay>()
     fun setup(_replay: BasicReplay, categorySelectionVM: CategorySelectionVM) {
         this.categorySelectionVM = categorySelectionVM
         this._replay.onNext(_replay)
@@ -37,12 +39,11 @@ class ReplayVM @Inject constructor(
     fun userSaveReplay(name: String) {
         val _replay = BasicReplay(
             name = name,
-            searchTexts = replay.value!!.searchTexts,
+            searchTexts = searchTexts.value!!,
             categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
             fillCategory = _fillCategory.value.first!!,
         )
-        replaysRepo.add(_replay)
-            .andThen(categorySelectionVM.clearSelection())
+        replaysRepo.update(_replay)
             .observe(disposables,
                 onComplete = { navUp.onNext(Unit) },
                 onError = errorSubject::onNext
@@ -57,19 +58,27 @@ class ReplayVM @Inject constructor(
             )
     }
 
+    val userAddSearchText = PublishSubject.create<String>()
+    fun userAddSearchText(searchText: String) {
+        userAddSearchText.onNext(searchText)
+    }
+
     // # Internal
-    private val _replay = BehaviorSubject.create<BasicReplay>()
 
     // # Output
     override val _totalGuess: ColdObservable<BigDecimal> =
         Observable.just(BigDecimal.ZERO)
             .cold()
     val replay: Observable<BasicReplay> = _replay!!
+    val userAddSearchTexts =
+        userAddSearchText
+            .scan(listOf<String>()) { acc, v -> acc.plus(v) }
+            .nonLazyCache(disposables)
     val searchTexts =
-        replay
-            .map { replayOrFuture ->
-                replayOrFuture.searchTexts
-            }!!
+        Observable.combineLatest(replay, userAddSearchTexts)
+        { replay, userAddSearchTexts ->
+            replay.searchTexts.plus(userAddSearchTexts)
+        }!!
 
     override val _selectedCategories =
         Observable.combineLatest(super._selectedCategories, replay)
