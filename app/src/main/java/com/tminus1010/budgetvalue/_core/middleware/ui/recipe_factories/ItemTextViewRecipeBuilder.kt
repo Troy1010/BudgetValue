@@ -1,9 +1,10 @@
 package com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories
 
 import android.content.Context
-import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
+import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.bind
+import com.tminus1010.budgetvalue._core.extensions.getColorByAttr
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.IViewItemRecipe3
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipe3__
 import com.tminus1010.budgetvalue.databinding.ItemTextViewBinding
@@ -38,6 +39,18 @@ class ItemTextViewRecipeBuilder(private val context: Context) {
     fun create(s: String, onClick: () -> Unit): IViewItemRecipe3 {
         return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, styler) { vb ->
             vb.textview.text = s
+            vb.textview.setOnClickListener { onClick() }
+        }
+    }
+
+    fun create(s: String, context: Context, highlighted: Boolean, onClick: () -> Unit): IViewItemRecipe3 {
+        return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, styler) { vb ->
+            vb.textview.text = s
+            vb.textview.setBackgroundColor(
+                context.theme.getColorByAttr(
+                    if (highlighted) R.attr.colorSecondary else R.attr.colorBackground
+                )
+            )
             vb.textview.setOnClickListener { onClick() }
         }
     }

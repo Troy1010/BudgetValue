@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.navGraphViewModels
 import com.tminus1010.budgetvalue.R
@@ -18,7 +18,6 @@ import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.databinding.FragCategorizeAdvancedBinding
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplay
-import com.tminus1010.budgetvalue.replay_or_future.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.ReplayVM
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -33,7 +32,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ReplayFrag : Fragment(R.layout.frag_categorize_advanced) {
     private val vb by viewBinding(FragCategorizeAdvancedBinding::bind)
-    private val replayVM by viewModels<ReplayVM>()
+    private val replayVM by activityViewModels<ReplayVM>()
     private val categorySelectionVM: CategorySelectionVM by navGraphViewModels(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
 
     @Inject
@@ -53,14 +52,12 @@ class ReplayFrag : Fragment(R.layout.frag_categorize_advanced) {
                 else -> throw it
             }
         }
+        replayVM.navToSelectTransactionName.observe(viewLifecycleOwner) { nav.navigate(R.id.chooseTransactionDescriptionFrag2) }
         // # State
         vb.buttonsview.buttons = replayVM.buttons
         vb.tvTitle.easyVisibility = true
         vb.tvTitle.bind(replayVM.replay) { text = it.name }
-        vb.tvAmountToSplit.bind(replayVM.amountToCategorizeMsg) { (amountToCategorizeMsg) ->
-            easyVisibility = amountToCategorizeMsg != null
-            text = amountToCategorizeMsg ?: ""
-        }
+        vb.tvAmountToSplit.bind(replayVM.amountOfSearchTexts) { text = it }
         replayVM.deleteReplayDialogBox.observe(viewLifecycleOwner) {
             AlertDialog.Builder(requireContext())
                 .setMessage("Do you really want to delete this replay?")

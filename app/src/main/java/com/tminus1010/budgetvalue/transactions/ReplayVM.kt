@@ -14,6 +14,7 @@ import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplay
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
+import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
@@ -58,7 +59,7 @@ class ReplayVM @Inject constructor(
             )
     }
 
-    val userAddSearchText = PublishSubject.create<String>()
+    private val userAddSearchText = PublishSubject.create<String>()
     fun userAddSearchText(searchText: String) {
         userAddSearchText.onNext(searchText)
     }
@@ -79,14 +80,15 @@ class ReplayVM @Inject constructor(
         { replay, userAddSearchTexts ->
             replay.searchTexts.plus(userAddSearchTexts)
         }!!
+            .replayNonError(1)
 
     override val _selectedCategories =
         Observable.combineLatest(super._selectedCategories, replay)
         { selectedCategories, replay ->
             selectedCategories.plus(replay.fillCategory)
         }
-    val amountToCategorizeMsg =
-        Observable.just(Box(null))!!
+    val amountOfSearchTexts =
+        searchTexts.map { it.size.toString() }
     override val _fillCategory =
         Observable.combineLatest(super._fillCategory, replay)
         { (fillCategory), replay ->
@@ -107,15 +109,20 @@ class ReplayVM @Inject constructor(
             categoryAmountFormulas.defaultAmount(total).toString()
         }!!
     val navUp = PublishSubject.create<Unit>()!!
+    val navToSelectTransactionName = PublishSubject.create<Unit>()!!
     val deleteReplayDialogBox = PublishSubject.create<Unit>()!!
     val buttons = listOf(
-        ButtonVMItem(
-            title = "Save Replay",
-            onClick = { userSaveReplay(replay.value!!.name) }
-        ),
         ButtonVMItem(
             title = "Delete Replay",
             onClick = { deleteReplayDialogBox.onNext(Unit) }
         ),
-    )
+        ButtonVMItem(
+            title = "Add Search Text",
+            onClick = { navToSelectTransactionName.onNext(Unit) }
+        ),
+        ButtonVMItem(
+            title = "Save Replay",
+            onClick = { userSaveReplay(replay.value!!.name) }
+        ),
+    ).reversed()
 }
