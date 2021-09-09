@@ -52,11 +52,6 @@
         android:id="@+id/categorizeNestedGraph"
         app:startDestination="@id/categorizeFrag">
         <fragment
-            android:id="@+id/categorizeAdvancedFrag"
-            android:name="com.tminus1010.budgetvalue.transactions.ui.CategorizeAdvancedFrag"
-            android:label="SplitTransactionFrag"
-            tools:layout="@layout/frag_categorize_advanced" />
-        <fragment
             android:id="@+id/categorySettingsFrag"
             android:name="com.tminus1010.budgetvalue.categories.ui.CategorySettingsFrag"
             android:label="CategorySettingsFrag"
@@ -66,10 +61,6 @@
             android:name="com.tminus1010.budgetvalue.transactions.ui.CategorizeFrag"
             android:label="Categorize"
             tools:layout="@layout/frag_categorize">
-            <action
-                android:id="@+id/action_categorizeFrag_to_categorizeAdvancedFrag"
-                app:destination="@id/categorizeAdvancedFrag"
-                app:popUpTo="@id/categorizeFrag" />
             <action
                 android:id="@+id/action_categorizeFrag_to_categorySettingsFrag"
                 app:destination="@id/categorySettingsFrag"
