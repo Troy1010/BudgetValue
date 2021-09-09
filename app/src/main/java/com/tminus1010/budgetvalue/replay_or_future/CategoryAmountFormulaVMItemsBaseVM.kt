@@ -2,11 +2,9 @@ package com.tminus1010.budgetvalue.replay_or_future
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.extensions.cold
 import com.tminus1010.budgetvalue._core.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue._core.extensions.isZero
-import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.middleware.ColdObservable
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulaVMItem
@@ -16,6 +14,7 @@ import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.tmcommonkotlin.rx.extensions.retryWithDelay
+import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -54,9 +53,11 @@ abstract class CategoryAmountFormulaVMItemsBaseVM : ViewModel() {
     }
 
     // # Internal
-    protected val selectedCategories =
+    protected open val _selectedCategories =
         Observable.defer { categorySelectionVM.selectedCategories }
             .retryWithDelay(200, TimeUnit.MILLISECONDS)
+    protected val selectedCategories =
+        Observable.defer { _selectedCategories }.cold()
 
     // # Output
     val totalGuessHeader = "Total Guess"
@@ -72,7 +73,7 @@ abstract class CategoryAmountFormulaVMItemsBaseVM : ViewModel() {
             }
             .switchMap { userSetFillCategory.startWithItem(it) }
             .distinctUntilChanged()
-            .nonLazyCache(disposables)
+            .replayNonError(1)
             .cold()
     val fillCategory = Observable.defer { _fillCategory }.cold()
 
@@ -88,7 +89,7 @@ abstract class CategoryAmountFormulaVMItemsBaseVM : ViewModel() {
                         AmountFormula.Value(userCategoryAmounts[it] ?: BigDecimal.ZERO)
                 }
         }
-            .nonLazyCache(disposables)
+            .replayNonError(1)
 
     @VisibleForTesting
     open val _categoryAmountFormulas =
@@ -97,7 +98,7 @@ abstract class CategoryAmountFormulaVMItemsBaseVM : ViewModel() {
             CategoryAmountFormulas(selectedCategories.associateWith { it.defaultAmountFormula })
                 .plus(userCategoryAmountFormulas)
         }
-            .nonLazyCache(disposables)
+            .replayNonError(1)
             .cold()
     val categoryAmountFormulas = Observable.defer { _categoryAmountFormulas }.cold()
 
@@ -122,5 +123,5 @@ abstract class CategoryAmountFormulaVMItemsBaseVM : ViewModel() {
                     CategoryAmountFormulaVMItem(category, amountFormula, fillCategory, fillAmountFormula, ::userSetCategoryIsPercentage, ::userInputCA)
                 }
             }
-            .nonLazyCache(disposables)
+            .replayNonError(1)
 }

@@ -68,8 +68,13 @@ class ReplayVM @Inject constructor(
         transaction.map { (it) -> it?.amount ?: BigDecimal.ZERO }
             .nonLazyCache(disposables)
             .cold()
-
     val replayOrFuture: Observable<Box<IReplayOrFuture?>> = _replayOrFuture!!
+    override val _selectedCategories =
+        Observable.combineLatest(super._selectedCategories, replayOrFuture)
+        { selectedCategories, (replayOrFuture) ->
+            selectedCategories
+                .run { if (replayOrFuture == null) this else plus(replayOrFuture.fillCategory) }
+        }
     val amountToCategorizeMsg =
         transaction
             .map { (transaction) -> Box(transaction?.let { "Amount to split: $${transaction.amount}" }) }
@@ -96,7 +101,6 @@ class ReplayVM @Inject constructor(
         }!!
     val navUp = PublishSubject.create<Unit>()!!
     val deleteReplayDialogBox = PublishSubject.create<Unit>()!!
-
     val buttons = listOf(
         ButtonVMItem(
             title = "Delete Replay",
