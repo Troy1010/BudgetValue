@@ -47,7 +47,7 @@ class ReplayVM @Inject constructor(
             .andThen(categorySelectionVM.clearSelection())
             .observe(disposables,
                 onComplete = { navUp.onNext(Unit) },
-                onError = { errorSubject.onNext(it) }
+                onError = errorSubject::onNext
             )
     }
 
@@ -55,7 +55,7 @@ class ReplayVM @Inject constructor(
         replaysRepo.delete(replayName)
             .observe(disposables,
                 onComplete = { navUp.onNext(Unit) },
-                onError = { errorSubject.onNext(it) }
+                onError = errorSubject::onNext
             )
     }
 
