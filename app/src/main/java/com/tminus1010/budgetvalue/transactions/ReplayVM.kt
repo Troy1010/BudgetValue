@@ -74,21 +74,20 @@ class ReplayVM @Inject constructor(
         transaction
             .map { (transaction) -> Box(transaction?.let { "Amount to split: $${transaction.amount}" }) }
             .nonLazyCache(disposables)
-
     override val _fillCategory =
         Observable.combineLatest(super._fillCategory, replayOrFuture)
         { (fillCategory), (replayOrFuture) ->
             Box(fillCategory ?: replayOrFuture?.fillCategory)
         }
             .cold()
-
     override val _categoryAmountFormulas =
         Observable.combineLatest(super._categoryAmountFormulas, replayOrFuture)
         { categoryAmountFormulas, (replayOrFuture) ->
-            CategoryAmountFormulas(replayOrFuture?.categoryAmountFormulas
+            replayOrFuture?.categoryAmountFormulas
                 ?.plus(categoryAmountFormulas)
-                ?: categoryAmountFormulas)
+                ?: categoryAmountFormulas
         }
+            .map { CategoryAmountFormulas(it) }
             .cold()
     val defaultAmount =
         Observable.combineLatest(categoryAmountFormulas, totalGuess)
