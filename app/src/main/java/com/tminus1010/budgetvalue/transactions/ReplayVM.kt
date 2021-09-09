@@ -33,7 +33,6 @@ class ReplayVM @Inject constructor(
     // # Input
     fun setup(_replay: IReplayOrFuture, categorySelectionVM: CategorySelectionVM) {
         this.categorySelectionVM = categorySelectionVM
-        _categorySelectionVM = categorySelectionVM
         _replayOrFuture.onNext(Box(_replay))
     }
 
@@ -45,7 +44,7 @@ class ReplayVM @Inject constructor(
             fillCategory = _fillCategory.value.first!!,
         )
         replaysRepo.add(replay)
-            .andThen(_categorySelectionVM.clearSelection())
+            .andThen(categorySelectionVM.clearSelection())
             .observe(disposables,
                 onComplete = { navUp.onNext(Unit) },
                 onError = { errorSubject.onNext(it) }
@@ -63,7 +62,6 @@ class ReplayVM @Inject constructor(
     // # Internal
     private val transaction = BehaviorSubject.createDefault(Box<Transaction?>(null))
     private val _replayOrFuture = BehaviorSubject.createDefault(Box<IReplayOrFuture?>(null))
-    private lateinit var _categorySelectionVM: CategorySelectionVM
 
     // # Output
     override val _totalGuess: ColdObservable<BigDecimal> =
