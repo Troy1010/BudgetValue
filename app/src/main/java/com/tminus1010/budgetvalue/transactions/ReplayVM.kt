@@ -64,8 +64,6 @@ class ReplayVM @Inject constructor(
         userAddSearchText.onNext(searchText)
     }
 
-    // # Internal
-
     // # Output
     override val _totalGuess: ColdObservable<BigDecimal> =
         Observable.just(BigDecimal.ZERO)

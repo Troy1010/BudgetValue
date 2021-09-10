@@ -8,8 +8,10 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.easyVisibility
+import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.itemEditTextRF
 import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.itemTextViewRB
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue.databinding.FragChooseTransactionDesciption2Binding
 import com.tminus1010.budgetvalue.databinding.FragTransactionsBinding
 import com.tminus1010.budgetvalue.transactions.ReplayVM
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
@@ -24,8 +26,8 @@ import javax.inject.Inject
 // TODO: ChooseTransactionDescriptionFrag outputs to createFutureVM, while ChooseTransactionDescriptionFrag2
 //      outputs to replayVM. There's probably an easier way to do this..
 @AndroidEntryPoint
-class ChooseTransactionDescriptionFrag2 : Fragment(R.layout.frag_transactions) {
-    private val vb by viewBinding(FragTransactionsBinding::bind)
+class ChooseTransactionDescriptionFrag2 : Fragment(R.layout.frag_choose_transaction_desciption_2) {
+    private val vb by viewBinding(FragChooseTransactionDesciption2Binding::bind)
     private val replayVM by activityViewModels<ReplayVM>()
     @Inject lateinit var transactionsDomain: TransactionsDomain
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -39,6 +41,23 @@ class ChooseTransactionDescriptionFrag2 : Fragment(R.layout.frag_transactions) {
                     .run { if (firstUncategorizedSpend == null) this else listOf(firstUncategorizedSpend) + this }
                     .distinctBy { it.description }
             }
+        var searchText = ""
+        vb.tmTableViewTop.initialize(
+            recipeGrid = listOf(
+                listOf(
+                    itemTextViewRB().create("SearchText") {
+                        if (searchText == "")
+                            easyToast("SearchText was empty")
+                        else {
+                            replayVM.userAddSearchText(searchText)
+                            nav.navigateUp()
+                        }
+                    },
+                    itemEditTextRF().create { searchText = it }
+                )
+            ),
+            shouldFitItemWidthsInsideTable = true,
+        )
         vb.tmTableView.bind(_transactions) { transactions ->
             initialize(
                 recipeGrid = transactions

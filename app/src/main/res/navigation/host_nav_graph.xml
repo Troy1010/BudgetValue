@@ -133,5 +133,5 @@
         android:id="@+id/chooseTransactionDescriptionFrag2"
         android:name="com.tminus1010.budgetvalue.choose_transaction_description.ChooseTransactionDescriptionFrag2"
         android:label="ChooseTransactionDescriptionFrag"
-        tools:layout="@layout/frag_transactions" />
+        tools:layout="@layout/frag_choose_transaction_desciption_2" />
 </navigation>

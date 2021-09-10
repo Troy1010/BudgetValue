@@ -26,4 +26,17 @@ class ItemEditTextRecipeFactory(private val context: Context) {
             }
         }
     }
+
+    fun create(s: String, lambda: (String) -> Unit): IViewItemRecipe3 {
+        return ViewItemRecipe3__(context, inflate) { vb ->
+            vb.edittext.easyText = s
+            vb.edittext.onDone(lambda)
+        }
+    }
+
+    fun create(lambda: (String) -> Unit): IViewItemRecipe3 {
+        return ViewItemRecipe3__(context, inflate) { vb ->
+            vb.edittext.onDone(lambda)
+        }
+    }
 }
