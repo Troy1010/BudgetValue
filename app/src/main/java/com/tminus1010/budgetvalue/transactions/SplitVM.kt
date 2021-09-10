@@ -130,7 +130,7 @@ class SplitVM @Inject constructor(
                 }
             ),
             ButtonVMItem(
-                title = "Submit For All Uncategorized",
+                title = "Submit for all Uncategorized with matching description",
                 onClick = ::userSubmitCategorizationForAllUncategorized
             ),
             ButtonVMItem(
