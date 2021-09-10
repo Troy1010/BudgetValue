@@ -24,6 +24,7 @@ import com.tminus1010.budgetvalue.categories.ui.CategorySettingsFrag
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
 import com.tminus1010.budgetvalue.replay_or_future.CreateFutureFrag
+import com.tminus1010.budgetvalue.replay_or_future.UseReplayFrag
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplay
 import com.tminus1010.budgetvalue.transactions.CategorizeVM
 import com.tminus1010.budgetvalue.transactions.TransactionsMiscVM
@@ -161,6 +162,11 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     .toTypedArray(),
                 if (!inSelectionMode)
                     ButtonVMItem(
+                        title = "Use Replay",
+                        onClick = { nav.navigate(R.id.useReplayFrag) })
+                else null,
+                if (!inSelectionMode)
+                    ButtonVMItem(
                         title = "Redo",
                         isEnabled = categorizeVM.isRedoAvailable,
                         onClick = { categorizeVM.userRedo() })
@@ -186,5 +192,12 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 else null,
             )
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (UseReplayFrag.chosenReplay != null)
+            categorizeVM.userReplay(UseReplayFrag.chosenReplay!!)
+                .also { UseReplayFrag.chosenReplay = null }
     }
 }

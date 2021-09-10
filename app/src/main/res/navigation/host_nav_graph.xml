@@ -134,4 +134,9 @@
         android:name="com.tminus1010.budgetvalue.choose_transaction_description.ChooseTransactionDescriptionFrag2"
         android:label="ChooseTransactionDescriptionFrag"
         tools:layout="@layout/frag_choose_transaction_desciption_2" />
+    <fragment
+        android:id="@+id/useReplayFrag"
+        android:name="com.tminus1010.budgetvalue.replay_or_future.UseReplayFrag"
+        android:label="UseReplayFrag"
+        tools:layout="@layout/frag_replays" />
 </navigation>
