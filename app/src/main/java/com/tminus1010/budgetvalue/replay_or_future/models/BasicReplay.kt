@@ -13,7 +13,7 @@ data class BasicReplay(
     override val fillCategory: Category,
 ) : IReplay {
     override fun predicate(transaction: Transaction): Boolean =
-        searchTexts.any { it in transaction.description }
+        searchTexts.any { it.uppercase() in transaction.description.uppercase() }
 
     fun toDTO(categoryAmountFormulasConverter: CategoryAmountFormulasConverter) =
         BasicReplayDTO(
