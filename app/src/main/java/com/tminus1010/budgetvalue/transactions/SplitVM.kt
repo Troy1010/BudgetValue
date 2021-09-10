@@ -62,7 +62,7 @@ class SplitVM @Inject constructor(
                 fillCategory.unbox
             )
         ).subscribeBy(
-            onSuccess = { toaster.toast("$it transactions categorized"); _categorySelectionVM.clearSelection(); navUp.onNext(Unit) }
+            onSuccess = { toaster.toast("$it transactions categorized"); _categorySelectionVM.clearSelection().subscribe(); navUp.onNext(Unit) }
         )
     }
 
