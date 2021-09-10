@@ -184,7 +184,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                         }
                     )
                 else null,
-            ).reversed()
+            )
         }
     }
 }
