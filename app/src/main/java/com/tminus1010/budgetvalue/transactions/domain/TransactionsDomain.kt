@@ -15,6 +15,7 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import java.io.InputStream
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -54,15 +55,18 @@ class TransactionsDomain @Inject constructor(
             .flatMapCompletable { it }
     }
 
-    fun applyReplayOrFutureToUncategorizedSpends(replay: IReplayOrFuture): Completable =
-        uncategorizedSpends.toSingle()
+    fun applyReplayOrFutureToUncategorizedSpends(replay: IReplayOrFuture): Single<Int> {
+        var counter = 0
+        return uncategorizedSpends.toSingle()
             .flatMapCompletable { transactions ->
                 Rx.merge(
                     transactions
                         .filter { replay.predicate(it) }
-                        .map { transactionsRepo.update(replay.categorize(it)) }
+                        .map { transactionsRepo.update(replay.categorize(it)).doOnComplete { counter++ } }
                 )
             }
+            .toSingle { counter }
+    }
 
     // # Internal
     private fun getBlocksFromTransactions(transactions: List<Transaction>): List<TransactionBlock> {

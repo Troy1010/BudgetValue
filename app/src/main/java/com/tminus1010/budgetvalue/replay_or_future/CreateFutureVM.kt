@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.replay_or_future
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue._core.extensions.cold
 import com.tminus1010.budgetvalue._core.middleware.Rx
+import com.tminus1010.budgetvalue._core.middleware.Toaster
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuVMItem
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
@@ -27,6 +28,7 @@ class CreateFutureVM @Inject constructor(
     private val futuresRepo: FuturesRepo,
     private val transactionsDomain: TransactionsDomain,
     override val categoryParser: ICategoryParser,
+    private val toaster: Toaster
 ) : CategoryAmountFormulaVMItemsBaseVM() {
     // # Workarounds
     lateinit var selfDestruct: () -> Unit
@@ -81,7 +83,7 @@ class CreateFutureVM @Inject constructor(
             .let { newFuture ->
                 Rx.merge(
                     futuresRepo.add(newFuture),
-                    if (newFuture.terminationStatus == TerminationStatus.PERMANENT) transactionsDomain.applyReplayOrFutureToUncategorizedSpends(newFuture) else null,
+                    if (newFuture.terminationStatus == TerminationStatus.PERMANENT) transactionsDomain.applyReplayOrFutureToUncategorizedSpends(newFuture).doOnSuccess { toaster.toast("$it transactions categorized") }.ignoreElement() else null,
                 )
             }
             .andThen(categorySelectionVM.clearSelection())

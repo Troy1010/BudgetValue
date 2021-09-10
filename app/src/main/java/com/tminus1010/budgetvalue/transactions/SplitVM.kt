@@ -5,6 +5,7 @@ import com.tminus1010.budgetvalue._core.extensions.cold
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.extensions.unbox
 import com.tminus1010.budgetvalue._core.middleware.ColdObservable
+import com.tminus1010.budgetvalue._core.middleware.Toaster
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.ICategoryParser
@@ -12,11 +13,14 @@ import com.tminus1010.budgetvalue.replay_or_future.CategoryAmountFormulaVMItemsB
 import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplay
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
+import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.budgetvalue.transactions.models.Transaction
+import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
@@ -29,6 +33,8 @@ class SplitVM @Inject constructor(
     private val replaysRepo: ReplaysRepo,
     private val errorSubject: Subject<Throwable>,
     override val categoryParser: ICategoryParser,
+    private val transactionsDomain: TransactionsDomain,
+    private val toaster: Toaster,
 ) : CategoryAmountFormulaVMItemsBaseVM() {
     // # Input
     fun setup(_transaction: Transaction?, categorySelectionVM: CategorySelectionVM) {
@@ -37,6 +43,7 @@ class SplitVM @Inject constructor(
         transaction.onNext(Box(_transaction))
     }
 
+    // TODO("Why does userSubmitCategorization not work for only 1 category?")
     fun userSubmitCategorization() {
         saveTransactionDomain.saveTransaction(transactionToPush.unbox)
             .andThen(_categorySelectionVM.clearSelection())
@@ -44,6 +51,19 @@ class SplitVM @Inject constructor(
                 onComplete = { navUp.onNext(Unit) },
                 onError = { errorSubject.onNext(it) }
             )
+    }
+
+    fun userSubmitCategorizationForAllUncategorized() {
+        transactionsDomain.applyReplayOrFutureToUncategorizedSpends(
+            BasicReplay(
+                generateUniqueID(),
+                listOf(transactionToPush.unbox.description),
+                categoryAmountFormulas.value!!.filter { !it.value.isZero() },
+                fillCategory.unbox
+            )
+        ).subscribeBy(
+            onSuccess = { toaster.toast("$it transactions categorized"); navUp.onNext(Unit) }
+        )
     }
 
     fun userSaveReplay(name: String) {
@@ -108,6 +128,10 @@ class SplitVM @Inject constructor(
                         }.joinToString(", ")
                     )
                 }
+            ),
+            ButtonVMItem(
+                title = "Submit For All Uncategorized",
+                onClick = ::userSubmitCategorizationForAllUncategorized
             ),
             ButtonVMItem(
                 title = "Submit",
