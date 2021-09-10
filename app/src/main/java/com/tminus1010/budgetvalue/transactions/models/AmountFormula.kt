@@ -18,6 +18,10 @@ sealed class AmountFormula {
         override fun toDTO() = "$amount:Value"
         override fun toDisplayStr() = amount.toString()
         override fun toDisplayStr2() = "$${amount}"
+
+        companion object {
+            val ZERO = Value(BigDecimal.ZERO)
+        }
     }
 
     data class Percentage(val percentage: BigDecimal) : AmountFormula() {
