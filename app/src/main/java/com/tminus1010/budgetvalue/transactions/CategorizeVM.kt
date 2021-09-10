@@ -12,7 +12,6 @@ import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.kotlin.Observables
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
@@ -55,15 +54,11 @@ class CategorizeVM @Inject constructor(
 
     // # Output
     val matchingReplays =
-        Observables.combineLatest(
-            replaysRepo.fetchReplays(),
-            transactionsDomain.firstUncategorizedSpend,
-        )
-            .map { (replays, transactionBox) ->
-                transactionBox.first
-                    ?.let { transaction -> replays.filter { it.predicate(transaction) } }
-                    ?: emptyList()
-            }!!
+        Observable.combineLatest(replaysRepo.fetchReplays(), transactionsDomain.firstUncategorizedSpend)
+        { replays, (transaction) ->
+            if (transaction == null) emptyList() else
+                replays.filter { it.predicate(transaction) }
+        }!!
     val isUndoAvailable = saveTransactionDomain.isUndoAvailable
     val isRedoAvailable = saveTransactionDomain.isRedoAvailable
     val isTransactionAvailable: Observable<Boolean> =
