@@ -9,6 +9,7 @@ import com.tminus1010.budgetvalue._core.ImportFailedException
 import com.tminus1010.budgetvalue._core.TestException
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
 import com.tminus1010.budgetvalue._core.extensions.getBackStack
+import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toast
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,7 +27,7 @@ class HostFrag : NavHostFragment() {
             ) + buttonVMItems.toList()
         logz(e)
         when (e) {
-            is ImportFailedException -> app.toast("Import failed")
+            is ImportFailedException -> app.easyToast("Import failed")
             is TestException -> {
                 errorVM.message.onNext("Test Exception")
                 errorVM.buttons.onNext(buttonPartialsRedef.toList())
@@ -35,7 +36,7 @@ class HostFrag : NavHostFragment() {
                 logz("backstack2:${getBackStack()}")
             }
             else -> {
-                app.toast("An error occurred")
+                app.easyToast("An error occurred")
                 nav.navigate(R.id.importFrag) // TODO("Clear backstack")
             }
         }
