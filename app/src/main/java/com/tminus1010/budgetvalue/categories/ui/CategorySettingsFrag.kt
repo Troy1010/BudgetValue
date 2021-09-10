@@ -15,8 +15,8 @@ import com.tminus1010.budgetvalue._core.extensions.*
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuVMItem
 import com.tminus1010.budgetvalue._core.middleware.ui.onDone
+import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.itemTextViewRB
 import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipe3
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
 import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
 import com.tminus1010.budgetvalue.categories.CategorySettingsVM
 import com.tminus1010.budgetvalue.categories.models.CategoryType
@@ -30,8 +30,8 @@ import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.tuple.Box
+import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
-import com.tminus1010.tmcommonkotlin.view.extensions.toast
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.Subject
@@ -54,7 +54,7 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
         //
         errorSubject.observe(viewLifecycleOwner) {
             when (it) {
-                is InvalidCategoryNameException -> toast("Invalid name")
+                is InvalidCategoryNameException -> easyToast("Invalid name")
                 else -> throw it
             }
         }
@@ -144,7 +144,7 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
                     if (isForNewCategory) "Name" else null,
                     "Default Amount",
                     "Type"
-                ).map { recipeFactories.textView.createOne(it) },
+                ).map(itemTextViewRB()::create),
                 listOfNotNull(
                     if (isForNewCategory) categoryNameRecipe else null,
                     defaultAmountFormulaValueRecipe,
