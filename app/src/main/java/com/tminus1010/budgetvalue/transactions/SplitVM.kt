@@ -6,13 +6,11 @@ import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.extensions.unbox
 import com.tminus1010.budgetvalue._core.middleware.ColdObservable
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
-import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.replay_or_future.CategoryAmountFormulaVMItemsBaseVM
 import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplay
-import com.tminus1010.budgetvalue.replay_or_future.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -94,13 +92,22 @@ class SplitVM @Inject constructor(
             .nonLazyCache(disposables)
             .cold()
     val navUp = PublishSubject.create<Unit>()!!
-    val saveReplayDialogBox = PublishSubject.create<Unit>()!!
+    val saveReplayDialogBox = PublishSubject.create<String>()!!
 
     val buttons
         get() = listOfNotNull(
             ButtonVMItem(
                 title = "Save Replay",
-                onClick = { saveReplayDialogBox.onNext(Unit) }
+                onClick = {
+                    saveReplayDialogBox.onNext(
+                        categoryAmountFormulas.value!!.map { (category, amountFormula) ->
+                            if (category != fillCategory.value.first)
+                                amountFormula.toDisplayStr2() + " " + category.name
+                            else
+                                category.name
+                        }.joinToString(", ")
+                    )
+                }
             ),
             ButtonVMItem(
                 title = "Submit",

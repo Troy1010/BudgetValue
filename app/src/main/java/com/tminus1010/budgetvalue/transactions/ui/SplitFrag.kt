@@ -48,6 +48,7 @@ class SplitFrag : Fragment(R.layout.frag_categorize_advanced) {
         splitVM.saveReplayDialogBox.observe(viewLifecycleOwner) {
             if (splitVM.areCurrentCAsValid.value) {
                 val editText = EditText(requireContext())
+                editText.easyText = it
                 AlertDialog.Builder(requireContext())
                     .setMessage("What would you like to name this replay?")
                     .setView(editText)
