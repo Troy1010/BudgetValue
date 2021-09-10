@@ -32,7 +32,7 @@ class ButtonsView @JvmOverloads constructor(
 
             override fun onViewAttachedToWindow(holder: GenViewHolder2<ItemButtonBinding>, lifecycle: LifecycleOwner) {
                 holder.vb.root.lifecycleOwner = lifecycleOwner
-                buttons[holder.adapterPosition].bind(holder.vb.btnItem)
+                buttons[itemCount - 1 - holder.adapterPosition].bind(holder.vb.btnItem)
             }
 
             override fun getItemCount() = buttons.size
