@@ -54,9 +54,9 @@ class ActivePlanDomain @Inject constructor(
     val expectedIncome = activePlan.map { it.amount }
         .distinctUntilChanged()
     val defaultAmount =
-        Rx.combineLatest(
-            expectedIncome,
-            activePlanCAs.switchMap { it.values.total() },
-        ).map { it.first - it.second }
+        Observable.combineLatest(expectedIncome, activePlanCAs.switchMap { it.values.total() })
+        { expectedIncome, activePlanTotal ->
+            expectedIncome - activePlanTotal
+        }
             .replay(1).refCount()
 }
