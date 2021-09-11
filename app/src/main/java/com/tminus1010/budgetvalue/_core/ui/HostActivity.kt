@@ -14,11 +14,14 @@ import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartialsUC
 import com.tminus1010.budgetvalue._core.extensions.add
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuVMItem
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
+import com.tminus1010.budgetvalue._shared.feature_flags.IsPlanEnabled
+import com.tminus1010.budgetvalue._shared.feature_flags.IsReconcileEnabled
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.replay_or_future.FuturesReviewFrag
 import com.tminus1010.budgetvalue.replay_or_future.ReplaysFrag
 import com.tminus1010.budgetvalue.transactions.TransactionsMiscVM
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
+import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -36,6 +39,12 @@ class HostActivity : AppCompatActivity() {
     @Inject
     lateinit var transactionsDomain: TransactionsDomain
 
+    @Inject
+    lateinit var isPlanEnabled: IsPlanEnabled
+
+    @Inject
+    lateinit var isReconcileEnabled: IsReconcileEnabled
+
     private val transactionsMiscVM: TransactionsMiscVM by viewModels()
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.frag_nav_host) as HostFrag }
     private val nav by lazy { findNavController(R.id.frag_nav_host) }
@@ -50,6 +59,9 @@ class HostActivity : AppCompatActivity() {
         //
         // This line solves (after doing an Import): java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
         transactionsMiscVM
+        //
+        isPlanEnabled().observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }
+        isReconcileEnabled().observe(this) { vb.bottomNavigation.menu.findItem(R.id.reconcileFrag).isVisible = it }
     }
 
     override fun onStart() {
