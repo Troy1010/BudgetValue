@@ -2,7 +2,6 @@ package com.tminus1010.budgetvalue.plans.domain
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.extensions.flatMapSourceHashMap
-import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
