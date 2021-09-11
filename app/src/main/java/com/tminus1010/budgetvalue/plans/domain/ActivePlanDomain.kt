@@ -17,8 +17,8 @@ import javax.inject.Singleton
 class ActivePlanDomain @Inject constructor(
     plansRepo: PlansRepo,
     datePeriodGetter: DatePeriodGetter,
-) : ViewModel(), IActivePlanDomain {
-    override val activePlan = plansRepo.plans
+) : ViewModel() {
+    val activePlan = plansRepo.plans
         .flatMap {
             // If the last plan is a valid active plan, use that. Otherwise, copy some of the last plan's properties if it exists or create a new one, and push it.
             val lastPlan = it.lastOrNull()
@@ -46,14 +46,14 @@ class ActivePlanDomain @Inject constructor(
             }
         }
         .replay(1).refCount()
-    override val activePlanCAs =
+    val activePlanCAs =
         activePlan.map { it.categoryAmounts }
             .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO))
             { it.itemObservableMap }
             .replay(1).refCount()
-    override val expectedIncome = activePlan.map { it.amount }
+    val expectedIncome = activePlan.map { it.amount }
         .distinctUntilChanged()
-    override val defaultAmount =
+    val defaultAmount =
         Rx.combineLatest(
             expectedIncome,
             activePlanCAs.switchMap { it.values.total() },
