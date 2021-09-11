@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.Menu
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
@@ -22,6 +23,7 @@ import com.tminus1010.budgetvalue.replay_or_future.ReplaysFrag
 import com.tminus1010.budgetvalue.transactions.TransactionsMiscVM
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
+import com.tminus1010.tmcommonkotlin.rx.extensions.pairwise
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -60,6 +62,12 @@ class HostActivity : AppCompatActivity() {
         // This line solves (after doing an Import): java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
         transactionsMiscVM
         //
+        isPlanEnabled().pairwise().filter { it.second }.map { it.second }.observe(this) {
+            AlertDialog.Builder(this)
+                .setMessage("You've leveled up! You can now make Plans. We've already set it based on your history, but adjust it to fit your desires. In 2 weeks, you can Reconcile what actually happened with your Plan.")
+                .setNeutralButton("Okay") { _, _ -> }
+                .show()
+        }
         isPlanEnabled().observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }
         isReconcileEnabled().observe(this) { vb.bottomNavigation.menu.findItem(R.id.reconcileFrag).isVisible = it }
     }

@@ -6,5 +6,6 @@ import javax.inject.Inject
 class IsPlanEnabled @Inject constructor() {
     operator fun invoke(): Observable<Boolean> {
         return Observable.just(false)
+            .distinctUntilChanged()
     }
 }
