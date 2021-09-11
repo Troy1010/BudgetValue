@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 class PlansRepo @Inject constructor(
     private val miscDAO: MiscDAO,
-    private val categoryAmountsConverter: CategoryAmountsConverter
+    private val categoryAmountsConverter: CategoryAmountsConverter,
 ) {
     val plans: Observable<List<Plan>> =
         miscDAO.fetchPlans().subscribeOn(Schedulers.io())
@@ -33,6 +33,10 @@ class PlansRepo @Inject constructor(
 
     fun updatePlanAmount(plan: Plan, amount: BigDecimal): Completable =
         miscDAO.updatePlanAmount(plan.toDTO(categoryAmountsConverter).startDate, amount).subscribeOn(Schedulers.io())
+
+    fun updatePlan(plan: Plan): Completable =
+        miscDAO.update(plan.toDTO(categoryAmountsConverter))
+            .subscribeOn(Schedulers.io())
 
     fun delete(plan: Plan): Completable =
         miscDAO.delete(plan.toDTO(categoryAmountsConverter))

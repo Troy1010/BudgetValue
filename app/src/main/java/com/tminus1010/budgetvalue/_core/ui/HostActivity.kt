@@ -13,19 +13,24 @@ import androidx.navigation.ui.NavigationUI
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartialsUC
 import com.tminus1010.budgetvalue._core.extensions.add
+import com.tminus1010.budgetvalue._core.extensions.isZero
+import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuVMItem
+import com.tminus1010.budgetvalue._core.models.CategoryAmounts
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
 import com.tminus1010.budgetvalue._shared.feature_flags.IsPlanEnabled
 import com.tminus1010.budgetvalue._shared.feature_flags.IsReconcileEnabled
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
+import com.tminus1010.budgetvalue.plans.data.PlansRepo
+import com.tminus1010.budgetvalue.plans.domain.ActivePlanDomain
 import com.tminus1010.budgetvalue.replay_or_future.FuturesReviewFrag
 import com.tminus1010.budgetvalue.replay_or_future.ReplaysFrag
 import com.tminus1010.budgetvalue.transactions.TransactionsMiscVM
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
-import com.tminus1010.tmcommonkotlin.rx.extensions.pairwise
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -47,6 +52,12 @@ class HostActivity : AppCompatActivity() {
     @Inject
     lateinit var isReconcileEnabled: IsReconcileEnabled
 
+    @Inject
+    lateinit var activePlanDomain: ActivePlanDomain
+
+    @Inject
+    lateinit var plansRepo: PlansRepo
+
     private val transactionsMiscVM: TransactionsMiscVM by viewModels()
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.frag_nav_host) as HostFrag }
     private val nav by lazy { findNavController(R.id.frag_nav_host) }
@@ -62,9 +73,18 @@ class HostActivity : AppCompatActivity() {
         // This line solves (after doing an Import): java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
         transactionsMiscVM
         //
-        isPlanEnabled().pairwise().filter { it.second }.map { it.second }.observe(this) {
+        isPlanEnabled.onChangeToTrue.observe(this) {
+            Observable.combineLatest(activePlanDomain.activePlan, transactionsDomain.transactionBlocks)
+            { activePlan, transactionBlocks ->
+                val relevantTransactionBlocks = transactionBlocks.filter { it.defaultAmount.isZero }
+                val categoryAmounts =
+                    relevantTransactionBlocks
+                        .fold(CategoryAmounts()) { acc, v -> acc.addTogether(v.categoryAmounts) }
+                        .mapValues { (_, v) -> (v / relevantTransactionBlocks.size.toBigDecimal()).toString().toMoneyBigDecimal() }
+                plansRepo.updatePlan(activePlan.copy(categoryAmounts = categoryAmounts))
+            }.flatMapCompletable { it }.subscribe()
             AlertDialog.Builder(this)
-                .setMessage("You've leveled up! You can now make Plans. We've already set it based on your history, but adjust it to fit your desires. In 2 weeks, you can Reconcile what actually happened with your Plan.")
+                .setMessage("You've leveled up! You can now make Plans. We've already set it based on your history, but you can adjust it as you desire. In a week, you can Reconcile what actually happened with your Plan.")
                 .setNeutralButton("Okay") { _, _ -> }
                 .show()
         }
