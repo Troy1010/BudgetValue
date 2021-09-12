@@ -22,5 +22,5 @@ class IsPlanEnabled @Inject constructor(
     val onChangeToTrue = invoke()
         .pairwise()
         .filter { it.second }
-        .map { Unit }
+        .map { Unit }!!
 }
