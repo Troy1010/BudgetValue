@@ -29,7 +29,9 @@ class HistoryVM @Inject constructor(
     budgetedDomain: BudgetedDomain,
     private val datePeriodGetter: DatePeriodGetter
 ) : ViewModel() {
-    val historyColumnDatas =
+    val historyVMItems =
+
+
         Rx.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans, activeReconciliationDefaultAmountUC(), reconciliationRepo.activeReconciliationCAs, transactionsDomain.transactionBlocks, budgetedDomain.budgeted)
             .observeOn(Schedulers.computation())
             .throttleLatest(500, TimeUnit.MILLISECONDS)
@@ -69,7 +71,7 @@ class HistoryVM @Inject constructor(
 
     // # Active Categories
     val activeCategories: Observable<List<Category>> =
-        historyColumnDatas
+        historyVMItems
             .map { it.fold(HashSet<Category>()) { acc, v -> acc.apply { addAll(v.categoryAmounts.map { it.key }) } } }
             .map { it.sortedWith(categoryComparator) }
 }

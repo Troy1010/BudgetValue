@@ -57,7 +57,7 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
                 }
             },
         )
-        Observables.combineLatest(historyVM.historyColumnDatas, historyVM.activeCategories)
+        Observables.combineLatest(historyVM.historyVMItems, historyVM.activeCategories)
             .distinctUntilChanged() //*idk why this emitted a copy without distinctUntilChanged
             .observeOn(Schedulers.computation())
             .map { (historyColumnDatas, activeCategories) ->
