@@ -22,15 +22,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HistoryVM @Inject constructor(
-    plansRepo: PlansRepo,
     transactionsDomain: TransactionsDomain,
-    reconciliationRepo: ReconciliationsRepo,
     activeReconciliationDefaultAmountUC: ActiveReconciliationDefaultAmountUC,
     budgetedDomain: BudgetedDomain,
     private val datePeriodGetter: DatePeriodGetter,
     private val currentDatePeriod: CurrentDatePeriod,
+    private val plansRepo: PlansRepo,
+    private val reconciliationRepo: ReconciliationsRepo,
 ) : ViewModel() {
-    // # Active Categories
     val activeCategories: Observable<List<Category>> =
         Observable.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans, reconciliationRepo.activeReconciliationCAs, transactionsDomain.transactionBlocks, budgetedDomain.budgeted)
         { reconciliations, plans, activeReconciliationCAs, transactionBlocks, budgeted ->
@@ -63,11 +62,11 @@ class HistoryVM @Inject constructor(
                 for (blockPeriod in blockPeriods) {
                     listOfNotNull(
                         transactionBlocks?.filter { it.datePeriod == blockPeriod } // TODO("sort by sortDate")
-                            ?.let { it.map { HistoryVMItem.TransactionBlockVMItem(it, activeCategories, currentDatePeriod) } },
+                            ?.let { it.map { HistoryVMItem.TransactionBlockVMItem(it, currentDatePeriod) } },
                         reconciliations?.filter { it.localDate in blockPeriod }
-                            ?.let { it.map { HistoryVMItem.ReconciliationVMItem(it, activeCategories) } },
+                            ?.let { it.map { HistoryVMItem.ReconciliationVMItem(it, reconciliationRepo) } },
                         plans?.filter { it.localDatePeriod.startDate in blockPeriod }
-                            ?.let { it.map { HistoryVMItem.PlanVMItem(it, activeCategories, currentDatePeriod) } },
+                            ?.let { it.map { HistoryVMItem.PlanVMItem(it, currentDatePeriod, plansRepo) } },
                     ).flatten().also { historyColumnDatas.addAll(it) }
                 }
                 // ## Add Active Reconciliation
@@ -76,12 +75,11 @@ class HistoryVM @Inject constructor(
                         HistoryVMItem.ActiveReconciliationVMItem(
                             activeReconciliationCAs,
                             activeReconciliationDefaultAmount,
-                            activeCategories,
                         )
                     )
                 }
                 // ## Add Budgeted
-                if (budgeted != null) historyColumnDatas.add(HistoryVMItem.BudgetedVMItem(budgeted, activeCategories))
+                if (budgeted != null) historyColumnDatas.add(HistoryVMItem.BudgetedVMItem(budgeted))
                 historyColumnDatas
             }
             .replayNonError(1)
