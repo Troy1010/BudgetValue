@@ -4,16 +4,16 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.categoryComparator
 import com.tminus1010.budgetvalue._core.middleware.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.middleware.Rx
+import com.tminus1010.budgetvalue._core.repo.CurrentDatePeriod
 import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
 import com.tminus1010.budgetvalue.budgeted.BudgetedDomain
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.history.models.HistoryColumnData
-import com.tminus1010.budgetvalue.history.models.IHistoryColumnData
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.reconciliations.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.reconciliations.domain.ActiveReconciliationDefaultAmountUC
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
-import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
+import com.tminus1010.tmcommonkotlin.rx.nonLazy
+import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -27,11 +27,26 @@ class HistoryVM @Inject constructor(
     reconciliationRepo: ReconciliationsRepo,
     activeReconciliationDefaultAmountUC: ActiveReconciliationDefaultAmountUC,
     budgetedDomain: BudgetedDomain,
-    private val datePeriodGetter: DatePeriodGetter
+    private val datePeriodGetter: DatePeriodGetter,
+    private val currentDatePeriod: CurrentDatePeriod,
 ) : ViewModel() {
+    // # Active Categories
+    val activeCategories: Observable<List<Category>> =
+        Observable.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans, reconciliationRepo.activeReconciliationCAs, transactionsDomain.transactionBlocks, budgetedDomain.budgeted)
+        { reconciliations, plans, activeReconciliationCAs, transactionBlocks, budgeted ->
+            sequenceOf<Set<Category>>()
+                .plus(reconciliations.map { it.categoryAmounts.keys })
+                .plus(plans.map { it.categoryAmounts.keys })
+                .plus(listOf(activeReconciliationCAs.keys))
+                .plus(transactionBlocks.map { it.categoryAmounts.keys })
+                .plus(listOf(budgeted.categoryAmounts.keys))
+                .fold(setOf<Category>()) { acc, v -> acc + v }
+                .toList()
+                .sortedWith(categoryComparator)
+        }
+
+
     val historyVMItems =
-
-
         Rx.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans, activeReconciliationDefaultAmountUC(), reconciliationRepo.activeReconciliationCAs, transactionsDomain.transactionBlocks, budgetedDomain.budgeted)
             .observeOn(Schedulers.computation())
             .throttleLatest(500, TimeUnit.MILLISECONDS)
@@ -43,35 +58,32 @@ class HistoryVM @Inject constructor(
                 reconciliations?.forEach { blockPeriods.add(datePeriodGetter.getDatePeriod(it.localDate)) }
                 plans?.forEach { blockPeriods.add(it.localDatePeriod) }
                 // # Define historyColumnDatas
-                val historyColumnDatas = arrayListOf<IHistoryColumnData>()
+                val historyColumnDatas = arrayListOf<HistoryVMItem>()
                 // ## Add TransactionBlocks, Reconciliations, Plans
                 for (blockPeriod in blockPeriods) {
                     listOfNotNull(
-                        transactionBlocks?.filter { it.datePeriod == blockPeriod }, // TODO("sort by sortDate")
-                        reconciliations?.filter { it.localDate in blockPeriod },
+                        transactionBlocks?.filter { it.datePeriod == blockPeriod } // TODO("sort by sortDate")
+                            ?.let { it.map { HistoryVMItem.TransactionBlockVMItem(it, activeCategories, currentDatePeriod) } },
+                        reconciliations?.filter { it.localDate in blockPeriod }
+                            ?.let { it.map { HistoryVMItem.ReconciliationVMItem(it, activeCategories) } },
                         plans?.filter { it.localDatePeriod.startDate in blockPeriod }
+                            ?.let { it.map { HistoryVMItem.PlanVMItem(it, activeCategories, currentDatePeriod) } },
                     ).flatten().also { historyColumnDatas.addAll(it) }
                 }
                 // ## Add Active Reconciliation
                 if (activeReconciliationCAs != null && activeReconciliationDefaultAmount != null) {
                     historyColumnDatas.add(
-                        HistoryColumnData(
-                            "Reconciliation",
-                            "Current",
-                            activeReconciliationDefaultAmount,
+                        HistoryVMItem.ActiveReconciliationVMItem(
                             activeReconciliationCAs,
+                            activeReconciliationDefaultAmount,
+                            activeCategories,
                         )
                     )
                 }
                 // ## Add Budgeted
-                if (budgeted != null) historyColumnDatas.add(budgeted)
+                if (budgeted != null) historyColumnDatas.add(HistoryVMItem.BudgetedVMItem(budgeted, activeCategories))
                 historyColumnDatas
             }
-            .toBehaviorSubject()
-
-    // # Active Categories
-    val activeCategories: Observable<List<Category>> =
-        historyVMItems
-            .map { it.fold(HashSet<Category>()) { acc, v -> acc.apply { addAll(v.categoryAmounts.map { it.key }) } } }
-            .map { it.sortedWith(categoryComparator) }
+            .replayNonError(1)
+            .nonLazy()
 }
