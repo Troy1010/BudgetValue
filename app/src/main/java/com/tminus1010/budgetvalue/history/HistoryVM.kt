@@ -80,6 +80,7 @@ class HistoryVM @Inject constructor(
                 }
                 // ## Add Budgeted
                 if (budgeted != null) historyColumnDatas.add(HistoryVMItem.BudgetedVMItem(budgeted))
+                //
                 historyColumnDatas
             }
             .replayNonError(1)
