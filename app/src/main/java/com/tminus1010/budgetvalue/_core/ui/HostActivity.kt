@@ -92,8 +92,8 @@ class HostActivity : AppCompatActivity() {
                 .setCancelable(false)
                 .show()
         }
-        isPlanEnabled().observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }
-        isReconcileEnabled().observe(this) { vb.bottomNavigation.menu.findItem(R.id.reconcileFrag).isVisible = it }
+        isPlanEnabled.observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }
+        isReconcileEnabled.observe(this) { vb.bottomNavigation.menu.findItem(R.id.reconcileFrag).isVisible = it }
     }
 
     override fun onStart() {

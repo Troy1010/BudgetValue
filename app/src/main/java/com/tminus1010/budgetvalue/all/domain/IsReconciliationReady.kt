@@ -1,13 +1,13 @@
-package com.tminus1010.budgetvalue._shared.feature_flags
+package com.tminus1010.budgetvalue.all.domain
 
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observer
 import javax.inject.Inject
 
-class IsReconcileEnabled @Inject constructor(
+class IsReconciliationReady @Inject constructor(
 
-) : Observable<Boolean>() {
+): Observable<Boolean>() {
     override fun subscribeActual(observer: Observer<in Boolean>) {
-        just(false).subscribe(observer)
+        TODO("Not yet implemented")
     }
 }
