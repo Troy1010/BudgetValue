@@ -14,9 +14,9 @@ import javax.inject.Singleton
 class MostRecentReconciliation @Inject constructor(
     reconciliationsRepo: ReconciliationsRepo
 ) : Observable<Box<Reconciliation?>>() {
-    private val x = reconciliationsRepo.reconciliations
+    private val mostRecentReconciliation = reconciliationsRepo.reconciliations
         .map(::Reconciliations)
         .mapBox(Reconciliations::mostRecent)
 
-    override fun subscribeActual(observer: Observer<in Box<Reconciliation?>>) = x.subscribe(observer)
+    override fun subscribeActual(observer: Observer<in Box<Reconciliation?>>) = mostRecentReconciliation.subscribe(observer)
 }

@@ -28,6 +28,6 @@ class LatestDateOfMostRecentImport @Inject constructor(
         GlobalScope.launch { app.dataStore.edit { it[key] = moshi.toJson(localDate) } }
     }
 
-    private val x = app.dataStore.data.asObservable().mapBox { moshi.fromJson<LocalDate>(it[key]) }
-    override fun subscribeActual(observer: Observer<in Box<LocalDate?>>?) = x.subscribe(observer)
+    private val latestDateOfMostRecentImport = app.dataStore.data.asObservable().mapBox { moshi.fromJson<LocalDate>(it[key]) }
+    override fun subscribeActual(observer: Observer<in Box<LocalDate?>>?) = latestDateOfMostRecentImport.subscribe(observer)
 }
