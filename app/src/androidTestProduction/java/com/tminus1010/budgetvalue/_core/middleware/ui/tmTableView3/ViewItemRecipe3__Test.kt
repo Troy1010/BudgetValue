@@ -14,23 +14,23 @@ import org.junit.runner.RunWith
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class ViewItemRecipe3__Test {
-    @Test
-    fun intrinsicHeight2() {
-        // # Given
-        val viewItemRecipe = ViewItemRecipe3__(
-            app,
-            ItemTextViewBinding::inflate,
-            null,
-            { vb ->
-                vb.textview.text = generateUniqueID()
-            }
-        )
-        // # When & Then
-        logz("intrinsicWidth:${viewItemRecipe.intrinsicWidth}")
-        logz("viewItemRecipe.intrinsicHeight:${viewItemRecipe.intrinsicHeight}")
-        logz("viewItemRecipe.intrinsicHeight2(877):${viewItemRecipe.intrinsicHeight2(877)}")
-        assertNotEquals(viewItemRecipe.intrinsicHeight, viewItemRecipe.intrinsicHeight2(877))
-    }
+//    @Test
+//    fun intrinsicHeight2() {
+//        // # Given
+//        val viewItemRecipe = ViewItemRecipe3__(
+//            app,
+//            ItemTextViewBinding::inflate,
+//            null,
+//            { vb ->
+//                vb.textview.text = generateUniqueID()
+//            }
+//        )
+//        // # When & Then
+//        logz("intrinsicWidth:${viewItemRecipe.intrinsicWidth}")
+//        logz("viewItemRecipe.intrinsicHeight:${viewItemRecipe.intrinsicHeight}")
+//        logz("viewItemRecipe.intrinsicHeight2(877):${viewItemRecipe.intrinsicHeight2(877)}")
+//        assertNotEquals(viewItemRecipe.intrinsicHeight, viewItemRecipe.intrinsicHeight2(877))
+//    }
 
     @Test
     fun intrinsicHeightPlayground() {
