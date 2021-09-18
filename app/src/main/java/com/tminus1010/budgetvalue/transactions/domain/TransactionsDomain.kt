@@ -79,12 +79,7 @@ class TransactionsDomain @Inject constructor(
                 .filter { it.date in datePeriod }
             transactionsRedefined.removeIf { it.date in datePeriod }
             if (transactionSet.isNotEmpty())
-                returning += transactionSet
-                    .fold(Pair(BigDecimal.ZERO, hashMapOf<Category, BigDecimal>())) { acc, transaction ->
-                        transaction.categoryAmounts.forEach { acc.second[it.key] = it.value + (acc.second[it.key] ?: BigDecimal.ZERO) }
-                        Pair(acc.first + transaction.amount, acc.second)
-                    }
-                    .let { TransactionBlock(datePeriod, it.first, it.second) }
+                returning += TransactionBlock(transactionSet, datePeriod)
             if (transactionsRedefined.isEmpty()) break
             datePeriod = datePeriodGetter.getDatePeriod(transactionsRedefined[0].date)
         }

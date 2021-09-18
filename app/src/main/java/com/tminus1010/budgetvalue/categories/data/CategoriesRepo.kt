@@ -13,6 +13,7 @@ import javax.inject.Singleton
 class CategoriesRepo @Inject constructor(
     private val userCategoriesDAO: UserCategoriesDAO
 ) {
+
     val userCategories: Observable<List<Category>> =
         userCategoriesDAO.fetchUserCategories()
             .subscribeOn(Schedulers.io())
