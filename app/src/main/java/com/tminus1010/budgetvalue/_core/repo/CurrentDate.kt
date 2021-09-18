@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import com.tminus1010.budgetvalue._core.extensions.cold
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import io.reactivex.rxjava3.core.Observable
 import java.time.LocalDate
@@ -33,7 +34,9 @@ class CurrentDate @Inject constructor(app: Application) {
             downstream.setCancellable { app.unregisterReceiver(broadcastReceiver) }
         }
             .distinctUntilChanged()
+            .startWithItem(LocalDate.now())
             .replayNonError(1)
+            .cold()
 
     operator fun invoke() = currentDate
 }
