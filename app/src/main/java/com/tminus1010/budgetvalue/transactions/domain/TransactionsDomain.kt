@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.transactions.domain
 
 import com.tminus1010.budgetvalue._core.extensions.cold
+import com.tminus1010.budgetvalue._core.extensions.mapBox
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
 import com.tminus1010.budgetvalue.categories.models.Category
@@ -11,8 +12,8 @@ import com.tminus1010.budgetvalue.transactions.TransactionParser
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.budgetvalue.transactions.models.TransactionBlock
+import com.tminus1010.budgetvalue.transactions.presentation.TransactionsDomainModel
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
-import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -110,9 +111,8 @@ class TransactionsDomain @Inject constructor(
         spends
             .map { it.filter { it.isUncategorized } }
     val firstUncategorizedSpend =
-        uncategorizedSpends
-            .map { Box(it.getOrNull(0)) }
-            .startWithItem(Box(null))
-            .replay(1).refCount()
+        transactionsRepo.transactions.startWithItem(listOf())
+            .map(::TransactionsDomainModel)
+            .mapBox(TransactionsDomainModel::firstUncategorized)
             .cold()
 }
