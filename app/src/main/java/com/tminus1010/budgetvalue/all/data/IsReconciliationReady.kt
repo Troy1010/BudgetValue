@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.all.data
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observer
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class IsReconciliationReady @Inject constructor(
@@ -12,18 +13,19 @@ class IsReconciliationReady @Inject constructor(
     isPlanFeatureEnabled: IsPlanFeatureEnabled,
 ) : Observable<Boolean>() {
     val x =
-        combineLatest(latestDateOfMostRecentImport, mostRecentReconciliation, transactionsDomain.spendBlocks, isPlanFeatureEnabled.dateWhenPlanFeatureWasEnabled)
-        { (latestDateOfMostRecentImport), (mostRecentReconciliation), spendBlocks, (dateWhenPlanFeatureWasEnabled) ->
-            val reconciliationDate = mostRecentReconciliation?.localDate ?: dateWhenPlanFeatureWasEnabled
-            if (latestDateOfMostRecentImport == null || reconciliationDate == null)
+        combineLatest(latestDateOfMostRecentImport, mostRecentReconciliation, transactionsDomain.spendBlocks, isPlanFeatureEnabled.latestDateOfMostRecentImportWhenPlanFeatureWasEnabled)
+        { (latestDateOfMostRecentImport), (mostRecentReconciliation), spendBlocks, (latestDateOfMostRecentImportWhenPlanFeatureWasEnabled) ->
+            val startDate = mostRecentReconciliation?.localDate ?: latestDateOfMostRecentImportWhenPlanFeatureWasEnabled
+            if (latestDateOfMostRecentImport == null || startDate == null)
                 return@combineLatest false
-            val spendBlocksAfterMostRecentReconciliation =
-                spendBlocks.filter { reconciliationDate < it.datePeriod.endDate }
-            if (spendBlocksAfterMostRecentReconciliation.isEmpty())
+            val spendBlocksAfterStartDate =
+                spendBlocks.filter { startDate < it.datePeriod.endDate }
+            if (spendBlocksAfterStartDate.isEmpty())
                 return@combineLatest false
-            spendBlocksAfterMostRecentReconciliation.all { it.isFullyCategorized }
-                    && spendBlocksAfterMostRecentReconciliation.any { it.datePeriod.endDate < latestDateOfMostRecentImport }
+            spendBlocksAfterStartDate.all { it.isFullyCategorized }
+                    && spendBlocksAfterStartDate.any { it.datePeriod.endDate <= latestDateOfMostRecentImport }
         }
+            .throttleLatest(1, TimeUnit.SECONDS)
             .distinctUntilChanged()
             .cache()
 

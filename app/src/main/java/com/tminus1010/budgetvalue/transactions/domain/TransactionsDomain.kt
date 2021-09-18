@@ -21,6 +21,7 @@ import io.reactivex.rxjava3.core.Single
 import java.io.InputStream
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -56,7 +57,10 @@ class TransactionsDomain @Inject constructor(
             )
         }
             .flatMapCompletable { it }
-            .andThen(Completable.fromAction { latestDateOfMostRecentImport.set(transactions.sortedBy { it.date }.last().date) })
+            .andThen(
+                Completable.fromAction { latestDateOfMostRecentImport.set(transactions.sortedBy { it.date }.last().date) }
+                    .delay(2, TimeUnit.SECONDS) // TODO("Duct-tape solution to the fact that the previous completable completes before the repo emits, which ruins IsReconciliationReady")
+            )
     }
 
     fun applyReplayOrFutureToUncategorizedSpends(replay: IReplayOrFuture): Single<Int> {

@@ -9,6 +9,7 @@ import com.tminus1010.budgetvalue._core.extensions.mapBox
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
+import com.tminus1010.tmcommonkotlin.rx.extensions.filterNotNullBox
 import com.tminus1010.tmcommonkotlin.rx.extensions.pairwise
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import io.reactivex.rxjava3.core.Observable
@@ -23,7 +24,8 @@ import javax.inject.Inject
 class IsPlanFeatureEnabled @Inject constructor(
     private val app: Application,
     transactionsDomain: TransactionsDomain,
-    private val moshi: Moshi
+    private val moshi: Moshi,
+    latestDateOfMostRecentImport: LatestDateOfMostRecentImport
 ) : Observable<Boolean>() {
     private val key = stringPreferencesKey("IsPlanFeatureEnabled")
 
@@ -31,14 +33,14 @@ class IsPlanFeatureEnabled @Inject constructor(
         GlobalScope.launch { app.dataStore.edit { it[key] = moshi.toJson(localDate) } }
     }
 
-    val dateWhenPlanFeatureWasEnabled =
+    val latestDateOfMostRecentImportWhenPlanFeatureWasEnabled =
         app.dataStore.data.asObservable()
             .mapBox { moshi.fromJson<LocalDate>(it[key]) }
             .distinctUntilChanged()
             .cold()
 
     private val isPlanFeatureEnabled =
-        dateWhenPlanFeatureWasEnabled
+        latestDateOfMostRecentImportWhenPlanFeatureWasEnabled
             .map { (it) -> it != null }
             .distinctUntilChanged()
             .cold()
@@ -51,7 +53,8 @@ class IsPlanFeatureEnabled @Inject constructor(
                     .filter { it.size >= 3 && it.takeLast(3).all { it.isFullyCategorized } }
                     .toSingle()
             }
-            .subscribeBy(onSuccess = { set(LocalDate.now()) })
+            .flatMap { latestDateOfMostRecentImport.filterNotNullBox().toSingle() }
+            .subscribeBy(onSuccess = { set(it) })
     }
 
     override fun subscribeActual(observer: Observer<in Boolean>) = isPlanFeatureEnabled.subscribe(observer)
