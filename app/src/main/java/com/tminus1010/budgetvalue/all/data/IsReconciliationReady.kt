@@ -3,7 +3,6 @@ package com.tminus1010.budgetvalue.all.data
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observer
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class IsReconciliationReady @Inject constructor(
@@ -25,7 +24,6 @@ class IsReconciliationReady @Inject constructor(
             spendBlocksAfterStartDate.all { it.isFullyCategorized }
                     && spendBlocksAfterStartDate.any { it.datePeriod.endDate <= latestDateOfMostRecentImport }
         }
-            .throttleLatest(1, TimeUnit.SECONDS)
             .distinctUntilChanged()
             .cache()
 
