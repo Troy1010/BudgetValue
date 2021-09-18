@@ -19,8 +19,8 @@ import com.tminus1010.budgetvalue._core.extensions.unCheckAllMenuItems
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuVMItem
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
-import com.tminus1010.budgetvalue.all.data.IsPlanEnabled
-import com.tminus1010.budgetvalue.all.data.IsReconcileEnabled
+import com.tminus1010.budgetvalue.all.data.IsPlanFeatureEnabled
+import com.tminus1010.budgetvalue.all.data.IsReconcileFeatureEnabled
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.history.HistoryFrag
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
@@ -50,10 +50,10 @@ class HostActivity : AppCompatActivity() {
     lateinit var transactionsDomain: TransactionsDomain
 
     @Inject
-    lateinit var isPlanEnabled: IsPlanEnabled
+    lateinit var isPlanFeatureEnabled: IsPlanFeatureEnabled
 
     @Inject
-    lateinit var isReconcileEnabled: IsReconcileEnabled
+    lateinit var isReconcileFeatureEnabled: IsReconcileFeatureEnabled
 
     @Inject
     lateinit var activePlanDomain: ActivePlanDomain
@@ -76,7 +76,7 @@ class HostActivity : AppCompatActivity() {
         // This line solves (after doing an Import): java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
         transactionsMiscVM
         //
-        isPlanEnabled.onChangeToTrue.observe(this) {
+        isPlanFeatureEnabled.onChangeToTrue.observe(this) {
             Observable.combineLatest(activePlanDomain.activePlan, transactionsDomain.transactionBlocks)
             { activePlan, transactionBlocks ->
                 val relevantTransactionBlocks = transactionBlocks.filter { it.defaultAmount.isZero }
@@ -92,8 +92,8 @@ class HostActivity : AppCompatActivity() {
                 .setCancelable(false)
                 .show()
         }
-        isPlanEnabled.observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }
-        isReconcileEnabled.observe(this) { vb.bottomNavigation.menu.findItem(R.id.reconcileFrag).isVisible = it }
+        isPlanFeatureEnabled.observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }
+        isReconcileFeatureEnabled.observe(this) { vb.bottomNavigation.menu.findItem(R.id.reconcileFrag).isVisible = it }
     }
 
     override fun onStart() {

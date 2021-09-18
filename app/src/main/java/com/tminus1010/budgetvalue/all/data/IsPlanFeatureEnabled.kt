@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx3.asObservable
 import javax.inject.Inject
 
-class IsPlanEnabled @Inject constructor(
+class IsPlanFeatureEnabled @Inject constructor(
     private val app: Application,
     transactionsDomain: TransactionsDomain,
 ) : Observable<Boolean>() {
