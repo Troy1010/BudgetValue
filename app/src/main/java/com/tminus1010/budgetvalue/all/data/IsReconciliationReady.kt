@@ -11,7 +11,7 @@ class IsReconciliationReady @Inject constructor(
     transactionsDomain: TransactionsDomain,
     isPlanFeatureEnabled: IsPlanFeatureEnabled,
 ) : Observable<Boolean>() {
-    val x =
+    val isReconciliationReady =
         combineLatest(latestDateOfMostRecentImport, mostRecentReconciliation, transactionsDomain.spendBlocks, isPlanFeatureEnabled.latestDateOfMostRecentImportWhenPlanFeatureWasEnabled)
         { (latestDateOfMostRecentImport), (mostRecentReconciliation), spendBlocks, (latestDateOfMostRecentImportWhenPlanFeatureWasEnabled) ->
             val startDate = mostRecentReconciliation?.localDate ?: latestDateOfMostRecentImportWhenPlanFeatureWasEnabled
@@ -27,5 +27,5 @@ class IsReconciliationReady @Inject constructor(
             .distinctUntilChanged()
             .cache()
 
-    override fun subscribeActual(observer: Observer<in Boolean>) = x.subscribe(observer)
+    override fun subscribeActual(observer: Observer<in Boolean>) = isReconciliationReady.subscribe(observer)
 }
