@@ -92,6 +92,13 @@ class HostActivity : AppCompatActivity() {
                 .setCancelable(false)
                 .show()
         }
+        isReconciliationFeatureEnabled.onChangeToTrue.observe(this) {
+            AlertDialog.Builder(this)
+                .setMessage("You've leveled up! You can now make Reconciliations.")
+                .setNeutralButton("Okay") { _, _ -> }
+                .setCancelable(false)
+                .show()
+        }
         isPlanFeatureEnabled.observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }
         isReconciliationFeatureEnabled.observe(this) { vb.bottomNavigation.menu.findItem(R.id.reconcileFrag).isVisible = it }
     }
