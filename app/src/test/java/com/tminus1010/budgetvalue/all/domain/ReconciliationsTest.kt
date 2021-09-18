@@ -15,7 +15,7 @@ class ReconciliationsTest {
             )
         )
         // # When
-        val result = reconciliations.last
+        val result = reconciliations.mostRecent
         // # Then
         assertEquals(result, Given.reconciliation1)
     }
