@@ -18,11 +18,11 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class MostRecentImportDate @Inject constructor(
+class LatestDateOfMostRecentImport @Inject constructor(
     private val app: Application,
     private val moshi: Moshi,
 ) : Observable<Box<LocalDate?>>() {
-    private val key = stringPreferencesKey("mostRecentImportDateKey")
+    private val key = stringPreferencesKey("LatestDateOfMostRecentImport")
 
     fun set(localDate: LocalDate) {
         GlobalScope.launch { app.dataStore.edit { it[key] = moshi.toJson(localDate) } }
