@@ -6,6 +6,7 @@ import android.view.View
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.show
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuVMItem
@@ -88,5 +89,11 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
                     rowFreezeCount = 1,
                 )
             }
+    }
+
+    companion object {
+        fun navTo(nav: NavController) {
+            nav.navigate(R.id.historyFrag)
+        }
     }
 }

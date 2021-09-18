@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.easyText
 import com.tminus1010.budgetvalue._core.extensions.getColorByAttr
@@ -59,5 +60,11 @@ class TransactionsFrag : Fragment(R.layout.frag_transactions) {
                     shouldFitItemWidthsInsideTable = true,
                 )
             }
+    }
+
+    companion object {
+        fun navTo(nav: NavController) {
+            nav.navigate(R.id.transactionsFrag)
+        }
     }
 }

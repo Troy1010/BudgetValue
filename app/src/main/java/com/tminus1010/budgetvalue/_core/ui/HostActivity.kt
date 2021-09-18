@@ -21,12 +21,14 @@ import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
 import com.tminus1010.budgetvalue._shared.feature_flags.IsPlanEnabled
 import com.tminus1010.budgetvalue._shared.feature_flags.IsReconcileEnabled
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
+import com.tminus1010.budgetvalue.history.HistoryFrag
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.plans.domain.ActivePlanDomain
 import com.tminus1010.budgetvalue.replay_or_future.FuturesReviewFrag
 import com.tminus1010.budgetvalue.replay_or_future.ReplaysFrag
 import com.tminus1010.budgetvalue.transactions.TransactionsMiscVM
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
+import com.tminus1010.budgetvalue.transactions.ui.TransactionsFrag
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import dagger.hilt.android.AndroidEntryPoint
@@ -103,8 +105,12 @@ class HostActivity : AppCompatActivity() {
         menu.clear()
         menu.add(
             MenuVMItem(
+                title = "History",
+                onClick = { HistoryFrag.navTo(nav) },
+            ),
+            MenuVMItem(
                 title = "Transactions",
-                onClick = { nav.navigate(R.id.transactionsFrag) },
+                onClick = { TransactionsFrag.navTo(nav) },
             ),
             MenuVMItem(
                 title = "Futures",
