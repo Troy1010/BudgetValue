@@ -1,9 +1,11 @@
-package com.tminus1010.budgetvalue.transactions.models
+package com.tminus1010.budgetvalue.all.domain
 
+import com.tminus1010.budgetvalue._core.extensions.isZero
 import com.tminus1010.budgetvalue._core.middleware.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
 import com.tminus1010.budgetvalue._shared.date_period_getter.IDatePeriodGetter
 import com.tminus1010.budgetvalue.history.models.IHistoryColumnData
+import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 
 data class TransactionBlock(
@@ -21,4 +23,6 @@ data class TransactionBlock(
     override val categoryAmounts: CategoryAmounts =
         transactionSet
             .fold(CategoryAmounts()) { acc, transaction -> acc.addTogether(transaction.categoryAmounts) }
+
+    val isFullyCategorized get() = defaultAmount.isZero
 }

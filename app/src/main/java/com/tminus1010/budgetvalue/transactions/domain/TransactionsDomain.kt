@@ -4,6 +4,7 @@ import com.tminus1010.budgetvalue._core.extensions.cold
 import com.tminus1010.budgetvalue._core.extensions.mapBox
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
+import com.tminus1010.budgetvalue.all.data.MostRecentImportDate
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.models.IReplayOrFuture
@@ -11,7 +12,7 @@ import com.tminus1010.budgetvalue.replay_or_future.models.TerminationStatus
 import com.tminus1010.budgetvalue.transactions.TransactionParser
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.models.Transaction
-import com.tminus1010.budgetvalue.transactions.models.TransactionBlock
+import com.tminus1010.budgetvalue.all.domain.TransactionBlock
 import com.tminus1010.budgetvalue.transactions.presentation.TransactionsDomainModel
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import io.reactivex.rxjava3.core.Completable
@@ -29,6 +30,7 @@ class TransactionsDomain @Inject constructor(
     private val datePeriodGetter: DatePeriodGetter,
     private val transactionParser: TransactionParser,
     private val futuresRepo: FuturesRepo,
+    private val mostRecentImportDate: MostRecentImportDate
 ) {
     // # Input
     fun importTransactions(inputStream: InputStream): Completable =
@@ -54,6 +56,7 @@ class TransactionsDomain @Inject constructor(
             )
         }
             .flatMapCompletable { it }
+            .andThen(Completable.fromAction { mostRecentImportDate.set(LocalDate.now()) })
     }
 
     fun applyReplayOrFutureToUncategorizedSpends(replay: IReplayOrFuture): Single<Int> {

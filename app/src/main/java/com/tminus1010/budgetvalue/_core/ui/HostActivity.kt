@@ -19,8 +19,8 @@ import com.tminus1010.budgetvalue._core.extensions.unCheckAllMenuItems
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuVMItem
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
-import com.tminus1010.budgetvalue._shared.feature_flags.IsPlanEnabled
-import com.tminus1010.budgetvalue._shared.feature_flags.IsReconcileEnabled
+import com.tminus1010.budgetvalue.all.data.IsPlanEnabled
+import com.tminus1010.budgetvalue.all.data.IsReconcileEnabled
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.history.HistoryFrag
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
