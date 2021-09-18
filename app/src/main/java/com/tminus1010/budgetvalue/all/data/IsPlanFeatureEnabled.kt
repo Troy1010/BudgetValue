@@ -19,20 +19,20 @@ class IsPlanFeatureEnabled @Inject constructor(
     private val app: Application,
     transactionsDomain: TransactionsDomain,
 ) : Observable<Boolean>() {
-    private val key = booleanPreferencesKey("IsPlanEnabled")
+    private val key = booleanPreferencesKey("IsPlanFeatureEnabled")
 
     private fun set(b: Boolean) {
         GlobalScope.launch { app.dataStore.edit { it[key] = b } }
     }
 
-    private val isPlanEnabled =
+    private val isPlanFeatureEnabled =
         app.dataStore.data.asObservable()
             .map { it[key] ?: false }
             .distinctUntilChanged()
             .cold()
 
     init {
-        isPlanEnabled
+        isPlanFeatureEnabled
             .toSingle()
             .flatMap {
                 transactionsDomain.transactionBlocks
@@ -42,11 +42,11 @@ class IsPlanFeatureEnabled @Inject constructor(
             .subscribeBy(onSuccess = { set(true) })
     }
 
-    override fun subscribeActual(observer: Observer<in Boolean>) = isPlanEnabled.subscribe(observer)
+    override fun subscribeActual(observer: Observer<in Boolean>) = isPlanFeatureEnabled.subscribe(observer)
 
     // TODO("test if this emits when it shouldn't?")
     val onChangeToTrue =
-        isPlanEnabled
+        isPlanFeatureEnabled
             .pairwise()
             .filter { it.second }
             .map { Unit }!!
