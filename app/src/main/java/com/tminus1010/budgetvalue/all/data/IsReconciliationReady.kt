@@ -20,6 +20,8 @@ class IsReconciliationReady @Inject constructor(
             val isTransactionBlockFullyImported = transactionBlock.datePeriod.endDate < mostRecentImportDate
             isTransactionBlockFullyImported && transactionBlock.isFullyCategorized
         }
+            .distinctUntilChanged()
+            .cache()
 
     override fun subscribeActual(observer: Observer<in Boolean>) = x.subscribe(observer)
 }
