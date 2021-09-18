@@ -87,7 +87,7 @@ class HostActivity : AppCompatActivity() {
                 plansRepo.updatePlan(activePlan.copy(categoryAmounts = categoryAmounts))
             }.flatMapCompletable { it }.subscribe()
             AlertDialog.Builder(this)
-                .setMessage("You've leveled up! You can now make Plans. We've already set it based on your history, but you can adjust it as you desire. Later on, you can Reconcile what actually happened with your Plan.")
+                .setMessage("You've leveled up! You can now make Plans. We've already set it based on your history, but you can adjust it.\nLater on, you can Reconcile what actually happened with your Plan.")
                 .setNeutralButton("Okay") { _, _ -> }
                 .setCancelable(false)
                 .show()
