@@ -24,7 +24,7 @@ class ItemTextViewRecipeBuilder(private val context: Context) {
         return this
     }
 
-    fun create(s: String): IViewItemRecipe3 {
+    fun create(s: String?): IViewItemRecipe3 {
         return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, styler) { vb ->
             vb.textview.text = s
         }
