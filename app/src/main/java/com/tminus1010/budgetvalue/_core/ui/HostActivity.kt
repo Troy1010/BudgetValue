@@ -15,6 +15,7 @@ import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartialsUC
 import com.tminus1010.budgetvalue._core.extensions.add
 import com.tminus1010.budgetvalue._core.extensions.isZero
 import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
+import com.tminus1010.budgetvalue._core.extensions.unCheckAllMenuItems
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuVMItem
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
@@ -96,9 +97,7 @@ class HostActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        nav.addOnDestinationChangedListener { _, navDestination, _ ->
-            Log.d("budgetvalue.Nav", "${navDestination.label}")
-        }
+        nav.addOnDestinationChangedListener { _, navDestination, _ -> Log.d("budgetvalue.Nav", "${navDestination.label}") }
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
@@ -106,19 +105,19 @@ class HostActivity : AppCompatActivity() {
         menu.add(
             MenuVMItem(
                 title = "History",
-                onClick = { HistoryFrag.navTo(nav) },
+                onClick = { HistoryFrag.navTo(nav); vb.bottomNavigation.menu.unCheckAllMenuItems() },
             ),
             MenuVMItem(
                 title = "Transactions",
-                onClick = { TransactionsFrag.navTo(nav) },
+                onClick = { TransactionsFrag.navTo(nav); vb.bottomNavigation.menu.unCheckAllMenuItems() },
             ),
             MenuVMItem(
                 title = "Futures",
-                onClick = { FuturesReviewFrag.navTo(nav) },
+                onClick = { FuturesReviewFrag.navTo(nav); vb.bottomNavigation.menu.unCheckAllMenuItems() },
             ),
             MenuVMItem(
                 title = "Replays",
-                onClick = { ReplaysFrag.navTo(nav) },
+                onClick = { ReplaysFrag.navTo(nav); vb.bottomNavigation.menu.unCheckAllMenuItems() },
             ),
             *getExtraMenuItemPartialsUC(this)
         )
