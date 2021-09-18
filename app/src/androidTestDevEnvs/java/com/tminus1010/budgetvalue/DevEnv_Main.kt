@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Intent
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartialsUC
+import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartials
 import com.tminus1010.budgetvalue._core.LaunchImportUC
 import com.tminus1010.budgetvalue._core.TestException
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuVMItem
@@ -63,7 +63,7 @@ class DevEnv_Main {
 
         @Provides
         @Singleton
-        fun getExtraMenuItemPartialsUC(appInitRepo: AppInitRepo, appInitDomain: AppInitDomain, transactionsDomain: TransactionsDomain, futuresRepo: FuturesRepo, application: Application) = object : GetExtraMenuItemPartialsUC() {
+        fun getExtraMenuItemPartialsUC(appInitRepo: AppInitRepo, appInitDomain: AppInitDomain, transactionsDomain: TransactionsDomain, futuresRepo: FuturesRepo, application: Application) = object : GetExtraMenuItemPartials() {
             override fun invoke(hostActivity: HostActivity) = hostActivity.run {
                 arrayOf(
                     MenuVMItem("Redo App Init") {

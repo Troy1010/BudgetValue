@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartialsUC
+import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartials
 import com.tminus1010.budgetvalue._core.extensions.add
 import com.tminus1010.budgetvalue._core.extensions.isZero
 import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
@@ -41,7 +41,7 @@ class HostActivity : AppCompatActivity() {
     private val vb by lazy { ActivityHostBinding.inflate(layoutInflater) }
 
     @Inject
-    lateinit var getExtraMenuItemPartialsUC: GetExtraMenuItemPartialsUC
+    lateinit var getExtraMenuItemPartials: GetExtraMenuItemPartials
 
     @Inject
     lateinit var appInitDomain: AppInitDomain
@@ -119,7 +119,7 @@ class HostActivity : AppCompatActivity() {
                 title = "Replays",
                 onClick = { ReplaysFrag.navTo(nav); vb.bottomNavigation.menu.unCheckAllMenuItems() },
             ),
-            *getExtraMenuItemPartialsUC(this)
+            *getExtraMenuItemPartials(this)
         )
         return true
     }
