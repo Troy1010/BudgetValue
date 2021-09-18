@@ -25,4 +25,5 @@ data class TransactionBlock(
             .fold(CategoryAmounts()) { acc, transaction -> acc.addTogether(transaction.categoryAmounts) }
 
     val isFullyCategorized get() = defaultAmount.isZero
+    val isFullyImported: Boolean get() = TODO()
 }
