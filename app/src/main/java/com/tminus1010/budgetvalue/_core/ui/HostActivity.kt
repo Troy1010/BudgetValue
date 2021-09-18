@@ -20,7 +20,7 @@ import com.tminus1010.budgetvalue._core.middleware.ui.MenuVMItem
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
 import com.tminus1010.budgetvalue.all.data.IsPlanFeatureEnabled
-import com.tminus1010.budgetvalue.all.data.IsReconcileFeatureEnabled
+import com.tminus1010.budgetvalue.all.data.IsReconciliationFeatureEnabled
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.history.HistoryFrag
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
@@ -53,7 +53,7 @@ class HostActivity : AppCompatActivity() {
     lateinit var isPlanFeatureEnabled: IsPlanFeatureEnabled
 
     @Inject
-    lateinit var isReconcileFeatureEnabled: IsReconcileFeatureEnabled
+    lateinit var isReconciliationFeatureEnabled: IsReconciliationFeatureEnabled
 
     @Inject
     lateinit var activePlanDomain: ActivePlanDomain
@@ -93,7 +93,7 @@ class HostActivity : AppCompatActivity() {
                 .show()
         }
         isPlanFeatureEnabled.observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }
-        isReconcileFeatureEnabled.observe(this) { vb.bottomNavigation.menu.findItem(R.id.reconcileFrag).isVisible = it }
+        isReconciliationFeatureEnabled.observe(this) { vb.bottomNavigation.menu.findItem(R.id.reconcileFrag).isVisible = it }
     }
 
     override fun onStart() {

@@ -14,24 +14,24 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx3.asObservable
 import javax.inject.Inject
 
-class IsReconcileFeatureEnabled @Inject constructor(
+class IsReconciliationFeatureEnabled @Inject constructor(
     private val app: Application,
     isReconciliationReady: IsReconciliationReady,
 ) : Observable<Boolean>() {
-    private val key = booleanPreferencesKey("IsReconcileFeatureEnabled")
+    private val key = booleanPreferencesKey("isReconciliationFeatureEnabled")
 
     private fun set(b: Boolean) {
         GlobalScope.launch { app.dataStore.edit { it[key] = b } }
     }
 
-    private val isReconcileFeatureEnabled =
+    private val isReconciliationFeatureEnabled =
         app.dataStore.data.asObservable()
             .map { it[key] ?: false }
             .distinctUntilChanged()
             .cold()
 
     init {
-        isReconcileFeatureEnabled
+        isReconciliationFeatureEnabled
             .toSingle()
             .flatMap {
                 isReconciliationReady
@@ -41,11 +41,11 @@ class IsReconcileFeatureEnabled @Inject constructor(
             .subscribeBy(onSuccess = { set(true) })
     }
 
-    override fun subscribeActual(observer: Observer<in Boolean>) = isReconcileFeatureEnabled.subscribe(observer)
+    override fun subscribeActual(observer: Observer<in Boolean>) = isReconciliationFeatureEnabled.subscribe(observer)
 
     // TODO("test if this emits when it shouldn't?")
     val onChangeToTrue =
-        isReconcileFeatureEnabled
+        isReconciliationFeatureEnabled
             .pairwise()
             .filter { it.second }
             .map { Unit }!!
