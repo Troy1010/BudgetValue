@@ -70,3 +70,6 @@ val <T : Any> Observable<Box<T?>>.unbox: T
 
 fun <T : Any> Observable<T>.cold(): ColdObservable<T> =
     ColdObservable(this)
+
+fun <T : Any, D : Any> Observable<T>.mapBox(lambda: (T) -> D?): Observable<Box<D?>> =
+    map { Box(lambda(it)) }
