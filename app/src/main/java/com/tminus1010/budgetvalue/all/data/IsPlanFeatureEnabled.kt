@@ -36,7 +36,7 @@ class IsPlanFeatureEnabled @Inject constructor(
             .toSingle()
             .flatMap {
                 transactionsDomain.transactionBlocks
-                    .filter { it.takeLast(3).all { it.isFullyCategorized } }
+                    .filter { it.size >= 3 && it.takeLast(3).all { it.isFullyCategorized } }
                     .toSingle()
             }
             .subscribeBy(onSuccess = { set(true) })
