@@ -29,35 +29,35 @@ object Given {
 //            givenCategories.value[1] to 31.toBigDecimal(),
 //            givenCategories.value[2] to 26.toBigDecimal()))
 //    val givenPlans = listOf(givenPlan1, givenPlan2).toObservable()
-    val givenReconciliation1 = Reconciliation(
-        localDate = LocalDate.now(),
+    val reconciliation1 = Reconciliation(
+        localDate = LocalDate.of(2020, 1, 2),
         defaultAmount = 33.toBigDecimal(),
         categoryAmounts = mapOf(
             givenCategories.value!![0] to 10.toBigDecimal()
         )
     )
-    val givenReconciliation2 = Reconciliation(
-        localDate = LocalDate.now(),
+    val reconciliation2 = Reconciliation(
+        localDate = LocalDate.of(2020, 1, 1),
         defaultAmount = 33.toBigDecimal(),
         categoryAmounts = mapOf(
             givenCategories.value!![0] to 5.toBigDecimal(),
             givenCategories.value!![1] to 55.toBigDecimal()
         )
     )
-    val givenReconciliations = listOf(givenReconciliation1, givenReconciliation2).toObservable()
-    val givenTransactionBlock1 = TransactionBlock(
-        datePeriod = LocalDatePeriod(LocalDate.now().plus(Period.ofWeeks(2)), Period.ofWeeks(2)),
-        amount = (-110).toBigDecimal(),
-        categoryAmounts = emptyMap()
-    )
-    val givenTransactionBlock2 = TransactionBlock(
-        datePeriod = LocalDatePeriod(LocalDate.now().plus(Period.ofWeeks(2)), Period.ofWeeks(2)),
-        amount = (-16).toBigDecimal(),
-        categoryAmounts = mapOf(
-            givenCategories.value!![0] to (-9).toBigDecimal()
-        )
-    )
-    val givenTransactionBlocks = listOf(givenTransactionBlock1, givenTransactionBlock2).toObservable()
+    val givenReconciliations = listOf(reconciliation1, reconciliation2).toObservable()
+//    val givenTransactionBlock1 = TransactionBlock(
+//        datePeriod = LocalDatePeriod(LocalDate.now().plus(Period.ofWeeks(2)), Period.ofWeeks(2)),
+//        amount = (-110).toBigDecimal(),
+//        categoryAmounts = emptyMap()
+//    )
+//    val givenTransactionBlock2 = TransactionBlock(
+//        datePeriod = LocalDatePeriod(LocalDate.now().plus(Period.ofWeeks(2)), Period.ofWeeks(2)),
+//        amount = (-16).toBigDecimal(),
+//        categoryAmounts = mapOf(
+//            givenCategories.value!![0] to (-9).toBigDecimal()
+//        )
+//    )
+//    val givenTransactionBlocks = listOf(givenTransactionBlock1, givenTransactionBlock2).toObservable()
     val givenActiveReconcileCAs: BehaviorSubject<SourceHashMap<Category, BigDecimal>> =
         SourceHashMap(
             null,

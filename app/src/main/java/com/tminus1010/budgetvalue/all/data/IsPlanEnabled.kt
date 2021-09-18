@@ -6,8 +6,10 @@ import androidx.datastore.preferences.core.edit
 import com.tminus1010.budgetvalue._core.extensions.cold
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.pairwise
+import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observer
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx3.asObservable
@@ -30,11 +32,14 @@ class IsPlanEnabled @Inject constructor(
             .cold()
 
     init {
-        if (!isPlanEnabled.value)
-            transactionsDomain.transactionBlocks
-                .filter { it.takeLast(3).all { it.isFullyCategorized } }
-                .take(1)
-                .subscribe { set(true) }
+        isPlanEnabled
+            .toSingle()
+            .flatMap {
+                transactionsDomain.transactionBlocks
+                    .filter { it.takeLast(3).all { it.isFullyCategorized } }
+                    .toSingle()
+            }
+            .subscribeBy(onSuccess = { set(true) })
     }
 
     override fun subscribeActual(observer: Observer<in Boolean>) = isPlanEnabled.subscribe(observer)
