@@ -95,6 +95,9 @@ class TransactionsDomain @Inject constructor(
     val transactionBlocks: Observable<List<TransactionBlock>> =
         transactions
             .map(::getBlocksFromTransactions)
+    val spendBlocks: Observable<List<TransactionBlock>> =
+        transactionBlocks
+            .map { it.map { it.spendBlock } }
     private val spends: Observable<List<Transaction>> =
         transactions
             .map { it.filter { it.isSpend } }
