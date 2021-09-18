@@ -45,8 +45,9 @@ class IsPlanEnabled @Inject constructor(
     override fun subscribeActual(observer: Observer<in Boolean>) = isPlanEnabled.subscribe(observer)
 
     // TODO("test if this emits when it shouldn't?")
-    val onChangeToTrue = isPlanEnabled
-        .pairwise()
-        .filter { it.second }
-        .map { Unit }!!
+    val onChangeToTrue =
+        isPlanEnabled
+            .pairwise()
+            .filter { it.second }
+            .map { Unit }!!
 }
