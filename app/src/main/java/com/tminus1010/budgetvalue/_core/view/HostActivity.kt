@@ -12,13 +12,12 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartials
-import com.tminus1010.budgetvalue._core.extensions.add
 import com.tminus1010.budgetvalue._core.extensions.isZero
 import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.extensions.unCheckAllMenuItems
 import com.tminus1010.budgetvalue._core.middleware.Toaster
-import com.tminus1010.budgetvalue._core.middleware.presentation.MenuVMItem
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
+import com.tminus1010.budgetvalue._core.presentation.HostVM
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
 import com.tminus1010.budgetvalue.all.data.IsPlanFeatureEnabled
 import com.tminus1010.budgetvalue.all.data.IsReconciliationFeatureEnabled
@@ -39,6 +38,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class HostActivity : AppCompatActivity() {
     private val vb by lazy { ActivityHostBinding.inflate(layoutInflater) }
+    val hostVM by viewModels<HostVM>()
 
     @Inject
     lateinit var getExtraMenuItemPartials: GetExtraMenuItemPartials
@@ -79,6 +79,12 @@ class HostActivity : AppCompatActivity() {
         // This line solves (after doing an Import): java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
         transactionsMiscVM
         //
+        hostVM.navToReplays.observe(this) { ReplaysFrag.navTo(nav) }
+        hostVM.navToFutures.observe(this) { FuturesReviewFrag.navTo(nav) }
+        hostVM.navToTransactions.observe(this) { TransactionsFrag.navTo(nav) }
+        hostVM.navToHistory.observe(this) { HistoryFrag.navTo(nav) }
+        hostVM.unCheckAllMenuItems.observe(this) { vb.bottomNavigation.menu.unCheckAllMenuItems() }
+        //
         isPlanFeatureEnabled.onChangeToTrue.observe(this) {
             Observable.combineLatest(activePlanDomain.activePlan, transactionsDomain.transactionBlocks)
             { activePlan, transactionBlocks ->
@@ -112,26 +118,7 @@ class HostActivity : AppCompatActivity() {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        menu.clear()
-        menu.add(
-            MenuVMItem(
-                title = "History",
-                onClick = { HistoryFrag.navTo(nav); vb.bottomNavigation.menu.unCheckAllMenuItems() },
-            ),
-            MenuVMItem(
-                title = "Transactions",
-                onClick = { TransactionsFrag.navTo(nav); vb.bottomNavigation.menu.unCheckAllMenuItems() },
-            ),
-            MenuVMItem(
-                title = "Futures",
-                onClick = { FuturesReviewFrag.navTo(nav); vb.bottomNavigation.menu.unCheckAllMenuItems() },
-            ),
-            MenuVMItem(
-                title = "Replays",
-                onClick = { ReplaysFrag.navTo(nav); vb.bottomNavigation.menu.unCheckAllMenuItems() },
-            ),
-            *getExtraMenuItemPartials(this)
-        )
+        hostVM.topMenuVMItems.bind(menu)
         return true
     }
 

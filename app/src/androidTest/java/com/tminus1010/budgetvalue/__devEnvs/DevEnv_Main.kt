@@ -9,7 +9,6 @@ import com.tminus1010.budgetvalue.AndroidTestAssetOwner
 import com.tminus1010.budgetvalue.MockImportSelectionActivity
 import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartials
 import com.tminus1010.budgetvalue._core.LaunchImport
-import com.tminus1010.budgetvalue._core.TestException
 import com.tminus1010.budgetvalue._core.middleware.presentation.MenuVMItem
 import com.tminus1010.budgetvalue._core.view.HostActivity
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
@@ -72,7 +71,7 @@ class DevEnv_Main {
         @Provides
         @Singleton
         fun getExtraMenuItemPartials(appInitRepo: AppInitRepo, appInitDomain: AppInitDomain, transactionsDomain: TransactionsDomain, futuresRepo: FuturesRepo, application: Application) = object : GetExtraMenuItemPartials() {
-            override fun invoke(hostActivity: HostActivity) = hostActivity.run {
+            override fun invoke() =
                 arrayOf(
                     MenuVMItem("Redo App Init") {
                         appInitRepo.pushAppInitBool(false)
@@ -104,14 +103,7 @@ class DevEnv_Main {
                             }
                             .subscribe()
                     },
-                    MenuVMItem("Throw Test Error") {
-                        hostFrag.handle(TestException())
-                    },
-                    MenuVMItem("Throw Error") {
-                        hostFrag.handle(Exception("Zip zoop an error"))
-                    },
                 )
-            }
         }
     }
 }
