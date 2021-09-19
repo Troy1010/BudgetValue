@@ -4,7 +4,7 @@ import com.tminus1010.budgetvalue._core.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
-import com.tminus1010.budgetvalue.accounts.domain.AccountsDomain
+import com.tminus1010.budgetvalue.all.data.repos.AccountsRepo
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.reconciliations.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
@@ -21,7 +21,7 @@ class BudgetedDomain @Inject constructor(
     plansRepo: PlansRepo,
     transactionsDomain: TransactionsDomain,
     reconciliationsRepo: ReconciliationsRepo,
-    accountsDomain: AccountsDomain,
+    accountsRepo: AccountsRepo,
 ) {
     val categoryAmounts =
         Rx.combineLatest(
@@ -42,9 +42,9 @@ class BudgetedDomain @Inject constructor(
         categoryAmounts
             .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO)) { it.itemObservableMap }
     val defaultAmount =
-        Observable.combineLatest(accountsDomain.accountsTotal, categoryAmountsObservableMap.switchMap { it.values.total() })
-        { accountsTotal, categoryAmountsTotal ->
-            accountsTotal - categoryAmountsTotal
+        Observable.combineLatest(accountsRepo.accounts, categoryAmountsObservableMap.switchMap { it.values.total() })
+        { accounts, categoryAmountsTotal ->
+            accounts.total - categoryAmountsTotal
         }
             .replayNonError(1)
     val budgeted =
