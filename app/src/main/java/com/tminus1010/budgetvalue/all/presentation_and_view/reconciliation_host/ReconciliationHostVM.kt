@@ -16,7 +16,7 @@ class ReconciliationHostVM @Inject constructor(
     ReconciliationsToDoInteractor: ReconciliationsToDoInteractor,
 ) : ViewModel() {
     // # Internal
-    private fun mapReconciliationsToDoToButtonVMItem(reconciliationToDos: List<ReconciliationToDo>): List<ButtonVMItem> {
+    private fun mapReconciliationToDosToButtonVMItems(reconciliationToDos: List<ReconciliationToDo>): List<ButtonVMItem> {
         return reconciliationToDos
             .map {
                 when (it) {
@@ -37,7 +37,7 @@ class ReconciliationHostVM @Inject constructor(
     // ## State
     val buttons =
         ReconciliationsToDoInteractor.reconciliationsToDo
-            .map(::mapReconciliationsToDoToButtonVMItem)!!
+            .map(::mapReconciliationToDosToButtonVMItems)!!
 
     val title =
         ReconciliationsToDoInteractor.reconciliationsToDo
