@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.all.data
+package com.tminus1010.budgetvalue.all.data.repos
 
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import io.reactivex.rxjava3.core.Observable

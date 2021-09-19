@@ -17,8 +17,8 @@ import com.tminus1010.budgetvalue._core.middleware.Toaster
 import com.tminus1010.budgetvalue._core.presentation.HostVM
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
 import com.tminus1010.budgetvalue.all.app.interactors.SetPlanValuesFromHistory
-import com.tminus1010.budgetvalue.all.data.IsPlanFeatureEnabled
-import com.tminus1010.budgetvalue.all.data.IsReconciliationFeatureEnabled
+import com.tminus1010.budgetvalue.all.data.repos.IsPlanFeatureEnabled
+import com.tminus1010.budgetvalue.all.data.repos.IsReconciliationFeatureEnabled
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.history.HistoryFrag
 import com.tminus1010.budgetvalue.plans.data.PlansRepo

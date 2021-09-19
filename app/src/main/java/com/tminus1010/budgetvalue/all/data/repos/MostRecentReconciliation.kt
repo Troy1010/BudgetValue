@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.all.data
+package com.tminus1010.budgetvalue.all.data.repos
 
 import com.tminus1010.budgetvalue._core.extensions.mapBox
 import com.tminus1010.budgetvalue.all.domain.Reconciliations
