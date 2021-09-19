@@ -16,6 +16,7 @@ import com.tminus1010.budgetvalue._core.extensions.add
 import com.tminus1010.budgetvalue._core.extensions.isZero
 import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.extensions.unCheckAllMenuItems
+import com.tminus1010.budgetvalue._core.middleware.Toaster
 import com.tminus1010.budgetvalue._core.middleware.presentation.MenuVMItem
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
@@ -31,7 +32,6 @@ import com.tminus1010.budgetvalue.transactions.TransactionsMiscVM
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.budgetvalue.transactions.ui.TransactionsFrag
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
-import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
@@ -60,6 +60,9 @@ class HostActivity : AppCompatActivity() {
 
     @Inject
     lateinit var plansRepo: PlansRepo
+
+    @Inject
+    lateinit var toaster: Toaster
 
     private val transactionsMiscVM: TransactionsMiscVM by viewModels()
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.frag_nav_host) as HostFrag }
@@ -138,7 +141,7 @@ class HostActivity : AppCompatActivity() {
                 try {
                     contentResolver.openInputStream(result.data!!.data!!)!!
                         .also { inputStream -> transactionsMiscVM.userImportTransactions(inputStream) }
-                    easyToast("Import successful")
+                    toaster.toast(R.string.import_successful)
                 } catch (e: Throwable) {
                     hostFrag.handle(e)
                 }

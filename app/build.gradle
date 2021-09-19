@@ -23,7 +23,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "com.tminus1010.budgetvalue._core_testing.CustomTestRunner"
+        testInstrumentationRunner "com.tminus1010.budgetvalue.__core_testing.CustomTestRunner"
 
         multiDexEnabled true
 
@@ -38,22 +38,6 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-
-    flavorDimensions "devEnvs_production"
-    productFlavors {
-        // # Production flavor
-        production {
-            dimension "devEnvs_production"
-            applicationIdSuffix ".production"
-            versionNameSuffix "-production"
-        }
-        // # Development flavor has DevEnvs.
-        devEnvs {
-            dimension "devEnvs_production"
-            applicationIdSuffix ".devEnvs"
-            versionNameSuffix "-devEnvs"
         }
     }
 

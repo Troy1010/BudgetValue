@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">BudgetValue</string>
+    <string name="import_successful">Import successful</string>
 </resources>
