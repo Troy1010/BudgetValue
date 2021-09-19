@@ -6,6 +6,7 @@ import com.tminus1010.budgetvalue._core.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.middleware.Rx
+import com.tminus1010.budgetvalue._core.middleware.presentation.ButtonVMItem
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
@@ -15,7 +16,7 @@ import com.tminus1010.budgetvalue.reconciliations.models.Reconciliation
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.kotlin.Singles
+import io.reactivex.rxjava3.core.Single
 import java.math.BigDecimal
 import java.time.LocalDate
 import javax.inject.Inject
@@ -26,17 +27,18 @@ class ActiveReconciliationVM @Inject constructor(
     categoriesDomain: CategoriesDomain,
     private val activeReconciliationDefaultAmountUC: ActiveReconciliationDefaultAmountUC,
 ) : ViewModel() {
-    // # Input
+    // # User Intents
     fun pushActiveReconcileCA(category: Category, s: String) {
         reconciliationsRepo.pushActiveReconciliationCA(category to s.toMoneyBigDecimal())
             .subscribe()
     }
 
     fun saveReconciliation() {
-        Singles.zip(
+        Single.zip(
             activeReconciliationDefaultAmountUC().toSingle(),
             reconciliationsRepo.activeReconciliationCAs.toSingle(),
-        ).flatMapCompletable { (activeReconciliationDefaultAmountUC, activeReconciliationCAs) ->
+        )
+        { activeReconciliationDefaultAmountUC, activeReconciliationCAs ->
             reconciliationsRepo.push(
                 Reconciliation(
                     LocalDate.now(),
@@ -45,11 +47,14 @@ class ActiveReconciliationVM @Inject constructor(
                 )
             )
         }
+            .flatMapCompletable { it }
             .andThen(reconciliationsRepo.clearActiveReconcileCAs())
             .subscribe()
     }
 
-    // # Output
+    // # Presentation Output
+    // ## Events
+    // ## State
     val activeReconcileCAs =
         Rx.combineLatest(
             reconciliationsRepo.activeReconciliationCAs,
@@ -68,4 +73,11 @@ class ActiveReconciliationVM @Inject constructor(
             .nonLazyCache(disposables)
     val defaultAmount: Observable<String> = activeReconciliationDefaultAmountUC()
         .map { it.toString() }
+    val buttons =
+        listOf(
+            ButtonVMItem(
+                title = "Save",
+                onClick = ::saveReconciliation
+            )
+        )
 }

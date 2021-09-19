@@ -26,7 +26,7 @@
         tools:layout="@layout/frag_import" />
     <fragment
         android:id="@+id/reconcileFrag"
-        android:name="com.tminus1010.budgetvalue.reconciliations.ReconcileFrag"
+        android:name="com.tminus1010.budgetvalue.reconciliations.AnytimeReconciliationFrag"
         android:label="Reconcile"
         tools:layout="@layout/frag_reconcile" />
     <fragment

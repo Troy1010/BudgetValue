@@ -10,7 +10,6 @@ import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.easyText
 import com.tminus1010.budgetvalue._core.extensions.getColorByAttr
 import com.tminus1010.budgetvalue._core.middleware.Rx
-import com.tminus1010.budgetvalue._core.middleware.presentation.ButtonVMItem
 import com.tminus1010.budgetvalue._core.middleware.view.onDone
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.ViewItemRecipeFactory3
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.recipeFactories
@@ -32,7 +31,7 @@ import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
-class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
+class AnytimeReconciliationFrag : Fragment(R.layout.frag_reconcile) {
     private val vb by viewBinding(FragReconcileBinding::bind)
     private val activeReconciliationVM: ActiveReconciliationVM by activityViewModels()
     private val categoriesVM: CategoriesVM by activityViewModels()
@@ -42,14 +41,10 @@ class ReconcileFrag : Fragment(R.layout.frag_reconcile) {
     private val budgetedVM: BudgetedVM by activityViewModels()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //
-        vb.buttonsview.buttons = listOf(
-            ButtonVMItem(
-                title = "Save",
-                onClick = { activeReconciliationVM.saveReconciliation() }
-            )
-        )
-        // # TMTableView
+        // # Bind Incoming from Presentation layer
+        // ## State
+        vb.buttonsview.buttons = activeReconciliationVM.buttons
+        // ## TMTableView
         val numberedHeaderRecipeFactory = ViewItemRecipeFactory3<ItemHeaderIncomeBinding, Pair<String, Observable<String>>>(
             { ItemHeaderIncomeBinding.inflate(LayoutInflater.from(context)) },
             { d, vb, lifecycle ->
