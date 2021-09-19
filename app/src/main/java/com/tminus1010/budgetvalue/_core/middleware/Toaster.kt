@@ -16,4 +16,8 @@ class Toaster @Inject constructor(private val application: Application) {
         else
             Completable.fromCallable { application.easyToast(s) }.subscribeOn(AndroidSchedulers.mainThread()).subscribe()
     }
+
+    fun toast(stringID: Int) {
+        toast(application.getString(stringID))
+    }
 }

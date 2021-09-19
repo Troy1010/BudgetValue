@@ -8,6 +8,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.tminus1010.budgetvalue._core.middleware.Toaster
 import com.tminus1010.budgetvalue._core.middleware.view.GenViewHolder2
 import com.tminus1010.budgetvalue.databinding.ActivityMockImportSelectionBinding
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
@@ -23,6 +24,9 @@ class MockImportSelectionActivity : AppCompatActivity() {
 
     @Inject
     lateinit var androidTestAssetOwner: AndroidTestAssetOwner
+
+    @Inject
+    lateinit var toaster: Toaster
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,8 +48,10 @@ class MockImportSelectionActivity : AppCompatActivity() {
                 override fun onBindViewHolder(holder: GenViewHolder2<ItemButtonBinding>, position: Int) {
                     holder.vb.btnItem.text = "Import Transactions ${holder.adapterPosition}"
                     holder.vb.btnItem.setOnClickListener {
-                        assets.open(transactionPathNames[holder.adapterPosition]).buffered()
-                            .also { transactionsVM.userImportTransactions(it) }
+                        transactionsVM.userImportTransactions(
+                            assets.open(transactionPathNames[holder.adapterPosition]).buffered()
+                        )
+                        toaster.toast(R.string.import_successful)
                         finish()
                     }
                 }
