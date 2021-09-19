@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.InvalidCategoryNameException
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
-import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.domain.DeleteCategoryFromActiveDomainUC
@@ -91,18 +90,21 @@ class CategorySettingsVM @Inject constructor(
     private val _categoryToPush = BehaviorSubject.create<Category>()
     val navigateUp: PublishSubject<Unit> = PublishSubject.create()
     val categoryToPush: Observable<Category> =
-        Rx.combineLatest(
+        Observable.combineLatest(
             _categoryToPush,
             userDefaultAmountFormulaValue.map { Box(it) }.startWithItem(Box(null)),
             userDefaultAmountFormulaIsPercentage.map { Box(it) }.startWithItem(Box(null)),
-        ).map { (categoryToPush, amountFormulaValueBox, amountFormulaIsPercentageBox) ->
-            val defaultAmountFormula = if (amountFormulaValueBox.first != null && amountFormulaIsPercentageBox.first != null)
-                (if (amountFormulaIsPercentageBox.first) AmountFormula.Percentage(amountFormulaValueBox.first) else AmountFormula.Value(amountFormulaValueBox.first))
-            else null
-            if (defaultAmountFormula != null)
-                categoryToPush.copy(defaultAmountFormula = defaultAmountFormula)
-            else
+        )
+        { categoryToPush, (amountFormulaValue), (amountFormulaIsPercentage) ->
+            val defaultAmountFormula =
+                if (amountFormulaValue == null || amountFormulaIsPercentage == null)
+                    null
+                else
+                    (if (amountFormulaIsPercentage) AmountFormula.Percentage(amountFormulaValue) else AmountFormula.Value(amountFormulaValue))
+            if (defaultAmountFormula == null)
                 categoryToPush
+            else
+                categoryToPush.copy(defaultAmountFormula = defaultAmountFormula)
         }
             .nonLazyCache(disposables)
 }
