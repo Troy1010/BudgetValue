@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._devEnvs
+package com.tminus1010.budgetvalue.__devEnvs
 
 import android.app.Application
 import android.content.Intent
