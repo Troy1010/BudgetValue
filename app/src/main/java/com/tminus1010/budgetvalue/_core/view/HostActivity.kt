@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._core.ui
+package com.tminus1010.budgetvalue._core.view
 
 import android.app.Activity
 import android.os.Bundle

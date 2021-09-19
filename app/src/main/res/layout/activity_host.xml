@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="._core.ui.HostActivity">
+    tools:context="._core.view.HostActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/frag_nav_host"
-        android:name="com.tminus1010.budgetvalue._core.ui.HostFrag"
+        android:name="com.tminus1010.budgetvalue._core.view.HostFrag"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:defaultNavHost="true"
