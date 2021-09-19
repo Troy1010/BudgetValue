@@ -11,7 +11,7 @@ import com.tminus1010.budgetvalue.all.app.interactors.SaveActiveReconciliationIn
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.reconciliations.data.ReconciliationsRepo
-import com.tminus1010.budgetvalue.reconciliations.domain.ActiveReconciliationDefaultAmountUC
+import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import java.math.BigDecimal
@@ -21,7 +21,6 @@ import javax.inject.Inject
 class AnytimeReconciliationVM @Inject constructor(
     private val reconciliationsRepo: ReconciliationsRepo,
     categoriesDomain: CategoriesDomain,
-    activeReconciliationDefaultAmountUC: ActiveReconciliationDefaultAmountUC,
     saveActiveReconciliationInteractor: SaveActiveReconciliationInteractor
 ) : ViewModel() {
     // # User Intents
@@ -49,7 +48,7 @@ class AnytimeReconciliationVM @Inject constructor(
             .map { it.mapValues { it.value.map { it.toString() } } }
             .nonLazyCache(disposables)
     val defaultAmount: Observable<String> =
-        activeReconciliationDefaultAmountUC()
+        activeReconcileCAs.map { it.values.sum() }
             .map(BigDecimal::toString)
     val buttons =
         listOf(

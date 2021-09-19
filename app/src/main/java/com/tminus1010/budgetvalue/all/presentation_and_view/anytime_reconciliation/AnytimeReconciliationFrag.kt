@@ -23,8 +23,6 @@ import com.tminus1010.budgetvalue.budgeted.BudgetedVM
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.*
-import com.tminus1010.budgetvalue.plans.ActivePlanVM
-import com.tminus1010.budgetvalue.transactions.TransactionsMiscVM
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -39,8 +37,6 @@ class AnytimeReconciliationFrag : Fragment(R.layout.frag_reconcile) {
     private val vb by viewBinding(FragReconcileBinding::bind)
     private val anytimeReconciliationVM: AnytimeReconciliationVM by activityViewModels()
     private val categoriesVM: CategoriesVM by activityViewModels()
-    private val activePlanVM: ActivePlanVM by activityViewModels()
-    private val transactionsMiscVM: TransactionsMiscVM by activityViewModels()
     private val accountsVM: AccountsVM by activityViewModels()
     private val budgetedVM: BudgetedVM by activityViewModels()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -70,20 +66,14 @@ class AnytimeReconciliationFrag : Fragment(R.layout.frag_reconcile) {
                 }
             },
         )
-        Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs, transactionsMiscVM.currentSpendBlockCAs, anytimeReconciliationVM.activeReconcileCAsToShow, budgetedVM.categoryAmounts)
+        Rx.combineLatest(categoriesVM.userCategories, anytimeReconciliationVM.activeReconcileCAsToShow, budgetedVM.categoryAmounts)
             .observeOn(Schedulers.computation())
             .debounce(100, TimeUnit.MILLISECONDS)
-            .map { (categories, activePlanCAs, currentSpendBlockCAs, activeReconciliationCAs, budgetedCA) ->
+            .map { (categories, activeReconciliationCAs, budgetedCA) ->
                 val recipeGrid = listOf(
                     listOf(itemHeaderRF().create("Category"))
                             + itemTextViewRB().create("Default")
                             + categories.map { itemTextViewRB().create(it.name) },
-                    listOf(itemHeaderWithSubtitleRF().create("Plan", activePlanVM.expectedIncome))
-                            + itemTextViewRB().create(activePlanVM.defaultAmount)
-                            + categories.map { itemTextViewRB().create(activePlanCAs[it] ?: Observable.just("")) },
-                    listOf(itemHeaderRF().create("Actual"))
-                            + itemTextViewRB().create("")
-                            + categories.map { itemTextViewRB().create(currentSpendBlockCAs[it]?.toString() ?: "") },
                     listOf(itemHeaderRF().create("Reconcile"))
                             + itemTextViewRB().create(anytimeReconciliationVM.defaultAmount)
                             + reconcileCARecipeFactory.createMany(categories.map { it to activeReconciliationCAs[it] }),
