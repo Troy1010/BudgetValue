@@ -12,10 +12,7 @@ import com.tminus1010.budgetvalue._core.extensions.easyText
 import com.tminus1010.budgetvalue._core.extensions.getColorByAttr
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.view.onDone
-import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemHeaderRF
-import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemHeaderWithSubtitleRF
-import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTextViewRB
-import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTitledDividerRB
+import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.*
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.ViewItemRecipeFactory3
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
 import com.tminus1010.budgetvalue.all.presentation_and_view.import_z.AccountsVM
@@ -45,14 +42,6 @@ class AnytimeReconciliationFrag : Fragment(R.layout.frag_reconcile) {
         // ## State
         vb.buttonsview.buttons = anytimeReconciliationVM.buttons
         // ## TMTableView
-        val reconcileCARecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Pair<Category, Observable<String>?>>(
-            { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
-            { (category, d), vb, lifecycle ->
-                vb.moneyedittext.onDone { anytimeReconciliationVM.pushActiveReconcileCA(category, it) }
-                if (d == null) return@ViewItemRecipeFactory3
-                d.observe(lifecycle) { vb.moneyedittext.easyText = it }
-            }
-        )
         Rx.combineLatest(categoriesVM.userCategories, anytimeReconciliationVM.activeReconcileCAsToShow, budgetedVM.categoryValidatedStringVMItems)
             .observeOn(Schedulers.computation())
             .debounce(100, TimeUnit.MILLISECONDS)
@@ -63,7 +52,7 @@ class AnytimeReconciliationFrag : Fragment(R.layout.frag_reconcile) {
                             + categories.map { itemTextViewRB().create(it.name) },
                     listOf(itemHeaderRF().create("Reconcile"))
                             + itemTextViewRB().create(anytimeReconciliationVM.defaultAmount)
-                            + reconcileCARecipeFactory.createMany(categories.map { it to activeReconciliationCAs[it] }),
+                            + categories.map { category -> itemMoneyEditTextRF().create(activeReconciliationCAs[category]) { anytimeReconciliationVM.pushActiveReconcileCA(category, it) } },
                     listOf(itemHeaderWithSubtitleRF().create("Budgeted", accountsVM.accountsTotal))
                             + itemTextViewRB().create(budgetedVM.defaultAmount)
                             + categories.map { itemTextViewRB().create(budgetedCategoryValidatedStringVMItems[it]) }

@@ -21,16 +21,18 @@ class ItemMoneyEditTextRecipeFactory(private val context: Context) {
         }
     }
 
-    fun create(d: Observable<String>): IViewItemRecipe3 {
+    fun create(d: Observable<String>?): IViewItemRecipe3 {
         return ViewItemRecipe3__(context, inflate) { vb ->
+            if (d == null) return@ViewItemRecipe3__
             vb.moneyedittext.bind(d) { easyText = it }
         }
     }
 
-    fun create(d: Observable<String>, lambda: (String) -> Unit): IViewItemRecipe3 {
+    fun create(d: Observable<String>?, lambda: (String) -> Unit): IViewItemRecipe3 {
         return ViewItemRecipe3__(context, inflate) { vb ->
-            vb.moneyedittext.bind(d) { easyText = it }
             vb.moneyedittext.onDone(lambda)
+            if (d == null) return@ViewItemRecipe3__
+            vb.moneyedittext.bind(d) { easyText = it }
         }
     }
 }
