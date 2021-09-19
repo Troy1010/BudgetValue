@@ -11,7 +11,7 @@ import io.reactivex.rxjava3.core.CompletableObserver
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
-class SetPlanValuesFromHistory @Inject constructor(
+class SetActivePlanFromHistory @Inject constructor(
     activePlanDomain: ActivePlanDomain,
     transactionsDomain: TransactionsDomain,
     private val plansRepo: PlansRepo

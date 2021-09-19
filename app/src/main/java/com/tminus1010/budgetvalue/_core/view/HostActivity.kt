@@ -17,7 +17,7 @@ import com.tminus1010.budgetvalue._core.presentation.HostVM
 import com.tminus1010.budgetvalue._core.view.extensions.easyAlertDialog
 import com.tminus1010.budgetvalue._core.view.extensions.getString
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
-import com.tminus1010.budgetvalue.all.app.interactors.SetPlanValuesFromHistory
+import com.tminus1010.budgetvalue.all.app.interactors.SetActivePlanFromHistory
 import com.tminus1010.budgetvalue.all.data.repos.ImportTransactions
 import com.tminus1010.budgetvalue.all.data.repos.IsPlanFeatureEnabled
 import com.tminus1010.budgetvalue.all.data.repos.IsReconciliationFeatureEnabled
@@ -64,7 +64,7 @@ class HostActivity : AppCompatActivity() {
     lateinit var toaster: Toaster
 
     @Inject
-    lateinit var setPlanValuesFromHistory: SetPlanValuesFromHistory
+    lateinit var setActivePlanFromHistory: SetActivePlanFromHistory
 
     @Inject
     lateinit var importTransactions: ImportTransactions
@@ -91,7 +91,7 @@ class HostActivity : AppCompatActivity() {
         hostVM.unCheckAllMenuItems.observe(this) { vb.bottomNavigation.menu.unCheckAllMenuItems() }
         //
         isPlanFeatureEnabled.onChangeToTrue.observe(this) {
-            setPlanValuesFromHistory.subscribe()
+            setActivePlanFromHistory.subscribe()
             easyAlertDialog(getString(hostVM.levelUpPlan))
         }
         isReconciliationFeatureEnabled.onChangeToTrue.observe(this) {
