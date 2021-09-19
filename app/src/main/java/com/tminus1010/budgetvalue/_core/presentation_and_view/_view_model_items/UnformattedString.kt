@@ -25,6 +25,7 @@ sealed class UnformattedString {
     }
 
     companion object {
+        // TODO("Trying to format an int fails. How to tell if it's an int to format in, or a string id..?")
         private fun fromAnyToUnformattedString(any: Any): UnformattedString {
             return when (any) {
                 is String -> WithCoreString(any)
@@ -52,11 +53,11 @@ sealed class UnformattedString {
 
         private fun formatAndThenAppend(s: String, strings: List<String>): String {
             val numOfFormatArgs = howManyFormatArgsInString(s)
-            var s = String.format(s, strings.take(numOfFormatArgs))
+            var returning = String.format(s, *strings.take(numOfFormatArgs).toTypedArray())
             strings.drop(numOfFormatArgs).forEach {
-                s += it
+                returning += it
             }
-            return s
+            return returning
         }
 
         private val regex = Regex("""%[0-9]?[${'$'}]?s""")

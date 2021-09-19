@@ -5,5 +5,5 @@
     <string name="level_up_plan">"You can now make Plans. We've already set it based on your history, but you can adjust it.\nLater on, you can Reconcile what actually happened with your Plan."</string>
     <string name="level_up_reconciliation">"You can now make Reconciliations."</string>
     <string name="reconciliations_required_none">"No reconciliations required"</string>
-    <string name="reconciliations_required">%1$i reconciliations required</string>
+    <string name="reconciliations_required">%1$s reconciliations required</string>
 </resources>

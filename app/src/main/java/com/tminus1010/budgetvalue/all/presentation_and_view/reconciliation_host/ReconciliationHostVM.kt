@@ -45,6 +45,6 @@ class ReconciliationHostVM @Inject constructor(
                 if (it.isEmpty())
                     UnformattedString(R.string.reconciliations_required_none)
                 else
-                    UnformattedString(R.string.reconciliations_required, it.size)
+                    UnformattedString(R.string.reconciliations_required, it.size.toString())
             }!!
 }
