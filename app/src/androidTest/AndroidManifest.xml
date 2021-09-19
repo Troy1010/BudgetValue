@@ -5,8 +5,5 @@
 
     <application
         android:name="._core.App"
-        tools:replace="android:name">
-        <activity android:name="._core.ui.MockImportSelectionActivity" />
-    </application>
-
+        tools:replace="android:name" />
 </manifest>

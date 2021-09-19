@@ -4,12 +4,14 @@ import android.app.Application
 import android.content.Intent
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import com.tminus1010.budgetvalue.AndroidTestAssetOwner
+import com.tminus1010.budgetvalue.MockImportSelectionActivity
 import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartials
 import com.tminus1010.budgetvalue._core.LaunchImport
 import com.tminus1010.budgetvalue._core.TestException
 import com.tminus1010.budgetvalue._core.middleware.presentation.MenuVMItem
 import com.tminus1010.budgetvalue._core.ui.HostActivity
-import com.tminus1010.budgetvalue.__devEnvs.view.MockImportSelectionActivity
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
 import com.tminus1010.budgetvalue._shared.app_init.data.AppInitRepo
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
@@ -59,6 +61,12 @@ class DevEnv_Main {
                 Intent(hostActivity, MockImportSelectionActivity::class.java)
                     .also { hostActivity.startActivity(it) }
             }
+        }
+
+        @Provides
+        @Singleton
+        fun androidTestAssetOwner(): AndroidTestAssetOwner = object : AndroidTestAssetOwner() {
+            override val assets = InstrumentationRegistry.getInstrumentation().context.assets
         }
 
         @Provides
