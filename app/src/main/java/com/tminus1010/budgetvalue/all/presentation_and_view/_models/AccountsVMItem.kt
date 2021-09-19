@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.all.presentation_and_view._view_model_item
+package com.tminus1010.budgetvalue.all.presentation_and_view._models
 
 import com.tminus1010.budgetvalue.all.domain.models.Accounts
 

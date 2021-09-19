@@ -15,7 +15,7 @@ import com.tminus1010.budgetvalue._core.middleware.view.onDone
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
 import com.tminus1010.budgetvalue._core.presentation_and_view.host.HostActivity
 import com.tminus1010.budgetvalue._middleware.view.extensions.onClick
-import com.tminus1010.budgetvalue.all.presentation_and_view._view_model_item.AccountVMItem
+import com.tminus1010.budgetvalue.all.presentation_and_view._models.AccountVMItem
 import com.tminus1010.budgetvalue.databinding.FragImportBinding
 import com.tminus1010.budgetvalue.databinding.ItemAccountBinding
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
