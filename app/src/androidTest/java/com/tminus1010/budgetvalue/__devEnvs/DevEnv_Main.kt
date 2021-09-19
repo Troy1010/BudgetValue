@@ -75,7 +75,7 @@ class DevEnv_Main {
                 arrayOf(
                     MenuVMItem("Redo App Init") {
                         appInitRepo.pushAppInitBool(false)
-                            .andThen(Completable.fromAction { appInit.appInit() })
+                            .andThen(appInit)
                             .subscribe()
                     },
                     MenuVMItem("Import Transaction for Future") {
