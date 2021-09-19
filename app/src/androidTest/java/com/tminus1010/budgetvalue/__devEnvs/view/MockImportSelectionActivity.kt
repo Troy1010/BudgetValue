@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._core.ui
+package com.tminus1010.budgetvalue.__devEnvs.view
 
 import android.os.Bundle
 import android.view.LayoutInflater

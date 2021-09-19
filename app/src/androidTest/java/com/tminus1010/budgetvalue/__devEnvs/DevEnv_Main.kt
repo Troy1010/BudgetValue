@@ -9,7 +9,7 @@ import com.tminus1010.budgetvalue._core.LaunchImport
 import com.tminus1010.budgetvalue._core.TestException
 import com.tminus1010.budgetvalue._core.middleware.presentation.MenuVMItem
 import com.tminus1010.budgetvalue._core.ui.HostActivity
-import com.tminus1010.budgetvalue._core.ui.MockImportSelectionActivity
+import com.tminus1010.budgetvalue.__devEnvs.view.MockImportSelectionActivity
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
 import com.tminus1010.budgetvalue._shared.app_init.data.AppInitRepo
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
