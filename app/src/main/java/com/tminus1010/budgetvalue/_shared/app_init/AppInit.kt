@@ -6,22 +6,25 @@ import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.models.CategoryType
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.CompletableObserver
 import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AppInitDomain @Inject constructor(
-    private val appInitRepo: AppInitRepo,
+class AppInit @Inject constructor(
+    appInitRepo: AppInitRepo,
     private val categoriesRepo: CategoriesRepo
-) {
-    fun appInit() {
-        if (!appInitRepo.fetchAppInitBool()) {
+) : Completable() {
+    val x =
+        if (appInitRepo.fetchAppInitBool())
+            complete()
+        else
             Rx.merge(initCategories.map { categoriesRepo.push(it) })
                 .andThen(appInitRepo.pushAppInitBool(true))
-                .subscribe()
-        }
-    }
+
+    override fun subscribeActual(observer: CompletableObserver) = x.subscribe(observer)
 
     companion object {
         val initCategories

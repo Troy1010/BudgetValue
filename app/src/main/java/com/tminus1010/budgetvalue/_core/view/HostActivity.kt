@@ -15,7 +15,7 @@ import com.tminus1010.budgetvalue._core.middleware.Toaster
 import com.tminus1010.budgetvalue._core.presentation.HostVM
 import com.tminus1010.budgetvalue._core.view.extensions.easyAlertDialog
 import com.tminus1010.budgetvalue._core.view.extensions.getString
-import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
+import com.tminus1010.budgetvalue._shared.app_init.AppInit
 import com.tminus1010.budgetvalue.all.app.interactors.SetActivePlanFromHistory
 import com.tminus1010.budgetvalue.all.data.repos.ImportTransactions
 import com.tminus1010.budgetvalue.all.data.repos.IsPlanFeatureEnabled
@@ -36,7 +36,7 @@ class HostActivity : AppCompatActivity() {
     private val hostVM by viewModels<HostVM>()
 
     @Inject
-    lateinit var appInitDomain: AppInitDomain
+    lateinit var appInit: AppInit
 
     @Inject
     lateinit var isPlanFeatureEnabled: IsPlanFeatureEnabled
@@ -60,7 +60,7 @@ class HostActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(vb.root)
         // # Initialize app once per install
-        appInitDomain.appInit()
+        appInit.subscribe()
         // # Bind bottom menu to navigation.
         // In order for NavigationUI.setupWithNavController to work, the ids in R.menu.* must exactly match R.navigation.*
         NavigationUI.setupWithNavController(vb.bottomNavigation, hostFrag.navController)

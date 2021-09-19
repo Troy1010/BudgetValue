@@ -14,11 +14,11 @@ import javax.inject.Inject
 class HostVM @Inject constructor(
     getExtraMenuItemPartials: GetExtraMenuItemPartials,
 ) : ViewModel() {
-    val unCheckAllMenuItems = PublishSubject.create<Unit>()
-    val navToHistory = PublishSubject.create<Unit>()
-    val navToTransactions = PublishSubject.create<Unit>()
-    val navToFutures = PublishSubject.create<Unit>()
-    val navToReplays = PublishSubject.create<Unit>()
+    val unCheckAllMenuItems = PublishSubject.create<Unit>()!!
+    val navToHistory = PublishSubject.create<Unit>()!!
+    val navToTransactions = PublishSubject.create<Unit>()!!
+    val navToFutures = PublishSubject.create<Unit>()!!
+    val navToReplays = PublishSubject.create<Unit>()!!
     val topMenuVMItems =
         MenuVMItems(
             MenuVMItem(

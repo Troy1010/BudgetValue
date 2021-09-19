@@ -11,7 +11,7 @@ import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartials
 import com.tminus1010.budgetvalue._core.LaunchImport
 import com.tminus1010.budgetvalue._core.middleware.presentation.MenuVMItem
 import com.tminus1010.budgetvalue._core.view.HostActivity
-import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
+import com.tminus1010.budgetvalue._shared.app_init.AppInit
 import com.tminus1010.budgetvalue._shared.app_init.data.AppInitRepo
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.models.TerminationStatus
@@ -70,12 +70,12 @@ class DevEnv_Main {
 
         @Provides
         @Singleton
-        fun getExtraMenuItemPartials(appInitRepo: AppInitRepo, appInitDomain: AppInitDomain, transactionsDomain: TransactionsDomain, futuresRepo: FuturesRepo, application: Application) = object : GetExtraMenuItemPartials() {
+        fun getExtraMenuItemPartials(appInitRepo: AppInitRepo, appInit: AppInit, transactionsDomain: TransactionsDomain, futuresRepo: FuturesRepo, application: Application) = object : GetExtraMenuItemPartials() {
             override fun invoke() =
                 arrayOf(
                     MenuVMItem("Redo App Init") {
                         appInitRepo.pushAppInitBool(false)
-                            .andThen(Completable.fromAction { appInitDomain.appInit() })
+                            .andThen(Completable.fromAction { appInit.appInit() })
                             .subscribe()
                     },
                     MenuVMItem("Import Transaction for Future") {
