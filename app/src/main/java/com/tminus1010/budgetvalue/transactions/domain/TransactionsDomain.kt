@@ -41,10 +41,9 @@ class TransactionsDomain @Inject constructor(
         return futuresRepo.fetchFutures().toSingle().map { futures ->
             Rx.merge(
                 transactions.map { transaction ->
-                    futures.find { it.predicate(transaction) }
+                    (futures.find { it.predicate(transaction) }
                         ?.let { future ->
                             transactionsRepo.push(future.categorize(transaction))
-                                .onErrorComplete() // error occurs when transaction already exists
                                 .andThen(
                                     if (future.terminationStatus == TerminationStatus.WAITING_FOR_MATCH)
                                         futuresRepo.setTerminationStatus(future, TerminationStatus.TERMINATED(LocalDate.now()))
@@ -52,7 +51,8 @@ class TransactionsDomain @Inject constructor(
                                         Completable.complete()
                                 )
                         }
-                        ?: transactionsRepo.push(transaction)
+                        ?: transactionsRepo.push(transaction))
+                        .onErrorComplete() // error occurs when transaction already exists
                 }
             )
         }

@@ -3,23 +3,21 @@ package com.tminus1010.budgetvalue
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.activity.viewModels
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue._core.middleware.Toaster
 import com.tminus1010.budgetvalue._core.middleware.view.GenViewHolder2
+import com.tminus1010.budgetvalue.all.data.repos.ImportTransactions
 import com.tminus1010.budgetvalue.databinding.ActivityMockImportSelectionBinding
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
-import com.tminus1010.budgetvalue.transactions.TransactionsMiscVM
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @VisibleForTesting
 @AndroidEntryPoint
 class MockImportSelectionActivity : AppCompatActivity() {
-    val transactionsVM by viewModels<TransactionsMiscVM>()
     val vb by lazy { ActivityMockImportSelectionBinding.inflate(layoutInflater) }
 
     @Inject
@@ -27,6 +25,9 @@ class MockImportSelectionActivity : AppCompatActivity() {
 
     @Inject
     lateinit var toaster: Toaster
+
+    @Inject
+    lateinit var importTransactions: ImportTransactions
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,9 +49,7 @@ class MockImportSelectionActivity : AppCompatActivity() {
                 override fun onBindViewHolder(holder: GenViewHolder2<ItemButtonBinding>, position: Int) {
                     holder.vb.btnItem.text = "Import Transactions ${holder.adapterPosition}"
                     holder.vb.btnItem.setOnClickListener {
-                        transactionsVM.userImportTransactions(
-                            assets.open(transactionPathNames[holder.adapterPosition]).buffered()
-                        )
+                        importTransactions(assets.open(transactionPathNames[holder.adapterPosition]).buffered()).subscribe()
                         toaster.toast(R.string.import_successful)
                         finish()
                     }

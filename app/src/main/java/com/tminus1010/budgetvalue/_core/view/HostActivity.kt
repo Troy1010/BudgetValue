@@ -17,6 +17,7 @@ import com.tminus1010.budgetvalue._core.middleware.Toaster
 import com.tminus1010.budgetvalue._core.presentation.HostVM
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
 import com.tminus1010.budgetvalue.all.app.interactors.SetPlanValuesFromHistory
+import com.tminus1010.budgetvalue.all.data.repos.ImportTransactions
 import com.tminus1010.budgetvalue.all.data.repos.IsPlanFeatureEnabled
 import com.tminus1010.budgetvalue.all.data.repos.IsReconciliationFeatureEnabled
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
@@ -63,6 +64,9 @@ class HostActivity : AppCompatActivity() {
 
     @Inject
     lateinit var setPlanValuesFromHistory: SetPlanValuesFromHistory
+
+    @Inject
+    lateinit var importTransactions: ImportTransactions
 
     private val transactionsMiscVM: TransactionsMiscVM by viewModels()
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.frag_nav_host) as HostFrag }
@@ -118,7 +122,7 @@ class HostActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 try {
-                    transactionsMiscVM.userImportTransactions(contentResolver.openInputStream(result.data!!.data!!)!!)
+                    importTransactions(result.data!!.data!!).subscribe()
                     toaster.toast(R.string.import_successful)
                 } catch (e: Throwable) {
                     hostFrag.handle(e)
