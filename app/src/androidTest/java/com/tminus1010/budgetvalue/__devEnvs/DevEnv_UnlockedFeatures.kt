@@ -48,6 +48,7 @@ class DevEnv_UnlockedFeatures {
     var activityScenarioRule = ActivityScenarioRule(HostActivity::class.java)
 
     init {
+        // TODO("Duct-tape solution b/c partial mocks are difficult")
         IsPlanFeatureEnabled.isPlanFeatureEnabledOverride = Observable.just(true)
         IsReconciliationFeatureEnabled.isReconciliationFeatureEnabledOverride = Observable.just(true)
     }

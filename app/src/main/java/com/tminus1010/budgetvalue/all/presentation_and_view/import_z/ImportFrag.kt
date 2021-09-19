@@ -53,14 +53,14 @@ class ImportFrag : Fragment(R.layout.frag_import) {
                 vb.edittextName.easyText = accountVMItem.title
                 vb.edittextName.onDone {
                     // TODO("There should be a better way to avoid NO_POSITION error.")
-                    if (holder.adapterPosition != RecyclerView.NO_POSITION) return@onDone
+                    if (holder.adapterPosition == RecyclerView.NO_POSITION) return@onDone
                     val accountVMItem = accounts[holder.adapterPosition]
                     accountVMItem.userSetTitle(it)
                 }
                 vb.edittextAmount.easyText = accountVMItem.amount
                 vb.edittextAmount.onDone {
                     // TODO("There should be a better way to avoid NO_POSITION error.")
-                    if (holder.adapterPosition != RecyclerView.NO_POSITION) return@onDone
+                    if (holder.adapterPosition == RecyclerView.NO_POSITION) return@onDone
                     val accountVMItem = accounts[holder.adapterPosition]
                     accountVMItem.userSetAmount(it)
                 }
