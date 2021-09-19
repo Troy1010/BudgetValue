@@ -42,9 +42,10 @@ class ReconciliationHostVM @Inject constructor(
     val title =
         ReconciliationsToDoInteractor.reconciliationsToDo
             .map {
-                if (it.isEmpty())
-                    UnformattedString(R.string.reconciliations_required_none)
-                else
-                    UnformattedString(R.string.reconciliations_required, it.size.toString())
+                when (it.size) {
+                    0 -> UnformattedString(R.string.reconciliations_required_none)
+                    1 -> UnformattedString(R.string.reconciliations_required_one)
+                    else -> UnformattedString(R.string.reconciliations_required_many, it.size.toString())
+                }
             }!!
 }
