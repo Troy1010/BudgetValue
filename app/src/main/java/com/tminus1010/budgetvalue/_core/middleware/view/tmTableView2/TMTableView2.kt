@@ -12,8 +12,6 @@ import com.tminus1010.budgetvalue._core.extensions.widthObservable
 import com.tminus1010.budgetvalue._core.middleware.Orientation
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView.IViewItemRecipe
 import com.tminus1010.budgetvalue.databinding.TableviewBinding
-import com.tminus1010.tmcommonkotlin.misc.extensions.children
-import com.tminus1010.tmcommonkotlin.misc.extensions.clearItemDecorations
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.Disposable
 import java.util.concurrent.TimeUnit

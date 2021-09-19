@@ -12,9 +12,8 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.InvalidCategoryNameException
 import com.tminus1010.budgetvalue._core.extensions.*
-import com.tminus1010.budgetvalue._core.middleware.view.ButtonVMItem
-import com.tminus1010.budgetvalue._core.middleware.view.MenuVMItem
-import com.tminus1010.budgetvalue._core.middleware.view.onDone
+import com.tminus1010.budgetvalue._core.middleware.presentation.ButtonVMItem
+import com.tminus1010.budgetvalue._core.middleware.presentation.MenuVMItem
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTextViewRB
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.ViewItemRecipe3
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding

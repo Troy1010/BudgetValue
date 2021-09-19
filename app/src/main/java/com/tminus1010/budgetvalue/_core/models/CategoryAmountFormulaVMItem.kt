@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue._core.models
 
 import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.middleware.ColdObservable
-import com.tminus1010.budgetvalue._core.middleware.view.MenuVMItem
+import com.tminus1010.budgetvalue._core.middleware.presentation.MenuVMItem
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import com.tminus1010.tmcommonkotlin.tuple.Box

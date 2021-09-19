@@ -5,7 +5,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
-import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,8 +14,6 @@ import com.tminus1010.budgetvalue._core.extensions.widthObservable
 import com.tminus1010.budgetvalue._core.middleware.Orientation
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView2.SynchronizedScrollListener
 import com.tminus1010.budgetvalue.databinding.TableviewBinding
-import com.tminus1010.tmcommonkotlin.misc.extensions.children
-import com.tminus1010.tmcommonkotlin.misc.extensions.clearItemDecorations
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.Disposable

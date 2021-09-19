@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._core.middleware.view
+package com.tminus1010.budgetvalue._core.middleware.presentation
 
 import android.widget.Button
 import com.tminus1010.budgetvalue._core.extensions.lifecycleOwner

@@ -3,7 +3,6 @@ package com.tminus1010.budgetvalue._core.middleware.view.recipe_factories
 import android.content.Context
 import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
-import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.IViewItemRecipe3
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.ViewItemRecipe3__
 import com.tminus1010.budgetvalue.databinding.ItemCheckboxBinding
