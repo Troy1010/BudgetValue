@@ -7,12 +7,13 @@ import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
 
+// TODO("Delete")
 @Singleton
 class AccountsDomain @Inject constructor(
     accountsRepo: AccountsRepo
 ) {
     val accountsTotal: Observable<BigDecimal> =
         accountsRepo.accounts
-            .map { it.map { it.amount }.sum() }
+            .map { it.accounts.map { it.amount }.sum() }
             .replay(1).refCount()
 }

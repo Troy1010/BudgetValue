@@ -6,6 +6,7 @@ import com.tminus1010.budgetvalue._core.middleware.presentation.ButtonVMItem
 import com.tminus1010.budgetvalue.all.data.repos.AccountsRepo
 import com.tminus1010.budgetvalue.all.domain.models.Account
 import com.tminus1010.budgetvalue.all.presentation_and_view._view_model_item.AccountVMItem
+import com.tminus1010.budgetvalue.all.presentation_and_view._view_model_item.AccountsVMItem
 import com.tminus1010.tmcommonkotlin.rx.nonLazy
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,7 +27,8 @@ class AccountsVM @Inject constructor(
             .nonLazy(disposables)
     val accountsTotal =
         accountsRepo.accounts
-            .map { it.total }
+            .map(::AccountsVMItem)
+            .map(AccountsVMItem::total)
             .replayNonError(1)
             .nonLazy(disposables)
     val buttons =
