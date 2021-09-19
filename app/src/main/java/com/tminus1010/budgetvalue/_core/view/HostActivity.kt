@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.Menu
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
@@ -15,6 +14,8 @@ import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartials
 import com.tminus1010.budgetvalue._core.extensions.unCheckAllMenuItems
 import com.tminus1010.budgetvalue._core.middleware.Toaster
 import com.tminus1010.budgetvalue._core.presentation.HostVM
+import com.tminus1010.budgetvalue._core.view.extensions.easyAlertDialog
+import com.tminus1010.budgetvalue._core.view.extensions.getString
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
 import com.tminus1010.budgetvalue.all.app.interactors.SetPlanValuesFromHistory
 import com.tminus1010.budgetvalue.all.data.repos.ImportTransactions
@@ -36,7 +37,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class HostActivity : AppCompatActivity() {
     private val vb by lazy { ActivityHostBinding.inflate(layoutInflater) }
-    val hostVM by viewModels<HostVM>()
+    private val hostVM by viewModels<HostVM>()
 
     @Inject
     lateinit var getExtraMenuItemPartials: GetExtraMenuItemPartials
@@ -91,18 +92,10 @@ class HostActivity : AppCompatActivity() {
         //
         isPlanFeatureEnabled.onChangeToTrue.observe(this) {
             setPlanValuesFromHistory.subscribe()
-            AlertDialog.Builder(this)
-                .setMessage("You've leveled up! You can now make Plans. We've already set it based on your history, but you can adjust it.\nLater on, you can Reconcile what actually happened with your Plan.")
-                .setNeutralButton("Okay") { _, _ -> }
-                .setCancelable(false)
-                .show()
+            easyAlertDialog(getString(hostVM.levelUpPlan))
         }
         isReconciliationFeatureEnabled.onChangeToTrue.observe(this) {
-            AlertDialog.Builder(this)
-                .setMessage("You've leveled up! You can now make Reconciliations.")
-                .setNeutralButton("Okay") { _, _ -> }
-                .setCancelable(false)
-                .show()
+            easyAlertDialog(getString(hostVM.levelUpReconciliation))
         }
         isPlanFeatureEnabled.observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }
         isReconciliationFeatureEnabled.observe(this) { vb.bottomNavigation.menu.findItem(R.id.reconcileFrag).isVisible = it }

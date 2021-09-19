@@ -1,21 +1,17 @@
 package com.tminus1010.budgetvalue
 
-import com.tminus1010.budgetvalue._core.extensions.toObservable
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
-import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.reconciliations.models.Reconciliation
-import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
-import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import java.math.BigDecimal
 import java.time.LocalDate
 
 object Given {
     val givenCategories = Observable.just(AppInitDomain.initCategories)
     val categories = AppInitDomain.initCategories
-//    val givenPlan1 = Plan(
+
+    //    val givenPlan1 = Plan(
 //        localDatePeriod = Observable.just(LocalDatePeriod(LocalDate.now(), Period.ofWeeks(2))),
 //        amount = 60.toBigDecimal(),
 //        categoryAmounts = mapOf(givenCategories.value[0] to 15.toBigDecimal()))
@@ -41,7 +37,8 @@ object Given {
             givenCategories.value!![1] to 55.toBigDecimal()
         )
     )
-    val givenReconciliations = listOf(reconciliation1, reconciliation2).toObservable()
+
+    //    val givenReconciliations = listOf(reconciliation1, reconciliation2).toObservable()
 //    val givenTransactionBlock1 = TransactionBlock(
 //        datePeriod = LocalDatePeriod(LocalDate.now().plus(Period.ofWeeks(2)), Period.ofWeeks(2)),
 //        amount = (-110).toBigDecimal(),
@@ -55,10 +52,10 @@ object Given {
 //        )
 //    )
 //    val givenTransactionBlocks = listOf(givenTransactionBlock1, givenTransactionBlock2).toObservable()
-    val givenActiveReconcileCAs: BehaviorSubject<SourceHashMap<Category, BigDecimal>> =
-        SourceHashMap(
-            null,
-            givenCategories.value!![0] to 9.toBigDecimal()
-        ).toObservable().toBehaviorSubject()
+//    val givenActiveReconcileCAs: BehaviorSubject<SourceHashMap<Category, BigDecimal>> =
+//        SourceHashMap(
+//            null,
+//            givenCategories.value!![0] to 9.toBigDecimal()
+//        ).toObservable().toBehaviorSubject()
     val givenAccountsTotal = BehaviorSubject.createDefault(500.toBigDecimal())
 }

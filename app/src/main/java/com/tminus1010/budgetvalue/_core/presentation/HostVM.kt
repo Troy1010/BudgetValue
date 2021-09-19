@@ -1,9 +1,11 @@
 package com.tminus1010.budgetvalue._core.presentation
 
 import androidx.lifecycle.ViewModel
+import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartials
 import com.tminus1010.budgetvalue._core.middleware.presentation.MenuVMItem
 import com.tminus1010.budgetvalue._core.middleware.presentation.MenuVMItems
+import com.tminus1010.budgetvalue._core.view.view_model_items.UnformattedString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.PublishSubject
 import javax.inject.Inject
@@ -37,4 +39,6 @@ class HostVM @Inject constructor(
             ),
             *getExtraMenuItemPartials()
         )
+    val levelUpPlan = UnformattedString(R.string.level_up_prefix, " ", R.string.level_up_plan)
+    val levelUpReconciliation = UnformattedString(R.string.level_up_prefix, " ", R.string.level_up_reconciliation)
 }
