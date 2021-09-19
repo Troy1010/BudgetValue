@@ -4,4 +4,4 @@ import android.app.Application
 import androidx.test.platform.app.InstrumentationRegistry
 
 
-val app by lazy { InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as Application }
+val app get() = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as Application

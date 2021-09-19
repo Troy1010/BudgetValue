@@ -13,8 +13,8 @@ import javax.inject.Singleton
 
 @Singleton
 class DatePeriodGetter @Inject constructor(
-    private val settingsRepo: SettingsRepo
-): IDatePeriodGetter {
+    private val settingsRepo: SettingsRepo,
+) : IDatePeriodGetter {
     private val anchorDay = LocalDate.of(2020, Month.JULY, 1)
     override fun getDatePeriodObservable(date: LocalDate): Observable<LocalDatePeriod> =
         Rx.combineLatest(settingsRepo.anchorDateOffset, settingsRepo.blockSize)
@@ -22,6 +22,7 @@ class DatePeriodGetter @Inject constructor(
                 getDatePeriod(date, anchorDateOffset, blockSize)
             }
 
+    @Deprecated("does not emit on change, not following SingleResponsibilityPrincipal. Replace with CurrentDatePeriod")
     override fun currentDatePeriod(): LocalDatePeriod =
         getDatePeriod(LocalDate.now())
 
@@ -31,10 +32,11 @@ class DatePeriodGetter @Inject constructor(
 
     override fun isDatePeriodValid(datePeriod: LocalDatePeriod): Boolean =
         getDatePeriod(datePeriod.startDate, anchorDateOffsetBS.value!!, blockSizeBS.value!!) == datePeriod
+
     override fun getDatePeriod(date: LocalDate): LocalDatePeriod =
         getDatePeriod(date, anchorDateOffsetBS.value!!, blockSizeBS.value!!)
 
-    private fun getDatePeriod(date: LocalDate, anchorDateOffset:Long, blockSize:Long): LocalDatePeriod {
+    private fun getDatePeriod(date: LocalDate, anchorDateOffset: Long, blockSize: Long): LocalDatePeriod {
         val startDate = ChronoUnit.DAYS.between(anchorDay.plusDays(anchorDateOffset), date)
             .let { it % blockSize }
             .let { if (anchorDay.plusDays(anchorDateOffset).isAfter(date)) it else -it }

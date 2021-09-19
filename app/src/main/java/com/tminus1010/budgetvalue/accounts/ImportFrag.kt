@@ -8,7 +8,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.LaunchImportUC
+import com.tminus1010.budgetvalue._core.LaunchImport
 import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
 import com.tminus1010.budgetvalue._core.middleware.ui.GenViewHolder2
@@ -25,7 +25,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ImportFrag : Fragment(R.layout.frag_import) {
     @Inject
-    lateinit var launchImportUC: LaunchImportUC
+    lateinit var launchImport: LaunchImport
     private val accountsVM: AccountsVM by activityViewModels()
     private val vb by viewBinding(FragImportBinding::bind)
     var accounts = emptyList<Account>()
@@ -61,7 +61,7 @@ class ImportFrag : Fragment(R.layout.frag_import) {
         vb.buttonsview.buttons = listOfNotNull(
             ButtonVMItem(
                 title = "Import",
-                onClick = { launchImportUC(requireActivity() as HostActivity) },
+                onClick = { launchImport(requireActivity() as HostActivity) },
             ),
             ButtonVMItem(
                 title = "Add Account",

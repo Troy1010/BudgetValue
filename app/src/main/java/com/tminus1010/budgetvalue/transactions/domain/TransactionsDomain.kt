@@ -1,8 +1,11 @@
 package com.tminus1010.budgetvalue.transactions.domain
 
 import com.tminus1010.budgetvalue._core.extensions.cold
+import com.tminus1010.budgetvalue._core.extensions.mapBox
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
+import com.tminus1010.budgetvalue.all.data.LatestDateOfMostRecentImport
+import com.tminus1010.budgetvalue.all.domain.TransactionBlock
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.models.IReplayOrFuture
@@ -10,15 +13,15 @@ import com.tminus1010.budgetvalue.replay_or_future.models.TerminationStatus
 import com.tminus1010.budgetvalue.transactions.TransactionParser
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.models.Transaction
-import com.tminus1010.budgetvalue.transactions.models.TransactionBlock
+import com.tminus1010.budgetvalue.transactions.presentation.TransactionsDomainModel
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
-import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import java.io.InputStream
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,6 +31,7 @@ class TransactionsDomain @Inject constructor(
     private val datePeriodGetter: DatePeriodGetter,
     private val transactionParser: TransactionParser,
     private val futuresRepo: FuturesRepo,
+    private val latestDateOfMostRecentImport: LatestDateOfMostRecentImport
 ) {
     // # Input
     fun importTransactions(inputStream: InputStream): Completable =
@@ -53,6 +57,10 @@ class TransactionsDomain @Inject constructor(
             )
         }
             .flatMapCompletable { it }
+            .andThen(
+                Completable.fromAction { latestDateOfMostRecentImport.set(transactions.sortedBy { it.date }.last().date) }
+                    .delay(2, TimeUnit.SECONDS) // TODO("Duct-tape solution to the fact that the previous completable completes before the repo emits, which ruins IsReconciliationReady")
+            )
     }
 
     fun applyReplayOrFutureToUncategorizedSpends(replay: IReplayOrFuture): Single<Int> {
@@ -79,12 +87,7 @@ class TransactionsDomain @Inject constructor(
                 .filter { it.date in datePeriod }
             transactionsRedefined.removeIf { it.date in datePeriod }
             if (transactionSet.isNotEmpty())
-                returning += transactionSet
-                    .fold(Pair(BigDecimal.ZERO, hashMapOf<Category, BigDecimal>())) { acc, transaction ->
-                        transaction.categoryAmounts.forEach { acc.second[it.key] = it.value + (acc.second[it.key] ?: BigDecimal.ZERO) }
-                        Pair(acc.first + transaction.amount, acc.second)
-                    }
-                    .let { TransactionBlock(datePeriod, it.first, it.second) }
+                returning += TransactionBlock(transactionSet, datePeriod)
             if (transactionsRedefined.isEmpty()) break
             datePeriod = datePeriodGetter.getDatePeriod(transactionsRedefined[0].date)
         }
@@ -96,6 +99,9 @@ class TransactionsDomain @Inject constructor(
     val transactionBlocks: Observable<List<TransactionBlock>> =
         transactions
             .map(::getBlocksFromTransactions)
+    val spendBlocks: Observable<List<TransactionBlock>> =
+        transactionBlocks
+            .map { it.map { it.spendBlock } }
     private val spends: Observable<List<Transaction>> =
         transactions
             .map { it.filter { it.isSpend } }
@@ -115,9 +121,8 @@ class TransactionsDomain @Inject constructor(
         spends
             .map { it.filter { it.isUncategorized } }
     val firstUncategorizedSpend =
-        uncategorizedSpends
-            .map { Box(it.getOrNull(0)) }
-            .startWithItem(Box(null))
-            .replay(1).refCount()
+        transactionsRepo.transactions.startWithItem(listOf())
+            .map(::TransactionsDomainModel)
+            .mapBox(TransactionsDomainModel::firstUncategorized)
             .cold()
 }

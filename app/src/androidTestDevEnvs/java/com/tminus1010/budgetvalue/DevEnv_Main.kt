@@ -4,8 +4,8 @@ import android.app.Application
 import android.content.Intent
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartialsUC
-import com.tminus1010.budgetvalue._core.LaunchImportUC
+import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartials
+import com.tminus1010.budgetvalue._core.LaunchImport
 import com.tminus1010.budgetvalue._core.TestException
 import com.tminus1010.budgetvalue._core.middleware.ui.MenuVMItem
 import com.tminus1010.budgetvalue._core.ui.HostActivity
@@ -54,7 +54,7 @@ class DevEnv_Main {
     object MockModule {
         @Provides
         @Singleton
-        fun launchImportUC() = object : LaunchImportUC() {
+        fun launchImport() = object : LaunchImport() {
             override fun invoke(hostActivity: HostActivity) {
                 Intent(hostActivity, MockImportSelectionActivity::class.java)
                     .also { hostActivity.startActivity(it) }
@@ -63,7 +63,7 @@ class DevEnv_Main {
 
         @Provides
         @Singleton
-        fun getExtraMenuItemPartialsUC(appInitRepo: AppInitRepo, appInitDomain: AppInitDomain, transactionsDomain: TransactionsDomain, futuresRepo: FuturesRepo, application: Application) = object : GetExtraMenuItemPartialsUC() {
+        fun getExtraMenuItemPartials(appInitRepo: AppInitRepo, appInitDomain: AppInitDomain, transactionsDomain: TransactionsDomain, futuresRepo: FuturesRepo, application: Application) = object : GetExtraMenuItemPartials() {
             override fun invoke(hostActivity: HostActivity) = hostActivity.run {
                 arrayOf(
                     MenuVMItem("Redo App Init") {
