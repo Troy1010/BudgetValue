@@ -23,6 +23,7 @@ class ReconciliationHostFrag : Fragment(R.layout.frag_reconciliation_host) {
         // ## Events
         reconciliationHostVM.navToAccountsReconciliation.observe(viewLifecycleOwner) { TODO() }
         reconciliationHostVM.navToPlanReconciliation.observe(viewLifecycleOwner) { TODO() }
+        reconciliationHostVM.navToAnytimeReconciliation.observe(viewLifecycleOwner) { TODO() }
         // ## State
         vb.buttonsview.bind(reconciliationHostVM.buttons) { buttons = it }
         vb.tvTitle.bind(reconciliationHostVM.title) { text = it.getString(context) }

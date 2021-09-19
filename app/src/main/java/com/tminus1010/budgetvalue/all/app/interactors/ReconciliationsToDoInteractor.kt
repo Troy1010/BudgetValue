@@ -10,7 +10,8 @@ class ReconciliationsToDoInteractor @Inject constructor(
     val reconciliationsToDo =
         Observable.just(
             listOf(
-                ReconciliationToDo.Accounts
+                ReconciliationToDo.Accounts,
+                ReconciliationToDo.Anytime,
             )
         )!!
 }
