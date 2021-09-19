@@ -13,6 +13,7 @@ import com.tminus1010.budgetvalue._core.extensions.getColorByAttr
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.view.onDone
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemHeaderRF
+import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemHeaderWithSubtitleRF
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTextViewRB
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTitledDividerRB
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.ViewItemRecipeFactory3
@@ -48,13 +49,6 @@ class AnytimeReconciliationFrag : Fragment(R.layout.frag_reconcile) {
         // ## State
         vb.buttonsview.buttons = anytimeReconciliationVM.buttons
         // ## TMTableView
-        val numberedHeaderRecipeFactory = ViewItemRecipeFactory3<ItemHeaderIncomeBinding, Pair<String, Observable<String>>>(
-            { ItemHeaderIncomeBinding.inflate(LayoutInflater.from(context)) },
-            { d, vb, lifecycle ->
-                vb.textviewHeader.text = d.first
-                d.second.observe(lifecycle) { vb.textviewNumber.text = it }
-            }
-        )
         val reconcileCARecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Pair<Category, Observable<String>?>>(
             { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
             { (category, d), vb, lifecycle ->
@@ -84,7 +78,7 @@ class AnytimeReconciliationFrag : Fragment(R.layout.frag_reconcile) {
                     listOf(itemHeaderRF().create("Category"))
                             + itemTextViewRB().create("Default")
                             + categories.map { itemTextViewRB().create(it.name) },
-                    listOf(numberedHeaderRecipeFactory.createOne(Pair("Plan", activePlanVM.expectedIncome)))
+                    listOf(itemHeaderWithSubtitleRF().create("Plan", activePlanVM.expectedIncome))
                             + itemTextViewRB().create(activePlanVM.defaultAmount)
                             + categories.map { itemTextViewRB().create(activePlanCAs[it] ?: Observable.just("")) },
                     listOf(itemHeaderRF().create("Actual"))
@@ -93,7 +87,7 @@ class AnytimeReconciliationFrag : Fragment(R.layout.frag_reconcile) {
                     listOf(itemHeaderRF().create("Reconcile"))
                             + itemTextViewRB().create(anytimeReconciliationVM.defaultAmount)
                             + reconcileCARecipeFactory.createMany(categories.map { it to activeReconciliationCAs[it] }),
-                    listOf(numberedHeaderRecipeFactory.createOne(Pair("Budgeted", accountsVM.accountsTotal)))
+                    listOf(itemHeaderWithSubtitleRF().create("Budgeted", accountsVM.accountsTotal))
                             + itemTextViewRB().create(budgetedVM.defaultAmount)
                             + budgetedRecipeFactory.createMany(categories.map { budgetedCA[it] })
                 ).reflectXY()
