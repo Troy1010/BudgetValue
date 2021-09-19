@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartials
 import com.tminus1010.budgetvalue._core.extensions.unCheckAllMenuItems
 import com.tminus1010.budgetvalue._core.middleware.Toaster
 import com.tminus1010.budgetvalue._core.presentation.HostVM
@@ -23,12 +22,9 @@ import com.tminus1010.budgetvalue.all.data.repos.IsPlanFeatureEnabled
 import com.tminus1010.budgetvalue.all.data.repos.IsReconciliationFeatureEnabled
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.history.HistoryFrag
-import com.tminus1010.budgetvalue.plans.data.PlansRepo
-import com.tminus1010.budgetvalue.plans.domain.ActivePlanDomain
 import com.tminus1010.budgetvalue.replay_or_future.FuturesReviewFrag
 import com.tminus1010.budgetvalue.replay_or_future.ReplaysFrag
 import com.tminus1010.budgetvalue.transactions.TransactionsMiscVM
-import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.budgetvalue.transactions.ui.TransactionsFrag
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,25 +36,13 @@ class HostActivity : AppCompatActivity() {
     private val hostVM by viewModels<HostVM>()
 
     @Inject
-    lateinit var getExtraMenuItemPartials: GetExtraMenuItemPartials
-
-    @Inject
     lateinit var appInitDomain: AppInitDomain
-
-    @Inject
-    lateinit var transactionsDomain: TransactionsDomain
 
     @Inject
     lateinit var isPlanFeatureEnabled: IsPlanFeatureEnabled
 
     @Inject
     lateinit var isReconciliationFeatureEnabled: IsReconciliationFeatureEnabled
-
-    @Inject
-    lateinit var activePlanDomain: ActivePlanDomain
-
-    @Inject
-    lateinit var plansRepo: PlansRepo
 
     @Inject
     lateinit var toaster: Toaster
