@@ -10,6 +10,7 @@ import com.tminus1010.budgetvalue.reconciliations.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.rx.extensions.total
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
+import io.reactivex.rxjava3.core.Observable
 import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -41,16 +42,12 @@ class BudgetedDomain @Inject constructor(
         categoryAmounts
             .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO)) { it.itemObservableMap }
     val defaultAmount =
-        Rx.combineLatest(
-            accountsDomain.accountsTotal,
-            categoryAmountsObservableMap.switchMap { it.values.total() },
-        )
-            .map { (accountsTotal, categoryAmountsTotal) ->
-                accountsTotal - categoryAmountsTotal
-            }
+        Observable.combineLatest(accountsDomain.accountsTotal, categoryAmountsObservableMap.switchMap { it.values.total() })
+        { accountsTotal, categoryAmountsTotal ->
+            accountsTotal - categoryAmountsTotal
+        }
             .replayNonError(1)
     val budgeted =
-        Rx.combineLatest(categoryAmounts, defaultAmount)
-            .map { Budgeted(it.first, it.second) }
+        Observable.combineLatest(categoryAmounts, defaultAmount, ::Budgeted)
             .replayNonError(1)
 }

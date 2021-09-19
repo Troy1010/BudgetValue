@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.all.domain
 
 import com.tminus1010.budgetvalue._core.extensions.isZero
-import com.tminus1010.budgetvalue._core.middleware.LocalDatePeriod
+import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
 import com.tminus1010.budgetvalue._shared.date_period_getter.IDatePeriodGetter
 import com.tminus1010.budgetvalue.history.models.IHistoryColumnData

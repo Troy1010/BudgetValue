@@ -1,11 +1,9 @@
 package com.tminus1010.budgetvalue
 
 import com.tminus1010.budgetvalue._core.extensions.toObservable
-import com.tminus1010.budgetvalue._core.middleware.LocalDatePeriod
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.reconciliations.models.Reconciliation
-import com.tminus1010.budgetvalue.all.domain.TransactionBlock
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
@@ -13,7 +11,6 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
 import java.time.LocalDate
-import java.time.Period
 
 object Given {
     val givenCategories = Observable.just(AppInitDomain.initCategories)

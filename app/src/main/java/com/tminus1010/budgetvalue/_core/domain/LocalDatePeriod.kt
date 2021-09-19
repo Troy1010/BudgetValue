@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._core.middleware
+package com.tminus1010.budgetvalue._core.domain
 
 import java.time.LocalDate
 import java.time.Period
