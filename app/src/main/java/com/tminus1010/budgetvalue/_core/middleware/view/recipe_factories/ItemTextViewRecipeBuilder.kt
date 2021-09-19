@@ -7,6 +7,7 @@ import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.getColorByAttr
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.IViewItemRecipe3
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.ViewItemRecipe3__
+import com.tminus1010.budgetvalue.all.presentation_and_view._models.ValidatedStringVMItem
 import com.tminus1010.budgetvalue.databinding.ItemTextViewBinding
 import com.tminus1010.tmcommonkotlin.view.extensions.toPX
 import io.reactivex.rxjava3.core.Observable
@@ -22,6 +23,23 @@ class ItemTextViewRecipeBuilder(private val context: Context) {
             vb.textview.requestLayout()
         }
         return this
+    }
+
+    @JvmName("createValidatedStringVMItem")
+    fun create(validatedStringVMItem: Observable<ValidatedStringVMItem>): IViewItemRecipe3 {
+        return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, styler) { vb ->
+            vb.textview.bind(validatedStringVMItem) {
+                text = it.s
+                setTextColor(
+                    context.theme.getColorByAttr(
+                        if (it.isValid)
+                            R.attr.colorOnBackground
+                        else
+                            R.attr.colorOnError
+                    )
+                )
+            }
+        }
     }
 
     fun create(s: String?): IViewItemRecipe3 {

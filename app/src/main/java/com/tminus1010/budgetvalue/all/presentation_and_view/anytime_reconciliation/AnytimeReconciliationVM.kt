@@ -3,11 +3,13 @@ package com.tminus1010.budgetvalue.all.presentation_and_view.anytime_reconciliat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.extensions.flatMapSourceHashMap
+import com.tminus1010.budgetvalue._core.extensions.isZero
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.middleware.presentation.ButtonVMItem
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.all.app.interactors.SaveActiveReconciliationInteractor
+import com.tminus1010.budgetvalue.all.presentation_and_view._models.ValidatedStringVMItem
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.reconciliations.data.ReconciliationsRepo
@@ -47,9 +49,9 @@ class AnytimeReconciliationVM @Inject constructor(
             .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO)) { it.itemObservableMap }
             .map { it.mapValues { it.value.map { it.toString() } } }
             .nonLazyCache(disposables)
-    val defaultAmount: Observable<String> =
+    val defaultAmount: Observable<ValidatedStringVMItem> =
         activeReconcileCAs.map { it.values.sum() }
-            .map(BigDecimal::toString)
+            .map { ValidatedStringVMItem(it, BigDecimal::isZero) }
     val buttons =
         listOf(
             ButtonVMItem(
