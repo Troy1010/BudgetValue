@@ -65,6 +65,7 @@ class HostActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(vb.bottomNavigation, hostFrag.navController)
         //
         // This line solves (after doing an Import): java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
+        // TODO("This may no longer be required b/c using Interactors instead")
         transactionsMiscVM
         //
         hostVM.navToReplays.observe(this) { ReplaysFrag.navTo(nav) }
@@ -81,7 +82,7 @@ class HostActivity : AppCompatActivity() {
             easyAlertDialog(getString(hostVM.levelUpReconciliation))
         }
         isPlanFeatureEnabled.observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }
-        isReconciliationFeatureEnabled.observe(this) { vb.bottomNavigation.menu.findItem(R.id.reconcileFrag).isVisible = it }
+        isReconciliationFeatureEnabled.observe(this) { vb.bottomNavigation.menu.findItem(R.id.reconciliationHostFrag).isVisible = it }
     }
 
     override fun onStart() {
