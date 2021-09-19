@@ -8,7 +8,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.LaunchImport
+import com.tminus1010.budgetvalue._core.LaunchSelectFile
 import com.tminus1010.budgetvalue._core.extensions.easyText
 import com.tminus1010.budgetvalue._core.middleware.view.GenViewHolder2
 import com.tminus1010.budgetvalue._core.middleware.view.onDone
@@ -25,7 +25,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ImportFrag : Fragment(R.layout.frag_import) {
     @Inject
-    lateinit var launchImport: LaunchImport
+    lateinit var launchSelectFile: LaunchSelectFile
     private val accountsVM: AccountsVM by activityViewModels()
     private val vb by viewBinding(FragImportBinding::bind)
     var accounts = emptyList<AccountVMItem>()
@@ -36,7 +36,7 @@ class ImportFrag : Fragment(R.layout.frag_import) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Events
-        accountsVM.navToSelectFile.observe(viewLifecycleOwner) { launchImport(requireActivity() as HostActivity) }
+        accountsVM.navToSelectFile.observe(viewLifecycleOwner) { launchSelectFile(requireActivity() as HostActivity) }
         // # Buttons
         vb.buttonsview.buttons = accountsVM.buttons
         // # Accounts

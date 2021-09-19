@@ -8,7 +8,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.tminus1010.budgetvalue.AndroidTestAssetOwner
 import com.tminus1010.budgetvalue.MockImportSelectionActivity
 import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartials
-import com.tminus1010.budgetvalue._core.LaunchImport
+import com.tminus1010.budgetvalue._core.LaunchSelectFile
 import com.tminus1010.budgetvalue._core.middleware.presentation.MenuVMItem
 import com.tminus1010.budgetvalue._core.presentation_and_view.host.HostActivity
 import com.tminus1010.budgetvalue._shared.app_init.AppInit
@@ -64,7 +64,7 @@ class DevEnv_UnlockedFeatures {
     object MockModule {
         @Provides
         @Singleton
-        fun launchImport() = object : LaunchImport() {
+        fun launchImport() = object : LaunchSelectFile() {
             override fun invoke(hostActivity: HostActivity) {
                 Intent(hostActivity, MockImportSelectionActivity::class.java)
                     .also { hostActivity.startActivity(it) }
