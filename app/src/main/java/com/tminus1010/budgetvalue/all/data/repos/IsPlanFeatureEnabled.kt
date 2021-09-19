@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.all.data.repos
 
 import android.app.Application
+import androidx.annotation.VisibleForTesting
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.squareup.moshi.Moshi
@@ -58,11 +59,18 @@ class IsPlanFeatureEnabled @Inject constructor(
             .subscribeBy(onSuccess = { set(it) })
     }
 
-    override fun subscribeActual(observer: Observer<in Boolean>) = isPlanFeatureEnabled.subscribe(observer)
+    override fun subscribeActual(observer: Observer<in Boolean>) =
+        (isPlanFeatureEnabledOverride ?: isPlanFeatureEnabled)
+            .subscribe(observer)
 
     val onChangeToTrue =
         isPlanFeatureEnabled
             .pairwise()
             .filter { it.second }
             .map { Unit }!!
+
+    companion object {
+        @VisibleForTesting
+        var isPlanFeatureEnabledOverride: Observable<Boolean>? = null
+    }
 }

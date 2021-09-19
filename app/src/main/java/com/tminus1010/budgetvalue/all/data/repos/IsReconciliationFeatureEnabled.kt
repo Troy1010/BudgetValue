@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.all.data.repos
 
 import android.app.Application
+import androidx.annotation.VisibleForTesting
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import com.tminus1010.budgetvalue._core.extensions.cold
@@ -42,7 +43,9 @@ class IsReconciliationFeatureEnabled @Inject constructor(
             .subscribeBy(onSuccess = { set(true) })
     }
 
-    override fun subscribeActual(observer: Observer<in Boolean>) = isReconciliationFeatureEnabled.subscribe(observer)
+    override fun subscribeActual(observer: Observer<in Boolean>) =
+        (isReconciliationFeatureEnabledOverride ?: isReconciliationFeatureEnabled)
+            .subscribe(observer)
 
     // TODO("test if this emits when it shouldn't?")
     val onChangeToTrue =
@@ -50,4 +53,9 @@ class IsReconciliationFeatureEnabled @Inject constructor(
             .pairwise()
             .filter { it.second }
             .map { Unit }!!
+
+    companion object {
+        @VisibleForTesting
+        var isReconciliationFeatureEnabledOverride: Observable<Boolean>? = null
+    }
 }
