@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._core.repo
+package com.tminus1010.budgetvalue._core.data.repos
 
 import android.app.Application
 import android.content.BroadcastReceiver

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="._core.view.HostActivity">
+    tools:context="._core.presentation_and_view.host.HostActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/frag_nav_host"

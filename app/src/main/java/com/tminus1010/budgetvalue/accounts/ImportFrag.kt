@@ -14,7 +14,7 @@ import com.tminus1010.budgetvalue._core.middleware.presentation.ButtonVMItem
 import com.tminus1010.budgetvalue._core.middleware.view.GenViewHolder2
 import com.tminus1010.budgetvalue._core.middleware.view.onDone
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
-import com.tminus1010.budgetvalue._core.view.HostActivity
+import com.tminus1010.budgetvalue._core.presentation_and_view.host.HostActivity
 import com.tminus1010.budgetvalue.accounts.models.Account
 import com.tminus1010.budgetvalue.databinding.FragImportBinding
 import com.tminus1010.budgetvalue.databinding.ItemAccountBinding

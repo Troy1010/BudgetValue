@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._core.repo
+package com.tminus1010.budgetvalue._core.data.repos
 
 import com.tminus1010.budgetvalue._core.extensions.cold
 import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter

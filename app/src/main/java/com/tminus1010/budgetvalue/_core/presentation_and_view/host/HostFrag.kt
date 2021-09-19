@@ -1,10 +1,10 @@
-package com.tminus1010.budgetvalue._core.view
+package com.tminus1010.budgetvalue._core.presentation_and_view.host
 
 import android.app.Application
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.NavHostFragment
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.ErrorVM
+import com.tminus1010.budgetvalue._core.presentation_and_view.error.ErrorVM
 import com.tminus1010.budgetvalue._core.ImportFailedException
 import com.tminus1010.budgetvalue._core.TestException
 import com.tminus1010.budgetvalue._core.middleware.presentation.ButtonVMItem

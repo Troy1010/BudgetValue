@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._core
+package com.tminus1010.budgetvalue._core.presentation_and_view.error
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.middleware.presentation.ButtonVMItem

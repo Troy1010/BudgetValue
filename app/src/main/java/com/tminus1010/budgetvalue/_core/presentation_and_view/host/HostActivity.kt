@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._core.view
+package com.tminus1010.budgetvalue._core.presentation_and_view.host
 
 import android.app.Activity
 import android.os.Bundle
@@ -12,9 +12,8 @@ import androidx.navigation.ui.NavigationUI
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.unCheckAllMenuItems
 import com.tminus1010.budgetvalue._core.middleware.Toaster
-import com.tminus1010.budgetvalue._core.presentation.HostVM
-import com.tminus1010.budgetvalue._core.view.extensions.easyAlertDialog
-import com.tminus1010.budgetvalue._core.view.extensions.getString
+import com.tminus1010.budgetvalue._core.presentation_and_view._extensions.easyAlertDialog
+import com.tminus1010.budgetvalue._core.presentation_and_view._extensions.getString
 import com.tminus1010.budgetvalue._shared.app_init.AppInit
 import com.tminus1010.budgetvalue.all.app.interactors.SetActivePlanFromHistory
 import com.tminus1010.budgetvalue.all.data.repos.ImportTransactions

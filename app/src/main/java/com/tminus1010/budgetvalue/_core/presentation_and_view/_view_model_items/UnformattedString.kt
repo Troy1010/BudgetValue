@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._core.view.view_model_items
+package com.tminus1010.budgetvalue._core.presentation_and_view._view_model_items
 
 import android.content.Context
 
@@ -37,14 +37,14 @@ sealed class UnformattedString {
         operator fun invoke(s: String, vararg args: Any): WithCoreString {
             return WithCoreString(
                 s = s,
-                args = args.map(::fromAnyToUnformattedString)
+                args = args.map(Companion::fromAnyToUnformattedString)
             )
         }
 
         operator fun invoke(stringID: Int, vararg args: Any): WithCoreStringID {
             return WithCoreStringID(
                 stringID = stringID,
-                args = args.map(::fromAnyToUnformattedString)
+                args = args.map(Companion::fromAnyToUnformattedString)
             )
         }
 

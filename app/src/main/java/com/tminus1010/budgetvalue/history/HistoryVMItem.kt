@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.history
 import com.tminus1010.budgetvalue._core.extensions.mapBox
 import com.tminus1010.budgetvalue._core.middleware.presentation.MenuVMItem
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
-import com.tminus1010.budgetvalue._core.repo.CurrentDatePeriod
+import com.tminus1010.budgetvalue._core.data.repos.CurrentDatePeriod
 import com.tminus1010.budgetvalue.budgeted.Budgeted
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
