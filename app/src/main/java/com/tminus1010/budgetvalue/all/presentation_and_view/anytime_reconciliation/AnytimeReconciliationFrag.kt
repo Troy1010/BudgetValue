@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.all.presentation_and_view.reconciliation
+package com.tminus1010.budgetvalue.all.presentation_and_view.anytime_reconciliation
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,10 +7,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.tminus1010.budgetvalue.*
 import com.tminus1010.budgetvalue._core.extensions.bind
-import com.tminus1010.budgetvalue._core.extensions.easyText
 import com.tminus1010.budgetvalue._core.extensions.getColorByAttr
 import com.tminus1010.budgetvalue._core.middleware.Rx
-import com.tminus1010.budgetvalue._core.middleware.view.onDone
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.ViewItemRecipeFactory3
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.recipeFactories
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
@@ -33,7 +31,7 @@ import java.util.concurrent.TimeUnit
 @AndroidEntryPoint
 class AnytimeReconciliationFrag : Fragment(R.layout.frag_reconcile) {
     private val vb by viewBinding(FragReconcileBinding::bind)
-    private val activeReconciliationVM: ActiveReconciliationVM by activityViewModels()
+    private val anytimeReconciliationVM: AnytimeReconciliationVM by activityViewModels()
     private val categoriesVM: CategoriesVM by activityViewModels()
     private val activePlanVM: ActivePlanVM by activityViewModels()
     private val transactionsMiscVM: TransactionsMiscVM by activityViewModels()
@@ -43,7 +41,7 @@ class AnytimeReconciliationFrag : Fragment(R.layout.frag_reconcile) {
         super.onViewCreated(view, savedInstanceState)
         // # Bind Incoming from Presentation layer
         // ## State
-        vb.buttonsview.buttons = activeReconciliationVM.buttons
+        vb.buttonsview.buttons = anytimeReconciliationVM.buttons
         // ## TMTableView
         val numberedHeaderRecipeFactory = ViewItemRecipeFactory3<ItemHeaderIncomeBinding, Pair<String, Observable<String>>>(
             { ItemHeaderIncomeBinding.inflate(LayoutInflater.from(context)) },
@@ -55,7 +53,7 @@ class AnytimeReconciliationFrag : Fragment(R.layout.frag_reconcile) {
         val reconcileCARecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Pair<Category, Observable<String>?>>(
             { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
             { (category, d), vb, lifecycle ->
-                vb.moneyedittext.onDone { activeReconciliationVM.pushActiveReconcileCA(category, it) }
+                vb.moneyedittext.onDone { anytimeReconciliationVM.pushActiveReconcileCA(category, it) }
                 if (d == null) return@ViewItemRecipeFactory3
                 d.observe(lifecycle) { vb.moneyedittext.easyText = it }
             }
@@ -73,7 +71,7 @@ class AnytimeReconciliationFrag : Fragment(R.layout.frag_reconcile) {
                 }
             },
         )
-        Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs, transactionsMiscVM.currentSpendBlockCAs, activeReconciliationVM.activeReconcileCAsToShow, budgetedVM.categoryAmounts)
+        Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs, transactionsMiscVM.currentSpendBlockCAs, anytimeReconciliationVM.activeReconcileCAsToShow, budgetedVM.categoryAmounts)
             .observeOn(Schedulers.computation())
             .debounce(100, TimeUnit.MILLISECONDS)
             .map { (categories, activePlanCAs, currentSpendBlockCAs, activeReconciliationCAs, budgetedCA) ->
@@ -88,7 +86,7 @@ class AnytimeReconciliationFrag : Fragment(R.layout.frag_reconcile) {
                             + recipeFactories.textView.createOne("")
                             + recipeFactories.textView.createMany(categories.map { currentSpendBlockCAs[it]?.toString() ?: "" }),
                     listOf(recipeFactories.header.createOne("Reconcile"))
-                            + recipeFactories.textViewWithLifecycle.createOne(activeReconciliationVM.defaultAmount)
+                            + recipeFactories.textViewWithLifecycle.createOne(anytimeReconciliationVM.defaultAmount)
                             + reconcileCARecipeFactory.createMany(categories.map { it to activeReconciliationCAs[it] }),
                     listOf(numberedHeaderRecipeFactory.createOne(Pair("Budgeted", accountsVM.accountsTotal)))
                             + recipeFactories.textViewWithLifecycle.createOne(budgetedVM.defaultAmount)

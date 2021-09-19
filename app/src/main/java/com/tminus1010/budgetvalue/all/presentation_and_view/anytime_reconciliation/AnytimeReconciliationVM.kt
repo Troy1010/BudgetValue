@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.all.presentation_and_view.reconciliation
+package com.tminus1010.budgetvalue.all.presentation_and_view.anytime_reconciliation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
@@ -22,7 +22,7 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
-class ActiveReconciliationVM @Inject constructor(
+class AnytimeReconciliationVM @Inject constructor(
     private val reconciliationsRepo: ReconciliationsRepo,
     categoriesDomain: CategoriesDomain,
     private val activeReconciliationDefaultAmountUC: ActiveReconciliationDefaultAmountUC,
