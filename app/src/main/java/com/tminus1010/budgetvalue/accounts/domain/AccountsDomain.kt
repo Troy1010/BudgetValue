@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue.accounts.domain
 
 import com.tminus1010.budgetvalue.all.data.repos.AccountsRepo
-import com.tminus1010.budgetvalue.all.domain.models.Account
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import io.reactivex.rxjava3.core.Observable
 import java.math.BigDecimal
@@ -12,10 +11,8 @@ import javax.inject.Singleton
 class AccountsDomain @Inject constructor(
     accountsRepo: AccountsRepo
 ) {
-    val accounts: Observable<List<Account>> = accountsRepo.fetchAccounts()
-        .replay(1).refCount()
-
-    val accountsTotal: Observable<BigDecimal> = accounts
-        .map { it.map { it.amount }.sum() }
-        .replay(1).refCount()
+    val accountsTotal: Observable<BigDecimal> =
+        accountsRepo.accounts
+            .map { it.map { it.amount }.sum() }
+            .replay(1).refCount()
 }

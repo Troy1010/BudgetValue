@@ -32,7 +32,9 @@ class AccountsVM @Inject constructor(
     }
 
     // # Output
-    val accounts = accountsDomain.accounts
+    val accounts =
+        accountsRepo.fetchAccounts()
+        accountsDomain.accounts
         .toState(disposables, errorSubject)
     val accountsTotal = accountsDomain.accountsTotal
         .map { it.toString() }

@@ -2,17 +2,21 @@ package com.tminus1010.budgetvalue.all.data.repos
 
 import com.tminus1010.budgetvalue._core.data.MiscDAO
 import com.tminus1010.budgetvalue.all.domain.models.Account
+import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class AccountsRepo @Inject constructor(
     private val miscDAO: MiscDAO
 ) {
-    fun fetchAccounts(): Observable<List<Account>> =
+    val accounts =
         miscDAO.fetchAccounts().subscribeOn(Schedulers.io())
             .map { it.map { Account.fromDTO(it) } }
+            .replayNonError(1)
 
     private fun getAccount(id: Int): Observable<Account> =
         miscDAO.getAccount(id).subscribeOn(Schedulers.io())
