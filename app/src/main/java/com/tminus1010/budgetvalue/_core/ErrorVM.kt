@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue._core
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
+import com.tminus1010.budgetvalue._core.middleware.view.ButtonVMItem
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
 class ErrorVM: ViewModel() {

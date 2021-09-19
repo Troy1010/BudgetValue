@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue._core
 
-import com.tminus1010.budgetvalue._core.middleware.ui.MenuVMItem
+import com.tminus1010.budgetvalue._core.middleware.view.MenuVMItem
 import com.tminus1010.budgetvalue._core.ui.HostActivity
 import javax.inject.Inject
 

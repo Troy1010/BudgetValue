@@ -13,10 +13,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.bind
-import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
-import com.tminus1010.budgetvalue._core.middleware.ui.GenViewHolder2
-import com.tminus1010.budgetvalue._core.middleware.ui.LifecycleRVAdapter
-import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue._core.middleware.view.ButtonVMItem
+import com.tminus1010.budgetvalue._core.middleware.view.GenViewHolder2
+import com.tminus1010.budgetvalue._core.middleware.view.LifecycleRVAdapter
+import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category

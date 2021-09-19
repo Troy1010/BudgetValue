@@ -10,10 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.LaunchImport
 import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
-import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
-import com.tminus1010.budgetvalue._core.middleware.ui.GenViewHolder2
-import com.tminus1010.budgetvalue._core.middleware.ui.onDone
-import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue._core.middleware.view.ButtonVMItem
+import com.tminus1010.budgetvalue._core.middleware.view.GenViewHolder2
+import com.tminus1010.budgetvalue._core.middleware.view.onDone
+import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
 import com.tminus1010.budgetvalue._core.ui.HostActivity
 import com.tminus1010.budgetvalue.accounts.models.Account
 import com.tminus1010.budgetvalue.databinding.FragImportBinding

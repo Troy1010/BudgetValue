@@ -8,9 +8,9 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.easyVisibility
-import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.itemEditTextRF
-import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.itemTextViewRB
-import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemEditTextRF
+import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTextViewRB
+import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragChooseTransactionDesciption2Binding
 import com.tminus1010.budgetvalue.databinding.FragTransactionsBinding
 import com.tminus1010.budgetvalue.transactions.ReplayVM

@@ -7,9 +7,9 @@ import com.tminus1010.budgetvalue.*
 import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.easyText
 import com.tminus1010.budgetvalue._core.middleware.Rx
-import com.tminus1010.budgetvalue._core.middleware.ui.onDone
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.*
-import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue._core.middleware.view.onDone
+import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.*
+import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.FragPlanBinding

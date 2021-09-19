@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.middleware.ui.GenViewHolder2
+import com.tminus1010.budgetvalue._core.middleware.view.GenViewHolder2
 import com.tminus1010.budgetvalue.databinding.ActivityMockImportSelectionBinding
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
 import com.tminus1010.budgetvalue.transactions.TransactionsMiscVM

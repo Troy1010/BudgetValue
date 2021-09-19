@@ -12,7 +12,7 @@
         app:layout_constraintBottom_toTopOf="@id/buttonsview"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.tminus1010.budgetvalue._core.middleware.ui.ButtonsView
+    <com.tminus1010.budgetvalue._core.middleware.view.ButtonsView
         android:id="@+id/buttonsview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -6,14 +6,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.TMTableView3
+    <com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.TMTableView3
         android:id="@+id/tmTableView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/buttonsview"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.tminus1010.budgetvalue._core.middleware.ui.ButtonsView
+    <com.tminus1010.budgetvalue._core.middleware.view.ButtonsView
         android:id="@+id/buttonsview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

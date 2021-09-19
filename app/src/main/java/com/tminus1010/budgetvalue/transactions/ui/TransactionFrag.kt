@@ -9,10 +9,10 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.easyText
 import com.tminus1010.budgetvalue._core.extensions.getColorByAttr
-import com.tminus1010.budgetvalue._core.middleware.ui.ButtonVMItem
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.recipeFactories
-import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue._core.middleware.view.ButtonVMItem
+import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.ViewItemRecipeFactory3
+import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.recipeFactories
+import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragTransactionBinding
 import com.tminus1010.budgetvalue.databinding.ItemTextViewBinding
 import com.tminus1010.budgetvalue.transactions.TransactionVM

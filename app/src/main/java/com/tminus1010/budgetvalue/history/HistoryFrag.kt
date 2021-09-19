@@ -9,10 +9,10 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.show
-import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.itemTextViewRB
-import com.tminus1010.budgetvalue._core.middleware.ui.recipe_factories.itemTitledDividerRB
-import com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3.ViewItemRecipeFactory3
-import com.tminus1010.budgetvalue._core.middleware.ui.viewBinding
+import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTextViewRB
+import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTitledDividerRB
+import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.ViewItemRecipeFactory3
+import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragHistoryBinding
 import com.tminus1010.budgetvalue.databinding.ItemHeaderWithSubtitleBinding
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
