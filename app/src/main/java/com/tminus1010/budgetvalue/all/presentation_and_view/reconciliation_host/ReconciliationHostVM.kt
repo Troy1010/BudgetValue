@@ -1,27 +1,50 @@
 package com.tminus1010.budgetvalue.all.presentation_and_view.reconciliation_host
 
 import androidx.lifecycle.ViewModel
+import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.middleware.presentation.ButtonVMItem
+import com.tminus1010.budgetvalue._core.presentation_and_view._view_model_items.UnformattedString
+import com.tminus1010.budgetvalue.all.app.interactors.ReconciliationsToDoInteractor
+import com.tminus1010.budgetvalue.all.domain.models.ReconciliationToDo
+import com.tminus1010.budgetvalue.all.framework.extensions.emit
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.PublishSubject
 import javax.inject.Inject
 
 @HiltViewModel
 class ReconciliationHostVM @Inject constructor(
+    ReconciliationsToDoInteractor: ReconciliationsToDoInteractor,
 ) : ViewModel() {
+    // # Internal
+    private fun mapReconciliationsToDoToButtonVMItem(reconciliationToDos: List<ReconciliationToDo>): List<ButtonVMItem> {
+        return reconciliationToDos
+            .map {
+                when (it) {
+                    is ReconciliationToDo.Accounts -> ButtonVMItem(
+                        title = "Accounts Reconciliation",
+                        onClick = navToAccountsReconciliation::emit,
+                    )
+                    is ReconciliationToDo.PlanZ -> TODO()
+                }
+            }
+    }
+
     // # Presentation Output
+    // ## Events
+    val navToAccountsReconciliation = PublishSubject.create<Unit>()!!
+    val navToPlanReconciliation = PublishSubject.create<Unit>()!!
+
+    // ## State
     val buttons =
-        Observable.just(
-            listOf(
-                ButtonVMItem(
-                    title = "Account Reconciliation",
-                    onClick = { TODO() }
-                )
-            )
-        )!!
+        ReconciliationsToDoInteractor.reconciliationsToDo
+            .map(::mapReconciliationsToDoToButtonVMItem)!!
 
     val title =
-        Observable.just(
-            "No Reconciliations Required" // TODO()
-        )!!
+        ReconciliationsToDoInteractor.reconciliationsToDo
+            .map {
+                if (it.isEmpty())
+                    UnformattedString(R.string.reconciliations_required_none)
+                else
+                    UnformattedString(R.string.reconciliations_required, it.size)
+            }!!
 }
