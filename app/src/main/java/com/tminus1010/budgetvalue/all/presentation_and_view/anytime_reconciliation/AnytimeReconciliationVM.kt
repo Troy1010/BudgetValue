@@ -26,6 +26,7 @@ class AnytimeReconciliationVM @Inject constructor(
     saveActiveReconciliationInteractor: SaveActiveReconciliationInteractor
 ) : ViewModel() {
     // # User Intents
+    // TODO("This should just be in a VMItem.")
     fun pushActiveReconcileCA(category: Category, s: String) {
         reconciliationsRepo.pushActiveReconciliationCA(category to s.toMoneyBigDecimal())
             .subscribe()
@@ -38,9 +39,9 @@ class AnytimeReconciliationVM @Inject constructor(
         Observable.combineLatest(
             reconciliationsRepo.activeReconciliationCAs,
             categoriesDomain.userCategories,
-        ) { activeReconcileCAs, activeCategories ->
+        ) { activeReconcileCAs, userCategories ->
             // These extra zeros prevent refreshes on hidden additions/removals that happen when a value is set to 0.
-            activeCategories.associateWith { BigDecimal.ZERO }
+            userCategories.associateWith { BigDecimal.ZERO }
                 .plus(activeReconcileCAs)
         }
             .nonLazyCache(disposables)
