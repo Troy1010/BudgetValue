@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.accounts.domain
 
-import com.tminus1010.budgetvalue.accounts.data.AccountsRepo
-import com.tminus1010.budgetvalue.accounts.models.Account
+import com.tminus1010.budgetvalue.all.data.repos.AccountsRepo
+import com.tminus1010.budgetvalue.all.domain.models.Account
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import io.reactivex.rxjava3.core.Observable
 import java.math.BigDecimal

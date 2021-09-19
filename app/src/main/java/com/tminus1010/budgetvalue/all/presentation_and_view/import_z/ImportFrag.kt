@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.accounts
+package com.tminus1010.budgetvalue.all.presentation_and_view.import_z
 
 import android.os.Bundle
 import android.view.View
@@ -15,7 +15,7 @@ import com.tminus1010.budgetvalue._core.middleware.view.GenViewHolder2
 import com.tminus1010.budgetvalue._core.middleware.view.onDone
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
 import com.tminus1010.budgetvalue._core.presentation_and_view.host.HostActivity
-import com.tminus1010.budgetvalue.accounts.models.Account
+import com.tminus1010.budgetvalue.all.domain.models.Account
 import com.tminus1010.budgetvalue.databinding.FragImportBinding
 import com.tminus1010.budgetvalue.databinding.ItemAccountBinding
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe

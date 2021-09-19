@@ -15,7 +15,7 @@ import com.tminus1010.budgetvalue._core.middleware.view.onDone
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.ViewItemRecipeFactory3
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.recipeFactories
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
-import com.tminus1010.budgetvalue.accounts.AccountsVM
+import com.tminus1010.budgetvalue.all.presentation_and_view.import_z.AccountsVM
 import com.tminus1010.budgetvalue.budgeted.BudgetedVM
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.models.Category

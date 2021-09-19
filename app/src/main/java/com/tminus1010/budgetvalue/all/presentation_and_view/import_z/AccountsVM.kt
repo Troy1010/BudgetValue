@@ -1,14 +1,13 @@
-package com.tminus1010.budgetvalue.accounts
+package com.tminus1010.budgetvalue.all.presentation_and_view.import_z
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
-import com.tminus1010.budgetvalue.accounts.data.AccountsRepo
+import com.tminus1010.budgetvalue.all.data.repos.AccountsRepo
 import com.tminus1010.budgetvalue.accounts.domain.AccountsDomain
-import com.tminus1010.budgetvalue.accounts.models.Account
+import com.tminus1010.budgetvalue.all.domain.models.Account
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.toState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.subjects.Subject
 import java.math.BigDecimal
 import javax.inject.Inject
