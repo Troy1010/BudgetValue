@@ -26,8 +26,9 @@ class ItemTextViewRecipeBuilder(private val context: Context) {
     }
 
     @JvmName("createValidatedStringVMItem")
-    fun create(validatedStringVMItem: Observable<ValidatedStringVMItem>): IViewItemRecipe3 {
+    fun create(validatedStringVMItem: Observable<ValidatedStringVMItem>?): IViewItemRecipe3 {
         return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, styler) { vb ->
+            if (validatedStringVMItem == null) return@ViewItemRecipe3__
             vb.textview.bind(validatedStringVMItem) {
                 text = it.s
                 setTextColor(

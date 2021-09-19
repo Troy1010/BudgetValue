@@ -53,23 +53,10 @@ class AnytimeReconciliationFrag : Fragment(R.layout.frag_reconcile) {
                 d.observe(lifecycle) { vb.moneyedittext.easyText = it }
             }
         )
-        val budgetedRecipeFactory = ViewItemRecipeFactory3<ItemTextViewBinding, Observable<BigDecimal>?>(
-            { ItemTextViewBinding.inflate(LayoutInflater.from(requireContext())) },
-            { d, vb, lifecycle ->
-                if (d == null) return@ViewItemRecipeFactory3
-                vb.textview.bind(d, lifecycle) {
-                    easyText = it.toString()
-                    if (it < BigDecimal.ZERO)
-                        setTextColor(context.theme.getColorByAttr(R.attr.colorOnError))
-                    else
-                        setTextColor(context.theme.getColorByAttr(R.attr.colorOnBackground))
-                }
-            },
-        )
-        Rx.combineLatest(categoriesVM.userCategories, anytimeReconciliationVM.activeReconcileCAsToShow, budgetedVM.categoryAmounts)
+        Rx.combineLatest(categoriesVM.userCategories, anytimeReconciliationVM.activeReconcileCAsToShow, budgetedVM.categoryValidatedStringVMItems)
             .observeOn(Schedulers.computation())
             .debounce(100, TimeUnit.MILLISECONDS)
-            .map { (categories, activeReconciliationCAs, budgetedCA) ->
+            .map { (categories, activeReconciliationCAs, budgetedCategoryValidatedStringVMItems) ->
                 val recipeGrid = listOf(
                     listOf(itemHeaderRF().create("Category"))
                             + itemTextViewRB().create("Default")
@@ -79,7 +66,7 @@ class AnytimeReconciliationFrag : Fragment(R.layout.frag_reconcile) {
                             + reconcileCARecipeFactory.createMany(categories.map { it to activeReconciliationCAs[it] }),
                     listOf(itemHeaderWithSubtitleRF().create("Budgeted", accountsVM.accountsTotal))
                             + itemTextViewRB().create(budgetedVM.defaultAmount)
-                            + budgetedRecipeFactory.createMany(categories.map { budgetedCA[it] })
+                            + categories.map { itemTextViewRB().create(budgetedCategoryValidatedStringVMItems[it]) }
                 ).reflectXY()
                 val dividerMap = categories
                     .withIndex()
