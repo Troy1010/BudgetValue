@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue._core.middleware.ui.tmTableView3
 import android.view.LayoutInflater
 import android.view.View
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.tminus1010.budgetvalue._core_testing.app
+import com.tminus1010.budgetvalue.__core_testing.app
 import com.tminus1010.budgetvalue.databinding.ItemTextViewBinding
 import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
 import dagger.hilt.android.testing.HiltAndroidTest

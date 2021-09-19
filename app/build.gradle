@@ -23,7 +23,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "com.tminus1010.budgetvalue._core_testing.CustomTestRunner"
+        testInstrumentationRunner "com.tminus1010.budgetvalue.__core_testing.CustomTestRunner"
 
         multiDexEnabled true
 

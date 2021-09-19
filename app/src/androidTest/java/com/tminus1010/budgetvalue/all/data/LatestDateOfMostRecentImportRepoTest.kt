@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.all.data
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.tminus1010.budgetvalue._core.dependency_injection.MiscModule
-import com.tminus1010.budgetvalue._core_testing.app
+import com.tminus1010.budgetvalue.__core_testing.app
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.reactivex.rxjava3.observers.TestObserver
 import org.junit.Test
