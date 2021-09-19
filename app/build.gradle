@@ -41,22 +41,6 @@ android {
         }
     }
 
-    flavorDimensions "devEnvs_production"
-    productFlavors {
-        // # Production flavor
-        production {
-            dimension "devEnvs_production"
-            applicationIdSuffix ".production"
-            versionNameSuffix "-production"
-        }
-        // # Development flavor has DevEnvs.
-        devEnvs {
-            dimension "devEnvs_production"
-            applicationIdSuffix ".devEnvs"
-            versionNameSuffix "-devEnvs"
-        }
-    }
-
     buildFeatures {
         viewBinding = true
     }
