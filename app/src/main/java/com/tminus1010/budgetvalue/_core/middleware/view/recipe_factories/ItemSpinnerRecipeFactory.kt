@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 fun Fragment.itemSpinnerRF() = ItemSpinnerRecipeFactory(requireContext())
 
+@Suppress("UNCHECKED_CAST")
 class ItemSpinnerRecipeFactory(private val context: Context) {
     private val inflate: (LayoutInflater) -> ItemSpinnerBinding = ItemSpinnerBinding::inflate
     fun <T> create(values: Array<T>, initialValue: T, lambda: (T) -> Unit): IViewItemRecipe3 {

@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.all.domain
+package com.tminus1010.budgetvalue.all.domain.models
 
 import com.tminus1010.budgetvalue.reconciliations.models.Reconciliation
 
