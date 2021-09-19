@@ -5,12 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.*
 import com.tminus1010.budgetvalue._core.extensions.bind
+import com.tminus1010.budgetvalue._core.extensions.easyText
 import com.tminus1010.budgetvalue._core.extensions.getColorByAttr
 import com.tminus1010.budgetvalue._core.middleware.Rx
+import com.tminus1010.budgetvalue._core.middleware.view.onDone
+import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemHeaderRF
+import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTextViewRB
+import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTitledDividerRB
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.ViewItemRecipeFactory3
-import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.recipeFactories
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
 import com.tminus1010.budgetvalue.all.presentation_and_view.import_z.AccountsVM
 import com.tminus1010.budgetvalue.budgeted.BudgetedVM
@@ -76,26 +81,26 @@ class AnytimeReconciliationFrag : Fragment(R.layout.frag_reconcile) {
             .debounce(100, TimeUnit.MILLISECONDS)
             .map { (categories, activePlanCAs, currentSpendBlockCAs, activeReconciliationCAs, budgetedCA) ->
                 val recipeGrid = listOf(
-                    listOf(recipeFactories.header.createOne("Category"))
-                            + recipeFactories.textView.createOne("Default")
-                            + recipeFactories.textView.createMany(categories.map { it.name }),
+                    listOf(itemHeaderRF().create("Category"))
+                            + itemTextViewRB().create("Default")
+                            + categories.map { itemTextViewRB().create(it.name) },
                     listOf(numberedHeaderRecipeFactory.createOne(Pair("Plan", activePlanVM.expectedIncome)))
-                            + recipeFactories.textViewWithLifecycle.createOne(activePlanVM.defaultAmount)
-                            + recipeFactories.textViewWithLifecycle.createMany(categories.map { activePlanCAs[it] }),
-                    listOf(recipeFactories.header.createOne("Actual"))
-                            + recipeFactories.textView.createOne("")
-                            + recipeFactories.textView.createMany(categories.map { currentSpendBlockCAs[it]?.toString() ?: "" }),
-                    listOf(recipeFactories.header.createOne("Reconcile"))
-                            + recipeFactories.textViewWithLifecycle.createOne(anytimeReconciliationVM.defaultAmount)
+                            + itemTextViewRB().create(activePlanVM.defaultAmount)
+                            + categories.map { itemTextViewRB().create(activePlanCAs[it] ?: Observable.just("")) },
+                    listOf(itemHeaderRF().create("Actual"))
+                            + itemTextViewRB().create("")
+                            + categories.map { itemTextViewRB().create(currentSpendBlockCAs[it]?.toString() ?: "") },
+                    listOf(itemHeaderRF().create("Reconcile"))
+                            + itemTextViewRB().create(anytimeReconciliationVM.defaultAmount)
                             + reconcileCARecipeFactory.createMany(categories.map { it to activeReconciliationCAs[it] }),
                     listOf(numberedHeaderRecipeFactory.createOne(Pair("Budgeted", accountsVM.accountsTotal)))
-                            + recipeFactories.textViewWithLifecycle.createOne(budgetedVM.defaultAmount)
+                            + itemTextViewRB().create(budgetedVM.defaultAmount)
                             + budgetedRecipeFactory.createMany(categories.map { budgetedCA[it] })
                 ).reflectXY()
                 val dividerMap = categories
                     .withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
-                    .associate { it.index to recipeFactories.titledDivider.createOne(it.value.type.name) }
+                    .associate { it.index to itemTitledDividerRB().create(it.value.type.name) }
                     .mapKeys { it.key + 2 } // header row, default row
                 Pair(recipeGrid, dividerMap)
             }
@@ -107,5 +112,11 @@ class AnytimeReconciliationFrag : Fragment(R.layout.frag_reconcile) {
                     rowFreezeCount = 1,
                 )
             }
+    }
+
+    companion object {
+        fun navTo(nav: NavController) {
+            nav.navigate(R.id.reconcileFrag)
+        }
     }
 }
