@@ -12,13 +12,11 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartials
-import com.tminus1010.budgetvalue._core.extensions.isZero
-import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.extensions.unCheckAllMenuItems
 import com.tminus1010.budgetvalue._core.middleware.Toaster
-import com.tminus1010.budgetvalue._core.models.CategoryAmounts
 import com.tminus1010.budgetvalue._core.presentation.HostVM
 import com.tminus1010.budgetvalue._shared.app_init.AppInitDomain
+import com.tminus1010.budgetvalue.all.app.interactors.SetPlanValuesFromHistory
 import com.tminus1010.budgetvalue.all.data.IsPlanFeatureEnabled
 import com.tminus1010.budgetvalue.all.data.IsReconciliationFeatureEnabled
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
@@ -32,7 +30,6 @@ import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.budgetvalue.transactions.ui.TransactionsFrag
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -64,6 +61,9 @@ class HostActivity : AppCompatActivity() {
     @Inject
     lateinit var toaster: Toaster
 
+    @Inject
+    lateinit var setPlanValuesFromHistory: SetPlanValuesFromHistory
+
     private val transactionsMiscVM: TransactionsMiscVM by viewModels()
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.frag_nav_host) as HostFrag }
     private val nav by lazy { findNavController(R.id.frag_nav_host) }
@@ -86,15 +86,7 @@ class HostActivity : AppCompatActivity() {
         hostVM.unCheckAllMenuItems.observe(this) { vb.bottomNavigation.menu.unCheckAllMenuItems() }
         //
         isPlanFeatureEnabled.onChangeToTrue.observe(this) {
-            Observable.combineLatest(activePlanDomain.activePlan, transactionsDomain.transactionBlocks)
-            { activePlan, transactionBlocks ->
-                val relevantTransactionBlocks = transactionBlocks.filter { it.defaultAmount.isZero }
-                val categoryAmounts =
-                    relevantTransactionBlocks
-                        .fold(CategoryAmounts()) { acc, v -> acc.addTogether(v.categoryAmounts) }
-                        .mapValues { (_, v) -> (v / relevantTransactionBlocks.size.toBigDecimal()).toString().toMoneyBigDecimal() }
-                plansRepo.updatePlan(activePlan.copy(categoryAmounts = categoryAmounts))
-            }.flatMapCompletable { it }.subscribe()
+            setPlanValuesFromHistory.subscribe()
             AlertDialog.Builder(this)
                 .setMessage("You've leveled up! You can now make Plans. We've already set it based on your history, but you can adjust it.\nLater on, you can Reconcile what actually happened with your Plan.")
                 .setNeutralButton("Okay") { _, _ -> }
@@ -126,8 +118,7 @@ class HostActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 try {
-                    contentResolver.openInputStream(result.data!!.data!!)!!
-                        .also { inputStream -> transactionsMiscVM.userImportTransactions(inputStream) }
+                    transactionsMiscVM.userImportTransactions(contentResolver.openInputStream(result.data!!.data!!)!!)
                     toaster.toast(R.string.import_successful)
                 } catch (e: Throwable) {
                     hostFrag.handle(e)
