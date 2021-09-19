@@ -44,13 +44,13 @@ class TransactionsDomain @Inject constructor(
                     futures.find { it.predicate(transaction) }
                         ?.let { future ->
                             transactionsRepo.push(future.categorize(transaction))
+                                .onErrorComplete() // error occurs when transaction already exists
                                 .andThen(
                                     if (future.terminationStatus == TerminationStatus.WAITING_FOR_MATCH)
                                         futuresRepo.setTerminationStatus(future, TerminationStatus.TERMINATED(LocalDate.now()))
                                     else
                                         Completable.complete()
                                 )
-                                .onErrorComplete() // error occurs when transaction already exists
                         }
                         ?: transactionsRepo.push(transaction)
                 }
