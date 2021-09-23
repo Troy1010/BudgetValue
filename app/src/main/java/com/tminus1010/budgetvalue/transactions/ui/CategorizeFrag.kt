@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
@@ -15,7 +14,7 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.middleware.presentation.ButtonVMItem
 import com.tminus1010.budgetvalue._core.middleware.view.GenViewHolder2
-import com.tminus1010.budgetvalue._core.middleware.view.LifecycleRVAdapter
+import com.tminus1010.budgetvalue._core.middleware.view.LifecycleRVAdapter2
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
@@ -79,7 +78,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         vb.recyclerviewCategories.addItemDecoration(LayoutMarginDecoration(3, 8.toPX(requireContext())))
         vb.recyclerviewCategories.layoutManager =
             GridLayoutManager(requireActivity(), 3, GridLayoutManager.VERTICAL, false)
-        vb.recyclerviewCategories.adapter = object : LifecycleRVAdapter<GenViewHolder2<ItemCategoryBtnBinding>>() {
+        vb.recyclerviewCategories.adapter = object : LifecycleRVAdapter2<GenViewHolder2<ItemCategoryBtnBinding>>() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
                 GenViewHolder2(ItemCategoryBtnBinding.inflate(LayoutInflater.from(requireContext()), parent, false))
 
@@ -101,12 +100,11 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
             }
 
             override fun getItemCount() = categories.size
-            override fun onViewAttachedToWindow(holder: GenViewHolder2<ItemCategoryBtnBinding>, lifecycle: LifecycleOwner) {
+
+            override fun onLifecycleAttached(holder: GenViewHolder2<ItemCategoryBtnBinding>) {
                 val categoryName = categories[holder.adapterPosition].name
-                categorySelectionVM.selectedCategories.observe(lifecycle) { selectedCategories ->
-                    holder.vb.btnCategory.alpha =
-                        if (selectedCategories.isEmpty() || categoryName in selectedCategories.map { it.name }) 1F
-                        else 0.5F
+                holder.vb.btnCategory.bind(categorySelectionVM.selectedCategories) {
+                    alpha = if (it.isEmpty() || categoryName in it.map { it.name }) 1F else 0.5F
                 }
             }
         }
