@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
     <item
         android:id="@+id/importFrag"
         android:title="Import" />
@@ -13,4 +12,7 @@
     <item
         android:id="@+id/reconciliationHostFrag"
         android:title="Reconcile" />
+    <item
+        android:id="@+id/reviewFrag"
+        android:title="Review" />
 </menu>
