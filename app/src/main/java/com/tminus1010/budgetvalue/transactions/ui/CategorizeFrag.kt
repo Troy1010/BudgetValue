@@ -75,9 +75,10 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         vb.textviewAmountLeft.bind(transactionsMiscVM.uncategorizedSpendsSize) { text = it }
         // # Categories RecyclerView
         categoriesVM.userCategories.observe(viewLifecycleOwner) { categories = it }
-        vb.recyclerviewCategories.addItemDecoration(LayoutMarginDecoration(3, 8.toPX(requireContext())))
+        val spanSize = if (requireContext().resources.configuration.fontScale <= 1.0) 3 else 2
+        vb.recyclerviewCategories.addItemDecoration(LayoutMarginDecoration(spanSize, 8.toPX(requireContext())))
         vb.recyclerviewCategories.layoutManager =
-            GridLayoutManager(requireActivity(), 3, GridLayoutManager.VERTICAL, false)
+            GridLayoutManager(requireActivity(), spanSize, GridLayoutManager.VERTICAL, false)
         vb.recyclerviewCategories.adapter = object : LifecycleRVAdapter2<GenViewHolder2<ItemCategoryBtnBinding>>() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
                 GenViewHolder2(ItemCategoryBtnBinding.inflate(LayoutInflater.from(requireContext()), parent, false))
