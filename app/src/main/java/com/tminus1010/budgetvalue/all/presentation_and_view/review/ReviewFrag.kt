@@ -17,8 +17,6 @@ import com.tminus1010.budgetvalue._core.models.CategoryAmounts
 import com.tminus1010.budgetvalue.databinding.FragReviewBinding
 import com.tminus1010.tmcommonkotlin.core.logx
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.absoluteValue
 
 @AndroidEntryPoint
@@ -29,13 +27,10 @@ class ReviewFrag : Fragment(R.layout.frag_review) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = FragReviewBinding.bind(view)
-        vb.pieChart1.bind(reviewVM.chartData) {
-            logz("chartData:$it")
-            setData(it)
-        }
+        vb.pieChart1.bind(reviewVM.chartData) { data = createPieData(it); invalidate() }
     }
 
-    private fun setData(categoryAmounts: CategoryAmounts) {
+    private fun createPieData(categoryAmounts: CategoryAmounts): PieData {
         val entries = categoryAmounts.map { PieEntry(it.value.toFloat().absoluteValue.logx("PieEntryValue")) }
         val dataSet = PieDataSet(entries, "Election Results")
         dataSet.setDrawIcons(false)
@@ -52,20 +47,11 @@ class ReviewFrag : Fragment(R.layout.frag_review) {
         for (c in ColorTemplate.PASTEL_COLORS) colors.add(c)
         colors.add(ColorTemplate.getHoloBlue())
         dataSet.colors = colors
-        //dataSet.setSelectionShift(0f);
-        val data = PieData(dataSet)
-        data.setValueFormatter(PercentFormatter())
-        data.setValueTextSize(11f)
-        data.setValueTextColor(Color.WHITE)
-        vb.pieChart1.data = data
-
-        // undo all highlights
-        vb.pieChart1.highlightValues(null)
-        vb.pieChart1.invalidate()
+//        dataSet.selectionShift = 0f
+        return PieData(dataSet).apply {
+            setValueFormatter(PercentFormatter())
+            setValueTextSize(11f)
+            setValueTextColor(Color.WHITE)
+        }
     }
-
-
-//    private fun createPieData(categoryAmounts: CategoryAmounts): PieData {
-//        return data
-//    }
 }
