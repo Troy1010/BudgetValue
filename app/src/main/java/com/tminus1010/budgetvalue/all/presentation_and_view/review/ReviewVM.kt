@@ -15,6 +15,7 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
 import java.time.Duration
 import java.time.LocalDate
@@ -80,6 +81,8 @@ class ReviewVM @Inject constructor(
     private val pieData = pieDataSet.map(::PieData)!!
 
     // # State
+    val errors = PublishSubject.create<Throwable>()!!
+
     /**
      * A [PieChartVMItem] is everything you need to produce a [PieChart], once you get access to a [Context] in the layer above.
      */
