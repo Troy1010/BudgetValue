@@ -9,7 +9,8 @@ import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.easyVisibility
 import com.tminus1010.budgetvalue.all.framework.extensions.invoke
 import com.tminus1010.budgetvalue.all.presentation_and_view._extensions.onClick
-import com.tminus1010.budgetvalue.all.presentation_and_view._models.NoMostRecentSpend
+import com.tminus1010.budgetvalue.all.presentation_and_view._models.NoMoreDataException
+import com.tminus1010.budgetvalue.all.presentation_and_view._models.NoMostRecentSpendException
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.bind
 import com.tminus1010.budgetvalue.all.presentation_and_view.bind
 import com.tminus1010.budgetvalue.databinding.FragReviewBinding
@@ -29,7 +30,8 @@ class ReviewFrag : Fragment(R.layout.frag_review) {
             // # Events
             reviewVM.errors.observe(viewLifecycleOwner) {
                 when (it) {
-                    is NoMostRecentSpend -> logz("Swallowing error:${it.javaClass.simpleName}")
+                    is NoMostRecentSpendException -> logz("Swallowing error:${it.javaClass.simpleName}")
+                    is NoMoreDataException -> easyToast("No more data. Import more transactions")
                     else -> easyToast("An error occurred").run { logz("error:", it) }
                 }
             }

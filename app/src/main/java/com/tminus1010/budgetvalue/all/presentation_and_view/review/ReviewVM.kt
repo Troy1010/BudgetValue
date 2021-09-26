@@ -14,7 +14,8 @@ import com.tminus1010.budgetvalue._core.models.CategoryAmounts
 import com.tminus1010.budgetvalue.all.domain.models.TransactionBlock
 import com.tminus1010.budgetvalue.all.presentation_and_view.SelectableDuration
 import com.tminus1010.budgetvalue.all.presentation_and_view.UsePeriodType
-import com.tminus1010.budgetvalue.all.presentation_and_view._models.NoMostRecentSpend
+import com.tminus1010.budgetvalue.all.presentation_and_view._models.NoMoreDataException
+import com.tminus1010.budgetvalue.all.presentation_and_view._models.NoMostRecentSpendException
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.PieChartVMItem
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.SpinnerVMItem
 import com.tminus1010.budgetvalue.categories.models.Category
@@ -52,6 +53,7 @@ class ReviewVM @Inject constructor(
         userSelectedDuration.switchMap {
             Observable.merge(userPrevious.map { 1 }, userNext.map { -1 })
                 .scan(0) { acc, v ->
+                    if (acc + v < 0) errors.onNext(NoMoreDataException())
                     (acc + v).coerceAtLeast(0)
                 }
                 .map(Int::toLong)
@@ -64,7 +66,7 @@ class ReviewVM @Inject constructor(
     private val period =
         Observable.combineLatest(userSelectedDuration, currentPageNumber, userUsePeriodType, transactionsAppService.transactions2.mapBox { it.mostRecentSpend }.filter { it.first != null }) // TODO("Filtering for not-null seems like a duct-tape solution b/c error stops subscription")
         { userSelectedDuration, currentPageNumber, userUsePeriodType, (mostRecentSpend) ->
-            val mostRecentSpendDate = (mostRecentSpend?.date ?: throw NoMostRecentSpend())
+            val mostRecentSpendDate = (mostRecentSpend?.date ?: throw NoMostRecentSpendException())
             when (userSelectedDuration) {
                 SelectableDuration.BY_WEEK ->
                     when (userUsePeriodType) {
