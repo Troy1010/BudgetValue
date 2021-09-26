@@ -46,14 +46,13 @@ class TMTableView3 @JvmOverloads constructor(
         dividerMap: Map<Int, IViewItemRecipe3> = emptyMap(),
         colFreezeCount: Int = 0,
         rowFreezeCount: Int = 0,
+        noDividers: Boolean = false,
     ) {
         // For some reason, without this, an empty recipeGrid will result in a no-stacktrace crash after 6s.
-        if (recipeGrid.isEmpty()) {
-            removeAllViews()
-            return
-        }
+        if (recipeGrid.isEmpty()) removeAllViews().also { return }
         //
-        RecipeGrid3.assert2dGrid(recipeGrid)
+        val recipeGridRedefined = RecipeGrid3.fillToEnsure2dGrid(context, recipeGrid)
+        RecipeGrid3.assert2dGrid(recipeGridRedefined)
         //
         if (shouldFitItemWidthsInsideTable)
             widthObservable()
@@ -62,21 +61,23 @@ class TMTableView3 @JvmOverloads constructor(
                 .observeOn(AndroidSchedulers.mainThread())
                 .observe(findViewTreeLifecycleOwner()!!) { width ->
                     inflateAndBind(
-                        RecipeGrid3(recipeGrid, width),
+                        RecipeGrid3(recipeGridRedefined, width),
                         dividerMap,
                         colFreezeCount,
                         rowFreezeCount,
                         SynchronizedScrollListener(Orientation.HORIZONTAL),
+                        noDividers,
                     )
                 }
                 .also { fitItemWidthsInsideTableDisposable?.dispose(); fitItemWidthsInsideTableDisposable = it }
         else
             inflateAndBind(
-                RecipeGrid3(recipeGrid),
+                RecipeGrid3(recipeGridRedefined),
                 dividerMap,
                 colFreezeCount,
                 rowFreezeCount,
                 SynchronizedScrollListener(Orientation.HORIZONTAL),
+                noDividers,
             )
     }
 
@@ -86,6 +87,7 @@ class TMTableView3 @JvmOverloads constructor(
         colFreezeCount: Int,
         rowFreezeCount: Int,
         synchronizedScrollListener: SynchronizedScrollListener,
+        noDividers: Boolean,
     ) {
         removeAllViews()
         val vb = TableviewBinding.inflate(LayoutInflater.from(context), this, true)
@@ -101,10 +103,11 @@ class TMTableView3 @JvmOverloads constructor(
         }
         // # Cells
         if (isWrapContentVertically) vb.recyclerviewTier1.updateLayoutParams { height = WRAP_CONTENT } // passing wrap_content to children
-        vb.recyclerviewTier1.adapter = OuterRVAdapter3(context, recipeGrid, rowFreezeCount, synchronizedScrollListener)
+        vb.recyclerviewTier1.adapter = OuterRVAdapter3(context, recipeGrid, rowFreezeCount, synchronizedScrollListener, noDividers)
         vb.recyclerviewTier1.layoutManager = LinearLayoutManager(context, VERTICAL, false)
         vb.recyclerviewTier1.clearItemDecorations()
-        vb.recyclerviewTier1.addItemDecoration(OuterDecoration3(context, Orientation.VERTICAL, dividerMap, recipeGrid, colFreezeCount, rowFreezeCount))
+        if (!noDividers)
+            vb.recyclerviewTier1.addItemDecoration(OuterDecoration3(context, Orientation.VERTICAL, dividerMap, recipeGrid, colFreezeCount, rowFreezeCount))
         // ## Synchronize scrolling
         disposable?.dispose()
         disposable = synchronizedScrollListener.scrollObservable
@@ -117,9 +120,8 @@ class TMTableView3 @JvmOverloads constructor(
                             ?.also { synchronizedScrollListener.ignoredScrollBy(it, dx, 0) }
                     }
                 // ### Scroll frozen row
-                if (vb.recyclerviewColumnheaders != v) {
+                if (vb.recyclerviewColumnheaders != v)
                     synchronizedScrollListener.ignoredScrollBy(vb.recyclerviewColumnheaders, dx, 0)
-                }
             }
     }
 }
