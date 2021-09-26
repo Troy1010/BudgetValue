@@ -111,7 +111,7 @@ class CreateFutureVM @Inject constructor(
     val searchDescriptionHeader = "Description"
     val searchDescription =
         userSetSearchDescription
-            .startWithItem(transactionsDomain.firstUncategorizedSpend.value.first?.description ?: "")
+            .startWithItem(transactionsDomain.mostRecentUncategorizedSpend.value.first?.description ?: "")
             .distinctUntilChanged()
             .cold()
     val searchDescriptionMenuVMItems = listOf(

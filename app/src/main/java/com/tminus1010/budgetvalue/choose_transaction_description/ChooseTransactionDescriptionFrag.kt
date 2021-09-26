@@ -28,7 +28,7 @@ class ChooseTransactionDescriptionFrag : Fragment(R.layout.frag_transactions) {
         vb.tvNoTransactionHistory.bind(transactionsDomain.transactions) { easyVisibility = it.isEmpty() }
         // TODO: This should be moved into a VM. I have not done so yet b/c I need to figure out how to not have 2 ChooseTransactionDescriptionFrag first.
         val _transactions =
-            Observable.combineLatest(transactionsDomain.transactions, transactionsDomain.firstUncategorizedSpend)
+            Observable.combineLatest(transactionsDomain.transactions, transactionsDomain.mostRecentUncategorizedSpend)
             { transactions, (firstUncategorizedSpend) ->
                 transactions
                     .run { if (firstUncategorizedSpend == null) this else listOf(firstUncategorizedSpend) + this }

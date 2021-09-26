@@ -24,7 +24,7 @@ class CategorizeVM @Inject constructor(
     // # Input
     fun userSimpleCategorize(category: Category) {
         saveTransactionDomain.saveTransaction(
-            transactionsDomain.firstUncategorizedSpend.unbox
+            transactionsDomain.mostRecentUncategorizedSpend.unbox
                 .categorize(category)
         )
             .observe(disposables)
@@ -32,7 +32,7 @@ class CategorizeVM @Inject constructor(
 
     fun userReplay(replay: IReplay) {
         saveTransactionDomain.saveTransaction(
-            replay.categorize(transactionsDomain.firstUncategorizedSpend.unbox)
+            replay.categorize(transactionsDomain.mostRecentUncategorizedSpend.unbox)
         )
             .observe(disposables)
     }
@@ -54,7 +54,7 @@ class CategorizeVM @Inject constructor(
 
     // # Output
     val matchingReplays =
-        Observable.combineLatest(replaysRepo.fetchReplays(), transactionsDomain.firstUncategorizedSpend)
+        Observable.combineLatest(replaysRepo.fetchReplays(), transactionsDomain.mostRecentUncategorizedSpend)
         { replays, (transaction) ->
             if (transaction == null) emptyList() else
                 replays.filter { it.predicate(transaction) }
@@ -62,15 +62,15 @@ class CategorizeVM @Inject constructor(
     val isUndoAvailable = saveTransactionDomain.isUndoAvailable
     val isRedoAvailable = saveTransactionDomain.isRedoAvailable
     val isTransactionAvailable: Observable<Boolean> =
-        transactionsDomain.firstUncategorizedSpend
+        transactionsDomain.mostRecentUncategorizedSpend
             .map { it.first != null }
     val date: Observable<String> =
-        transactionsDomain.firstUncategorizedSpend
+        transactionsDomain.mostRecentUncategorizedSpend
             .map { it.first?.date?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")) ?: "" }
     val latestUncategorizedTransactionAmount: Observable<String> =
-        transactionsDomain.firstUncategorizedSpend
+        transactionsDomain.mostRecentUncategorizedSpend
             .map { it.first?.defaultAmount?.toString() ?: "" }
     val latestUncategorizedTransactionDescription: Observable<String> =
-        transactionsDomain.firstUncategorizedSpend
+        transactionsDomain.mostRecentUncategorizedSpend
             .map { it.first?.description ?: "" }
 }

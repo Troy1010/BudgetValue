@@ -125,7 +125,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     ButtonVMItem(
                         title = "Split",
                         isEnabled = categorizeVM.isTransactionAvailable,
-                        onClick = { SplitFrag.navTo(nav, transactionsDomain.firstUncategorizedSpend.value!!.first!!) }
+                        onClick = { SplitFrag.navTo(nav, transactionsDomain.mostRecentUncategorizedSpend.value!!.first!!) }
                     )
                 else null,
                 if (inSelectionMode)

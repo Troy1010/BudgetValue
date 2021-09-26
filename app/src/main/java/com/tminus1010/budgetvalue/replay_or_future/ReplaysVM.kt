@@ -28,7 +28,7 @@ class ReplaysVM @Inject constructor(
     }
 
     // # Output
-    val searchText = transactionsDomain.firstUncategorizedSpend.value.first?.description
+    val searchText = transactionsDomain.mostRecentUncategorizedSpend.value.first?.description
     val replays: Observable<List<IReplay>> =
         replaysRepo.fetchReplays()
     val navUp = PublishSubject.create<Unit>()!!

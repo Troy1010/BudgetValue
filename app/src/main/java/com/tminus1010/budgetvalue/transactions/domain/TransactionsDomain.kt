@@ -120,9 +120,9 @@ class TransactionsDomain @Inject constructor(
     val uncategorizedSpends: Observable<List<Transaction>> =
         spends
             .map { it.filter { it.isUncategorized } }
-    val firstUncategorizedSpend =
+    val mostRecentUncategorizedSpend =
         transactionsRepo.transactions.startWithItem(listOf())
             .map(::TransactionsDomainModel)
-            .mapBox(TransactionsDomainModel::firstUncategorized)
+            .mapBox(TransactionsDomainModel::mostRecentUncategorizedSpend)
             .cold()
 }
