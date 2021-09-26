@@ -72,7 +72,6 @@ class ReviewVM @Inject constructor(
                 }
             TransactionBlock(transactions, period)
         }
-            .observeOn(AndroidSchedulers.mainThread())
 
     /**
      * A [PieEntry] represents 1 chunk of the pie, but without everything it needs, like color.
