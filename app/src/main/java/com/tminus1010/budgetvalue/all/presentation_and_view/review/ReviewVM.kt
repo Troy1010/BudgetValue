@@ -13,10 +13,14 @@ import com.tminus1010.budgetvalue.all.presentation_and_view._models.PieChartVMIt
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
+import java.time.Duration
+import java.time.LocalDate
 import javax.inject.Inject
 
+@Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
 @HiltViewModel
 class ReviewVM @Inject constructor(
     transactionsRepo: TransactionsRepo
@@ -31,7 +35,16 @@ class ReviewVM @Inject constructor(
         .plus(ColorTemplate.COLORFUL_COLORS.toList())
         .plus(ColorTemplate.PASTEL_COLORS.toList())
     private val categoryAmounts =
-        transactionsRepo.transactions
+        Observable.combineLatest(userSelectedDuration, transactionsRepo.transactions)
+        { userSelectedDuration, transactions ->
+            transactions.filter {
+                when (userSelectedDuration) {
+                    SelectableDuration.ONE_MONTH -> Duration.between(it.date.atStartOfDay(), LocalDate.now().atStartOfDay()) < Duration.ofDays(30)
+                    SelectableDuration.TWO_MONTHS -> Duration.between(it.date.atStartOfDay(), LocalDate.now().atStartOfDay()) < Duration.ofDays(61)
+                    SelectableDuration.FOREVER -> true
+                }
+            }
+        }
             .map { it.fold(CategoryAmounts()) { acc, transaction -> acc.addTogether(transaction.categoryAmounts) } }
 
     /**

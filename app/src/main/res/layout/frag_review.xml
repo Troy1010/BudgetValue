@@ -8,8 +8,15 @@
         android:id="@+id/pieChart1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/spinner_duration"
+        app:layout_constraintBottom_toTopOf="@id/divider"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/colorBackgroundHighlight"
+        app:layout_constraintBottom_toTopOf="@id/spinner_duration" />
 
     <Spinner
         android:id="@+id/spinner_duration"
