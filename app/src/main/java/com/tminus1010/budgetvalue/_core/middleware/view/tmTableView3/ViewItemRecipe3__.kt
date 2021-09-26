@@ -14,7 +14,7 @@ data class ViewItemRecipe3__<VB : ViewBinding> constructor(
     private val context: Context,
     private val inflate: (LayoutInflater) -> VB,
     private val styler: ((VB) -> Unit)? = null,
-    private val _bind: (VB) -> Unit,
+    private val _bind: ((VB) -> Unit)? = null,
 ) : IViewItemRecipe3 {
     override val intrinsicWidth: Int
         get() = createImpatientlyBoundView().apply { measureUnspecified() }.measuredWidth
@@ -46,10 +46,10 @@ data class ViewItemRecipe3__<VB : ViewBinding> constructor(
 
     @Suppress("UNCHECKED_CAST")
     override fun bind(vb: ViewBinding) {
-        return try {
-            _bind(vb as VB)
+        try {
+            _bind?.also { it(vb as VB) }
         } catch (e: android.util.AndroidRuntimeException) { // maybe mainThread is required
-            Completable.fromAction { _bind(vb as VB) }
+            Completable.fromAction { _bind?.also { it(vb as VB) } }
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .blockingAwait()
         }

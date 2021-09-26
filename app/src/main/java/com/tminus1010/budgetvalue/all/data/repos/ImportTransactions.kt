@@ -2,14 +2,14 @@ package com.tminus1010.budgetvalue.all.data.repos
 
 import android.app.Application
 import android.net.Uri
-import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
+import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
 import io.reactivex.rxjava3.core.Completable
 import java.io.InputStream
 import javax.inject.Inject
 
 class ImportTransactions @Inject constructor(
     private val app: Application,
-    private val transactionsDomain: TransactionsDomain,
+    private val transactionsAppService: TransactionsAppService,
 ) {
     operator fun invoke(uri: Uri): Completable {
         return invoke(
@@ -20,6 +20,6 @@ class ImportTransactions @Inject constructor(
     }
 
     operator fun invoke(inputStream: InputStream): Completable {
-        return transactionsDomain.importTransactions(inputStream)
+        return transactionsAppService.importTransactions(inputStream)
     }
 }

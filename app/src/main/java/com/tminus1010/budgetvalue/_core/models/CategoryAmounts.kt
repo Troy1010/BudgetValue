@@ -41,7 +41,16 @@ data class CategoryAmounts constructor(private val map: Map<Category, BigDecimal
         return totalAmount - this.filter { it.key != fillCategory }.values.sum()
     }
 
+    /**
+     * A [totalAmount] is how much the Transaction/Plan/whatever has in total.
+     * The [categorizedAmount] is how much is categorized.
+     * The difference is put into [defaultAmount]
+     */
     fun defaultAmount(totalAmount: BigDecimal): BigDecimal {
-        return totalAmount - this.values.sum().toString().toMoneyBigDecimal()
+        return totalAmount - categorizedAmount
+    }
+
+    val categorizedAmount by lazy {
+        this.values.sum().toString().toMoneyBigDecimal()
     }
 }

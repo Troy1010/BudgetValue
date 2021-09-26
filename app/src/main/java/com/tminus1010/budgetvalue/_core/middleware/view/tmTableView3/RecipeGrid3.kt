@@ -1,6 +1,8 @@
 package com.tminus1010.budgetvalue._core.middleware.view.tmTableView3
 
+import android.content.Context
 import androidx.viewbinding.ViewBinding
+import com.tminus1010.budgetvalue.databinding.ItemEmptyBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.easySetHeight
 import com.tminus1010.tmcommonkotlin.misc.extensions.easySetWidth
 import com.tminus1010.tmcommonkotlin.misc.extensions.pairwise
@@ -28,6 +30,14 @@ class RecipeGrid3(
     }
 
     companion object {
+        fun fillToEnsure2dGrid(context: Context, recipes2d: List<List<IViewItemRecipe3>>): List<List<IViewItemRecipe3>> {
+            val maxSize = recipes2d.fold(0) { acc, v -> acc.coerceAtLeast(v.size) }
+            return recipes2d.map {
+                val amountOfEmptyRecipeItemsToAdd = maxSize - it.size
+                it.plus((0 until amountOfEmptyRecipeItemsToAdd).map { ViewItemRecipe3__(context, ItemEmptyBinding::inflate) { } })
+            }
+        }
+
         fun assert2dGrid(recipes2d: List<List<IViewItemRecipe3>>) {
             // # Assert that all inner lists have equal size
             recipes2d.pairwise().forEach { if (it.first.size != it.second.size) error("All sub-lists must be equal size.") }

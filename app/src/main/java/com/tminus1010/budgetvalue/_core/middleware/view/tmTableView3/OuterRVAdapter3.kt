@@ -15,21 +15,24 @@ class OuterRVAdapter3(
     val context: Context,
     val recipeGrid: RecipeGrid3,
     val rowFreezeCount: Int,
-    val synchronizedScrollListener: SynchronizedScrollListener
+    val synchronizedScrollListener: SynchronizedScrollListener,
+    val noDividers: Boolean
 ) : RecyclerView.Adapter<OuterRVAdapter3.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
-    //
+
     override fun onCreateViewHolder(parent: ViewGroup, j: Int) = RecyclerView(context)
         .apply {
             adapter = InnerRVAdapter(recipeGrid, j)
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            addItemDecoration(Decoration(context, Orientation.HORIZONTAL))
+            if (!noDividers)
+                addItemDecoration(Decoration(context, Orientation.HORIZONTAL))
             addOnScrollListener(synchronizedScrollListener)
             layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, recipeGrid.getRowHeight(j))
         }
         .let { ViewHolder(it) }
+
     override fun getItemViewType(position: Int) = position + rowFreezeCount
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) { }
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {}
     override fun getItemCount() = recipeGrid.size - rowFreezeCount
     override fun onViewAttachedToWindow(holder: ViewHolder) {
         super.onViewAttachedToWindow(holder)

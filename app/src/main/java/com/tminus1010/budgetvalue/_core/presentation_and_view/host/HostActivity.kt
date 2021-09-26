@@ -68,12 +68,8 @@ class HostActivity : AppCompatActivity() {
         // TODO("This may no longer be required b/c using Interactors instead")
         transactionsMiscVM
         //
-        hostVM.navToReplays.observe(this) { ReplaysFrag.navTo(nav) }
-        hostVM.navToFutures.observe(this) { FuturesReviewFrag.navTo(nav) }
-        hostVM.navToTransactions.observe(this) { TransactionsFrag.navTo(nav) }
-        hostVM.navToHistory.observe(this) { HistoryFrag.navTo(nav) }
-        hostVM.unCheckAllMenuItems.observe(this) { vb.bottomNavigation.menu.unCheckAllMenuItems() }
-        //
+        vb.bottomNavigation.selectedItemId = R.id.reviewFrag
+        // # Events
         isPlanFeatureEnabled.onChangeToTrue.observe(this) {
             setActivePlanFromHistory.subscribe()
             easyAlertDialog(getString(hostVM.levelUpPlan))
@@ -81,6 +77,12 @@ class HostActivity : AppCompatActivity() {
         isReconciliationFeatureEnabled.onChangeToTrue.observe(this) {
             easyAlertDialog(getString(hostVM.levelUpReconciliation))
         }
+        // # State
+        hostVM.navToReplays.observe(this) { ReplaysFrag.navTo(nav) }
+        hostVM.navToFutures.observe(this) { FuturesReviewFrag.navTo(nav) }
+        hostVM.navToTransactions.observe(this) { TransactionsFrag.navTo(nav) }
+        hostVM.navToHistory.observe(this) { HistoryFrag.navTo(nav) }
+        hostVM.unCheckAllMenuItems.observe(this) { vb.bottomNavigation.menu.unCheckAllMenuItems() }
         isPlanFeatureEnabled.observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }
         isReconciliationFeatureEnabled.observe(this) { vb.bottomNavigation.menu.findItem(R.id.reconciliationHostFrag).isVisible = it }
     }

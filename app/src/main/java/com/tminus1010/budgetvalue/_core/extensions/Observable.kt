@@ -45,7 +45,7 @@ fun <K, V> Observable<Map<K, V>>.toSourceHashMap(disposables: CompositeDisposabl
         .let { sourceHashMap }
 
 fun <T> Observable<T>.divertErrors(errorSubject: Subject<Throwable>): Observable<T> =
-    this.onErrorResumeNext { errorSubject.onNext(it); Observable.empty() }
+    Observable.defer { onErrorResumeNext { errorSubject.onNext(it); Observable.empty() } }
 
 private class NonLazyCacheHelper<T>(source: Observable<T>, compositeDisposable: CompositeDisposable) {
     private val semaphore = Semaphore(1)

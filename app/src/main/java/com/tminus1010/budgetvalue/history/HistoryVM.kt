@@ -11,7 +11,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.reconciliations.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.reconciliations.domain.ActiveReconciliationDefaultAmountUC
-import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
+import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
 import com.tminus1010.tmcommonkotlin.rx.nonLazy
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HistoryVM @Inject constructor(
-    transactionsDomain: TransactionsDomain,
+    transactionsAppService: TransactionsAppService,
     activeReconciliationDefaultAmountUC: ActiveReconciliationDefaultAmountUC,
     budgetedDomain: BudgetedDomain,
     private val datePeriodGetter: DatePeriodGetter,
@@ -31,7 +31,7 @@ class HistoryVM @Inject constructor(
     private val reconciliationRepo: ReconciliationsRepo,
 ) : ViewModel() {
     val activeCategories: Observable<List<Category>> =
-        Observable.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans, reconciliationRepo.activeReconciliationCAs, transactionsDomain.transactionBlocks, budgetedDomain.budgeted)
+        Observable.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans, reconciliationRepo.activeReconciliationCAs, transactionsAppService.transactionBlocks, budgetedDomain.budgeted)
         { reconciliations, plans, activeReconciliationCAs, transactionBlocks, budgeted ->
             sequenceOf<Set<Category>>()
                 .plus(reconciliations.map { it.categoryAmounts.keys })
@@ -46,14 +46,14 @@ class HistoryVM @Inject constructor(
 
 
     val historyVMItems =
-        Rx.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans, activeReconciliationDefaultAmountUC(), reconciliationRepo.activeReconciliationCAs, transactionsDomain.transactionBlocks, budgetedDomain.budgeted)
+        Rx.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans, activeReconciliationDefaultAmountUC(), reconciliationRepo.activeReconciliationCAs, transactionsAppService.transactionBlocks, budgetedDomain.budgeted)
             .observeOn(Schedulers.computation())
             .throttleLatest(500, TimeUnit.MILLISECONDS)
             .map { (reconciliations, plans, activeReconciliationDefaultAmount, activeReconciliationCAs, transactionBlocks, budgeted) ->
                 // # Define blocks
                 val blockPeriods = sortedSetOf<LocalDatePeriod>(compareBy { it.startDate })
-                transactionBlocks?.forEach { if (!datePeriodGetter.isDatePeriodValid(it.datePeriod)) error("datePeriod was not valid:${it.datePeriod}") }
-                transactionBlocks?.forEach { blockPeriods.add(it.datePeriod) }
+                transactionBlocks?.forEach { if (!datePeriodGetter.isDatePeriodValid(it.datePeriod!!)) error("datePeriod was not valid:${it.datePeriod}") }
+                transactionBlocks?.forEach { blockPeriods.add(it.datePeriod!!) }
                 reconciliations?.forEach { blockPeriods.add(datePeriodGetter.getDatePeriod(it.localDate)) }
                 plans?.forEach { blockPeriods.add(it.localDatePeriod) }
                 // # Define historyColumnDatas

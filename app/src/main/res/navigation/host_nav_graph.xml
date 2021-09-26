@@ -144,4 +144,9 @@
         android:name="com.tminus1010.budgetvalue.all.presentation_and_view.reconciliation_host.ReconciliationHostFrag"
         android:label="ReconciliationHostFrag"
         tools:layout="@layout/frag_reconciliation_host" />
+    <fragment
+        android:id="@+id/reviewFrag"
+        android:name="com.tminus1010.budgetvalue.all.presentation_and_view.review.ReviewFrag"
+        android:label="ReviewFrag"
+        tools:layout="@layout/frag_review" />
 </navigation>

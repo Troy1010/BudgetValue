@@ -15,6 +15,7 @@ import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.budgetvalue.transactions.presentation.TransactionsDomainModel
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
+import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -26,7 +27,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class TransactionsDomain @Inject constructor(
+class TransactionsAppService @Inject constructor(
     private val transactionsRepo: TransactionsRepo,
     private val datePeriodGetter: DatePeriodGetter,
     private val transactionParser: TransactionParser,
@@ -120,9 +121,12 @@ class TransactionsDomain @Inject constructor(
     val uncategorizedSpends: Observable<List<Transaction>> =
         spends
             .map { it.filter { it.isUncategorized } }
-    val firstUncategorizedSpend =
-        transactionsRepo.transactions.startWithItem(listOf())
+    val transactions2 = // TODO("Replace transactions")
+        transactionsRepo.transactions
             .map(::TransactionsDomainModel)
-            .mapBox(TransactionsDomainModel::firstUncategorized)
+    val mostRecentUncategorizedSpend =
+        transactions2.startWithItem(TransactionsDomainModel(listOf()))
+            .mapBox(TransactionsDomainModel::mostRecentUncategorizedSpend)
+            .replayNonError(1)
             .cold()
 }

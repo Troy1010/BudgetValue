@@ -18,7 +18,7 @@ import com.tminus1010.budgetvalue.all.data.repos.IsReconciliationFeatureEnabled
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.models.TerminationStatus
 import com.tminus1010.budgetvalue.replay_or_future.models.TotalFuture
-import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
+import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
@@ -79,7 +79,7 @@ class DevEnv_UnlockedFeatures {
 
         @Provides
         @Singleton
-        fun getExtraMenuItemPartials(appInitRepo: AppInitRepo, appInit: AppInit, transactionsDomain: TransactionsDomain, futuresRepo: FuturesRepo, application: Application) = object : GetExtraMenuItemPartials() {
+        fun getExtraMenuItemPartials(appInitRepo: AppInitRepo, appInit: AppInit, transactionsAppService: TransactionsAppService, futuresRepo: FuturesRepo, application: Application) = object : GetExtraMenuItemPartials() {
             override fun invoke() =
                 arrayOf(
                     MenuVMItem("Redo App Init") {
@@ -95,7 +95,7 @@ class DevEnv_UnlockedFeatures {
                                     ?.let { it as TotalFuture }
                                     ?.searchTotal
                                 if (firstSearchTotal != null)
-                                    transactionsDomain.importTransactions(
+                                    transactionsAppService.importTransactions(
                                         listOf(
                                             Transaction(
                                                 date = LocalDate.of(2018, 1, 1),
