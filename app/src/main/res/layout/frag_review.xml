@@ -18,7 +18,8 @@
         android:layout_height="50dp"
         android:src="@drawable/ic_left"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/colorOnDark" />
 
     <ImageView
         android:id="@+id/iv_right"
@@ -26,7 +27,8 @@
         android:layout_height="50dp"
         android:src="@drawable/ic_right"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/colorOnDark" />
 
     <TextView
         android:id="@+id/tv_title"
