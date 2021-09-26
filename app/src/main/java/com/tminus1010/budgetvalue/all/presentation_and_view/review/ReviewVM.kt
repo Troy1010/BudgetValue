@@ -13,12 +13,15 @@ import com.tminus1010.budgetvalue._core.extensions.mapBox
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
 import com.tminus1010.budgetvalue.all.domain.models.TransactionBlock
 import com.tminus1010.budgetvalue.all.presentation_and_view.SelectableDuration
+import com.tminus1010.budgetvalue.all.presentation_and_view.UsePeriodType
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.NoMostRecentSpend
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.PieChartVMItem
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.SpinnerVMItem
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
+import com.tminus1010.tmcommonkotlin.core.extensions.nextOrSame
+import com.tminus1010.tmcommonkotlin.core.extensions.previousOrSame
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import com.tminus1010.tmcommonkotlin.tuple.Box
@@ -27,6 +30,9 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.Month
 import javax.inject.Inject
 
 @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
@@ -37,6 +43,7 @@ class ReviewVM @Inject constructor(
 ) : ViewModel() {
     // # UserIntents
     val userSelectedDuration = BehaviorSubject.createDefault(SelectableDuration.BY_MONTH)
+    val userUsePeriodType = BehaviorSubject.createDefault(UsePeriodType.USE_DAY_COUNT_PERIODS)
     val userPrevious = PublishSubject.create<Unit>()
     val userNext = PublishSubject.create<Unit>()
 
@@ -47,6 +54,7 @@ class ReviewVM @Inject constructor(
                 .scan(0) { acc, v ->
                     (acc + v).coerceAtLeast(0)
                 }
+                .map(Int::toLong)
         }
     private val _colors = listOf<Int>()
         .plus(ColorTemplate.VORDIPLOM_COLORS.toList())
@@ -54,29 +62,115 @@ class ReviewVM @Inject constructor(
         .plus(ColorTemplate.COLORFUL_COLORS.toList())
         .plus(ColorTemplate.PASTEL_COLORS.toList())
     private val period =
-        Observable.combineLatest(userSelectedDuration, currentPageNumber, transactionsAppService.transactions2.mapBox { it.mostRecentSpend }.filter { it.first != null }) // TODO("Filtering for not-null seems like a duct-tape solution b/c error stops subscription")
-        { userSelectedDuration, currentPageNumber, (mostRecentSpend) ->
+        Observable.combineLatest(userSelectedDuration, currentPageNumber, userUsePeriodType, transactionsAppService.transactions2.mapBox { it.mostRecentSpend }.filter { it.first != null }) // TODO("Filtering for not-null seems like a duct-tape solution b/c error stops subscription")
+        { userSelectedDuration, currentPageNumber, userUsePeriodType, (mostRecentSpend) ->
+            val mostRecentSpendDate = (mostRecentSpend?.date ?: throw NoMostRecentSpend())
             when (userSelectedDuration) {
                 SelectableDuration.BY_WEEK ->
-                    LocalDatePeriod(
-                        (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays((currentPageNumber + 1) * 7L),
-                        mostRecentSpend.date.minusDays((currentPageNumber) * 7L),
-                    )
+                    when (userUsePeriodType) {
+                        UsePeriodType.USE_DAY_COUNT_PERIODS ->
+                            LocalDatePeriod(
+                                mostRecentSpendDate.minusDays((currentPageNumber + 1) * 7),
+                                mostRecentSpendDate.minusDays((currentPageNumber) * 7),
+                            )
+                        UsePeriodType.USE_CALENDAR_PERIODS -> {
+                            val dateToConsider = mostRecentSpendDate.minusWeeks(currentPageNumber)
+                            LocalDatePeriod(
+                                dateToConsider.previousOrSame(DayOfWeek.SUNDAY),
+                                dateToConsider.nextOrSame(DayOfWeek.SATURDAY),
+                            )
+                        }
+                    }
                 SelectableDuration.BY_MONTH ->
-                    LocalDatePeriod(
-                        (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays((currentPageNumber + 1) * 30L),
-                        mostRecentSpend.date.minusDays((currentPageNumber) * 30L),
-                    )
+                    when (userUsePeriodType) {
+                        UsePeriodType.USE_DAY_COUNT_PERIODS ->
+                            LocalDatePeriod(
+                                mostRecentSpendDate.minusDays((currentPageNumber + 1) * 30),
+                                mostRecentSpendDate.minusDays((currentPageNumber) * 30),
+                            )
+                        UsePeriodType.USE_CALENDAR_PERIODS -> {
+                            val dateToConsider = mostRecentSpendDate.minusMonths(currentPageNumber)
+                            LocalDatePeriod(
+                                dateToConsider.withDayOfMonth(1),
+                                dateToConsider.withDayOfMonth(dateToConsider.lengthOfMonth()),
+                            )
+                        }
+                    }
+                SelectableDuration.BY_3_MONTHS ->
+                    when (userUsePeriodType) {
+                        UsePeriodType.USE_DAY_COUNT_PERIODS ->
+                            LocalDatePeriod(
+                                mostRecentSpendDate.minusDays((currentPageNumber + 1) * 365 / 4),
+                                mostRecentSpendDate.minusDays((currentPageNumber) * 365 / 4),
+                            )
+                        UsePeriodType.USE_CALENDAR_PERIODS -> {
+                            val dateToConsider = mostRecentSpendDate.minusMonths(currentPageNumber * 3)
+                            val firstQuarter =
+                                LocalDatePeriod(
+                                    LocalDate.of(dateToConsider.year, Month.JANUARY, 1),
+                                    LocalDate.of(dateToConsider.year, Month.MARCH, Month.MARCH.length(dateToConsider.isLeapYear)),
+                                )
+                            val secondQuarter =
+                                LocalDatePeriod(
+                                    LocalDate.of(dateToConsider.year, Month.APRIL, 1),
+                                    LocalDate.of(dateToConsider.year, Month.JUNE, Month.JUNE.length(dateToConsider.isLeapYear)),
+                                )
+                            val thirdQuarter =
+                                LocalDatePeriod(
+                                    LocalDate.of(dateToConsider.year, Month.JULY, 1),
+                                    LocalDate.of(dateToConsider.year, Month.SEPTEMBER, Month.SEPTEMBER.length(dateToConsider.isLeapYear)),
+                                )
+                            val fourthQuarter =
+                                LocalDatePeriod(
+                                    LocalDate.of(dateToConsider.year, Month.OCTOBER, 1),
+                                    LocalDate.of(dateToConsider.year, Month.DECEMBER, Month.DECEMBER.length(dateToConsider.isLeapYear)),
+                                )
+                            when (dateToConsider) {
+                                in firstQuarter -> firstQuarter
+                                in secondQuarter -> secondQuarter
+                                in thirdQuarter -> thirdQuarter
+                                in fourthQuarter -> fourthQuarter
+                                else -> error("dateToConsider:${dateToConsider} was somehow not in any quarters.")
+                            }
+                        }
+                    }
                 SelectableDuration.BY_6_MONTHS ->
-                    LocalDatePeriod(
-                        (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays((currentPageNumber + 1) * 365L / 2),
-                        mostRecentSpend.date.minusDays((currentPageNumber) * 365L / 2),
-                    )
+                    when (userUsePeriodType) {
+                        UsePeriodType.USE_DAY_COUNT_PERIODS ->
+                            LocalDatePeriod(
+                                mostRecentSpendDate.minusDays((currentPageNumber + 1) * 365 / 2),
+                                mostRecentSpendDate.minusDays((currentPageNumber) * 365 / 2),
+                            )
+                        UsePeriodType.USE_CALENDAR_PERIODS -> {
+                            val dateToConsider = mostRecentSpendDate.minusMonths(currentPageNumber * 6)
+                            val firstHalfOfYear =
+                                LocalDatePeriod(
+                                    LocalDate.of(dateToConsider.year, Month.JANUARY, 1),
+                                    LocalDate.of(dateToConsider.year, Month.JUNE, Month.JUNE.length(dateToConsider.isLeapYear)),
+                                )
+                            val secondHalfOfYear =
+                                LocalDatePeriod(
+                                    LocalDate.of(dateToConsider.year, Month.JULY, 1),
+                                    LocalDate.of(dateToConsider.year, Month.DECEMBER, Month.DECEMBER.length(dateToConsider.isLeapYear)),
+                                )
+                            if (dateToConsider in firstHalfOfYear) firstHalfOfYear else secondHalfOfYear
+                        }
+                    }
                 SelectableDuration.BY_YEAR ->
-                    LocalDatePeriod(
-                        (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays((currentPageNumber + 1) * 365L),
-                        mostRecentSpend.date.minusDays((currentPageNumber) * 365L),
-                    )
+                    when (userUsePeriodType) {
+                        UsePeriodType.USE_DAY_COUNT_PERIODS ->
+                            LocalDatePeriod(
+                                mostRecentSpendDate.minusDays((currentPageNumber + 1) * 365),
+                                mostRecentSpendDate.minusDays((currentPageNumber) * 365),
+                            )
+                        UsePeriodType.USE_CALENDAR_PERIODS -> {
+                            val dateToConsider = mostRecentSpendDate.minusYears(currentPageNumber)
+                            LocalDatePeriod(
+                                LocalDate.of(dateToConsider.year, Month.JANUARY, 1),
+                                LocalDate.of(dateToConsider.year, Month.DECEMBER, Month.DECEMBER.length(dateToConsider.isLeapYear)),
+                            )
+                        }
+                    }
                 SelectableDuration.FOREVER ->
                     null
             }.let { Box(it) }
@@ -133,10 +227,16 @@ class ReviewVM @Inject constructor(
             centerText = "Spending"
         )
 
-    val spinnerVMItem =
+    val selectableDurationSpinnerVMItem =
         SpinnerVMItem(
             SelectableDuration.values(),
             userSelectedDuration,
+        )
+
+    val usePeriodTypeSpinnerVMItem =
+        SpinnerVMItem(
+            UsePeriodType.values(),
+            userUsePeriodType,
         )
 
     val title =

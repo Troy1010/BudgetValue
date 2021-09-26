@@ -35,7 +35,8 @@ class ReviewFrag : Fragment(R.layout.frag_review) {
             }
             // # State
             vb.pieChart1.bind(pieChartVMItem)
-            vb.spinnerDuration.bind(spinnerVMItem)
+            vb.spinnerDuration.bind(selectableDurationSpinnerVMItem)
+            vb.spinnerUsePeriodType.bind(usePeriodTypeSpinnerVMItem)
             vb.tvTitle.bind(title) { text = it }
             vb.ivLeft.bind(isLeftVisible) { easyVisibility = it }
             vb.ivRight.bind(isRightVisible) { easyVisibility = it }
