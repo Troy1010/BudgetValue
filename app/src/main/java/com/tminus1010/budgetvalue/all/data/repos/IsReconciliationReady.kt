@@ -18,11 +18,11 @@ class IsReconciliationReady @Inject constructor(
             if (latestDateOfMostRecentImport == null || startDate == null)
                 return@combineLatest false
             val spendBlocksAfterStartDate =
-                spendBlocks.filter { startDate < it.datePeriod.endDate }
+                spendBlocks.filter { startDate < it.datePeriod!!.endDate }
             if (spendBlocksAfterStartDate.isEmpty())
                 return@combineLatest false
             spendBlocksAfterStartDate.all { it.isFullyCategorized }
-                    && spendBlocksAfterStartDate.any { it.datePeriod.endDate <= latestDateOfMostRecentImport }
+                    && spendBlocksAfterStartDate.any { it.datePeriod!!.endDate <= latestDateOfMostRecentImport }
         }
             .distinctUntilChanged()
             .cache()

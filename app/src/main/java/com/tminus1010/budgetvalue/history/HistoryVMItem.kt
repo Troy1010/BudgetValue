@@ -77,7 +77,7 @@ sealed class HistoryVMItem {
                     if (it == transactionBlock.datePeriod)
                         "Current"
                     else
-                        transactionBlock.datePeriod.startDate.toDisplayStr()
+                        transactionBlock.datePeriod!!.startDate.toDisplayStr()
                 }
         override val categoryAmounts =
             transactionBlock.categoryAmounts

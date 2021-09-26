@@ -121,9 +121,11 @@ class TransactionsDomain @Inject constructor(
     val uncategorizedSpends: Observable<List<Transaction>> =
         spends
             .map { it.filter { it.isUncategorized } }
-    val mostRecentUncategorizedSpend =
-        transactionsRepo.transactions.startWithItem(listOf())
+    val transactions2 = // TODO("Replace transactions")
+        transactionsRepo.transactions
             .map(::TransactionsDomainModel)
+    val mostRecentUncategorizedSpend =
+        transactions2.startWithItem(TransactionsDomainModel(listOf()))
             .mapBox(TransactionsDomainModel::mostRecentUncategorizedSpend)
             .replayNonError(1)
             .cold()

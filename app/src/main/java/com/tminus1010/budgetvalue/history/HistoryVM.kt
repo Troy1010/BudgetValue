@@ -52,8 +52,8 @@ class HistoryVM @Inject constructor(
             .map { (reconciliations, plans, activeReconciliationDefaultAmount, activeReconciliationCAs, transactionBlocks, budgeted) ->
                 // # Define blocks
                 val blockPeriods = sortedSetOf<LocalDatePeriod>(compareBy { it.startDate })
-                transactionBlocks?.forEach { if (!datePeriodGetter.isDatePeriodValid(it.datePeriod)) error("datePeriod was not valid:${it.datePeriod}") }
-                transactionBlocks?.forEach { blockPeriods.add(it.datePeriod) }
+                transactionBlocks?.forEach { if (!datePeriodGetter.isDatePeriodValid(it.datePeriod!!)) error("datePeriod was not valid:${it.datePeriod}") }
+                transactionBlocks?.forEach { blockPeriods.add(it.datePeriod!!) }
                 reconciliations?.forEach { blockPeriods.add(datePeriodGetter.getDatePeriod(it.localDate)) }
                 plans?.forEach { blockPeriods.add(it.localDatePeriod) }
                 // # Define historyColumnDatas

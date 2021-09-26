@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all.framework.extensions.invoke
 import com.tminus1010.budgetvalue.all.presentation_and_view.SelectableDuration
-import com.tminus1010.budgetvalue.all.presentation_and_view._models.NoLatestDateOfMostRecentImportException
+import com.tminus1010.budgetvalue.all.presentation_and_view._models.NoMostRecentSpend
 import com.tminus1010.budgetvalue.all.presentation_and_view.bind
 import com.tminus1010.budgetvalue.databinding.FragReviewBinding
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -28,7 +28,7 @@ class ReviewFrag : Fragment(R.layout.frag_review) {
         // # Events
         reviewVM.errors.observe(viewLifecycleOwner) {
             when (it) {
-                is NoLatestDateOfMostRecentImportException -> logz("Swallowing error:${it.javaClass.simpleName}")
+                is NoMostRecentSpend -> logz("Swallowing error:${it.javaClass.simpleName}")
                 else -> easyToast("An error occurred").run { logz("error:", it) }
             }
         }

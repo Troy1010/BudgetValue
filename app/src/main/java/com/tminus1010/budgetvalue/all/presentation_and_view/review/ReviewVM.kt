@@ -7,27 +7,30 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.utils.ColorTemplate
+import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.extensions.divertErrors
-import com.tminus1010.budgetvalue._core.models.CategoryAmounts
-import com.tminus1010.budgetvalue.all.data.repos.LatestDateOfMostRecentImport
+import com.tminus1010.budgetvalue._core.extensions.isZero
+import com.tminus1010.budgetvalue._core.extensions.mapBox
+import com.tminus1010.budgetvalue.all.domain.models.TransactionBlock
 import com.tminus1010.budgetvalue.all.presentation_and_view.SelectableDuration
+import com.tminus1010.budgetvalue.all.presentation_and_view._models.NoMostRecentSpend
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.PieChartVMItem
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
+import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.math.BigDecimal
-import java.time.Duration
-import java.time.LocalDate
 import javax.inject.Inject
 
 @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
 @HiltViewModel
 class ReviewVM @Inject constructor(
     transactionsRepo: TransactionsRepo,
-    latestDateOfMostRecentImport: LatestDateOfMostRecentImport,
+    transactionsDomain: TransactionsDomain,
 ) : ViewModel() {
     // # UserIntents
     val userSelectedDuration = BehaviorSubject.createDefault(SelectableDuration.ONE_MONTH)!!
@@ -38,28 +41,38 @@ class ReviewVM @Inject constructor(
         .plus(ColorTemplate.JOYFUL_COLORS.toList())
         .plus(ColorTemplate.COLORFUL_COLORS.toList())
         .plus(ColorTemplate.PASTEL_COLORS.toList())
-    private val categoryAmounts =
-        Observable.combineLatest(userSelectedDuration, transactionsRepo.transactions, latestDateOfMostRecentImport)
-        { userSelectedDuration, transactions, (latestDateOfMostRecentImport) ->
-            transactions.filter {
+    private val transactionBlock =
+        Observable.combineLatest(userSelectedDuration, transactionsRepo.transactions, transactionsDomain.transactions2.mapBox { it.mostRecentSpend }.filter { it.first != null }) // TODO("Filtering for not-null seems like a duct-tape solution b/c error stops subscription")
+        { userSelectedDuration, transactions, (mostRecentSpend) ->
+            val period =
                 when (userSelectedDuration) {
-                    SelectableDuration.ONE_MONTH -> Duration.between(it.date.atStartOfDay(), LocalDate.now().atStartOfDay()) < Duration.ofDays(30)
-                    SelectableDuration.TWO_MONTHS -> Duration.between(it.date.atStartOfDay(), LocalDate.now().atStartOfDay()) < Duration.ofDays(61)
-                    SelectableDuration.FOREVER -> true
+                    SelectableDuration.ONE_MONTH -> LocalDatePeriod(
+                        (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays(30),
+                        mostRecentSpend.date,
+                    )
+                    SelectableDuration.TWO_MONTHS ->
+                        LocalDatePeriod(
+                            (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays(61),
+                            mostRecentSpend.date,
+                        )
+                    SelectableDuration.FOREVER ->
+                        null
                 }
-            }
+            TransactionBlock(transactions, period)
         }
-            .map { it.fold(CategoryAmounts()) { acc, transaction -> acc.addTogether(transaction.categoryAmounts) } }
+            .observeOn(AndroidSchedulers.mainThread())
 
     /**
      * List of [PieEntry]. A [PieEntry] represents 1 chunk of the pie, but without everything it needs, like color.
      */
     private val pieEntries =
-        categoryAmounts.map { categoryAmounts ->
-            listOf(
-                categoryAmounts.filter { it.value.abs() < categoryAmounts.categorizedAmount.abs() * BigDecimal(0.03) }
+        transactionBlock.map { transactionBlock ->
+            listOfNotNull(
+                if (transactionBlock.defaultAmount.isZero) null else
+                    PieEntry(transactionBlock.defaultAmount.abs().toFloat(), "Uncategorized"),
+                transactionBlock.categoryAmounts.filter { it.value.abs() < transactionBlock.categoryAmounts.categorizedAmount.abs() * BigDecimal(0.03) }
                     .let { PieEntry(it.values.sum().abs().toFloat(), "Other") },
-                *categoryAmounts.filter { it.value.abs() >= categoryAmounts.categorizedAmount.abs() * BigDecimal(0.03) }
+                *transactionBlock.categoryAmounts.filter { it.value.abs() >= transactionBlock.categoryAmounts.categorizedAmount.abs() * BigDecimal(0.03) }
                     .map { PieEntry(it.value.abs().toFloat(), it.key.name) }.toTypedArray()
             )
         }
