@@ -7,6 +7,7 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.utils.ColorTemplate
+import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
 import com.tminus1010.budgetvalue.all.presentation_and_view.SelectableDuration
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.PieChartVMItem
@@ -88,7 +89,7 @@ class ReviewVM @Inject constructor(
      */
     val pieChartVMItem =
         PieChartVMItem(
-            pieData,
+            pieData.divertErrors(errors),
             centerText = "Spending"
         )
 
