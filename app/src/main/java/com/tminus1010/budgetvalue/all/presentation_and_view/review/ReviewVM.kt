@@ -21,7 +21,6 @@ import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -43,50 +42,49 @@ class ReviewVM @Inject constructor(
         .plus(ColorTemplate.JOYFUL_COLORS.toList())
         .plus(ColorTemplate.COLORFUL_COLORS.toList())
         .plus(ColorTemplate.PASTEL_COLORS.toList())
-    private val transactionBlock =
-        Observable.combineLatest(userSelectedDuration, transactionsRepo.transactions, transactionsAppService.transactions2.mapBox { it.mostRecentSpend }.filter { it.first != null }) // TODO("Filtering for not-null seems like a duct-tape solution b/c error stops subscription")
-        { userSelectedDuration, transactions, (mostRecentSpend) ->
-            val period =
-                when (userSelectedDuration) {
-                    SelectableDuration.THIS_MONTH -> LocalDatePeriod(
-                        (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays(30),
+    private val period =
+        Observable.combineLatest(userSelectedDuration, transactionsAppService.transactions2.mapBox { it.mostRecentSpend }.filter { it.first != null }) // TODO("Filtering for not-null seems like a duct-tape solution b/c error stops subscription")
+        { userSelectedDuration, (mostRecentSpend) ->
+            when (userSelectedDuration) {
+                SelectableDuration.THIS_MONTH -> LocalDatePeriod(
+                    (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays(30),
+                    mostRecentSpend.date,
+                )
+                SelectableDuration.TWO_MONTHS_COMBINED ->
+                    LocalDatePeriod(
+                        (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays(60),
                         mostRecentSpend.date,
                     )
-                    SelectableDuration.TWO_MONTHS_COMBINED ->
-                        LocalDatePeriod(
-                            (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays(60),
-                            mostRecentSpend.date,
-                        )
-                    SelectableDuration.ONE_MONTH_AGO ->
-                        LocalDatePeriod(
-                            (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays(60),
-                            mostRecentSpend.date.minusDays(30),
-                        )
-                    SelectableDuration.TWO_MONTHS_AGO ->
-                        LocalDatePeriod(
-                            (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays(90),
-                            mostRecentSpend.date.minusDays(60),
-                        )
-                    SelectableDuration.FOREVER ->
-                        null
-                }
-            TransactionBlock(transactions, period)
+                SelectableDuration.ONE_MONTH_AGO ->
+                    LocalDatePeriod(
+                        (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays(60),
+                        mostRecentSpend.date.minusDays(30),
+                    )
+                SelectableDuration.TWO_MONTHS_AGO ->
+                    LocalDatePeriod(
+                        (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays(90),
+                        mostRecentSpend.date.minusDays(60),
+                    )
+                SelectableDuration.FOREVER ->
+                    null
+            }
         }
+
+    private val transactionBlock = Observable.combineLatest(transactionsRepo.transactions, period, ::TransactionBlock)
 
     /**
      * A [PieEntry] represents 1 chunk of the pie, but without everything it needs, like color.
      */
     private val pieEntries =
-        transactionBlock
-            .map { transactionBlock ->
-                val categoryAmounts = CategoryAmounts(transactionBlock.categoryAmounts.plus(Category("Uncategorized") to transactionBlock.defaultAmount))
-                listOfNotNull(
-                    categoryAmounts.filter { it.value.abs() < transactionBlock.amount.abs() * BigDecimal(0.03) }
-                        .let { if (it.isEmpty()) null else PieEntry(it.values.sum().abs().toFloat(), "Other") },
-                    *categoryAmounts.filter { it.value.abs() >= transactionBlock.amount.abs() * BigDecimal(0.03) }
-                        .map { PieEntry(it.value.abs().toFloat(), it.key.name) }.toTypedArray()
-                )
-            }
+        transactionBlock.map { transactionBlock ->
+            val categoryAmounts = CategoryAmounts(transactionBlock.categoryAmounts.plus(Category("Uncategorized") to transactionBlock.defaultAmount))
+            listOfNotNull(
+                categoryAmounts.filter { it.value.abs() < transactionBlock.amount.abs() * BigDecimal(0.03) }
+                    .let { if (it.isEmpty()) null else PieEntry(it.values.sum().abs().toFloat(), "Other") },
+                *categoryAmounts.filter { it.value.abs() >= transactionBlock.amount.abs() * BigDecimal(0.03) }
+                    .map { PieEntry(it.value.abs().toFloat(), it.key.name) }.toTypedArray()
+            )
+        }
 
     /**
      * [PieDataSet] is a list of [PieEntry], combined with other information relevant to the entire list, like colors.
