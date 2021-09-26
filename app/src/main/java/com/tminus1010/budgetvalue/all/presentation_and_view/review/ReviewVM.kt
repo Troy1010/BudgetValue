@@ -122,7 +122,6 @@ class ReviewVM @Inject constructor(
 
     val spinnerVMItem = SpinnerVMItem(
         SelectableDuration.values(),
-        userSelectedDuration.value,
-        userSelectedDuration::onNext,
+        userSelectedDuration,
     )
 }
