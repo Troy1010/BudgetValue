@@ -118,21 +118,21 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 if (inSelectionMode)
                     ButtonVMItem(
                         title = "Create Future",
-                        onClick = { CreateFutureFrag.navTo(nav) }
+                        userClick = { CreateFutureFrag.navTo(nav) }
                     )
                 else null,
                 if (inSelectionMode)
                     ButtonVMItem(
                         title = "Split",
                         isEnabled = categorizeVM.isTransactionAvailable,
-                        onClick = { SplitFrag.navTo(nav, transactionsAppService.mostRecentUncategorizedSpend.value!!.first!!) }
+                        userClick = { SplitFrag.navTo(nav, transactionsAppService.mostRecentUncategorizedSpend.value!!.first!!) }
                     )
                 else null,
                 if (inSelectionMode)
                     ButtonVMItem(
                         title = "Category Settings",
                         isEnabled = categorySelectionVM.selectedCategories.map { it.size == 1 },
-                        onClick = {
+                        userClick = {
                             CategorySettingsFrag.navTo(
                                 source = this,
                                 nav = nav,
@@ -150,8 +150,8 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                         .map { replay ->
                             ButtonVMItem(
                                 title = "Replay (${replay.name})",
-                                onClick = { categorizeVM.userReplay(replay) },
-                                onLongClick = {
+                                userClick = { categorizeVM.userReplay(replay) },
+                                userLongClick = {
                                     ReplayFrag.navTo(
                                         nav = nav,
                                         replay = replay as BasicReplay,
@@ -162,24 +162,24 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 if (!inSelectionMode)
                     ButtonVMItem(
                         title = "Use Replay",
-                        onClick = { nav.navigate(R.id.useReplayFrag) })
+                        userClick = { nav.navigate(R.id.useReplayFrag) })
                 else null,
                 if (!inSelectionMode)
                     ButtonVMItem(
                         title = "Redo",
                         isEnabled = categorizeVM.isRedoAvailable,
-                        onClick = { categorizeVM.userRedo() })
+                        userClick = { categorizeVM.userRedo() })
                 else null,
                 if (!inSelectionMode)
                     ButtonVMItem(
                         title = "Undo",
                         isEnabled = categorizeVM.isUndoAvailable,
-                        onClick = { categorizeVM.userUndo() })
+                        userClick = { categorizeVM.userUndo() })
                 else null,
                 if (!inSelectionMode)
                     ButtonVMItem(
                         title = "Make New Category",
-                        onClick = {
+                        userClick = {
                             CategorySettingsFrag.navTo(
                                 nav = nav,
                                 source = this,

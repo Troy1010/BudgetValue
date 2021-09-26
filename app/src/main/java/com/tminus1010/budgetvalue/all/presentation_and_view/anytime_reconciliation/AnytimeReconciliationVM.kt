@@ -57,7 +57,7 @@ class AnytimeReconciliationVM @Inject constructor(
         listOf(
             ButtonVMItem(
                 title = "Save",
-                onClick = saveActiveReconciliationInteractor.saveActiveReconiliation::subscribe
+                userClick = saveActiveReconciliationInteractor.saveActiveReconiliation::subscribe
             )
         )
 }

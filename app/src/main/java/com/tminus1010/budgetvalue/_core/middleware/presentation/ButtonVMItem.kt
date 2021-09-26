@@ -10,16 +10,16 @@ data class ButtonVMItem(
     val title: String? = null,
     val titleObservable: Observable<String>? = null,
     val isEnabled: Observable<Boolean>? = null,
-    val onLongClick: (() -> Unit)? = null,
-    val onClick: () -> Unit,
+    val userLongClick: (() -> Unit)? = null,
+    val userClick: () -> Unit,
 ) {
     fun bind(button: Button) = button.apply {
         if (titleObservable != null)
             bind(titleObservable) { text = title }
         if (text != null)
             text = title
-        setOnClickListener { onClick() }
-        onLongClick
+        setOnClickListener { userClick() }
+        userLongClick
             ?.also { setOnLongClickListener { it(); true } }
         this@ButtonVMItem.isEnabled?.observe(button.lifecycleOwner!!) { isEnabled = it }
             ?: run { isEnabled = true }

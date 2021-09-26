@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.reconciliations.domain
 import androidx.annotation.VisibleForTesting
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
 import com.tminus1010.budgetvalue.all.data.repos.AccountsRepo
-import com.tminus1010.budgetvalue.all.domain.models.Accounts
+import com.tminus1010.budgetvalue.all.domain.models.AccountList
 import com.tminus1010.budgetvalue.all.domain.models.TransactionBlock
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.plans.models.Plan
@@ -31,7 +31,7 @@ class ActiveReconciliationDefaultAmountUC @Inject constructor(
             plansRepo.plans,
             reconciliationsRepo.reconciliations,
             transactionsAppService.transactionBlocks,
-            accountsRepo.accounts.map(Accounts::total),
+            accountsRepo.accounts.map(AccountList::total),
             reconciliationsRepo.activeReconciliationCAs,
             ::calcActiveReconciliationDefaultAmount
         )

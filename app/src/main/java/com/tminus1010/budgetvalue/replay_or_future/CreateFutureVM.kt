@@ -124,7 +124,7 @@ class CreateFutureVM @Inject constructor(
         listOf(
             ButtonVMItem(
                 "Submit",
-                onClick = ::userSubmit
+                userClick = ::userSubmit
             )
         )
     val navUp = PublishSubject.create<Unit>()!!

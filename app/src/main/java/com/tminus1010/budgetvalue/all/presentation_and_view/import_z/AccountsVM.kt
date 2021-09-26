@@ -5,8 +5,8 @@ import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.middleware.presentation.ButtonVMItem
 import com.tminus1010.budgetvalue.all.data.repos.AccountsRepo
 import com.tminus1010.budgetvalue.all.domain.models.Account
-import com.tminus1010.budgetvalue.all.presentation_and_view._models.AccountVMItem
-import com.tminus1010.budgetvalue.all.presentation_and_view._models.AccountsVMItem
+import com.tminus1010.budgetvalue.all.framework.extensions.invoke
+import com.tminus1010.budgetvalue.all.presentation_and_view._models.AccountVMItemList
 import com.tminus1010.tmcommonkotlin.rx.nonLazy
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,28 +18,24 @@ import javax.inject.Inject
 class AccountsVM @Inject constructor(
     private val accountsRepo: AccountsRepo,
 ) : ViewModel() {
-    // # Presentation Output
-    val navToSelectFile = PublishSubject.create<Unit>()!!
-    val accounts =
+    // # Events
+    val navToSelectFile = PublishSubject.create<Unit>()
+
+    // # Presentation State
+    val accountVMItemList =
         accountsRepo.accounts
-            .map { it.accounts.map { AccountVMItem(it, accountsRepo) } }
-            .replayNonError(1)
-            .nonLazy(disposables)
-    val accountsTotal =
-        accountsRepo.accounts
-            .map(::AccountsVMItem)
-            .map(AccountsVMItem::total)
+            .map { AccountVMItemList(it, accountsRepo) }
             .replayNonError(1)
             .nonLazy(disposables)
     val buttons =
         listOfNotNull(
             ButtonVMItem(
                 title = "Import",
-                onClick = { navToSelectFile.onNext(Unit) }
+                userClick = navToSelectFile::invoke
             ),
             ButtonVMItem(
                 title = "Add Account",
-                onClick = { accountsRepo.add(Account("", BigDecimal.ZERO)).subscribe() }
+                userClick = { accountsRepo.add(Account("", BigDecimal.ZERO)).subscribe() }
             ),
         )
 }

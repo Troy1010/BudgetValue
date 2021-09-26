@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.all.data.repos
 
 import com.tminus1010.budgetvalue._core.data.MiscDAO
 import com.tminus1010.budgetvalue.all.domain.models.Account
-import com.tminus1010.budgetvalue.all.domain.models.Accounts
+import com.tminus1010.budgetvalue.all.domain.models.AccountList
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -17,7 +17,7 @@ class AccountsRepo @Inject constructor(
     val accounts =
         miscDAO.fetchAccounts().subscribeOn(Schedulers.io())
             .map { it.map(Account::fromDTO) }
-            .map(::Accounts)
+            .map(::AccountList)
             .replayNonError(1)
 
     private fun getAccount(id: Int): Observable<Account> =
