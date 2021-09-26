@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue._core.LaunchSelectFile
 import com.tminus1010.budgetvalue._core.extensions.unCheckAllMenuItems
 import com.tminus1010.budgetvalue._core.middleware.Toaster
 import com.tminus1010.budgetvalue._core.presentation_and_view._extensions.easyAlertDialog
@@ -19,6 +20,7 @@ import com.tminus1010.budgetvalue.all.app.interactors.SetActivePlanFromHistory
 import com.tminus1010.budgetvalue.all.data.repos.ImportTransactions
 import com.tminus1010.budgetvalue.all.data.repos.IsPlanFeatureEnabled
 import com.tminus1010.budgetvalue.all.data.repos.IsReconciliationFeatureEnabled
+import com.tminus1010.budgetvalue.all.presentation_and_view.import_z.AccountsVM
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.history.HistoryFrag
 import com.tminus1010.budgetvalue.replay_or_future.FuturesReviewFrag
@@ -33,6 +35,7 @@ import javax.inject.Inject
 class HostActivity : AppCompatActivity() {
     private val vb by lazy { ActivityHostBinding.inflate(layoutInflater) }
     private val hostVM by viewModels<HostVM>()
+    private val accountsVM by viewModels<AccountsVM>()
 
     @Inject
     lateinit var appInit: AppInit
@@ -52,6 +55,9 @@ class HostActivity : AppCompatActivity() {
     @Inject
     lateinit var importTransactions: ImportTransactions
 
+    @Inject
+    lateinit var launchSelectFile: LaunchSelectFile
+
     private val transactionsMiscVM: TransactionsMiscVM by viewModels()
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.frag_nav_host) as HostFrag }
     private val nav by lazy { findNavController(R.id.frag_nav_host) }
@@ -70,6 +76,7 @@ class HostActivity : AppCompatActivity() {
         //
         vb.bottomNavigation.selectedItemId = R.id.reviewFrag
         // # Events
+        accountsVM.navToSelectFile.observe(this) { launchSelectFile(this) }
         isPlanFeatureEnabled.onChangeToTrue.observe(this) {
             setActivePlanFromHistory.subscribe()
             easyAlertDialog(getString(hostVM.levelUpPlan))

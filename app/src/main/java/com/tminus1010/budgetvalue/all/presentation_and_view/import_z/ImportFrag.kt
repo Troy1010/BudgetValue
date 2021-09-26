@@ -13,7 +13,6 @@ import com.tminus1010.budgetvalue._core.extensions.easyText
 import com.tminus1010.budgetvalue._core.middleware.view.GenViewHolder2
 import com.tminus1010.budgetvalue._core.middleware.view.onDone
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
-import com.tminus1010.budgetvalue._core.presentation_and_view.host.HostActivity
 import com.tminus1010.budgetvalue._middleware.view.extensions.onClick
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.AccountVMItem
 import com.tminus1010.budgetvalue.databinding.FragImportBinding
@@ -35,8 +34,6 @@ class ImportFrag : Fragment(R.layout.frag_import) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // # Events
-        accountsVM.navToSelectFile.observe(viewLifecycleOwner) { launchSelectFile(requireActivity() as HostActivity) }
         // # Buttons
         vb.buttonsview.buttons = accountsVM.buttons
         // # Accounts
