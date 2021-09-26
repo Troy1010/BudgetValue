@@ -8,14 +8,13 @@
         android:id="@+id/pieChart1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/legend"
+        app:layout_constraintBottom_toTopOf="@id/spinner_duration"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.TMTableView3
-        android:id="@+id/legend"
+    <Spinner
+        android:id="@+id/spinner_duration"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHeight_percent="0.25" />
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,10 +8,12 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
+import com.tminus1010.budgetvalue.all.presentation_and_view.SelectableDuration
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.PieChartVMItem
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -19,6 +21,10 @@ import javax.inject.Inject
 class ReviewVM @Inject constructor(
     transactionsRepo: TransactionsRepo
 ) : ViewModel() {
+    // # UserIntents
+    val userSelectedDuration = BehaviorSubject.createDefault(SelectableDuration.ONE_MONTH)!!
+
+    // # Internal
     private val _colors = listOf<Int>()
         .plus(ColorTemplate.VORDIPLOM_COLORS.toList())
         .plus(ColorTemplate.JOYFUL_COLORS.toList())
@@ -60,6 +66,7 @@ class ReviewVM @Inject constructor(
      */
     private val pieData = pieDataSet.map(::PieData)!!
 
+    // # State
     /**
      * A [PieChartVMItem] is everything you need to produce a [PieChart], once you get access to a [Context] in the layer above.
      */
@@ -68,4 +75,6 @@ class ReviewVM @Inject constructor(
             pieData,
             centerText = "Spending"
         )
+
+    val initialSelectedDuration = userSelectedDuration.value!!
 }

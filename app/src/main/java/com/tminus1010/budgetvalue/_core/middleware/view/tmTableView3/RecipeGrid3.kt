@@ -34,7 +34,7 @@ class RecipeGrid3(
             val maxSize = recipes2d.fold(0) { acc, v -> acc.coerceAtLeast(v.size) }
             return recipes2d.map {
                 val amountOfEmptyRecipeItemsToAdd = maxSize - it.size
-                it.plus((0 until amountOfEmptyRecipeItemsToAdd).map { ViewItemRecipe3__(context, ItemEmptyBinding::inflate) { vb: ItemEmptyBinding -> } })
+                it.plus((0 until amountOfEmptyRecipeItemsToAdd).map { ViewItemRecipe3__(context, ItemEmptyBinding::inflate) { } })
             }
         }
 
