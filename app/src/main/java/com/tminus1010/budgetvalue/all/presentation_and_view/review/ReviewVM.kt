@@ -90,7 +90,7 @@ class ReviewVM @Inject constructor(
             }
 
     /**
-     * A [PieDataSet] is a list of [PieEntry], combined with other information relevant to the entire list, like colors.
+     * [PieDataSet] is a list of [PieEntry], combined with other information relevant to the entire list, like colors.
      */
     private val pieDataSet =
         pieEntries.map { pieEntries ->
@@ -103,16 +103,17 @@ class ReviewVM @Inject constructor(
         }
 
     /**
-     * A [PieData] is the bare minimum to produce a [PieChart], but it is missing a lot of attributes, like centerText, entryLabelColor, isLegendEnabled.
+     * [PieData] is the bare minimum to produce a [PieChart], but it is missing a lot of attributes, like centerText, entryLabelColor, isLegendEnabled.
      * It can contain and define shared data for multiple [PieDataSet], but usually there is only 1 [PieDataSet].
      */
     private val pieData = pieDataSet.map(::PieData)!!
 
-    // # State
+    // # Events
     val errors = PublishSubject.create<Throwable>()!!
 
+    // # State
     /**
-     * A [PieChartVMItem] is everything you need to produce a [PieChart], once you get access to a [Context] in the layer above.
+     * [PieChartVMItem] is everything you need to produce a [PieChart], once you get access to a [Context] in the layer above.
      */
     val pieChartVMItem =
         PieChartVMItem(
@@ -120,8 +121,9 @@ class ReviewVM @Inject constructor(
             centerText = "Spending"
         )
 
-    val spinnerVMItem = SpinnerVMItem(
-        SelectableDuration.values(),
-        userSelectedDuration,
-    )
+    val spinnerVMItem =
+        SpinnerVMItem(
+            SelectableDuration.values(),
+            userSelectedDuration,
+        )
 }
