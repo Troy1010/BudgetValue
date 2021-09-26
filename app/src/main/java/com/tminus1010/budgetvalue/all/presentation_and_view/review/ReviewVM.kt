@@ -15,6 +15,7 @@ import com.tminus1010.budgetvalue.all.domain.models.TransactionBlock
 import com.tminus1010.budgetvalue.all.presentation_and_view.SelectableDuration
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.NoMostRecentSpend
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.PieChartVMItem
+import com.tminus1010.budgetvalue.all.presentation_and_view._models.SpinnerVMItem
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
@@ -119,5 +120,9 @@ class ReviewVM @Inject constructor(
             centerText = "Spending"
         )
 
-    val initialSelectedDuration = userSelectedDuration.value!!
+    val spinnerVMItem = SpinnerVMItem(
+        SelectableDuration.values(),
+        userSelectedDuration.value,
+        userSelectedDuration::onNext,
+    )
 }

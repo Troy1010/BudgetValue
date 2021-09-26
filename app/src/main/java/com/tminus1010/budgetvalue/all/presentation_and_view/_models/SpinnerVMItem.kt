@@ -9,10 +9,14 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 @Suppress("UNCHECKED_CAST")
 class SpinnerVMItem<T>(private val values: Array<T>, private val initialValue: T, private val lambda: (T) -> Unit) {
+    init {
+        if (values.isEmpty()) error("Values was empty, and that is unsupported atm. Perhaps an empty set of values should be supported..?")
+    }
+
     fun bind(spinner: Spinner) {
         val adapter = ArrayAdapter(spinner.context, R.layout.item_text_view_without_highlight, values)
         spinner.adapter = adapter
-        spinner.setSelection(adapter.getPosition(initialValue))
+        spinner.setSelection(adapter.getPosition(initialValue ?: values[0]))
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             var didFirstSelectionHappen = AtomicBoolean(false)
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
@@ -24,3 +28,5 @@ class SpinnerVMItem<T>(private val values: Array<T>, private val initialValue: T
         }
     }
 }
+
+fun <T> Spinner.bind(spinnerVMItem: SpinnerVMItem<T>) = spinnerVMItem.bind(this)
