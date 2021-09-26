@@ -9,12 +9,13 @@ import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.extensions.divertErrors
-import com.tminus1010.budgetvalue._core.extensions.isZero
 import com.tminus1010.budgetvalue._core.extensions.mapBox
+import com.tminus1010.budgetvalue._core.models.CategoryAmounts
 import com.tminus1010.budgetvalue.all.domain.models.TransactionBlock
 import com.tminus1010.budgetvalue.all.presentation_and_view.SelectableDuration
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.NoMostRecentSpend
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.PieChartVMItem
+import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
@@ -33,7 +34,7 @@ class ReviewVM @Inject constructor(
     transactionsAppService: TransactionsAppService,
 ) : ViewModel() {
     // # UserIntents
-    val userSelectedDuration = BehaviorSubject.createDefault(SelectableDuration.ONE_MONTH)!!
+    val userSelectedDuration = BehaviorSubject.createDefault(SelectableDuration.THIS_MONTH)!!
 
     // # Internal
     private val _colors = listOf<Int>()
@@ -46,14 +47,24 @@ class ReviewVM @Inject constructor(
         { userSelectedDuration, transactions, (mostRecentSpend) ->
             val period =
                 when (userSelectedDuration) {
-                    SelectableDuration.ONE_MONTH -> LocalDatePeriod(
+                    SelectableDuration.THIS_MONTH -> LocalDatePeriod(
                         (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays(30),
                         mostRecentSpend.date,
                     )
-                    SelectableDuration.TWO_MONTHS ->
+                    SelectableDuration.TWO_MONTHS_COMBINED ->
                         LocalDatePeriod(
-                            (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays(61),
+                            (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays(60),
                             mostRecentSpend.date,
+                        )
+                    SelectableDuration.ONE_MONTH_AGO ->
+                        LocalDatePeriod(
+                            (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays(60),
+                            mostRecentSpend.date.minusDays(30),
+                        )
+                    SelectableDuration.TWO_MONTHS_AGO ->
+                        LocalDatePeriod(
+                            (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays(90),
+                            mostRecentSpend.date.minusDays(60),
                         )
                     SelectableDuration.FOREVER ->
                         null
@@ -63,19 +74,19 @@ class ReviewVM @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
 
     /**
-     * List of [PieEntry]. A [PieEntry] represents 1 chunk of the pie, but without everything it needs, like color.
+     * A [PieEntry] represents 1 chunk of the pie, but without everything it needs, like color.
      */
     private val pieEntries =
-        transactionBlock.map { transactionBlock ->
-            listOfNotNull(
-                if (transactionBlock.defaultAmount.isZero) null else
-                    PieEntry(transactionBlock.defaultAmount.abs().toFloat(), "Uncategorized"),
-                transactionBlock.categoryAmounts.filter { it.value.abs() < transactionBlock.categoryAmounts.categorizedAmount.abs() * BigDecimal(0.03) }
-                    .let { PieEntry(it.values.sum().abs().toFloat(), "Other") },
-                *transactionBlock.categoryAmounts.filter { it.value.abs() >= transactionBlock.categoryAmounts.categorizedAmount.abs() * BigDecimal(0.03) }
-                    .map { PieEntry(it.value.abs().toFloat(), it.key.name) }.toTypedArray()
-            )
-        }
+        transactionBlock
+            .map { transactionBlock ->
+                val categoryAmounts = CategoryAmounts(transactionBlock.categoryAmounts.plus(Category("Uncategorized") to transactionBlock.defaultAmount))
+                listOfNotNull(
+                    categoryAmounts.filter { it.value.abs() < transactionBlock.amount.abs() * BigDecimal(0.03) }
+                        .let { if (it.isEmpty()) null else PieEntry(it.values.sum().abs().toFloat(), "Other") },
+                    *categoryAmounts.filter { it.value.abs() >= transactionBlock.amount.abs() * BigDecimal(0.03) }
+                        .map { PieEntry(it.value.abs().toFloat(), it.key.name) }.toTypedArray()
+                )
+            }
 
     /**
      * A [PieDataSet] is a list of [PieEntry], combined with other information relevant to the entire list, like colors.
