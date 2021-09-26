@@ -1,11 +1,11 @@
 package com.tminus1010.budgetvalue.all.presentation_and_view
 
-import java.util.*
+import com.tminus1010.budgetvalue.all.framework.extensions.easyCapitalize
 
 enum class SelectableDuration {
-    THIS_MONTH, TWO_MONTHS_COMBINED, ONE_MONTH_AGO, TWO_MONTHS_AGO, FOREVER;
+    BY_MONTH, BY_6_MONTHS, BY_YEAR, FOREVER;
 
     override fun toString(): String {
-        return this.name.lowercase().capitalize(Locale.ROOT).replace("_", " ")
+        return this.name.lowercase().easyCapitalize().replace("_", " ")
     }
 }

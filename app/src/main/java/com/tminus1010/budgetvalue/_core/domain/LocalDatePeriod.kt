@@ -9,6 +9,10 @@ data class LocalDatePeriod(
     val startDate: LocalDate,
     val endDate: LocalDate
 ) {
+    init {
+        if (endDate < startDate) error("endDate < startDate is illegal. Perhaps this could be supported?")
+    }
+
     constructor(startDate: LocalDate, period: Period) : this(startDate, startDate.plus(period))
 
     operator fun contains(localDate: LocalDate): Boolean {

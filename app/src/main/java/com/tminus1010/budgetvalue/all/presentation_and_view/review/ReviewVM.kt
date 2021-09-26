@@ -20,6 +20,8 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
+import com.tminus1010.tmcommonkotlin.rx.extensions.doLogx
+import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
@@ -35,43 +37,53 @@ class ReviewVM @Inject constructor(
     transactionsAppService: TransactionsAppService,
 ) : ViewModel() {
     // # UserIntents
-    val userSelectedDuration = BehaviorSubject.createDefault(SelectableDuration.THIS_MONTH)!!
+    val userSelectedDuration = BehaviorSubject.createDefault(SelectableDuration.BY_MONTH)
+    val userPrevious = PublishSubject.create<Unit>()
+    val userNext = PublishSubject.create<Unit>()
 
     // # Internal
+    private val currentPageNumber =
+        userSelectedDuration.switchMap {
+            Observable.merge(userPrevious.map { 1 }, userNext.map { -1 })
+                .scan(0) { acc, v ->
+                    (acc + v).coerceAtLeast(0)
+                }
+        }
     private val _colors = listOf<Int>()
         .plus(ColorTemplate.VORDIPLOM_COLORS.toList())
         .plus(ColorTemplate.JOYFUL_COLORS.toList())
         .plus(ColorTemplate.COLORFUL_COLORS.toList())
         .plus(ColorTemplate.PASTEL_COLORS.toList())
     private val period =
-        Observable.combineLatest(userSelectedDuration, transactionsAppService.transactions2.mapBox { it.mostRecentSpend }.filter { it.first != null }) // TODO("Filtering for not-null seems like a duct-tape solution b/c error stops subscription")
-        { userSelectedDuration, (mostRecentSpend) ->
+        Observable.combineLatest(userSelectedDuration, currentPageNumber, transactionsAppService.transactions2.mapBox { it.mostRecentSpend }.filter { it.first != null }) // TODO("Filtering for not-null seems like a duct-tape solution b/c error stops subscription")
+        { userSelectedDuration, currentPageNumber, (mostRecentSpend) ->
             when (userSelectedDuration) {
-                SelectableDuration.THIS_MONTH -> LocalDatePeriod(
-                    (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays(30),
-                    mostRecentSpend.date,
-                )
-                SelectableDuration.TWO_MONTHS_COMBINED ->
+                SelectableDuration.BY_MONTH ->
                     LocalDatePeriod(
-                        (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays(60),
-                        mostRecentSpend.date,
+                        (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays((currentPageNumber + 1) * 30L),
+                        mostRecentSpend.date.minusDays((currentPageNumber) * 30L),
                     )
-                SelectableDuration.ONE_MONTH_AGO ->
+                SelectableDuration.BY_6_MONTHS ->
                     LocalDatePeriod(
-                        (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays(60),
-                        mostRecentSpend.date.minusDays(30),
+                        (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays((currentPageNumber + 1) * 365L / 2),
+                        mostRecentSpend.date.minusDays((currentPageNumber) * 365L / 2),
                     )
-                SelectableDuration.TWO_MONTHS_AGO ->
+                SelectableDuration.BY_YEAR ->
                     LocalDatePeriod(
-                        (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays(90),
-                        mostRecentSpend.date.minusDays(60),
+                        (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays((currentPageNumber + 1) * 365L),
+                        mostRecentSpend.date.minusDays((currentPageNumber) * 365L),
                     )
                 SelectableDuration.FOREVER ->
                     null
             }.let { Box(it) }
         }
+//            .distinctUntilChanged { a, b -> (a.first.logx("first") == b.first.logx("second")).logx("equal?") }
+            .replayNonError(1)
+            .doLogx("period")
 
     private val transactionBlock = Observable.combineLatest(transactionsRepo.transactions, period, ::TransactionBlock)
+        .doLogx("TransactionBlock")
+        .doOnNext { logz("TransactionBlock.size:${it.transactionSet.size}") }
 
     /**
      * A [PieEntry] represents 1 chunk of the pie, but without everything it needs, like color.
@@ -86,6 +98,7 @@ class ReviewVM @Inject constructor(
                     .map { PieEntry(it.value.abs().toFloat(), it.key.name) }.toTypedArray()
             )
         }
+            .doOnNext { logz("pieEntries.size:${it.size}") }
 
     /**
      * [PieDataSet] is a list of [PieEntry], combined with other information relevant to the entire list, like colors.
@@ -124,4 +137,7 @@ class ReviewVM @Inject constructor(
             SelectableDuration.values(),
             userSelectedDuration,
         )
+
+    val title =
+        period.map { (it) -> it?.toDisplayStr() ?: "Forever" }
 }
