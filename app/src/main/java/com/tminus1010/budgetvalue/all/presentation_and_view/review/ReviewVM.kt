@@ -9,6 +9,7 @@ import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
+import com.tminus1010.budgetvalue.all.data.repos.LatestDateOfMostRecentImport
 import com.tminus1010.budgetvalue.all.presentation_and_view.SelectableDuration
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.PieChartVMItem
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
@@ -25,7 +26,8 @@ import javax.inject.Inject
 @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
 @HiltViewModel
 class ReviewVM @Inject constructor(
-    transactionsRepo: TransactionsRepo
+    transactionsRepo: TransactionsRepo,
+    latestDateOfMostRecentImport: LatestDateOfMostRecentImport,
 ) : ViewModel() {
     // # UserIntents
     val userSelectedDuration = BehaviorSubject.createDefault(SelectableDuration.ONE_MONTH)!!
@@ -37,8 +39,8 @@ class ReviewVM @Inject constructor(
         .plus(ColorTemplate.COLORFUL_COLORS.toList())
         .plus(ColorTemplate.PASTEL_COLORS.toList())
     private val categoryAmounts =
-        Observable.combineLatest(userSelectedDuration, transactionsRepo.transactions)
-        { userSelectedDuration, transactions ->
+        Observable.combineLatest(userSelectedDuration, transactionsRepo.transactions, latestDateOfMostRecentImport)
+        { userSelectedDuration, transactions, (latestDateOfMostRecentImport) ->
             transactions.filter {
                 when (userSelectedDuration) {
                     SelectableDuration.ONE_MONTH -> Duration.between(it.date.atStartOfDay(), LocalDate.now().atStartOfDay()) < Duration.ofDays(30)
