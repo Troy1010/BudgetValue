@@ -15,6 +15,7 @@ import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.budgetvalue.transactions.presentation.TransactionsDomainModel
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
+import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -124,5 +125,6 @@ class TransactionsDomain @Inject constructor(
         transactionsRepo.transactions.startWithItem(listOf())
             .map(::TransactionsDomainModel)
             .mapBox(TransactionsDomainModel::mostRecentUncategorizedSpend)
+            .replayNonError(1)
             .cold()
 }
