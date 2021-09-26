@@ -37,7 +37,7 @@ class ImportFrag : Fragment(R.layout.frag_import) {
         // # Buttons
         vb.buttonsview.buttons = accountsVM.buttons
         // # Accounts
-        accountsVM.accounts.observe(viewLifecycleOwner) { accounts = it }
+        accountsVM.accountVMItemList.observe(viewLifecycleOwner) { accounts = it }
         vb.recyclerviewAccounts.layoutManager = LinearLayoutManager(requireActivity())
         vb.recyclerviewAccounts.adapter = object : RecyclerView.Adapter<GenViewHolder2<ItemAccountBinding>>() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =

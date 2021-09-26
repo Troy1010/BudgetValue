@@ -118,7 +118,7 @@ class SplitVM @Inject constructor(
         get() = listOfNotNull(
             ButtonVMItem(
                 title = "Save Replay",
-                onClick = {
+                userClick = {
                     saveReplayDialogBox.onNext(
                         categoryAmountFormulas.value!!.map { (category, amountFormula) ->
                             if (category != fillCategory.value.first)
@@ -131,11 +131,11 @@ class SplitVM @Inject constructor(
             ),
             ButtonVMItem(
                 title = "Submit for all Uncategorized with matching description",
-                onClick = ::userSubmitCategorizationForAllUncategorized
+                userClick = ::userSubmitCategorizationForAllUncategorized
             ),
             ButtonVMItem(
                 title = "Submit",
-                onClick = ::userSubmitCategorization
+                userClick = ::userSubmitCategorization
             ),
         )
 }

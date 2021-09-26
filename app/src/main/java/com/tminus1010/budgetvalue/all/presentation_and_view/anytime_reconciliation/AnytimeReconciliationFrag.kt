@@ -1,32 +1,24 @@
 package com.tminus1010.budgetvalue.all.presentation_and_view.anytime_reconciliation
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
-import com.tminus1010.budgetvalue.*
-import com.tminus1010.budgetvalue._core.extensions.bind
-import com.tminus1010.budgetvalue._core.extensions.easyText
-import com.tminus1010.budgetvalue._core.extensions.getColorByAttr
+import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.middleware.Rx
-import com.tminus1010.budgetvalue._core.middleware.view.onDone
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.*
-import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.ViewItemRecipeFactory3
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
+import com.tminus1010.budgetvalue.all.presentation_and_view._models.AccountVMItemList
 import com.tminus1010.budgetvalue.all.presentation_and_view.import_z.AccountsVM
 import com.tminus1010.budgetvalue.budgeted.BudgetedVM
 import com.tminus1010.budgetvalue.categories.CategoriesVM
-import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.databinding.*
+import com.tminus1010.budgetvalue.databinding.FragReconcileBinding
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
@@ -53,7 +45,7 @@ class AnytimeReconciliationFrag : Fragment(R.layout.frag_reconcile) {
                     listOf(itemHeaderRF().create("Reconcile"))
                             + itemTextViewRB().create(anytimeReconciliationVM.defaultAmount)
                             + categories.map { category -> itemMoneyEditTextRF().create(activeReconciliationCAs[category]) { anytimeReconciliationVM.pushActiveReconcileCA(category, it) } },
-                    listOf(itemHeaderWithSubtitleRF().create("Budgeted", accountsVM.accountsTotal))
+                    listOf(itemHeaderWithSubtitleRF().create("Budgeted", accountsVM.accountVMItemList.map(AccountVMItemList::total)))
                             + itemTextViewRB().create(budgetedVM.defaultAmount)
                             + categories.map { itemTextViewRB().create(budgetedCategoryValidatedStringVMItems[it]) }
                 ).reflectXY()

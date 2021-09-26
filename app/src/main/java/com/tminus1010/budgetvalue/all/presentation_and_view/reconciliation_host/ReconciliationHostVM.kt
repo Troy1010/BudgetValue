@@ -22,11 +22,11 @@ class ReconciliationHostVM @Inject constructor(
                 when (it) {
                     is ReconciliationToDo.Accounts -> ButtonVMItem(
                         title = "Accounts Reconciliation",
-                        onClick = navToAccountsReconciliation::emit,
+                        userClick = navToAccountsReconciliation::emit,
                     )
                     is ReconciliationToDo.Anytime -> ButtonVMItem(
                         title = "Anytime Reconciliation",
-                        onClick = navToAnytimeReconciliation::emit
+                        userClick = navToAnytimeReconciliation::emit
                     )
                     is ReconciliationToDo.PlanZ -> TODO()
                 }

@@ -36,7 +36,7 @@ class TransactionFrag : Fragment(R.layout.frag_transaction) {
         vb.buttonsview.buttons = listOfNotNull(
             ButtonVMItem(
                 title = "Clear",
-                onClick = { transactionVM.userClearTransaction() }
+                userClick = { transactionVM.userClearTransaction() }
             )
         ).reversed()
         // # TMTableView_Title
