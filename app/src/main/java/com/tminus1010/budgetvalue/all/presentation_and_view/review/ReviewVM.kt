@@ -20,7 +20,6 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
-import com.tminus1010.tmcommonkotlin.rx.extensions.doLogx
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -58,6 +57,11 @@ class ReviewVM @Inject constructor(
         Observable.combineLatest(userSelectedDuration, currentPageNumber, transactionsAppService.transactions2.mapBox { it.mostRecentSpend }.filter { it.first != null }) // TODO("Filtering for not-null seems like a duct-tape solution b/c error stops subscription")
         { userSelectedDuration, currentPageNumber, (mostRecentSpend) ->
             when (userSelectedDuration) {
+                SelectableDuration.BY_WEEK ->
+                    LocalDatePeriod(
+                        (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays((currentPageNumber + 1) * 7L),
+                        mostRecentSpend.date.minusDays((currentPageNumber) * 7L),
+                    )
                 SelectableDuration.BY_MONTH ->
                     LocalDatePeriod(
                         (mostRecentSpend?.date ?: throw NoMostRecentSpend()).minusDays((currentPageNumber + 1) * 30L),
@@ -77,12 +81,9 @@ class ReviewVM @Inject constructor(
                     null
             }.let { Box(it) }
         }
-//            .distinctUntilChanged { a, b -> (a.first.logx("first") == b.first.logx("second")).logx("equal?") }
             .replayNonError(1)
-            .doLogx("period")
 
     private val transactionBlock = Observable.combineLatest(transactionsRepo.transactions, period, ::TransactionBlock)
-        .doLogx("TransactionBlock")
         .doOnNext { logz("TransactionBlock.size:${it.transactionSet.size}") }
 
     /**
@@ -117,10 +118,10 @@ class ReviewVM @Inject constructor(
      * [PieData] is the bare minimum to produce a [PieChart], but it is missing a lot of attributes, like centerText, entryLabelColor, isLegendEnabled.
      * It can contain and define shared data for multiple [PieDataSet], but usually there is only 1 [PieDataSet].
      */
-    private val pieData = pieDataSet.map(::PieData)!!
+    private val pieData = pieDataSet.map(::PieData)
 
     // # Events
-    val errors = PublishSubject.create<Throwable>()!!
+    val errors = PublishSubject.create<Throwable>()
 
     // # State
     /**
@@ -140,4 +141,8 @@ class ReviewVM @Inject constructor(
 
     val title =
         period.map { (it) -> it?.toDisplayStr() ?: "Forever" }
+    val isLeftVisible =
+        userSelectedDuration.map { it != SelectableDuration.FOREVER }
+    val isRightVisible =
+        userSelectedDuration.map { it != SelectableDuration.FOREVER }
 }

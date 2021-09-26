@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.bind
+import com.tminus1010.budgetvalue._core.extensions.easyVisibility
 import com.tminus1010.budgetvalue.all.framework.extensions.invoke
 import com.tminus1010.budgetvalue.all.presentation_and_view._extensions.onClick
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.NoMostRecentSpend
@@ -24,19 +25,23 @@ class ReviewFrag : Fragment(R.layout.frag_review) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = FragReviewBinding.bind(view)
-        // # Events
-        reviewVM.errors.observe(viewLifecycleOwner) {
-            when (it) {
-                is NoMostRecentSpend -> logz("Swallowing error:${it.javaClass.simpleName}")
-                else -> easyToast("An error occurred").run { logz("error:", it) }
+        reviewVM.apply {
+            // # Events
+            reviewVM.errors.observe(viewLifecycleOwner) {
+                when (it) {
+                    is NoMostRecentSpend -> logz("Swallowing error:${it.javaClass.simpleName}")
+                    else -> easyToast("An error occurred").run { logz("error:", it) }
+                }
             }
+            // # State
+            vb.pieChart1.bind(pieChartVMItem)
+            vb.spinnerDuration.bind(spinnerVMItem)
+            vb.tvTitle.bind(title) { text = it }
+            vb.ivLeft.bind(isLeftVisible) { easyVisibility = it }
+            vb.ivRight.bind(isRightVisible) { easyVisibility = it }
+            // # UserIntents
+            vb.ivLeft.onClick(userPrevious::invoke)
+            vb.ivRight.onClick(userNext::invoke)
         }
-        // # State
-        vb.pieChart1.bind(reviewVM.pieChartVMItem)
-        vb.spinnerDuration.bind(reviewVM.spinnerVMItem)
-        vb.tvTitle.bind(reviewVM.title) { text = it }
-        // # UserIntents
-        vb.ivLeft.onClick(reviewVM.userPrevious::invoke)
-        vb.ivRight.onClick(reviewVM.userNext::invoke)
     }
 }

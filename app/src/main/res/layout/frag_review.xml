@@ -5,6 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <FrameLayout
+        android:id="@+id/frame_left"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/iv_left"
         android:layout_width="50dp"
@@ -27,18 +34,25 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/iv_left"
+        app:layout_constraintBottom_toBottomOf="@id/barrier_bottom_of_title"
         app:layout_constraintEnd_toStartOf="@id/iv_right"
         app:layout_constraintStart_toEndOf="@id/iv_left"
         app:layout_constraintTop_toTopOf="@id/iv_left"
         tools:text="Title" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_bottom_of_title"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="iv_left, iv_right, tv_title, frame_left" />
 
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/pieChart1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/divider"
-        app:layout_constraintTop_toBottomOf="@id/iv_left" />
+        app:layout_constraintTop_toBottomOf="@id/barrier_bottom_of_title" />
 
     <View
         android:id="@+id/divider"
