@@ -20,6 +20,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
+import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -67,7 +68,7 @@ class ReviewVM @Inject constructor(
                     )
                 SelectableDuration.FOREVER ->
                     null
-            }
+            }.let { Box(it) }
         }
 
     private val transactionBlock = Observable.combineLatest(transactionsRepo.transactions, period, ::TransactionBlock)

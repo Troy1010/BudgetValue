@@ -7,6 +7,7 @@ import com.tminus1010.budgetvalue._shared.date_period_getter.IDatePeriodGetter
 import com.tminus1010.budgetvalue.history.models.IHistoryColumnData
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
+import com.tminus1010.tmcommonkotlin.tuple.Box
 
 /**
  * a null [datePeriod] represents forever
@@ -15,6 +16,8 @@ data class TransactionBlock(
     private val _transactionSet: List<Transaction>,
     val datePeriod: LocalDatePeriod?,
 ) : IHistoryColumnData {
+    constructor(_transactionSet: List<Transaction>, datePeriodBox: Box<LocalDatePeriod?>) : this(_transactionSet, datePeriodBox.first)
+
     val transactionSet = if (datePeriod == null) _transactionSet else _transactionSet.filter { it.date in datePeriod }
     val amount = transactionSet.map { it.amount }.sum()!!
     override val title = "Actual"
