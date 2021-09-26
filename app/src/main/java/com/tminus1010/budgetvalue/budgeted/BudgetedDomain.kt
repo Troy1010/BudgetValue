@@ -7,7 +7,7 @@ import com.tminus1010.budgetvalue._core.models.CategoryAmounts
 import com.tminus1010.budgetvalue.all.data.repos.AccountsRepo
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.reconciliations.data.ReconciliationsRepo
-import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
+import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
 import com.tminus1010.tmcommonkotlin.rx.extensions.total
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import io.reactivex.rxjava3.core.Observable
@@ -19,7 +19,7 @@ import javax.inject.Singleton
 @Singleton
 class BudgetedDomain @Inject constructor(
     plansRepo: PlansRepo,
-    transactionsDomain: TransactionsDomain,
+    transactionsAppService: TransactionsAppService,
     reconciliationsRepo: ReconciliationsRepo,
     accountsRepo: AccountsRepo,
 ) {
@@ -27,7 +27,7 @@ class BudgetedDomain @Inject constructor(
         Rx.combineLatest(
             reconciliationsRepo.reconciliations,
             plansRepo.plans,
-            transactionsDomain.transactionBlocks,
+            transactionsAppService.transactionBlocks,
             reconciliationsRepo.activeReconciliationCAs,
         )
             .throttleLatest(1, TimeUnit.SECONDS)

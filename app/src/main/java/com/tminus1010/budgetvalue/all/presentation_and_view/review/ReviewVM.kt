@@ -16,7 +16,7 @@ import com.tminus1010.budgetvalue.all.presentation_and_view.SelectableDuration
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.NoMostRecentSpend
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.PieChartVMItem
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
-import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
+import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -30,7 +30,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ReviewVM @Inject constructor(
     transactionsRepo: TransactionsRepo,
-    transactionsDomain: TransactionsDomain,
+    transactionsAppService: TransactionsAppService,
 ) : ViewModel() {
     // # UserIntents
     val userSelectedDuration = BehaviorSubject.createDefault(SelectableDuration.ONE_MONTH)!!
@@ -42,7 +42,7 @@ class ReviewVM @Inject constructor(
         .plus(ColorTemplate.COLORFUL_COLORS.toList())
         .plus(ColorTemplate.PASTEL_COLORS.toList())
     private val transactionBlock =
-        Observable.combineLatest(userSelectedDuration, transactionsRepo.transactions, transactionsDomain.transactions2.mapBox { it.mostRecentSpend }.filter { it.first != null }) // TODO("Filtering for not-null seems like a duct-tape solution b/c error stops subscription")
+        Observable.combineLatest(userSelectedDuration, transactionsRepo.transactions, transactionsAppService.transactions2.mapBox { it.mostRecentSpend }.filter { it.first != null }) // TODO("Filtering for not-null seems like a duct-tape solution b/c error stops subscription")
         { userSelectedDuration, transactions, (mostRecentSpend) ->
             val period =
                 when (userSelectedDuration) {

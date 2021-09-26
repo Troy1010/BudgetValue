@@ -27,7 +27,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class TransactionsDomain @Inject constructor(
+class TransactionsAppService @Inject constructor(
     private val transactionsRepo: TransactionsRepo,
     private val datePeriodGetter: DatePeriodGetter,
     private val transactionParser: TransactionParser,

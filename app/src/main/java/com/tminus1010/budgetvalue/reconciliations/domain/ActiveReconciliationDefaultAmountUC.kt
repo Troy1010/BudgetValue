@@ -9,7 +9,7 @@ import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.plans.models.Plan
 import com.tminus1010.budgetvalue.reconciliations.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.reconciliations.models.Reconciliation
-import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
+import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import com.tminus1010.tmcommonkotlin.rx.nonLazy
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
@@ -23,14 +23,14 @@ import javax.inject.Singleton
 class ActiveReconciliationDefaultAmountUC @Inject constructor(
     plansRepo: PlansRepo,
     reconciliationsRepo: ReconciliationsRepo,
-    transactionsDomain: TransactionsDomain,
+    transactionsAppService: TransactionsAppService,
     accountsRepo: AccountsRepo,
 ) {
     private val defaultAmount =
         Observable.combineLatest(
             plansRepo.plans,
             reconciliationsRepo.reconciliations,
-            transactionsDomain.transactionBlocks,
+            transactionsAppService.transactionBlocks,
             accountsRepo.accounts.map(Accounts::total),
             reconciliationsRepo.activeReconciliationCAs,
             ::calcActiveReconciliationDefaultAmount
