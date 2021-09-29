@@ -73,4 +73,7 @@ class CategorizeVM @Inject constructor(
     val latestUncategorizedTransactionDescription: Observable<String> =
         transactionsAppService.mostRecentUncategorizedSpend
             .map { it.first?.description ?: "" }
+    val uncategorizedSpendsSize =
+        transactionsAppService.uncategorizedSpends
+            .map { it.size.toString() }
 }
