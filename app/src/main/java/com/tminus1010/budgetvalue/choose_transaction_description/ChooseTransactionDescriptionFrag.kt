@@ -12,6 +12,7 @@ import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTex
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragTransactionsBinding
 import com.tminus1010.budgetvalue.replay_or_future.CreateFutureVM
+import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,16 +22,19 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ChooseTransactionDescriptionFrag : Fragment(R.layout.frag_transactions) {
     private val vb by viewBinding(FragTransactionsBinding::bind)
-    @Inject lateinit var transactionsAppService: TransactionsAppService
+    @Inject
+    lateinit var transactionsAppService: TransactionsAppService
+    @Inject
+    lateinit var transactionsRepo: TransactionsRepo
     private val createFutureVM by navGraphViewModels<CreateFutureVM>(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        vb.tvNoTransactionHistory.bind(transactionsAppService.transactions) { easyVisibility = it.isEmpty() }
+        vb.tvNoTransactionHistory.bind(transactionsRepo.transactionsAggregate) { easyVisibility = it.transactions.isEmpty() }
         // TODO: This should be moved into a VM. I have not done so yet b/c I need to figure out how to not have 2 ChooseTransactionDescriptionFrag first.
         val _transactions =
-            Observable.combineLatest(transactionsAppService.transactions, transactionsAppService.mostRecentUncategorizedSpend)
-            { transactions, (firstUncategorizedSpend) ->
-                transactions
+            Observable.combineLatest(transactionsRepo.transactionsAggregate, transactionsAppService.mostRecentUncategorizedSpend)
+            { transactionsAggregate, (firstUncategorizedSpend) ->
+                transactionsAggregate.transactions
                     .run { if (firstUncategorizedSpend == null) this else listOf(firstUncategorizedSpend) + this }
                     .distinctBy { it.description }
             }
