@@ -8,12 +8,14 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.easyVisibility
+import com.tminus1010.budgetvalue._core.extensions.mapBox
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemEditTextRF
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTextViewRB
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragChooseTransactionDesciption2Binding
 import com.tminus1010.budgetvalue.transactions.ReplayVM
-import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
+import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
+import com.tminus1010.budgetvalue.transactions.domain.models.TransactionsAggregate
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
@@ -28,13 +30,15 @@ import javax.inject.Inject
 class ChooseTransactionDescriptionFrag2 : Fragment(R.layout.frag_choose_transaction_desciption_2) {
     private val vb by viewBinding(FragChooseTransactionDesciption2Binding::bind)
     private val replayVM by activityViewModels<ReplayVM>()
-    @Inject lateinit var transactionsAppService: TransactionsAppService
+
+    @Inject
+    lateinit var transactionsRepo: TransactionsRepo
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        vb.tvNoTransactionHistory.bind(transactionsAppService.transactions) { easyVisibility = it.isEmpty() }
+        vb.tvNoTransactionHistory.bind(transactionsRepo.transactionsAggregate.map(TransactionsAggregate::transactions)) { easyVisibility = it.isEmpty() }
         // TODO: This should be moved into a VM. I have not done so yet b/c I need to figure out how to not have 2 ChooseTransactionDescriptionFrag first.
         val _transactions =
-            Observable.combineLatest(transactionsAppService.transactions, transactionsAppService.mostRecentUncategorizedSpend)
+            Observable.combineLatest(transactionsRepo.transactionsAggregate.map(TransactionsAggregate::transactions), transactionsRepo.transactionsAggregate.mapBox(TransactionsAggregate::mostRecentUncategorizedSpend))
             { transactions, (firstUncategorizedSpend) ->
                 transactions
                     .run { if (firstUncategorizedSpend == null) this else listOf(firstUncategorizedSpend) + this }
