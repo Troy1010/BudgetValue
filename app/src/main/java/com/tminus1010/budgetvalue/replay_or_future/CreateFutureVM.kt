@@ -16,6 +16,7 @@ import com.tminus1010.budgetvalue.replay_or_future.models.TotalFuture
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
 import com.tminus1010.budgetvalue.transactions.models.SearchType
 import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
+import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -111,7 +112,7 @@ class CreateFutureVM @Inject constructor(
     val searchDescriptionHeader = "Description"
     val searchDescription =
         userSetSearchDescription
-            .startWithItem(transactionsAppService.mostRecentUncategorizedSpend.value.first?.description ?: "")
+            .startWithItem(transactionsAppService.mostRecentUncategorizedSpend.value!!.first?.description ?: "")
             .distinctUntilChanged()
             .cold()
     val searchDescriptionMenuVMItems = listOf(

@@ -1,6 +1,5 @@
 package com.tminus1010.budgetvalue.transactions.domain
 
-import com.tminus1010.budgetvalue._core.extensions.cold
 import com.tminus1010.budgetvalue._core.extensions.mapBox
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
@@ -12,9 +11,10 @@ import com.tminus1010.budgetvalue.replay_or_future.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.replay_or_future.models.TerminationStatus
 import com.tminus1010.budgetvalue.transactions.TransactionParser
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
+import com.tminus1010.budgetvalue.transactions.domain.models.TransactionListDomainModel
 import com.tminus1010.budgetvalue.transactions.models.Transaction
-import com.tminus1010.budgetvalue.transactions.domain.models.TransactionsDomainModel
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
+import com.tminus1010.tmcommonkotlin.rx.nonLazy
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -96,6 +96,7 @@ class TransactionsAppService @Inject constructor(
     }
 
     // # Output
+    @Deprecated("Use TransactionsRepo.transactions2")
     val transactions = transactionsRepo.transactions
     val transactionBlocks: Observable<List<TransactionBlock>> =
         transactions
@@ -121,12 +122,9 @@ class TransactionsAppService @Inject constructor(
     val uncategorizedSpends: Observable<List<Transaction>> =
         spends
             .map { it.filter { it.isUncategorized } }
-    val transactions2 = // TODO("Replace transactions")
-        transactionsRepo.transactions
-            .map(::TransactionsDomainModel)
     val mostRecentUncategorizedSpend =
-        transactions2.startWithItem(TransactionsDomainModel(listOf()))
-            .mapBox(TransactionsDomainModel::mostRecentUncategorizedSpend)
+        transactionsRepo.transactions2
+            .mapBox(TransactionListDomainModel::mostRecentUncategorizedSpend)
             .replayNonError(1)
-            .cold()
+            .nonLazy()
 }
