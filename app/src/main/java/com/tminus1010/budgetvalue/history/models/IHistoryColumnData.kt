@@ -5,7 +5,6 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import java.math.BigDecimal
 
 interface IHistoryColumnData {
-    val title: String
     val defaultAmount: BigDecimal
     val categoryAmounts: Map<Category, BigDecimal>
     fun totalAmount(): BigDecimal {

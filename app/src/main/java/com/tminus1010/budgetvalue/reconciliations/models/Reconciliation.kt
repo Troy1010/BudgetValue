@@ -30,6 +30,4 @@ data class Reconciliation(
             )
         }
     }
-
-    override val title = "Reconciliation"
 }

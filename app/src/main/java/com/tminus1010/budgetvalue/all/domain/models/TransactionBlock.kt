@@ -19,15 +19,12 @@ data class TransactionBlock(
 
     val transactionSet = if (datePeriod == null) _transactionSet else _transactionSet.filter { it.date in datePeriod }
     val amount = transactionSet.map { it.amount }.sum()!!
-    override val title = "Actual"
     val size = transactionSet.size
     override val defaultAmount get() = amount - categoryAmounts.values.sum()
     override val categoryAmounts: CategoryAmounts =
         transactionSet
             .fold(CategoryAmounts()) { acc, transaction -> acc.addTogether(transaction.categoryAmounts) }
-
     val spendBlock get() = TransactionBlock(transactionSet.filter { it.isSpend }, datePeriod)
-
     val isFullyCategorized get() = defaultAmount.isZero
     val isFullyImported: Boolean get() = TODO()
 }

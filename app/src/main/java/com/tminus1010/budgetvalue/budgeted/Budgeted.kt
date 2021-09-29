@@ -7,6 +7,4 @@ import java.math.BigDecimal
 class Budgeted(
     override val categoryAmounts: Map<Category, BigDecimal>,
     override val defaultAmount: BigDecimal,
-) : IHistoryColumnData {
-    override val title: String = "Budgeted"
-}
+) : IHistoryColumnData
