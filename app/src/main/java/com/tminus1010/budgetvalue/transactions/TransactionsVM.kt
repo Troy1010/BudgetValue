@@ -12,7 +12,7 @@ class TransactionsVM @Inject constructor(
     transactionsAppService: TransactionsAppService,
 ) : ViewModel() {
     // # Presentation State
-    val transactions = transactionsAppService.transactions
+    val transactions = transactionsAppService.transactions2
         .map(::TransactionVMItemList)
         .replayNonError(1)
 
