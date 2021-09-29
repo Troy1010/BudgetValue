@@ -22,8 +22,11 @@ class TransactionListFrag : Fragment(R.layout.frag_transactions) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // # Events
         transactionsVM.navToTransaction.observe(viewLifecycleOwner) { TransactionFrag.navTo(nav, it) }
-        // # TMTableView
+        transactionsVM.alertDialog.observe(viewLifecycleOwner) { it.show(requireContext()) }
+        // # Presentation State
+        vb.buttonsview.buttons = transactionsVM.buttons
         vb.tmTableView.bind(
             transactionsVM.transactionVMItems
                 .observeOn(Schedulers.computation())

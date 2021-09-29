@@ -42,6 +42,8 @@ class TransactionsRepo @Inject constructor(
     fun tryPush(transactions: List<Transaction>): Completable =
         miscDAO.tryAdd(transactions.map { it.toDTO(categoryAmountsConverter) }).subscribeOn(Schedulers.io())
 
+    fun clear() = miscDAO.clearTransactions().subscribeOn(Schedulers.io())
+
     fun findTransactionsWithDescription(description: String): Single<List<Transaction>> =
         miscDAO.fetchTransactions(description).subscribeOn(Schedulers.io())
             .map { it.map { Transaction.fromDTO(it, categoryAmountsConverter) } }
