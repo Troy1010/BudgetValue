@@ -10,3 +10,10 @@ operator fun Subject<Unit>.invoke() =
 
 fun Subject<Unit>.emit() =
     onNext(Unit)
+
+/**
+ * Useful for:
+ *     button.setOnClickListener(subject::onNext2)
+ */
+fun Subject<Unit>.onNext2(any: Any) =
+    onNext(Unit)

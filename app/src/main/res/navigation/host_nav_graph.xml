@@ -98,7 +98,7 @@
     </navigation>
     <fragment
         android:id="@+id/transactionsFrag"
-        android:name="com.tminus1010.budgetvalue.transactions.ui.TransactionsFrag"
+        android:name="com.tminus1010.budgetvalue.transactions.ui.TransactionListFrag"
         android:label="TransactionsFrag"
         tools:layout="@layout/frag_transactions">
         <action

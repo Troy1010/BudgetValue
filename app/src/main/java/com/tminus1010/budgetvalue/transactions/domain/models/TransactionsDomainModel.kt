@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.transactions.presentation
+package com.tminus1010.budgetvalue.transactions.domain.models
 
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 

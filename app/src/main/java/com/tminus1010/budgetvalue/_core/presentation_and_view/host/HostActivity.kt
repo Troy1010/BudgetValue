@@ -26,7 +26,7 @@ import com.tminus1010.budgetvalue.history.HistoryFrag
 import com.tminus1010.budgetvalue.replay_or_future.FuturesReviewFrag
 import com.tminus1010.budgetvalue.replay_or_future.ReplaysFrag
 import com.tminus1010.budgetvalue.transactions.TransactionsMiscVM
-import com.tminus1010.budgetvalue.transactions.ui.TransactionsFrag
+import com.tminus1010.budgetvalue.transactions.ui.TransactionListFrag
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -87,7 +87,7 @@ class HostActivity : AppCompatActivity() {
         // # State
         hostVM.navToReplays.observe(this) { ReplaysFrag.navTo(nav) }
         hostVM.navToFutures.observe(this) { FuturesReviewFrag.navTo(nav) }
-        hostVM.navToTransactions.observe(this) { TransactionsFrag.navTo(nav) }
+        hostVM.navToTransactions.observe(this) { TransactionListFrag.navTo(nav) }
         hostVM.navToHistory.observe(this) { HistoryFrag.navTo(nav) }
         hostVM.unCheckAllMenuItems.observe(this) { vb.bottomNavigation.menu.unCheckAllMenuItems() }
         isPlanFeatureEnabled.observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }
