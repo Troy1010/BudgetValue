@@ -1,8 +1,10 @@
 package com.tminus1010.budgetvalue.transactions.presentation.models
 
-import com.tminus1010.budgetvalue.transactions.models.Transaction
+import com.tminus1010.budgetvalue.transactions.domain.models.TransactionListDomainModel
 import io.reactivex.rxjava3.core.Observable
 
-class TransactionVMItemList(private val transactions: List<Transaction>) : List<TransactionVMItem> by transactions.map(::TransactionVMItem) {
+class TransactionVMItemList(
+    private val transactionListDomainModel: TransactionListDomainModel
+) : List<TransactionVMItem> by transactionListDomainModel.transactions.map(::TransactionVMItem) {
     val navToTransaction = Observable.merge(this.map { it.userTryNavToTransaction })
 }

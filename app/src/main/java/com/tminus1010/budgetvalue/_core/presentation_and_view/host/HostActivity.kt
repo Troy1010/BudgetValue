@@ -25,7 +25,6 @@ import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.history.HistoryFrag
 import com.tminus1010.budgetvalue.replay_or_future.FuturesReviewFrag
 import com.tminus1010.budgetvalue.replay_or_future.ReplaysFrag
-import com.tminus1010.budgetvalue.transactions.TransactionsMiscVM
 import com.tminus1010.budgetvalue.transactions.ui.TransactionListFrag
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
@@ -58,7 +57,6 @@ class HostActivity : AppCompatActivity() {
     @Inject
     lateinit var launchSelectFile: LaunchSelectFile
 
-    private val transactionsMiscVM: TransactionsMiscVM by viewModels()
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.frag_nav_host) as HostFrag }
     private val nav by lazy { findNavController(R.id.frag_nav_host) }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,10 +67,6 @@ class HostActivity : AppCompatActivity() {
         // # Bind bottom menu to navigation.
         // In order for NavigationUI.setupWithNavController to work, the ids in R.menu.* must exactly match R.navigation.*
         NavigationUI.setupWithNavController(vb.bottomNavigation, hostFrag.navController)
-        //
-        // This line solves (after doing an Import): java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
-        // TODO("This may no longer be required b/c using Interactors instead")
-        transactionsMiscVM
         //
         vb.bottomNavigation.selectedItemId = R.id.reviewFrag
         // # Events
