@@ -16,7 +16,6 @@ data class Plan(
 ) : IHistoryColumnData {
     override val defaultAmount = amount - categoryAmounts.values.sum()
     override val title = "Plan"
-    override fun subTitle(datePeriodGetter: IDatePeriodGetter): String? = TODO()
 
     fun toDTO(categoryAmountsConverter: CategoryAmountsConverter): PlanDTO =
         PlanDTO(

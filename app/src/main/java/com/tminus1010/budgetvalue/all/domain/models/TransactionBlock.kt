@@ -3,7 +3,6 @@ package com.tminus1010.budgetvalue.all.domain.models
 import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.extensions.isZero
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
-import com.tminus1010.budgetvalue._shared.date_period_getter.IDatePeriodGetter
 import com.tminus1010.budgetvalue.history.models.IHistoryColumnData
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
@@ -21,10 +20,6 @@ data class TransactionBlock(
     val transactionSet = if (datePeriod == null) _transactionSet else _transactionSet.filter { it.date in datePeriod }
     val amount = transactionSet.map { it.amount }.sum()!!
     override val title = "Actual"
-    override fun subTitle(datePeriodGetter: IDatePeriodGetter): String? {
-        TODO("Not yet implemented")
-    }
-
     val size = transactionSet.size
     override val defaultAmount get() = amount - categoryAmounts.values.sum()
     override val categoryAmounts: CategoryAmounts =
