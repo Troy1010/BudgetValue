@@ -3,16 +3,15 @@ package com.tminus1010.budgetvalue.plans.models
 import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.history.models.IHistoryColumnData
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import java.math.BigDecimal
 
 data class Plan(
     val localDatePeriod: LocalDatePeriod,
     val amount: BigDecimal,
-    override val categoryAmounts: Map<Category, BigDecimal>,
-) : IHistoryColumnData {
-    override val defaultAmount = amount - categoryAmounts.values.sum()
+    val categoryAmounts: Map<Category, BigDecimal>,
+) {
+    val defaultAmount = amount - categoryAmounts.values.sum()
 
     fun toDTO(categoryAmountsConverter: CategoryAmountsConverter): PlanDTO =
         PlanDTO(
