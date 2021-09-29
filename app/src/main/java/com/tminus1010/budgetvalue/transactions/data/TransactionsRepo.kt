@@ -2,11 +2,9 @@ package com.tminus1010.budgetvalue.transactions.data
 
 import com.tminus1010.budgetvalue._core.data.MiscDAO
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
-import com.tminus1010.budgetvalue.transactions.domain.models.TransactionListDomainModel
+import com.tminus1010.budgetvalue.transactions.domain.models.TransactionsAggregate
 import com.tminus1010.budgetvalue.transactions.models.Transaction
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -22,33 +20,33 @@ class TransactionsRepo @Inject constructor(
             .map { it.map { Transaction.fromDTO(it, categoryAmountsConverter) } }
             .replay(1).refCount()
 
-    val transactions2: Observable<TransactionListDomainModel> =
+    val transactionsAggregate =
         miscDAO.fetchTransactions().subscribeOn(Schedulers.io())
-            .map { TransactionListDomainModel(it, categoryAmountsConverter) }
+            .map { TransactionsAggregate(it, categoryAmountsConverter) }
             .replay(1).refCount()
 
-    fun tryPush(transaction: Transaction): Completable =
+    fun tryPush(transaction: Transaction) =
         miscDAO.tryAdd(transaction.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
 
-    fun push(transaction: Transaction): Completable =
+    fun push(transaction: Transaction) =
         miscDAO.add(transaction.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
 
-    fun delete(transaction: Transaction): Completable =
+    fun delete(transaction: Transaction) =
         miscDAO.delete(transaction.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
 
-    fun update(transaction: Transaction): Completable =
+    fun update(transaction: Transaction) =
         miscDAO.update(transaction.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
 
-    fun tryPush(transactions: List<Transaction>): Completable =
+    fun tryPush(transactions: List<Transaction>) =
         miscDAO.tryAdd(transactions.map { it.toDTO(categoryAmountsConverter) }).subscribeOn(Schedulers.io())
 
     fun clear() = miscDAO.clearTransactions().subscribeOn(Schedulers.io())
 
-    fun findTransactionsWithDescription(description: String): Single<List<Transaction>> =
+    fun findTransactionsWithDescription(description: String) =
         miscDAO.fetchTransactions(description).subscribeOn(Schedulers.io())
             .map { it.map { Transaction.fromDTO(it, categoryAmountsConverter) } }
 
-    fun getTransaction(id: String): Single<Transaction> =
+    fun getTransaction(id: String) =
         miscDAO.getTransaction(id).subscribeOn(Schedulers.io())
             .map { Transaction.fromDTO(it, categoryAmountsConverter) }
 }

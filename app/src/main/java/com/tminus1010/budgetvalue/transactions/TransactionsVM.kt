@@ -21,7 +21,7 @@ class TransactionsVM @Inject constructor(
 
     // # Presentation State
     val transactionVMItems =
-        transactionsRepo.transactions2
+        transactionsRepo.transactionsAggregate
             .map { it.transactions.map(::TransactionVMItem) }
             .replayNonError(1)
     val buttons = listOf(

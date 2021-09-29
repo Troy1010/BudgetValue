@@ -11,7 +11,7 @@ import com.tminus1010.budgetvalue.replay_or_future.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.replay_or_future.models.TerminationStatus
 import com.tminus1010.budgetvalue.transactions.TransactionParser
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
-import com.tminus1010.budgetvalue.transactions.domain.models.TransactionListDomainModel
+import com.tminus1010.budgetvalue.transactions.domain.models.TransactionsAggregate
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import com.tminus1010.tmcommonkotlin.rx.nonLazy
@@ -105,8 +105,8 @@ class TransactionsAppService @Inject constructor(
         transactionBlocks
             .map { it.map { it.spendBlock } }
     private val spends: Observable<List<Transaction>> =
-        transactions
-            .map { it.filter { it.isSpend } }
+        transactionsRepo.transactionsAggregate
+            .map(TransactionsAggregate::spends)
             .replay(1).refCount()
     val currentSpendBlockCAs: Observable<Map<Category, BigDecimal>> =
         spends
@@ -123,8 +123,8 @@ class TransactionsAppService @Inject constructor(
         spends
             .map { it.filter { it.isUncategorized } }
     val mostRecentUncategorizedSpend =
-        transactionsRepo.transactions2
-            .mapBox(TransactionListDomainModel::mostRecentUncategorizedSpend)
+        transactionsRepo.transactionsAggregate
+            .mapBox(TransactionsAggregate::mostRecentUncategorizedSpend)
             .replayNonError(1)
             .nonLazy()
 }
