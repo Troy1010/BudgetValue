@@ -14,12 +14,6 @@ class TransactionsRepo @Inject constructor(
     private val miscDAO: MiscDAO,
     private val categoryAmountsConverter: CategoryAmountsConverter,
 ) {
-    @Deprecated("Use transactions2")
-    val transactions: Observable<List<Transaction>> =
-        miscDAO.fetchTransactions().subscribeOn(Schedulers.io())
-            .map { it.map { Transaction.fromDTO(it, categoryAmountsConverter) } }
-            .replay(1).refCount()
-
     val transactionsAggregate =
         miscDAO.fetchTransactions().subscribeOn(Schedulers.io())
             .map { TransactionsAggregate(it, categoryAmountsConverter) }

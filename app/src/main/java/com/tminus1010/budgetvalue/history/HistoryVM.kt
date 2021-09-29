@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.categoryComparator
 import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.middleware.Rx
-import com.tminus1010.budgetvalue._core.data.repos.CurrentDatePeriod
+import com.tminus1010.budgetvalue._core.data.repos.CurrentDatePeriodRepo
 import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
 import com.tminus1010.budgetvalue.budgeted.BudgetedDomain
 import com.tminus1010.budgetvalue.categories.models.Category
@@ -26,7 +26,7 @@ class HistoryVM @Inject constructor(
     activeReconciliationDefaultAmountUC: ActiveReconciliationDefaultAmountUC,
     budgetedDomain: BudgetedDomain,
     private val datePeriodGetter: DatePeriodGetter,
-    private val currentDatePeriod: CurrentDatePeriod,
+    private val currentDatePeriodRepo: CurrentDatePeriodRepo,
     private val plansRepo: PlansRepo,
     private val reconciliationRepo: ReconciliationsRepo,
 ) : ViewModel() {
@@ -62,11 +62,11 @@ class HistoryVM @Inject constructor(
                 for (blockPeriod in blockPeriods) {
                     listOfNotNull(
                         transactionBlocks?.filter { it.datePeriod == blockPeriod } // TODO("sort by sortDate")
-                            ?.let { it.map { HistoryVMItem.TransactionBlockVMItem(it, currentDatePeriod) } },
+                            ?.let { it.map { HistoryVMItem.TransactionBlockVMItem(it, currentDatePeriodRepo) } },
                         reconciliations?.filter { it.localDate in blockPeriod }
                             ?.let { it.map { HistoryVMItem.ReconciliationVMItem(it, reconciliationRepo) } },
                         plans?.filter { it.localDatePeriod.startDate in blockPeriod }
-                            ?.let { it.map { HistoryVMItem.PlanVMItem(it, currentDatePeriod, plansRepo) } },
+                            ?.let { it.map { HistoryVMItem.PlanVMItem(it, currentDatePeriodRepo, plansRepo) } },
                     ).flatten().also { historyColumnDatas.addAll(it) }
                 }
                 // ## Add Active Reconciliation

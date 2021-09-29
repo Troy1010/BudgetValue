@@ -96,10 +96,9 @@ class TransactionsAppService @Inject constructor(
     }
 
     // # Output
-    @Deprecated("Use TransactionsRepo.transactions2")
-    val transactions = transactionsRepo.transactions
     val transactionBlocks: Observable<List<TransactionBlock>> =
-        transactions
+        transactionsRepo.transactionsAggregate
+            .map(TransactionsAggregate::transactions)
             .map(::getBlocksFromTransactions)
     val spendBlocks: Observable<List<TransactionBlock>> =
         transactionBlocks

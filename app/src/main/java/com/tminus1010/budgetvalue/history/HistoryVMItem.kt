@@ -1,16 +1,16 @@
 package com.tminus1010.budgetvalue.history
 
+import com.tminus1010.budgetvalue._core.data.repos.CurrentDatePeriodRepo
 import com.tminus1010.budgetvalue._core.extensions.mapBox
 import com.tminus1010.budgetvalue._core.middleware.presentation.MenuVMItem
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
-import com.tminus1010.budgetvalue._core.data.repos.CurrentDatePeriod
+import com.tminus1010.budgetvalue.all.domain.models.TransactionBlock
 import com.tminus1010.budgetvalue.budgeted.Budgeted
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.plans.models.Plan
 import com.tminus1010.budgetvalue.reconciliations.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.reconciliations.models.Reconciliation
-import com.tminus1010.budgetvalue.all.domain.models.TransactionBlock
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Observable
@@ -30,10 +30,10 @@ sealed class HistoryVMItem {
 
     open val menuVMItems: List<MenuVMItem> = listOf()
 
-    class PlanVMItem(plan: Plan, currentDatePeriod: CurrentDatePeriod, plansRepo: PlansRepo) : HistoryVMItem() {
+    class PlanVMItem(plan: Plan, currentDatePeriodRepo: CurrentDatePeriodRepo, plansRepo: PlansRepo) : HistoryVMItem() {
         override val title: String = "Plan"
         override val subTitle: Observable<Box<String?>> =
-            currentDatePeriod()
+            currentDatePeriodRepo.currentDatePeriod
                 .mapBox {
                     if (it == plan.localDatePeriod)
                         "Current"
@@ -42,11 +42,8 @@ sealed class HistoryVMItem {
                 }
         override val categoryAmounts =
             plan.categoryAmounts
-
-        override val defaultAmount: String =
-            plan.defaultAmount
-                .toString()
-
+        override val defaultAmount =
+            plan.defaultAmount.toString()
         override val menuVMItems =
             listOf(
                 MenuVMItem("Delete") { plansRepo.delete(plan).subscribe() }
@@ -60,19 +57,18 @@ sealed class HistoryVMItem {
                 .let { Observable.just(Box(it)) }
         override val categoryAmounts =
             reconciliation.categoryAmounts
-        override val defaultAmount: String =
-            reconciliation.defaultAmount
-                .toString()
+        override val defaultAmount =
+            reconciliation.defaultAmount.toString()
         override val menuVMItems =
             listOf(
                 MenuVMItem("Delete") { reconciliationsRepo.delete(reconciliation) }
             )
     }
 
-    class TransactionBlockVMItem(transactionBlock: TransactionBlock, currentDatePeriod: CurrentDatePeriod) : HistoryVMItem() {
+    class TransactionBlockVMItem(transactionBlock: TransactionBlock, currentDatePeriodRepo: CurrentDatePeriodRepo) : HistoryVMItem() {
         override val title: String = "Actual"
         override val subTitle: Observable<Box<String?>> =
-            currentDatePeriod()
+            currentDatePeriodRepo.currentDatePeriod
                 .mapBox {
                     if (it == transactionBlock.datePeriod)
                         "Current"
@@ -81,9 +77,8 @@ sealed class HistoryVMItem {
                 }
         override val categoryAmounts =
             transactionBlock.categoryAmounts
-        override val defaultAmount: String =
-            transactionBlock.defaultAmount
-                .toString()
+        override val defaultAmount =
+            transactionBlock.defaultAmount.toString()
     }
 
     class BudgetedVMItem(budgeted: Budgeted) : HistoryVMItem() {
@@ -92,17 +87,15 @@ sealed class HistoryVMItem {
             Observable.just(Box(null))
         override val categoryAmounts =
             budgeted.categoryAmounts
-        override val defaultAmount: String =
-            budgeted.defaultAmount
-                .toString()
+        override val defaultAmount =
+            budgeted.defaultAmount.toString()
     }
 
     class ActiveReconciliationVMItem(override val categoryAmounts: CategoryAmounts, defaultAmount: BigDecimal) : HistoryVMItem() {
         override val title: String = "Reconciliation"
         override val subTitle: Observable<Box<String?>> =
             Observable.just(Box("Current"))
-        override val defaultAmount: String =
-            defaultAmount
-                .toString()
+        override val defaultAmount =
+            defaultAmount.toString()
     }
 }

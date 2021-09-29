@@ -17,14 +17,10 @@ class DatePeriodGetter @Inject constructor(
 ) : IDatePeriodGetter {
     private val anchorDay = LocalDate.of(2020, Month.JULY, 1)
     override fun getDatePeriodObservable(date: LocalDate): Observable<LocalDatePeriod> =
-        Rx.combineLatest(settingsRepo.anchorDateOffset, settingsRepo.blockSize)
-            .map { (anchorDateOffset, blockSize) ->
-                getDatePeriod(date, anchorDateOffset, blockSize)
-            }
-
-    @Deprecated("does not emit on change, not following SingleResponsibilityPrincipal. Replace with CurrentDatePeriod")
-    override fun currentDatePeriod(): LocalDatePeriod =
-        getDatePeriod(LocalDate.now())
+        Observable.combineLatest(settingsRepo.anchorDateOffset, settingsRepo.blockSize)
+        { anchorDateOffset, blockSize ->
+            getDatePeriod(date, anchorDateOffset, blockSize)
+        }
 
     // TODO("This is pretty hacky..")
     private val blockSizeBS = settingsRepo.blockSize.toBehaviorSubject()

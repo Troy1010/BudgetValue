@@ -8,5 +8,4 @@ interface IDatePeriodGetter {
     fun isDatePeriodValid(datePeriod: LocalDatePeriod): Boolean
     fun getDatePeriod(date: LocalDate): LocalDatePeriod
     fun getDatePeriodObservable(date: LocalDate): Observable<LocalDatePeriod>
-    fun currentDatePeriod(): LocalDatePeriod
 }
