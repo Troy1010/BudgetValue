@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.history
 import com.tminus1010.budgetvalue._core.extensions.mapBox
 import com.tminus1010.budgetvalue._core.middleware.presentation.MenuVMItem
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
-import com.tminus1010.budgetvalue._core.data.repos.CurrentDatePeriod
+import com.tminus1010.budgetvalue._core.data.repos.CurrentDatePeriodRepo
 import com.tminus1010.budgetvalue.budgeted.Budgeted
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
@@ -30,10 +30,10 @@ sealed class HistoryVMItem {
 
     open val menuVMItems: List<MenuVMItem> = listOf()
 
-    class PlanVMItem(plan: Plan, currentDatePeriod: CurrentDatePeriod, plansRepo: PlansRepo) : HistoryVMItem() {
+    class PlanVMItem(plan: Plan, currentDatePeriodRepo: CurrentDatePeriodRepo, plansRepo: PlansRepo) : HistoryVMItem() {
         override val title: String = "Plan"
         override val subTitle: Observable<Box<String?>> =
-            currentDatePeriod()
+            currentDatePeriodRepo.currentDatePeriod
                 .mapBox {
                     if (it == plan.localDatePeriod)
                         "Current"
@@ -69,10 +69,10 @@ sealed class HistoryVMItem {
             )
     }
 
-    class TransactionBlockVMItem(transactionBlock: TransactionBlock, currentDatePeriod: CurrentDatePeriod) : HistoryVMItem() {
+    class TransactionBlockVMItem(transactionBlock: TransactionBlock, currentDatePeriodRepo: CurrentDatePeriodRepo) : HistoryVMItem() {
         override val title: String = "Actual"
         override val subTitle: Observable<Box<String?>> =
-            currentDatePeriod()
+            currentDatePeriodRepo.currentDatePeriod
                 .mapBox {
                     if (it == transactionBlock.datePeriod)
                         "Current"
