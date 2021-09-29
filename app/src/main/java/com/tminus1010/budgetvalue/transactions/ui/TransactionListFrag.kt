@@ -25,7 +25,7 @@ class TransactionListFrag : Fragment(R.layout.frag_transactions) {
         transactionsVM.navToTransaction.observe(viewLifecycleOwner) { TransactionFrag.navTo(nav, it) }
         // # TMTableView
         vb.tmTableView.bind(
-            transactionsVM.transactions
+            transactionsVM.transactionVMItems
                 .observeOn(Schedulers.computation())
                 .map { it.map { it.toViewItemRecipes(requireContext()) } }
         ) {
