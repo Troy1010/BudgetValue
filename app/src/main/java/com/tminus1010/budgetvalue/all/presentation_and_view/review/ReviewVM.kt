@@ -20,6 +20,7 @@ import com.tminus1010.budgetvalue.all.presentation_and_view._models.PieChartVMIt
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.SpinnerVMItem
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
+import com.tminus1010.budgetvalue.transactions.domain.models.TransactionsAggregate
 import com.tminus1010.tmcommonkotlin.core.extensions.nextOrSame
 import com.tminus1010.tmcommonkotlin.core.extensions.previousOrSame
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
@@ -177,8 +178,12 @@ class ReviewVM @Inject constructor(
         }
             .replayNonError(1)
 
-    private val transactionBlock = Observable.combineLatest(transactionsRepo.transactions, period, ::TransactionBlock)
-        .doOnNext { logz("TransactionBlock.size:${it.transactionSet.size}") }
+    private val transactionBlock =
+        Observable.combineLatest(
+            transactionsRepo.transactionsAggregate.map(TransactionsAggregate::transactions),
+            period,
+            ::TransactionBlock,
+        )
 
     /**
      * A [PieEntry] represents 1 chunk of the pie, but without everything it needs, like color.
