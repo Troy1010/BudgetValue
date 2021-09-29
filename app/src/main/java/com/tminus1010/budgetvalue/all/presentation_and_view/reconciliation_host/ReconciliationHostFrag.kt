@@ -8,10 +8,7 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
-import com.tminus1010.budgetvalue.all.presentation_and_view.anytime_reconciliation.AnytimeReconciliationFrag
 import com.tminus1010.budgetvalue.databinding.FragReconciliationHostBinding
-import com.tminus1010.tmcommonkotlin.rx.extensions.observe
-import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,13 +18,8 @@ class ReconciliationHostFrag : Fragment(R.layout.frag_reconciliation_host) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // # Bind Incoming from Presentation layer
-        // ## Events
-        reconciliationHostVM.navToAccountsReconciliation.observe(viewLifecycleOwner) { TODO() }
-        reconciliationHostVM.navToPlanReconciliation.observe(viewLifecycleOwner) { TODO() }
-        reconciliationHostVM.navToAnytimeReconciliation.observe(viewLifecycleOwner) { AnytimeReconciliationFrag.navTo(nav) }
-        // ## State
-        vb.buttonsview.bind(reconciliationHostVM.buttons) { buttons = it }
+        // # Presentation State
+        vb.buttonsview.buttons = reconciliationHostVM.buttons
         vb.tvTitle.bind(reconciliationHostVM.title) { text = it.getString(context) }
     }
 

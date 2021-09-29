@@ -1,5 +1,6 @@
 package com.tminus1010.budgetvalue.reconciliations.models
 
+import com.tminus1010.budgetvalue._core.models.CategoryAmounts
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.models.Category
 import java.math.BigDecimal
@@ -11,6 +12,8 @@ data class Reconciliation(
     val categoryAmounts: Map<Category, BigDecimal>,
     val id: Int = 0
 ) {
+    // TODO("Check if this totalAmount calculation is correct")
+    val totalAmount = CategoryAmounts(categoryAmounts).categorizedAmount - defaultAmount
     fun toDTO(categoryAmountsConverter: CategoryAmountsConverter): ReconciliationDTO =
         ReconciliationDTO(
             localDate = localDate,
