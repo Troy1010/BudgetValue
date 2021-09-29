@@ -45,7 +45,7 @@ class ActiveReconciliationDefaultAmountUC @Inject constructor(
          */
         @VisibleForTesting
         fun calcActiveReconciliationDefaultAmount(plans: List<Plan>, reconciliations: List<Reconciliation>, transactionBlocks: List<TransactionBlock>, accountsTotal: BigDecimal, activeReconciliationCAs: CategoryAmounts): BigDecimal {
-            val historyTotalAmounts = (plans + reconciliations + transactionBlocks).map { it.totalAmount() }
+            val historyTotalAmounts = plans.map { it.amount } + reconciliations.map { it.totalAmount } + transactionBlocks.map { it.amount }
             return activeReconciliationCAs.defaultAmount(accountsTotal - historyTotalAmounts.sum())
         }
     }
