@@ -40,9 +40,9 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     private val vb by viewBinding(FragCategorizeBinding::bind)
-    private val categorizeVM: CategorizeVM by activityViewModels()
-    private val categoriesVM: CategoriesVM by activityViewModels()
-    private val categorySelectionVM: CategorySelectionVM by navGraphViewModels(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
+    private val categorizeVM by activityViewModels<CategorizeVM>()
+    private val categoriesVM by activityViewModels<CategoriesVM>()
+    private val categorySelectionVM by navGraphViewModels<CategorySelectionVM>(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
 
     @Inject
     lateinit var transactionsAppService: TransactionsAppService
