@@ -5,6 +5,7 @@ import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
 import com.tminus1010.budgetvalue.all.data.repos.AccountsRepo
+import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.reconciliations.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
@@ -24,16 +25,13 @@ class BudgetedDomain @Inject constructor(
     accountsRepo: AccountsRepo,
 ) {
     val categoryAmounts =
-        Rx.combineLatest(
-            reconciliationsRepo.reconciliations,
-            plansRepo.plans,
-            transactionsAppService.transactionBlocks,
-            reconciliationsRepo.activeReconciliationCAs,
-        )
+        Rx.combineLatest(reconciliationsRepo.reconciliations, plansRepo.plans, transactionsAppService.transactionBlocks, reconciliationsRepo.activeReconciliationCAs,)
             .throttleLatest(1, TimeUnit.SECONDS)
             .map { (reconciliations, plans, transactionBlocks, activeReconcileCAs) ->
-                (reconciliations + plans + transactionBlocks)
-                    .map { it.categoryAmounts }
+                sequenceOf<Map<Category, BigDecimal>>()
+                    .plus(reconciliations.map { it.categoryAmounts })
+                    .plus(plans.map { it.categoryAmounts })
+                    .plus(transactionBlocks.map { it.categoryAmounts })
                     .plus(activeReconcileCAs)
                     .fold(CategoryAmounts()) { acc, map -> acc.addTogether(map) }
             }!!
