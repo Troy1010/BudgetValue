@@ -5,6 +5,7 @@ import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplay
 import com.tminus1010.budgetvalue.replay_or_future.models.IReplay
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
+import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -28,7 +29,7 @@ class ReplaysVM @Inject constructor(
     }
 
     // # Output
-    val searchText = transactionsAppService.mostRecentUncategorizedSpend.value.first?.description
+    val searchText = transactionsAppService.mostRecentUncategorizedSpend.value!!.first?.description
     val replays: Observable<List<IReplay>> =
         replaysRepo.fetchReplays()
     val navUp = PublishSubject.create<Unit>()!!

@@ -26,7 +26,6 @@ import com.tminus1010.budgetvalue.replay_or_future.CreateFutureFrag
 import com.tminus1010.budgetvalue.replay_or_future.UseReplayFrag
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplay
 import com.tminus1010.budgetvalue.transactions.CategorizeVM
-import com.tminus1010.budgetvalue.transactions.TransactionsMiscVM
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeAdvancedDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -41,10 +40,9 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     private val vb by viewBinding(FragCategorizeBinding::bind)
-    private val categorizeVM: CategorizeVM by activityViewModels()
-    private val categoriesVM: CategoriesVM by activityViewModels()
-    private val transactionsMiscVM: TransactionsMiscVM by activityViewModels()
-    private val categorySelectionVM: CategorySelectionVM by navGraphViewModels(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
+    private val categorizeVM by activityViewModels<CategorizeVM>()
+    private val categoriesVM by activityViewModels<CategoriesVM>()
+    private val categorySelectionVM by navGraphViewModels<CategorySelectionVM>(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
 
     @Inject
     lateinit var transactionsAppService: TransactionsAppService
@@ -72,7 +70,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         vb.textviewDate.bind(categorizeVM.date) { text = it }
         vb.textviewAmount.bind(categorizeVM.latestUncategorizedTransactionAmount) { text = it }
         vb.textviewDescription.bind(categorizeVM.latestUncategorizedTransactionDescription) { text = it }
-        vb.textviewAmountLeft.bind(transactionsMiscVM.uncategorizedSpendsSize) { text = it }
+        vb.textviewAmountLeft.bind(categorizeVM.uncategorizedSpendsSize) { text = it }
         // # Categories RecyclerView
         categoriesVM.userCategories.observe(viewLifecycleOwner) { categories = it }
         val spanSize = if (requireContext().resources.configuration.fontScale <= 1.0) 3 else 2
