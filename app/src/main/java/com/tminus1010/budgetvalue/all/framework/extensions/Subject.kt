@@ -17,3 +17,6 @@ fun Subject<Unit>.emit() =
  */
 fun Subject<Unit>.onNext2(any: Any) =
     onNext(Unit)
+
+fun Subject<Unit>.onNext2() =
+    onNext(Unit)
