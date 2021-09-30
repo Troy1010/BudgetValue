@@ -4,18 +4,18 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.middleware.presentation.ButtonVMItem
 import com.tminus1010.budgetvalue._core.presentation_and_view._view_model_items.UnformattedString
-import com.tminus1010.budgetvalue.all.app.interactors.ReconciliationsToDoInteractor
 import com.tminus1010.budgetvalue.all.app.interactors.SaveActiveReconciliationInteractor
+import com.tminus1010.budgetvalue.all.app.interactors.individual.ReconciliationsToDo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class ReconciliationHostVM @Inject constructor(
-    reconciliationsToDoInteractor: ReconciliationsToDoInteractor,
+    reconciliationsToDo: ReconciliationsToDo,
     saveActiveReconciliationInteractor: SaveActiveReconciliationInteractor,
 ) : ViewModel() {
     // # Presentation State
-    val title = reconciliationsToDoInteractor.reconciliationsToDo.map {
+    val title = reconciliationsToDo.map {
         when (it.size) {
             0 -> UnformattedString(R.string.reconciliations_required_none)
             1 -> UnformattedString(R.string.reconciliations_required_one)
