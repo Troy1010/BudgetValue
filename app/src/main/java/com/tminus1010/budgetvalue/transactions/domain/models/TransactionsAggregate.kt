@@ -23,6 +23,11 @@ class TransactionsAggregate(
             .firstOrNull()
     }
 
+    val oldestSpend by lazy {
+        spends
+            .lastOrNull()
+    }
+
     val mostRecentUncategorizedSpend by lazy {
         spends
             .firstOrNull(Transaction::isUncategorized)

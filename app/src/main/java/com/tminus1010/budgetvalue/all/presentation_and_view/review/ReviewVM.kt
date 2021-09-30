@@ -198,7 +198,6 @@ class ReviewVM @Inject constructor(
                     .map { PieEntry(it.value.abs().toFloat(), it.key.name) }.toTypedArray()
             )
         }
-            .doOnNext { logz("pieEntries.size:${it.size}") }
 
     /**
      * [PieDataSet] is a list of [PieEntry], combined with other information relevant to the entire list, like colors.
