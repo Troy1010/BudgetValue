@@ -13,5 +13,5 @@ class ReconciliationsToDoInteractor @Inject constructor(
                 ReconciliationToDo.Accounts,
                 ReconciliationToDo.Anytime,
             )
-        )!!
+        )
 }
