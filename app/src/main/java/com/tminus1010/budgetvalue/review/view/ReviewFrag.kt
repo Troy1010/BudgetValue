@@ -9,11 +9,11 @@ import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.extensions.easyVisibility
 import com.tminus1010.budgetvalue.all.framework.extensions.invoke
 import com.tminus1010.budgetvalue.all.presentation_and_view._extensions.onClick
-import com.tminus1010.budgetvalue.all.presentation_and_view._models.NoMoreDataException
-import com.tminus1010.budgetvalue.all.presentation_and_view._models.NoMostRecentSpendException
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.bind
 import com.tminus1010.budgetvalue.all.presentation_and_view.bind
 import com.tminus1010.budgetvalue.databinding.FragReviewBinding
+import com.tminus1010.budgetvalue.review.presentation.NoMoreDataException
+import com.tminus1010.budgetvalue.review.presentation.NoMostRecentSpendException
 import com.tminus1010.budgetvalue.review.presentation.ReviewVM
 import com.tminus1010.budgetvalue.review.presentation.TooFarBackException
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe

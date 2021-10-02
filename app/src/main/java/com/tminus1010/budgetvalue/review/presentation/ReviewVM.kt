@@ -11,12 +11,9 @@ import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.mapBox
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
-import com.tminus1010.budgetvalue._middleware.framework.createPublishSubject
 import com.tminus1010.budgetvalue.all.domain.models.TransactionBlock
 import com.tminus1010.budgetvalue.all.presentation_and_view.SelectableDuration
 import com.tminus1010.budgetvalue.all.presentation_and_view.UsePeriodType
-import com.tminus1010.budgetvalue.all.presentation_and_view._models.NoMoreDataException
-import com.tminus1010.budgetvalue.all.presentation_and_view._models.NoMostRecentSpendException
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.PieChartVMItem
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.SpinnerVMItem
 import com.tminus1010.budgetvalue.categories.models.Category
@@ -54,7 +51,6 @@ class ReviewVM @Inject constructor(
     val userNext = PublishSubject.create<Unit>()
 
     // # Internal
-    private val pageNumberTooFar = createPublishSubject()
     private val currentPageNumber =
         userSelectedDuration.switchMap {
             Observable.merge(userPrevious.map { 1 }, userNext.map { -1 }, errors.filter { it is TooFarBackException }.map { -1 })
