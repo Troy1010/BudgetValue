@@ -18,14 +18,14 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class BudgetedDomain @Inject constructor(
+class BudgetedInteractor @Inject constructor(
     plansRepo: PlansRepo,
     transactionsAppService: TransactionsAppService,
     reconciliationsRepo: ReconciliationsRepo,
     accountsRepo: AccountsRepo,
 ) {
     val categoryAmounts =
-        Rx.combineLatest(reconciliationsRepo.reconciliations, plansRepo.plans, transactionsAppService.transactionBlocks, reconciliationsRepo.activeReconciliationCAs,)
+        Rx.combineLatest(reconciliationsRepo.reconciliations, plansRepo.plans, transactionsAppService.transactionBlocks, reconciliationsRepo.activeReconciliationCAs)
             .throttleLatest(1, TimeUnit.SECONDS)
             .map { (reconciliations, plans, transactionBlocks, activeReconcileCAs) ->
                 sequenceOf<Map<Category, BigDecimal>>()

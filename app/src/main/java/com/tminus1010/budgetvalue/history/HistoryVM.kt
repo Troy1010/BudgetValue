@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.data.repos.CurrentDatePeriodRepo
 import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
-import com.tminus1010.budgetvalue.budgeted.BudgetedDomain
+import com.tminus1010.budgetvalue.budgeted.BudgetedInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
@@ -24,14 +24,14 @@ import javax.inject.Inject
 class HistoryVM @Inject constructor(
     transactionsAppService: TransactionsAppService,
     activeReconciliationDefaultAmountUC: ActiveReconciliationDefaultAmountUC,
-    budgetedDomain: BudgetedDomain,
+    budgetedInteractor: BudgetedInteractor,
     private val datePeriodGetter: DatePeriodGetter,
     private val currentDatePeriodRepo: CurrentDatePeriodRepo,
     private val plansRepo: PlansRepo,
     private val reconciliationRepo: ReconciliationsRepo,
 ) : ViewModel() {
     val activeCategories: Observable<List<Category>> =
-        Observable.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans, reconciliationRepo.activeReconciliationCAs, transactionsAppService.transactionBlocks, budgetedDomain.budgeted)
+        Observable.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans, reconciliationRepo.activeReconciliationCAs, transactionsAppService.transactionBlocks, budgetedInteractor.budgeted)
         { reconciliations, plans, activeReconciliationCAs, transactionBlocks, budgeted ->
             sequenceOf<Set<Category>>()
                 .plus(reconciliations.map { it.categoryAmounts.keys })
@@ -46,7 +46,7 @@ class HistoryVM @Inject constructor(
 
 
     val historyVMItems =
-        Rx.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans, activeReconciliationDefaultAmountUC(), reconciliationRepo.activeReconciliationCAs, transactionsAppService.transactionBlocks, budgetedDomain.budgeted)
+        Rx.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans, activeReconciliationDefaultAmountUC(), reconciliationRepo.activeReconciliationCAs, transactionsAppService.transactionBlocks, budgetedInteractor.budgeted)
             .observeOn(Schedulers.computation())
             .throttleLatest(500, TimeUnit.MILLISECONDS)
             .map { (reconciliations, plans, activeReconciliationDefaultAmount, activeReconciliationCAs, transactionBlocks, budgeted) ->

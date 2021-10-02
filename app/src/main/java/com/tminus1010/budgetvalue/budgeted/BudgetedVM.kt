@@ -13,13 +13,13 @@ import javax.inject.Inject
 @HiltViewModel
 class BudgetedVM @Inject constructor(
     errorSubject: Subject<Throwable>,
-    budgetedDomain: BudgetedDomain,
+    budgetedInteractor: BudgetedInteractor,
 ) : ViewModel() {
     // # Output
-    val defaultAmount: Observable<String> = budgetedDomain.defaultAmount
+    val defaultAmount: Observable<String> = budgetedInteractor.defaultAmount
         .map { it.toString() }
         .divertErrors(errorSubject)
-    val categoryAmounts = budgetedDomain.categoryAmountsObservableMap
+    val categoryAmounts = budgetedInteractor.categoryAmountsObservableMap
 
     val categoryValidatedStringVMItems =
         categoryAmounts.map {
