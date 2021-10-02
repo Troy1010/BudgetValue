@@ -32,20 +32,18 @@ class ActiveReconciliationDefaultAmountUC @Inject constructor(
             transactionsAppService.transactionBlocks,
             accountsRepo.accounts.map(AccountList::total),
             reconciliationsRepo.activeReconciliationCAs,
-            Companion::calcActiveReconciliationDefaultAmount
+            ::calcActiveReconciliationDefaultAmount
         )
             .replayNonError(1).nonLazy()
 
     operator fun invoke(): Observable<BigDecimal> = defaultAmount
 
-    companion object {
-        /**
-         * For clarification, take a look at the ManualCalculationsForTests excel sheet.
-         */
-        @VisibleForTesting
-        fun calcActiveReconciliationDefaultAmount(plans: List<Plan>, reconciliations: List<Reconciliation>, transactionBlocks: List<TransactionBlock>, accountsTotal: BigDecimal, activeReconciliationCAs: CategoryAmounts): BigDecimal {
-            val historyTotalAmounts = plans.map { it.amount } + reconciliations.map { it.totalAmount } + transactionBlocks.map { it.amount }
-            return activeReconciliationCAs.defaultAmount(accountsTotal - historyTotalAmounts.sum())
-        }
+    /**
+     * For clarification, take a look at the ManualCalculationsForTests excel sheet.
+     */
+    @VisibleForTesting
+    fun calcActiveReconciliationDefaultAmount(plans: List<Plan>, reconciliations: List<Reconciliation>, transactionBlocks: List<TransactionBlock>, accountsTotal: BigDecimal, activeReconciliationCAs: CategoryAmounts): BigDecimal {
+        val historyTotalAmounts = plans.map { it.amount } + reconciliations.map { it.totalAmount } + transactionBlocks.map { it.amount }
+        return activeReconciliationCAs.defaultAmount(accountsTotal - historyTotalAmounts.sum())
     }
 }
