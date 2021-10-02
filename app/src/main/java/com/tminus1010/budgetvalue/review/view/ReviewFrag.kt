@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.all.presentation_and_view.review
+package com.tminus1010.budgetvalue.review.view
 
 import android.os.Bundle
 import android.view.View
@@ -14,6 +14,7 @@ import com.tminus1010.budgetvalue.all.presentation_and_view._models.NoMostRecent
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.bind
 import com.tminus1010.budgetvalue.all.presentation_and_view.bind
 import com.tminus1010.budgetvalue.databinding.FragReviewBinding
+import com.tminus1010.budgetvalue.review.presentation.ReviewVM
 import com.tminus1010.budgetvalue.review.presentation.TooFarBackException
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
