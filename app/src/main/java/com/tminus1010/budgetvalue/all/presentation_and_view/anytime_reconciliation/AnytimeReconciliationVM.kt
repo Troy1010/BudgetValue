@@ -12,7 +12,7 @@ import com.tminus1010.budgetvalue.all.app.interactors.SaveActiveReconciliationIn
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.ValidatedStringVMItem
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.reconciliations.data.ReconciliationsRepo
+import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable

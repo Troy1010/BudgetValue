@@ -1,8 +1,9 @@
-package com.tminus1010.budgetvalue.reconciliations.models
+package com.tminus1010.budgetvalue.reconcile.app
 
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.reconcile.data.ReconciliationDTO
 import java.math.BigDecimal
 import java.time.LocalDate
 

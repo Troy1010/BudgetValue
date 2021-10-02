@@ -3,8 +3,9 @@ package com.tminus1010.budgetvalue.reconciliations.domain
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
 import com.tminus1010.budgetvalue._shared.app_init.AppInit
 import com.tminus1010.budgetvalue.plans.models.Plan
-import com.tminus1010.budgetvalue.reconciliations.models.Reconciliation
+import com.tminus1010.budgetvalue.reconcile.app.Reconciliation
 import com.tminus1010.budgetvalue.all.domain.models.TransactionBlock
+import com.tminus1010.budgetvalue.reconcile.app.ActiveReconciliationDefaultAmountUC
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Assert.assertEquals

@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.all.presentation_and_view.reconciliation_host
+package com.tminus1010.budgetvalue.reconcile.presentation
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.R

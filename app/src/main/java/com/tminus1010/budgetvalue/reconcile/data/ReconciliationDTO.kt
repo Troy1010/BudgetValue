@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.reconciliations.models
+package com.tminus1010.budgetvalue.reconcile.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

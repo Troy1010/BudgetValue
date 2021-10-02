@@ -10,8 +10,8 @@ import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.all.app.interactors.SaveActiveReconciliationInteractor
 import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.reconciliations.data.ReconciliationsRepo
-import com.tminus1010.budgetvalue.reconciliations.domain.ActiveReconciliationDefaultAmountUC
+import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
+import com.tminus1010.budgetvalue.reconcile.app.ActiveReconciliationDefaultAmountUC
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import java.math.BigDecimal

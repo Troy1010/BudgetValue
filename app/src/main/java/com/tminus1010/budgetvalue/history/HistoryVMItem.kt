@@ -9,8 +9,8 @@ import com.tminus1010.budgetvalue.budgeted.Budgeted
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.plans.models.Plan
-import com.tminus1010.budgetvalue.reconciliations.data.ReconciliationsRepo
-import com.tminus1010.budgetvalue.reconciliations.models.Reconciliation
+import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
+import com.tminus1010.budgetvalue.reconcile.app.Reconciliation
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Observable

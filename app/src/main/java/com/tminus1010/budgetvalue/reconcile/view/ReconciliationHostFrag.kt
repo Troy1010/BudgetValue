@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.all.presentation_and_view.reconciliation_host
+package com.tminus1010.budgetvalue.reconcile.view
 
 import android.os.Bundle
 import android.view.View
@@ -9,6 +9,7 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragReconciliationHostBinding
+import com.tminus1010.budgetvalue.reconcile.presentation.ReconciliationHostVM
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

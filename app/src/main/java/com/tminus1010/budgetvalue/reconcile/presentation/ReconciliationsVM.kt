@@ -1,9 +1,9 @@
-package com.tminus1010.budgetvalue.reconciliations
+package com.tminus1010.budgetvalue.reconcile.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
-import com.tminus1010.budgetvalue.reconciliations.data.ReconciliationsRepo
-import com.tminus1010.budgetvalue.reconciliations.models.Reconciliation
+import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
+import com.tminus1010.budgetvalue.reconcile.app.Reconciliation
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.reconciliations.domain
+package com.tminus1010.budgetvalue.reconcile.app
 
 import androidx.annotation.VisibleForTesting
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
@@ -7,8 +7,7 @@ import com.tminus1010.budgetvalue.all.domain.models.AccountList
 import com.tminus1010.budgetvalue.all.domain.models.TransactionBlock
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.plans.models.Plan
-import com.tminus1010.budgetvalue.reconciliations.data.ReconciliationsRepo
-import com.tminus1010.budgetvalue.reconciliations.models.Reconciliation
+import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import com.tminus1010.tmcommonkotlin.rx.nonLazy
@@ -33,7 +32,7 @@ class ActiveReconciliationDefaultAmountUC @Inject constructor(
             transactionsAppService.transactionBlocks,
             accountsRepo.accounts.map(AccountList::total),
             reconciliationsRepo.activeReconciliationCAs,
-            ::calcActiveReconciliationDefaultAmount
+            Companion::calcActiveReconciliationDefaultAmount
         )
             .replayNonError(1).nonLazy()
 

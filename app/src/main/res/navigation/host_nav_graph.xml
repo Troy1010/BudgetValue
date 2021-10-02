@@ -141,7 +141,7 @@
         tools:layout="@layout/frag_replays" />
     <fragment
         android:id="@+id/reconciliationHostFrag"
-        android:name="com.tminus1010.budgetvalue.all.presentation_and_view.reconciliation_host.ReconciliationHostFrag"
+        android:name="com.tminus1010.budgetvalue.reconcile.view.ReconciliationHostFrag"
         android:label="ReconciliationHostFrag"
         tools:layout="@layout/frag_reconciliation_host" />
     <fragment

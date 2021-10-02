@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue._core.data
 import androidx.room.*
 import com.tminus1010.budgetvalue.all.data.models.AccountDTO
 import com.tminus1010.budgetvalue.plans.models.PlanDTO
-import com.tminus1010.budgetvalue.reconciliations.models.ReconciliationDTO
+import com.tminus1010.budgetvalue.reconcile.data.ReconciliationDTO
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicFutureDTO
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplayDTO
 import com.tminus1010.budgetvalue.replay_or_future.models.TotalFutureDTO
