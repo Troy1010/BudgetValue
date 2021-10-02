@@ -14,6 +14,7 @@ import com.tminus1010.budgetvalue.all.presentation_and_view._models.NoMostRecent
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.bind
 import com.tminus1010.budgetvalue.all.presentation_and_view.bind
 import com.tminus1010.budgetvalue.databinding.FragReviewBinding
+import com.tminus1010.budgetvalue.review.presentation.TooFarBackException
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,6 +33,7 @@ class ReviewFrag : Fragment(R.layout.frag_review) {
                 when (it) {
                     is NoMostRecentSpendException -> logz("Swallowing error:${it.javaClass.simpleName}")
                     is NoMoreDataException -> easyToast("No more data. Import more transactions")
+                    is TooFarBackException -> easyToast("No more data")
                     else -> easyToast("An error occurred").run { logz("error:", it) }
                 }
             }

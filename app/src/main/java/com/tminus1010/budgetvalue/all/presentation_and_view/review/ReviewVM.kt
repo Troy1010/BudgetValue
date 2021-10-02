@@ -11,6 +11,7 @@ import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.extensions.mapBox
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
+import com.tminus1010.budgetvalue._middleware.framework.createPublishSubject
 import com.tminus1010.budgetvalue.all.domain.models.TransactionBlock
 import com.tminus1010.budgetvalue.all.presentation_and_view.SelectableDuration
 import com.tminus1010.budgetvalue.all.presentation_and_view.UsePeriodType
@@ -19,11 +20,14 @@ import com.tminus1010.budgetvalue.all.presentation_and_view._models.NoMostRecent
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.PieChartVMItem
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.SpinnerVMItem
 import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.review.presentation.TooFarBackException
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.models.TransactionsAggregate
 import com.tminus1010.tmcommonkotlin.core.extensions.nextOrSame
 import com.tminus1010.tmcommonkotlin.core.extensions.previousOrSame
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
+import com.tminus1010.tmcommonkotlin.rx.extensions.pairwise
+import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,6 +45,9 @@ import javax.inject.Inject
 class ReviewVM @Inject constructor(
     transactionsRepo: TransactionsRepo,
 ) : ViewModel() {
+    // # Events
+    val errors = PublishSubject.create<Throwable>()
+
     // # UserIntents
     val userSelectedDuration = BehaviorSubject.createDefault(SelectableDuration.BY_MONTH)
     val userUsePeriodType = BehaviorSubject.createDefault(UsePeriodType.USE_DAY_COUNT_PERIODS)
@@ -48,9 +55,10 @@ class ReviewVM @Inject constructor(
     val userNext = PublishSubject.create<Unit>()
 
     // # Internal
+    private val pageNumberTooFar = createPublishSubject()
     private val currentPageNumber =
         userSelectedDuration.switchMap {
-            Observable.merge(userPrevious.map { 1 }, userNext.map { -1 })
+            Observable.merge(userPrevious.map { 1 }, userNext.map { -1 }, errors.filter { it is TooFarBackException }.map { -1 })
                 .scan(0) { acc, v ->
                     if (acc + v < 0) errors.onNext(NoMoreDataException())
                     (acc + v).coerceAtLeast(0)
@@ -176,6 +184,15 @@ class ReviewVM @Inject constructor(
                     null
             }.let { Box(it) }
         }
+            .startWithItem(Box(null))
+            .pairwise()
+            .map { (a, b) ->
+                if (b.first != null && b.first!!.endDate < transactionsRepo.transactionsAggregate.value?.oldestSpend?.date)
+                    a.also { errors.onNext(TooFarBackException()) }
+                else
+                    b
+            }
+            .divertErrors(errors)
             .replayNonError(1)
 
     private val transactionBlock =
@@ -217,9 +234,6 @@ class ReviewVM @Inject constructor(
      * It can contain and define shared data for multiple [PieDataSet], but usually there is only 1 [PieDataSet].
      */
     private val pieData = pieDataSet.map(::PieData)
-
-    // # Events
-    val errors = PublishSubject.create<Throwable>()
 
     // # State
     /**
