@@ -23,7 +23,7 @@ class AccountsVM @Inject constructor(
 
     // # Presentation State
     val accountVMItemList =
-        accountsRepo.accounts
+        accountsRepo.accountsAggregate
             .map { AccountVMItemList(it, accountsRepo) }
             .replayNonError(1)
             .nonLazy(disposables)
