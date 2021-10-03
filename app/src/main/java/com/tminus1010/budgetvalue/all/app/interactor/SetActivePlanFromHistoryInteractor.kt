@@ -5,17 +5,17 @@ import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.plans.domain.ActivePlanDomain
-import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
+import com.tminus1010.budgetvalue.transactions.app.TransactionsInteractor
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
 class SetActivePlanFromHistoryInteractor @Inject constructor(
     activePlanDomain: ActivePlanDomain,
-    transactionsAppService: TransactionsAppService,
+    transactionsInteractor: TransactionsInteractor,
     private val plansRepo: PlansRepo
 ) {
     val setActivePlanFromHistory =
-        Observable.combineLatest(activePlanDomain.activePlan, transactionsAppService.transactionBlocks)
+        Observable.combineLatest(activePlanDomain.activePlan, transactionsInteractor.transactionBlocks)
         { activePlan, transactionBlocks ->
             val relevantTransactionBlocks = transactionBlocks.filter { it.defaultAmount.isZero }
             val categoryAmounts =

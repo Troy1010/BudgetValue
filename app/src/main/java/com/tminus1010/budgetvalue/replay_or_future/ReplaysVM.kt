@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplay
 import com.tminus1010.budgetvalue.replay_or_future.models.IReplay
-import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
+import com.tminus1010.budgetvalue.transactions.app.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Completable
@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ReplaysVM @Inject constructor(
     private val replaysRepo: ReplaysRepo,
-    transactionsAppService: TransactionsAppService,
+    transactionsInteractor: TransactionsInteractor,
 ) : ViewModel() {
     // # Input
     fun userAddSearchTextToReplay(replay: IReplay) {
@@ -29,7 +29,7 @@ class ReplaysVM @Inject constructor(
     }
 
     // # Output
-    val searchText = transactionsAppService.mostRecentUncategorizedSpend.value!!.first?.description
+    val searchText = transactionsInteractor.mostRecentUncategorizedSpend.value!!.first?.description
     val replays: Observable<List<IReplay>> =
         replaysRepo.fetchReplays()
     val navUp = PublishSubject.create<Unit>()!!

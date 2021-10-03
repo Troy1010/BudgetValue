@@ -16,7 +16,7 @@ import com.tminus1010.budgetvalue._shared.app_init.data.AppInitRepo
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.models.TerminationStatus
 import com.tminus1010.budgetvalue.replay_or_future.models.TotalFuture
-import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
+import com.tminus1010.budgetvalue.transactions.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
@@ -70,7 +70,7 @@ class DevEnv_Main {
 
         @Provides
         @Singleton
-        fun getExtraMenuItemPartials(appInitRepo: AppInitRepo, appInit: AppInit, transactionsAppService: TransactionsAppService, futuresRepo: FuturesRepo, application: Application) = object : GetExtraMenuItemPartials() {
+        fun getExtraMenuItemPartials(appInitRepo: AppInitRepo, appInit: AppInit, transactionsInteractor: TransactionsInteractor, futuresRepo: FuturesRepo, application: Application) = object : GetExtraMenuItemPartials() {
             override fun invoke() =
                 arrayOf(
                     MenuVMItem("Redo App Init") {
@@ -86,7 +86,7 @@ class DevEnv_Main {
                                     ?.let { it as TotalFuture }
                                     ?.searchTotal
                                 if (firstSearchTotal != null)
-                                    transactionsAppService.importTransactions(
+                                    transactionsInteractor.importTransactions(
                                         listOf(
                                             Transaction(
                                                 date = LocalDate.of(2018, 1, 1),

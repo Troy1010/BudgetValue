@@ -8,7 +8,7 @@ import com.squareup.moshi.Moshi
 import com.tminus1010.budgetvalue._core.extensions.cold
 import com.tminus1010.budgetvalue._core.extensions.mapBox
 import com.tminus1010.budgetvalue.all.data.dataStore
-import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
+import com.tminus1010.budgetvalue.transactions.app.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import com.tminus1010.tmcommonkotlin.rx.extensions.filterNotNullBox
@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 class IsPlanFeatureEnabled @Inject constructor(
     private val app: Application,
-    transactionsAppService: TransactionsAppService,
+    transactionsInteractor: TransactionsInteractor,
     private val moshi: Moshi,
     latestDateOfMostRecentImport: LatestDateOfMostRecentImport
 ) : Observable<Boolean>() {
@@ -51,7 +51,7 @@ class IsPlanFeatureEnabled @Inject constructor(
         isPlanFeatureEnabled
             .toSingle()
             .flatMap {
-                transactionsAppService.spendBlocks
+                transactionsInteractor.spendBlocks
                     .filter { it.size >= 3 && it.takeLast(3).all { it.isFullyCategorized } }
                     .toSingle()
             }

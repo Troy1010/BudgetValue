@@ -27,7 +27,7 @@ import com.tminus1010.budgetvalue.replay_or_future.UseReplayFrag
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplay
 import com.tminus1010.budgetvalue.transactions.CategorizeVM
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeAdvancedDomain
-import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
+import com.tminus1010.budgetvalue.transactions.app.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
@@ -45,7 +45,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     private val categorySelectionVM by navGraphViewModels<CategorySelectionVM>(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
 
     @Inject
-    lateinit var transactionsAppService: TransactionsAppService
+    lateinit var transactionsInteractor: TransactionsInteractor
 
     @Inject
     lateinit var categorizeAdvancedDomain: CategorizeAdvancedDomain
@@ -123,7 +123,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                     ButtonVMItem(
                         title = "Split",
                         isEnabled = categorizeVM.isTransactionAvailable,
-                        userClick = { SplitFrag.navTo(nav, transactionsAppService.mostRecentUncategorizedSpend.value!!.first!!) }
+                        userClick = { SplitFrag.navTo(nav, transactionsInteractor.mostRecentUncategorizedSpend.value!!.first!!) }
                     )
                 else null,
                 if (inSelectionMode)

@@ -13,7 +13,7 @@ import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicFuture
 import com.tminus1010.budgetvalue.replay_or_future.models.TerminationStatus
 import com.tminus1010.budgetvalue.replay_or_future.models.TotalFuture
-import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
+import com.tminus1010.budgetvalue.transactions.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.transactions.models.SearchType
 import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
@@ -27,7 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateFutureVM @Inject constructor(
     private val futuresRepo: FuturesRepo,
-    private val transactionsAppService: TransactionsAppService,
+    private val transactionsInteractor: TransactionsInteractor,
     override val categoryParser: ICategoryParser,
     private val toaster: Toaster
 ) : CategoryAmountFormulaVMItemsBaseVM() {
@@ -84,7 +84,7 @@ class CreateFutureVM @Inject constructor(
             .let { newFuture ->
                 Rx.merge(
                     futuresRepo.add(newFuture),
-                    if (newFuture.terminationStatus == TerminationStatus.PERMANENT) transactionsAppService.applyReplayOrFutureToUncategorizedSpends(newFuture).doOnSuccess { toaster.toast("$it transactions categorized") }.ignoreElement() else null,
+                    if (newFuture.terminationStatus == TerminationStatus.PERMANENT) transactionsInteractor.applyReplayOrFutureToUncategorizedSpends(newFuture).doOnSuccess { toaster.toast("$it transactions categorized") }.ignoreElement() else null,
                 )
             }
             .andThen(categorySelectionVM.clearSelection())
@@ -112,7 +112,7 @@ class CreateFutureVM @Inject constructor(
     val searchDescriptionHeader = "Description"
     val searchDescription =
         userSetSearchDescription
-            .startWithItem(transactionsAppService.mostRecentUncategorizedSpend.value!!.first?.description ?: "")
+            .startWithItem(transactionsInteractor.mostRecentUncategorizedSpend.value!!.first?.description ?: "")
             .distinctUntilChanged()
             .cold()
     val searchDescriptionMenuVMItems = listOf(

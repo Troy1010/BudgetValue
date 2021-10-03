@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.transactions.domain
+package com.tminus1010.budgetvalue.transactions.app
 
 import com.tminus1010.budgetvalue._core.extensions.mapBox
 import com.tminus1010.budgetvalue._core.middleware.Rx
@@ -27,7 +27,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class TransactionsAppService @Inject constructor(
+class TransactionsInteractor @Inject constructor(
     private val transactionsRepo: TransactionsRepo,
     private val datePeriodGetter: DatePeriodGetter,
     private val transactionParser: TransactionParser,

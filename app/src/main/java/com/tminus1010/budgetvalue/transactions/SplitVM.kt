@@ -13,7 +13,7 @@ import com.tminus1010.budgetvalue.replay_or_future.CategoryAmountFormulaVMItemsB
 import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplay
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
-import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
+import com.tminus1010.budgetvalue.transactions.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -33,7 +33,7 @@ class SplitVM @Inject constructor(
     private val replaysRepo: ReplaysRepo,
     private val errorSubject: Subject<Throwable>,
     override val categoryParser: ICategoryParser,
-    private val transactionsAppService: TransactionsAppService,
+    private val transactionsInteractor: TransactionsInteractor,
     private val toaster: Toaster,
 ) : CategoryAmountFormulaVMItemsBaseVM() {
     // # Input
@@ -54,7 +54,7 @@ class SplitVM @Inject constructor(
     }
 
     fun userSubmitCategorizationForAllUncategorized() {
-        transactionsAppService.applyReplayOrFutureToUncategorizedSpends(
+        transactionsInteractor.applyReplayOrFutureToUncategorizedSpends(
             BasicReplay(
                 generateUniqueID(),
                 listOf(transactionToPush.unbox.description),

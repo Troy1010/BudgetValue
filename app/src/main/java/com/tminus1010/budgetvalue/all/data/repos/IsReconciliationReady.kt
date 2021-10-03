@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.all.data.repos
 
-import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
+import com.tminus1010.budgetvalue.transactions.app.TransactionsInteractor
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observer
 import javax.inject.Inject
@@ -8,11 +8,11 @@ import javax.inject.Inject
 class IsReconciliationReady @Inject constructor(
     latestDateOfMostRecentImport: LatestDateOfMostRecentImport,
     mostRecentReconciliation: MostRecentReconciliation,
-    transactionsAppService: TransactionsAppService,
+    transactionsInteractor: TransactionsInteractor,
     isPlanFeatureEnabled: IsPlanFeatureEnabled,
 ) : Observable<Boolean>() {
     val isReconciliationReady =
-        combineLatest(latestDateOfMostRecentImport, mostRecentReconciliation, transactionsAppService.spendBlocks, isPlanFeatureEnabled.latestDateOfMostRecentImportWhenPlanFeatureWasEnabled)
+        combineLatest(latestDateOfMostRecentImport, mostRecentReconciliation, transactionsInteractor.spendBlocks, isPlanFeatureEnabled.latestDateOfMostRecentImportWhenPlanFeatureWasEnabled)
         { (latestDateOfMostRecentImport), (mostRecentReconciliation), spendBlocks, (latestDateOfMostRecentImportWhenPlanFeatureWasEnabled) ->
             val startDate = mostRecentReconciliation?.localDate ?: latestDateOfMostRecentImportWhenPlanFeatureWasEnabled
             if (latestDateOfMostRecentImport == null || startDate == null)

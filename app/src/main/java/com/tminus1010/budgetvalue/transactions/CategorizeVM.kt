@@ -8,7 +8,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
 import com.tminus1010.budgetvalue.replay_or_future.models.IReplay
 import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
-import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
+import com.tminus1010.budgetvalue.transactions.app.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
@@ -18,13 +18,13 @@ import javax.inject.Inject
 @HiltViewModel
 class CategorizeVM @Inject constructor(
     private val saveTransactionDomain: SaveTransactionDomain,
-    private val transactionsAppService: TransactionsAppService,
+    private val transactionsInteractor: TransactionsInteractor,
     replaysRepo: ReplaysRepo,
 ) : ViewModel() {
     // # Input
     fun userSimpleCategorize(category: Category) {
         saveTransactionDomain.saveTransaction(
-            transactionsAppService.mostRecentUncategorizedSpend.unbox
+            transactionsInteractor.mostRecentUncategorizedSpend.unbox
                 .categorize(category)
         )
             .observe(disposables)
@@ -32,7 +32,7 @@ class CategorizeVM @Inject constructor(
 
     fun userReplay(replay: IReplay) {
         saveTransactionDomain.saveTransaction(
-            replay.categorize(transactionsAppService.mostRecentUncategorizedSpend.unbox)
+            replay.categorize(transactionsInteractor.mostRecentUncategorizedSpend.unbox)
         )
             .observe(disposables)
     }
@@ -54,7 +54,7 @@ class CategorizeVM @Inject constructor(
 
     // # Output
     val matchingReplays =
-        Observable.combineLatest(replaysRepo.fetchReplays(), transactionsAppService.mostRecentUncategorizedSpend)
+        Observable.combineLatest(replaysRepo.fetchReplays(), transactionsInteractor.mostRecentUncategorizedSpend)
         { replays, (transaction) ->
             if (transaction == null) emptyList() else
                 replays.filter { it.predicate(transaction) }
@@ -62,18 +62,18 @@ class CategorizeVM @Inject constructor(
     val isUndoAvailable = saveTransactionDomain.isUndoAvailable
     val isRedoAvailable = saveTransactionDomain.isRedoAvailable
     val isTransactionAvailable: Observable<Boolean> =
-        transactionsAppService.mostRecentUncategorizedSpend
+        transactionsInteractor.mostRecentUncategorizedSpend
             .map { it.first != null }
     val date: Observable<String> =
-        transactionsAppService.mostRecentUncategorizedSpend
+        transactionsInteractor.mostRecentUncategorizedSpend
             .map { it.first?.date?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")) ?: "" }
     val latestUncategorizedTransactionAmount: Observable<String> =
-        transactionsAppService.mostRecentUncategorizedSpend
+        transactionsInteractor.mostRecentUncategorizedSpend
             .map { it.first?.defaultAmount?.toString() ?: "" }
     val latestUncategorizedTransactionDescription: Observable<String> =
-        transactionsAppService.mostRecentUncategorizedSpend
+        transactionsInteractor.mostRecentUncategorizedSpend
             .map { it.first?.description ?: "" }
     val uncategorizedSpendsSize =
-        transactionsAppService.uncategorizedSpends
+        transactionsInteractor.uncategorizedSpends
             .map { it.size.toString() }
 }

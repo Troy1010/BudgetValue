@@ -8,7 +8,7 @@ import com.tminus1010.budgetvalue.all.data.repos.AccountsRepo
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
-import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
+import com.tminus1010.budgetvalue.transactions.app.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.rx.extensions.total
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import io.reactivex.rxjava3.core.Observable
@@ -20,12 +20,12 @@ import javax.inject.Singleton
 @Singleton
 class BudgetedInteractor @Inject constructor(
     plansRepo: PlansRepo,
-    transactionsAppService: TransactionsAppService,
+    transactionsInteractor: TransactionsInteractor,
     reconciliationsRepo: ReconciliationsRepo,
     accountsRepo: AccountsRepo,
 ) {
     val categoryAmounts =
-        Rx.combineLatest(reconciliationsRepo.reconciliations, plansRepo.plans, transactionsAppService.transactionBlocks, reconciliationsRepo.activeReconciliationCAs)
+        Rx.combineLatest(reconciliationsRepo.reconciliations, plansRepo.plans, transactionsInteractor.transactionBlocks, reconciliationsRepo.activeReconciliationCAs)
             .throttleLatest(1, TimeUnit.SECONDS)
             .map { (reconciliations, plans, transactionBlocks, activeReconcileCAs) ->
                 sequenceOf<Map<Category, BigDecimal>>()
