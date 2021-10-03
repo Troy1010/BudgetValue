@@ -18,7 +18,7 @@ import com.tminus1010.budgetvalue.all.presentation_and_view._models.PieChartVMIt
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.SpinnerVMItem
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
-import com.tminus1010.budgetvalue.transactions.domain.models.TransactionsAggregate
+import com.tminus1010.budgetvalue.transactions.app.TransactionsAggregate
 import com.tminus1010.tmcommonkotlin.core.extensions.nextOrSame
 import com.tminus1010.tmcommonkotlin.core.extensions.previousOrSame
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum

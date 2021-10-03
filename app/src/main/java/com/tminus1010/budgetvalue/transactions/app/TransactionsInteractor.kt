@@ -11,7 +11,6 @@ import com.tminus1010.budgetvalue.replay_or_future.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.replay_or_future.models.TerminationStatus
 import com.tminus1010.budgetvalue.transactions.data.TransactionParser
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
-import com.tminus1010.budgetvalue.transactions.domain.models.TransactionsAggregate
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import com.tminus1010.tmcommonkotlin.rx.nonLazy

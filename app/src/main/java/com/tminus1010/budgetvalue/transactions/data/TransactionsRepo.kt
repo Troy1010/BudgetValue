@@ -2,9 +2,8 @@ package com.tminus1010.budgetvalue.transactions.data
 
 import com.tminus1010.budgetvalue._core.data.MiscDAO
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
-import com.tminus1010.budgetvalue.transactions.domain.models.TransactionsAggregate
+import com.tminus1010.budgetvalue.transactions.app.TransactionsAggregate
 import com.tminus1010.budgetvalue.transactions.models.Transaction
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Singleton

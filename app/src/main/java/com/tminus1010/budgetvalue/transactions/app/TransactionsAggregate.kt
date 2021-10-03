@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.transactions.domain.models
+package com.tminus1010.budgetvalue.transactions.app
 
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.transactions.models.Transaction
