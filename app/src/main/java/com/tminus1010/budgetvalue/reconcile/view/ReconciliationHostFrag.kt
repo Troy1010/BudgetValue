@@ -32,8 +32,8 @@ class ReconciliationHostFrag : Fragment(R.layout.frag_reconciliation_host) {
                     when (it) {
                         is ReconciliationToDo.Accounts -> AccountsReconciliationSubFrag()
                         is ReconciliationToDo.PlanZ -> PlanReconciliationSubFrag(it)
+                        null,
                         is ReconciliationToDo.Anytime -> AnytimeReconciliationSubFrag()
-                        else -> error("Oh no!")
                     },
                     null,
                 )

@@ -25,5 +25,5 @@ data class TransactionBlock(
             .fold(CategoryAmounts()) { acc, transaction -> acc.addTogether(transaction.categoryAmounts) }
     val spendBlock get() = TransactionBlock(transactionSet.filter { it.isSpend }, datePeriod)
     val isFullyCategorized get() = defaultAmount.isZero
-    val isFullyImported: Boolean get() = TODO()
+    val isFullyImported: Boolean get() = true // TODO()
 }
