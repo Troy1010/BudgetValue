@@ -13,7 +13,7 @@ import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemEdi
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTextViewRB
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragChooseTransactionDesciption2Binding
-import com.tminus1010.budgetvalue.transactions.ReplayVM
+import com.tminus1010.budgetvalue.transactions.presentation.ReplayVM
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.domain.models.TransactionsAggregate
 import com.tminus1010.tmcommonkotlin.rx.extensions.value

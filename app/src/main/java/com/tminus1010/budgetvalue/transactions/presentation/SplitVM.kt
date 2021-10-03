@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.transactions
+package com.tminus1010.budgetvalue.transactions.presentation
 
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.all.extensions.cold
