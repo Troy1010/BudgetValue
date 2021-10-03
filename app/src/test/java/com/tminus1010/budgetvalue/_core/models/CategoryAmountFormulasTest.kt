@@ -1,5 +1,6 @@
 package com.tminus1010.budgetvalue._core.models
 
+import com.tminus1010.budgetvalue._core.app.CategoryAmountFormulas
 import com.tminus1010.budgetvalue._shared.app_init.AppInit
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
 import org.junit.Assert.assertEquals

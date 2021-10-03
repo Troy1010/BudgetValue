@@ -11,7 +11,7 @@ import com.tminus1010.budgetvalue._core.middleware.presentation.MenuVMItem
 import com.tminus1010.budgetvalue._core.middleware.view.onDone
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.IViewItemRecipe3
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.ViewItemRecipe3__
-import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulaVMItem
+import com.tminus1010.budgetvalue._core.presentation.model.CategoryAmountFormulaVMItem
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.ItemAmountFormulaBinding
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula

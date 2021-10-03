@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._core.models
+package com.tminus1010.budgetvalue._core.app
 
 import io.reactivex.rxjava3.core.Completable
 

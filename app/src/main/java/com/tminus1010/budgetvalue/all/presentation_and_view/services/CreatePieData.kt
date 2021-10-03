@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.all.presentation_and_view.services
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import com.tminus1010.budgetvalue._core.models.CategoryAmounts
+import com.tminus1010.budgetvalue._core.app.CategoryAmounts
 import kotlin.math.absoluteValue
 
 

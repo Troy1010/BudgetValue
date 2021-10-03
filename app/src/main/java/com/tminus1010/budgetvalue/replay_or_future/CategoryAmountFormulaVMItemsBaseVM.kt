@@ -7,8 +7,8 @@ import com.tminus1010.budgetvalue._core.all.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue._core.all.extensions.isZero
 import com.tminus1010.budgetvalue._core.middleware.ColdObservable
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
-import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulaVMItem
-import com.tminus1010.budgetvalue._core.models.CategoryAmountFormulas
+import com.tminus1010.budgetvalue._core.presentation.model.CategoryAmountFormulaVMItem
+import com.tminus1010.budgetvalue._core.app.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.models.Category
