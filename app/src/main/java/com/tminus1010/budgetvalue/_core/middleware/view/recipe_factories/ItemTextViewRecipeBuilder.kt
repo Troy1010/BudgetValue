@@ -43,6 +43,20 @@ class ItemTextViewRecipeBuilder(private val context: Context) {
         }
     }
 
+    fun create(validatedStringVMItem: ValidatedStringVMItem): IViewItemRecipe3 {
+        return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, styler) { vb ->
+            vb.textview.text = validatedStringVMItem.s
+            vb.textview.setTextColor(
+                context.theme.getColorByAttr(
+                    if (validatedStringVMItem.isValid)
+                        R.attr.colorOnBackground
+                    else
+                        R.attr.colorOnError
+                )
+            )
+        }
+    }
+
     fun create(s: String?): IViewItemRecipe3 {
         return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, styler) { vb ->
             vb.textview.text = s

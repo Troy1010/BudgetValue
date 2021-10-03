@@ -10,10 +10,14 @@ import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemEmptyRF
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemMoneyEditTextRF
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTextViewRB
+import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTitledDividerRB
+import com.tminus1010.budgetvalue.all.presentation_and_view._models.ValidatedStringVMItem
 import com.tminus1010.budgetvalue.databinding.ItemTmTableViewBinding
 import com.tminus1010.budgetvalue.reconcile.presentation.AccountsReconciliationVM
 import com.tminus1010.budgetvalue.reconcile.presentation.model.CategoryAmountVMItem
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.kotlin.Observables
 
 @AndroidEntryPoint
 class AccountsReconciliationSubFrag : Fragment(R.layout.item_tm_table_view) {
@@ -22,19 +26,23 @@ class AccountsReconciliationSubFrag : Fragment(R.layout.item_tm_table_view) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = ItemTmTableViewBinding.bind(view)
-        vb.tmTableView.bind(accountsReconciliationVM.recipeGrid) { recipeGrid ->
+        vb.tmTableView.bind(Observables.combineLatest(accountsReconciliationVM.recipeGrid, accountsReconciliationVM.dividerMap))
+        { (recipeGrid, dividerMap) ->
             initialize(
                 recipeGrid = recipeGrid.map { recipeList ->
                     recipeList.map {
                         when (it) {
                             null -> itemEmptyRF().create(hasHighlight = true)
                             is String -> itemTextViewRB().create(it)
+                            is ValidatedStringVMItem -> itemTextViewRB().create(it)
                             is CategoryAmountVMItem -> itemMoneyEditTextRF().create(it)
                             else -> error("Unhandled:$it")
                         }
                     }
                 },
+                dividerMap = dividerMap.mapValues { itemTitledDividerRB().create(it.value) },
                 shouldFitItemWidthsInsideTable = true,
+                rowFreezeCount = 1
             )
         }
     }
