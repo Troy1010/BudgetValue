@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.mapBox
 import com.tminus1010.budgetvalue._core.middleware.presentation.ButtonVMItem
 import com.tminus1010.budgetvalue._core.presentation_and_view._view_model_items.UnformattedString
-import com.tminus1010.budgetvalue.all.app.interactors.SaveActiveReconciliationInteractor
+import com.tminus1010.budgetvalue.all.app.interactor.SaveActiveReconciliationInteractor
 import com.tminus1010.budgetvalue.all.app.convenience_service.ReconciliationsToDo
 import com.tminus1010.budgetvalue.all.domain.models.ReconciliationToDo
 import dagger.hilt.android.lifecycle.HiltViewModel

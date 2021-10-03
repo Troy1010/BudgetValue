@@ -16,7 +16,7 @@ import com.tminus1010.budgetvalue._core.middleware.Toaster
 import com.tminus1010.budgetvalue._core.presentation_and_view._extensions.easyAlertDialog
 import com.tminus1010.budgetvalue._core.presentation_and_view._extensions.getString
 import com.tminus1010.budgetvalue._shared.app_init.AppInit
-import com.tminus1010.budgetvalue.all.app.interactors.SetActivePlanFromHistory
+import com.tminus1010.budgetvalue.all.app.interactor.SetActivePlanFromHistory
 import com.tminus1010.budgetvalue.all.data.repos.ImportTransactions
 import com.tminus1010.budgetvalue.all.data.repos.IsPlanFeatureEnabled
 import com.tminus1010.budgetvalue.all.data.repos.IsReconciliationFeatureEnabled

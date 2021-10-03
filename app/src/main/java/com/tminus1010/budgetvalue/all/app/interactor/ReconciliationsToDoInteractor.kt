@@ -1,11 +1,9 @@
-package com.tminus1010.budgetvalue.all.app.interactors
+package com.tminus1010.budgetvalue.all.app.interactor
 
 import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue._shared.app_init.AppInit
-import com.tminus1010.budgetvalue._shared.app_init.data.AppInitRepo
 import com.tminus1010.budgetvalue.all.domain.models.ReconciliationToDo
 import com.tminus1010.budgetvalue.all.domain.models.TransactionBlock
-import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.plans.models.Plan
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import io.reactivex.rxjava3.core.Observable

@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.all.app.interactors
+package com.tminus1010.budgetvalue.all.app.interactor
 
 import com.tminus1010.budgetvalue._core.extensions.isZero
 import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal

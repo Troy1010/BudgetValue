@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.all.app.convenience_service
 
-import com.tminus1010.budgetvalue.all.app.interactors.ReconciliationsToDoInteractor
+import com.tminus1010.budgetvalue.all.app.interactor.ReconciliationsToDoInteractor
 import com.tminus1010.budgetvalue.all.domain.models.ReconciliationToDo
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observer
