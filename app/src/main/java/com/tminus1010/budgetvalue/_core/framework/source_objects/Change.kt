@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._core.middleware.source_objects
+package com.tminus1010.budgetvalue._core.framework.source_objects
 
 data class Change<K, V>(
     val type: AddRemEditType,

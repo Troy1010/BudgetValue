@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.transactions.domain
 
-import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceArrayList
+import com.tminus1010.budgetvalue._core.framework.source_objects.SourceArrayList
 import com.tminus1010.budgetvalue._core.app.Redoable
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.models.Transaction
