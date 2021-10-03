@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.all.extensions.mapBox
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
-import com.tminus1010.budgetvalue._core.presentation_and_view._view_model_items.UnformattedString
+import com.tminus1010.budgetvalue._core.presentation.model.UnformattedString
 import com.tminus1010.budgetvalue.all.domain.models.ReconciliationToDo
 import com.tminus1010.budgetvalue.reconcile.app.convenience_service.ReconciliationsToDo
 import com.tminus1010.budgetvalue.reconcile.app.interactor.SaveActiveReconciliationInteractor

@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.transactions
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
-import com.tminus1010.budgetvalue._core.presentation_and_view._view_model_items.PopupVMItem
+import com.tminus1010.budgetvalue._core.presentation.model.PopupVMItem
 import com.tminus1010.budgetvalue._middleware.framework.createPublishSubject
 import com.tminus1010.budgetvalue.all.framework.extensions.onNext2
 import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo

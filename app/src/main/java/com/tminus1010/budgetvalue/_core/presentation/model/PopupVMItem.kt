@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._core.presentation_and_view._view_model_items
+package com.tminus1010.budgetvalue._core.presentation.model
 
 import android.content.Context
 import androidx.appcompat.app.AlertDialog
