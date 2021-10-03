@@ -9,7 +9,7 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.all.extensions.bind
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragTransactionsBinding
-import com.tminus1010.budgetvalue.transactions.TransactionsVM
+import com.tminus1010.budgetvalue.transactions.presentation.TransactionsVM
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint

@@ -15,7 +15,7 @@ import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.recipeFacto
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragTransactionBinding
 import com.tminus1010.budgetvalue.databinding.ItemTextViewBinding
-import com.tminus1010.budgetvalue.transactions.TransactionVM
+import com.tminus1010.budgetvalue.transactions.presentation.TransactionVM
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
