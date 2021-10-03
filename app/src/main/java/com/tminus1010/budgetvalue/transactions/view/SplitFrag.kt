@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.transactions.ui
+package com.tminus1010.budgetvalue.transactions.view
 
 import android.app.AlertDialog
 import android.database.sqlite.SQLiteConstraintException

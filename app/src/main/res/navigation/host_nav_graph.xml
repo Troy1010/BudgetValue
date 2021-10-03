@@ -58,7 +58,7 @@
             tools:layout="@layout/frag_category_settings" />
         <fragment
             android:id="@+id/categorizeFrag"
-            android:name="com.tminus1010.budgetvalue.transactions.ui.CategorizeFrag"
+            android:name="com.tminus1010.budgetvalue.transactions.view.CategorizeFrag"
             android:label="Categorize"
             tools:layout="@layout/frag_categorize">
             <action
@@ -92,13 +92,13 @@
         </navigation>
         <fragment
             android:id="@+id/splitFrag"
-            android:name="com.tminus1010.budgetvalue.transactions.ui.SplitFrag"
+            android:name="com.tminus1010.budgetvalue.transactions.view.SplitFrag"
             android:label="SplitFrag"
             tools:layout="@layout/frag_categorize_advanced" />
     </navigation>
     <fragment
         android:id="@+id/transactionsFrag"
-        android:name="com.tminus1010.budgetvalue.transactions.ui.TransactionListFrag"
+        android:name="com.tminus1010.budgetvalue.transactions.view.TransactionListFrag"
         android:label="TransactionsFrag"
         tools:layout="@layout/frag_transactions">
         <action
@@ -107,7 +107,7 @@
     </fragment>
     <fragment
         android:id="@+id/transactionFrag"
-        android:name="com.tminus1010.budgetvalue.transactions.ui.TransactionFrag"
+        android:name="com.tminus1010.budgetvalue.transactions.view.TransactionFrag"
         android:label="TransactionFrag"
         tools:layout="@layout/frag_transaction" />
     <fragment
@@ -126,7 +126,7 @@
         tools:layout="@layout/frag_create_future" />
     <fragment
         android:id="@+id/replayFrag"
-        android:name="com.tminus1010.budgetvalue.transactions.ui.ReplayFrag"
+        android:name="com.tminus1010.budgetvalue.transactions.view.ReplayFrag"
         android:label="ReplayFrag"
         tools:layout="@layout/frag_categorize_advanced" />
     <fragment

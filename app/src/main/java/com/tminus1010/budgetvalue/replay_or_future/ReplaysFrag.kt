@@ -10,7 +10,7 @@ import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTex
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragReplaysBinding
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplay
-import com.tminus1010.budgetvalue.transactions.ui.ReplayFrag
+import com.tminus1010.budgetvalue.transactions.view.ReplayFrag
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint

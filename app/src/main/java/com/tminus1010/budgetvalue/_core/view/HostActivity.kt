@@ -27,7 +27,7 @@ import com.tminus1010.budgetvalue.history.HistoryFrag
 import com.tminus1010.budgetvalue.reconcile.view.AccountsReconciliationSubFrag
 import com.tminus1010.budgetvalue.replay_or_future.FuturesReviewFrag
 import com.tminus1010.budgetvalue.replay_or_future.ReplaysFrag
-import com.tminus1010.budgetvalue.transactions.ui.TransactionListFrag
+import com.tminus1010.budgetvalue.transactions.view.TransactionListFrag
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

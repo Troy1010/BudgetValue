@@ -25,7 +25,7 @@ import com.tminus1010.budgetvalue.databinding.ItemAmountFormulaBinding
 import com.tminus1010.budgetvalue.databinding.ItemEditTextBinding
 import com.tminus1010.budgetvalue.databinding.ItemSpinnerBinding
 import com.tminus1010.budgetvalue.transactions.models.AmountFormula
-import com.tminus1010.budgetvalue.transactions.ui.CategorizeFrag
+import com.tminus1010.budgetvalue.transactions.view.CategorizeFrag
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
