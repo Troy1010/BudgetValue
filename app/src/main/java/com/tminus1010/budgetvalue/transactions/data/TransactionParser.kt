@@ -12,8 +12,8 @@ import javax.inject.Inject
 
 class TransactionParser @Inject constructor(
     private val categoryAmountsConverter: CategoryAmountsConverter,
-) : ITransactionParser {
-    override fun parseToTransactions(inputStream: InputStream): List<Transaction> {
+) {
+    fun parseToTransactions(inputStream: InputStream): List<Transaction> {
         val transactions = ArrayList<TransactionDTO>()
         val reader = BufferedReader(InputStreamReader(inputStream))
         val iterator = reader.lineSequence().iterator()
