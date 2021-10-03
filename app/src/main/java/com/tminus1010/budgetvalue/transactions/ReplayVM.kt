@@ -4,7 +4,7 @@ import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.all.extensions.cold
 import com.tminus1010.budgetvalue._core.all.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.middleware.ColdObservable
-import com.tminus1010.budgetvalue._core.middleware.presentation.ButtonVMItem
+import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue._core.app.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.ICategoryParser

@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue._shared.date_period_getter
 
-import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
-import com.tminus1010.budgetvalue._core.middleware.Rx
+import com.tminus1010.budgetvalue._core.app.LocalDatePeriod
 import com.tminus1010.budgetvalue._shared.date_period_getter.data.SettingsRepo
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable

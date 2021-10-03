@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.history
 
 import com.tminus1010.budgetvalue._core.data.repos.CurrentDatePeriodRepo
 import com.tminus1010.budgetvalue._core.all.extensions.mapBox
-import com.tminus1010.budgetvalue._core.middleware.presentation.MenuVMItem
+import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue._core.app.CategoryAmounts
 import com.tminus1010.budgetvalue.all.domain.models.TransactionBlock
 import com.tminus1010.budgetvalue.budgeted.Budgeted

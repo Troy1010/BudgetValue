@@ -3,8 +3,8 @@ package com.tminus1010.budgetvalue._core.presentation_and_view.host
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartials
-import com.tminus1010.budgetvalue._core.middleware.presentation.MenuVMItem
-import com.tminus1010.budgetvalue._core.middleware.presentation.MenuVMItems
+import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
+import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItems
 import com.tminus1010.budgetvalue._core.presentation_and_view._view_model_items.UnformattedString
 import com.tminus1010.budgetvalue._middleware.framework.createPublishSubject
 import dagger.hilt.android.lifecycle.HiltViewModel

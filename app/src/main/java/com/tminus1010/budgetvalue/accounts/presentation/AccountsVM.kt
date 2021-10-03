@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.accounts.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
-import com.tminus1010.budgetvalue._core.middleware.presentation.ButtonVMItem
+import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue.accounts.data.AccountsRepo
 import com.tminus1010.budgetvalue.accounts.app.Account
 import com.tminus1010.budgetvalue.all.framework.extensions.invoke

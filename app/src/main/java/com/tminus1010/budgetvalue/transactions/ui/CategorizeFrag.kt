@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.all.extensions.bind
-import com.tminus1010.budgetvalue._core.middleware.presentation.ButtonVMItem
+import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue._core.middleware.view.GenViewHolder2
 import com.tminus1010.budgetvalue._core.middleware.view.LifecycleRVAdapter2
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding

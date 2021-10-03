@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue._core.all.extensions.add
 import com.tminus1010.budgetvalue._core.all.extensions.bind
 import com.tminus1010.budgetvalue._core.all.extensions.easyText
-import com.tminus1010.budgetvalue._core.middleware.presentation.MenuVMItem
+import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue._core.middleware.view.onDone
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.IViewItemRecipe3
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.ViewItemRecipe3__

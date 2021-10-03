@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.plans.models
 
-import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
+import com.tminus1010.budgetvalue._core.app.LocalDatePeriod
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
