@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._core.presentation_and_view.host
+package com.tminus1010.budgetvalue._core.presentation.view_model
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.R

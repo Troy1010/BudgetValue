@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._core.presentation_and_view.host
+package com.tminus1010.budgetvalue._core.view
 
 import android.app.Activity
 import android.os.Bundle
@@ -13,6 +13,7 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.LaunchSelectFile
 import com.tminus1010.budgetvalue._core.all.extensions.unCheckAllMenuItems
 import com.tminus1010.budgetvalue._core.middleware.Toaster
+import com.tminus1010.budgetvalue._core.presentation.view_model.HostVM
 import com.tminus1010.budgetvalue._core.presentation_and_view._extensions.easyAlertDialog
 import com.tminus1010.budgetvalue._core.presentation_and_view._extensions.getString
 import com.tminus1010.budgetvalue._shared.app_init.AppInit

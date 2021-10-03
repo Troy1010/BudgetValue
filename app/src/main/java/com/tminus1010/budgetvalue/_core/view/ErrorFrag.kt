@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._core.presentation_and_view.error
+package com.tminus1010.budgetvalue._core.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.middleware.view.GenViewHolder2
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
+import com.tminus1010.budgetvalue._core.presentation.view_model.ErrorVM
 import com.tminus1010.budgetvalue.databinding.FragErrorBinding
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
