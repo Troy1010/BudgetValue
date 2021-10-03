@@ -60,3 +60,7 @@ var View.lifecycleOwner: LifecycleOwner?
     set(value) {
         setTag(androidx.lifecycle.runtime.R.id.view_tree_lifecycle_owner, value)
     }
+
+fun View.onClick(lambda: () -> Unit) {
+    setOnClickListener { lambda() }
+}
