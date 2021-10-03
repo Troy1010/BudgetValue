@@ -23,8 +23,8 @@ class ReconciliationHostVM @Inject constructor(
         currentReconciliationToDo.map { (it) ->
             when (it) {
                 is ReconciliationToDo.Accounts -> "Accounts Reconciliation"
-                is ReconciliationToDo.Anytime -> "Anytime Reconciliation"
                 is ReconciliationToDo.PlanZ -> "Plan Reconciliation"
+                is ReconciliationToDo.Anytime -> "Anytime Reconciliation"
                 null -> ""
             }.let { UnformattedString(it) }
         }
