@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.transactions.models
 
 import com.tminus1010.budgetvalue._core.extensions.copy
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
-import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
+import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import java.math.BigDecimal
@@ -39,7 +39,7 @@ data class Transaction(
     }
 
     fun categorize(category: Category): Transaction {
-        if (category == CategoriesDomain.defaultCategory) return this
+        if (category == CategoriesInteractor.defaultCategory) return this
         return categorize(
             categoryAmounts
                 .filter { it.key != category }

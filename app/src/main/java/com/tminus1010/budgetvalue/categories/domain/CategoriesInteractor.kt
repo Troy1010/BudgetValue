@@ -13,7 +13,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CategoriesDomain @Inject constructor(
+class CategoriesInteractor @Inject constructor(
     categoriesRepo: CategoriesRepo
 ) : ICategoryParser {
     // # Input

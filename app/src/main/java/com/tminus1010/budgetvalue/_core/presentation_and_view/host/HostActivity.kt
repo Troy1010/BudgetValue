@@ -23,6 +23,7 @@ import com.tminus1010.budgetvalue.all.data.repos.IsReconciliationFeatureEnabled
 import com.tminus1010.budgetvalue.all.presentation_and_view.import_z.AccountsVM
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.history.HistoryFrag
+import com.tminus1010.budgetvalue.reconcile.view.AccountsReconciliationSubFrag
 import com.tminus1010.budgetvalue.replay_or_future.FuturesReviewFrag
 import com.tminus1010.budgetvalue.replay_or_future.ReplaysFrag
 import com.tminus1010.budgetvalue.transactions.ui.TransactionListFrag
@@ -78,12 +79,13 @@ class HostActivity : AppCompatActivity() {
         isReconciliationFeatureEnabled.onChangeToTrue.observe(this) {
             easyAlertDialog(getString(hostVM.levelUpReconciliation))
         }
-        // # State
         hostVM.navToReplays.observe(this) { ReplaysFrag.navTo(nav) }
         hostVM.navToFutures.observe(this) { FuturesReviewFrag.navTo(nav) }
         hostVM.navToTransactions.observe(this) { TransactionListFrag.navTo(nav) }
         hostVM.navToHistory.observe(this) { HistoryFrag.navTo(nav) }
+        hostVM.navToAccountsReconciliationSubFrag.observe(this) { AccountsReconciliationSubFrag.navTo(nav) }
         hostVM.unCheckAllMenuItems.observe(this) { vb.bottomNavigation.menu.unCheckAllMenuItems() }
+        // # State
         isPlanFeatureEnabled.observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }
         isReconciliationFeatureEnabled.observe(this) { vb.bottomNavigation.menu.findItem(R.id.reconciliationHostFrag).isVisible = it }
     }

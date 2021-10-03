@@ -6,6 +6,7 @@ import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartials
 import com.tminus1010.budgetvalue._core.middleware.presentation.MenuVMItem
 import com.tminus1010.budgetvalue._core.middleware.presentation.MenuVMItems
 import com.tminus1010.budgetvalue._core.presentation_and_view._view_model_items.UnformattedString
+import com.tminus1010.budgetvalue._middleware.framework.createPublishSubject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.PublishSubject
 import javax.inject.Inject
@@ -14,11 +15,12 @@ import javax.inject.Inject
 class HostVM @Inject constructor(
     getExtraMenuItemPartials: GetExtraMenuItemPartials,
 ) : ViewModel() {
-    val unCheckAllMenuItems = PublishSubject.create<Unit>()!!
-    val navToHistory = PublishSubject.create<Unit>()!!
-    val navToTransactions = PublishSubject.create<Unit>()!!
-    val navToFutures = PublishSubject.create<Unit>()!!
-    val navToReplays = PublishSubject.create<Unit>()!!
+    val unCheckAllMenuItems = PublishSubject.create<Unit>()
+    val navToHistory = PublishSubject.create<Unit>()
+    val navToTransactions = PublishSubject.create<Unit>()
+    val navToFutures = PublishSubject.create<Unit>()
+    val navToReplays = PublishSubject.create<Unit>()
+    val navToAccountsReconciliationSubFrag = createPublishSubject()
     val topMenuVMItems =
         MenuVMItems(
             MenuVMItem(
@@ -36,6 +38,10 @@ class HostVM @Inject constructor(
             MenuVMItem(
                 title = "Replays",
                 onClick = { navToReplays.onNext(Unit); unCheckAllMenuItems.onNext(Unit) },
+            ),
+            MenuVMItem(
+                title = "AccountSubFrag",
+                onClick = { navToAccountsReconciliationSubFrag.onNext(Unit); unCheckAllMenuItems.onNext(Unit) },
             ),
             *getExtraMenuItemPartials()
         )

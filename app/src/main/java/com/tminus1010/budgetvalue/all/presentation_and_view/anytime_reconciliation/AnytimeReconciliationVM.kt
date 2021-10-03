@@ -10,7 +10,7 @@ import com.tminus1010.budgetvalue._core.middleware.presentation.ButtonVMItem
 import com.tminus1010.budgetvalue._core.middleware.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.all.app.interactors.SaveActiveReconciliationInteractor
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.ValidatedStringVMItem
-import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
+import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
@@ -22,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AnytimeReconciliationVM @Inject constructor(
     private val reconciliationsRepo: ReconciliationsRepo,
-    categoriesDomain: CategoriesDomain,
+    categoriesInteractor: CategoriesInteractor,
     saveActiveReconciliationInteractor: SaveActiveReconciliationInteractor
 ) : ViewModel() {
     // # User Intents
@@ -38,7 +38,7 @@ class AnytimeReconciliationVM @Inject constructor(
     private val activeReconcileCAs = // TODO("This should be an Interactor or something.")
         Observable.combineLatest(
             reconciliationsRepo.activeReconciliationCAs,
-            categoriesDomain.userCategories,
+            categoriesInteractor.userCategories,
         ) { activeReconcileCAs, userCategories ->
             // These extra zeros prevent refreshes on hidden additions/removals that happen when a value is set to 0.
             userCategories.associateWith { BigDecimal.ZERO }

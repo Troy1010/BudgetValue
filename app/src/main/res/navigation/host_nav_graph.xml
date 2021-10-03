@@ -149,4 +149,8 @@
         android:name="com.tminus1010.budgetvalue.review.view.ReviewFrag"
         android:label="ReviewFrag"
         tools:layout="@layout/frag_review" />
+    <fragment
+        android:id="@+id/accountsReconciliationSubFrag"
+        android:name="com.tminus1010.budgetvalue.reconcile.view.AccountsReconciliationSubFrag"
+        android:label="AccountsReconciliationSubFrag" />
 </navigation>

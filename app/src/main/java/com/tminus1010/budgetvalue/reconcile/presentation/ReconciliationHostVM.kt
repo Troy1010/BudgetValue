@@ -31,7 +31,7 @@ class ReconciliationHostVM @Inject constructor(
         )
 
     // An Accounts reconciliation needs:
-        // the reconciliation, with default calculated by accounts total - ?something?
+        // the reconciliation, with default calculated by accounts total - something?
         // the budgeted (Is this necessary?)
     // A Plan reconciliation needs:
         // the plan

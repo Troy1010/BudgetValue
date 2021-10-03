@@ -9,6 +9,7 @@ import com.tminus1010.budgetvalue._core.middleware.view.onDone
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.IViewItemRecipe3
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.ViewItemRecipe3__
 import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
+import com.tminus1010.budgetvalue.reconcile.presentation.model.CategoryAmountVMItem
 import io.reactivex.rxjava3.core.Observable
 
 fun Fragment.itemMoneyEditTextRF() = ItemMoneyEditTextRecipeFactory(requireContext())
@@ -28,11 +29,17 @@ class ItemMoneyEditTextRecipeFactory(private val context: Context) {
         }
     }
 
-    fun create(d: Observable<String>?, lambda: (String) -> Unit): IViewItemRecipe3 {
+    fun create(d: Observable<String>?, onDone: (String) -> Unit): IViewItemRecipe3 {
         return ViewItemRecipe3__(context, inflate) { vb ->
-            vb.moneyedittext.onDone(lambda)
+            vb.moneyedittext.onDone(onDone)
             if (d == null) return@ViewItemRecipe3__
             vb.moneyedittext.bind(d) { easyText = it }
+        }
+    }
+
+    fun create(categoryAmountVMItem: CategoryAmountVMItem): IViewItemRecipe3 {
+        return ViewItemRecipe3__(context, inflate) { vb ->
+            categoryAmountVMItem.bind(vb.moneyedittext)
         }
     }
 }

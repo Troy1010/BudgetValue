@@ -5,7 +5,7 @@ import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.InvalidCategoryNameException
 import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
 import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
-import com.tminus1010.budgetvalue.categories.domain.CategoriesDomain
+import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.domain.DeleteCategoryFromActiveDomainUC
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.models.CategoryType
@@ -69,8 +69,8 @@ class CategorySettingsVM @Inject constructor(
     fun userSaveCategory() {
         Completable.fromCallable {
             if (categoryToPush.value!!.name == "" ||
-                categoryToPush.value!!.name.equals(CategoriesDomain.defaultCategory.name, ignoreCase = true) ||
-                categoryToPush.value!!.name.equals(CategoriesDomain.unrecognizedCategory.name, ignoreCase = true)
+                categoryToPush.value!!.name.equals(CategoriesInteractor.defaultCategory.name, ignoreCase = true) ||
+                categoryToPush.value!!.name.equals(CategoriesInteractor.unrecognizedCategory.name, ignoreCase = true)
             ) throw InvalidCategoryNameException()
         }
             .andThen(categoriesRepo.hasCategory(categoryToPush.value!!.name))
