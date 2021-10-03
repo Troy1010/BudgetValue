@@ -29,18 +29,20 @@ class ReconciliationHostVM @Inject constructor(
                 userClick = saveActiveReconciliationInteractor.saveActiveReconiliation::subscribe
             )
         )
+    val currentReconciliationToDo =
+        reconciliationsToDo.map { it.firstOrNull() }
 
     // An Accounts reconciliation needs:
-        // the reconciliation, with default calculated by accounts total - something?
-        // the budgeted (Is this necessary?)
+    // the reconciliation, with default calculated by accounts total - something?
+    // the budgeted (Is this necessary?)
     // A Plan reconciliation needs:
-        // the plan
-        // the actual
-        // the reconciliation, with default calculated by plan total - actual total
-        // the budgeted (Is this necessary?)
+    // the plan
+    // the actual
+    // the reconciliation, with default calculated by plan total - actual total
+    // the budgeted (Is this necessary?)
     // An Anytime reconciliation needs:
-        // the reconciliation, with 0 as default amount
-        // the budgeted
+    // the reconciliation, with 0 as default amount
+    // the budgeted
 
     // A grid of Active / Plan / Reconciliation / Budgeted
     // A Save button

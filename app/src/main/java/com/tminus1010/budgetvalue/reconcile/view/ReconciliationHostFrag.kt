@@ -8,6 +8,7 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.extensions.bind
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
+import com.tminus1010.budgetvalue.all.domain.models.ReconciliationToDo
 import com.tminus1010.budgetvalue.databinding.FragReconciliationHostBinding
 import com.tminus1010.budgetvalue.reconcile.presentation.ReconciliationHostVM
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,6 +23,19 @@ class ReconciliationHostFrag : Fragment(R.layout.frag_reconciliation_host) {
         // # Presentation State
         vb.buttonsview.buttons = reconciliationHostVM.buttons
         vb.tvTitle.bind(reconciliationHostVM.title) { text = it.getString(context) }
+        vb.frame.bind(reconciliationHostVM.currentReconciliationToDo) {
+            this@ReconciliationHostFrag.childFragmentManager
+                .beginTransaction()
+                .replace(
+                    R.id.frame,
+                    when (it) {
+                        is ReconciliationToDo.Accounts -> AccountsReconciliationSubFrag()
+                        else -> error("Oh no!")
+                    },
+                    null,
+                )
+                .commitNowAllowingStateLoss()
+        }
     }
 
     companion object {
