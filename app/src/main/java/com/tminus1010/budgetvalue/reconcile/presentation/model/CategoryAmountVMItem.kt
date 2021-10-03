@@ -14,7 +14,7 @@ class CategoryAmountVMItem(
 
     fun bind(editText: EditText) {
         editText.setText(amountStr)
-        if (onDone != null) editText.onDone { onDone!!(category, it) }
+        onDone?.also { onDone -> editText.onDone { onDone(category, it) } }
     }
 }
 
