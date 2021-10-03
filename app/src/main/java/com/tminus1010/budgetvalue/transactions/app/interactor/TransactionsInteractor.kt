@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.transactions.app
+package com.tminus1010.budgetvalue.transactions.app.interactor
 
 import com.tminus1010.budgetvalue._core.all.extensions.mapBox
 import com.tminus1010.budgetvalue._core.middleware.Rx
@@ -9,8 +9,9 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.models.IReplayOrFuture
 import com.tminus1010.budgetvalue.replay_or_future.models.TerminationStatus
+import com.tminus1010.budgetvalue.transactions.app.TransactionsAggregate
 import com.tminus1010.budgetvalue.transactions.data.TransactionParser
-import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
+import com.tminus1010.budgetvalue.transactions.data.repo.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import com.tminus1010.tmcommonkotlin.rx.nonLazy

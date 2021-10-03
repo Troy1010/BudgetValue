@@ -8,7 +8,7 @@ import com.squareup.moshi.Moshi
 import com.tminus1010.budgetvalue._core.all.extensions.cold
 import com.tminus1010.budgetvalue._core.all.extensions.mapBox
 import com.tminus1010.budgetvalue.all.data.dataStore
-import com.tminus1010.budgetvalue.transactions.app.TransactionsInteractor
+import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import com.tminus1010.tmcommonkotlin.rx.extensions.filterNotNullBox

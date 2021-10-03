@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.all.data.repos
 
 import android.app.Application
 import android.net.Uri
-import com.tminus1010.budgetvalue.transactions.app.TransactionsInteractor
+import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import io.reactivex.rxjava3.core.Completable
 import java.io.InputStream
 import javax.inject.Inject

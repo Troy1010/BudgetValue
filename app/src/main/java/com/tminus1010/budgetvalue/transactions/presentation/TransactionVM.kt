@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.transactions.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
-import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
+import com.tminus1010.budgetvalue.transactions.app.interactor.SaveTransactionInteractor
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TransactionVM @Inject constructor(
-    private val saveTransactionDomain: SaveTransactionDomain,
+    private val saveTransactionInteractor: SaveTransactionInteractor,
 ) : ViewModel() {
     // # Input
     fun setup(transaction: Transaction) {
@@ -20,7 +20,7 @@ class TransactionVM @Inject constructor(
     }
 
     fun userClearTransaction() {
-        saveTransactionDomain.saveTransaction(transaction.categorize(emptyMap()))
+        saveTransactionInteractor.saveTransaction(transaction.categorize(emptyMap()))
             .andThen(Completable.fromAction { navUp.onNext(Unit) })
             .observe(disposables)
     }

@@ -27,7 +27,7 @@ import com.tminus1010.budgetvalue.replay_or_future.UseReplayFrag
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplay
 import com.tminus1010.budgetvalue.transactions.presentation.CategorizeVM
 import com.tminus1010.budgetvalue.transactions.domain.CategorizeAdvancedDomain
-import com.tminus1010.budgetvalue.transactions.app.TransactionsInteractor
+import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.view.extensions.nav

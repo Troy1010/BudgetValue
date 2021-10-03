@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.reconcile.app.interactor
 import com.tminus1010.budgetvalue.all.domain.models.ReconciliationToDo
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
-import com.tminus1010.budgetvalue.transactions.app.TransactionsInteractor
+import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 

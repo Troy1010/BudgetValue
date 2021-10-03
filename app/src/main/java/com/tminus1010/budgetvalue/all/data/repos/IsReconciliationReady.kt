@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.all.data.repos
 
-import com.tminus1010.budgetvalue.transactions.app.TransactionsInteractor
+import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observer
 import javax.inject.Inject

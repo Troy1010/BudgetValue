@@ -1,8 +1,8 @@
-package com.tminus1010.budgetvalue.transactions.domain
+package com.tminus1010.budgetvalue.transactions.app.interactor
 
 import com.tminus1010.budgetvalue._core.framework.source_objects.SourceArrayList
 import com.tminus1010.budgetvalue._core.app.Redoable
-import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
+import com.tminus1010.budgetvalue.transactions.data.repo.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -11,7 +11,7 @@ import javax.inject.Singleton
 
 // TODO: undo/redo logic should be separate from saveTransaction, maybe?
 @Singleton
-class SaveTransactionDomain @Inject constructor(
+class SaveTransactionInteractor @Inject constructor(
     private val transactionsRepo: TransactionsRepo,
 ) {
     // # Input

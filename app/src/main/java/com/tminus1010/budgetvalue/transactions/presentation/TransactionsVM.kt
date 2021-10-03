@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue._core.presentation.model.PopupVMItem
 import com.tminus1010.budgetvalue._middleware.framework.createPublishSubject
 import com.tminus1010.budgetvalue.all.framework.extensions.onNext2
-import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
+import com.tminus1010.budgetvalue.transactions.data.repo.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.presentation.models.TransactionVMItem
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import dagger.hilt.android.lifecycle.HiltViewModel

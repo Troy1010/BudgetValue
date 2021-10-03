@@ -12,8 +12,8 @@ import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.replay_or_future.CategoryAmountFormulaVMItemsBaseVM
 import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplay
-import com.tminus1010.budgetvalue.transactions.domain.SaveTransactionDomain
-import com.tminus1010.budgetvalue.transactions.app.TransactionsInteractor
+import com.tminus1010.budgetvalue.transactions.app.interactor.SaveTransactionInteractor
+import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.budgetvalue.transactions.models.Transaction
 import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -29,7 +29,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplitVM @Inject constructor(
-    private val saveTransactionDomain: SaveTransactionDomain,
+    private val saveTransactionInteractor: SaveTransactionInteractor,
     private val replaysRepo: ReplaysRepo,
     private val errorSubject: Subject<Throwable>,
     override val categoryParser: ICategoryParser,
@@ -45,7 +45,7 @@ class SplitVM @Inject constructor(
 
     // TODO("Why does userSubmitCategorization not work for only 1 category?")
     fun userSubmitCategorization() {
-        saveTransactionDomain.saveTransaction(transactionToPush.unbox)
+        saveTransactionInteractor.saveTransaction(transactionToPush.unbox)
             .andThen(_categorySelectionVM.clearSelection())
             .observe(disposables,
                 onComplete = { navUp.onNext(Unit) },

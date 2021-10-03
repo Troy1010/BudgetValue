@@ -12,8 +12,8 @@ import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTex
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragTransactionsBinding
 import com.tminus1010.budgetvalue.replay_or_future.CreateFutureVM
-import com.tminus1010.budgetvalue.transactions.data.TransactionsRepo
-import com.tminus1010.budgetvalue.transactions.app.TransactionsInteractor
+import com.tminus1010.budgetvalue.transactions.data.repo.TransactionsRepo
+import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
