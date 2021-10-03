@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.all.app.interactors.individual
+package com.tminus1010.budgetvalue.all.app.convenience_service
 
 import com.tminus1010.budgetvalue.all.app.interactors.ReconciliationsToDoInteractor
 import com.tminus1010.budgetvalue.all.domain.models.ReconciliationToDo
