@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.reconcile.presentation.model
+package com.tminus1010.budgetvalue._core.presentation.model
 
 import android.widget.EditText
 import com.tminus1010.budgetvalue._core.middleware.view.onDone

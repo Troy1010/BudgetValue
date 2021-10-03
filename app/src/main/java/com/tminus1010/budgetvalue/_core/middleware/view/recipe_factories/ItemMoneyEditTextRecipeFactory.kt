@@ -8,8 +8,8 @@ import com.tminus1010.budgetvalue._core.extensions.easyText
 import com.tminus1010.budgetvalue._core.middleware.view.onDone
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.IViewItemRecipe3
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.ViewItemRecipe3__
+import com.tminus1010.budgetvalue._core.presentation.model.CategoryAmountVMItem
 import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
-import com.tminus1010.budgetvalue.reconcile.presentation.model.CategoryAmountVMItem
 import io.reactivex.rxjava3.core.Observable
 
 fun Fragment.itemMoneyEditTextRF() = ItemMoneyEditTextRecipeFactory(requireContext())

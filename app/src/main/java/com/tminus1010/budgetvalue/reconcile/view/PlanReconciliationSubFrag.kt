@@ -10,11 +10,11 @@ import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemEmp
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemMoneyEditTextRF
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTextViewRB
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTitledDividerRB
+import com.tminus1010.budgetvalue._core.presentation.model.CategoryAmountVMItem
 import com.tminus1010.budgetvalue.all.domain.models.ReconciliationToDo
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.ValidatedStringVMItem
 import com.tminus1010.budgetvalue.databinding.ItemTmTableViewBinding
 import com.tminus1010.budgetvalue.reconcile.presentation.PlanReconciliationVM
-import com.tminus1010.budgetvalue.reconcile.presentation.model.CategoryAmountVMItem
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.kotlin.Observables
 

@@ -11,12 +11,11 @@ import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemEmp
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemMoneyEditTextRF
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTextViewRB
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTitledDividerRB
+import com.tminus1010.budgetvalue._core.presentation.model.CategoryAmountVMItem
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.ValidatedStringVMItem
 import com.tminus1010.budgetvalue.databinding.ItemTmTableViewBinding
 import com.tminus1010.budgetvalue.reconcile.presentation.AccountsReconciliationVM
-import com.tminus1010.budgetvalue.reconcile.presentation.model.CategoryAmountVMItem
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.Observables
 
 @AndroidEntryPoint
@@ -26,6 +25,7 @@ class AccountsReconciliationSubFrag : Fragment(R.layout.item_tm_table_view) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = ItemTmTableViewBinding.bind(view)
+        // # Presentation State
         vb.tmTableView.bind(Observables.combineLatest(accountsReconciliationVM.recipeGrid, accountsReconciliationVM.dividerMap))
         { (recipeGrid, dividerMap) ->
             initialize(
