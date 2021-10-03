@@ -1,8 +1,8 @@
 package com.tminus1010.budgetvalue.reconcile.presentation
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue._core.extensions.isZero
-import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
+import com.tminus1010.budgetvalue._core.all.extensions.isZero
+import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.all.domain.models.ReconciliationToDo
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.ValidatedStringVMItem
 import com.tminus1010.budgetvalue.budgeted.BudgetedInteractor

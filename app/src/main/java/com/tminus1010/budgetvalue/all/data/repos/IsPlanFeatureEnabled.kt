@@ -5,8 +5,8 @@ import androidx.annotation.VisibleForTesting
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.squareup.moshi.Moshi
-import com.tminus1010.budgetvalue._core.extensions.cold
-import com.tminus1010.budgetvalue._core.extensions.mapBox
+import com.tminus1010.budgetvalue._core.all.extensions.cold
+import com.tminus1010.budgetvalue._core.all.extensions.mapBox
 import com.tminus1010.budgetvalue.all.data.dataStore
 import com.tminus1010.budgetvalue.transactions.app.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson

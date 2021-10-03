@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.all.data
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.tminus1010.budgetvalue._core.dependency_injection.MiscModule
+import com.tminus1010.budgetvalue._core.all.dependency_injection.MiscModule
 import com.tminus1010.budgetvalue.__core_testing.app
 import com.tminus1010.budgetvalue.all.data.repos.LatestDateOfMostRecentImport
 import dagger.hilt.android.testing.HiltAndroidTest

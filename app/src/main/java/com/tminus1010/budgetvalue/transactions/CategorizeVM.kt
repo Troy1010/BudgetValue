@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.transactions
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
-import com.tminus1010.budgetvalue._core.extensions.unbox
+import com.tminus1010.budgetvalue._core.all.extensions.unbox
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo

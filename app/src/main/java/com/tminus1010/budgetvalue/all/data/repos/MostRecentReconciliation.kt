@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.all.data.repos
 
-import com.tminus1010.budgetvalue._core.extensions.mapBox
+import com.tminus1010.budgetvalue._core.all.extensions.mapBox
 import com.tminus1010.budgetvalue.all.domain.models.Reconciliations
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.reconcile.app.Reconciliation

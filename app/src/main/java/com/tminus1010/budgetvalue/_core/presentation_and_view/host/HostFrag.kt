@@ -8,7 +8,7 @@ import com.tminus1010.budgetvalue._core.presentation_and_view.error.ErrorVM
 import com.tminus1010.budgetvalue._core.ImportFailedException
 import com.tminus1010.budgetvalue._core.TestException
 import com.tminus1010.budgetvalue._core.middleware.presentation.ButtonVMItem
-import com.tminus1010.budgetvalue._core.extensions.getBackStack
+import com.tminus1010.budgetvalue._core.all.extensions.getBackStack
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint

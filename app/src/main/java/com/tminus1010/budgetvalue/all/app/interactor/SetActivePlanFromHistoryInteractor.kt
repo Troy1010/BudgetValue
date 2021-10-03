@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.all.app.interactor
 
-import com.tminus1010.budgetvalue._core.extensions.isZero
-import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
+import com.tminus1010.budgetvalue._core.all.extensions.isZero
+import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.plans.domain.ActivePlanDomain

@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue._core.middleware.view
 
 import androidx.recyclerview.widget.RecyclerView
-import com.tminus1010.budgetvalue._core.extensions.lifecycleOwner
+import com.tminus1010.budgetvalue._core.all.extensions.lifecycleOwner
 
 abstract class LifecycleRVAdapter2<VH : RecyclerView.ViewHolder> : RecyclerView.Adapter<VH>() {
     abstract fun onLifecycleAttached(holder: VH)

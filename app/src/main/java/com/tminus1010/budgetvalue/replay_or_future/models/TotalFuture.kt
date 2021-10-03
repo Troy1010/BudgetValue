@@ -1,8 +1,8 @@
 package com.tminus1010.budgetvalue.replay_or_future.models
 
 import androidx.annotation.VisibleForTesting
-import com.tminus1010.budgetvalue._core.extensions.easyEquals
-import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
+import com.tminus1010.budgetvalue._core.all.extensions.easyEquals
+import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.categories.CategoryAmountFormulasConverter
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.models.Category

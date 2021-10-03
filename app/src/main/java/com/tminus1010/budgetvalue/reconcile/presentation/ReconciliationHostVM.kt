@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.reconcile.presentation
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.extensions.mapBox
+import com.tminus1010.budgetvalue._core.all.extensions.mapBox
 import com.tminus1010.budgetvalue._core.middleware.presentation.ButtonVMItem
 import com.tminus1010.budgetvalue._core.presentation_and_view._view_model_items.UnformattedString
 import com.tminus1010.budgetvalue.all.domain.models.ReconciliationToDo

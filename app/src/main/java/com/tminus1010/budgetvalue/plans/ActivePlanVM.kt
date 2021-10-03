@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.plans
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
-import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
+import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.plans.domain.ActivePlanDomain

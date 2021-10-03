@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue._core.middleware.view.tmTableView3
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewbinding.ViewBinding
-import com.tminus1010.budgetvalue._core.extensions.lifecycleOwner
+import com.tminus1010.budgetvalue._core.all.extensions.lifecycleOwner
 import com.tminus1010.budgetvalue._core.middleware.view.ExposedLifecycleOwner
 import com.tminus1010.tmcommonkotlin.misc.extensions.measureUnspecified
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers

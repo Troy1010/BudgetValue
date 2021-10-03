@@ -11,8 +11,8 @@ import androidx.navigation.navGraphViewModels
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.InvalidCategoryAmounts
 import com.tminus1010.budgetvalue._core.InvalidSearchText
-import com.tminus1010.budgetvalue._core.extensions.bind
-import com.tminus1010.budgetvalue._core.extensions.easyVisibility
+import com.tminus1010.budgetvalue._core.all.extensions.bind
+import com.tminus1010.budgetvalue._core.all.extensions.easyVisibility
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.*
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM

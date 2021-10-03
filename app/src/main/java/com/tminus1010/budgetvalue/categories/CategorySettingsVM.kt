@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.categories
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.InvalidCategoryNameException
-import com.tminus1010.budgetvalue._core.extensions.nonLazyCache
+import com.tminus1010.budgetvalue._core.all.extensions.nonLazyCache
 import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.domain.DeleteCategoryFromActiveDomainUC

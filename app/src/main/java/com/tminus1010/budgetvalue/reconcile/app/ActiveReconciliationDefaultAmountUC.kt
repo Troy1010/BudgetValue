@@ -2,8 +2,8 @@ package com.tminus1010.budgetvalue.reconcile.app
 
 import androidx.annotation.VisibleForTesting
 import com.tminus1010.budgetvalue._core.models.CategoryAmounts
-import com.tminus1010.budgetvalue.all.data.repos.AccountsRepo
-import com.tminus1010.budgetvalue.all.domain.models.AccountsAggregate
+import com.tminus1010.budgetvalue.accounts.data.AccountsRepo
+import com.tminus1010.budgetvalue.accounts.app.AccountsAggregate
 import com.tminus1010.budgetvalue.all.domain.models.TransactionBlock
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.plans.models.Plan

@@ -1,8 +1,8 @@
 package com.tminus1010.budgetvalue._core.middleware.presentation
 
 import android.widget.Button
-import com.tminus1010.budgetvalue._core.extensions.bind
-import com.tminus1010.budgetvalue._core.extensions.lifecycleOwner
+import com.tminus1010.budgetvalue._core.all.extensions.bind
+import com.tminus1010.budgetvalue._core.all.extensions.lifecycleOwner
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.core.Observable
 

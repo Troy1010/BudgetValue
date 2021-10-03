@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.transactions.models
 
 
-import com.tminus1010.budgetvalue._core.extensions.copy
+import com.tminus1010.budgetvalue._core.all.extensions.copy
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category

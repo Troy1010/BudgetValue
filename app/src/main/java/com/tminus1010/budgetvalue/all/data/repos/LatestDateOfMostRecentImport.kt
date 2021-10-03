@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.squareup.moshi.Moshi
-import com.tminus1010.budgetvalue._core.extensions.mapBox
+import com.tminus1010.budgetvalue._core.all.extensions.mapBox
 import com.tminus1010.budgetvalue.all.data.dataStore
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson

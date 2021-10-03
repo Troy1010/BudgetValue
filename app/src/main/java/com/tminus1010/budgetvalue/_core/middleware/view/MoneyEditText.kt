@@ -9,8 +9,8 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.R
 import androidx.appcompat.widget.AppCompatEditText
-import com.tminus1010.budgetvalue._core.extensions.easyText
-import com.tminus1010.budgetvalue._core.extensions.toMoneyBigDecimal
+import com.tminus1010.budgetvalue._core.all.extensions.easyText
+import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 
