@@ -20,7 +20,7 @@ import java.math.BigDecimal
 import javax.inject.Inject
 
 @HiltViewModel
-class AnytimeReconciliationVM @Inject constructor(
+class AnytimeReconciliationVM_OLD2 @Inject constructor(
     private val reconciliationsRepo: ReconciliationsRepo,
     categoriesInteractor: CategoriesInteractor,
     saveActiveReconciliationInteractor: SaveActiveReconciliationInteractor

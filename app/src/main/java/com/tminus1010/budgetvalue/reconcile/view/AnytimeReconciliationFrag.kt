@@ -10,7 +10,7 @@ import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.*
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.AccountVMItemList
-import com.tminus1010.budgetvalue.reconcile.presentation.AnytimeReconciliationVM
+import com.tminus1010.budgetvalue.reconcile.presentation.AnytimeReconciliationVM_OLD2
 import com.tminus1010.budgetvalue.all.presentation_and_view.import_z.AccountsVM
 import com.tminus1010.budgetvalue.budgeted.BudgetedVM
 import com.tminus1010.budgetvalue.categories.CategoriesVM
@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit
 @AndroidEntryPoint
 class AnytimeReconciliationFrag : Fragment(R.layout.frag_reconcile) {
     private val vb by viewBinding(FragReconcileBinding::bind)
-    private val anytimeReconciliationVM: AnytimeReconciliationVM by activityViewModels()
+    private val anytimeReconciliationVMOLD2: AnytimeReconciliationVM_OLD2 by activityViewModels()
     private val categoriesVM: CategoriesVM by activityViewModels()
     private val accountsVM: AccountsVM by activityViewModels()
     private val budgetedVM: BudgetedVM by activityViewModels()
@@ -33,9 +33,9 @@ class AnytimeReconciliationFrag : Fragment(R.layout.frag_reconcile) {
         super.onViewCreated(view, savedInstanceState)
         // # Bind Incoming from Presentation layer
         // ## State
-        vb.buttonsview.buttons = anytimeReconciliationVM.buttons
+        vb.buttonsview.buttons = anytimeReconciliationVMOLD2.buttons
         // ## TMTableView
-        Rx.combineLatest(categoriesVM.userCategories, anytimeReconciliationVM.activeReconcileCAsToShow, budgetedVM.categoryValidatedStringVMItems)
+        Rx.combineLatest(categoriesVM.userCategories, anytimeReconciliationVMOLD2.activeReconcileCAsToShow, budgetedVM.categoryValidatedStringVMItems)
             .observeOn(Schedulers.computation())
             .debounce(100, TimeUnit.MILLISECONDS)
             .map { (categories, activeReconciliationCAs, budgetedCategoryValidatedStringVMItems) ->
@@ -44,8 +44,8 @@ class AnytimeReconciliationFrag : Fragment(R.layout.frag_reconcile) {
                             + itemTextViewRB().create("Default")
                             + categories.map { itemTextViewRB().create(it.name) },
                     listOf(itemHeaderRF().create("Reconcile"))
-                            + itemTextViewRB().create(anytimeReconciliationVM.defaultAmount)
-                            + categories.map { category -> itemMoneyEditTextRF().create(activeReconciliationCAs[category]) { anytimeReconciliationVM.pushActiveReconcileCA(category, it) } },
+                            + itemTextViewRB().create(anytimeReconciliationVMOLD2.defaultAmount)
+                            + categories.map { category -> itemMoneyEditTextRF().create(activeReconciliationCAs[category]) { anytimeReconciliationVMOLD2.pushActiveReconcileCA(category, it) } },
                     listOf(itemHeaderWithSubtitleRF().create("Budgeted", accountsVM.accountVMItemList.map(AccountVMItemList::total)))
                             + itemTextViewRB().create(budgetedVM.defaultAmount)
                             + categories.map { itemTextViewRB().create(budgetedCategoryValidatedStringVMItems[it]) }
