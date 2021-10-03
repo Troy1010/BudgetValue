@@ -8,24 +8,20 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.LaunchSelectFile
 import com.tminus1010.budgetvalue._core.all.extensions.easyText
+import com.tminus1010.budgetvalue._core.all.extensions.onClick
 import com.tminus1010.budgetvalue._core.middleware.view.GenViewHolder2
 import com.tminus1010.budgetvalue._core.middleware.view.onDone
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
-import com.tminus1010.budgetvalue._middleware.view.extensions.onClick
-import com.tminus1010.budgetvalue.accounts.presentation.AccountsVM
 import com.tminus1010.budgetvalue.accounts.presentation.AccountVMItem
+import com.tminus1010.budgetvalue.accounts.presentation.AccountsVM
 import com.tminus1010.budgetvalue.databinding.FragImportBinding
 import com.tminus1010.budgetvalue.databinding.ItemAccountBinding
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class ImportFrag : Fragment(R.layout.frag_import) {
-    @Inject
-    lateinit var launchSelectFile: LaunchSelectFile
     private val accountsVM: AccountsVM by activityViewModels()
     private val vb by viewBinding(FragImportBinding::bind)
     var accounts = emptyList<AccountVMItem>()
