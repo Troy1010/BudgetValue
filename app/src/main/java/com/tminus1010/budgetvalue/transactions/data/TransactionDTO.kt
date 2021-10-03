@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.transactions.models
+package com.tminus1010.budgetvalue.transactions.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

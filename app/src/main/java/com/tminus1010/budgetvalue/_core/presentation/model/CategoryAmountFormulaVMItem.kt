@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue._core.presentation.model
 import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.framework.ColdObservable
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.transactions.models.AmountFormula
+import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Observable
 import java.math.BigDecimal

@@ -2,8 +2,8 @@ package com.tminus1010.budgetvalue.replay_or_future.models
 
 import com.tminus1010.budgetvalue._core.app.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.transactions.models.AmountFormula
-import com.tminus1010.budgetvalue.transactions.models.Transaction
+import com.tminus1010.budgetvalue.transactions.app.AmountFormula
+import com.tminus1010.budgetvalue.transactions.app.Transaction
 
 interface IReplayOrFuture {
     val name: String

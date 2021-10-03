@@ -12,7 +12,7 @@ import com.tminus1010.budgetvalue.replay_or_future.models.TerminationStatus
 import com.tminus1010.budgetvalue.transactions.app.TransactionsAggregate
 import com.tminus1010.budgetvalue.transactions.data.TransactionParser
 import com.tminus1010.budgetvalue.transactions.data.repo.TransactionsRepo
-import com.tminus1010.budgetvalue.transactions.models.Transaction
+import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import com.tminus1010.tmcommonkotlin.rx.nonLazy
 import com.tminus1010.tmcommonkotlin.rx.replayNonError

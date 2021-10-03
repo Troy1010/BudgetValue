@@ -1,8 +1,7 @@
 package com.tminus1010.budgetvalue.transactions.app
 
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
-import com.tminus1010.budgetvalue.transactions.models.Transaction
-import com.tminus1010.budgetvalue.transactions.models.TransactionDTO
+import com.tminus1010.budgetvalue.transactions.data.TransactionDTO
 
 class TransactionsAggregate(
     transactionsDTO: List<TransactionDTO>,

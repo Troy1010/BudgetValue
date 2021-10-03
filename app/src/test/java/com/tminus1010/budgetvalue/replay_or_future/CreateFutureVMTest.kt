@@ -1,18 +1,7 @@
 package com.tminus1010.budgetvalue.replay_or_future
 
-import com.tminus1010.budgetvalue.Given
-import com.tminus1010.budgetvalue.categories.CategorySelectionVM
-import com.tminus1010.budgetvalue.categories.ICategoryParser
-import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.transactions.models.AmountFormula
-import io.mockk.every
-import io.mockk.mockk
 import io.reactivex.rxjava3.android.plugins.RxAndroidPlugins
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import org.junit.Assert.assertEquals
-import org.junit.Test
-import java.math.BigDecimal
 
 class CreateFutureVMTest {
 //    @Test

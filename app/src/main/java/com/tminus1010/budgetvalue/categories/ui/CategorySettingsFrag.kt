@@ -14,7 +14,6 @@ import com.tminus1010.budgetvalue._core.InvalidCategoryNameException
 import com.tminus1010.budgetvalue._core.all.extensions.*
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
-import com.tminus1010.budgetvalue._core.middleware.view.onDone
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTextViewRB
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.ViewItemRecipe3
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
@@ -24,7 +23,7 @@ import com.tminus1010.budgetvalue.databinding.FragCategorySettingsBinding
 import com.tminus1010.budgetvalue.databinding.ItemAmountFormulaBinding
 import com.tminus1010.budgetvalue.databinding.ItemEditTextBinding
 import com.tminus1010.budgetvalue.databinding.ItemSpinnerBinding
-import com.tminus1010.budgetvalue.transactions.models.AmountFormula
+import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.budgetvalue.transactions.view.CategorizeFrag
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe

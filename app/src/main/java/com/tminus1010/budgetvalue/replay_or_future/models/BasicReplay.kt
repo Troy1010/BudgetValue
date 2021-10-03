@@ -3,8 +3,8 @@ package com.tminus1010.budgetvalue.replay_or_future.models
 import com.tminus1010.budgetvalue.categories.CategoryAmountFormulasConverter
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.transactions.models.AmountFormula
-import com.tminus1010.budgetvalue.transactions.models.Transaction
+import com.tminus1010.budgetvalue.transactions.app.AmountFormula
+import com.tminus1010.budgetvalue.transactions.app.Transaction
 
 data class BasicReplay(
     override val name: String,

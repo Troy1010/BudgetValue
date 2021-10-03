@@ -2,11 +2,10 @@ package com.tminus1010.budgetvalue.categories
 
 import com.squareup.moshi.Moshi
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.transactions.models.AmountFormula
+import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.tmcommonkotlin.core.extensions.associate
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
-import java.math.BigDecimal
 import javax.inject.Inject
 
 class CategoryAmountFormulasConverter @Inject constructor(

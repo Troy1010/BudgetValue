@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.categories.models
 
-import com.tminus1010.budgetvalue.transactions.models.AmountFormula
+import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import java.math.BigDecimal
 
 data class Category(

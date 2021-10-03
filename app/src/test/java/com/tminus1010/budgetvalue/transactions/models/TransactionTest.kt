@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.transactions.models
 
 import com.tminus1010.budgetvalue.Given
+import com.tminus1010.budgetvalue.transactions.app.Transaction
 import io.mockk.mockk
 import junit.framework.TestCase
 import java.math.BigDecimal

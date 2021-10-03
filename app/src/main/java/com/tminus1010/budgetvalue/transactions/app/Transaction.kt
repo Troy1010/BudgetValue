@@ -1,10 +1,11 @@
-package com.tminus1010.budgetvalue.transactions.models
+package com.tminus1010.budgetvalue.transactions.app
 
 
 import com.tminus1010.budgetvalue._core.all.extensions.copy
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.transactions.data.TransactionDTO
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import java.math.BigDecimal
 import java.math.RoundingMode

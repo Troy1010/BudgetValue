@@ -7,7 +7,7 @@ import com.tminus1010.budgetvalue.reconcile.data.ReconciliationDTO
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicFutureDTO
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplayDTO
 import com.tminus1010.budgetvalue.replay_or_future.models.TotalFutureDTO
-import com.tminus1010.budgetvalue.transactions.models.TransactionDTO
+import com.tminus1010.budgetvalue.transactions.data.TransactionDTO
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single

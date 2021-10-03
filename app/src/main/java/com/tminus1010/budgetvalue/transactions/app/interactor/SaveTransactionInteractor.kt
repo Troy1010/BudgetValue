@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.transactions.app.interactor
 import com.tminus1010.budgetvalue._core.framework.source_objects.SourceArrayList
 import com.tminus1010.budgetvalue._core.app.Redoable
 import com.tminus1010.budgetvalue.transactions.data.repo.TransactionsRepo
-import com.tminus1010.budgetvalue.transactions.models.Transaction
+import com.tminus1010.budgetvalue.transactions.app.Transaction
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject

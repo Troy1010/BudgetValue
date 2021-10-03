@@ -14,7 +14,7 @@ import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.ViewItemRec
 import com.tminus1010.budgetvalue._core.presentation.model.CategoryAmountFormulaVMItem
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.ItemAmountFormulaBinding
-import com.tminus1010.budgetvalue.transactions.models.AmountFormula
+import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Observable
 
