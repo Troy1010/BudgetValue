@@ -9,6 +9,7 @@ import javax.inject.Inject
 class ReconciliationsToDo @Inject constructor(
     private val reconciliationsToDoInteractor: ReconciliationsToDoInteractor
 ) : Observable<List<ReconciliationToDo>>() {
-    override fun subscribeActual(observer: Observer<in List<ReconciliationToDo>>?) =
+    override fun subscribeActual(observer: Observer<in List<ReconciliationToDo>>?) {
         reconciliationsToDoInteractor.reconciliationsToDo.subscribe(observer)
+    }
 }
