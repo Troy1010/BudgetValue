@@ -22,8 +22,9 @@ class ReconciliationHostFrag : Fragment(R.layout.frag_reconciliation_host) {
         super.onViewCreated(view, savedInstanceState)
         // # Presentation State
         vb.buttonsview.buttons = reconciliationHostVM.buttons
+        vb.tvSubTitle.bind(reconciliationHostVM.subTitle) { text = it.getString(context) }
         vb.tvTitle.bind(reconciliationHostVM.title) { text = it.getString(context) }
-        vb.frame.bind(reconciliationHostVM.currentReconciliationToDo) {
+        vb.frame.bind(reconciliationHostVM.currentReconciliationToDo) { (it) ->
             this@ReconciliationHostFrag.childFragmentManager
                 .beginTransaction()
                 .replace(

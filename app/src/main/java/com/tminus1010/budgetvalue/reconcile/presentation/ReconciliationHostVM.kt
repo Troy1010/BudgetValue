@@ -2,10 +2,12 @@ package com.tminus1010.budgetvalue.reconcile.presentation
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue._core.extensions.mapBox
 import com.tminus1010.budgetvalue._core.middleware.presentation.ButtonVMItem
 import com.tminus1010.budgetvalue._core.presentation_and_view._view_model_items.UnformattedString
 import com.tminus1010.budgetvalue.all.app.interactors.SaveActiveReconciliationInteractor
 import com.tminus1010.budgetvalue.all.app.interactors.individual.ReconciliationsToDo
+import com.tminus1010.budgetvalue.all.domain.models.ReconciliationToDo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -15,13 +17,25 @@ class ReconciliationHostVM @Inject constructor(
     saveActiveReconciliationInteractor: SaveActiveReconciliationInteractor,
 ) : ViewModel() {
     // # Presentation State
-    val title = reconciliationsToDo.map {
-        when (it.size) {
-            0 -> UnformattedString(R.string.reconciliations_required_none)
-            1 -> UnformattedString(R.string.reconciliations_required_one)
-            else -> UnformattedString(R.string.reconciliations_required_many, it.size.toString())
+    val currentReconciliationToDo =
+        reconciliationsToDo.mapBox { it.firstOrNull() }
+    val title =
+        currentReconciliationToDo.map { (it) ->
+            when (it) {
+                is ReconciliationToDo.Accounts -> "Accounts Reconciliation"
+                is ReconciliationToDo.Anytime -> "Anytime Reconciliation"
+                is ReconciliationToDo.PlanZ -> "Plan Reconciliation"
+                null -> ""
+            }.let { UnformattedString(it) }
         }
-    }
+    val subTitle =
+        reconciliationsToDo.map {
+            when (it.size) {
+                0 -> UnformattedString(R.string.reconciliations_required_none)
+                1 -> UnformattedString(R.string.reconciliations_required_one)
+                else -> UnformattedString(R.string.reconciliations_required_many, it.size.toString())
+            }
+        }
     val buttons =
         listOf(
             ButtonVMItem(
@@ -29,8 +43,6 @@ class ReconciliationHostVM @Inject constructor(
                 userClick = saveActiveReconciliationInteractor.saveActiveReconiliation::subscribe
             )
         )
-    val currentReconciliationToDo =
-        reconciliationsToDo.map { it.firstOrNull() }
 
     // An Accounts reconciliation needs:
     // the reconciliation, with default calculated by accounts total - something?

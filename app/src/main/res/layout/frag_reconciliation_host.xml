@@ -6,14 +6,24 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/tvSubTitle"
+        style="@style/AppTheme.StandardTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="18sp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="No reconciliations required" />
+
+    <TextView
         android:id="@+id/tvTitle"
         style="@style/AppTheme.StandardTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="40sp"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="No reconciliations required" />
+        android:textSize="30sp"
+        app:layout_constraintTop_toBottomOf="@id/tvSubTitle"
+        tools:text="Accounts reconciliation" />
 
     <FrameLayout
         android:id="@+id/frame"
