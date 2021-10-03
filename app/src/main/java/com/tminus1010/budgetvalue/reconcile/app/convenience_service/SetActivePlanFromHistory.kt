@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.all.app.convenience_service
+package com.tminus1010.budgetvalue.reconcile.app.convenience_service
 
 import com.tminus1010.budgetvalue.all.app.interactor.SetActivePlanFromHistoryInteractor
 import io.reactivex.rxjava3.core.Completable

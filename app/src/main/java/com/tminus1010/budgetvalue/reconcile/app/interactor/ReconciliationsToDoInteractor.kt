@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.all.app.interactor
+package com.tminus1010.budgetvalue.reconcile.app.interactor
 
 import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue._shared.app_init.AppInit

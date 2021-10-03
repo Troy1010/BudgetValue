@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.all.app.interactor
+package com.tminus1010.budgetvalue.reconcile.app.interactor
 
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.reconcile.app.ActiveReconciliationDefaultAmountUC
