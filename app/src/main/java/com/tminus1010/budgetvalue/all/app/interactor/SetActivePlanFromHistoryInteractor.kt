@@ -6,8 +6,6 @@ import com.tminus1010.budgetvalue._core.models.CategoryAmounts
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.plans.domain.ActivePlanDomain
 import com.tminus1010.budgetvalue.transactions.domain.TransactionsAppService
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.CompletableObserver
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
@@ -15,8 +13,8 @@ class SetActivePlanFromHistoryInteractor @Inject constructor(
     activePlanDomain: ActivePlanDomain,
     transactionsAppService: TransactionsAppService,
     private val plansRepo: PlansRepo
-) : Completable() {
-    private val x =
+) {
+    val setActivePlanFromHistory =
         Observable.combineLatest(activePlanDomain.activePlan, transactionsAppService.transactionBlocks)
         { activePlan, transactionBlocks ->
             val relevantTransactionBlocks = transactionBlocks.filter { it.defaultAmount.isZero }
@@ -26,6 +24,4 @@ class SetActivePlanFromHistoryInteractor @Inject constructor(
                     .mapValues { (_, v) -> (v / relevantTransactionBlocks.size.toBigDecimal()).toString().toMoneyBigDecimal() }
             plansRepo.updatePlan(activePlan.copy(categoryAmounts = categoryAmounts))
         }.flatMapCompletable { it }
-
-    override fun subscribeActual(observer: CompletableObserver) = x.subscribe(observer)
 }
