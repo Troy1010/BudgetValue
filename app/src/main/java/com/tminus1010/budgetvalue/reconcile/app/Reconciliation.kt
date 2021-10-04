@@ -29,7 +29,7 @@ data class Reconciliation(
                 localDate = localDate,
                 defaultAmount = defaultAmount,
                 categoryAmounts = categoryAmountsConverter.toCategoryAmounts(categoryAmounts),
-                id = id
+                id = id,
             )
         }
     }
