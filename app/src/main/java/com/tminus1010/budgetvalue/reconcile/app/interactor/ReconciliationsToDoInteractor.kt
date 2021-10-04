@@ -8,8 +8,10 @@ import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
+import com.tminus1010.tmcommonkotlin.rx.extensions.doLogx
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Observable
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 // TODO()
@@ -38,13 +40,15 @@ class ReconciliationsToDoInteractor @Inject constructor(
                 }
                 .map { ReconciliationToDo.PlanZ(it.first, it.second!!) }
         }
+            .throttleLast(50, TimeUnit.MILLISECONDS)
 
     private val accountReconciliationsToDo =
         Observable.combineLatest(accountsRepo.accountsAggregate, budgetedInteractor.budgeted)
         { accountsAggregate, budgeted ->
-            val difference = accountsAggregate.total - (budgeted.categoryAmounts.values.sum() + budgeted.defaultAmount)
+            val difference = accountsAggregate.total - (budgeted.categoryAmounts.values.sum() - budgeted.defaultAmount)
             Box(if (difference.isZero) null else ReconciliationToDo.Accounts(difference))
         }
+            .doOnNext { logz("qwer:${it.first?.difference}") }
 
     val reconciliationsToDo =
         Observable.combineLatest(planReconciliationsToDo, accountReconciliationsToDo)
@@ -54,6 +58,7 @@ class ReconciliationsToDoInteractor @Inject constructor(
                 planReconciliationsToDo,
             ).flatten().filterNotNull()
         }
+            .replay(1).refCount()
 
 //        Observable.just(
 //            listOf(
