@@ -19,8 +19,8 @@ import com.tminus1010.budgetvalue.transactions.presentation.TransactionVM
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
+import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
-import com.tminus1010.tmcommonkotlin.view.extensions.toast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -63,7 +63,7 @@ class TransactionFrag : Fragment(R.layout.frag_transaction) {
         )
         // # TMTableView
         if (transactionVM.transaction.categoryAmounts.isEmpty())
-            toast("This transaction is empty")
+            easyToast("This transaction is empty")
         else
             vb.tmTableView.initialize(
                 recipeGrid = listOf(
