@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.navGraphViewModels
@@ -25,7 +26,6 @@ import com.tminus1010.budgetvalue.replay_or_future.CreateFutureFrag
 import com.tminus1010.budgetvalue.replay_or_future.UseReplayFrag
 import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplay
 import com.tminus1010.budgetvalue.transactions.presentation.CategorizeVM
-import com.tminus1010.budgetvalue.transactions.domain.CategorizeAdvancedDomain
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
@@ -45,9 +45,6 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
 
     @Inject
     lateinit var transactionsInteractor: TransactionsInteractor
-
-    @Inject
-    lateinit var categorizeAdvancedDomain: CategorizeAdvancedDomain
     var categories = emptyList<Category>()
         set(value) {
             val shouldNotifyDataSetChanged = field.size != value.size
