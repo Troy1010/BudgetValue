@@ -8,7 +8,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/frag_nav_host"
-        android:name="com.tminus1010.budgetvalue._core.presentation_and_view.host.HostFrag"
+        android:name="com.tminus1010.budgetvalue._core.view.HostFrag"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:defaultNavHost="true"
