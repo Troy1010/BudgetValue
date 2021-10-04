@@ -3,7 +3,6 @@ package com.tminus1010.budgetvalue._shared.date_period_getter
 import com.tminus1010.budgetvalue._core.app.LocalDatePeriod
 import com.tminus1010.budgetvalue._shared.date_period_getter.data.SettingsRepo
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
-import io.reactivex.rxjava3.core.Observable
 import java.time.LocalDate
 import java.time.Month
 import java.time.temporal.ChronoUnit
@@ -12,23 +11,18 @@ import javax.inject.Singleton
 
 @Singleton
 class DatePeriodGetter @Inject constructor(
-    private val settingsRepo: SettingsRepo,
-) : IDatePeriodGetter {
+    settingsRepo: SettingsRepo,
+) {
     private val anchorDay = LocalDate.of(2020, Month.JULY, 1)
-    override fun getDatePeriodObservable(date: LocalDate): Observable<LocalDatePeriod> =
-        Observable.combineLatest(settingsRepo.anchorDateOffset, settingsRepo.blockSize)
-        { anchorDateOffset, blockSize ->
-            getDatePeriod(date, anchorDateOffset, blockSize)
-        }
 
     // TODO("This is pretty hacky..")
     private val blockSizeBS = settingsRepo.blockSize.toBehaviorSubject()
     private val anchorDateOffsetBS = settingsRepo.anchorDateOffset.toBehaviorSubject()
 
-    override fun isDatePeriodValid(datePeriod: LocalDatePeriod): Boolean =
+    fun isDatePeriodValid(datePeriod: LocalDatePeriod): Boolean =
         getDatePeriod(datePeriod.startDate, anchorDateOffsetBS.value!!, blockSizeBS.value!!) == datePeriod
 
-    override fun getDatePeriod(date: LocalDate): LocalDatePeriod =
+    fun getDatePeriod(date: LocalDate): LocalDatePeriod =
         getDatePeriod(date, anchorDateOffsetBS.value!!, blockSizeBS.value!!)
 
     private fun getDatePeriod(date: LocalDate, anchorDateOffset: Long, blockSize: Long): LocalDatePeriod {
