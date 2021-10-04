@@ -8,6 +8,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
+import com.tminus1010.tmcommonkotlin.core.logx
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import com.tminus1010.tmcommonkotlin.rx.extensions.doLogx
 import com.tminus1010.tmcommonkotlin.rx.extensions.total
@@ -39,14 +40,21 @@ class BudgetedInteractor @Inject constructor(
     val categoryAmountsObservableMap =
         categoryAmounts
             .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO)) { it.itemObservableMap }
-    val defaultAmount =
-        Observable.combineLatest(categoryAmountsObservableMap.switchMap { it.values.total() }, reconciliationsRepo.reconciliations, plansRepo.plans, transactionsInteractor.transactionBlocks, reconciliationsRepo.activeReconciliationCAs)
-        { caTotal, reconciliations, plans, actuals, activeReconciliationCAs ->
-            reconciliations.map { it.totalAmount }.sum() + plans.map { it.amount }.sum() + actuals.map { it.amount }.sum() + activeReconciliationCAs.categorizedAmount - caTotal
+    val totalAmount =
+        Observable.combineLatest(reconciliationsRepo.reconciliations, plansRepo.plans, transactionsInteractor.transactionBlocks)
+        { reconciliations, plans, actuals ->
+            reconciliations.map { it.totalAmount }.sum().logx("aaa") +
+                    plans.map { it.amount }.sum().logx("bbb") +
+                    actuals.map { it.amount }.sum().logx("actuals")
+            // plus active reconciliation total?
         }
+            .throttleLast(50, TimeUnit.MILLISECONDS)
+            .doLogx("totalAmount")
+            .replayNonError(1)
+    val defaultAmount =
+        Observable.combineLatest(totalAmount, categoryAmountsObservableMap.switchMap { it.values.total() })
+        { totalAmount, caTotal -> totalAmount - caTotal.logx("caTotalBudgeted") }
             .doLogx("defaultAmount")
-
-    //        categoryAmountsObservableMap.switchMap { it.values.total() }
             .replayNonError(1)
     val budgeted =
         Observable.combineLatest(categoryAmounts, defaultAmount, ::Budgeted)
