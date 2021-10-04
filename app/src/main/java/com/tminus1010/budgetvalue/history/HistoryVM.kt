@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue._core.categoryComparator
 import com.tminus1010.budgetvalue._core.app.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.data.repos.CurrentDatePeriodRepo
-import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
+import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodService
 import com.tminus1010.budgetvalue.budgeted.BudgetedInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
@@ -25,7 +25,7 @@ class HistoryVM @Inject constructor(
     transactionsInteractor: TransactionsInteractor,
     activeReconciliationDefaultAmountUC: ActiveReconciliationDefaultAmountUC,
     budgetedInteractor: BudgetedInteractor,
-    private val datePeriodGetter: DatePeriodGetter,
+    private val datePeriodService: DatePeriodService,
     private val currentDatePeriodRepo: CurrentDatePeriodRepo,
     private val plansRepo: PlansRepo,
     private val reconciliationRepo: ReconciliationsRepo,
@@ -52,9 +52,9 @@ class HistoryVM @Inject constructor(
             .map { (reconciliations, plans, activeReconciliationDefaultAmount, activeReconciliationCAs, transactionBlocks, budgeted) ->
                 // # Define blocks
                 val blockPeriods = sortedSetOf<LocalDatePeriod>(compareBy { it.startDate })
-                transactionBlocks?.forEach { if (!datePeriodGetter.isDatePeriodValid(it.datePeriod!!)) error("datePeriod was not valid:${it.datePeriod}") }
+                transactionBlocks?.forEach { if (!datePeriodService.isDatePeriodValid(it.datePeriod!!)) error("datePeriod was not valid:${it.datePeriod}") }
                 transactionBlocks?.forEach { blockPeriods.add(it.datePeriod!!) }
-                reconciliations?.forEach { blockPeriods.add(datePeriodGetter.getDatePeriod(it.localDate)) }
+                reconciliations?.forEach { blockPeriods.add(datePeriodService.getDatePeriod(it.localDate)) }
                 plans?.forEach { blockPeriods.add(it.localDatePeriod) }
                 // # Define historyColumnDatas
                 val historyColumnDatas = arrayListOf<HistoryVMItem>()

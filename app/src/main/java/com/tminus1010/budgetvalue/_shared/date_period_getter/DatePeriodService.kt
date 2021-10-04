@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue._shared.date_period_getter
 
 import com.tminus1010.budgetvalue._core.app.LocalDatePeriod
-import com.tminus1010.budgetvalue._shared.date_period_getter.data.SettingsRepo
+import com.tminus1010.budgetvalue._core.data.repos.SettingsRepo
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import java.time.LocalDate
 import java.time.Month
@@ -10,7 +10,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DatePeriodGetter @Inject constructor(
+class DatePeriodService @Inject constructor(
     settingsRepo: SettingsRepo,
 ) {
     private val anchorDay = LocalDate.of(2020, Month.JULY, 1)

@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.transactions.app.interactor
 
 import com.tminus1010.budgetvalue._core.all.extensions.mapBox
 import com.tminus1010.budgetvalue._core.middleware.Rx
-import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
+import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodService
 import com.tminus1010.budgetvalue.all.data.repos.LatestDateOfMostRecentImport
 import com.tminus1010.budgetvalue.all.domain.models.TransactionBlock
 import com.tminus1010.budgetvalue.categories.models.Category
@@ -29,7 +29,7 @@ import javax.inject.Singleton
 @Singleton
 class TransactionsInteractor @Inject constructor(
     private val transactionsRepo: TransactionsRepo,
-    private val datePeriodGetter: DatePeriodGetter,
+    private val datePeriodService: DatePeriodService,
     private val transactionParser: TransactionParser,
     private val futuresRepo: FuturesRepo,
     private val latestDateOfMostRecentImport: LatestDateOfMostRecentImport
@@ -82,7 +82,7 @@ class TransactionsInteractor @Inject constructor(
         val transactionsRedefined = transactions.sortedBy { it.date }.toMutableList()
         val returning = ArrayList<TransactionBlock>()
         if (0 !in transactionsRedefined.indices) return returning
-        var datePeriod = datePeriodGetter.getDatePeriod(transactionsRedefined[0].date)
+        var datePeriod = datePeriodService.getDatePeriod(transactionsRedefined[0].date)
         while (datePeriod.startDate <= transactionsRedefined.last().date) {
             val transactionSet = transactionsRedefined
                 .filter { it.date in datePeriod }
@@ -90,7 +90,7 @@ class TransactionsInteractor @Inject constructor(
             if (transactionSet.isNotEmpty())
                 returning += TransactionBlock(transactionSet, datePeriod)
             if (transactionsRedefined.isEmpty()) break
-            datePeriod = datePeriodGetter.getDatePeriod(transactionsRedefined[0].date)
+            datePeriod = datePeriodService.getDatePeriod(transactionsRedefined[0].date)
         }
         return returning
     }
@@ -111,7 +111,7 @@ class TransactionsInteractor @Inject constructor(
         spends
             .map {
                 it
-                    .filter { it.date in datePeriodGetter.getDatePeriod(LocalDate.now()) }
+                    .filter { it.date in datePeriodService.getDatePeriod(LocalDate.now()) }
                     .map { it.categoryAmounts }
                     .fold(mapOf()) { acc, v ->
                         mutableSetOf<Category>().apply { addAll(acc.keys); addAll(v.keys) }
