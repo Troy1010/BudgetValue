@@ -11,8 +11,8 @@ import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartials
 import com.tminus1010.budgetvalue._core.LaunchSelectFile
 import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue._core.view.HostActivity
-import com.tminus1010.budgetvalue._shared.app_init.AppInteractor
-import com.tminus1010.budgetvalue._shared.app_init.AppInitRepo
+import com.tminus1010.budgetvalue.app_init.AppInteractor
+import com.tminus1010.budgetvalue.app_init.AppInitRepo
 import com.tminus1010.budgetvalue.all.data.repos.IsPlanFeatureEnabled
 import com.tminus1010.budgetvalue.all.data.repos.IsReconciliationFeatureEnabled
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
