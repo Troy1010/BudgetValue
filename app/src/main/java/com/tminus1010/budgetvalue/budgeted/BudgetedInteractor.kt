@@ -40,10 +40,7 @@ class BudgetedInteractor @Inject constructor(
         categoryAmounts
             .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO)) { it.itemObservableMap }
     val defaultAmount =
-        Observable.combineLatest(accountsRepo.accountsAggregate, categoryAmountsObservableMap.switchMap { it.values.total() })
-        { accounts, categoryAmountsTotal ->
-            accounts.total - categoryAmountsTotal
-        }
+        categoryAmountsObservableMap.switchMap { it.values.total() }
             .replayNonError(1)
     val budgeted =
         Observable.combineLatest(categoryAmounts, defaultAmount, ::Budgeted)

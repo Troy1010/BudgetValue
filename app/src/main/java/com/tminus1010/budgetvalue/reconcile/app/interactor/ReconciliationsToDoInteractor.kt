@@ -1,9 +1,14 @@
 package com.tminus1010.budgetvalue.reconcile.app.interactor
 
+import com.tminus1010.budgetvalue._core.all.extensions.isZero
+import com.tminus1010.budgetvalue.accounts.data.AccountsRepo
 import com.tminus1010.budgetvalue.all.domain.models.ReconciliationToDo
+import com.tminus1010.budgetvalue.budgeted.BudgetedInteractor
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
+import com.tminus1010.tmcommonkotlin.misc.extensions.sum
+import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
@@ -12,6 +17,8 @@ class ReconciliationsToDoInteractor @Inject constructor(
     plansRepo: PlansRepo,
     transactionsInteractor: TransactionsInteractor,
     reconciliationsRepo: ReconciliationsRepo,
+    accountsRepo: AccountsRepo,
+    budgetedInteractor: BudgetedInteractor,
 ) {
     val planReconciliationsToDo =
         Observable.combineLatest(plansRepo.plans, transactionsInteractor.transactionBlocks, reconciliationsRepo.reconciliations)
@@ -32,8 +39,22 @@ class ReconciliationsToDoInteractor @Inject constructor(
                 .map { ReconciliationToDo.PlanZ(it.first, it.second!!) }
         }
 
+    val accountReconciliationsToDo =
+        Observable.combineLatest(accountsRepo.accountsAggregate, budgetedInteractor.budgeted)
+        { accountsAggregate, budgeted ->
+            val difference = accountsAggregate.total - (budgeted.categoryAmounts.values.sum() + budgeted.defaultAmount)
+            Box(if (difference.isZero) null else ReconciliationToDo.Accounts(difference))
+        }
+
     val reconciliationsToDo =
-        planReconciliationsToDo
+        Observable.combineLatest(planReconciliationsToDo, accountReconciliationsToDo)
+        { planReconciliationsToDo, (accountReconciliationsToDo) ->
+            listOf(
+                listOf(accountReconciliationsToDo),
+                planReconciliationsToDo,
+            ).flatten().filterNotNull()
+        }
+
 //        Observable.just(
 //            listOf(
 //                ReconciliationToDo.PlanZ(

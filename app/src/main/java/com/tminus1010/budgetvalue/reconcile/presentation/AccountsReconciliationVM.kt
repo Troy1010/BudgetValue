@@ -13,6 +13,7 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -23,6 +24,9 @@ class AccountsReconciliationVM @Inject constructor(
     budgetedInteractor: BudgetedInteractor,
     categoriesInteractor: CategoriesInteractor,
 ) : ViewModel() {
+    // # View Events
+    val difference = BehaviorSubject.create<BigDecimal>()
+
     // # User Intents
     fun userUpdateActiveReconciliationCategoryAmount(category: Category, s: String) {
         reconciliationsRepo.pushActiveReconciliationCA(Pair(category, s.toMoneyBigDecimal())).subscribe()

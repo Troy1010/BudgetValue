@@ -20,7 +20,6 @@ class HostVM @Inject constructor(
     val navToTransactions = PublishSubject.create<Unit>()
     val navToFutures = PublishSubject.create<Unit>()
     val navToReplays = PublishSubject.create<Unit>()
-    val navToAccountsReconciliationSubFrag = createPublishSubject()
     val topMenuVMItems =
         MenuVMItems(
             MenuVMItem(
@@ -38,10 +37,6 @@ class HostVM @Inject constructor(
             MenuVMItem(
                 title = "Replays",
                 onClick = { navToReplays.onNext(Unit); unCheckAllMenuItems.onNext(Unit) },
-            ),
-            MenuVMItem(
-                title = "AccountSubFrag",
-                onClick = { navToAccountsReconciliationSubFrag.onNext(Unit); unCheckAllMenuItems.onNext(Unit) },
             ),
             *getExtraMenuItemPartials()
         )
