@@ -3,17 +3,19 @@ package com.tminus1010.budgetvalue.reconcile.presentation
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.all.extensions.isZero
 import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
+import com.tminus1010.budgetvalue.all.domain.models.ReconciliationToDo
 import com.tminus1010.budgetvalue.all.presentation_and_view._models.ValidatedStringVMItem
 import com.tminus1010.budgetvalue.budgeted.BudgetedInteractor
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.reconcile.app.convenience_service.ReconciliationsToDo
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.reconcile.presentation.service.ReconciliationPresentationMapper
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
+import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -23,16 +25,18 @@ class AccountsReconciliationVM @Inject constructor(
     reconciliationPresentationMapper: ReconciliationPresentationMapper,
     budgetedInteractor: BudgetedInteractor,
     categoriesInteractor: CategoriesInteractor,
+    reconciliationsToDo: ReconciliationsToDo
 ) : ViewModel() {
-    // # View Events
-    val difference = BehaviorSubject.create<BigDecimal>()
-
     // # User Intents
     fun userUpdateActiveReconciliationCategoryAmount(category: Category, s: String) {
         reconciliationsRepo.pushActiveReconciliationCA(Pair(category, s.toMoneyBigDecimal())).subscribe()
     }
 
     // # Internal
+    private val reconciliationToDo =
+        reconciliationsToDo
+            .map { it.find { it is ReconciliationToDo.Accounts }!! as ReconciliationToDo.Accounts }
+            .toSingle().cache()
     private val activeReconciliationCAs =
         Observable.combineLatest(reconciliationsRepo.activeReconciliationCAs, categoriesInteractor.userCategories)
         { activeReconciliationCAs, categories ->
@@ -40,13 +44,14 @@ class AccountsReconciliationVM @Inject constructor(
                 .plus(activeReconciliationCAs)
             reconciliationPresentationMapper.getCategoryAmountVMItems(map, onDone = ::userUpdateActiveReconciliationCategoryAmount)
         }
-
     private val budgeted =
         budgetedInteractor.budgeted
             .map { it.categoryAmounts.mapValues { ValidatedStringVMItem(it.value) { BigDecimal.ZERO <= it } } }
-
     private val activeReconciliationUncategorizedAmount =
-        reconciliationsRepo.activeReconciliationCAs.map { it.values.sum() }
+        Observable.combineLatest(reconciliationsRepo.activeReconciliationCAs, reconciliationToDo.toObservable())
+        { activeReconciliationCAs, reconciliationToDo ->
+            activeReconciliationCAs.values.sum() + reconciliationToDo.difference
+        }
             .map { ValidatedStringVMItem(it, BigDecimal::isZero) }
 
     // # State

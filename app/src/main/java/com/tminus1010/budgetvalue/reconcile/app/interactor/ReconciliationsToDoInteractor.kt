@@ -20,7 +20,7 @@ class ReconciliationsToDoInteractor @Inject constructor(
     accountsRepo: AccountsRepo,
     budgetedInteractor: BudgetedInteractor,
 ) {
-    val planReconciliationsToDo =
+    private val planReconciliationsToDo =
         Observable.combineLatest(plansRepo.plans, transactionsInteractor.transactionBlocks, reconciliationsRepo.reconciliations)
         { plans, transactionBlocks, reconciliations ->
             plans.map { plan ->
@@ -39,7 +39,7 @@ class ReconciliationsToDoInteractor @Inject constructor(
                 .map { ReconciliationToDo.PlanZ(it.first, it.second!!) }
         }
 
-    val accountReconciliationsToDo =
+    private val accountReconciliationsToDo =
         Observable.combineLatest(accountsRepo.accountsAggregate, budgetedInteractor.budgeted)
         { accountsAggregate, budgeted ->
             val difference = accountsAggregate.total - (budgeted.categoryAmounts.values.sum() + budgeted.defaultAmount)

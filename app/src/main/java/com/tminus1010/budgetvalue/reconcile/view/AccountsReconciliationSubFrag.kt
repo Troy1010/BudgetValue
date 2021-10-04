@@ -16,18 +16,14 @@ import com.tminus1010.budgetvalue.databinding.ItemTmTableViewBinding
 import com.tminus1010.budgetvalue.reconcile.presentation.AccountsReconciliationVM
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.kotlin.Observables
-import java.math.BigDecimal
 
 @AndroidEntryPoint
 class AccountsReconciliationSubFrag : Fragment(R.layout.item_tm_table_view) {
     lateinit var vb: ItemTmTableViewBinding
     val accountsReconciliationVM by viewModels<AccountsReconciliationVM>()
-    val difference get() = requireArguments().getString(KEY_DIFFERENCE)!!.toBigDecimal()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = ItemTmTableViewBinding.bind(view)
-        // # Mediation
-        accountsReconciliationVM.difference.onNext(difference)
         // # Presentation State
         vb.tmTableView.bind(Observables.combineLatest(accountsReconciliationVM.recipeGrid, accountsReconciliationVM.dividerMap))
         { (recipeGrid, dividerMap) ->
@@ -47,14 +43,6 @@ class AccountsReconciliationSubFrag : Fragment(R.layout.item_tm_table_view) {
                 shouldFitItemWidthsInsideTable = true,
                 rowFreezeCount = 1
             )
-        }
-    }
-
-    companion object {
-        private const val KEY_DIFFERENCE = "KEY_DIFFERENCE"
-        operator fun invoke(difference: BigDecimal): AccountsReconciliationSubFrag {
-            return AccountsReconciliationSubFrag()
-                .apply { arguments = Bundle().apply { putString(KEY_DIFFERENCE, difference.toString()) } }
         }
     }
 }
