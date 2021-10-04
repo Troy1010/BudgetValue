@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue._core.categoryComparator
 import com.tminus1010.budgetvalue._core.app.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.data.repos.CurrentDatePeriodRepo
-import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodService
+import com.tminus1010.budgetvalue._core.app.DatePeriodService
 import com.tminus1010.budgetvalue.budgeted.BudgetedInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
