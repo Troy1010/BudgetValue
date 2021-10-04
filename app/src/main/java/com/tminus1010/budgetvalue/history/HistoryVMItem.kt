@@ -61,7 +61,7 @@ sealed class HistoryVMItem {
             reconciliation.defaultAmount.toString()
         override val menuVMItems =
             listOf(
-                MenuVMItem("Delete") { reconciliationsRepo.delete(reconciliation) }
+                MenuVMItem("Delete") { reconciliationsRepo.delete(reconciliation).subscribe() }
             )
     }
 
