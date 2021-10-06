@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.all.presentation_and_view._extensions
+package com.tminus1010.budgetvalue.all.presentation_and_view.extensions
 
 import com.github.mikephil.charting.interfaces.datasets.IPieDataSet
 
