@@ -9,8 +9,8 @@ import com.tminus1010.budgetvalue._core.all.extensions.bind
 import com.tminus1010.budgetvalue._core.all.extensions.easyVisibility
 import com.tminus1010.budgetvalue._core.all.extensions.onClick
 import com.tminus1010.budgetvalue.all.framework.extensions.invoke
-import com.tminus1010.budgetvalue.all.presentation_and_view._models.bind
-import com.tminus1010.budgetvalue.all.presentation_and_view.bind
+import com.tminus1010.budgetvalue.all.presentation_and_view.models.bind
+import com.tminus1010.budgetvalue.all.presentation_and_view.extensions.bind
 import com.tminus1010.budgetvalue.databinding.FragReviewBinding
 import com.tminus1010.budgetvalue.review.presentation.NoMoreDataException
 import com.tminus1010.budgetvalue.review.presentation.NoMostRecentSpendException

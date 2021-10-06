@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.all.presentation_and_view.import_z
+package com.tminus1010.budgetvalue.importZ.view
 
 import android.os.Bundle
 import android.view.View

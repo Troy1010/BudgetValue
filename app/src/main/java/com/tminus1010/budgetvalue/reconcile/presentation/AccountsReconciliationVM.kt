@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.all.extensions.isZero
 import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.all.domain.models.ReconciliationToDo
-import com.tminus1010.budgetvalue.all.presentation_and_view._models.ValidatedStringVMItem
+import com.tminus1010.budgetvalue.all.presentation_and_view.models.ValidatedStringVMItem
 import com.tminus1010.budgetvalue.budgeted.BudgetedInteractor
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
