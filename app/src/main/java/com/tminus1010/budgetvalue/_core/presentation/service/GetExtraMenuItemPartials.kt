@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._core
+package com.tminus1010.budgetvalue._core.presentation.service
 
 import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
 import javax.inject.Inject

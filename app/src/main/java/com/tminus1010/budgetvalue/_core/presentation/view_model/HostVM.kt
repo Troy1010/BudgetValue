@@ -2,11 +2,10 @@ package com.tminus1010.budgetvalue._core.presentation.view_model
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartials
+import com.tminus1010.budgetvalue._core.presentation.service.GetExtraMenuItemPartials
 import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItems
 import com.tminus1010.budgetvalue._core.presentation.model.UnformattedString
-import com.tminus1010.budgetvalue._middleware.framework.createPublishSubject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.PublishSubject
 import javax.inject.Inject

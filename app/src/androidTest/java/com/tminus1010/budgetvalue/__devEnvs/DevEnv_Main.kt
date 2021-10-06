@@ -7,8 +7,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.tminus1010.budgetvalue.AndroidTestAssetOwner
 import com.tminus1010.budgetvalue.MockImportSelectionActivity
-import com.tminus1010.budgetvalue._core.GetExtraMenuItemPartials
-import com.tminus1010.budgetvalue._core.LaunchSelectFile
+import com.tminus1010.budgetvalue._core.presentation.service.GetExtraMenuItemPartials
+import com.tminus1010.budgetvalue._core.view.service.LaunchSelectFile
 import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue._core.view.HostActivity
 import com.tminus1010.budgetvalue.app_init.AppInteractor
