@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.all.presentation_and_view.models
+package com.tminus1010.budgetvalue.all.presentation.models
 
 import android.view.View
 import android.widget.AdapterView

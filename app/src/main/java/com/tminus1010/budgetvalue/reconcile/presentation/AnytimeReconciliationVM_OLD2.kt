@@ -9,7 +9,7 @@ import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue._core.framework.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.reconcile.app.interactor.SaveActiveReconciliationInteractor
-import com.tminus1010.budgetvalue.all.presentation_and_view.models.ValidatedStringVMItem
+import com.tminus1010.budgetvalue.all.presentation.models.ValidatedStringVMItem
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo

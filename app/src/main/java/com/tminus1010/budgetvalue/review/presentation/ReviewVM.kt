@@ -12,10 +12,10 @@ import com.tminus1010.budgetvalue._core.all.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.all.extensions.mapBox
 import com.tminus1010.budgetvalue._core.app.CategoryAmounts
 import com.tminus1010.budgetvalue.all.domain.models.TransactionBlock
-import com.tminus1010.budgetvalue.all.presentation_and_view.SelectableDuration
-import com.tminus1010.budgetvalue.all.presentation_and_view.UsePeriodType
-import com.tminus1010.budgetvalue.all.presentation_and_view.models.PieChartVMItem
-import com.tminus1010.budgetvalue.all.presentation_and_view.models.SpinnerVMItem
+import com.tminus1010.budgetvalue.all.presentation.SelectableDuration
+import com.tminus1010.budgetvalue.all.presentation.UsePeriodType
+import com.tminus1010.budgetvalue.all.presentation.models.PieChartVMItem
+import com.tminus1010.budgetvalue.all.presentation.models.SpinnerVMItem
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.repo.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.app.TransactionsAggregate

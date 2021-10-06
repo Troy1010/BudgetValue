@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.budgeted
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.all.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.all.extensions.isPositive
-import com.tminus1010.budgetvalue.all.presentation_and_view.models.ValidatedStringVMItem
+import com.tminus1010.budgetvalue.all.presentation.models.ValidatedStringVMItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.Subject

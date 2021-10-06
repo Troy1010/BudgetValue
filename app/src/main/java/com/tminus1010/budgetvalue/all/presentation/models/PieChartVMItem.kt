@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.all.presentation_and_view.models
+package com.tminus1010.budgetvalue.all.presentation.models
 
 import android.graphics.Color
 import com.github.mikephil.charting.charts.PieChart
