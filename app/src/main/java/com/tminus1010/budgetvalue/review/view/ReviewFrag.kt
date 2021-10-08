@@ -8,8 +8,8 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.all.extensions.bind
 import com.tminus1010.budgetvalue._core.all.extensions.easyVisibility
 import com.tminus1010.budgetvalue._core.all.extensions.onClick
-import com.tminus1010.budgetvalue.all.framework.extensions.invoke
-import com.tminus1010.budgetvalue.all.presentation.models.bind
+import com.tminus1010.budgetvalue._core.presentation.model.bind
+import com.tminus1010.budgetvalue._core.all.extensions.invoke
 import com.tminus1010.budgetvalue.all.presentation.extensions.bind
 import com.tminus1010.budgetvalue.databinding.FragReviewBinding
 import com.tminus1010.budgetvalue.review.presentation.NoMoreDataException

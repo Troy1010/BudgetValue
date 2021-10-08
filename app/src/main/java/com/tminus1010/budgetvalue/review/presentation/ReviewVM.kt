@@ -15,7 +15,7 @@ import com.tminus1010.budgetvalue.transactions.app.TransactionBlock
 import com.tminus1010.budgetvalue.review.SelectableDuration
 import com.tminus1010.budgetvalue.review.UsePeriodType
 import com.tminus1010.budgetvalue._core.presentation.model.PieChartVMItem
-import com.tminus1010.budgetvalue.all.presentation.models.SpinnerVMItem
+import com.tminus1010.budgetvalue._core.presentation.model.SpinnerVMItem
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.repo.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.app.TransactionsAggregate
