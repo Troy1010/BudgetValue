@@ -1,15 +1,15 @@
 package com.tminus1010.budgetvalue.all.domain
 
 import com.tminus1010.budgetvalue.Given
-import com.tminus1010.budgetvalue.reconcile.app.Reconciliations
+import com.tminus1010.budgetvalue.reconcile.app.ReconciliationAggregate
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class ReconciliationsTest {
+class ReconciliationAggregateTest {
     @Test
     fun last() {
         // # Given
-        val reconciliations = Reconciliations(
+        val reconciliations = ReconciliationAggregate(
             listOf(
                 Given.reconciliation1,
                 Given.reconciliation2,
