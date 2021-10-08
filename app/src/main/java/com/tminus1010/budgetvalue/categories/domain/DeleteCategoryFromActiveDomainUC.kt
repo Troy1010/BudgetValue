@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
-import com.tminus1010.budgetvalue.plans.domain.ActivePlanDomain
+import com.tminus1010.budgetvalue.plans.app.ActivePlanDomain
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.schedulers.Schedulers

@@ -17,9 +17,9 @@ import com.tminus1010.budgetvalue._core.presentation.view_model.HostVM
 import com.tminus1010.budgetvalue._core.presentation_and_view._extensions.easyAlertDialog
 import com.tminus1010.budgetvalue._core.presentation_and_view._extensions.getString
 import com.tminus1010.budgetvalue.accounts.presentation.AccountsVM
-import com.tminus1010.budgetvalue.all.data.repos.ImportTransactions
-import com.tminus1010.budgetvalue.all.data.repos.IsPlanFeatureEnabled
-import com.tminus1010.budgetvalue.all.data.repos.IsReconciliationFeatureEnabled
+import com.tminus1010.budgetvalue.importZ.data.ImportTransactions
+import com.tminus1010.budgetvalue.plans.data.IsPlanFeatureEnabled
+import com.tminus1010.budgetvalue.reconcile.data.IsReconciliationFeatureEnabled
 import com.tminus1010.budgetvalue.app_init.AppInteractor
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.history.HistoryFrag

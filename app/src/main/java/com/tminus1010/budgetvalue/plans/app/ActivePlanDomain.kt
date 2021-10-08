@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.plans.domain
+package com.tminus1010.budgetvalue.plans.app
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.data.repos.CurrentDatePeriodRepo

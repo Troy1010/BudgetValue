@@ -1,10 +1,9 @@
-package com.tminus1010.budgetvalue.all.app.interactors
+package com.tminus1010.budgetvalue.plans.app
 
 import com.tminus1010.budgetvalue._core.all.extensions.isZero
 import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.app.CategoryAmounts
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
-import com.tminus1010.budgetvalue.plans.domain.ActivePlanDomain
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject

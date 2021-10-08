@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue._core.middleware.Toaster
 import com.tminus1010.budgetvalue._core.middleware.view.GenViewHolder2
-import com.tminus1010.budgetvalue.all.data.repos.ImportTransactions
+import com.tminus1010.budgetvalue.importZ.data.ImportTransactions
 import com.tminus1010.budgetvalue.databinding.ActivityMockImportSelectionBinding
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
 import dagger.hilt.android.AndroidEntryPoint
