@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import java.math.BigDecimal
 import javax.inject.Inject
 
-class ReconciliationPresentationMapper @Inject constructor() {
+class ReconciliationPresentationFactory @Inject constructor() {
     fun getCategoryAmountVMItems(
         categoryAmounts: Map<Category, BigDecimal>,
         onDone: (Category, String) -> Unit,

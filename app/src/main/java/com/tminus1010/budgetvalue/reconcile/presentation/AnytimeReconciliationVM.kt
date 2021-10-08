@@ -8,7 +8,7 @@ import com.tminus1010.budgetvalue.budgeted.BudgetedInteractor
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
-import com.tminus1010.budgetvalue.reconcile.presentation.service.ReconciliationPresentationMapper
+import com.tminus1010.budgetvalue.reconcile.presentation.service.ReconciliationPresentationFactory
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AnytimeReconciliationVM @Inject constructor(
     private val reconciliationsRepo: ReconciliationsRepo,
-    reconciliationPresentationMapper: ReconciliationPresentationMapper,
+    reconciliationPresentationFactory: ReconciliationPresentationFactory,
     budgetedInteractor: BudgetedInteractor,
     categoriesInteractor: CategoriesInteractor,
 ) : ViewModel() {
@@ -34,7 +34,7 @@ class AnytimeReconciliationVM @Inject constructor(
         { activeReconciliationCAs, categories ->
             val map = categories.associateWith { BigDecimal.ZERO }
                 .plus(activeReconciliationCAs)
-            reconciliationPresentationMapper.getCategoryAmountVMItems(map, onDone = ::userUpdateActiveReconciliationCategoryAmount)
+            reconciliationPresentationFactory.getCategoryAmountVMItems(map, onDone = ::userUpdateActiveReconciliationCategoryAmount)
         }
 
     private val budgeted =

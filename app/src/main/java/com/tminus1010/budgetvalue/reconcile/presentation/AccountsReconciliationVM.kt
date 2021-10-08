@@ -10,7 +10,7 @@ import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.reconcile.app.convenience_service.ReconciliationsToDo
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
-import com.tminus1010.budgetvalue.reconcile.presentation.service.ReconciliationPresentationMapper
+import com.tminus1010.budgetvalue.reconcile.presentation.service.ReconciliationPresentationFactory
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
@@ -22,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AccountsReconciliationVM @Inject constructor(
     private val reconciliationsRepo: ReconciliationsRepo,
-    reconciliationPresentationMapper: ReconciliationPresentationMapper,
+    reconciliationPresentationFactory: ReconciliationPresentationFactory,
     budgetedInteractor: BudgetedInteractor,
     categoriesInteractor: CategoriesInteractor,
     reconciliationsToDo: ReconciliationsToDo
@@ -42,7 +42,7 @@ class AccountsReconciliationVM @Inject constructor(
         { activeReconciliationCAs, categories ->
             val map = categories.associateWith { BigDecimal.ZERO }
                 .plus(activeReconciliationCAs)
-            reconciliationPresentationMapper.getCategoryAmountVMItems(map, onDone = ::userUpdateActiveReconciliationCategoryAmount)
+            reconciliationPresentationFactory.getCategoryAmountVMItems(map, onDone = ::userUpdateActiveReconciliationCategoryAmount)
         }
     private val budgeted =
         budgetedInteractor.budgeted
