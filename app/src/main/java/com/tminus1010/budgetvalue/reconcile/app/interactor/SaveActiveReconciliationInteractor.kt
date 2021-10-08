@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue.reconcile.app.interactor
 
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
-import com.tminus1010.budgetvalue.reconcile.app.ActiveReconciliationDefaultAmountUC
 import com.tminus1010.budgetvalue.reconcile.app.Reconciliation
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import io.reactivex.rxjava3.core.Single
@@ -9,12 +8,12 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 class SaveActiveReconciliationInteractor @Inject constructor(
-    activeReconciliationDefaultAmountUC: ActiveReconciliationDefaultAmountUC,
+    activeReconciliationDefaultAmountInteractor: ActiveReconciliationDefaultAmountInteractor,
     reconciliationsRepo: ReconciliationsRepo,
 ) {
     val saveActiveReconiliation =
         Single.zip(
-            activeReconciliationDefaultAmountUC().toSingle(),
+            activeReconciliationDefaultAmountInteractor().toSingle(),
             reconciliationsRepo.activeReconciliationCAs.toSingle(),
         )
         { activeReconciliationDefaultAmountUC, activeReconciliationCAs ->
