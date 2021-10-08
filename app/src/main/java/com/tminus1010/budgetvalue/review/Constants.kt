@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.all.presentation
+package com.tminus1010.budgetvalue.review
 
 import com.tminus1010.budgetvalue._core.all.extensions.easyCapitalize
 

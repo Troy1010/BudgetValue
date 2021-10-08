@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.reconcile.presentation
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.all.extensions.isZero
 import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
-import com.tminus1010.budgetvalue.all.presentation.models.ValidatedStringVMItem
+import com.tminus1010.budgetvalue._core.presentation.model.ValidatedStringVMItem
 import com.tminus1010.budgetvalue.budgeted.BudgetedInteractor
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
