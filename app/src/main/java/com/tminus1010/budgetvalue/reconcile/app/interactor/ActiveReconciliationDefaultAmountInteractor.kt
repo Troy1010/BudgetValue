@@ -2,8 +2,8 @@ package com.tminus1010.budgetvalue.reconcile.app.interactor
 
 import androidx.annotation.VisibleForTesting
 import com.tminus1010.budgetvalue._core.app.CategoryAmounts
-import com.tminus1010.budgetvalue.accounts.data.AccountsRepo
 import com.tminus1010.budgetvalue.accounts.app.AccountsAggregate
+import com.tminus1010.budgetvalue.accounts.data.AccountsRepo
 import com.tminus1010.budgetvalue.all.domain.models.TransactionBlock
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.plans.models.Plan
@@ -26,7 +26,7 @@ class ActiveReconciliationDefaultAmountInteractor @Inject constructor(
     transactionsInteractor: TransactionsInteractor,
     accountsRepo: AccountsRepo,
 ) {
-    private val defaultAmount =
+    val activeReconciliationDefaultAmount =
         Observable.combineLatest(
             plansRepo.plans,
             reconciliationsRepo.reconciliations,
@@ -36,8 +36,6 @@ class ActiveReconciliationDefaultAmountInteractor @Inject constructor(
             ::calcActiveReconciliationDefaultAmount
         )
             .replayNonError(1).nonLazy()
-
-    operator fun invoke(): Observable<BigDecimal> = defaultAmount
 
     /**
      * For clarification, take a look at the ManualCalculationsForTests excel sheet.

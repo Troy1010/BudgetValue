@@ -1,16 +1,16 @@
 package com.tminus1010.budgetvalue.history
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue._core.categoryComparator
-import com.tminus1010.budgetvalue._core.app.LocalDatePeriod
-import com.tminus1010.budgetvalue._core.middleware.Rx
-import com.tminus1010.budgetvalue._core.data.repos.CurrentDatePeriodRepo
 import com.tminus1010.budgetvalue._core.app.DatePeriodService
+import com.tminus1010.budgetvalue._core.app.LocalDatePeriod
+import com.tminus1010.budgetvalue._core.categoryComparator
+import com.tminus1010.budgetvalue._core.data.repos.CurrentDatePeriodRepo
+import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue.budgeted.BudgetedInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
+import com.tminus1010.budgetvalue.reconcile.app.convenience_service.ActiveReconciliationDefaultAmount
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
-import com.tminus1010.budgetvalue.reconcile.app.interactor.ActiveReconciliationDefaultAmountInteractor
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.rx.nonLazy
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
@@ -23,7 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HistoryVM @Inject constructor(
     transactionsInteractor: TransactionsInteractor,
-    activeReconciliationDefaultAmountInteractor: ActiveReconciliationDefaultAmountInteractor,
+    activeReconciliationDefaultAmount: ActiveReconciliationDefaultAmount,
     budgetedInteractor: BudgetedInteractor,
     private val datePeriodService: DatePeriodService,
     private val currentDatePeriodRepo: CurrentDatePeriodRepo,
@@ -46,7 +46,7 @@ class HistoryVM @Inject constructor(
 
 
     val historyVMItems =
-        Rx.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans, activeReconciliationDefaultAmountInteractor(), reconciliationRepo.activeReconciliationCAs, transactionsInteractor.transactionBlocks, budgetedInteractor.budgeted)
+        Rx.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans, activeReconciliationDefaultAmount, reconciliationRepo.activeReconciliationCAs, transactionsInteractor.transactionBlocks, budgetedInteractor.budgeted)
             .observeOn(Schedulers.computation())
             .throttleLatest(500, TimeUnit.MILLISECONDS)
             .map { (reconciliations, plans, activeReconciliationDefaultAmount, activeReconciliationCAs, transactionBlocks, budgeted) ->
