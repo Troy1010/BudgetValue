@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.all.presentation
 
-import com.tminus1010.budgetvalue.all.framework.extensions.easyCapitalize
+import com.tminus1010.budgetvalue._core.all.extensions.easyCapitalize
 
 enum class SelectableDuration {
     BY_WEEK, BY_MONTH, BY_3_MONTHS, BY_6_MONTHS, BY_YEAR, FOREVER;
