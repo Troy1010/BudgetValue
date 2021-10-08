@@ -2,13 +2,12 @@ package com.tminus1010.budgetvalue.reconcile.app.interactor
 
 import com.tminus1010.budgetvalue._core.all.extensions.isZero
 import com.tminus1010.budgetvalue.accounts.data.AccountsRepo
-import com.tminus1010.budgetvalue.all.domain.models.ReconciliationToDo
+import com.tminus1010.budgetvalue.reconcile.app.ReconciliationToDo
 import com.tminus1010.budgetvalue.budgeted.BudgetedInteractor
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
-import com.tminus1010.tmcommonkotlin.rx.extensions.doLogx
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Observable
 import java.util.concurrent.TimeUnit

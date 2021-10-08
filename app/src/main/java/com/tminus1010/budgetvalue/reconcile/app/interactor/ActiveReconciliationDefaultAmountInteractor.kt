@@ -4,7 +4,7 @@ import androidx.annotation.VisibleForTesting
 import com.tminus1010.budgetvalue._core.app.CategoryAmounts
 import com.tminus1010.budgetvalue.accounts.app.AccountsAggregate
 import com.tminus1010.budgetvalue.accounts.data.AccountsRepo
-import com.tminus1010.budgetvalue.all.domain.models.TransactionBlock
+import com.tminus1010.budgetvalue.transactions.app.TransactionBlock
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.plans.models.Plan
 import com.tminus1010.budgetvalue.reconcile.app.Reconciliation

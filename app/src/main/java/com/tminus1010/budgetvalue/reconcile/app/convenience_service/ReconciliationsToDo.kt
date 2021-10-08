@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.reconcile.app.convenience_service
 
 import com.tminus1010.budgetvalue.reconcile.app.interactor.ReconciliationsToDoInteractor
-import com.tminus1010.budgetvalue.all.domain.models.ReconciliationToDo
+import com.tminus1010.budgetvalue.reconcile.app.ReconciliationToDo
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observer
 import javax.inject.Inject

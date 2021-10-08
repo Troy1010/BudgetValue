@@ -11,7 +11,7 @@ import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemMon
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTextViewRB
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTitledDividerRB
 import com.tminus1010.budgetvalue._core.presentation.model.CategoryAmountVMItem
-import com.tminus1010.budgetvalue.all.domain.models.ReconciliationToDo
+import com.tminus1010.budgetvalue.reconcile.app.ReconciliationToDo
 import com.tminus1010.budgetvalue.all.presentation.models.ValidatedStringVMItem
 import com.tminus1010.budgetvalue.databinding.ItemTmTableViewBinding
 import com.tminus1010.budgetvalue.reconcile.presentation.PlanReconciliationVM

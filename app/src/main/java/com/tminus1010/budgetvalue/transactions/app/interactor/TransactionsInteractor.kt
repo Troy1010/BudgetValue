@@ -4,7 +4,7 @@ import com.tminus1010.budgetvalue._core.all.extensions.mapBox
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue._core.app.DatePeriodService
 import com.tminus1010.budgetvalue.importZ.data.LatestDateOfMostRecentImport
-import com.tminus1010.budgetvalue.all.domain.models.TransactionBlock
+import com.tminus1010.budgetvalue.transactions.app.TransactionBlock
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.models.IReplayOrFuture

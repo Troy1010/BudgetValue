@@ -1,5 +1,6 @@
-package com.tminus1010.budgetvalue.all.domain.models
+package com.tminus1010.budgetvalue.reconcile.app
 
+import com.tminus1010.budgetvalue.transactions.app.TransactionBlock
 import com.tminus1010.budgetvalue.plans.models.Plan
 import java.math.BigDecimal
 

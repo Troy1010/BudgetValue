@@ -11,7 +11,7 @@ import com.tminus1010.budgetvalue._core.app.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.all.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.all.extensions.mapBox
 import com.tminus1010.budgetvalue._core.app.CategoryAmounts
-import com.tminus1010.budgetvalue.all.domain.models.TransactionBlock
+import com.tminus1010.budgetvalue.transactions.app.TransactionBlock
 import com.tminus1010.budgetvalue.all.presentation.SelectableDuration
 import com.tminus1010.budgetvalue.all.presentation.UsePeriodType
 import com.tminus1010.budgetvalue.all.presentation.models.PieChartVMItem
