@@ -1,11 +1,15 @@
 package com.tminus1010.budgetvalue.budgeted
 
 import com.tminus1010.budgetvalue._core.all.extensions.flatMapSourceHashMap
+import com.tminus1010.budgetvalue._core.all.extensions.isZero
 import com.tminus1010.budgetvalue._core.app.CategoryAmounts
 import com.tminus1010.budgetvalue._core.framework.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue._core.middleware.Rx
+import com.tminus1010.budgetvalue.accounts.data.AccountsRepo
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
+import com.tminus1010.budgetvalue.reconcile.app.ReconciliationToDo
+import com.tminus1010.budgetvalue.reconcile.app.convenience_service.ReconciliationsToDo
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.core.logx
@@ -13,6 +17,7 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import com.tminus1010.tmcommonkotlin.rx.extensions.doLogx
 import com.tminus1010.tmcommonkotlin.rx.extensions.total
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
+import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Observable
 import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
@@ -24,16 +29,16 @@ class BudgetedInteractor @Inject constructor(
     plansRepo: PlansRepo,
     transactionsInteractor: TransactionsInteractor,
     reconciliationsRepo: ReconciliationsRepo,
+    accountsRepo: AccountsRepo,
 ) {
     val categoryAmounts =
-        Rx.combineLatest(reconciliationsRepo.reconciliations, plansRepo.plans, transactionsInteractor.transactionBlocks, reconciliationsRepo.activeReconciliationCAs)
+        Rx.combineLatest(reconciliationsRepo.reconciliations, plansRepo.plansWithoutActivePlan, transactionsInteractor.transactionBlocks)
             .throttleLatest(1, TimeUnit.SECONDS)
-            .map { (reconciliations, plans, transactionBlocks, activeReconcileCAs) ->
+            .map { (reconciliations, plans, transactionBlocks) ->
                 sequenceOf<Map<Category, BigDecimal>>()
                     .plus(reconciliations.map { it.categoryAmounts })
                     .plus(plans.map { it.categoryAmounts })
                     .plus(transactionBlocks.map { it.categoryAmounts })
-                    .plus(activeReconcileCAs)
                     .fold(CategoryAmounts()) { acc, map -> acc.addTogether(map) }
             }
             .replayNonError(1)
@@ -46,17 +51,33 @@ class BudgetedInteractor @Inject constructor(
             reconciliations.map { it.totalAmount }.sum().logx("aaa") +
                     plans.map { it.amount }.sum().logx("bbb") +
                     actuals.map { it.amount }.sum().logx("actuals")
-            // plus active reconciliation total?
         }
             .throttleLast(50, TimeUnit.MILLISECONDS)
             .doLogx("totalAmount")
             .replayNonError(1)
+
+    @Deprecated("use budgeted.defaultAmount")
     val defaultAmount =
         Observable.combineLatest(totalAmount, categoryAmountsObservableMap.switchMap { it.values.total() })
         { totalAmount, caTotal -> totalAmount - caTotal.logx("caTotalBudgeted") }
             .doLogx("defaultAmount")
             .replayNonError(1)
     val budgeted =
-        Observable.combineLatest(categoryAmounts, defaultAmount, ::Budgeted)
+        Observable.combineLatest(categoryAmounts, totalAmount, ::Budgeted)
+            .replayNonError(1)
+    val difference =
+        Observable.combineLatest(accountsRepo.accountsAggregate, budgeted)
+        { accountsAggregate, budgeted ->
+            accountsAggregate.total - (budgeted.categoryAmounts.values.sum() - budgeted.defaultAmount)
+        }
+            .replay(1).refCount()
+    val budgetedWithActiveReconciliation =
+        Observable.combineLatest(budgeted, reconciliationsRepo.activeReconciliationCAs, difference)
+        { budgeted, activeReconciliationCAs, difference ->
+            Budgeted(
+                CategoryAmounts(budgeted.categoryAmounts).addTogether(activeReconciliationCAs),
+                budgeted.totalAmount + difference,
+            )
+        }
             .replayNonError(1)
 }

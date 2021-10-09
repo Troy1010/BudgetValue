@@ -1,16 +1,20 @@
 package com.tminus1010.budgetvalue.reconcile.presentation
 
 import androidx.lifecycle.ViewModel
+import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.all.extensions.isZero
 import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
-import com.tminus1010.budgetvalue.reconcile.app.ReconciliationToDo
 import com.tminus1010.budgetvalue._core.presentation.model.ValidatedStringVMItem
 import com.tminus1010.budgetvalue.budgeted.BudgetedInteractor
+import com.tminus1010.budgetvalue.budgeted.presentation.BudgetHeaderPresentationModel
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.reconcile.app.ReconciliationToDo
 import com.tminus1010.budgetvalue.reconcile.app.convenience_service.ReconciliationsToDo
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
+import com.tminus1010.budgetvalue.reconcile.presentation.model.HeaderPresentationModel
 import com.tminus1010.budgetvalue.reconcile.presentation.service.ReconciliationPresentationFactory
+import com.tminus1010.tmcommonkotlin.core.logx
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
@@ -44,27 +48,27 @@ class AccountsReconciliationVM @Inject constructor(
                 .plus(activeReconciliationCAs)
             reconciliationPresentationFactory.getCategoryAmountVMItems(map, onDone = ::userUpdateActiveReconciliationCategoryAmount)
         }
-    private val budgeted =
-        budgetedInteractor.budgeted
+    private val budgetedCAs =
+        budgetedInteractor.budgetedWithActiveReconciliation
             .map { it.categoryAmounts.mapValues { ValidatedStringVMItem(it.value) { BigDecimal.ZERO <= it } } }
     private val activeReconciliationUncategorizedAmount =
         Observable.combineLatest(reconciliationsRepo.activeReconciliationCAs, reconciliationToDo.toObservable())
         { activeReconciliationCAs, reconciliationToDo ->
-            activeReconciliationCAs.values.sum() + reconciliationToDo.difference
+            reconciliationToDo.difference - activeReconciliationCAs.values.sum()
         }
             .map { ValidatedStringVMItem(it, BigDecimal::isZero) }
 
-    // # State
+    // # Presentation State
     val recipeGrid =
-        Observable.combineLatest(categoriesInteractor.userCategories, activeReconciliationCAs, budgeted, budgetedInteractor.defaultAmount, activeReconciliationUncategorizedAmount)
-        { categories, activeReconciliationCAs, budgeted, budgetedDefaultAmount, activeReconciliationUncategorizedAmount ->
+        Observable.combineLatest(categoriesInteractor.userCategories, activeReconciliationCAs, budgetedCAs, budgetedInteractor.budgetedWithActiveReconciliation, activeReconciliationUncategorizedAmount)
+        { categories, activeReconciliationCAs, budgetedCAs, budgeted, activeReconciliationUncategorizedAmount ->
             listOf(
                 listOf(
-                    listOf("Categories", "Reconcile", "Budgeted"),
-                    listOf("Default", activeReconciliationUncategorizedAmount, budgetedDefaultAmount.toString())
+                    listOf(HeaderPresentationModel("Categories"), HeaderPresentationModel("Reconcile"), BudgetHeaderPresentationModel("Budgeted", budgeted.totalAmount.toString()) ),
+                    listOf("Default", activeReconciliationUncategorizedAmount, budgeted.defaultAmount.logx("qqq(defaultAmount").toString())
                 ),
                 categories.map {
-                    listOf(it.name, activeReconciliationCAs[it], budgeted[it])
+                    listOf(it.name, activeReconciliationCAs[it], budgetedCAs[it])
                 }
             ).flatten()
         }

@@ -12,6 +12,7 @@ import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTex
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTitledDividerRB
 import com.tminus1010.budgetvalue._core.presentation.model.CategoryAmountVMItem
 import com.tminus1010.budgetvalue._core.presentation.model.ValidatedStringVMItem
+import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe
 import com.tminus1010.budgetvalue.databinding.ItemTmTableViewBinding
 import com.tminus1010.budgetvalue.reconcile.presentation.AnytimeReconciliationVM
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,6 +35,7 @@ class AnytimeReconciliationSubFrag : Fragment(R.layout.item_tm_table_view) {
                             is String -> itemTextViewRB().create(it)
                             is ValidatedStringVMItem -> itemTextViewRB().create(it)
                             is CategoryAmountVMItem -> itemMoneyEditTextRF().create(it)
+                            is IHasToViewItemRecipe -> it.toViewItemRecipe(context)
                             else -> error("Unhandled:$it")
                         }
                     }

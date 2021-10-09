@@ -47,7 +47,6 @@ class ReconciliationsToDoInteractor @Inject constructor(
             val difference = accountsAggregate.total - (budgeted.categoryAmounts.values.sum() - budgeted.defaultAmount)
             Box(if (difference.isZero) null else ReconciliationToDo.Accounts(difference))
         }
-            .doOnNext { logz("difference:${it.first?.difference}") }
             .replay(1).refCount()
 
     val reconciliationsToDo =

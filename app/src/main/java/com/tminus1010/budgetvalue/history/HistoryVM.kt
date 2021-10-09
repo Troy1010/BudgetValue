@@ -46,10 +46,10 @@ class HistoryVM @Inject constructor(
 
 
     val historyVMItems =
-        Rx.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans, activeReconciliationDefaultAmount, reconciliationRepo.activeReconciliationCAs, transactionsInteractor.transactionBlocks, budgetedInteractor.budgeted)
+        Rx.combineLatest(reconciliationRepo.reconciliations, plansRepo.plansWithoutActivePlan, transactionsInteractor.transactionBlocks, budgetedInteractor.budgeted)
             .observeOn(Schedulers.computation())
             .throttleLatest(500, TimeUnit.MILLISECONDS)
-            .map { (reconciliations, plans, activeReconciliationDefaultAmount, activeReconciliationCAs, transactionBlocks, budgeted) ->
+            .map { (reconciliations, plans, transactionBlocks, budgeted) ->
                 // # Define blocks
                 val blockPeriods = sortedSetOf<LocalDatePeriod>(compareBy { it.startDate })
                 transactionBlocks?.forEach { if (!datePeriodService.isDatePeriodValid(it.datePeriod!!)) error("datePeriod was not valid:${it.datePeriod}") }
@@ -68,15 +68,6 @@ class HistoryVM @Inject constructor(
                         plans?.filter { it.localDatePeriod.startDate in blockPeriod }
                             ?.let { it.map { HistoryVMItem.PlanVMItem(it, currentDatePeriodRepo, plansRepo) } },
                     ).flatten().also { historyColumnDatas.addAll(it) }
-                }
-                // ## Add Active Reconciliation
-                if (activeReconciliationCAs != null && activeReconciliationDefaultAmount != null) {
-                    historyColumnDatas.add(
-                        HistoryVMItem.ActiveReconciliationVMItem(
-                            activeReconciliationCAs,
-                            activeReconciliationDefaultAmount,
-                        )
-                    )
                 }
                 // ## Add Budgeted
                 if (budgeted != null) historyColumnDatas.add(HistoryVMItem.BudgetedVMItem(budgeted))

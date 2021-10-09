@@ -18,6 +18,10 @@ class PlansRepo @Inject constructor(
         miscDAO.fetchPlans().subscribeOn(Schedulers.io())
             .map { it.map { Plan.fromDTO(it, categoryAmountsConverter) } }
 
+    val plansWithoutActivePlan: Observable<List<Plan>> =
+        plans
+            .map { it.drop(1) }
+
     fun pushPlan(plan: Plan): Completable =
         miscDAO.add(plan.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
 
