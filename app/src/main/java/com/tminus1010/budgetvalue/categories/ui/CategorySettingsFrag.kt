@@ -66,7 +66,7 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
             if (isForNewCategory) null
             else ButtonVMItem(
                 title = "Delete",
-                userClick = {
+                onClick = {
                     AlertDialog.Builder(requireContext())
                         .setMessage("Are you sure you want to delete these categories?\n\t${categorySettingsVM.categoryToPush.value!!.name}")
                         .setPositiveButton("Yes") { _, _ ->
@@ -79,7 +79,7 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
             ),
             ButtonVMItem(
                 title = "Done",
-                userClick = { categorySettingsVM.userSaveCategory() }
+                onClick = { categorySettingsVM.userSaveCategory() }
             ),
         ).reversed()
         // # TMTableView

@@ -35,7 +35,6 @@ class ReconciliationHostFrag : Fragment(R.layout.frag_reconciliation_host) {
                         is ReconciliationToDo.Anytime,
                         null -> AccountsReconciliationSubFrag()
                     },
-                    null,
                 )
                 .commitNowAllowingStateLoss()
         }

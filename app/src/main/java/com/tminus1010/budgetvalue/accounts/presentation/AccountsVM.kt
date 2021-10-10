@@ -30,11 +30,11 @@ class AccountsVM @Inject constructor(
         listOfNotNull(
             ButtonVMItem(
                 title = "Import",
-                userClick = navToSelectFile::invoke
+                onClick = navToSelectFile::invoke
             ),
             ButtonVMItem(
                 title = "Add Account",
-                userClick = { accountsRepo.add(Account("", BigDecimal.ZERO)).subscribe() }
+                onClick = { accountsRepo.add(Account("", BigDecimal.ZERO)).subscribe() }
             ),
         )
 }

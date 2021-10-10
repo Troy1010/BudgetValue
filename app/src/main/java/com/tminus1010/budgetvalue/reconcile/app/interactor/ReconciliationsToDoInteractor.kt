@@ -58,38 +58,4 @@ class ReconciliationsToDoInteractor @Inject constructor(
             ).flatten().filterNotNull()
         }
             .replay(1).refCount()
-
-//        Observable.just(
-//            listOf(
-//                ReconciliationToDo.PlanZ(
-//                    Plan(
-//                        LocalDatePeriod(LocalDate.of(2020, 1, 1), LocalDate.of(2020, 2, 1)),
-//                        BigDecimal("800"),
-//                        mapOf(
-//                            AppInit.initCategories[0] to BigDecimal("40"),
-//                            AppInit.initCategories[1] to BigDecimal("24"),
-//                            AppInit.initCategories[2] to BigDecimal("41"),
-//                        )
-//                    ),
-//                    TransactionBlock(
-//                        listOf(
-//                            Transaction(
-//                                LocalDate.of(2020, 1, 5),
-//                                "Zoop",
-//                                BigDecimal("70"),
-//                                mapOf(
-//                                    AppInit.initCategories[0] to BigDecimal("35"),
-//                                    AppInit.initCategories[1] to BigDecimal("35"),
-//                                ),
-//                                LocalDate.of(2020, 3, 1),
-//                                "156835"
-//                            )
-//                        ),
-//                        LocalDatePeriod(LocalDate.of(2020, 1, 1), LocalDate.of(2020, 2, 1))
-//                    )
-//                ),
-//                ReconciliationToDo.Accounts,
-//                ReconciliationToDo.Anytime,
-//            )
-//        )
 }

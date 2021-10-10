@@ -27,7 +27,7 @@ class TransactionsVM @Inject constructor(
     val buttons = listOf(
         ButtonVMItem(
             title = "Clear",
-            userClick = userTryClearTransactionHistory::onNext2
+            onClick = userTryClearTransactionHistory::onNext2
         )
     )
 

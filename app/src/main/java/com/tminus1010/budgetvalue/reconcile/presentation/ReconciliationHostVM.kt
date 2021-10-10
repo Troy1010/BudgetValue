@@ -16,6 +16,7 @@ class ReconciliationHostVM @Inject constructor(
     reconciliationsToDo: ReconciliationsToDo,
     saveActiveReconciliationInteractor: SaveActiveReconciliationInteractor,
 ) : ViewModel() {
+    // # User Intents
     // # Presentation State
     val currentReconciliationToDo =
         reconciliationsToDo.mapBox { it.firstOrNull() }
@@ -40,7 +41,7 @@ class ReconciliationHostVM @Inject constructor(
         listOf(
             ButtonVMItem(
                 title = "Save",
-                userClick = saveActiveReconciliationInteractor.saveActiveReconiliation::subscribe
+                onClick = saveActiveReconciliationInteractor.saveActiveReconiliation::subscribe
             )
         )
 }

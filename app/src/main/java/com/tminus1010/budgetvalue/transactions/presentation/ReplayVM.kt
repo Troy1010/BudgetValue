@@ -112,15 +112,15 @@ class ReplayVM @Inject constructor(
     val buttons = listOf(
         ButtonVMItem(
             title = "Delete Replay",
-            userClick = { deleteReplayDialogBox.onNext(Unit) }
+            onClick = { deleteReplayDialogBox.onNext(Unit) }
         ),
         ButtonVMItem(
             title = "Add Search Text",
-            userClick = { navToSelectTransactionName.onNext(Unit) }
+            onClick = { navToSelectTransactionName.onNext(Unit) }
         ),
         ButtonVMItem(
             title = "Save Replay",
-            userClick = { userSaveReplay(replay.value!!.name) }
+            onClick = { userSaveReplay(replay.value!!.name) }
         ),
     ).reversed()
 }

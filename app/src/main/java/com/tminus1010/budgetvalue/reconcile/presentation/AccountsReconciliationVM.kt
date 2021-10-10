@@ -52,7 +52,7 @@ class AccountsReconciliationVM @Inject constructor(
                         CategoryAmountPresentationModel(it, activeReconciliation.categoryAmounts[it], ::userUpdateActiveReconciliationCategoryAmount),
                         AmountPresentationModel(budgetedWithActiveReconciliation.categoryAmounts[it]) { it >= BigDecimal.ZERO },
                     )
-                }
+                },
             ).flatten()
         }
     val dividerMap =
