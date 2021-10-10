@@ -9,19 +9,21 @@ sealed class CategoryAmountsAndTotal {
     abstract val total: BigDecimal
     abstract val defaultAmount: BigDecimal
 
-    class FromTotal(
+    open class FromTotal(
         override val categoryAmounts: CategoryAmounts,
         override val total: BigDecimal,
     ) : CategoryAmountsAndTotal() {
         constructor(categoryAmounts: Map<Category, BigDecimal>, total: BigDecimal) : this(CategoryAmounts(categoryAmounts), total)
+
         override val defaultAmount by lazy { categoryAmounts.defaultAmount(total) }
     }
 
-    class FromDefaultAmount(
+    open class FromDefaultAmount(
         override val categoryAmounts: CategoryAmounts,
         override val defaultAmount: BigDecimal,
     ) : CategoryAmountsAndTotal() {
         constructor(categoryAmounts: Map<Category, BigDecimal>, total: BigDecimal) : this(CategoryAmounts(categoryAmounts), total)
+
         override val total by lazy { categoryAmounts.total(defaultAmount) }
     }
 }

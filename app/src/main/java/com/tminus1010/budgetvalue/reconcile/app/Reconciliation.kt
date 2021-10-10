@@ -9,12 +9,12 @@ import java.time.LocalDate
 
 data class Reconciliation(
     val localDate: LocalDate,
-    val defaultAmount: BigDecimal,
-    val categoryAmounts: Map<Category, BigDecimal>,
+    override val defaultAmount: BigDecimal,
+    override val categoryAmounts: CategoryAmounts,
     val id: Int = 0
-) {
-    // TODO("Check if this totalAmount calculation is correct")
-    val totalAmount = CategoryAmounts(categoryAmounts).categorizedAmount - defaultAmount
+) : CategoryAmountsAndTotal.FromDefaultAmount(categoryAmounts, defaultAmount) {
+    constructor(localDate: LocalDate, defaultAmount: BigDecimal, categoryAmounts: Map<Category, BigDecimal>, id: Int = 0) : this(localDate, defaultAmount, CategoryAmounts(categoryAmounts), id)
+
     fun toDTO(categoryAmountsConverter: CategoryAmountsConverter): ReconciliationDTO =
         ReconciliationDTO(
             localDate = localDate,

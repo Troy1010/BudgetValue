@@ -44,7 +44,7 @@ class BudgetedInteractor @Inject constructor(
     val totalAmount =
         Observable.combineLatest(reconciliationsRepo.reconciliations, plansRepo.plans, transactionsInteractor.transactionBlocks)
         { reconciliations, plans, actuals ->
-            reconciliations.map { it.totalAmount }.sum().logx("aaa") +
+            reconciliations.map { it.total }.sum().logx("aaa") +
                     plans.map { it.amount }.sum().logx("bbb") +
                     actuals.map { it.amount }.sum().logx("actuals")
         }
@@ -66,13 +66,4 @@ class BudgetedInteractor @Inject constructor(
             accountsAggregate.total - budgeted.categoryAmounts.values.sum()
         }
             .replay(1).refCount()
-    val budgetedWithActiveReconciliation =
-        Observable.combineLatest(budgeted, reconciliationsRepo.activeReconciliationCAs, difference, accountsRepo.accountsAggregate)
-        { budgeted, activeReconciliationCAs, difference, accountsAggregate ->
-            Budgeted(
-                CategoryAmounts(budgeted.categoryAmounts).addTogether(activeReconciliationCAs),
-                accountsAggregate.total - budgeted.totalAmount.logx("old_totalAmount"),
-            )
-        }
-            .replayNonError(1)
 }
