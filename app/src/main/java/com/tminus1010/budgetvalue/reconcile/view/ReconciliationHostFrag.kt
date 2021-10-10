@@ -8,8 +8,8 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.all.extensions.bind
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
-import com.tminus1010.budgetvalue.reconcile.app.ReconciliationToDo
 import com.tminus1010.budgetvalue.databinding.FragReconciliationHostBinding
+import com.tminus1010.budgetvalue.reconcile.app.ReconciliationToDo
 import com.tminus1010.budgetvalue.reconcile.presentation.ReconciliationHostVM
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,10 +30,10 @@ class ReconciliationHostFrag : Fragment(R.layout.frag_reconciliation_host) {
                 .replace(
                     R.id.frame,
                     when (it) {
-                        is ReconciliationToDo.Accounts -> AccountsReconciliationSubFrag()
                         is ReconciliationToDo.PlanZ -> PlanReconciliationSubFrag(it)
-                        null,
-                        is ReconciliationToDo.Anytime -> AnytimeReconciliationSubFrag()
+                        is ReconciliationToDo.Accounts,
+                        is ReconciliationToDo.Anytime,
+                        null -> AccountsReconciliationSubFrag()
                     },
                     null,
                 )
