@@ -14,9 +14,13 @@ import javax.inject.Inject
 @HiltViewModel
 class ReconciliationHostVM @Inject constructor(
     reconciliationsToDo: ReconciliationsToDo,
-    saveActiveReconciliationInteractor: SaveActiveReconciliationInteractor,
+    private val saveActiveReconciliationInteractor: SaveActiveReconciliationInteractor,
 ) : ViewModel() {
     // # User Intents
+    fun userSave() {
+        saveActiveReconciliationInteractor.saveActiveReconiliation.subscribe()
+    }
+
     // # Presentation State
     val currentReconciliationToDo =
         reconciliationsToDo.mapBox { it.firstOrNull() }
@@ -41,7 +45,7 @@ class ReconciliationHostVM @Inject constructor(
         listOf(
             ButtonVMItem(
                 title = "Save",
-                onClick = saveActiveReconciliationInteractor.saveActiveReconiliation::subscribe
+                onClick = ::userSave
             )
         )
 }
