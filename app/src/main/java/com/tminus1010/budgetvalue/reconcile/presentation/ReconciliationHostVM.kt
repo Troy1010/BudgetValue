@@ -29,8 +29,8 @@ class ReconciliationHostVM @Inject constructor(
             when (it) {
                 is ReconciliationToDo.Accounts -> "Accounts Reconciliation"
                 is ReconciliationToDo.PlanZ -> "Plan Reconciliation"
-                null,
-                is ReconciliationToDo.Anytime -> "Anytime Reconciliation"
+                is ReconciliationToDo.Anytime,
+                null -> "Anytime Reconciliation"
             }.let { UnformattedString(it) }
         }
     val subTitle =
