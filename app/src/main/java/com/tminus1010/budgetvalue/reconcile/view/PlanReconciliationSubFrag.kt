@@ -10,9 +10,9 @@ import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemEmp
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemMoneyEditTextRF
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTextViewRB
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTitledDividerRB
-import com.tminus1010.budgetvalue._core.presentation.model.CategoryAmountVMItem
+import com.tminus1010.budgetvalue._core.presentation.model.CategoryAmountPresentationModel
 import com.tminus1010.budgetvalue.reconcile.app.ReconciliationToDo
-import com.tminus1010.budgetvalue._core.presentation.model.ValidatedStringVMItem
+import com.tminus1010.budgetvalue._core.presentation.model.AmountPresentationModel
 import com.tminus1010.budgetvalue.databinding.ItemTmTableViewBinding
 import com.tminus1010.budgetvalue.reconcile.presentation.PlanReconciliationVM
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,8 +37,8 @@ class PlanReconciliationSubFrag : Fragment(R.layout.item_tm_table_view) {
                         when (it) {
                             null -> itemEmptyRF().create(hasHighlight = true)
                             is String -> itemTextViewRB().create(it)
-                            is ValidatedStringVMItem -> itemTextViewRB().create(it)
-                            is CategoryAmountVMItem -> itemMoneyEditTextRF().create(it)
+                            is AmountPresentationModel -> itemTextViewRB().create(it)
+                            is CategoryAmountPresentationModel -> itemMoneyEditTextRF().create(it)
                             else -> error("Unhandled:$it")
                         }
                     }

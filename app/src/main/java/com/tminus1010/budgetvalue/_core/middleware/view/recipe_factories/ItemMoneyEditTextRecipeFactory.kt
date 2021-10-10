@@ -8,7 +8,7 @@ import com.tminus1010.budgetvalue._core.all.extensions.easyText
 import com.tminus1010.budgetvalue._core.middleware.view.onDone
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.IViewItemRecipe3
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.ViewItemRecipe3__
-import com.tminus1010.budgetvalue._core.presentation.model.CategoryAmountVMItem
+import com.tminus1010.budgetvalue._core.presentation.model.CategoryAmountPresentationModel
 import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
 import io.reactivex.rxjava3.core.Observable
 
@@ -37,9 +37,9 @@ class ItemMoneyEditTextRecipeFactory(private val context: Context) {
         }
     }
 
-    fun create(categoryAmountVMItem: CategoryAmountVMItem): IViewItemRecipe3 {
+    fun create(categoryAmountPresentationModel: CategoryAmountPresentationModel): IViewItemRecipe3 {
         return ViewItemRecipe3__(context, inflate) { vb ->
-            categoryAmountVMItem.bind(vb.moneyedittext)
+            categoryAmountPresentationModel.bind(vb.moneyedittext)
         }
     }
 }

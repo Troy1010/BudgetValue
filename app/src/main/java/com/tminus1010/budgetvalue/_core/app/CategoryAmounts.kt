@@ -42,12 +42,21 @@ data class CategoryAmounts constructor(private val map: Map<Category, BigDecimal
     }
 
     /**
-     * A [totalAmount] is how much the Transaction/Plan/whatever has in total.
+     * A [total] is how much the Transaction/Plan/whatever has in total.
      * The [categorizedAmount] is how much is categorized.
      * The difference is put into [defaultAmount]
      */
-    fun defaultAmount(totalAmount: BigDecimal): BigDecimal {
-        return totalAmount - categorizedAmount
+    fun defaultAmount(total: BigDecimal): BigDecimal {
+        return total - categorizedAmount
+    }
+
+    /**
+     * A [total] is how much the Transaction/Plan/whatever has in total.
+     * The [categorizedAmount] is how much is categorized.
+     * The difference is put into [defaultAmount]
+     */
+    fun total(defaultAmount: BigDecimal): BigDecimal {
+        return categorizedAmount + defaultAmount
     }
 
     val categorizedAmount by lazy {

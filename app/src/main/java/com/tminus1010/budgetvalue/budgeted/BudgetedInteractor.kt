@@ -1,15 +1,12 @@
 package com.tminus1010.budgetvalue.budgeted
 
 import com.tminus1010.budgetvalue._core.all.extensions.flatMapSourceHashMap
-import com.tminus1010.budgetvalue._core.all.extensions.isZero
 import com.tminus1010.budgetvalue._core.app.CategoryAmounts
 import com.tminus1010.budgetvalue._core.framework.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue._core.middleware.Rx
 import com.tminus1010.budgetvalue.accounts.data.AccountsRepo
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
-import com.tminus1010.budgetvalue.reconcile.app.ReconciliationToDo
-import com.tminus1010.budgetvalue.reconcile.app.convenience_service.ReconciliationsToDo
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.core.logx
@@ -17,7 +14,6 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import com.tminus1010.tmcommonkotlin.rx.extensions.doLogx
 import com.tminus1010.tmcommonkotlin.rx.extensions.total
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
-import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Observable
 import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
@@ -59,24 +55,23 @@ class BudgetedInteractor @Inject constructor(
     @Deprecated("use budgeted.defaultAmount")
     val defaultAmount =
         Observable.combineLatest(totalAmount, categoryAmountsObservableMap.switchMap { it.values.total() })
-        { totalAmount, caTotal -> totalAmount - caTotal.logx("caTotalBudgeted") }
-            .doLogx("defaultAmount")
+        { totalAmount, caTotal -> totalAmount - caTotal }
             .replayNonError(1)
     val budgeted =
-        Observable.combineLatest(categoryAmounts, totalAmount, ::Budgeted)
+        Observable.combineLatest(categoryAmounts, totalAmount.doLogx("totalAmount"), ::Budgeted)
             .replayNonError(1)
     val difference =
         Observable.combineLatest(accountsRepo.accountsAggregate, budgeted)
         { accountsAggregate, budgeted ->
-            accountsAggregate.total - (budgeted.categoryAmounts.values.sum() - budgeted.defaultAmount)
+            accountsAggregate.total - budgeted.categoryAmounts.values.sum()
         }
             .replay(1).refCount()
     val budgetedWithActiveReconciliation =
-        Observable.combineLatest(budgeted, reconciliationsRepo.activeReconciliationCAs, difference)
-        { budgeted, activeReconciliationCAs, difference ->
+        Observable.combineLatest(budgeted, reconciliationsRepo.activeReconciliationCAs, difference, accountsRepo.accountsAggregate)
+        { budgeted, activeReconciliationCAs, difference, accountsAggregate ->
             Budgeted(
                 CategoryAmounts(budgeted.categoryAmounts).addTogether(activeReconciliationCAs),
-                budgeted.totalAmount + difference,
+                accountsAggregate.total - budgeted.totalAmount.logx("old_totalAmount"),
             )
         }
             .replayNonError(1)

@@ -84,7 +84,7 @@ sealed class HistoryVMItem {
     class BudgetedVMItem(budgeted: Budgeted) : HistoryVMItem() {
         override val title: String = "Budgeted"
         override val subTitle: Observable<Box<String?>> =
-            Observable.just(Box(null))
+            Observable.just(Box(budgeted.totalAmount.toString()))
         override val categoryAmounts =
             budgeted.categoryAmounts
         override val defaultAmount =

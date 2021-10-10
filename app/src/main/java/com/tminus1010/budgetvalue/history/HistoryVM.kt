@@ -1,36 +1,42 @@
 package com.tminus1010.budgetvalue.history
 
+import android.view.View
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.app.DatePeriodService
 import com.tminus1010.budgetvalue._core.app.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.categoryComparator
 import com.tminus1010.budgetvalue._core.data.repos.CurrentDatePeriodRepo
 import com.tminus1010.budgetvalue._core.middleware.Rx
+import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue.budgeted.BudgetedInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.history.presentation.BasicHeaderWithSubtitlePresentationModel
+import com.tminus1010.budgetvalue.history.presentation.BasicTextPresentationModel
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
-import com.tminus1010.budgetvalue.reconcile.app.convenience_service.ActiveReconciliationDefaultAmount
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
+import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
+import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
+import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.rx.nonLazy
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
 class HistoryVM @Inject constructor(
     transactionsInteractor: TransactionsInteractor,
-    activeReconciliationDefaultAmount: ActiveReconciliationDefaultAmount,
     budgetedInteractor: BudgetedInteractor,
     private val datePeriodService: DatePeriodService,
     private val currentDatePeriodRepo: CurrentDatePeriodRepo,
     private val plansRepo: PlansRepo,
     private val reconciliationRepo: ReconciliationsRepo,
 ) : ViewModel() {
-    val activeCategories: Observable<List<Category>> =
+    private val activeCategories: Observable<List<Category>> =
         Observable.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans, reconciliationRepo.activeReconciliationCAs, transactionsInteractor.transactionBlocks, budgetedInteractor.budgeted)
         { reconciliations, plans, activeReconciliationCAs, transactionBlocks, budgeted ->
             sequenceOf<Set<Category>>()
@@ -45,7 +51,7 @@ class HistoryVM @Inject constructor(
         }
 
 
-    val historyVMItems =
+    private val historyVMItems =
         Rx.combineLatest(reconciliationRepo.reconciliations, plansRepo.plansWithoutActivePlan, transactionsInteractor.transactionBlocks, budgetedInteractor.budgeted)
             .observeOn(Schedulers.computation())
             .throttleLatest(500, TimeUnit.MILLISECONDS)
@@ -76,4 +82,39 @@ class HistoryVM @Inject constructor(
             }
             .replayNonError(1)
             .nonLazy()
+
+    // # Presentation Event
+    val showPopupMenu = PublishSubject.create<Pair<View, List<MenuVMItem>>>()
+
+    // # Presentation State
+    val recipeGrid =
+        Observable.combineLatest(activeCategories, historyVMItems)
+        { activeCategories, historyVMItems ->
+            listOf(
+                listOf(
+                    BasicTextPresentationModel("Categories"),
+                    BasicTextPresentationModel("Default"),
+                    *activeCategories.map {
+                        BasicTextPresentationModel(it.name)
+                    }.toTypedArray()
+                ),
+                *historyVMItems.map { historyVMItem ->
+                    listOf(
+                        BasicHeaderWithSubtitlePresentationModel(historyVMItem.title, historyVMItem.subTitle.value?.first ?: "") { showPopupMenu.onNext(Pair(it, historyVMItem.menuVMItems)) }, // TODO("Duct-tape solution to non-resizing frozen row")
+                        BasicTextPresentationModel(historyVMItem.defaultAmount),
+                        *historyVMItem.amountStrings(activeCategories).map {
+                            BasicTextPresentationModel(it)
+                        }.toTypedArray()
+                    )
+                }.toTypedArray()
+            ).reflectXY()
+        }
+    val dividerMap =
+        activeCategories
+            .map {
+                it.withIndex()
+                    .distinctUntilChangedWith(compareBy { it.value.type })
+                    .associate { it.index to it.value.type.name }
+                    .mapKeys { it.key + 2 } // header row, default row
+            }
 }

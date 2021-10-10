@@ -7,7 +7,7 @@ import com.tminus1010.budgetvalue._core.all.extensions.bind
 import com.tminus1010.budgetvalue._core.all.extensions.getColorByAttr
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.IViewItemRecipe3
 import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.ViewItemRecipe3__
-import com.tminus1010.budgetvalue._core.presentation.model.ValidatedStringVMItem
+import com.tminus1010.budgetvalue._core.presentation.model.AmountPresentationModel
 import com.tminus1010.budgetvalue.databinding.ItemTextViewBinding
 import com.tminus1010.tmcommonkotlin.view.extensions.toPX
 import io.reactivex.rxjava3.core.Observable
@@ -26,10 +26,10 @@ class ItemTextViewRecipeBuilder(private val context: Context) {
     }
 
     @JvmName("createValidatedStringVMItem")
-    fun create(validatedStringVMItem: Observable<ValidatedStringVMItem>?): IViewItemRecipe3 {
+    fun create(amountPresentationModel: Observable<AmountPresentationModel>?): IViewItemRecipe3 {
         return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, styler) { vb ->
-            if (validatedStringVMItem == null) return@ViewItemRecipe3__
-            vb.textview.bind(validatedStringVMItem) {
+            if (amountPresentationModel == null) return@ViewItemRecipe3__
+            vb.textview.bind(amountPresentationModel) {
                 text = it.s
                 setTextColor(
                     context.theme.getColorByAttr(
@@ -43,12 +43,12 @@ class ItemTextViewRecipeBuilder(private val context: Context) {
         }
     }
 
-    fun create(validatedStringVMItem: ValidatedStringVMItem): IViewItemRecipe3 {
+    fun create(amountPresentationModel: AmountPresentationModel): IViewItemRecipe3 {
         return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, styler) { vb ->
-            vb.textview.text = validatedStringVMItem.s
+            vb.textview.text = amountPresentationModel.s
             vb.textview.setTextColor(
                 context.theme.getColorByAttr(
-                    if (validatedStringVMItem.isValid)
+                    if (amountPresentationModel.isValid)
                         R.attr.colorOnBackground
                     else
                         R.attr.colorOnError

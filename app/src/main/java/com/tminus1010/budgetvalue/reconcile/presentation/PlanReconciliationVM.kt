@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.all.extensions.isZero
 import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.reconcile.app.ReconciliationToDo
-import com.tminus1010.budgetvalue._core.presentation.model.ValidatedStringVMItem
+import com.tminus1010.budgetvalue._core.presentation.model.AmountPresentationModel
 import com.tminus1010.budgetvalue.budgeted.BudgetedInteractor
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
@@ -52,11 +52,11 @@ class PlanReconciliationVM @Inject constructor(
 
     private val budgeted =
         budgetedInteractor.budgeted
-            .map { it.categoryAmounts.mapValues { ValidatedStringVMItem(it.value) { BigDecimal.ZERO <= it } } }
+            .map { it.categoryAmounts.mapValues { AmountPresentationModel(it.value) { BigDecimal.ZERO <= it } } }
 
     private val activeReconciliationUncategorizedAmount =
         reconciliationsRepo.activeReconciliationCAs.map { it.values.sum() }
-            .map { ValidatedStringVMItem(it, BigDecimal::isZero) }
+            .map { AmountPresentationModel(it, BigDecimal::isZero) }
 
     // # State
     val recipeGrid =
