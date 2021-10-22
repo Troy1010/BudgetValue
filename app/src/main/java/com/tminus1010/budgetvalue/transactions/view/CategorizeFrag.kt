@@ -22,9 +22,9 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.ui.CategorySettingsFrag
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
-import com.tminus1010.budgetvalue.replay_or_future.CreateFutureFrag
-import com.tminus1010.budgetvalue.replay_or_future.UseReplayFrag
-import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplay
+import com.tminus1010.budgetvalue.replay_or_future.view.CreateFutureFrag
+import com.tminus1010.budgetvalue.replay_or_future.view.UseReplayFrag
+import com.tminus1010.budgetvalue.replay_or_future.domain.BasicReplay
 import com.tminus1010.budgetvalue.transactions.presentation.CategorizeVM
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe

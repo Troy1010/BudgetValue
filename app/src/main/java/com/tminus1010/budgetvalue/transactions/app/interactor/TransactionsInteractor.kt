@@ -7,8 +7,8 @@ import com.tminus1010.budgetvalue.importZ.data.LatestDateOfMostRecentImport
 import com.tminus1010.budgetvalue.transactions.app.TransactionBlock
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
-import com.tminus1010.budgetvalue.replay_or_future.models.IReplayOrFuture
-import com.tminus1010.budgetvalue.replay_or_future.models.TerminationStatus
+import com.tminus1010.budgetvalue.replay_or_future.domain.IReplayOrFuture
+import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
 import com.tminus1010.budgetvalue.transactions.app.TransactionsAggregate
 import com.tminus1010.budgetvalue.transactions.data.TransactionParser
 import com.tminus1010.budgetvalue.transactions.data.repo.TransactionsRepo

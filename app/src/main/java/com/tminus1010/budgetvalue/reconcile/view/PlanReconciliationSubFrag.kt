@@ -11,8 +11,9 @@ import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemMon
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTextViewRB
 import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTitledDividerRB
 import com.tminus1010.budgetvalue._core.presentation.model.CategoryAmountPresentationModel
-import com.tminus1010.budgetvalue.reconcile.app.ReconciliationToDo
+import com.tminus1010.budgetvalue.reconcile.domain.ReconciliationToDo
 import com.tminus1010.budgetvalue._core.presentation.model.AmountPresentationModel
+import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe
 import com.tminus1010.budgetvalue.databinding.ItemTmTableViewBinding
 import com.tminus1010.budgetvalue.reconcile.presentation.PlanReconciliationVM
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,6 +40,7 @@ class PlanReconciliationSubFrag : Fragment(R.layout.item_tm_table_view) {
                             is String -> itemTextViewRB().create(it)
                             is AmountPresentationModel -> itemTextViewRB().create(it)
                             is CategoryAmountPresentationModel -> itemMoneyEditTextRF().create(it)
+                            is IHasToViewItemRecipe -> it.toViewItemRecipe(context)
                             else -> error("Unhandled:$it")
                         }
                     }

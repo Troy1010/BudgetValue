@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue
 
 import com.tminus1010.budgetvalue.app_init.AppInteractor
-import com.tminus1010.budgetvalue.reconcile.app.Reconciliation
+import com.tminus1010.budgetvalue.reconcile.domain.Reconciliation
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject

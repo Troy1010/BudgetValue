@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue._core.all.extensions.unbox
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
-import com.tminus1010.budgetvalue.replay_or_future.models.IReplay
+import com.tminus1010.budgetvalue.replay_or_future.domain.IReplay
 import com.tminus1010.budgetvalue.transactions.app.interactor.SaveTransactionInteractor
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe

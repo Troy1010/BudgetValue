@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.plans.data
 import com.tminus1010.budgetvalue._core.data.MiscDAO
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.plans.models.Plan
+import com.tminus1010.budgetvalue.plans.domain.Plan
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers

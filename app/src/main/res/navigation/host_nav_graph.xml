@@ -12,7 +12,7 @@
         app:popUpToInclusive="true" />
     <fragment
         android:id="@+id/replaysFrag"
-        android:name="com.tminus1010.budgetvalue.replay_or_future.ReplaysFrag"
+        android:name="com.tminus1010.budgetvalue.replay_or_future.view.ReplaysFrag"
         android:label="ReplaysFrag"
         tools:layout="@layout/frag_replays">
         <action
@@ -31,7 +31,7 @@
         tools:layout="@layout/frag_reconcile" />
     <fragment
         android:id="@+id/planFrag"
-        android:name="com.tminus1010.budgetvalue.plans.ui.PlanFrag"
+        android:name="com.tminus1010.budgetvalue.plans.view.PlanFrag"
         android:label="Plan"
         tools:layout="@layout/frag_plan" />
     <fragment
@@ -82,7 +82,7 @@
                 tools:layout="@layout/frag_transactions" />
             <fragment
                 android:id="@+id/createFutureFrag"
-                android:name="com.tminus1010.budgetvalue.replay_or_future.CreateFutureFrag"
+                android:name="com.tminus1010.budgetvalue.replay_or_future.view.CreateFutureFrag"
                 android:label="CreateFutureFrag"
                 tools:layout="@layout/frag_create_future">
                 <action
@@ -112,7 +112,7 @@
         tools:layout="@layout/frag_transaction" />
     <fragment
         android:id="@+id/futuresReviewFrag"
-        android:name="com.tminus1010.budgetvalue.replay_or_future.FuturesReviewFrag"
+        android:name="com.tminus1010.budgetvalue.replay_or_future.view.FuturesReviewFrag"
         android:label="FuturesReviewFrag"
         tools:layout="@layout/frag_futures_review">
         <action
@@ -121,7 +121,7 @@
     </fragment>
     <fragment
         android:id="@+id/futureDetailsFrag"
-        android:name="com.tminus1010.budgetvalue.replay_or_future.FutureDetailsFrag"
+        android:name="com.tminus1010.budgetvalue.replay_or_future.view.FutureDetailsFrag"
         android:label="FutureDetailsFrag"
         tools:layout="@layout/frag_create_future" />
     <fragment
@@ -136,7 +136,7 @@
         tools:layout="@layout/frag_choose_transaction_desciption_2" />
     <fragment
         android:id="@+id/useReplayFrag"
-        android:name="com.tminus1010.budgetvalue.replay_or_future.UseReplayFrag"
+        android:name="com.tminus1010.budgetvalue.replay_or_future.view.UseReplayFrag"
         android:label="UseReplayFrag"
         tools:layout="@layout/frag_replays" />
     <fragment

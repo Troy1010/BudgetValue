@@ -9,8 +9,10 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.all.extensions.bind
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragReconciliationHostBinding
-import com.tminus1010.budgetvalue.reconcile.app.ReconciliationToDo
+import com.tminus1010.budgetvalue.reconcile.domain.ReconciliationToDo
 import com.tminus1010.budgetvalue.reconcile.presentation.ReconciliationHostVM
+import com.tminus1010.tmcommonkotlin.rx.extensions.observe
+import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,6 +22,8 @@ class ReconciliationHostFrag : Fragment(R.layout.frag_reconciliation_host) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // # Presentation Event
+        reconciliationHostVM.toast.observe(viewLifecycleOwner) { easyToast(it) }
         // # Presentation State
         vb.buttonsview.buttons = reconciliationHostVM.buttons
         vb.tvSubTitle.bind(reconciliationHostVM.subTitle) { text = it.getString(context) }

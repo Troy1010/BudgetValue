@@ -6,8 +6,8 @@ import com.tminus1010.budgetvalue.accounts.app.AccountsAggregate
 import com.tminus1010.budgetvalue.accounts.data.AccountsRepo
 import com.tminus1010.budgetvalue.transactions.app.TransactionBlock
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
-import com.tminus1010.budgetvalue.plans.models.Plan
-import com.tminus1010.budgetvalue.reconcile.app.Reconciliation
+import com.tminus1010.budgetvalue.plans.domain.Plan
+import com.tminus1010.budgetvalue.reconcile.domain.Reconciliation
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum

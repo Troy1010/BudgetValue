@@ -22,7 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ImportFrag : Fragment(R.layout.frag_import) {
-    private val accountsVM: AccountsVM by activityViewModels()
+    private val accountsVM by activityViewModels<AccountsVM>()
     private val vb by viewBinding(FragImportBinding::bind)
     var accounts = emptyList<AccountVMItem>()
         set(value) {

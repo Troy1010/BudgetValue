@@ -10,22 +10,22 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.importZ.view.services.LaunchSelectFile
 import com.tminus1010.budgetvalue._core.all.extensions.unCheckAllMenuItems
+import com.tminus1010.budgetvalue.importZ.view.services.LaunchSelectFile
 import com.tminus1010.budgetvalue._core.middleware.Toaster
 import com.tminus1010.budgetvalue._core.presentation.view_model.HostVM
 import com.tminus1010.budgetvalue._core.presentation_and_view._extensions.easyAlertDialog
 import com.tminus1010.budgetvalue._core.presentation_and_view._extensions.getString
 import com.tminus1010.budgetvalue.accounts.presentation.AccountsVM
 import com.tminus1010.budgetvalue.importZ.data.ImportTransactions
-import com.tminus1010.budgetvalue.plans.data.IsPlanFeatureEnabled
+import com.tminus1010.budgetvalue.plans.app.convenience_service.IsPlanFeatureEnabledUC
 import com.tminus1010.budgetvalue.reconcile.data.IsReconciliationFeatureEnabled
 import com.tminus1010.budgetvalue.app_init.AppInteractor
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.history.HistoryFrag
-import com.tminus1010.budgetvalue.reconcile.app.convenience_service.SetActivePlanFromHistory
-import com.tminus1010.budgetvalue.replay_or_future.FuturesReviewFrag
-import com.tminus1010.budgetvalue.replay_or_future.ReplaysFrag
+import com.tminus1010.budgetvalue.plans.app.convenience_service.SetActivePlanFromHistoryUC
+import com.tminus1010.budgetvalue.replay_or_future.view.FuturesReviewFrag
+import com.tminus1010.budgetvalue.replay_or_future.view.ReplaysFrag
 import com.tminus1010.budgetvalue.transactions.view.TransactionListFrag
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,7 +41,7 @@ class HostActivity : AppCompatActivity() {
     lateinit var appInteractor: AppInteractor
 
     @Inject
-    lateinit var isPlanFeatureEnabled: IsPlanFeatureEnabled
+    lateinit var isPlanFeatureEnabledUC: IsPlanFeatureEnabledUC
 
     @Inject
     lateinit var isReconciliationFeatureEnabled: IsReconciliationFeatureEnabled
@@ -50,7 +50,7 @@ class HostActivity : AppCompatActivity() {
     lateinit var toaster: Toaster
 
     @Inject
-    lateinit var setActivePlanFromHistory: SetActivePlanFromHistory
+    lateinit var setActivePlanFromHistoryUC: SetActivePlanFromHistoryUC
 
     @Inject
     lateinit var importTransactions: ImportTransactions
@@ -72,8 +72,8 @@ class HostActivity : AppCompatActivity() {
         vb.bottomNavigation.selectedItemId = R.id.reviewFrag
         // # Events
         accountsVM.navToSelectFile.observe(this) { launchSelectFile(this) }
-        isPlanFeatureEnabled.onChangeToTrue.observe(this) {
-            setActivePlanFromHistory.subscribe()
+        isPlanFeatureEnabledUC.onChangeToTrue.observe(this) {
+            setActivePlanFromHistoryUC.subscribe()
             easyAlertDialog(getString(hostVM.levelUpPlan))
         }
         isReconciliationFeatureEnabled.onChangeToTrue.observe(this) {
@@ -85,7 +85,7 @@ class HostActivity : AppCompatActivity() {
         hostVM.navToHistory.observe(this) { HistoryFrag.navTo(nav) }
         hostVM.unCheckAllMenuItems.observe(this) { vb.bottomNavigation.menu.unCheckAllMenuItems() }
         // # State
-        isPlanFeatureEnabled.observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }
+        isPlanFeatureEnabledUC.observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }
         isReconciliationFeatureEnabled.observe(this) { vb.bottomNavigation.menu.findItem(R.id.reconciliationHostFrag).isVisible = it }
     }
 

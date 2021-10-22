@@ -3,10 +3,10 @@ package com.tminus1010.budgetvalue.replay_or_future.data
 import com.tminus1010.budgetvalue._core.data.MiscDAO
 import com.tminus1010.budgetvalue.categories.CategoryAmountFormulasConverter
 import com.tminus1010.budgetvalue.categories.ICategoryParser
-import com.tminus1010.budgetvalue.replay_or_future.models.BasicFuture
-import com.tminus1010.budgetvalue.replay_or_future.models.IFuture
-import com.tminus1010.budgetvalue.replay_or_future.models.TerminationStatus
-import com.tminus1010.budgetvalue.replay_or_future.models.TotalFuture
+import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture
+import com.tminus1010.budgetvalue.replay_or_future.domain.IFuture
+import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
+import com.tminus1010.budgetvalue.replay_or_future.domain.TotalFuture
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers

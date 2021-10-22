@@ -7,7 +7,7 @@ import com.tminus1010.budgetvalue._core.app.CategoryAmounts
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.reconcile.app.Reconciliation
+import com.tminus1010.budgetvalue.reconcile.domain.Reconciliation
 import com.tminus1010.tmcommonkotlin.core.extensions.associate
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -41,7 +41,7 @@ class ReconciliationsRepo @Inject constructor(
         sharedPrefWrapper.activeReconciliationCAs.subscribeOn(Schedulers.io())
             .map { it.associate { categoryParser.parseCategory(it.key) to it.value.toBigDecimalOrZero() } }
             .map { CategoryAmounts(it) }
-            .replay(1).refCount()!!
+            .replay(1).refCount()
 
     fun clearActiveReconcileCAs(): Completable =
         sharedPrefWrapper.clearActiveReconcileCAs().subscribeOn(Schedulers.io())

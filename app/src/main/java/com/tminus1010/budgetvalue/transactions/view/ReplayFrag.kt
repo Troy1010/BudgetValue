@@ -17,7 +17,7 @@ import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.*
 import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.databinding.FragCategorizeAdvancedBinding
-import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplay
+import com.tminus1010.budgetvalue.replay_or_future.domain.BasicReplay
 import com.tminus1010.budgetvalue.transactions.presentation.ReplayVM
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe

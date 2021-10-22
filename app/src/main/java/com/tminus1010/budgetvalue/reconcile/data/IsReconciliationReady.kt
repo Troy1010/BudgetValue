@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.reconcile.data
 
 import com.tminus1010.budgetvalue.importZ.data.LatestDateOfMostRecentImport
-import com.tminus1010.budgetvalue.plans.data.IsPlanFeatureEnabled
+import com.tminus1010.budgetvalue.plans.app.convenience_service.IsPlanFeatureEnabledUC
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observer
@@ -11,10 +11,10 @@ class IsReconciliationReady @Inject constructor(
     latestDateOfMostRecentImport: LatestDateOfMostRecentImport,
     mostRecentReconciliation: MostRecentReconciliation,
     transactionsInteractor: TransactionsInteractor,
-    isPlanFeatureEnabled: IsPlanFeatureEnabled,
+    isPlanFeatureEnabledUC: IsPlanFeatureEnabledUC,
 ) : Observable<Boolean>() {
     val isReconciliationReady =
-        combineLatest(latestDateOfMostRecentImport, mostRecentReconciliation, transactionsInteractor.spendBlocks, isPlanFeatureEnabled.latestDateOfMostRecentImportWhenPlanFeatureWasEnabled)
+        combineLatest(latestDateOfMostRecentImport, mostRecentReconciliation, transactionsInteractor.spendBlocks, isPlanFeatureEnabledUC.latestDateOfMostRecentImportWhenPlanFeatureWasEnabled)
         { (latestDateOfMostRecentImport), (mostRecentReconciliation), spendBlocks, (latestDateOfMostRecentImportWhenPlanFeatureWasEnabled) ->
             val startDate = mostRecentReconciliation?.localDate ?: latestDateOfMostRecentImportWhenPlanFeatureWasEnabled
             if (latestDateOfMostRecentImport == null || startDate == null)

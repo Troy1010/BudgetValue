@@ -9,9 +9,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
-import com.tminus1010.tmcommonkotlin.core.logx
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
-import com.tminus1010.tmcommonkotlin.rx.extensions.doLogx
 import com.tminus1010.tmcommonkotlin.rx.extensions.total
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import io.reactivex.rxjava3.core.Observable
@@ -44,12 +42,11 @@ class BudgetedInteractor @Inject constructor(
     val totalAmount =
         Observable.combineLatest(reconciliationsRepo.reconciliations, plansRepo.plans, transactionsInteractor.transactionBlocks)
         { reconciliations, plans, actuals ->
-            reconciliations.map { it.total }.sum().logx("aaa") +
-                    plans.map { it.amount }.sum().logx("bbb") +
-                    actuals.map { it.amount }.sum().logx("actuals")
+            reconciliations.map { it.total }.sum() +
+                    plans.map { it.amount }.sum() +
+                    actuals.map { it.amount }.sum()
         }
             .throttleLast(50, TimeUnit.MILLISECONDS)
-            .doLogx("totalAmount")
             .replayNonError(1)
 
     @Deprecated("use budgeted.defaultAmount")
@@ -58,7 +55,7 @@ class BudgetedInteractor @Inject constructor(
         { totalAmount, caTotal -> totalAmount - caTotal }
             .replayNonError(1)
     val budgeted =
-        Observable.combineLatest(categoryAmounts, totalAmount.doLogx("totalAmount"), ::Budgeted)
+        Observable.combineLatest(categoryAmounts, totalAmount, ::Budgeted)
             .replayNonError(1)
     val difference =
         Observable.combineLatest(accountsRepo.accountsAggregate, budgeted)

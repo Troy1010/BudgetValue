@@ -9,9 +9,9 @@ import com.tminus1010.budgetvalue._core.middleware.Toaster
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.ICategoryParser
-import com.tminus1010.budgetvalue.replay_or_future.CategoryAmountFormulaVMItemsBaseVM
+import com.tminus1010.budgetvalue.replay_or_future.presentation.CategoryAmountFormulaVMItemsBaseVM
 import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
-import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplay
+import com.tminus1010.budgetvalue.replay_or_future.domain.BasicReplay
 import com.tminus1010.budgetvalue.transactions.app.interactor.SaveTransactionInteractor
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.budgetvalue.transactions.app.Transaction

@@ -5,9 +5,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.ToJson
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.tminus1010.budgetvalue.categories.models.CategoryType
-import com.tminus1010.budgetvalue.replay_or_future.models.TerminationStatus
-import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
-import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
+import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.reconcile.app.interactor
 
 import com.tminus1010.budgetvalue.accounts.data.AccountsRepo
 import com.tminus1010.budgetvalue.budgeted.BudgetedInteractor
-import com.tminus1010.budgetvalue.reconcile.app.CategoryAmountsAndTotal
+import com.tminus1010.budgetvalue.reconcile.domain.CategoryAmountsAndTotal
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
@@ -17,7 +17,7 @@ class ActiveReconciliationInteractor @Inject constructor(
         { accountsAggregate, budgeted, activeReconciliationCAs ->
             CategoryAmountsAndTotal.FromTotal(
                 activeReconciliationCAs,
-                accountsAggregate.total - budgeted.totalAmount
+                accountsAggregate.total - budgeted.totalAmount,
             )
         }
 }

@@ -13,11 +13,11 @@ import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue._core.view.HostActivity
 import com.tminus1010.budgetvalue.app_init.AppInteractor
 import com.tminus1010.budgetvalue.app_init.AppInitRepo
-import com.tminus1010.budgetvalue.plans.data.IsPlanFeatureEnabled
+import com.tminus1010.budgetvalue.plans.app.convenience_service.IsPlanFeatureEnabledUC
 import com.tminus1010.budgetvalue.reconcile.data.IsReconciliationFeatureEnabled
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
-import com.tminus1010.budgetvalue.replay_or_future.models.TerminationStatus
-import com.tminus1010.budgetvalue.replay_or_future.models.TotalFuture
+import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
+import com.tminus1010.budgetvalue.replay_or_future.domain.TotalFuture
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
@@ -49,7 +49,7 @@ class DevEnv_UnlockedFeatures {
 
     init {
         // TODO("Duct-tape solution b/c partial mocks are difficult")
-        IsPlanFeatureEnabled.isPlanFeatureEnabledOverride = Observable.just(true)
+        IsPlanFeatureEnabledUC.isPlanFeatureEnabledOverride = Observable.just(true)
         IsReconciliationFeatureEnabled.isReconciliationFeatureEnabledOverride = Observable.just(true)
     }
 

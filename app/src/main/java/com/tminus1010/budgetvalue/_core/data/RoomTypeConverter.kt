@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue._core.data
 import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 import com.squareup.moshi.Moshi
-import com.tminus1010.budgetvalue.replay_or_future.models.TerminationStatus
+import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import java.math.BigDecimal

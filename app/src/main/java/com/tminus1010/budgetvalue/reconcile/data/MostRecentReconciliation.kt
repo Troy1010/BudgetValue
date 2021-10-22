@@ -1,8 +1,8 @@
 package com.tminus1010.budgetvalue.reconcile.data
 
 import com.tminus1010.budgetvalue._core.all.extensions.mapBox
-import com.tminus1010.budgetvalue.reconcile.app.ReconciliationAggregate
-import com.tminus1010.budgetvalue.reconcile.app.Reconciliation
+import com.tminus1010.budgetvalue.reconcile.domain.ReconciliationAggregate
+import com.tminus1010.budgetvalue.reconcile.domain.Reconciliation
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observer

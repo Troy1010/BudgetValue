@@ -1,8 +1,8 @@
 package com.tminus1010.budgetvalue.transactions.app
 
-import com.tminus1010.budgetvalue._core.app.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.all.extensions.isZero
 import com.tminus1010.budgetvalue._core.app.CategoryAmounts
+import com.tminus1010.budgetvalue._core.app.LocalDatePeriod
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import com.tminus1010.tmcommonkotlin.tuple.Box
 
@@ -19,7 +19,7 @@ data class TransactionBlock(
     val amount = transactionSet.map { it.amount }.sum()!!
     val size = transactionSet.size
     val defaultAmount get() = amount - categoryAmounts.values.sum()
-    val categoryAmounts: CategoryAmounts =
+    val categoryAmounts =
         transactionSet
             .fold(CategoryAmounts()) { acc, transaction -> acc.addTogether(transaction.categoryAmounts) }
     val spendBlock get() = TransactionBlock(transactionSet.filter { it.isSpend }, datePeriod)

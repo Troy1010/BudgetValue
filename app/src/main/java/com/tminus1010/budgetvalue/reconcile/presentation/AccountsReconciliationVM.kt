@@ -14,7 +14,6 @@ import com.tminus1010.budgetvalue.reconcile.presentation.model.HeaderPresentatio
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
-import java.math.BigDecimal
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,7 +24,7 @@ class AccountsReconciliationVM @Inject constructor(
     activeReconciliationInteractor: ActiveReconciliationInteractor,
 ) : ViewModel() {
     // # User Intents
-    fun userUpdateActiveReconciliationCategoryAmount(category: Category, s: String) {
+    fun userSetCategoryAmount(category: Category, s: String) {
         reconciliationsRepo.pushActiveReconciliationCA(Pair(category, s.toMoneyBigDecimal())).subscribe()
     }
 
@@ -43,14 +42,14 @@ class AccountsReconciliationVM @Inject constructor(
                     listOf(
                         "Default",
                         activeReconciliation.defaultAmount.toString(),
-                        AmountPresentationModel(budgetedWithActiveReconciliation.defaultAmount) { it >= BigDecimal.ZERO },
+                        AmountPresentationModel(budgetedWithActiveReconciliation.defaultAmount) { budgetedWithActiveReconciliation.isDefaultAmountValid },
                     ),
                 ),
-                categories.map {
+                categories.map { category ->
                     listOf(
-                        it.name,
-                        CategoryAmountPresentationModel(it, activeReconciliation.categoryAmounts[it], ::userUpdateActiveReconciliationCategoryAmount),
-                        AmountPresentationModel(budgetedWithActiveReconciliation.categoryAmounts[it]) { it >= BigDecimal.ZERO },
+                        category.name,
+                        CategoryAmountPresentationModel(category, activeReconciliation.categoryAmounts[category], ::userSetCategoryAmount),
+                        AmountPresentationModel(budgetedWithActiveReconciliation.categoryAmounts[category]) { budgetedWithActiveReconciliation.isValid(category) },
                     )
                 },
             ).flatten()
