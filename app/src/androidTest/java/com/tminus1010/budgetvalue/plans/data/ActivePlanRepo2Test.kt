@@ -10,6 +10,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.tmcommonkotlin.core.logx
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.util.concurrent.TimeUnit
@@ -29,6 +30,17 @@ class ActivePlanRepo2Test {
                 MiscModule.provideMoshi()
             )
         )
+    }
+
+    @Test
+    fun nullWhenNoCreate() {
+        // # When
+        activePlanRepo.activePlan
+            .take(1)
+            .test()
+            .apply { await(5, TimeUnit.SECONDS) }
+        // # Then
+        assertNull(activePlanRepo.activePlan.value.logx("result"))
     }
 
     @Test
