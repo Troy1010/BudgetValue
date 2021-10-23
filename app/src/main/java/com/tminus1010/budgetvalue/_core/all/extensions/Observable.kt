@@ -1,9 +1,9 @@
 package com.tminus1010.budgetvalue._core.all.extensions
 
-import com.tminus1010.budgetvalue._core.framework.ColdObservable
-import com.tminus1010.budgetvalue._core.framework.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue._core.app.CategoryAmountFormulas
 import com.tminus1010.budgetvalue._core.app.CategoryAmounts
+import com.tminus1010.budgetvalue._core.framework.ColdObservable
+import com.tminus1010.budgetvalue._core.framework.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
@@ -73,3 +73,7 @@ fun <T : Any> Observable<T>.cold(): ColdObservable<T> =
 
 fun <T : Any, D : Any> Observable<T>.mapBox(lambda: (T) -> D?): Observable<Box<D?>> =
     map { Box(lambda(it)) }
+
+fun <T : Any, D : Any> Observable<T>.mapNotNull(lambda: (T) -> D?): Observable<D> {
+    return this.flatMap { lambda(it)?.let { Observable.just(it) } ?: Observable.empty() }
+}

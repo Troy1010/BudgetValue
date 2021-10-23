@@ -1,15 +1,20 @@
 package com.tminus1010.budgetvalue.reconcile.app.interactor
 
 import com.tminus1010.budgetvalue._core.all.extensions.isZero
+import com.tminus1010.budgetvalue._core.app.LocalDatePeriod
 import com.tminus1010.budgetvalue.accounts.data.AccountsRepo
 import com.tminus1010.budgetvalue.budgeted.BudgetedInteractor
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
+import com.tminus1010.budgetvalue.plans.domain.Plan
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.reconcile.domain.ReconciliationToDo
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
+import com.tminus1010.tmcommonkotlin.core.logx
 import com.tminus1010.tmcommonkotlin.rx.extensions.doLogx
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Observable
+import java.math.BigDecimal
+import java.time.LocalDate
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -32,16 +37,28 @@ class ReconciliationsToDoInteractor @Inject constructor(
                         reconciliations.find { it.localDate in transactionBlock.datePeriod!! }
                     )
                 }
+                .logx("aaa")
                 .filter { (transactionBlock, plan, reconciliation) ->
-                    plan != null
+                    plan == null
+                            && reconciliation == null
                             && transactionBlock.isFullyImported
                             && transactionBlock.isFullyCategorized
-                            && reconciliation == null
                 }
-                .map { ReconciliationToDo.PlanZ(it.second!!, it.first) }
+                .logx("bbb")
+                .map {
+                    ReconciliationToDo.PlanZ(
+                        Plan(
+                            LocalDatePeriod(
+                                LocalDate.of(2020, 1, 1),
+                                LocalDate.of(2020, 1, 1)
+                            ), BigDecimal.TEN, mapOf()
+                        ),
+                        it.first
+                    )
+                }
         }
             .throttleLast(50, TimeUnit.MILLISECONDS)
-            .doLogx("aaa")
+            .doLogx("www")
 
     private val accountReconciliationsToDo =
         Observable.combineLatest(accountsRepo.accountsAggregate, budgetedInteractor.budgeted)
