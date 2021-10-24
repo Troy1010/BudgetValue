@@ -7,7 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.squareup.moshi.Moshi
 import com.tminus1010.budgetvalue._core.all.extensions.mapNotNull
-import com.tminus1010.budgetvalue._core.app.LocalDatePeriod
+import com.tminus1010.budgetvalue._core.app.DatePeriodService
 import com.tminus1010.budgetvalue._core.data.dataStore
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.plans.data.model.PlanDTO
@@ -27,9 +27,10 @@ class ActivePlanRepo2 constructor(
     private val dataStore: DataStore<Preferences>,
     private val moshi: Moshi,
     private val categoryAmountsConverter: CategoryAmountsConverter,
+    private val datePeriodService: DatePeriodService
 ) {
     @Inject
-    constructor(app: Application, moshi: Moshi, categoryAmountsConverter: CategoryAmountsConverter) : this(app.dataStore, moshi, categoryAmountsConverter)
+    constructor(app: Application, moshi: Moshi, categoryAmountsConverter: CategoryAmountsConverter, datePeriodService: DatePeriodService) : this(app.dataStore, moshi, categoryAmountsConverter, datePeriodService)
 
     private val key = stringPreferencesKey("ActivePlanRepo2")
     private val semaphore = Semaphore(1)
@@ -56,10 +57,7 @@ class ActivePlanRepo2 constructor(
         if (activePlan.value == null)
             update(
                 Plan(
-                    LocalDatePeriod(
-                        LocalDate.now().minusDays(7),
-                        LocalDate.now(),
-                    ),
+                    datePeriodService.getDatePeriod(LocalDate.now()),
                     BigDecimal.ZERO,
                     mapOf()
                 )
