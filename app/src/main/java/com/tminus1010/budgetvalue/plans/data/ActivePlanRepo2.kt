@@ -1,12 +1,14 @@
 package com.tminus1010.budgetvalue.plans.data
 
 import android.app.Application
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.squareup.moshi.Moshi
 import com.tminus1010.budgetvalue._core.all.extensions.mapNotNull
 import com.tminus1010.budgetvalue._core.app.LocalDatePeriod
-import com.tminus1010.budgetvalue.all.data.dataStore
+import com.tminus1010.budgetvalue._core.data.dataStore
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.plans.data.model.PlanDTO
 import com.tminus1010.budgetvalue.plans.domain.Plan
@@ -20,13 +22,15 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import javax.inject.Inject
 
-class ActivePlanRepo2 @Inject constructor(
-    private val app: Application,
+class ActivePlanRepo2 constructor(
+    private val dataStore: DataStore<Preferences>,
     private val moshi: Moshi,
     private val categoryAmountsConverter: CategoryAmountsConverter,
 ) {
-    private val key = stringPreferencesKey("ActivePlanRepo2")
+    @Inject
+    constructor(app: Application, moshi: Moshi, categoryAmountsConverter: CategoryAmountsConverter) : this(app.dataStore, moshi, categoryAmountsConverter)
 
+    private val key = stringPreferencesKey("ActivePlanRepo2")
     fun create() {
         update(
             Plan(
@@ -41,7 +45,7 @@ class ActivePlanRepo2 @Inject constructor(
     }
 
     fun update(plan: Plan) {
-        GlobalScope.launch { app.dataStore.edit { it[key] = moshi.toJson(plan.toDTO(categoryAmountsConverter)) } }
+        GlobalScope.launch { dataStore.edit { it[key] = moshi.toJson(plan.toDTO(categoryAmountsConverter)) } }
     }
 
     fun clearCategoryAmounts() {
@@ -50,7 +54,7 @@ class ActivePlanRepo2 @Inject constructor(
     }
 
     val activePlan =
-        app.dataStore.data.asObservable()
+        dataStore.data.asObservable()
             .mapNotNull { moshi.fromJson<PlanDTO>(it[key])?.let { Plan.fromDTO(it, categoryAmountsConverter) } }
             .distinctUntilChanged()
             .replay(1).autoConnect()

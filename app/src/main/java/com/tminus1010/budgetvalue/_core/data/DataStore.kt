@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.all.data
+package com.tminus1010.budgetvalue._core.data
 
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
