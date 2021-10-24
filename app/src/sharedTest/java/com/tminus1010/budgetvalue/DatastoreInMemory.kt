@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.__core_testing
+package com.tminus1010.budgetvalue
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.MutablePreferences

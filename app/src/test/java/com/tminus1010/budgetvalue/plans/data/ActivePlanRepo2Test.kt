@@ -1,8 +1,7 @@
 package com.tminus1010.budgetvalue.plans.data
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.tminus1010.budgetvalue.Given2
-import com.tminus1010.budgetvalue.__core_testing.DatastoreInMemory
+import com.tminus1010.budgetvalue.Given
+import com.tminus1010.budgetvalue.DatastoreInMemory
 import com.tminus1010.budgetvalue._core.all.dependency_injection.MiscModule
 import com.tminus1010.budgetvalue._core.app.DatePeriodService
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
@@ -16,11 +15,9 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
-@RunWith(AndroidJUnit4::class)
 class ActivePlanRepo2Test {
     lateinit var activePlanRepo: ActivePlanRepo2
 
@@ -33,7 +30,7 @@ class ActivePlanRepo2Test {
                 CategoryAmountsConverter(
                     object : ICategoryParser {
                         override fun parseCategory(categoryName: String): Category {
-                            return Given2.categories.find { it.name == categoryName }!!
+                            return Given.categories.find { it.name == categoryName }!!
                         }
                     },
                     MiscModule.provideMoshi()
@@ -50,7 +47,7 @@ class ActivePlanRepo2Test {
     @Test
     fun update() {
         // # Given
-        val givenCategoryAmounts = mapOf(Given2.categories[0] to BigDecimal.TEN)
+        val givenCategoryAmounts = mapOf(Given.categories[0] to BigDecimal.TEN)
         // # When
         activePlanRepo.update { it.copy(categoryAmounts = givenCategoryAmounts) }
         // # Then
@@ -65,7 +62,7 @@ class ActivePlanRepo2Test {
     @Test
     fun clearCategoryAmounts() {
         // # Given
-        activePlanRepo.update { it.copy(categoryAmounts = mapOf(Given2.categories[0] to BigDecimal.TEN)) }
+        activePlanRepo.update { it.copy(categoryAmounts = mapOf(Given.categories[0] to BigDecimal.TEN)) }
         // # When
         activePlanRepo.clearCategoryAmounts()
         // # Then
