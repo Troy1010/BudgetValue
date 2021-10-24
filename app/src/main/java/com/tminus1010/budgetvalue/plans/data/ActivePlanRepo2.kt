@@ -18,6 +18,7 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx3.asObservable
+import kotlinx.coroutines.sync.Semaphore
 import java.math.BigDecimal
 import java.time.LocalDate
 import javax.inject.Inject
@@ -31,26 +32,18 @@ class ActivePlanRepo2 constructor(
     constructor(app: Application, moshi: Moshi, categoryAmountsConverter: CategoryAmountsConverter) : this(app.dataStore, moshi, categoryAmountsConverter)
 
     private val key = stringPreferencesKey("ActivePlanRepo2")
-    fun create() {
-        update(
-            Plan(
-                LocalDatePeriod(
-                    LocalDate.now().minusDays(7),
-                    LocalDate.now(),
-                ),
-                BigDecimal.ZERO,
-                mapOf()
-            )
-        )
-    }
+    private val semaphore = Semaphore(1)
 
     fun update(plan: Plan) {
-        GlobalScope.launch { dataStore.edit { it[key] = moshi.toJson(plan.toDTO(categoryAmountsConverter)) } }
+        GlobalScope.launch { semaphore.acquire(); dataStore.edit { it[key] = moshi.toJson(plan.toDTO(categoryAmountsConverter)) }; semaphore.release() }
+    }
+
+    fun update(planTransformation: (Plan) -> Plan) {
+        activePlan.take(1).subscribe { update(planTransformation(it)) }
     }
 
     fun clearCategoryAmounts() {
-        activePlan.value
-            ?.also { update(it.copy(categoryAmounts = mapOf())) }
+        update { it.copy(categoryAmounts = mapOf()) }
     }
 
     val activePlan =
@@ -58,4 +51,18 @@ class ActivePlanRepo2 constructor(
             .mapNotNull { moshi.fromJson<PlanDTO>(it[key])?.let { Plan.fromDTO(it, categoryAmountsConverter) } }
             .distinctUntilChanged()
             .replay(1).autoConnect()
+
+    init {
+        if (activePlan.value == null)
+            update(
+                Plan(
+                    LocalDatePeriod(
+                        LocalDate.now().minusDays(7),
+                        LocalDate.now(),
+                    ),
+                    BigDecimal.ZERO,
+                    mapOf()
+                )
+            )
+    }
 }

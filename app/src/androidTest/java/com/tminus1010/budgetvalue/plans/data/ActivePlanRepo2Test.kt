@@ -7,13 +7,12 @@ import com.tminus1010.budgetvalue._core.all.dependency_injection.MiscModule
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.tmcommonkotlin.core.logx
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
@@ -37,25 +36,32 @@ class ActivePlanRepo2Test {
     }
 
     @Test
-    fun nullWhenNoCreate() {
+    fun update() {
+        // # Given
+        val givenCategoryAmounts = mapOf(Given2.categories[0] to BigDecimal.TEN)
         // # When
-        activePlanRepo.activePlan
-            .take(1)
-            .test()
-            .apply { await(3, TimeUnit.SECONDS) }
+        activePlanRepo.update { it.copy(categoryAmounts = givenCategoryAmounts) }
         // # Then
-        assertNull(activePlanRepo.activePlan.value.logx("result"))
-    }
-
-    @Test
-    fun create() {
-        // # When
-        activePlanRepo.create()
         activePlanRepo.activePlan
+            .throttleLast(1, TimeUnit.SECONDS)
             .take(1)
             .test()
             .apply { await(5, TimeUnit.SECONDS) }
+        assertEquals(givenCategoryAmounts, activePlanRepo.activePlan.value!!.categoryAmounts)
+    }
+
+    @Test
+    fun clearCategoryAmounts() {
+        // # Given
+        activePlanRepo.update { it.copy(categoryAmounts = mapOf(Given2.categories[0] to BigDecimal.TEN)) }
+        // # When
+        activePlanRepo.clearCategoryAmounts()
         // # Then
-        assertNotNull(activePlanRepo.activePlan.value.logx("result"))
+        activePlanRepo.activePlan
+            .throttleLast(1, TimeUnit.SECONDS)
+            .take(1)
+            .test()
+            .apply { await(5, TimeUnit.SECONDS) }
+        assertEquals(mapOf<Category, BigDecimal>(), activePlanRepo.activePlan.value!!.categoryAmounts)
     }
 }
