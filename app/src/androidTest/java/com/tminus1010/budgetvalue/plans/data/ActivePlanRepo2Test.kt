@@ -11,19 +11,18 @@ import com.tminus1010.tmcommonkotlin.core.logx
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
-import org.junit.Rule
+import org.junit.Before
 import org.junit.Test
-import org.junit.rules.Timeout
 import org.junit.runner.RunWith
 import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
 class ActivePlanRepo2Test {
-    @get:Rule
-    val timeout = Timeout(5, TimeUnit.SECONDS)
+    lateinit var activePlanRepo: ActivePlanRepo2
 
-    val activePlanRepo by lazy {
-        ActivePlanRepo2(
+    @Before
+    fun before() {
+        activePlanRepo = ActivePlanRepo2(
             DatastoreInMemory(),
             MiscModule.provideMoshi(),
             CategoryAmountsConverter(
@@ -43,7 +42,7 @@ class ActivePlanRepo2Test {
         activePlanRepo.activePlan
             .take(1)
             .test()
-            .apply { await(4, TimeUnit.SECONDS) }
+            .apply { await(3, TimeUnit.SECONDS) }
         // # Then
         assertNull(activePlanRepo.activePlan.value.logx("result"))
     }
@@ -55,7 +54,7 @@ class ActivePlanRepo2Test {
         activePlanRepo.activePlan
             .take(1)
             .test()
-            .await()
+            .apply { await(5, TimeUnit.SECONDS) }
         // # Then
         assertNotNull(activePlanRepo.activePlan.value.logx("result"))
     }
