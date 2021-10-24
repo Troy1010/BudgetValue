@@ -13,6 +13,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Observable
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -74,5 +75,17 @@ class ActivePlanRepo2Test {
             .test()
             .apply { await(5, TimeUnit.SECONDS) }
         assertEquals(mapOf<Category, BigDecimal>(), activePlanRepo.activePlan.value!!.categoryAmounts)
+    }
+
+    @Test
+    fun startWithPlan() {
+        // # When
+        activePlanRepo.activePlan
+            .throttleLast(1, TimeUnit.SECONDS)
+            .take(1)
+            .test()
+            .apply { await(5, TimeUnit.SECONDS) }
+        // # Then
+        assertNotNull(activePlanRepo.activePlan.value)
     }
 }

@@ -27,7 +27,7 @@ class ActivePlanRepo2 constructor(
     private val dataStore: DataStore<Preferences>,
     private val moshi: Moshi,
     private val categoryAmountsConverter: CategoryAmountsConverter,
-    private val datePeriodService: DatePeriodService
+    datePeriodService: DatePeriodService
 ) {
     @Inject
     constructor(app: Application, moshi: Moshi, categoryAmountsConverter: CategoryAmountsConverter, datePeriodService: DatePeriodService) : this(app.dataStore, moshi, categoryAmountsConverter, datePeriodService)
