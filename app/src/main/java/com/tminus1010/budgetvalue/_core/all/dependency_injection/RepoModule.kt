@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import com.tminus1010.budgetvalue._core.SHARED_PREF_FILE_NAME
-import com.tminus1010.budgetvalue._core.data.DB
+import com.tminus1010.budgetvalue._core.data.MiscDB
 import com.tminus1010.budgetvalue._core.data.MiscDAO
 import com.tminus1010.budgetvalue._core.data.UserCategoriesDAO
 import dagger.Module
@@ -26,9 +26,9 @@ object RepoModule {
 
     @Provides
     @Singleton
-    fun providesMyDao(roomDatabase: DB): MiscDAO = roomDatabase.miscDAO()
+    fun providesMyDao(roomDatabase: MiscDB): MiscDAO = roomDatabase.miscDAO()
 
     @Provides
     @Singleton
-    fun providesActiveCategoryDAO(roomDatabase: DB): UserCategoriesDAO = roomDatabase.userCategoriesDAO()
+    fun providesActiveCategoryDAO(miscDB: MiscDB): UserCategoriesDAO = miscDB.userCategoriesDAO()
 }

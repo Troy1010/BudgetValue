@@ -4,12 +4,15 @@ import com.squareup.moshi.Moshi
 import com.tminus1010.budgetvalue.FakeDatastore
 import com.tminus1010.budgetvalue.Given
 import com.tminus1010.budgetvalue._core.app.DatePeriodService
-import com.tminus1010.budgetvalue._core.data.repos.SettingsRepo
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
+import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
+import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.domain.Plan
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import kotlinx.coroutines.Dispatchers
+import io.mockk.every
+import io.mockk.mockk
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -27,10 +30,19 @@ class ActivePlanRepo3Test {
     lateinit var moshi: Moshi
 
     @Inject
-    lateinit var categoryAmountsConverter: CategoryAmountsConverter
-
-    @Inject
     lateinit var datePeriodService: DatePeriodService
+
+    val categoryAmountsConverter by lazy {
+        CategoryAmountsConverter(
+            CategoriesInteractor(
+                mockk {
+                    every { userCategories } returns
+                            Observable.just(listOf(), Given.categories)
+                }
+            ),
+            moshi
+        )
+    }
 
     @Test
     fun anchorDateOffset_default_push() {
@@ -57,7 +69,7 @@ class ActivePlanRepo3Test {
             Plan(
                 datePeriodService.getDatePeriod(LocalDate.now()),
                 BigDecimal.TEN,
-                mapOf()
+                mapOf(Given.categories[0] to BigDecimal("8"))
             )
         // # When
         runBlocking { activePlanRepo.update(givenPlan) }
@@ -69,52 +81,52 @@ class ActivePlanRepo3Test {
         )
     }
 
-//    @Test
-//    fun default_update_clearCategoryAmounts() {
-//        // # Given
-//        hiltAndroidRule.inject()
-//        val activePlanRepo3 =
-//            ActivePlanRepo3(
-//                FakeDatastore(),
-//                moshi,
-//                categoryAmountsConverter,
-//                datePeriodService,
-//            )
-//        // # Then
-//        assertEquals(
-//            Plan(
-//                datePeriodService.getDatePeriod(LocalDate.now()),
-//                BigDecimal.ZERO,
-//                mapOf()
-//            ),
-//            activePlanRepo3.activePlan.value
-//        )
-//        // # Given
-//        val givenPlan =
-//            Plan(
-//                datePeriodService.getDatePeriod(LocalDate.now()),
-//                BigDecimal("11"),
-//                mapOf(Given.categories[0] to BigDecimal("8"))
-//            )
-//        // # When
-//        runBlocking(Dispatchers.IO) { activePlanRepo3.update(givenPlan) }
-//        Thread.sleep(1000)
-//        // # Then
-//        assertEquals(
-//            givenPlan,
-//            activePlanRepo3.activePlan.value
-//        )
-//        // # When
-//        runBlocking { activePlanRepo3.clearCategoryAmounts() }
-//        Thread.sleep(1000)
-//        // # Then
-//        assertEquals(
-//            Plan(
-//                datePeriodService.getDatePeriod(LocalDate.now()),
-//                BigDecimal("11"),
-//                mapOf()
-//            ),
-//            activePlanRepo3.activePlan.value
-//        )
-//    }
+    @Test
+    fun default_update_clearCategoryAmounts() {
+        // # Given
+        hiltAndroidRule.inject()
+        val activePlanRepo3 =
+            ActivePlanRepo3(
+                FakeDatastore(),
+                moshi,
+                categoryAmountsConverter,
+                datePeriodService,
+            )
+        // # Then
+        assertEquals(
+            Plan(
+                datePeriodService.getDatePeriod(LocalDate.now()),
+                BigDecimal.ZERO,
+                mapOf()
+            ),
+            activePlanRepo3.activePlan.value
+        )
+        // # Given
+        val givenPlan =
+            Plan(
+                datePeriodService.getDatePeriod(LocalDate.now()),
+                BigDecimal("11"),
+                mapOf(Given.categories[0] to BigDecimal("8"))
+            )
+        // # When
+        runBlocking { activePlanRepo3.update(givenPlan) }
+        Thread.sleep(1000)
+        // # Then
+        assertEquals(
+            givenPlan,
+            activePlanRepo3.activePlan.value
+        )
+        // # When
+        runBlocking { activePlanRepo3.clearCategoryAmounts() }
+        Thread.sleep(1000)
+        // # Then
+        assertEquals(
+            Plan(
+                datePeriodService.getDatePeriod(LocalDate.now()),
+                BigDecimal("11"),
+                mapOf()
+            ),
+            activePlanRepo3.activePlan.value
+        )
+    }
 }
