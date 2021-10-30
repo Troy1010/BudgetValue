@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.plans.data
 
-import com.tminus1010.budgetvalue.Given
 import com.tminus1010.budgetvalue.FakeDatastore
+import com.tminus1010.budgetvalue.Given
 import com.tminus1010.budgetvalue._core.all.dependency_injection.MiscModule
 import com.tminus1010.budgetvalue._core.app.DatePeriodService
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
@@ -10,7 +10,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import io.mockk.every
 import io.mockk.mockk
-import io.reactivex.rxjava3.core.Observable
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Before
@@ -37,8 +37,8 @@ class ActivePlanRepo2UnitTest {
                 ),
                 DatePeriodService(
                     mockk {
-                        every { anchorDateOffset } returns Observable.just(0L)
-                        every { blockSize } returns Observable.just(14L)
+                        every { anchorDateOffset } returns MutableStateFlow(0L)
+                        every { blockSize } returns MutableStateFlow(14L)
                     }
                 )
             )
