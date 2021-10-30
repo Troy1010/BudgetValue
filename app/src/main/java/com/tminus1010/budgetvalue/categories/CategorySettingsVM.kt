@@ -4,7 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.InvalidCategoryNameException
 import com.tminus1010.budgetvalue._core.all.extensions.nonLazyCache
-import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
+import com.tminus1010.budgetvalue._core.middleware.Rx
+import com.tminus1010.budgetvalue.categories.data.CategoriesRepo2
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.domain.DeleteCategoryFromActiveDomainUC
 import com.tminus1010.budgetvalue.categories.models.Category
@@ -20,13 +21,15 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.rx3.asObservable
 import java.math.BigDecimal
 import javax.inject.Inject
 
 @HiltViewModel
 class CategorySettingsVM @Inject constructor(
     private val deleteCategoryFromActiveDomainUC: DeleteCategoryFromActiveDomainUC,
-    private val categoriesRepo: CategoriesRepo,
+    private val categoriesRepo: CategoriesRepo2,
     private val errorSubject: Subject<Throwable>,
 ) : ViewModel() {
     // # Input
@@ -37,6 +40,7 @@ class CategorySettingsVM @Inject constructor(
         else
             categoriesRepo.userCategories
                 .take(1)
+                .asObservable()
                 .map { it.find { it.name == categoryName }!! }
                 .observe(disposables) { _categoryToPush.onNext(it) }
     }
@@ -73,12 +77,12 @@ class CategorySettingsVM @Inject constructor(
                 categoryToPush.value!!.name.equals(CategoriesInteractor.unrecognizedCategory.name, ignoreCase = true)
             ) throw InvalidCategoryNameException()
         }
-            .andThen(categoriesRepo.hasCategory(categoryToPush.value!!.name))
+            .andThen(Rx.fromSuspend<Boolean> { categoriesRepo.hasCategory(categoryToPush.value!!.name) })
             .flatMapCompletable {
                 if (it)
-                    categoriesRepo.update(categoryToPush.value!!)
+                    Rx.completableFromSuspend { categoriesRepo.update(categoryToPush.value!!) }
                 else
-                    categoriesRepo.push(categoryToPush.value!!)
+                    Rx.completableFromSuspend { categoriesRepo.push(categoryToPush.value!!) }
             }
             .subscribeBy(
                 onComplete = { navigateUp.onNext(Unit) },

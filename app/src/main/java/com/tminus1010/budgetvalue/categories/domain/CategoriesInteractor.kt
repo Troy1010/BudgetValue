@@ -2,19 +2,21 @@ package com.tminus1010.budgetvalue.categories.domain
 
 import com.tminus1010.budgetvalue._core.categoryComparator
 import com.tminus1010.budgetvalue.categories.ICategoryParser
-import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
+import com.tminus1010.budgetvalue.categories.data.CategoriesRepo2
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.models.CategoryType
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.rx3.asObservable
 import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class CategoriesInteractor @Inject constructor(
-    categoriesRepo: CategoriesRepo
+    categoriesRepo: CategoriesRepo2
 ) : ICategoryParser {
     // # Input
     override fun parseCategory(categoryName: String): Category {
@@ -27,6 +29,7 @@ class CategoriesInteractor @Inject constructor(
     val userCategories: BehaviorSubject<List<Category>> =
         categoriesRepo.userCategories
             .map { it.sortedWith(categoryComparator) }
+            .asObservable()
             .toBehaviorSubject(emptyList())
 
     val categories: BehaviorSubject<List<Category>> =

@@ -4,6 +4,9 @@ import com.tminus1010.tmcommonkotlin.tuple.*
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableSource
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.runBlocking
 
 object Rx {
     @Suppress("UNCHECKED_CAST")
@@ -142,4 +145,14 @@ object Rx {
 
     fun merge(vararg completables: Completable?) = Completable.merge(completables.toList().filterNotNull())
     fun merge(completables: List<Completable?>): Completable = merge(*completables.filterNotNull().toTypedArray())
+
+    fun <T> fromSuspend(lambda: suspend () -> T): Single<T> {
+        return Single.fromCallable { runBlocking { lambda() } }
+            .subscribeOn(Schedulers.io())
+    }
+
+    fun completableFromSuspend(lambda: suspend () -> Unit): Completable {
+        return Completable.fromCallable { runBlocking { lambda() } }
+            .subscribeOn(Schedulers.io())
+    }
 }
