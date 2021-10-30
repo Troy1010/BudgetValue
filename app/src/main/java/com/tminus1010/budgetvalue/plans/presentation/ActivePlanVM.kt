@@ -41,6 +41,7 @@ class ActivePlanVM @Inject constructor(
     val expectedIncome = activePlanRepo.expectedIncome
         .map { it.toString() }
         .toState(disposables, errorSubject)
-    val activePlanCAs: Observable<Map<Category, Observable<String>>> = activePlanRepo.activePlanCAs
-        .map { it.mapValues { it.value.map { it.toString() } } }
+    val activePlanCAs: Observable<Map<Category, Observable<String>>> =
+        activePlanRepo.activePlanCAs
+            .map { it.mapValues { it.value.map { it.toString() } } }
 }
