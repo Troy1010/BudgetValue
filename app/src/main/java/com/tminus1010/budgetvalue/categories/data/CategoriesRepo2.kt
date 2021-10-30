@@ -1,38 +1,41 @@
 package com.tminus1010.budgetvalue.categories.data
 
-import com.tminus1010.budgetvalue._core.data.UserCategoriesDAO
+import com.tminus1010.budgetvalue._core.data.MiscDatabase
+import com.tminus1010.budgetvalue._core.data.UserCategoriesDAO2
 import com.tminus1010.budgetvalue.categories.models.Category
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CategoriesRepo2 @Inject constructor(
-    private val userCategoriesDAO: UserCategoriesDAO
+class CategoriesRepo2 constructor(
+    private val userCategoriesDAO2: UserCategoriesDAO2
 ) {
-    val userCategories: Observable<List<Category>> =
-        userCategoriesDAO.fetchUserCategories()
-            .subscribeOn(Schedulers.io())
+    @Inject
+    constructor(miscDatabase: MiscDatabase) : this(miscDatabase.userCategoriesDAO2())
+
+    val userCategories: Flow<List<Category>> =
+        userCategoriesDAO2.fetchUserCategories()
             .map { it.map { Category.fromDTO(it) } }
-            .replay(1).autoConnect()
+            .shareIn(GlobalScope, SharingStarted.WhileSubscribed(), 1)
 
-    fun push(category: Category): Completable =
-        userCategoriesDAO.push(category.toDTO())
-            .subscribeOn(Schedulers.io())
+    suspend fun push(category: Category) {
+        userCategoriesDAO2.push(category.toDTO())
+    }
 
-    fun delete(category: Category): Completable =
-        userCategoriesDAO.delete(category.toDTO())
-            .subscribeOn(Schedulers.io())
+    suspend fun delete(category: Category) {
+        userCategoriesDAO2.delete(category.toDTO())
+    }
 
-    fun update(category: Category): Completable =
-        userCategoriesDAO.update(category.toDTO())
-            .subscribeOn(Schedulers.io())
+    suspend fun update(category: Category) {
+        userCategoriesDAO2.update(category.toDTO())
+    }
 
-    fun hasCategory(categoryName: String): Single<Boolean> =
-        userCategoriesDAO.hasCategory(categoryName)
-            .map { it != 0 }
-            .subscribeOn(Schedulers.io())
+    suspend fun hasCategory(categoryName: String): Boolean {
+        return userCategoriesDAO2.hasCategory(categoryName) != 0
+    }
 }

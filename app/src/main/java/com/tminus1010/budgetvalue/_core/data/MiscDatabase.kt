@@ -18,7 +18,7 @@ import com.tminus1010.budgetvalue.transactions.data.TransactionDTO
     entities = [TransactionDTO::class, AccountDTO::class, ReconciliationDTO::class, PlanDTO::class, CategoryDTO::class, BasicReplayDTO::class, BasicFutureDTO::class, TotalFutureDTO::class],
 //    autoMigrations = [AutoMigration(from = 41, to = 42)]
 )
-abstract class MiscDB : RoomDatabase() {
+abstract class MiscDatabase : RoomDatabase() {
     abstract fun miscDAO(): MiscDAO
     abstract fun userCategoriesDAO(): UserCategoriesDAO
     abstract fun userCategoriesDAO2(): UserCategoriesDAO2
