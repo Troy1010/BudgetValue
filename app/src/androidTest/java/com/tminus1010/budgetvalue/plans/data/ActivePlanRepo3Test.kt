@@ -52,8 +52,7 @@ class ActivePlanRepo3Test {
             ActivePlanRepo3(
                 FakeDatastore(),
                 moshi,
-                categoryAmountsConverter,
-                datePeriodService
+                categoryAmountsConverter
             )
     }
 
@@ -61,17 +60,13 @@ class ActivePlanRepo3Test {
     fun default() = runBlocking {
         // # Then
         assertEquals(
-            Plan(
-                datePeriodService.getDatePeriod(LocalDate.now()),
-                BigDecimal.ZERO,
-                mapOf()
-            ),
+            null,
             activePlanRepo.activePlan.value
         )
     }
 
     @Test
-    fun update1() = runBlocking {
+    fun push() = runBlocking {
         // # Given
         val givenNewPlan =
             Plan(
@@ -80,21 +75,10 @@ class ActivePlanRepo3Test {
                 mapOf(Given.categories[0] to BigDecimal("9"))
             )
         // # When
-        activePlanRepo.update(givenNewPlan)
+        activePlanRepo.push(givenNewPlan)
         Thread.sleep(500) // Why is this necessary..?
         // # Then
         assertEquals(givenNewPlan, activePlanRepo.activePlan.value)
-    }
-
-    @Test
-    fun update2() = runBlocking {
-        // # Given
-        val givenNewAmount = BigDecimal("17")
-        // # When
-        activePlanRepo.update { it.copy(amount = givenNewAmount) }
-        Thread.sleep(500) // Why is this necessary..?
-        // # Then
-        assertEquals(givenNewAmount, activePlanRepo.activePlan.value.amount)
     }
 
     @Test
@@ -106,7 +90,7 @@ class ActivePlanRepo3Test {
                 BigDecimal("11"),
                 mapOf(Given.categories[0] to BigDecimal("9"))
             )
-        activePlanRepo.update(givenNewPlan)
+        activePlanRepo.push(givenNewPlan)
         Thread.sleep(500) // Why is this necessary..?
         // # When
         activePlanRepo.clearCategoryAmounts()
