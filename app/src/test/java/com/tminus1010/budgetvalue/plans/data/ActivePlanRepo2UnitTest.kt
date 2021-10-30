@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.plans.data
 
 import com.tminus1010.budgetvalue.Given
-import com.tminus1010.budgetvalue.DatastoreInMemory
+import com.tminus1010.budgetvalue.FakeDatastore
 import com.tminus1010.budgetvalue._core.all.dependency_injection.MiscModule
 import com.tminus1010.budgetvalue._core.app.DatePeriodService
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
@@ -18,14 +18,14 @@ import org.junit.Test
 import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
-class ActivePlanRepo2Test {
+class ActivePlanRepo2UnitTest {
     lateinit var activePlanRepo: ActivePlanRepo2
 
     @Before
     fun before() {
         activePlanRepo =
             ActivePlanRepo2(
-                DatastoreInMemory(),
+                FakeDatastore(),
                 MiscModule.provideMoshi(),
                 CategoryAmountsConverter(
                     object : ICategoryParser {
