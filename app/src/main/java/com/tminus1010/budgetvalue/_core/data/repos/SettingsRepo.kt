@@ -5,7 +5,10 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -16,7 +19,7 @@ class SettingsRepo @Inject constructor(
     private val anchorDateOffsetKey = stringPreferencesKey("anchorDateOffset")
     private val blockSizeKey = stringPreferencesKey("blockSize")
 
-    val anchorDateOffset: StateFlow<Long> =
+    val anchorDateOffset =
         dataStore.data
             .map { it[anchorDateOffsetKey]?.toLong() ?: ANCHOR_DATE_OFFSET_DEFAULT }
             .distinctUntilChanged()
@@ -31,7 +34,7 @@ class SettingsRepo @Inject constructor(
         }
     }
 
-    val blockSize: StateFlow<Long> =
+    val blockSize =
         dataStore.data
             .map { it[blockSizeKey]?.toLong() ?: BLOCK_SIZE_DEFAULT }
             .distinctUntilChanged()
