@@ -16,7 +16,10 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
+import javax.inject.Singleton
 
+// TODO: This Repo may no longer fit the requirements
+@Singleton
 class ActivePlanRepo3 @Inject constructor(
     private val dataStore: DataStore<Preferences>,
     private val moshi: Moshi,
