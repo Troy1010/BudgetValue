@@ -7,12 +7,12 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 @HiltAndroidTest
-class SettingsRepo2Test {
+class SettingsRepoTest {
 
     @Test
     fun anchorDateOffset_default_push() {
         // # Given
-        val settingsRepo = SettingsRepo2(FakeDatastore())
+        val settingsRepo = SettingsRepo(FakeDatastore())
         // # Then
         assertEquals(0, settingsRepo.anchorDateOffset.value)
         // # When
@@ -25,7 +25,7 @@ class SettingsRepo2Test {
     @Test
     fun blockSize_default_push() {
         // # Given
-        val settingsRepo = SettingsRepo2(FakeDatastore())
+        val settingsRepo = SettingsRepo(FakeDatastore())
         // # Then
         assertEquals(14, settingsRepo.blockSize.value)
         // # When

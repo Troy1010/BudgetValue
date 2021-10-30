@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue._core.app
 
-import com.tminus1010.budgetvalue._core.data.repos.SettingsRepo2
+import com.tminus1010.budgetvalue._core.data.repos.SettingsRepo
 import java.time.LocalDate
 import java.time.Month
 import java.time.temporal.ChronoUnit
@@ -9,7 +9,7 @@ import javax.inject.Singleton
 
 @Singleton
 class DatePeriodService @Inject constructor(
-    private val settingsRepo: SettingsRepo2,
+    private val settingsRepo: SettingsRepo,
 ) {
     private val anchorDay = LocalDate.of(2020, Month.JULY, 1)
 
