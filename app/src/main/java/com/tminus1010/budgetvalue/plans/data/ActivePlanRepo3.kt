@@ -35,7 +35,6 @@ class ActivePlanRepo3 @Inject constructor(
         )
 
     suspend fun update(plan: Plan) {
-        logz("update plan:$plan")
         dataStore.edit { it[key] = moshi.toJson(plan.toDTO(categoryAmountsConverter)).also { logz("qqq:$it") } }
     }
 
@@ -50,9 +49,8 @@ class ActivePlanRepo3 @Inject constructor(
     val activePlan =
         dataStore.data
             .map {
-                moshi.fromJson<PlanDTO>(it[key].also { logz("bbb:$it") })
+                moshi.fromJson<PlanDTO>(it[key])
                     ?.let { Plan.fromDTO(it, categoryAmountsConverter) }
-                    .also { logz("aaa:$it") }
                     ?: default
             }
             .distinctUntilChanged()
