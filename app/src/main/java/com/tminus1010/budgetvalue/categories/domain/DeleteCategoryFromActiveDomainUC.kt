@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.categories.domain
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.middleware.Rx
-import com.tminus1010.budgetvalue.categories.data.CategoriesRepo2
+import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.data.ActivePlanRepo
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
@@ -15,7 +15,7 @@ import javax.inject.Singleton
 
 @Singleton
 open class DeleteCategoryFromActiveDomainUC @Inject constructor(
-    private val categoriesRepo: CategoriesRepo2,
+    private val categoriesRepo: CategoriesRepo,
     private val reconciliationRepo: ReconciliationsRepo,
     private val plansRepo: PlansRepo,
     private val activePlanRepo: ActivePlanRepo,

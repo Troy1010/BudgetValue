@@ -5,7 +5,7 @@ import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.InvalidCategoryNameException
 import com.tminus1010.budgetvalue._core.all.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.middleware.Rx
-import com.tminus1010.budgetvalue.categories.data.CategoriesRepo2
+import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.domain.DeleteCategoryFromActiveDomainUC
 import com.tminus1010.budgetvalue.categories.models.Category
@@ -29,7 +29,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CategorySettingsVM @Inject constructor(
     private val deleteCategoryFromActiveDomainUC: DeleteCategoryFromActiveDomainUC,
-    private val categoriesRepo: CategoriesRepo2,
+    private val categoriesRepo: CategoriesRepo,
     private val errorSubject: Subject<Throwable>,
 ) : ViewModel() {
     // # Input

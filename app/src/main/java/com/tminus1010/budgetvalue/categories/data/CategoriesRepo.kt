@@ -12,7 +12,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CategoriesRepo2 constructor(
+class CategoriesRepo constructor(
     private val userCategoriesDAO2: UserCategoriesDAO2
 ) {
     @Inject

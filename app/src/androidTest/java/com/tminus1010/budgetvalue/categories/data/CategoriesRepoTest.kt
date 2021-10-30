@@ -18,20 +18,20 @@ import org.junit.Test
 import javax.inject.Inject
 
 @HiltAndroidTest
-class CategoriesRepo2Test {
+class CategoriesRepoTest {
     @get:Rule
     var hiltAndroidRule = HiltAndroidRule(this)
 
     @Inject
     lateinit var moshi: Moshi
 
-    lateinit var categoriesRepo: CategoriesRepo2
+    lateinit var categoriesRepo: CategoriesRepo
 
     @Before
     fun before() {
         hiltAndroidRule.inject()
         categoriesRepo =
-            CategoriesRepo2(
+            CategoriesRepo(
                 Room.inMemoryDatabaseBuilder(
                     app,
                     MiscDatabase::class.java,

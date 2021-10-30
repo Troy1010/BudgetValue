@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.categories.domain
 
 import com.tminus1010.budgetvalue._core.categoryComparator
 import com.tminus1010.budgetvalue.categories.ICategoryParser
-import com.tminus1010.budgetvalue.categories.data.CategoriesRepo2
+import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.models.CategoryType
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
@@ -16,7 +16,7 @@ import javax.inject.Singleton
 
 @Singleton
 class CategoriesInteractor @Inject constructor(
-    categoriesRepo: CategoriesRepo2
+    categoriesRepo: CategoriesRepo
 ) : ICategoryParser {
     // # Input
     override fun parseCategory(categoryName: String): Category {
