@@ -52,24 +52,19 @@ class ActivePlanRepo3Test {
             ),
             activePlanRepo.activePlan.value
         )
-        // # When
-        runBlocking {
-            activePlanRepo.update(
-                Plan(
-                    datePeriodService.getDatePeriod(LocalDate.now()),
-                    BigDecimal.TEN,
-                    mapOf()
-                )
-            )
-        }
-        Thread.sleep(1000)
-        // # Then
-        assertEquals(
+        // # Given
+        val givenPlan =
             Plan(
                 datePeriodService.getDatePeriod(LocalDate.now()),
                 BigDecimal.TEN,
                 mapOf()
-            ),
+            )
+        // # When
+        runBlocking { activePlanRepo.update(givenPlan) }
+        Thread.sleep(1000)
+        // # Then
+        assertEquals(
+            givenPlan,
             activePlanRepo.activePlan.value
         )
     }
