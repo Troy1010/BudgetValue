@@ -6,8 +6,6 @@ import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.models.CategoryType
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
-import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.rx3.asObservable
 import java.math.BigDecimal
@@ -18,25 +16,16 @@ import javax.inject.Singleton
 class CategoriesInteractor @Inject constructor(
     categoriesRepo: CategoriesRepo
 ) : ICategoryParser {
-    // # Input
     override fun parseCategory(categoryName: String): Category {
         if (categoryName == defaultCategory.name) error("Should never have to parse \"${defaultCategory.name}\"")
         return nameToCategoryMap.blockingFirst()[categoryName]
             ?: unrecognizedCategory.also { logz("Warning: returning category Unrecognized for unrecognized name:$categoryName") }
     }
 
-    // # Output
-    val userCategories: BehaviorSubject<List<Category>> =
+    val userCategories =
         categoriesRepo.userCategories
             .map { it.sortedWith(categoryComparator) }
             .asObservable()
-            .toBehaviorSubject(emptyList())
-
-    val categories: BehaviorSubject<List<Category>> =
-        userCategories
-            .map { it + defaultCategory + unrecognizedCategory }
-            .map { it.sortedWith(categoryComparator) }
-            .toBehaviorSubject()
 
     private val nameToCategoryMap =
         userCategories

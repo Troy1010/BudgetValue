@@ -6,13 +6,12 @@ import com.tminus1010.budgetvalue.Given
 import com.tminus1010.budgetvalue._core.app.DatePeriodService
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
-import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.domain.Plan
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.mockk.every
 import io.mockk.mockk
-import io.reactivex.rxjava3.core.Observable
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -37,7 +36,7 @@ class ActivePlanRepo3Test {
             CategoriesInteractor(
                 mockk {
                     every { userCategories } returns
-                            Observable.just(listOf(), Given.categories)
+                            flow { emit(listOf()); emit(Given.categories) }
                 }
             ),
             moshi
