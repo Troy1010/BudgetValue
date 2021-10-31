@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.categories
 
-import com.squareup.moshi.Moshi
+import com.tminus1010.budgetvalue._core.data.MoshiProvider.moshi
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.tmcommonkotlin.core.extensions.associate
@@ -10,7 +10,6 @@ import javax.inject.Inject
 
 class CategoryAmountFormulasConverter @Inject constructor(
     private val categoryParser: ICategoryParser,
-    private val moshi: Moshi
 ) {
     fun toCategoryAmountFormulas(s: String?): Map<Category, AmountFormula> =
         if (s == null) emptyMap() else

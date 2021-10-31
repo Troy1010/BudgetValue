@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.categories
 
 import com.squareup.moshi.Moshi
+import com.tminus1010.budgetvalue._core.data.MoshiProvider.moshi
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.tmcommonkotlin.core.extensions.associate
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
@@ -10,7 +11,6 @@ import javax.inject.Inject
 
 class CategoryAmountsConverter @Inject constructor(
     private val categoryParser: ICategoryParser,
-    private val moshi: Moshi
 ) {
     fun toCategoryAmounts(s: String?): Map<Category, BigDecimal> =
         if (s == null) emptyMap() else

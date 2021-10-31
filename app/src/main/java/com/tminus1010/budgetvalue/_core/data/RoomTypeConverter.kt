@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue._core.data
 import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 import com.squareup.moshi.Moshi
+import com.tminus1010.budgetvalue._core.data.MoshiProvider.moshi
 import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
@@ -12,7 +13,7 @@ import java.util.*
 import javax.inject.Inject
 
 @ProvidedTypeConverter
-class RoomTypeConverter @Inject constructor(val moshi: Moshi) {
+class RoomTypeConverter @Inject constructor() {
     @TypeConverter
     fun fromBigDecimalToString(x: BigDecimal): String =
         moshi.toJson(x)

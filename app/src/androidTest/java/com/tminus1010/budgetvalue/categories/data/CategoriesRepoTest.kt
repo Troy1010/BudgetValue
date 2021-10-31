@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue.categories.data
 
 import androidx.room.Room
-import com.squareup.moshi.Moshi
 import com.tminus1010.budgetvalue.__core_testing.app
 import com.tminus1010.budgetvalue._core.data.MiscDatabase
 import com.tminus1010.budgetvalue._core.data.RoomTypeConverter
@@ -15,17 +14,15 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import javax.inject.Inject
 
 @HiltAndroidTest
 class CategoriesRepoTest {
     @get:Rule
     var hiltAndroidRule = HiltAndroidRule(this)
 
-    @Inject
-    lateinit var moshi: Moshi
-
     lateinit var categoriesRepo: CategoriesRepo
+
+    lateinit var roomTypeConverter: RoomTypeConverter
 
     @Before
     fun before() {
@@ -36,7 +33,7 @@ class CategoriesRepoTest {
                     app,
                     MiscDatabase::class.java,
                 )
-                    .addTypeConverter(RoomTypeConverter(moshi))
+                    .addTypeConverter(roomTypeConverter)
                     .build()
             )
     }

@@ -1,6 +1,5 @@
 package com.tminus1010.budgetvalue.plans.data
 
-import com.squareup.moshi.Moshi
 import com.tminus1010.budgetvalue.FakeDatastore
 import com.tminus1010.budgetvalue.Given
 import com.tminus1010.budgetvalue._core.app.DatePeriodService
@@ -27,9 +26,6 @@ class ActivePlanRepo3Test {
     val hiltAndroidRule = HiltAndroidRule(this)
 
     @Inject
-    lateinit var moshi: Moshi
-
-    @Inject
     lateinit var datePeriodService: DatePeriodService
 
     lateinit var categoryAmountsConverter: CategoryAmountsConverter
@@ -46,13 +42,11 @@ class ActivePlanRepo3Test {
                                 flow { emit(listOf()); emit(Given.categories) }
                     }
                 ),
-                moshi
             )
         activePlanRepo =
             ActivePlanRepo3(
                 FakeDatastore(),
-                moshi,
-                categoryAmountsConverter
+                categoryAmountsConverter,
             )
     }
 

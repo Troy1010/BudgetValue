@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.squareup.moshi.Moshi
+import com.tminus1010.budgetvalue._core.data.MoshiProvider.moshi
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.plans.data.model.PlanDTO
 import com.tminus1010.budgetvalue.plans.domain.Plan
@@ -22,7 +23,6 @@ import javax.inject.Singleton
 @Singleton
 class ActivePlanRepo3 @Inject constructor(
     private val dataStore: DataStore<Preferences>,
-    private val moshi: Moshi,
     private val categoryAmountsConverter: CategoryAmountsConverter,
 ) {
     private val key = stringPreferencesKey("ActivePlanRepo3")

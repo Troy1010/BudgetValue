@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.squareup.moshi.Moshi
 import com.tminus1010.budgetvalue._core.all.extensions.mapBox
+import com.tminus1010.budgetvalue._core.data.MoshiProvider.moshi
 import com.tminus1010.budgetvalue._core.data.dataStore
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
@@ -21,7 +22,6 @@ import javax.inject.Singleton
 @Singleton
 class LatestDateOfMostRecentImport @Inject constructor(
     private val app: Application,
-    private val moshi: Moshi,
 ) : Observable<Box<LocalDate?>>() {
     private val key = stringPreferencesKey("LatestDateOfMostRecentImport")
 

@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.squareup.moshi.Moshi
 import com.tminus1010.budgetvalue._core.all.extensions.cold
 import com.tminus1010.budgetvalue._core.all.extensions.mapBox
+import com.tminus1010.budgetvalue._core.data.MoshiProvider.moshi
 import com.tminus1010.budgetvalue._core.data.dataStore
 import com.tminus1010.budgetvalue.importZ.data.LatestDateOfMostRecentImport
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
@@ -27,8 +28,7 @@ import javax.inject.Inject
 class IsPlanFeatureEnabledUC @Inject constructor(
     private val app: Application,
     transactionsInteractor: TransactionsInteractor,
-    private val moshi: Moshi,
-    latestDateOfMostRecentImport: LatestDateOfMostRecentImport
+    latestDateOfMostRecentImport: LatestDateOfMostRecentImport,
 ) : Observable<Boolean>() {
     private val key = stringPreferencesKey("IsPlanFeatureEnabled")
 
