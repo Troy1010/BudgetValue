@@ -9,9 +9,10 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.*
+import javax.inject.Inject
 
 @ProvidedTypeConverter
-class RoomTypeConverter(val moshi: Moshi) {
+class RoomTypeConverter @Inject constructor(val moshi: Moshi) {
     @TypeConverter
     fun fromBigDecimalToString(x: BigDecimal): String =
         moshi.toJson(x)

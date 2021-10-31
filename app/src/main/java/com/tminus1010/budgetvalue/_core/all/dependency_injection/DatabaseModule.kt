@@ -2,7 +2,6 @@ package com.tminus1010.budgetvalue._core.all.dependency_injection
 
 import android.app.Application
 import androidx.room.Room
-import com.squareup.moshi.Moshi
 import com.tminus1010.budgetvalue._core.data.MiscDatabase
 import com.tminus1010.budgetvalue._core.data.RoomTypeConverter
 import dagger.Module
@@ -16,10 +15,10 @@ import javax.inject.Singleton
 object DatabaseModule {
     @Provides
     @Singleton
-    fun providesDatabase(application: Application, moshi: Moshi): MiscDatabase {
+    fun providesDatabase(application: Application, roomTypeConverter: RoomTypeConverter): MiscDatabase {
         return Room.databaseBuilder(application, MiscDatabase::class.java, "BudgetValueDB")
 //            .addMigrations(Migrations.MIGRATION_40_41(moshi))
-            .addTypeConverter(RoomTypeConverter(moshi))
+            .addTypeConverter(roomTypeConverter)
             .fallbackToDestructiveMigration()
             .build()
     }
