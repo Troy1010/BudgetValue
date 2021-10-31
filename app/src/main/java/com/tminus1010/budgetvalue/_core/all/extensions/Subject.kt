@@ -7,16 +7,3 @@ operator fun <T> Subject<T>.invoke(value: T) =
 
 operator fun Subject<Unit>.invoke() =
     onNext(Unit)
-
-fun Subject<Unit>.emit() =
-    onNext(Unit)
-
-/**
- * Useful for:
- *     button.setOnClickListener(subject::onNext2)
- */
-fun Subject<Unit>.onNext2(any: Any) =
-    onNext(Unit)
-
-fun Subject<Unit>.onNext2() =
-    onNext(Unit)
