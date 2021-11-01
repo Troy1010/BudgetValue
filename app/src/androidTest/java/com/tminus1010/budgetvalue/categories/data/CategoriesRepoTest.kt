@@ -2,8 +2,9 @@ package com.tminus1010.budgetvalue.categories.data
 
 import androidx.room.Room
 import com.tminus1010.budgetvalue.__core_testing.app
-import com.tminus1010.budgetvalue._core.data.MiscDatabase
+import com.tminus1010.budgetvalue._core.data.CategoryDatabase
 import com.tminus1010.budgetvalue._core.data.RoomTypeConverter
+import com.tminus1010.budgetvalue._core.data.RoomWithCategoriesTypeConverter
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.models.CategoryType
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -14,15 +15,17 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import javax.inject.Inject
 
 @HiltAndroidTest
 class CategoriesRepoTest {
     @get:Rule
     var hiltAndroidRule = HiltAndroidRule(this)
 
-    lateinit var categoriesRepo: CategoriesRepo
-
+    @Inject
     lateinit var roomTypeConverter: RoomTypeConverter
+
+    lateinit var categoriesRepo: CategoriesRepo
 
     @Before
     fun before() {
@@ -31,7 +34,7 @@ class CategoriesRepoTest {
             CategoriesRepo(
                 Room.inMemoryDatabaseBuilder(
                     app,
-                    MiscDatabase::class.java,
+                    CategoryDatabase::class.java,
                 )
                     .addTypeConverter(roomTypeConverter)
                     .build()

@@ -12,7 +12,7 @@ import com.tminus1010.budgetvalue.replay_or_future.data.model.BasicReplayDTO
 import com.tminus1010.budgetvalue.replay_or_future.data.model.TotalFutureDTO
 import com.tminus1010.budgetvalue.transactions.data.TransactionDTO
 
-@TypeConverters(RoomTypeConverter::class)
+@TypeConverters(RoomTypeConverter::class, RoomWithCategoriesTypeConverter::class)
 @Database(
     version = 43,
     entities = [TransactionDTO::class, AccountDTO::class, ReconciliationDTO::class, PlanDTO::class, CategoryDTO::class, BasicReplayDTO::class, BasicFutureDTO::class, TotalFutureDTO::class],
@@ -21,7 +21,6 @@ import com.tminus1010.budgetvalue.transactions.data.TransactionDTO
 abstract class MiscDatabase : RoomDatabase() {
     abstract fun miscDAO(): MiscDAO
     abstract fun userCategoriesDAO(): UserCategoriesDAO
-    abstract fun userCategoriesDAO2(): UserCategoriesDAO2
 
     // # Migrations
 //    @RenameColumn(tableName = "BasicReplayDTO", fromColumnName = "description", toColumnName = "searchText")

@@ -22,7 +22,7 @@ class LatestDateOfMostRecentImportRepoTest {
     @Test
     fun mostRecentImportDate() {
         // # Given
-        val mostRecentImportDate = LatestDateOfMostRecentImport(app, MiscModule.provideMoshi())
+        val mostRecentImportDate = LatestDateOfMostRecentImport(app)
         val localDate1 = LocalDate.of(2020, 6, 1)
         val localDate2 = LocalDate.of(1867, 1, 30)
         // # When

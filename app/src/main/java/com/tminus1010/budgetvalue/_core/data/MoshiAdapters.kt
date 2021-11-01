@@ -6,6 +6,7 @@ import com.squareup.moshi.ToJson
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.tminus1010.budgetvalue.categories.models.CategoryType
 import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
+import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -75,4 +76,12 @@ object MoshiAdapters {
     @FromJson
     fun fromJson4(s: String): LocalDate =
         s.let { LocalDate.parse(s, dateFormatter) }
+
+    @ToJson
+    fun toJson(x: AmountFormula): String =
+        x.toDTO()
+
+    @FromJson
+    fun fromJson5(s: String): AmountFormula? =
+        AmountFormula.fromDTO(s)
 }

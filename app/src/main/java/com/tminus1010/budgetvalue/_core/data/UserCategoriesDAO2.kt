@@ -1,23 +1,23 @@
 package com.tminus1010.budgetvalue._core.data
 
 import androidx.room.*
-import com.tminus1010.budgetvalue.categories.models.CategoryDTO
+import com.tminus1010.budgetvalue.categories.models.Category
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserCategoriesDAO2 {
-    @Query("SELECT * FROM `CategoryDTO`")
-    fun fetchUserCategories(): Flow<List<CategoryDTO>>
+    @Query("SELECT * FROM `Category`")
+    fun fetchUserCategories(): Flow<List<Category>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun push(category: CategoryDTO)
+    suspend fun push(category: Category)
 
     @Delete
-    suspend fun delete(category: CategoryDTO)
+    suspend fun delete(category: Category)
 
     @Update
-    suspend fun update(category: CategoryDTO)
+    suspend fun update(category: Category)
 
-    @Query("SELECT COUNT(1) FROM `CategoryDTO` WHERE name=:categoryName")
+    @Query("SELECT COUNT(1) FROM `Category` WHERE name=:categoryName")
     suspend fun hasCategory(categoryName: String): Int
 }

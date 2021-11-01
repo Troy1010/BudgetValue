@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.plans.data
 import com.tminus1010.budgetvalue.FakeDatastore
 import com.tminus1010.budgetvalue.Given
 import com.tminus1010.budgetvalue._core.app.DatePeriodService
+import com.tminus1010.budgetvalue._core.data.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.plans.domain.Plan
@@ -28,25 +29,18 @@ class ActivePlanRepo3Test {
     @Inject
     lateinit var datePeriodService: DatePeriodService
 
-    lateinit var categoryAmountsConverter: CategoryAmountsConverter
+    @Inject
+    lateinit var moshiWithCategoriesProvider: MoshiWithCategoriesProvider
+
     lateinit var activePlanRepo: ActivePlanRepo3
 
     @Before
     fun before() {
         hiltAndroidRule.inject()
-        categoryAmountsConverter =
-            CategoryAmountsConverter(
-                CategoriesInteractor(
-                    mockk {
-                        every { userCategories } returns
-                                flow { emit(listOf()); emit(Given.categories) }
-                    }
-                ),
-            )
         activePlanRepo =
             ActivePlanRepo3(
                 FakeDatastore(),
-                categoryAmountsConverter,
+                moshiWithCategoriesProvider
             )
     }
 
@@ -73,6 +67,7 @@ class ActivePlanRepo3Test {
         Thread.sleep(500) // Why is this necessary..?
         // # Then
         assertEquals(givenNewPlan, activePlanRepo.activePlan.value)
+        Thread.sleep(500) // Why is this necessary..?
     }
 
     @Test
@@ -98,5 +93,6 @@ class ActivePlanRepo3Test {
             ),
             activePlanRepo.activePlan.value
         )
+        Thread.sleep(500) // Why is this necessary..?
     }
 }

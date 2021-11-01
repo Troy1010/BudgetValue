@@ -3,16 +3,16 @@ package com.tminus1010.budgetvalue._core.data
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.tminus1010.budgetvalue.categories.models.Category
+import javax.inject.Inject
 
 /**
- * This moshi provider is global, but it cannot parse [Category], b/c doing so depends on a DAO.
- *
- * If you need to do so, use [MoshiWithCategoriesProvider].
+ * This moshi can parse [Category], but it transitively depends on [UserCategoriesDAO2]
  */
-object MoshiProvider {
+class MoshiWithCategoriesProvider @Inject constructor(moshiWithCategoriesAdapters: MoshiWithCategoriesAdapters) {
     val moshi =
         Moshi.Builder()
-            .add(MoshiAdapters)
             .addLast(KotlinJsonAdapterFactory())
+            .add(moshiWithCategoriesAdapters)
+            .add(MoshiAdapters)
             .build()
 }
