@@ -2,9 +2,11 @@ package com.tminus1010.budgetvalue
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
+import org.junit.Ignore
 import org.junit.Test
 
-class PlaygroundTest {
+@Ignore
+class Playground {
     @Test
     fun test1() {
         // # Given

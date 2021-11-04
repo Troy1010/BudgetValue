@@ -10,11 +10,13 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flow
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Rule
 import javax.inject.Inject
 
+@Ignore
 @HiltAndroidTest
-class Playground {
+class PlaygroundInstrumentation {
     @get:Rule
     val hiltAndroidRule = HiltAndroidRule(this)
 
