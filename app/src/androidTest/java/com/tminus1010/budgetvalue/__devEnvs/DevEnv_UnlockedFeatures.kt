@@ -4,8 +4,6 @@ import android.app.Application
 import android.content.Intent
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
-import com.tminus1010.budgetvalue.AndroidTestAssetOwner
 import com.tminus1010.budgetvalue.MockImportSelectionActivity
 import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue._core.presentation.service.GetExtraMenuItemPartials
@@ -71,12 +69,6 @@ class DevEnv_UnlockedFeatures {
                 Intent(hostActivity, MockImportSelectionActivity::class.java)
                     .also { hostActivity.startActivity(it) }
             }
-        }
-
-        @Provides
-        @Singleton
-        fun androidTestAssetOwner(): AndroidTestAssetOwner = object : AndroidTestAssetOwner() {
-            override val assets = InstrumentationRegistry.getInstrumentation().context.assets
         }
 
         @Provides
