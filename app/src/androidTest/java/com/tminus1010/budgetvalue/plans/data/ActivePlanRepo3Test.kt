@@ -1,10 +1,8 @@
 package com.tminus1010.budgetvalue.plans.data
 
-import com.tminus1010.budgetvalue.FakeDatastore
 import com.tminus1010.budgetvalue.Given
 import com.tminus1010.budgetvalue._core.app.CategoryAmounts
 import com.tminus1010.budgetvalue._core.app.DatePeriodService
-import com.tminus1010.budgetvalue._core.data.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue.plans.domain.Plan
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -26,17 +24,11 @@ class ActivePlanRepo3Test {
     lateinit var datePeriodService: DatePeriodService
 
     @Inject
-    lateinit var moshiWithCategoriesProvider: MoshiWithCategoriesProvider
     lateinit var activePlanRepo: ActivePlanRepo3
 
     @Before
     fun before() {
         hiltAndroidRule.inject()
-        activePlanRepo =
-            ActivePlanRepo3(
-                FakeDatastore(),
-                moshiWithCategoriesProvider
-            )
     }
 
     @Test
