@@ -7,17 +7,17 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.tminus1010.budgetvalue.AndroidTestAssetOwner
 import com.tminus1010.budgetvalue.MockImportSelectionActivity
-import com.tminus1010.budgetvalue._core.presentation.service.GetExtraMenuItemPartials
-import com.tminus1010.budgetvalue.importZ.view.services.LaunchSelectFile
 import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
+import com.tminus1010.budgetvalue._core.presentation.service.GetExtraMenuItemPartials
 import com.tminus1010.budgetvalue._core.view.HostActivity
-import com.tminus1010.budgetvalue.app_init.AppInteractor
 import com.tminus1010.budgetvalue.app_init.AppInitRepo
+import com.tminus1010.budgetvalue.app_init.AppInteractor
+import com.tminus1010.budgetvalue.importZ.view.services.LaunchSelectFile
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
 import com.tminus1010.budgetvalue.replay_or_future.domain.TotalFuture
-import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.budgetvalue.transactions.app.Transaction
+import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
@@ -29,12 +29,14 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.components.SingletonComponent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.time.LocalDate
 import javax.inject.Singleton
 
+@Ignore
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class DevEnv_Main {
