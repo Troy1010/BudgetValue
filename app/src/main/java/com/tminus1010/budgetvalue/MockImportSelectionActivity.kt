@@ -1,5 +1,6 @@
 package com.tminus1010.budgetvalue
 
+import android.content.res.AssetManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,9 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue._core.middleware.Toaster
 import com.tminus1010.budgetvalue._core.middleware.view.GenViewHolder2
-import com.tminus1010.budgetvalue.importZ.data.ImportTransactions
 import com.tminus1010.budgetvalue.databinding.ActivityMockImportSelectionBinding
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
+import com.tminus1010.budgetvalue.importZ.data.ImportTransactions
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -21,7 +22,7 @@ class MockImportSelectionActivity : AppCompatActivity() {
     val vb by lazy { ActivityMockImportSelectionBinding.inflate(layoutInflater) }
 
     @Inject
-    lateinit var androidTestAssetOwner: AndroidTestAssetOwner
+    lateinit var assets2: AssetManager
 
     @Inject
     lateinit var toaster: Toaster
@@ -32,10 +33,9 @@ class MockImportSelectionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(vb.root)
-        val assets = androidTestAssetOwner.assets
         // # RecyclerView
         val transactionPathNames =
-            assets.list("transactions")
+            assets2.list("transactions")
                 ?.map { "transactions/$it" }
                 ?: emptyList()
         vb.recyclerviewSelectMockImport.layoutManager =

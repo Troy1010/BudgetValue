@@ -13,7 +13,7 @@ import javax.inject.Singleton
 @Module
 @TestInstallIn(
     components = [SingletonComponent::class],
-    replaces = [DataStoreModule::class]
+    replaces = [DataStoreModule::class],
 )
 object FakeDataStoreModule {
     @Provides
