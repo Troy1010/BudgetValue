@@ -3,15 +3,15 @@ package com.tminus1010.budgetvalue.transactions.presentation
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.all.extensions.cold
 import com.tminus1010.budgetvalue._core.all.extensions.nonLazyCache
+import com.tminus1010.budgetvalue._core.app.CategoryAmountFormulas
 import com.tminus1010.budgetvalue._core.framework.ColdObservable
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
-import com.tminus1010.budgetvalue._core.app.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
-import com.tminus1010.budgetvalue.categories.ICategoryParser
+import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.replay_or_future.presentation.CategoryAmountFormulaVMItemsBaseVM
 import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
 import com.tminus1010.budgetvalue.replay_or_future.domain.BasicReplay
+import com.tminus1010.budgetvalue.replay_or_future.presentation.CategoryAmountFormulaVMItemsBaseVM
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
@@ -28,9 +28,9 @@ import javax.inject.Inject
 class ReplayVM @Inject constructor(
     private val replaysRepo: ReplaysRepo,
     private val errorSubject: Subject<Throwable>,
-    override val categoryParser: ICategoryParser,
+    override val categoriesInteractor: CategoriesInteractor,
 ) : CategoryAmountFormulaVMItemsBaseVM() {
-    // # Input
+    // # UserIntents
     private val _replay = BehaviorSubject.create<BasicReplay>()
     fun setup(_replay: BasicReplay, categorySelectionVM: CategorySelectionVM) {
         this.categorySelectionVM = categorySelectionVM
@@ -45,7 +45,8 @@ class ReplayVM @Inject constructor(
             fillCategory = _fillCategory.value.first!!,
         )
         replaysRepo.update(_replay)
-            .observe(disposables,
+            .observe(
+                disposables,
                 onComplete = { navUp.onNext(Unit) },
                 onError = errorSubject::onNext
             )
@@ -53,7 +54,8 @@ class ReplayVM @Inject constructor(
 
     fun userDeleteReplay(replayName: String) {
         replaysRepo.delete(replayName)
-            .observe(disposables,
+            .observe(
+                disposables,
                 onComplete = { navUp.onNext(Unit) },
                 onError = errorSubject::onNext
             )

@@ -1,11 +1,11 @@
 package com.tminus1010.budgetvalue.reconcile.data
 
-import com.tminus1010.budgetvalue._core.data.MiscDAO
-import com.tminus1010.budgetvalue._core.data.SharedPrefWrapper
 import com.tminus1010.budgetvalue._core.all.extensions.toBigDecimalOrZero
 import com.tminus1010.budgetvalue._core.app.CategoryAmounts
+import com.tminus1010.budgetvalue._core.data.MiscDAO
+import com.tminus1010.budgetvalue._core.data.SharedPrefWrapper
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
-import com.tminus1010.budgetvalue.categories.ICategoryParser
+import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.reconcile.domain.Reconciliation
 import com.tminus1010.tmcommonkotlin.core.extensions.associate
@@ -21,7 +21,7 @@ class ReconciliationsRepo @Inject constructor(
     private val miscDAO: MiscDAO,
     private val categoryAmountsConverter: CategoryAmountsConverter,
     private val sharedPrefWrapper: SharedPrefWrapper,
-    categoryParser: ICategoryParser,
+    categoriesInteractor: CategoriesInteractor,
 ) {
     fun clearReconciliations(): Completable =
         miscDAO.clearReconciliations().subscribeOn(Schedulers.io())
@@ -39,7 +39,7 @@ class ReconciliationsRepo @Inject constructor(
 
     val activeReconciliationCAs =
         sharedPrefWrapper.activeReconciliationCAs.subscribeOn(Schedulers.io())
-            .map { it.associate { categoryParser.parseCategory(it.key) to it.value.toBigDecimalOrZero() } }
+            .map { it.associate { categoriesInteractor.parseCategory(it.key) to it.value.toBigDecimalOrZero() } }
             .map { CategoryAmounts(it) }
             .replay(1).refCount()
 

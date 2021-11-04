@@ -13,5 +13,5 @@ import javax.inject.Singleton
 object AssetsModule {
     @Provides
     @Singleton
-    fun providesMiscDatabase(application: Application): AssetManager = application.assets
+    fun provideAssets(application: Application): AssetManager = application.assets
 }

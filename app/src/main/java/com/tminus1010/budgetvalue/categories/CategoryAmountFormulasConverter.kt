@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.categories
 
 import com.tminus1010.budgetvalue._core.data.MoshiProvider.moshi
+import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.tmcommonkotlin.core.extensions.associate
@@ -9,7 +10,7 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import javax.inject.Inject
 
 class CategoryAmountFormulasConverter @Inject constructor(
-    private val categoryParser: ICategoryParser,
+    private val categoryParser: CategoriesInteractor,
 ) {
     fun toCategoryAmountFormulas(s: String?): Map<Category, AmountFormula> =
         if (s == null) emptyMap() else

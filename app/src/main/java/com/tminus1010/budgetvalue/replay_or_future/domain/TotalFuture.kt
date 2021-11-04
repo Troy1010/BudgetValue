@@ -4,7 +4,7 @@ import androidx.annotation.VisibleForTesting
 import com.tminus1010.budgetvalue._core.all.extensions.easyEquals
 import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.categories.CategoryAmountFormulasConverter
-import com.tminus1010.budgetvalue.categories.ICategoryParser
+import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay_or_future.data.model.TotalFutureDTO
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
@@ -32,12 +32,12 @@ data class TotalFuture(
         )
 
     companion object {
-        fun fromDTO(basicFutureDTO: TotalFutureDTO, categoryAmountFormulasConverter: CategoryAmountFormulasConverter, categoryParser: ICategoryParser) = basicFutureDTO.run {
+        fun fromDTO(basicFutureDTO: TotalFutureDTO, categoryAmountFormulasConverter: CategoryAmountFormulasConverter, categoriesInteractor: CategoriesInteractor) = basicFutureDTO.run {
             TotalFuture(
                 name = name,
                 searchTotal = searchTotal.toMoneyBigDecimal(),
                 categoryAmountFormulas = categoryAmountFormulasConverter.toCategoryAmountFormulas(categoryAmountFormulasStr),
-                fillCategory = categoryParser.parseCategory(autoFillCategoryName),
+                fillCategory = categoriesInteractor.parseCategory(autoFillCategoryName),
                 terminationStatus = terminationStatus
             )
         }

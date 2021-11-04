@@ -8,13 +8,13 @@ import com.tminus1010.budgetvalue._core.framework.ColdObservable
 import com.tminus1010.budgetvalue._core.middleware.Toaster
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
-import com.tminus1010.budgetvalue.categories.ICategoryParser
-import com.tminus1010.budgetvalue.replay_or_future.presentation.CategoryAmountFormulaVMItemsBaseVM
+import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
 import com.tminus1010.budgetvalue.replay_or_future.domain.BasicReplay
+import com.tminus1010.budgetvalue.replay_or_future.presentation.CategoryAmountFormulaVMItemsBaseVM
+import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.budgetvalue.transactions.app.interactor.SaveTransactionInteractor
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
-import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.tuple.Box
@@ -32,7 +32,7 @@ class SplitVM @Inject constructor(
     private val saveTransactionInteractor: SaveTransactionInteractor,
     private val replaysRepo: ReplaysRepo,
     private val errorSubject: Subject<Throwable>,
-    override val categoryParser: ICategoryParser,
+    override val categoriesInteractor: CategoriesInteractor,
     private val transactionsInteractor: TransactionsInteractor,
     private val toaster: Toaster,
 ) : CategoryAmountFormulaVMItemsBaseVM() {

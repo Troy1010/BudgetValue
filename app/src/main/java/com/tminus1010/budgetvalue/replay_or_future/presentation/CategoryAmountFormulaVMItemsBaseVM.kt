@@ -5,12 +5,12 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.all.extensions.cold
 import com.tminus1010.budgetvalue._core.all.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue._core.all.extensions.isZero
+import com.tminus1010.budgetvalue._core.app.CategoryAmountFormulas
 import com.tminus1010.budgetvalue._core.framework.ColdObservable
 import com.tminus1010.budgetvalue._core.framework.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue._core.presentation.model.CategoryAmountFormulaVMItem
-import com.tminus1010.budgetvalue._core.app.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
-import com.tminus1010.budgetvalue.categories.ICategoryParser
+import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.tmcommonkotlin.rx.extensions.retryWithDelay
@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit
  * Base class for common code when creating ViewModels which allow the user to input a CategoryAmountFormula
  */
 abstract class CategoryAmountFormulaVMItemsBaseVM : ViewModel() {
-    abstract val categoryParser: ICategoryParser
+    abstract val categoriesInteractor: CategoriesInteractor
 
     // # Workarounds
     /**
@@ -49,7 +49,7 @@ abstract class CategoryAmountFormulaVMItemsBaseVM : ViewModel() {
 
     protected val userSetFillCategory = BehaviorSubject.create<Box<Category?>>()!!
     fun userSetFillCategory(categoryName: String) {
-        userSetFillCategory.onNext(Box(categoryParser.parseCategory(categoryName)))
+        userSetFillCategory.onNext(Box(categoriesInteractor.parseCategory(categoryName)))
     }
 
     // # Internal

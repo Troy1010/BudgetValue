@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue.categories.domain
 
 import com.tminus1010.budgetvalue._core.categoryComparator
-import com.tminus1010.budgetvalue.categories.ICategoryParser
 import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.models.CategoryType
@@ -14,9 +13,9 @@ import javax.inject.Singleton
 
 @Singleton
 class CategoriesInteractor @Inject constructor(
-    categoriesRepo: CategoriesRepo
-) : ICategoryParser {
-    override fun parseCategory(categoryName: String): Category {
+    categoriesRepo: CategoriesRepo,
+) {
+    fun parseCategory(categoryName: String): Category {
         if (categoryName == defaultCategory.name) error("Should never have to parse \"${defaultCategory.name}\"")
         return nameToCategoryMap.blockingFirst()[categoryName]
             ?: unrecognizedCategory.also { logz("Warning: returning category Unrecognized for unrecognized name:$categoryName") }

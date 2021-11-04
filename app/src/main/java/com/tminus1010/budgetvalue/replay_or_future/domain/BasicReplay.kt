@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.replay_or_future.domain
 
 import com.tminus1010.budgetvalue.categories.CategoryAmountFormulasConverter
-import com.tminus1010.budgetvalue.categories.ICategoryParser
+import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay_or_future.data.model.BasicReplayDTO
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
@@ -25,12 +25,12 @@ data class BasicReplay(
         )
 
     companion object {
-        fun fromDTO(basicReplayDTO: BasicReplayDTO, categoryAmountFormulasConverter: CategoryAmountFormulasConverter, categoryParser: ICategoryParser) = basicReplayDTO.run {
+        fun fromDTO(basicReplayDTO: BasicReplayDTO, categoryAmountFormulasConverter: CategoryAmountFormulasConverter, categoriesInteractor: CategoriesInteractor) = basicReplayDTO.run {
             BasicReplay(
                 name = name,
                 searchTexts = searchTextsStr.split("`"),
                 categoryAmountFormulas = categoryAmountFormulasConverter.toCategoryAmountFormulas(categoryAmountFormulasStr),
-                fillCategory = categoryParser.parseCategory(autoFillCategoryName),
+                fillCategory = categoriesInteractor.parseCategory(autoFillCategoryName),
             )
         }
     }

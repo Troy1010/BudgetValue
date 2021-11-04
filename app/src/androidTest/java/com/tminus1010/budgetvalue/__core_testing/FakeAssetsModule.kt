@@ -17,5 +17,5 @@ import javax.inject.Singleton
 object FakeAssetsModule {
     @Provides
     @Singleton
-    fun provideDataStore(): AssetManager = InstrumentationRegistry.getInstrumentation().context.assets
+    fun provideAssets(): AssetManager = InstrumentationRegistry.getInstrumentation().context.assets
 }

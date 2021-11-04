@@ -7,7 +7,7 @@ import com.tminus1010.budgetvalue._core.middleware.Toaster
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
-import com.tminus1010.budgetvalue.categories.ICategoryParser
+import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.choose_transaction_description.ChooseTransactionDescriptionFrag
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture
@@ -28,8 +28,8 @@ import javax.inject.Inject
 class CreateFutureVM @Inject constructor(
     private val futuresRepo: FuturesRepo,
     private val transactionsInteractor: TransactionsInteractor,
-    override val categoryParser: ICategoryParser,
-    private val toaster: Toaster
+    override val categoriesInteractor: CategoriesInteractor,
+    private val toaster: Toaster,
 ) : CategoryAmountFormulaVMItemsBaseVM() {
     // # Workarounds
     lateinit var selfDestruct: () -> Unit
