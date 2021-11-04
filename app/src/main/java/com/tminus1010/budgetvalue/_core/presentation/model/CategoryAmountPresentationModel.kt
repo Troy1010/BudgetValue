@@ -2,9 +2,9 @@ package com.tminus1010.budgetvalue._core.presentation.model
 
 import android.content.Context
 import android.widget.EditText
-import com.tminus1010.budgetvalue._core.middleware.view.onDone
-import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.IViewItemRecipe3
-import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.ViewItemRecipe3__
+import com.tminus1010.budgetvalue._core.framework.view.onDone
+import com.tminus1010.budgetvalue._core.framework.view.tmTableView3.IViewItemRecipe3
+import com.tminus1010.budgetvalue._core.framework.view.tmTableView3.ViewItemRecipe3__
 import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding

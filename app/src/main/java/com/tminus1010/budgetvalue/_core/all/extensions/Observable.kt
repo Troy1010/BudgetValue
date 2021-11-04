@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue._core.all.extensions
 
-import com.tminus1010.budgetvalue._core.app.CategoryAmountFormulas
-import com.tminus1010.budgetvalue._core.app.CategoryAmounts
+import com.tminus1010.budgetvalue._core.domain.CategoryAmountFormulas
+import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
 import com.tminus1010.budgetvalue._core.framework.ColdObservable
 import com.tminus1010.budgetvalue._core.framework.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.categories.models.Category

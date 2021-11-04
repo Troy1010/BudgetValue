@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.transactions.presentation
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.all.extensions.cold
 import com.tminus1010.budgetvalue._core.all.extensions.nonLazyCache
-import com.tminus1010.budgetvalue._core.app.CategoryAmountFormulas
+import com.tminus1010.budgetvalue._core.domain.CategoryAmountFormulas
 import com.tminus1010.budgetvalue._core.framework.ColdObservable
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM

@@ -7,9 +7,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.all.extensions.bind
-import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemHeaderRF
-import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTextViewRB
-import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
+import com.tminus1010.budgetvalue._core.framework.view.recipe_factories.itemHeaderRF
+import com.tminus1010.budgetvalue._core.framework.view.recipe_factories.itemTextViewRB
+import com.tminus1010.budgetvalue._core.framework.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragFuturesReviewBinding
 import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture
 import com.tminus1010.budgetvalue.replay_or_future.domain.TotalFuture

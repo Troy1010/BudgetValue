@@ -2,11 +2,11 @@ package com.tminus1010.budgetvalue.history
 
 import android.view.View
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue._core.app.DatePeriodService
-import com.tminus1010.budgetvalue._core.app.LocalDatePeriod
+import com.tminus1010.budgetvalue._core.domain.DatePeriodService
+import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.categoryComparator
 import com.tminus1010.budgetvalue._core.data.repos.CurrentDatePeriodRepo
-import com.tminus1010.budgetvalue._core.middleware.Rx
+import com.tminus1010.budgetvalue._core.framework.Rx
 import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue.budgeted.BudgetedInteractor
 import com.tminus1010.budgetvalue.categories.models.Category

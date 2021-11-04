@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue.history
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
@@ -10,20 +9,12 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.all.extensions.bind
 import com.tminus1010.budgetvalue._core.all.extensions.show
-import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTextViewRB
-import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTitledDividerRB
-import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.ViewItemRecipeFactory3
-import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
+import com.tminus1010.budgetvalue._core.framework.view.recipe_factories.itemTitledDividerRB
+import com.tminus1010.budgetvalue._core.framework.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragHistoryBinding
-import com.tminus1010.budgetvalue.databinding.ItemHeaderWithSubtitleBinding
-import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
-import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
-import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.Observables
-import io.reactivex.rxjava3.schedulers.Schedulers
 
 @AndroidEntryPoint
 class HistoryFrag : Fragment(R.layout.frag_history) {

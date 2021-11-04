@@ -1,8 +1,8 @@
 package com.tminus1010.budgetvalue.transactions.app
 
 import com.tminus1010.budgetvalue._core.all.extensions.isZero
-import com.tminus1010.budgetvalue._core.app.CategoryAmounts
-import com.tminus1010.budgetvalue._core.app.LocalDatePeriod
+import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
+import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import com.tminus1010.tmcommonkotlin.tuple.Box
 

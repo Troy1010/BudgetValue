@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.reconcile.data
 
 import com.tminus1010.budgetvalue._core.all.extensions.toBigDecimalOrZero
-import com.tminus1010.budgetvalue._core.app.CategoryAmounts
+import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
 import com.tminus1010.budgetvalue._core.data.MiscDAO
 import com.tminus1010.budgetvalue._core.data.SharedPrefWrapper
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter

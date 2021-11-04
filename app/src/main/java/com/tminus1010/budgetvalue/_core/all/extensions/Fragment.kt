@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue._core.all.extensions
 import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
-import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.ViewItemRecipe3_
+import com.tminus1010.budgetvalue._core.framework.view.tmTableView3.ViewItemRecipe3_
 import kotlin.reflect.full.functions
 
 @Suppress("UNCHECKED_CAST")

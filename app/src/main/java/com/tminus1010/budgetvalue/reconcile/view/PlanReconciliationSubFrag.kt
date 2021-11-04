@@ -6,10 +6,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.all.extensions.bind
-import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemEmptyRF
-import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemMoneyEditTextRF
-import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTextViewRB
-import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTitledDividerRB
+import com.tminus1010.budgetvalue._core.framework.view.recipe_factories.itemEmptyRF
+import com.tminus1010.budgetvalue._core.framework.view.recipe_factories.itemMoneyEditTextRF
+import com.tminus1010.budgetvalue._core.framework.view.recipe_factories.itemTextViewRB
+import com.tminus1010.budgetvalue._core.framework.view.recipe_factories.itemTitledDividerRB
 import com.tminus1010.budgetvalue._core.presentation.model.CategoryAmountPresentationModel
 import com.tminus1010.budgetvalue.reconcile.domain.ReconciliationToDo
 import com.tminus1010.budgetvalue._core.presentation.model.AmountPresentationModel

@@ -9,9 +9,9 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.all.extensions.bind
 import com.tminus1010.budgetvalue._core.all.extensions.easyVisibility
 import com.tminus1010.budgetvalue._core.all.extensions.mapBox
-import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemEditTextRF
-import com.tminus1010.budgetvalue._core.middleware.view.recipe_factories.itemTextViewRB
-import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
+import com.tminus1010.budgetvalue._core.framework.view.recipe_factories.itemEditTextRF
+import com.tminus1010.budgetvalue._core.framework.view.recipe_factories.itemTextViewRB
+import com.tminus1010.budgetvalue._core.framework.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragChooseTransactionDesciption2Binding
 import com.tminus1010.budgetvalue.transactions.presentation.ReplayVM
 import com.tminus1010.budgetvalue.transactions.data.repo.TransactionsRepo

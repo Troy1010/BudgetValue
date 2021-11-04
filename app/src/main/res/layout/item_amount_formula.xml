@@ -8,7 +8,7 @@
     tools:layout_height="60dp"
     tools:layout_width="100dp">
 
-    <com.tminus1010.budgetvalue._core.middleware.view.MoneyEditText
+    <com.tminus1010.budgetvalue._core.framework.view.MoneyEditText
         android:id="@+id/moneyEditText"
         android:layout_width="0dp"
         android:layout_height="match_parent"

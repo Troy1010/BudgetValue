@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.all.extensions.easyText
 import com.tminus1010.budgetvalue._core.all.extensions.onClick
-import com.tminus1010.budgetvalue._core.middleware.view.GenViewHolder2
-import com.tminus1010.budgetvalue._core.middleware.view.onDone
-import com.tminus1010.budgetvalue._core.middleware.view.viewBinding
+import com.tminus1010.budgetvalue._core.framework.view.GenViewHolder2
+import com.tminus1010.budgetvalue._core.framework.view.onDone
+import com.tminus1010.budgetvalue._core.framework.view.viewBinding
 import com.tminus1010.budgetvalue.accounts.presentation.AccountVMItem
 import com.tminus1010.budgetvalue.accounts.presentation.AccountsVM
 import com.tminus1010.budgetvalue.databinding.FragImportBinding

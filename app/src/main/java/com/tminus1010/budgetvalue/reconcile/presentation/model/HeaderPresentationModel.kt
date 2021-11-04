@@ -1,8 +1,8 @@
 package com.tminus1010.budgetvalue.reconcile.presentation.model
 
 import android.content.Context
-import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.IViewItemRecipe3
-import com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.ViewItemRecipe3__
+import com.tminus1010.budgetvalue._core.framework.view.tmTableView3.IViewItemRecipe3
+import com.tminus1010.budgetvalue._core.framework.view.tmTableView3.ViewItemRecipe3__
 import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe
 import com.tminus1010.budgetvalue.databinding.ItemHeaderBinding
 
