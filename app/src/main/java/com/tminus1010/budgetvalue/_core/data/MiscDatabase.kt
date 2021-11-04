@@ -20,7 +20,6 @@ import com.tminus1010.budgetvalue.transactions.data.TransactionDTO
 )
 abstract class MiscDatabase : RoomDatabase() {
     abstract fun miscDAO(): MiscDAO
-    abstract fun userCategoriesDAO(): UserCategoriesDAO
 
     // # Migrations
 //    @RenameColumn(tableName = "BasicReplayDTO", fromColumnName = "description", toColumnName = "searchText")
