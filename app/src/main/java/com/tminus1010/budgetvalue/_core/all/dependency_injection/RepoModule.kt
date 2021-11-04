@@ -3,7 +3,6 @@ package com.tminus1010.budgetvalue._core.all.dependency_injection
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import com.tminus1010.budgetvalue._core.SHARED_PREF_FILE_NAME
 import com.tminus1010.budgetvalue._core.data.MiscDAO
 import com.tminus1010.budgetvalue._core.data.MiscDatabase
 import dagger.Module
@@ -22,7 +21,7 @@ object RepoModule {
     @Singleton
     fun providesSharedPreferences(application: Application): SharedPreferences =
         application.getSharedPreferences(
-            SHARED_PREF_FILE_NAME,
+            "SharedPref",
             Context.MODE_PRIVATE
         )
 
