@@ -6,8 +6,9 @@ import javax.inject.Inject
 
 open class LaunchSelectFile @Inject constructor() {
     open operator fun invoke(hostActivity: HostActivity) {
-        Intent().apply { type = "*/*"; action = Intent.ACTION_GET_CONTENT }
-            .let { Intent.createChooser(it, "Select transactions csv") }
-            .also { hostActivity.activityResultLauncher.launch(it) }
+        hostActivity.activityResultLauncher.launch(
+            Intent().apply { type = "*/*"; action = Intent.ACTION_GET_CONTENT }
+                .let { Intent.createChooser(it, "Select transactions csv") }
+        )
     }
 }

@@ -66,8 +66,9 @@ class DevEnv_UnlockedFeatures {
         @Singleton
         fun launchImport() = object : LaunchSelectFile() {
             override fun invoke(hostActivity: HostActivity) {
-                Intent(hostActivity, MockImportSelectionActivity::class.java)
-                    .also { hostActivity.startActivity(it) }
+                hostActivity.startActivity(
+                    Intent(hostActivity, MockImportSelectionActivity::class.java)
+                )
             }
         }
 
