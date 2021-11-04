@@ -4,13 +4,16 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.tminus1010.budgetvalue._core.app.CategoryAmounts
 import com.tminus1010.budgetvalue._core.data.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue.plans.domain.Plan
-import com.tminus1010.tmcommonkotlin.core.logx
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -26,24 +29,22 @@ class ActivePlanRepo3 @Inject constructor(
         if (plan == null)
             dataStore.edit { it.remove(key) }
         else
-            dataStore.edit { it[key] = moshiWithCategoriesProvider.moshi.toJson(plan).logx("toJson") }
+            dataStore.edit { it[key] = moshiWithCategoriesProvider.moshi.toJson(plan) }
     }
 
     suspend fun clearCategoryAmounts() {
-        push(activePlan.value?.copy(categoryAmounts = mapOf()))
+        push(activePlan.value?.copy(categoryAmounts = CategoryAmounts()))
     }
 
     val activePlan =
         dataStore.data
             .map {
                 try {
-                    moshiWithCategoriesProvider.moshi.fromJson<Plan>(it[key].logx("for fromJson")).logx("fromJson")
+                    moshiWithCategoriesProvider.moshi.fromJson<Plan>(it[key])
                 } catch (e: Throwable) {
-                    logz("someError, oh no!", e)
                     throw e
                 }
             }
-            .onCompletion { if (it != null) logz("erro4!", it) }
             .distinctUntilChanged()
             .stateIn(GlobalScope, SharingStarted.Eagerly, null)
 }

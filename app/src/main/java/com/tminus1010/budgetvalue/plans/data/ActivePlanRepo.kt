@@ -1,7 +1,8 @@
 package com.tminus1010.budgetvalue.plans.data
 
-import com.tminus1010.budgetvalue._core.data.repos.CurrentDatePeriodRepo
 import com.tminus1010.budgetvalue._core.all.extensions.flatMapSourceHashMap
+import com.tminus1010.budgetvalue._core.app.CategoryAmounts
+import com.tminus1010.budgetvalue._core.data.repos.CurrentDatePeriodRepo
 import com.tminus1010.budgetvalue._core.framework.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.plans.domain.Plan
 import com.tminus1010.tmcommonkotlin.rx.extensions.total
@@ -37,7 +38,7 @@ class ActivePlanRepo @Inject constructor(
                                 Plan(
                                     currentDatePeriodRepo.currentDatePeriod.value,
                                     BigDecimal.ZERO,
-                                    emptyMap()
+                                    CategoryAmounts()
                                 )
                             )
                     }.doOnNext { plansRepo.pushPlan(it).blockingAwait() }

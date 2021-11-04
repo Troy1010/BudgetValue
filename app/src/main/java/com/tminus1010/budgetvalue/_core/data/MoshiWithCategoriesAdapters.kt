@@ -28,25 +28,6 @@ class MoshiWithCategoriesAdapters @Inject constructor(
         categoriesInteractor.parseCategory(s)
 
     /**
-     * Map<[Category], [BigDecimal]>
-     */
-    val adapter1 =
-        moshi.adapter<Map<String, String>>(
-            Types.newParameterizedType(Map::class.java, String::class.java, String::class.java)
-        )
-
-    @ToJson
-    fun toJson(x: Map<@JvmSuppressWildcards Category, @JvmSuppressWildcards BigDecimal>): String {
-        return adapter1.toJson(x.associate { toJson(it.key) to it.value.toString() })
-    }
-
-    @FromJson
-    fun fromJson8(s: String): Map<@JvmSuppressWildcards Category, @JvmSuppressWildcards BigDecimal> {
-        return adapter1.fromJson(s)!!
-            .associate { categoriesInteractor.parseCategory(it.key) to BigDecimal(it.value) }
-    }
-
-    /**
      * [CategoryAmounts]
      */
     @ToJson
@@ -55,11 +36,12 @@ class MoshiWithCategoriesAdapters @Inject constructor(
 
     @FromJson
     fun fromJson3(s: String): CategoryAmounts {
-        return moshi.adapter<Map<String, String>>(
-            Types.newParameterizedType(Map::class.java, String::class.java, String::class.java)
+        return CategoryAmounts(
+            moshi.adapter<Map<String, String>>(
+                Types.newParameterizedType(Map::class.java, String::class.java, String::class.java)
+            )
+                .fromJson(s)!!
+                .associate { fromJson1(it.key) to BigDecimal(it.value) }
         )
-            .fromJson(s)!!
-            .associate { fromJson1(it.key) to BigDecimal(it.value) }
-            .let { CategoryAmounts(it) }
     }
 }

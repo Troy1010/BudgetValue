@@ -22,6 +22,6 @@ class SetActivePlanFromHistoryInteractor @Inject constructor(
                 relevantTransactionBlocks
                     .fold(CategoryAmounts()) { acc, v -> acc.addTogether(v.categoryAmounts) }
                     .mapValues { (_, v) -> (v / relevantTransactionBlocks.size.toBigDecimal()).toString().toMoneyBigDecimal() }
-            plansRepo.updatePlan(activePlan.copy(categoryAmounts = categoryAmounts))
+            plansRepo.updatePlan(activePlan.copy(categoryAmounts = CategoryAmounts(categoryAmounts)))
         }.flatMapCompletable { it }
 }

@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.reconcile.app.interactor
 
 import com.tminus1010.budgetvalue._core.all.extensions.isZero
+import com.tminus1010.budgetvalue._core.app.CategoryAmounts
 import com.tminus1010.budgetvalue._core.app.LocalDatePeriod
 import com.tminus1010.budgetvalue.accounts.data.AccountsRepo
 import com.tminus1010.budgetvalue.budgeted.BudgetedInteractor
@@ -51,7 +52,9 @@ class ReconciliationsToDoInteractor @Inject constructor(
                             LocalDatePeriod(
                                 LocalDate.of(2020, 1, 1),
                                 LocalDate.of(2020, 1, 1)
-                            ), BigDecimal.TEN, mapOf()
+                            ),
+                            BigDecimal.TEN,
+                            CategoryAmounts(),
                         ),
                         it.first
                     )

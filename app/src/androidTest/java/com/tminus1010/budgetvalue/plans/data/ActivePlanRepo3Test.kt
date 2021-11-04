@@ -2,16 +2,12 @@ package com.tminus1010.budgetvalue.plans.data
 
 import com.tminus1010.budgetvalue.FakeDatastore
 import com.tminus1010.budgetvalue.Given
+import com.tminus1010.budgetvalue._core.app.CategoryAmounts
 import com.tminus1010.budgetvalue._core.app.DatePeriodService
 import com.tminus1010.budgetvalue._core.data.MoshiWithCategoriesProvider
-import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
-import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.plans.domain.Plan
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import io.mockk.every
-import io.mockk.mockk
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -31,7 +27,6 @@ class ActivePlanRepo3Test {
 
     @Inject
     lateinit var moshiWithCategoriesProvider: MoshiWithCategoriesProvider
-
     lateinit var activePlanRepo: ActivePlanRepo3
 
     @Before
@@ -60,7 +55,7 @@ class ActivePlanRepo3Test {
             Plan(
                 datePeriodService.getDatePeriod(LocalDate.now()),
                 BigDecimal("11"),
-                mapOf(Given.categories[0] to BigDecimal("9"))
+                CategoryAmounts(Given.categories[0] to BigDecimal("9"))
             )
         // # When
         activePlanRepo.push(givenNewPlan)
@@ -77,7 +72,7 @@ class ActivePlanRepo3Test {
             Plan(
                 datePeriodService.getDatePeriod(LocalDate.now()),
                 BigDecimal("11"),
-                mapOf(Given.categories[0] to BigDecimal("9"))
+                CategoryAmounts(Given.categories[0] to BigDecimal("9"))
             )
         activePlanRepo.push(givenNewPlan)
         Thread.sleep(500) // Why is this necessary..?
@@ -89,9 +84,9 @@ class ActivePlanRepo3Test {
             Plan(
                 datePeriodService.getDatePeriod(LocalDate.now()),
                 BigDecimal("11"),
-                mapOf()
+                CategoryAmounts()
             ),
-            activePlanRepo.activePlan.value
+            activePlanRepo.activePlan.value,
         )
         Thread.sleep(500) // Why is this necessary..?
     }
