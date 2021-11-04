@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import javax.inject.Inject
 
 /**
- * This moshi can parse [Category], but it transitively depends on [UserCategoriesDAO2]
+ * This moshi can parse [Category], but it transitively depends on [UserCategoriesDAO]
  */
 class MoshiWithCategoriesProvider @Inject constructor(moshiWithCategoriesAdapters: MoshiWithCategoriesAdapters) {
     val moshi =

@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface UserCategoriesDAO2 {
+interface UserCategoriesDAO {
     @Query("SELECT * FROM `Category`")
     fun fetchUserCategories(): Flow<List<Category>>
 

@@ -13,25 +13,25 @@ import javax.inject.Singleton
 class CategoriesRepo @Inject constructor(
     categoryDatabase: CategoryDatabase,
 ) {
-    private val userCategoriesDAO2 = categoryDatabase.userCategoriesDAO2()
+    private val userCategoriesDAO = categoryDatabase.userCategoriesDAO()
 
     val userCategories: Flow<List<Category>> =
-        userCategoriesDAO2.fetchUserCategories()
+        userCategoriesDAO.fetchUserCategories()
             .shareIn(GlobalScope, SharingStarted.WhileSubscribed(), 1)
 
     suspend fun push(category: Category) {
-        userCategoriesDAO2.push(category)
+        userCategoriesDAO.push(category)
     }
 
     suspend fun delete(category: Category) {
-        userCategoriesDAO2.delete(category)
+        userCategoriesDAO.delete(category)
     }
 
     suspend fun update(category: Category) {
-        userCategoriesDAO2.update(category)
+        userCategoriesDAO.update(category)
     }
 
     suspend fun hasCategory(categoryName: String): Boolean {
-        return userCategoriesDAO2.hasCategory(categoryName) != 0
+        return userCategoriesDAO.hasCategory(categoryName) != 0
     }
 }

@@ -11,5 +11,5 @@ import com.tminus1010.budgetvalue.categories.models.Category
     entities = [Category::class],
 )
 abstract class CategoryDatabase : RoomDatabase() {
-    abstract fun userCategoriesDAO2(): UserCategoriesDAO2
+    abstract fun userCategoriesDAO(): UserCategoriesDAO
 }
