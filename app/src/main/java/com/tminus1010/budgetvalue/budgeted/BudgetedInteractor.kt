@@ -1,12 +1,13 @@
 package com.tminus1010.budgetvalue.budgeted
 
+import com.tminus1010.budgetvalue._core.all.extensions.asObservable2
 import com.tminus1010.budgetvalue._core.all.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
-import com.tminus1010.budgetvalue._core.framework.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue._core.framework.Rx
+import com.tminus1010.budgetvalue._core.framework.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.accounts.data.AccountsRepo
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.plans.data.PlansRepo
+import com.tminus1010.budgetvalue.plans.data.PlansRepo2
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
@@ -20,13 +21,13 @@ import javax.inject.Singleton
 
 @Singleton
 class BudgetedInteractor @Inject constructor(
-    plansRepo: PlansRepo,
+    plansRepo: PlansRepo2,
     transactionsInteractor: TransactionsInteractor,
     reconciliationsRepo: ReconciliationsRepo,
     accountsRepo: AccountsRepo,
 ) {
     val categoryAmounts =
-        Rx.combineLatest(reconciliationsRepo.reconciliations, plansRepo.plansWithoutActivePlan, transactionsInteractor.transactionBlocks)
+        Rx.combineLatest(reconciliationsRepo.reconciliations, plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks)
             .throttleLatest(1, TimeUnit.SECONDS)
             .map { (reconciliations, plans, transactionBlocks) ->
                 sequenceOf<Map<Category, BigDecimal>>()
@@ -40,7 +41,7 @@ class BudgetedInteractor @Inject constructor(
         categoryAmounts
             .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO)) { it.itemObservableMap }
     val totalAmount =
-        Observable.combineLatest(reconciliationsRepo.reconciliations, plansRepo.plans, transactionsInteractor.transactionBlocks)
+        Observable.combineLatest(reconciliationsRepo.reconciliations, plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks)
         { reconciliations, plans, actuals ->
             reconciliations.map { it.total }.sum() +
                     plans.map { it.amount }.sum() +
