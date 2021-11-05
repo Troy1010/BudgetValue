@@ -15,7 +15,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ActivePlanRepo @Inject constructor(
-    plansRepo: PlansRepo2,
+    plansRepo: PlansRepo,
     currentDatePeriodRepo: CurrentDatePeriodRepo,
 ) {
     val activePlan =

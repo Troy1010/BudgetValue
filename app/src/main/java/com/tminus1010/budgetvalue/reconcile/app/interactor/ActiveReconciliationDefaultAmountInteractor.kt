@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue._core.all.extensions.asObservable2
 import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.accounts.app.AccountsAggregate
 import com.tminus1010.budgetvalue.accounts.data.AccountsRepo
-import com.tminus1010.budgetvalue.plans.data.PlansRepo2
+import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.plans.domain.Plan
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.reconcile.domain.Reconciliation
@@ -22,7 +22,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ActiveReconciliationDefaultAmountInteractor @Inject constructor(
-    plansRepo: PlansRepo2,
+    plansRepo: PlansRepo,
     reconciliationsRepo: ReconciliationsRepo,
     transactionsInteractor: TransactionsInteractor,
     accountsRepo: AccountsRepo,

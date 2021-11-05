@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.stateIn
 import java.math.BigDecimal
 import javax.inject.Inject
 
-class PlansRepo2 @Inject constructor(
+class PlansRepo @Inject constructor(
     miscDatabase: MiscDatabase,
 ) {
     private val miscDAO = miscDatabase.miscDAO()

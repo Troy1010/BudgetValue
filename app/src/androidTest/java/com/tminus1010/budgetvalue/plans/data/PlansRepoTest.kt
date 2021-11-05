@@ -16,7 +16,7 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltAndroidTest
-class PlansRepo2Test {
+class PlansRepoTest {
     @get:Rule
     val hiltAndroidRule = HiltAndroidRule(this)
 
@@ -24,7 +24,7 @@ class PlansRepo2Test {
     lateinit var datePeriodService: DatePeriodService
 
     @Inject
-    lateinit var plansRepo: PlansRepo2
+    lateinit var plansRepo: PlansRepo
 
     @Before
     fun before() {

@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
 import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue.accounts.data.AccountsRepo
 import com.tminus1010.budgetvalue.budgeted.BudgetedInteractor
-import com.tminus1010.budgetvalue.plans.data.PlansRepo2
+import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.plans.domain.Plan
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.reconcile.domain.ReconciliationToDo
@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 // TODO()
 class ReconciliationsToDoInteractor @Inject constructor(
-    plansRepo: PlansRepo2,
+    plansRepo: PlansRepo,
     transactionsInteractor: TransactionsInteractor,
     reconciliationsRepo: ReconciliationsRepo,
     accountsRepo: AccountsRepo,

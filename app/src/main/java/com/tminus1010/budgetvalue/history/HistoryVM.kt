@@ -13,7 +13,7 @@ import com.tminus1010.budgetvalue.budgeted.BudgetedInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.history.presentation.BasicHeaderWithSubtitlePresentationModel
 import com.tminus1010.budgetvalue.history.presentation.BasicTextPresentationModel
-import com.tminus1010.budgetvalue.plans.data.PlansRepo2
+import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
@@ -34,7 +34,7 @@ class HistoryVM @Inject constructor(
     budgetedInteractor: BudgetedInteractor,
     private val datePeriodService: DatePeriodService,
     private val currentDatePeriodRepo: CurrentDatePeriodRepo,
-    private val plansRepo: PlansRepo2,
+    private val plansRepo: PlansRepo,
     private val reconciliationRepo: ReconciliationsRepo,
 ) : ViewModel() {
     private val activeCategories: Observable<List<Category>> =

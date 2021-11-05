@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
 import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue.budgeted.Budgeted
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.plans.data.PlansRepo2
+import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.plans.domain.Plan
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.reconcile.domain.Reconciliation
@@ -32,7 +32,7 @@ sealed class HistoryVMItem {
 
     open val menuVMItems: List<MenuVMItem> = listOf()
 
-    class PlanVMItem(plan: Plan, currentDatePeriodRepo: CurrentDatePeriodRepo, plansRepo: PlansRepo2) : HistoryVMItem() {
+    class PlanVMItem(plan: Plan, currentDatePeriodRepo: CurrentDatePeriodRepo, plansRepo: PlansRepo) : HistoryVMItem() {
         override val title: String = "Plan"
         override val subTitle: Observable<Box<String?>> =
             currentDatePeriodRepo.currentDatePeriod
