@@ -27,14 +27,12 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.components.SingletonComponent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.time.LocalDate
 import javax.inject.Singleton
 
-@Ignore
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class DevEnv_Main {
