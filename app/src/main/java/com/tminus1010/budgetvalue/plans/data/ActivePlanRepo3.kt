@@ -4,8 +4,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
 import com.tminus1010.budgetvalue._core.data.MoshiWithCategoriesProvider
+import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.plans.domain.Plan
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
@@ -38,13 +38,7 @@ class ActivePlanRepo3 @Inject constructor(
 
     val activePlan =
         dataStore.data
-            .map {
-                try {
-                    moshiWithCategoriesProvider.moshi.fromJson<Plan>(it[key])
-                } catch (e: Throwable) {
-                    throw e
-                }
-            }
+            .map { moshiWithCategoriesProvider.moshi.fromJson<Plan>(it[key]) }
             .distinctUntilChanged()
             .stateIn(GlobalScope, SharingStarted.Eagerly, null)
 }
