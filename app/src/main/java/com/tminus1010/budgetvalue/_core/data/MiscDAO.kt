@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue._core.data
 import androidx.room.*
 import com.tminus1010.budgetvalue.accounts.data.AccountDTO
 import com.tminus1010.budgetvalue.plans.data.model.PlanDTO
+import com.tminus1010.budgetvalue.plans.domain.Plan
 import com.tminus1010.budgetvalue.reconcile.data.model.ReconciliationDTO
 import com.tminus1010.budgetvalue.replay_or_future.data.model.BasicFutureDTO
 import com.tminus1010.budgetvalue.replay_or_future.data.model.BasicReplayDTO
@@ -68,7 +69,12 @@ interface MiscDAO {
     @Query("UPDATE TransactionDTO SET categoryAmounts=:categoryAmounts WHERE id=:id")
     fun updateTransactionCategoryAmounts(id: String, categoryAmounts: Map<String, BigDecimal>): Completable
 
-    // # PlanCategoryAmounts
+    // # Plan
+    @Query("select * from `Plan`")
+    fun getPlans(): Observable<List<Plan>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(plan: Plan): Completable
 
     @Query("select * from PlanDTO")
     fun fetchPlans(): Observable<List<PlanDTO>>

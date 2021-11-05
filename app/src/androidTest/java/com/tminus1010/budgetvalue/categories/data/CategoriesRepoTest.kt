@@ -22,9 +22,6 @@ class CategoriesRepoTest {
     @get:Rule
     var hiltAndroidRule = HiltAndroidRule(this)
 
-    @Inject
-    lateinit var roomTypeConverter: RoomTypeConverter
-
     lateinit var categoriesRepo: CategoriesRepo
 
     @Before
@@ -36,7 +33,6 @@ class CategoriesRepoTest {
                     app,
                     CategoryDatabase::class.java,
                 )
-                    .addTypeConverter(roomTypeConverter)
                     .build()
             )
     }

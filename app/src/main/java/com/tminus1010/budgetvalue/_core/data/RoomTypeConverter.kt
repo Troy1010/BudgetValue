@@ -1,8 +1,8 @@
 package com.tminus1010.budgetvalue._core.data
 
-import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 import com.tminus1010.budgetvalue._core.data.MoshiProvider.moshi
+import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
@@ -10,10 +10,8 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.*
-import javax.inject.Inject
 
-@ProvidedTypeConverter
-class RoomTypeConverter @Inject constructor() {
+object RoomTypeConverter {
     @TypeConverter
     fun fromBigDecimalToString(x: BigDecimal): String =
         moshi.toJson(x)
@@ -52,5 +50,13 @@ class RoomTypeConverter @Inject constructor() {
 
     @TypeConverter
     fun fromJson2(s: String): AmountFormula? =
+        moshi.fromJson(s)
+
+    @TypeConverter
+    fun fromLocalDatePeriod(x: LocalDatePeriod): String =
+        moshi.toJson(x)
+
+    @TypeConverter
+    fun toLocalDatePeriod(s: String): LocalDatePeriod? =
         moshi.fromJson(s)
 }
