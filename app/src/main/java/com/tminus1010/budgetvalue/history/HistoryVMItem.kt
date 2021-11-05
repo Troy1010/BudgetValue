@@ -1,19 +1,21 @@
 package com.tminus1010.budgetvalue.history
 
-import com.tminus1010.budgetvalue._core.data.repos.CurrentDatePeriodRepo
 import com.tminus1010.budgetvalue._core.all.extensions.mapBox
-import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
+import com.tminus1010.budgetvalue._core.data.repos.CurrentDatePeriodRepo
 import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
-import com.tminus1010.budgetvalue.transactions.app.TransactionBlock
+import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue.budgeted.Budgeted
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.plans.data.PlansRepo
+import com.tminus1010.budgetvalue.plans.data.PlansRepo2
 import com.tminus1010.budgetvalue.plans.domain.Plan
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.reconcile.domain.Reconciliation
+import com.tminus1010.budgetvalue.transactions.app.TransactionBlock
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Observable
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.math.BigDecimal
 
 /**
@@ -30,7 +32,7 @@ sealed class HistoryVMItem {
 
     open val menuVMItems: List<MenuVMItem> = listOf()
 
-    class PlanVMItem(plan: Plan, currentDatePeriodRepo: CurrentDatePeriodRepo, plansRepo: PlansRepo) : HistoryVMItem() {
+    class PlanVMItem(plan: Plan, currentDatePeriodRepo: CurrentDatePeriodRepo, plansRepo: PlansRepo2) : HistoryVMItem() {
         override val title: String = "Plan"
         override val subTitle: Observable<Box<String?>> =
             currentDatePeriodRepo.currentDatePeriod
@@ -46,7 +48,7 @@ sealed class HistoryVMItem {
             plan.defaultAmount.toString()
         override val menuVMItems =
             listOf(
-                MenuVMItem("Delete") { plansRepo.delete(plan).subscribe() }
+                MenuVMItem("Delete") { GlobalScope.launch { plansRepo.delete(plan) } }
             )
     }
 

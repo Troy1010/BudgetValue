@@ -1,23 +1,25 @@
 package com.tminus1010.budgetvalue.plans.data
 
+import com.tminus1010.budgetvalue._core.all.extensions.asObservable2
 import com.tminus1010.budgetvalue._core.all.extensions.flatMapSourceHashMap
-import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
 import com.tminus1010.budgetvalue._core.data.repos.CurrentDatePeriodRepo
+import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
 import com.tminus1010.budgetvalue._core.framework.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.plans.domain.Plan
 import com.tminus1010.tmcommonkotlin.rx.extensions.total
 import io.reactivex.rxjava3.core.Observable
+import kotlinx.coroutines.runBlocking
 import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ActivePlanRepo @Inject constructor(
-    plansRepo: PlansRepo,
+    plansRepo: PlansRepo2,
     currentDatePeriodRepo: CurrentDatePeriodRepo,
 ) {
     val activePlan =
-        plansRepo.plans
+        plansRepo.plans.asObservable2()
             .flatMap {
                 // If the last plan is a valid active plan, use that. Otherwise, copy some of the last plan's properties if it exists or create a new one, and push it.
                 val lastPlan = it.lastOrNull()
@@ -41,7 +43,7 @@ class ActivePlanRepo @Inject constructor(
                                     CategoryAmounts()
                                 )
                             )
-                    }.doOnNext { plansRepo.pushPlan(it).blockingAwait() }
+                    }.doOnNext { runBlocking { plansRepo.push(it) } }
                 }
             }
             .replay(1).refCount()
