@@ -7,7 +7,6 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.domain.Plan
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -16,7 +15,7 @@ class PlansRepo @Inject constructor(
     miscDatabase: MiscDatabase,
 ) {
     private val miscDAO = miscDatabase.miscDAO()
-    val plans: StateFlow<List<Plan>?> =
+    val plans =
         miscDAO.getPlans()
             .stateIn(GlobalScope, SharingStarted.Eagerly, null)
 
