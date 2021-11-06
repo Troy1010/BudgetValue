@@ -49,7 +49,7 @@ class MockImportSelectionActivity : AppCompatActivity() {
                 override fun onBindViewHolder(holder: GenViewHolder2<ItemButtonBinding>, position: Int) {
                     holder.vb.btnItem.text = "Import Transactions ${holder.adapterPosition}"
                     holder.vb.btnItem.setOnClickListener {
-                        importTransactions(assets.open(transactionPathNames[holder.adapterPosition]).buffered()).subscribe()
+                        importTransactions(assets2.open(transactionPathNames[holder.adapterPosition]).buffered()).subscribe()
                         toaster.toast(R.string.import_successful)
                         finish()
                     }
