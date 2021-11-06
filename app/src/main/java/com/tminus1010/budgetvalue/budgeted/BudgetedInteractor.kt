@@ -44,7 +44,7 @@ class BudgetedInteractor @Inject constructor(
         Observable.combineLatest(reconciliationsRepo.reconciliations, plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks)
         { reconciliations, plans, actuals ->
             reconciliations.map { it.total }.sum() +
-                    plans.map { it.amount }.sum() +
+                    plans.map { it.total }.sum() +
                     actuals.map { it.amount }.sum()
         }
             .throttleLast(50, TimeUnit.MILLISECONDS)

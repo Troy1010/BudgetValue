@@ -94,8 +94,8 @@ interface MiscDAO {
     @Query("UPDATE `Plan` SET categoryAmounts=:categoryAmounts WHERE localDatePeriod=:localDatePeriod")
     suspend fun updatePlanCategoryAmounts(localDatePeriod: LocalDatePeriod, categoryAmounts: CategoryAmounts)
 
-    @Query("UPDATE `Plan` SET amount=:amount WHERE localDatePeriod=:localDatePeriod")
-    suspend fun updatePlanAmount(localDatePeriod: LocalDatePeriod, amount: BigDecimal)
+    @Query("UPDATE `Plan` SET total=:total WHERE localDatePeriod=:localDatePeriod")
+    suspend fun updatePlanAmount(localDatePeriod: LocalDatePeriod, total: BigDecimal)
 
     //
 

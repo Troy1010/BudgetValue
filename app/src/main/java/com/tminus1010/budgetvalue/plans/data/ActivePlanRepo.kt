@@ -31,7 +31,7 @@ class ActivePlanRepo @Inject constructor(
                             Observable.just(
                                 Plan(
                                     currentDatePeriodRepo.currentDatePeriod.value,
-                                    lastPlan.amount,
+                                    lastPlan.total,
                                     lastPlan.categoryAmounts
                                 )
                             )
@@ -53,7 +53,7 @@ class ActivePlanRepo @Inject constructor(
             { it.itemObservableMap }
             .replay(1).refCount()
     val expectedIncome =
-        activePlan.map { it.amount }
+        activePlan.map { it.total }
             .distinctUntilChanged()
     val defaultAmount =
         Observable.combineLatest(expectedIncome, activePlanCAs.switchMap { it.values.total() })

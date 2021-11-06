@@ -12,9 +12,9 @@ import java.math.BigDecimal
 data class Plan(
     @PrimaryKey
     val localDatePeriod: LocalDatePeriod,
-    val amount: BigDecimal,
+    val total: BigDecimal,
     val categoryAmounts: CategoryAmounts,
 ) {
     @Ignore
-    val defaultAmount = amount - categoryAmounts.values.sum()
+    val defaultAmount = total - categoryAmounts.values.sum()
 }
