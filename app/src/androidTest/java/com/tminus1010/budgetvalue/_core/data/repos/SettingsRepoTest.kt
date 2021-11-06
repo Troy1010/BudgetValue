@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue._core.data.repos
 
-import com.tminus1010.budgetvalue.FakeDatastore
+import com.tminus1010.budgetvalue.FakeDataStore
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -12,7 +12,7 @@ class SettingsRepoTest {
     @Test
     fun anchorDateOffset_default_push() {
         // # Given
-        val settingsRepo = SettingsRepo(FakeDatastore())
+        val settingsRepo = SettingsRepo(FakeDataStore())
         // # Then
         assertEquals(0, settingsRepo.anchorDateOffset.value)
         // # When
@@ -25,7 +25,7 @@ class SettingsRepoTest {
     @Test
     fun blockSize_default_push() {
         // # Given
-        val settingsRepo = SettingsRepo(FakeDatastore())
+        val settingsRepo = SettingsRepo(FakeDataStore())
         // # Then
         assertEquals(14, settingsRepo.blockSize.value)
         // # When

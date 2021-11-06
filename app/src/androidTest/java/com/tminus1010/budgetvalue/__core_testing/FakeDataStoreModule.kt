@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.__core_testing
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.tminus1010.budgetvalue.FakeDatastore
+import com.tminus1010.budgetvalue.FakeDataStore
 import com.tminus1010.budgetvalue._core.all.dependency_injection.DataStoreModule
 import dagger.Module
 import dagger.Provides
@@ -18,5 +18,5 @@ import javax.inject.Singleton
 object FakeDataStoreModule {
     @Provides
     @Singleton
-    fun provideDataStore(): DataStore<Preferences> = FakeDatastore()
+    fun provideDataStore(): DataStore<Preferences> = FakeDataStore()
 }

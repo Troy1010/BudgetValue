@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.tminus1010.budgetvalue.*
+import com.tminus1010.budgetvalue._core.all.extensions.asObservable2
 import com.tminus1010.budgetvalue._core.all.extensions.bind
 import com.tminus1010.budgetvalue._core.all.extensions.easyText
 import com.tminus1010.budgetvalue._core.framework.Rx
@@ -14,7 +15,7 @@ import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.FragPlanBinding
 import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
-import com.tminus1010.budgetvalue.plans.presentation.ActivePlanVM
+import com.tminus1010.budgetvalue.plans.presentation.PlanVM
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -26,7 +27,7 @@ import java.util.concurrent.TimeUnit
 @AndroidEntryPoint
 class PlanFrag : Fragment(R.layout.frag_plan) {
     private val vb by viewBinding(FragPlanBinding::bind)
-    private val activePlanVM: ActivePlanVM by activityViewModels()
+    private val planVM: PlanVM by activityViewModels()
     private val categoriesVM: CategoriesVM by activityViewModels()
     override fun onStart() {
         super.onStart()
@@ -35,18 +36,18 @@ class PlanFrag : Fragment(R.layout.frag_plan) {
             { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
             { d, vb, lifecycleOwner ->
                 vb.moneyedittext.bind(d, lifecycleOwner) { easyText = it }
-                vb.moneyedittext.onDone { activePlanVM.userSaveExpectedIncome(it) }
+                vb.moneyedittext.onDone { planVM.userSaveExpectedIncome(it) }
             }
         )
-        val planCAsRecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Pair<Category, Observable<String>?>>(
+        val planCAsRecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Pair<Category, String?>>(
             { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
             { (category, d), vb, lifecycleOwner ->
-                vb.moneyedittext.onDone { activePlanVM.userSaveActivePlanCA(category, it) }
+                vb.moneyedittext.onDone { planVM.userSaveActivePlanCA(category, it) }
                 if (d == null) return@ViewItemRecipeFactory3
-                vb.moneyedittext.bind(d, lifecycleOwner) { easyText = it }
+                vb.moneyedittext.easyText = d
             }
         )
-        Rx.combineLatest(categoriesVM.userCategories, activePlanVM.activePlanCAs)
+        Rx.combineLatest(categoriesVM.userCategories, planVM.activePlanCAs.asObservable2())
             .throttleLatest(150, TimeUnit.MILLISECONDS)
             .observeOn(Schedulers.computation())
             .map { (categories, planCAsItemObservableMap) ->
@@ -56,8 +57,8 @@ class PlanFrag : Fragment(R.layout.frag_plan) {
                             + recipeFactories.textView.createOne("Default")
                             + recipeFactories.textView.createMany(categories.map { it.name }),
                     listOf(recipeFactories.header.createOne("Plan"))
-                            + expectedIncomeRecipeFactory.createOne(activePlanVM.expectedIncome)
-                            + recipeFactories.textViewWithLifecycle.createOne(activePlanVM.defaultAmount)
+                            + expectedIncomeRecipeFactory.createOne(planVM.expectedIncome.asObservable2())
+                            + recipeFactories.textViewWithLifecycle.createOne(planVM.defaultAmount.asObservable2())
                             + planCAsRecipeFactory.createMany(categories.map { Pair(it, planCAsItemObservableMap[it]) })
                 )
                     .reflectXY()

@@ -9,7 +9,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlin.reflect.jvm.isAccessible
 
-class FakeDatastore : DataStore<Preferences> {
+class FakeDataStore : DataStore<Preferences> {
     private val _data = MutableStateFlow<Preferences>(MutablePreferences::class.constructors.first().apply { isAccessible = true }.call(mutableMapOf<Preferences.Key<*>, Any>(), false))
     private val mutex = Mutex()
     override val data: Flow<Preferences> = _data

@@ -4,6 +4,7 @@ import com.tminus1010.budgetvalue.Given
 import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
 import com.tminus1010.budgetvalue._core.domain.DatePeriodService
 import com.tminus1010.budgetvalue.plans.domain.Plan
+import com.tminus1010.tmcommonkotlin.core.logx
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
@@ -35,38 +36,20 @@ class ActivePlanRepo3Test {
     fun default() = runBlocking {
         // # Then
         assertEquals(
-            null,
-            activePlanRepo.activePlan.value
-        )
-    }
-
-    @Test
-    fun push() = runBlocking {
-        // # Given
-        val givenNewPlan =
             Plan(
                 datePeriodService.getDatePeriod(LocalDate.now()),
-                BigDecimal("11"),
-                CategoryAmounts(Given.categories[0] to BigDecimal("9"))
-            )
-        // # When
-        activePlanRepo.push(givenNewPlan)
-        Thread.sleep(500) // Why is this necessary..?
-        // # Then
-        assertEquals(givenNewPlan, activePlanRepo.activePlan.value)
+                BigDecimal("0"),
+                CategoryAmounts(),
+            ),
+            activePlanRepo.activePlan.value
+        )
         Thread.sleep(500) // Why is this necessary..?
     }
 
     @Test
     fun clearCategoryAmounts() = runBlocking {
         // # Given
-        val givenNewPlan =
-            Plan(
-                datePeriodService.getDatePeriod(LocalDate.now()),
-                BigDecimal("11"),
-                CategoryAmounts(Given.categories[0] to BigDecimal("9"))
-            )
-        activePlanRepo.push(givenNewPlan)
+        activePlanRepo.updateCategoryAmount(Given.categories[0], BigDecimal("9"))
         Thread.sleep(500) // Why is this necessary..?
         // # When
         activePlanRepo.clearCategoryAmounts()
@@ -75,8 +58,42 @@ class ActivePlanRepo3Test {
         assertEquals(
             Plan(
                 datePeriodService.getDatePeriod(LocalDate.now()),
-                BigDecimal("11"),
-                CategoryAmounts()
+                BigDecimal("0"),
+                CategoryAmounts(),
+            ),
+            activePlanRepo.activePlan.value,
+        )
+        Thread.sleep(500) // Why is this necessary..?
+    }
+
+    @Test
+    fun updateCategoryAmount() = runBlocking {
+        // # When
+        activePlanRepo.updateCategoryAmount(Given.categories[0], BigDecimal("22"))
+        Thread.sleep(500) // Why is this necessary..?
+        // # Then
+        assertEquals(
+            Plan(
+                datePeriodService.getDatePeriod(LocalDate.now()),
+                BigDecimal("0"),
+                CategoryAmounts(Given.categories[0] to BigDecimal("22")),
+            ),
+            activePlanRepo.activePlan.value.logx("valueOfTest"),
+        )
+        Thread.sleep(500) // Why is this necessary..?
+    }
+
+    @Test
+    fun updateTotal() = runBlocking {
+        // # When
+        activePlanRepo.updateTotal(BigDecimal("98"))
+        Thread.sleep(500) // Why is this necessary..?
+        // # Then
+        assertEquals(
+            Plan(
+                datePeriodService.getDatePeriod(LocalDate.now()),
+                BigDecimal("98"),
+                CategoryAmounts(),
             ),
             activePlanRepo.activePlan.value,
         )
