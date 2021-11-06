@@ -10,7 +10,6 @@ import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.toState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.Subject
 import javax.inject.Inject
 
@@ -36,13 +35,15 @@ class ActivePlanVM @Inject constructor(
     }
 
     // # Presentation State
-    val defaultAmount = activePlanRepo.defaultAmount
-        .map { it.toString() }
-        .toState(disposables, errorSubject)
-    val expectedIncome = activePlanRepo.expectedIncome
-        .map { it.toString() }
-        .toState(disposables, errorSubject)
-    val activePlanCAs: Observable<Map<Category, Observable<String>>> =
+    val defaultAmount =
+        activePlanRepo.defaultAmount
+            .map { it.toString() }
+            .toState(disposables, errorSubject)
+    val expectedIncome =
+        activePlanRepo.expectedIncome
+            .map { it.toString() }
+            .toState(disposables, errorSubject)
+    val activePlanCAs =
         activePlanRepo.activePlanCAs
             .map { it.mapValues { it.value.map { it.toString() } } }
 }
