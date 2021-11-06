@@ -13,6 +13,10 @@ class IsReconciliationReady @Inject constructor(
     transactionsInteractor: TransactionsInteractor,
     isPlanFeatureEnabledUC: IsPlanFeatureEnabledUC,
 ) : Observable<Boolean>() {
+    /**
+     * If all spendBlocks after startDate are fullyCategorized, then return true.
+     * The startDate is your most recent reconciliation, or the latest date of the most recent import when plan feature was enabled.
+     */
     val isReconciliationReady =
         combineLatest(latestDateOfMostRecentImport, mostRecentReconciliation, transactionsInteractor.spendBlocks, isPlanFeatureEnabledUC.latestDateOfMostRecentImportWhenPlanFeatureWasEnabled)
         { (latestDateOfMostRecentImport), (mostRecentReconciliation), spendBlocks, (latestDateOfMostRecentImportWhenPlanFeatureWasEnabled) ->
