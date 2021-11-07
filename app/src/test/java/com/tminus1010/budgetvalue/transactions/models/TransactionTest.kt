@@ -19,7 +19,7 @@ class TransactionTest : TestCase() {
                 Given.categories[2] to BigDecimal("3.34"),
             ),
             null,
-            "someID"
+            "someID",
         )
         // # When
         val result = transaction.categorize(Given.categories[0])
