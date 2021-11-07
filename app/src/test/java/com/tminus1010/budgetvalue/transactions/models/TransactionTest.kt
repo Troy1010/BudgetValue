@@ -24,10 +24,13 @@ class TransactionTest : TestCase() {
         // # When
         val result = transaction.categorize(Given.categories[0])
         // # Then
-        assertEquals(mapOf(
-            Given.categories[0] to BigDecimal("3.33"),
-            Given.categories[1] to BigDecimal("3.33"),
-            Given.categories[2] to BigDecimal("3.34"),
-        ), result.categoryAmounts)
+        assertEquals(
+            mapOf(
+                Given.categories[0] to BigDecimal("3.33"),
+                Given.categories[1] to BigDecimal("3.33"),
+                Given.categories[2] to BigDecimal("3.34"),
+            ),
+            result.categoryAmounts,
+        )
     }
 }
