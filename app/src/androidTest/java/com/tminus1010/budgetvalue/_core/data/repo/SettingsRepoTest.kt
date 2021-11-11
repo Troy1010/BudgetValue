@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._core.data.repos
+package com.tminus1010.budgetvalue._core.data.repo
 
 import com.tminus1010.budgetvalue.FakeDataStore
 import dagger.hilt.android.testing.HiltAndroidTest
