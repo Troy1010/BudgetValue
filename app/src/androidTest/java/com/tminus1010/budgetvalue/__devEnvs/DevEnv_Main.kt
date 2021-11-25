@@ -64,8 +64,8 @@ class DevEnv_Main {
         @Provides
         @Singleton
         fun getExtraMenuItemPartials(appInitRepo: AppInitRepo, appInteractor: AppInteractor, transactionsInteractor: TransactionsInteractor, futuresRepo: FuturesRepo, application: Application) = object : GetExtraMenuItemPartials() {
-            override fun invoke() =
-                arrayOf(
+            override fun invoke(): Array<MenuVMItem> {
+                return arrayOf(
                     MenuVMItem("Redo App Init") {
                         appInitRepo.pushAppInitBool(false)
                             .andThen(appInteractor)
@@ -97,6 +97,7 @@ class DevEnv_Main {
                             .subscribe()
                     },
                 )
+            }
         }
     }
 }
