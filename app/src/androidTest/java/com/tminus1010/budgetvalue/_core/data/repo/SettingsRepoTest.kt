@@ -4,7 +4,6 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.tminus1010.budgetvalue.FakeDataStore
 import com.tminus1010.budgetvalue._core.all.dependency_injection.DataStoreModule
-import com.tminus1010.budgetvalue._core.all.dependency_injection.DatabaseModule
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
