@@ -18,11 +18,11 @@ import javax.inject.Inject
 @UninstallModules(DataStoreModule::class)
 @HiltAndroidTest
 class SettingsRepoTest {
-    @BindValue
-    val fakeDataStore: DataStore<Preferences> = FakeDataStore()
-
     @get:Rule
     var hiltAndroidRule = HiltAndroidRule(this)
+
+    @BindValue
+    val fakeDataStore: DataStore<Preferences> = FakeDataStore()
 
     @Inject
     lateinit var settingsRepo: SettingsRepo
