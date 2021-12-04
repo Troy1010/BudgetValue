@@ -3,7 +3,6 @@ package com.tminus1010.budgetvalue.transactions.app.interactor
 import com.tminus1010.budgetvalue._core.all.extensions.mapBox
 import com.tminus1010.budgetvalue._core.domain.DatePeriodService
 import com.tminus1010.budgetvalue._core.framework.Rx
-import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.importZ.data.LatestDateOfMostRecentImport
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
@@ -18,7 +17,6 @@ import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import java.io.InputStream
-import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -92,17 +90,6 @@ class TransactionsInteractor @Inject constructor(
         transactionsRepo.transactionsAggregate
             .map(TransactionsAggregate::spends)
             .replay(1).refCount()
-    val currentSpendBlockCAs: Observable<Map<Category, BigDecimal>> =
-        spends
-            .map {
-                it
-                    .filter { it.date in datePeriodService.getDatePeriod(LocalDate.now()) }
-                    .map { it.categoryAmounts }
-                    .fold(mapOf()) { acc, v ->
-                        mutableSetOf<Category>().apply { addAll(acc.keys); addAll(v.keys) }
-                            .associateWith { (acc[it] ?: BigDecimal.ZERO) + (v[it] ?: BigDecimal.ZERO) }
-                    }
-            }
     val uncategorizedSpends: Observable<List<Transaction>> =
         spends
             .map { it.filter { it.isUncategorized } }
