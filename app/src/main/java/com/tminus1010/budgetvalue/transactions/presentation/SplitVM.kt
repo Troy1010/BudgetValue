@@ -14,7 +14,7 @@ import com.tminus1010.budgetvalue.replay_or_future.domain.BasicReplay
 import com.tminus1010.budgetvalue.replay_or_future.presentation.CategoryAmountFormulaVMItemsBaseVM
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.budgetvalue.transactions.app.interactor.SaveTransactionInteractor
-import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
+import com.tminus1010.budgetvalue.transactions.app.use_case.UseReplayOrFutureOnAllMatchingUncategorizedTransactions
 import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.tuple.Box
@@ -33,8 +33,8 @@ class SplitVM @Inject constructor(
     private val replaysRepo: ReplaysRepo,
     private val errorSubject: Subject<Throwable>,
     override val categoriesInteractor: CategoriesInteractor,
-    private val transactionsInteractor: TransactionsInteractor,
     private val toaster: Toaster,
+    private val useReplayOrFutureOnAllMatchingUncategorizedTransactions: UseReplayOrFutureOnAllMatchingUncategorizedTransactions
 ) : CategoryAmountFormulaVMItemsBaseVM() {
     // # Input
     fun setup(_transaction: Transaction?, categorySelectionVM: CategorySelectionVM) {
@@ -54,12 +54,12 @@ class SplitVM @Inject constructor(
     }
 
     fun userSubmitCategorizationForAllUncategorized() {
-        transactionsInteractor.applyReplayOrFutureToUncategorizedSpends(
+        useReplayOrFutureOnAllMatchingUncategorizedTransactions(
             BasicReplay(
-                generateUniqueID(),
-                listOf(transactionToPush.unbox.description),
-                categoryAmountFormulas.value!!.filter { !it.value.isZero() },
-                fillCategory.unbox
+                name = generateUniqueID(),
+                searchTexts = listOf(transactionToPush.unbox.description),
+                categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
+                fillCategory = fillCategory.unbox
             )
         ).subscribeBy(
             onSuccess = { toaster.toast("$it transactions categorized"); _categorySelectionVM.clearSelection().subscribe(); navUp.onNext(Unit) }

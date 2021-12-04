@@ -1,24 +1,22 @@
 package com.tminus1010.budgetvalue.transactions.app.interactor
 
 import com.tminus1010.budgetvalue._core.all.extensions.mapBox
-import com.tminus1010.budgetvalue._core.framework.Rx
 import com.tminus1010.budgetvalue._core.domain.DatePeriodService
-import com.tminus1010.budgetvalue.importZ.data.LatestDateOfMostRecentImport
-import com.tminus1010.budgetvalue.transactions.app.TransactionBlock
+import com.tminus1010.budgetvalue._core.framework.Rx
 import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.importZ.data.LatestDateOfMostRecentImport
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
-import com.tminus1010.budgetvalue.replay_or_future.domain.IReplayOrFuture
 import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
+import com.tminus1010.budgetvalue.transactions.app.Transaction
+import com.tminus1010.budgetvalue.transactions.app.TransactionBlock
 import com.tminus1010.budgetvalue.transactions.app.TransactionsAggregate
 import com.tminus1010.budgetvalue.transactions.data.TransactionParser
 import com.tminus1010.budgetvalue.transactions.data.repo.TransactionsRepo
-import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import com.tminus1010.tmcommonkotlin.rx.nonLazy
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
 import java.io.InputStream
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -62,19 +60,6 @@ class TransactionsInteractor @Inject constructor(
                 Completable.fromAction { latestDateOfMostRecentImport.set(transactions.sortedBy { it.date }.last().date) }
                     .delay(2, TimeUnit.SECONDS) // TODO("Duct-tape solution to the fact that the previous completable completes before the repo emits, which ruins IsReconciliationReady")
             )
-    }
-
-    fun applyReplayOrFutureToUncategorizedSpends(replay: IReplayOrFuture): Single<Int> {
-        var counter = 0
-        return uncategorizedSpends.toSingle()
-            .flatMapCompletable { transactions ->
-                Rx.merge(
-                    transactions
-                        .filter { replay.predicate(it) }
-                        .map { transactionsRepo.update(replay.categorize(it)).doOnComplete { counter++ } }
-                )
-            }
-            .toSingle { counter }
     }
 
     // # Internal

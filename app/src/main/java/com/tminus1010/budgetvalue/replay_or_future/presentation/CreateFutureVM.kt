@@ -14,6 +14,7 @@ import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture
 import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
 import com.tminus1010.budgetvalue.replay_or_future.domain.TotalFuture
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
+import com.tminus1010.budgetvalue.transactions.app.use_case.UseReplayOrFutureOnAllMatchingUncategorizedTransactions
 import com.tminus1010.budgetvalue.transactions.presentation.models.SearchType
 import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
@@ -30,6 +31,7 @@ class CreateFutureVM @Inject constructor(
     private val transactionsInteractor: TransactionsInteractor,
     override val categoriesInteractor: CategoriesInteractor,
     private val toaster: Toaster,
+    private val useReplayOrFutureOnAllMatchingUncategorizedTransactions: UseReplayOrFutureOnAllMatchingUncategorizedTransactions
 ) : CategoryAmountFormulaVMItemsBaseVM() {
     // # Workarounds
     lateinit var selfDestruct: () -> Unit
@@ -84,7 +86,7 @@ class CreateFutureVM @Inject constructor(
             .let { newFuture ->
                 Rx.merge(
                     futuresRepo.add(newFuture),
-                    if (newFuture.terminationStatus == TerminationStatus.PERMANENT) transactionsInteractor.applyReplayOrFutureToUncategorizedSpends(newFuture).doOnSuccess { toaster.toast("$it transactions categorized") }.ignoreElement() else null,
+                    if (newFuture.terminationStatus == TerminationStatus.PERMANENT) useReplayOrFutureOnAllMatchingUncategorizedTransactions(newFuture).doOnSuccess { toaster.toast("$it transactions categorized") }.ignoreElement() else null,
                 )
             }
             .andThen(categorySelectionVM.clearSelection())
