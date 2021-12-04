@@ -1,6 +1,9 @@
 package com.tminus1010.budgetvalue.plans.data
 
+import androidx.room.Room
 import com.tminus1010.budgetvalue.Given
+import com.tminus1010.budgetvalue.__core_testing.app
+import com.tminus1010.budgetvalue._core.data.CategoryDatabase
 import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
 import com.tminus1010.budgetvalue._core.domain.DatePeriodService
 import com.tminus1010.budgetvalue._core.data.MoshiWithCategoriesAdapters
@@ -9,6 +12,7 @@ import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.plans.domain.Plan
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.mockk.every
@@ -26,6 +30,10 @@ import javax.inject.Inject
 class PlanAdapterTest {
     @get:Rule
     val hiltAndroidRule = HiltAndroidRule(this)
+
+    @BindValue
+    val categoryDatabase: CategoryDatabase =
+        Room.inMemoryDatabaseBuilder(app, CategoryDatabase::class.java).build()
 
     @Inject
     lateinit var datePeriodService: DatePeriodService

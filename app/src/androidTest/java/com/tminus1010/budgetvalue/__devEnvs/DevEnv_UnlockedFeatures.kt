@@ -2,9 +2,12 @@ package com.tminus1010.budgetvalue.__devEnvs
 
 import android.app.Application
 import android.content.Intent
+import androidx.room.Room
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.tminus1010.budgetvalue.MockImportSelectionActivity
+import com.tminus1010.budgetvalue.__core_testing.app
+import com.tminus1010.budgetvalue._core.data.CategoryDatabase
 import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue._core.presentation.service.GetExtraMenuItemPartials
 import com.tminus1010.budgetvalue._core.view.HostActivity
@@ -24,6 +27,7 @@ import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.components.SingletonComponent
@@ -44,6 +48,10 @@ class DevEnv_UnlockedFeatures {
 
     @get:Rule(order = 1)
     var activityScenarioRule = ActivityScenarioRule(HostActivity::class.java)
+
+    @BindValue
+    val categoryDatabase: CategoryDatabase =
+        Room.inMemoryDatabaseBuilder(app, CategoryDatabase::class.java).build()
 
     init {
         // TODO("Duct-tape solution b/c partial mocks are difficult")

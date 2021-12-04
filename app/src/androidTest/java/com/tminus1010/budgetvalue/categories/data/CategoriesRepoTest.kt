@@ -3,10 +3,9 @@ package com.tminus1010.budgetvalue.categories.data
 import androidx.room.Room
 import com.tminus1010.budgetvalue.__core_testing.app
 import com.tminus1010.budgetvalue._core.data.CategoryDatabase
-import com.tminus1010.budgetvalue._core.data.RoomTypeConverter
-import com.tminus1010.budgetvalue._core.data.RoomWithCategoriesTypeConverter
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.models.CategoryType
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.flow.first
@@ -22,19 +21,16 @@ class CategoriesRepoTest {
     @get:Rule
     var hiltAndroidRule = HiltAndroidRule(this)
 
+    @BindValue
+    val categoryDatabase: CategoryDatabase =
+        Room.inMemoryDatabaseBuilder(app, CategoryDatabase::class.java).build()
+
+    @Inject
     lateinit var categoriesRepo: CategoriesRepo
 
     @Before
     fun before() {
         hiltAndroidRule.inject()
-        categoriesRepo =
-            CategoriesRepo(
-                Room.inMemoryDatabaseBuilder(
-                    app,
-                    CategoryDatabase::class.java,
-                )
-                    .build()
-            )
     }
 
     @Test
