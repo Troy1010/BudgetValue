@@ -7,6 +7,8 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.tminus1010.budgetvalue.MockImportSelectionActivity
 import com.tminus1010.budgetvalue.__core_testing.app
+import com.tminus1010.budgetvalue._core.all.dependency_injection.DataStoreModule
+import com.tminus1010.budgetvalue._core.all.dependency_injection.DatabaseModule
 import com.tminus1010.budgetvalue._core.data.CategoryDatabase
 import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue._core.presentation.service.GetExtraMenuItemPartials
@@ -28,6 +30,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 import dagger.hilt.components.SingletonComponent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
@@ -45,10 +48,6 @@ class DevEnv_Main {
 
     @get:Rule(order = 1)
     var activityScenarioRule = ActivityScenarioRule(HostActivity::class.java)
-
-    @BindValue
-    val categoryDatabase: CategoryDatabase =
-        Room.inMemoryDatabaseBuilder(app, CategoryDatabase::class.java).build()
 
     @Test
     fun main() {

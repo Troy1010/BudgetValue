@@ -6,39 +6,30 @@ import androidx.room.Room
 import com.tminus1010.budgetvalue.FakeDataStore
 import com.tminus1010.budgetvalue.__core_testing.app
 import com.tminus1010.budgetvalue._core.all.dependency_injection.DataStoreModule
+import com.tminus1010.budgetvalue._core.all.dependency_injection.DatabaseModule
 import com.tminus1010.budgetvalue._core.data.CategoryDatabase
+import com.tminus1010.budgetvalue._core.data.MiscDatabase
+import com.tminus1010.budgetvalue._core.data.RoomWithCategoriesTypeConverter
+import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@UninstallModules(DataStoreModule::class)
+@UninstallModules(DatabaseModule::class, DataStoreModule::class)
 @HiltAndroidTest
 class SettingsRepoTest {
-    @get:Rule
-    var hiltAndroidRule = HiltAndroidRule(this)
-
-    @BindValue
-    val categoryDatabase: CategoryDatabase =
-        Room.inMemoryDatabaseBuilder(app, CategoryDatabase::class.java).build()
-
-    @BindValue
-    val fakeDataStore: DataStore<Preferences> = FakeDataStore()
-
-    @Inject
-    lateinit var settingsRepo: SettingsRepo
-
-    @Before
-    fun before() {
-        hiltAndroidRule.inject()
-    }
-
     @Test
     fun anchorDateOffset_default_push() {
         // # Then
@@ -59,5 +50,41 @@ class SettingsRepoTest {
         Thread.sleep(10)
         // # Then
         assertEquals(7, settingsRepo.blockSize.value)
+    }
+
+    @get:Rule
+    var hiltAndroidRule = HiltAndroidRule(this)
+
+    @Inject
+    lateinit var settingsRepo: SettingsRepo
+
+    @Inject
+    lateinit var categoriesRepo: CategoriesRepo
+
+    @Before
+    fun before() {
+        hiltAndroidRule.inject()
+    }
+
+    @BindValue
+    val fakeDataStore: DataStore<Preferences> = FakeDataStore()
+
+    @InstallIn(SingletonComponent::class)
+    @Module
+    object MockModule {
+        @Provides
+        @Singleton
+        fun categoryDatabase(): CategoryDatabase {
+            return Room.inMemoryDatabaseBuilder(app, CategoryDatabase::class.java).build()
+        }
+
+        @Provides
+        @Singleton
+        fun miscDatabase(roomWithCategoriesTypeConverter: RoomWithCategoriesTypeConverter): MiscDatabase {
+            return Room.inMemoryDatabaseBuilder(app, MiscDatabase::class.java)
+                .addTypeConverter(roomWithCategoriesTypeConverter)
+                .fallbackToDestructiveMigration()
+                .build()
+        }
     }
 }

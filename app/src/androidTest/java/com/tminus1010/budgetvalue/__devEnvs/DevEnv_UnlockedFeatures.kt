@@ -49,10 +49,6 @@ class DevEnv_UnlockedFeatures {
     @get:Rule(order = 1)
     var activityScenarioRule = ActivityScenarioRule(HostActivity::class.java)
 
-    @BindValue
-    val categoryDatabase: CategoryDatabase =
-        Room.inMemoryDatabaseBuilder(app, CategoryDatabase::class.java).build()
-
     init {
         // TODO("Duct-tape solution b/c partial mocks are difficult")
         IsPlanFeatureEnabledUC.isPlanFeatureEnabledOverride = Observable.just(true)
