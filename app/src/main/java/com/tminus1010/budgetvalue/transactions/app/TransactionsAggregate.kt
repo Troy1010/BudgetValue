@@ -11,24 +11,8 @@ class TransactionsAggregate(
         transactionsDTO
             .map { Transaction.fromDTO(it, categoryAmountsConverter) }
             .sortedByDescending(Transaction::date)
-
-    val spends by lazy {
-        transactions
-            .filter(Transaction::isSpend)
-    }
-
-    val mostRecentSpend by lazy {
-        spends
-            .firstOrNull()
-    }
-
-    val oldestSpend by lazy {
-        spends
-            .lastOrNull()
-    }
-
-    val mostRecentUncategorizedSpend by lazy {
-        spends
-            .firstOrNull(Transaction::isUncategorized)
-    }
+    val spends by lazy { transactions.filter(Transaction::isSpend) }
+    val mostRecentSpend by lazy { spends.firstOrNull() }
+    val oldestSpend by lazy { spends.lastOrNull() }
+    val mostRecentUncategorizedSpend by lazy { spends.firstOrNull(Transaction::isUncategorized) }
 }
