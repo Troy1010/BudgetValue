@@ -28,7 +28,6 @@ class CategoriesInteractor @Inject constructor(
 
     private val nameToCategoryMap =
         userCategories
-            .skip(1)
             .map { it.associateBy { it.name } as HashMap<String, Category> }
             .replay(1).apply { connect() }
 
