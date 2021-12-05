@@ -35,6 +35,8 @@ import javax.inject.Singleton
 class ActivePlanRepo3Test {
     @Test
     fun default() = runBlocking {
+        // # Given
+        // # When
         // # Then
         assertEquals(
             Plan(
@@ -69,6 +71,7 @@ class ActivePlanRepo3Test {
 
     @Test
     fun updateCategoryAmount() = runBlocking {
+        // # Given
         // # When
         activePlanRepo.updateCategoryAmount(Given.categories[0], BigDecimal("22"))
         Thread.sleep(500) // Why is this necessary..?
@@ -86,6 +89,7 @@ class ActivePlanRepo3Test {
 
     @Test
     fun updateTotal() = runBlocking {
+        // # Given
         // # When
         activePlanRepo.updateTotal(BigDecimal("98"))
         Thread.sleep(500) // Why is this necessary..?
