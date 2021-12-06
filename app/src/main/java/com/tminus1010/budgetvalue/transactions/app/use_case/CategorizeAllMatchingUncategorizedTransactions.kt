@@ -8,7 +8,7 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
-class UseReplayOrFutureOnAllMatchingUncategorizedTransactions @Inject constructor(
+class CategorizeAllMatchingUncategorizedTransactions @Inject constructor(
     private val transactionsInteractor: TransactionsInteractor,
     private val transactionsRepo: TransactionsRepo
 ) {

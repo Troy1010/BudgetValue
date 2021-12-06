@@ -14,7 +14,7 @@ import com.tminus1010.budgetvalue.replay_or_future.domain.BasicReplay
 import com.tminus1010.budgetvalue.replay_or_future.presentation.CategoryAmountFormulaVMItemsBaseVM
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.budgetvalue.transactions.app.interactor.SaveTransactionInteractor
-import com.tminus1010.budgetvalue.transactions.app.use_case.UseReplayOrFutureOnAllMatchingUncategorizedTransactions
+import com.tminus1010.budgetvalue.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
 import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.tuple.Box
@@ -34,7 +34,7 @@ class SplitVM @Inject constructor(
     private val errorSubject: Subject<Throwable>,
     override val categoriesInteractor: CategoriesInteractor,
     private val toaster: Toaster,
-    private val useReplayOrFutureOnAllMatchingUncategorizedTransactions: UseReplayOrFutureOnAllMatchingUncategorizedTransactions
+    private val categorizeAllMatchingUncategorizedTransactions: CategorizeAllMatchingUncategorizedTransactions
 ) : CategoryAmountFormulaVMItemsBaseVM() {
     // # Input
     fun setup(_transaction: Transaction?, categorySelectionVM: CategorySelectionVM) {
@@ -54,7 +54,7 @@ class SplitVM @Inject constructor(
     }
 
     fun userSubmitCategorizationForAllUncategorized() {
-        useReplayOrFutureOnAllMatchingUncategorizedTransactions(
+        categorizeAllMatchingUncategorizedTransactions(
             BasicReplay(
                 name = generateUniqueID(),
                 searchTexts = listOf(transactionToPush.unbox.description),

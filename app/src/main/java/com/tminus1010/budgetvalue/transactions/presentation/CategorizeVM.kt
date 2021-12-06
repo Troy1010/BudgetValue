@@ -8,18 +8,18 @@ import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
+import com.tminus1010.budgetvalue.replay_or_future.domain.BasicReplay
 import com.tminus1010.budgetvalue.replay_or_future.domain.IReplay
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.budgetvalue.transactions.app.interactor.SaveTransactionInteractor
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
+import com.tminus1010.budgetvalue.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.runBlocking
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
@@ -28,6 +28,7 @@ class CategorizeVM @Inject constructor(
     private val saveTransactionInteractor: SaveTransactionInteractor,
     private val transactionsInteractor: TransactionsInteractor,
     replaysRepo: ReplaysRepo,
+    categorizeAllMatchingUncategorizedTransactions: CategorizeAllMatchingUncategorizedTransactions,
 ) : ViewModel() {
     // # Input
     val inSelectionMode = BehaviorSubject.create<Boolean>()
@@ -125,6 +126,19 @@ class CategorizeVM @Inject constructor(
                         }
                     )
                 else null,
+//                if (inSelectionMode)
+//                    ButtonVMItem(
+//                        title = "Categorize All Matching Descriptions As This Category",
+//                        isEnabled = selectedCategories.map { it.size == 1 },
+//                        onClick = {
+//                            categorizeAllMatchingUncategorizedTransactions(
+//                                BasicReplay()
+//                            )
+//                            navToCategorySettings.easyEmit(selectedCategories.value!!.first())
+//                            clearSelection.easyEmit(Unit)
+//                        }
+//                    )
+//                else null,
                 *(if (inSelectionMode)
                     emptyList()
                 else
