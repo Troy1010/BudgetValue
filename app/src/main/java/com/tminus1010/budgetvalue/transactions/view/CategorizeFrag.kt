@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.all.extensions.bind
-import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
+import com.tminus1010.budgetvalue._core.all.extensions.easyCollect
 import com.tminus1010.budgetvalue._core.framework.view.GenViewHolder2
 import com.tminus1010.budgetvalue._core.framework.view.LifecycleRVAdapter2
 import com.tminus1010.budgetvalue._core.framework.view.viewBinding
@@ -24,15 +24,13 @@ import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
 import com.tminus1010.budgetvalue.replay_or_future.view.CreateFutureFrag
 import com.tminus1010.budgetvalue.replay_or_future.view.UseReplayFrag
-import com.tminus1010.budgetvalue.replay_or_future.domain.BasicReplay
-import com.tminus1010.budgetvalue.transactions.presentation.CategorizeVM
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
+import com.tminus1010.budgetvalue.transactions.presentation.CategorizeVM
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toPX
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.kotlin.Observables
 import javax.inject.Inject
 
 
@@ -56,6 +54,9 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         super.onViewCreated(view, savedInstanceState)
         // # Mediation
         categorizeVM.setup(categorySelectionVM)
+        categorySelectionVM.inSelectionMode.subscribe(categorizeVM.inSelectionMode)
+        categorySelectionVM.selectedCategories.subscribe(categorizeVM.selectedCategories)
+        categorizeVM.clearSelection.easyCollect(viewLifecycleOwner) { logz("about to clear selection"); categorySelectionVM.clearSelection().subscribe() }
         // # Some of SelectionMode
         categorySelectionVM.inSelectionMode.observe(viewLifecycleOwner) { inSelectionMode ->
             vb.root.children
@@ -103,88 +104,15 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 }
             }
         }
-        // # Buttons
-        Observables.combineLatest(
-            categorySelectionVM.inSelectionMode,
-            categorizeVM.matchingReplays,
-        ).observe(viewLifecycleOwner) { (inSelectionMode, matchingReplays) ->
-            vb.buttonsview.buttons = listOfNotNull(
-                if (inSelectionMode)
-                    ButtonVMItem(
-                        title = "Create Future",
-                        onClick = { CreateFutureFrag.navTo(nav) }
-                    )
-                else null,
-                if (inSelectionMode)
-                    ButtonVMItem(
-                        title = "Split",
-                        isEnabled = categorizeVM.isTransactionAvailable,
-                        onClick = { SplitFrag.navTo(nav, transactionsInteractor.mostRecentUncategorizedSpend.value!!.first!!) }
-                    )
-                else null,
-                if (inSelectionMode)
-                    ButtonVMItem(
-                        title = "Category Settings",
-                        isEnabled = categorySelectionVM.selectedCategories.map { it.size == 1 },
-                        onClick = {
-                            CategorySettingsFrag.navTo(
-                                source = this,
-                                nav = nav,
-                                categoryName = categorySelectionVM.selectedCategories.value!!.first().name,
-                                isForNewCategory = false
-                            )
-                            categorySelectionVM.clearSelection().subscribe()
-                        }
-                    )
-                else null,
-                *(if (inSelectionMode)
-                    emptyList()
-                else
-                    matchingReplays
-                        .map { replay ->
-                            ButtonVMItem(
-                                title = "Replay (${replay.name})",
-                                onClick = { categorizeVM.userReplay(replay) },
-                                onLongClick = {
-                                    ReplayFrag.navTo(
-                                        nav = nav,
-                                        replay = replay as BasicReplay,
-                                    )
-                                })
-                        })
-                    .toTypedArray(),
-                if (!inSelectionMode)
-                    ButtonVMItem(
-                        title = "Use Replay",
-                        onClick = { nav.navigate(R.id.useReplayFrag) })
-                else null,
-                if (!inSelectionMode)
-                    ButtonVMItem(
-                        title = "Redo",
-                        isEnabled = categorizeVM.isRedoAvailable,
-                        onClick = { categorizeVM.userRedo() })
-                else null,
-                if (!inSelectionMode)
-                    ButtonVMItem(
-                        title = "Undo",
-                        isEnabled = categorizeVM.isUndoAvailable,
-                        onClick = { categorizeVM.userUndo() })
-                else null,
-                if (!inSelectionMode)
-                    ButtonVMItem(
-                        title = "Make New Category",
-                        onClick = {
-                            CategorySettingsFrag.navTo(
-                                nav = nav,
-                                source = this,
-                                categoryName = null,
-                                isForNewCategory = true
-                            )
-                        }
-                    )
-                else null,
-            )
-        }
+        //
+        vb.buttonsview.bind(categorizeVM.buttons) { buttons = it }
+        // # Bind Presentation Events
+        categorizeVM.navToCreateFuture.easyCollect(viewLifecycleOwner) { CreateFutureFrag.navTo(nav) }
+        categorizeVM.navToSplit.easyCollect(viewLifecycleOwner) { SplitFrag.navTo(nav, it) }
+        categorizeVM.navToNewCategory.easyCollect(viewLifecycleOwner) { CategorySettingsFrag.navTo(this, nav, null, true) }
+        categorizeVM.navToCategorySettings.easyCollect(viewLifecycleOwner) { CategorySettingsFrag.navTo(this, nav, it.name, false) }
+        categorizeVM.navToReplay.easyCollect(viewLifecycleOwner) { CategorySettingsFrag.navTo(this, nav, it.name, false) }
+        categorizeVM.navToSelectReplay.easyCollect(viewLifecycleOwner) { nav.navigate(R.id.useReplayFrag) }
     }
 
     override fun onResume() {
