@@ -4,11 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
 import com.tminus1010.budgetvalue._core.all.extensions.unbox
+import com.tminus1010.budgetvalue._core.framework.view.Toaster
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
-import com.tminus1010.budgetvalue.replay_or_future.domain.BasicReplay
 import com.tminus1010.budgetvalue.replay_or_future.domain.IReplay
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.budgetvalue.transactions.app.interactor.SaveTransactionInteractor
@@ -18,6 +18,7 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import java.time.format.DateTimeFormatter
@@ -29,6 +30,7 @@ class CategorizeVM @Inject constructor(
     private val transactionsInteractor: TransactionsInteractor,
     replaysRepo: ReplaysRepo,
     categorizeAllMatchingUncategorizedTransactions: CategorizeAllMatchingUncategorizedTransactions,
+    private val toaster: Toaster
 ) : ViewModel() {
     // # Input
     val inSelectionMode = BehaviorSubject.create<Boolean>()
@@ -126,19 +128,19 @@ class CategorizeVM @Inject constructor(
                         }
                     )
                 else null,
-//                if (inSelectionMode)
-//                    ButtonVMItem(
-//                        title = "Categorize All Matching Descriptions As This Category",
-//                        isEnabled = selectedCategories.map { it.size == 1 },
-//                        onClick = {
-//                            categorizeAllMatchingUncategorizedTransactions(
-//                                BasicReplay()
-//                            )
-//                            navToCategorySettings.easyEmit(selectedCategories.value!!.first())
-//                            clearSelection.easyEmit(Unit)
-//                        }
-//                    )
-//                else null,
+                if (inSelectionMode)
+                    ButtonVMItem(
+                        title = "Categorize All Matching Descriptions As This Category",
+                        isEnabled = selectedCategories.map { it.size == 1 },
+                        onClick = {
+                            categorizeAllMatchingUncategorizedTransactions(
+                                predicate = { latestUncategorizedTransactionDescription.value!!.uppercase() in it.description.uppercase() },
+                                categorization = { it.categorize(selectedCategories.value!!.first()) }
+                            ).subscribeBy { toaster.toast("$it transactions categorized") }
+                            clearSelection.easyEmit(Unit)
+                        }
+                    )
+                else null,
                 *(if (inSelectionMode)
                     emptyList()
                 else
