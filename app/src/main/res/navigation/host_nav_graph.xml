@@ -26,7 +26,7 @@
         tools:layout="@layout/frag_import" />
     <fragment
         android:id="@+id/reconcileFrag"
-        android:name="com.tminus1010.budgetvalue.reconcile.view.AnytimeReconciliationFrag"
+        android:name="com.tminus1010.budgetvalue.reconcile.view.ReconciliationHostFrag"
         android:label="Reconcile"
         tools:layout="@layout/frag_reconcile" />
     <fragment
@@ -153,4 +153,9 @@
         android:id="@+id/accountsReconciliationSubFrag"
         android:name="com.tminus1010.budgetvalue.reconcile.view.AccountsReconciliationSubFrag"
         android:label="AccountsReconciliationSubFrag" />
+    <fragment
+        android:id="@+id/transactionBlockCompletionFrag"
+        android:name="com.tminus1010.budgetvalue.transactions.view.TransactionBlockCompletionFrag"
+        android:label="TransactionBlockCompletionFrag"
+        tools:layout="@layout/frag_transaction_block_completion" />
 </navigation>

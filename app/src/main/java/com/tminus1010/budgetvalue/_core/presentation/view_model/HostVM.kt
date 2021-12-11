@@ -1,12 +1,14 @@
 package com.tminus1010.budgetvalue._core.presentation.view_model
 
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.presentation.service.GetExtraMenuItemPartials
 import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItems
 import com.tminus1010.budgetvalue._core.presentation.model.UnformattedString
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import javax.inject.Inject
 
@@ -14,6 +16,9 @@ import javax.inject.Inject
 class HostVM @Inject constructor(
     getExtraMenuItemPartials: GetExtraMenuItemPartials,
 ) : ViewModel() {
+    // # Setup
+    val nav = BehaviorSubject.create<NavController>()
+    //
     val unCheckAllMenuItems = PublishSubject.create<Unit>()
     val navToHistory = PublishSubject.create<Unit>()
     val navToTransactions = PublishSubject.create<Unit>()
@@ -37,7 +42,7 @@ class HostVM @Inject constructor(
                 title = "Replays",
                 onClick = { navToReplays.onNext(Unit); unCheckAllMenuItems.onNext(Unit) },
             ),
-            *getExtraMenuItemPartials()
+            *getExtraMenuItemPartials(nav)
         )
     val levelUpPlan = UnformattedString(R.string.level_up_prefix, " ", R.string.level_up_plan)
     val levelUpReconciliation = UnformattedString(R.string.level_up_prefix, " ", R.string.level_up_reconciliation)

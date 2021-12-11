@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.__core_testing
 
 import android.app.Application
+import androidx.navigation.NavController
 import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue._core.presentation.service.GetExtraMenuItemPartials
 import com.tminus1010.budgetvalue.app_init.AppInitRepo
@@ -10,6 +11,7 @@ import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
 import com.tminus1010.budgetvalue.replay_or_future.domain.TotalFuture
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
+import com.tminus1010.budgetvalue.transactions.view.TransactionBlockCompletionFrag
 import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
@@ -19,6 +21,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.time.LocalDate
 import javax.inject.Singleton
 
@@ -28,7 +31,7 @@ object ExtraMenuItemPartialsModule {
     @Provides
     @Singleton
     fun getExtraMenuItemPartials(appInitRepo: AppInitRepo, appInteractor: AppInteractor, transactionsInteractor: TransactionsInteractor, futuresRepo: FuturesRepo, application: Application) = object : GetExtraMenuItemPartials() {
-        override fun invoke(): Array<MenuVMItem> {
+        override fun invoke(nav: BehaviorSubject<NavController>): Array<MenuVMItem> {
             return arrayOf(
                 MenuVMItem("Redo App Init") {
                     appInitRepo.pushAppInitBool(false)
@@ -59,6 +62,9 @@ object ExtraMenuItemPartialsModule {
                                 Completable.fromCallable { application.easyToast("No TotalFutures found") }.subscribeOn(AndroidSchedulers.mainThread())
                         }
                         .subscribe()
+                },
+                MenuVMItem("View TransactionBlock completion") {
+                    TransactionBlockCompletionFrag.navTo(nav.value!!)
                 },
             )
         }
