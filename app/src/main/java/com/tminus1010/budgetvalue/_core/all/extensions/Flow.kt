@@ -24,7 +24,7 @@ inline fun <reified T> Flow<T>.easyCollect(lifecycleOwner: LifecycleOwner, cross
     val flow = this
     lifecycleOwner.lifecycleScope.launch {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            flow.collect(lambda)
+            flow.collect { lambda(it) }
         }
     }
 }
