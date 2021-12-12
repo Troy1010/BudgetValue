@@ -19,7 +19,7 @@ android {
     defaultConfig {
         applicationId "com.tminus1010.budgetvalue"
         minSdkVersion 26
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
 
@@ -42,7 +42,7 @@ android {
     }
 
     buildFeatures {
-        viewBinding = true
+        viewBinding true
     }
 
     lintOptions {
