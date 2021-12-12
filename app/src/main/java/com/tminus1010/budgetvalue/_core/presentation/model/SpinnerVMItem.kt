@@ -10,7 +10,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 @Suppress("UNCHECKED_CAST")
 class SpinnerVMItem<T>(private val values: Array<T>, private val initialValue: T, private val lambda: (T) -> Unit) {
-    constructor(values: Array<T>, behaviorSubject: BehaviorSubject<T>): this(values, behaviorSubject.value, behaviorSubject::onNext)
+    constructor(values: Array<T>, behaviorSubject: BehaviorSubject<T>) : this(values, behaviorSubject.value, behaviorSubject::onNext)
+
     init {
         if (values.isEmpty()) error("Values was empty, and that is unsupported atm. Perhaps an empty set of values should be supported..?")
     }
@@ -21,7 +22,7 @@ class SpinnerVMItem<T>(private val values: Array<T>, private val initialValue: T
         spinner.setSelection(adapter.getPosition(initialValue ?: values[0]))
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             var didFirstSelectionHappen = AtomicBoolean(false)
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 if (didFirstSelectionHappen.getAndSet(true))
                     lambda(spinner.selectedItem as T)
             }
