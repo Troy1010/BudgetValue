@@ -9,7 +9,6 @@ import com.tminus1010.budgetvalue._core.all.extensions.bind
 import com.tminus1010.budgetvalue._core.all.extensions.easyVisibility
 import com.tminus1010.budgetvalue._core.all.extensions.onClick
 import com.tminus1010.budgetvalue._core.presentation.model.bind
-import com.tminus1010.budgetvalue._core.all.extensions.invoke
 import com.tminus1010.budgetvalue.all.presentation.extensions.bind
 import com.tminus1010.budgetvalue.databinding.FragReviewBinding
 import com.tminus1010.budgetvalue.review.presentation.NoMoreDataException
@@ -28,26 +27,24 @@ class ReviewFrag : Fragment(R.layout.frag_review) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = FragReviewBinding.bind(view)
-        reviewVM.apply {
-            // # Events
-            reviewVM.errors.observe(viewLifecycleOwner) {
-                when (it) {
-                    is NoMostRecentSpendException -> logz("Swallowing error:${it.javaClass.simpleName}")
-                    is NoMoreDataException -> easyToast("No more data. Import more transactions")
-                    is TooFarBackException -> easyToast("No more data")
-                    else -> easyToast("An error occurred").run { logz("error:", it) }
-                }
+        // # Bind Presentation Events
+        reviewVM.errors.observe(viewLifecycleOwner) {
+            when (it) {
+                is NoMostRecentSpendException -> logz("Swallowing error:${it.javaClass.simpleName}")
+                is NoMoreDataException -> easyToast("No more data. Import more transactions")
+                is TooFarBackException -> easyToast("No more data")
+                else -> easyToast("An error occurred").run { logz("error:", it) }
             }
-            // # State
-            vb.pieChart1.bind(pieChartVMItem)
-            vb.spinnerDuration.bind(selectableDurationSpinnerVMItem)
-            vb.spinnerUsePeriodType.bind(usePeriodTypeSpinnerVMItem)
-            vb.tvTitle.bind(title) { text = it }
-            vb.ivLeft.bind(isLeftVisible) { easyVisibility = it }
-            vb.ivRight.bind(isRightVisible) { easyVisibility = it }
-            // # UserIntents
-            vb.ivLeft.onClick(userPrevious::invoke)
-            vb.ivRight.onClick(userNext::invoke)
         }
+        // # Bind Presentation State
+        vb.pieChart1.bind(reviewVM.pieChartVMItem)
+        vb.spinnerDuration.bind(reviewVM.selectableDurationSpinnerVMItem)
+        vb.spinnerUsePeriodType.bind(reviewVM.usePeriodTypeSpinnerVMItem)
+        vb.tvTitle.bind(reviewVM.title) { text = it }
+        vb.ivLeft.bind(reviewVM.isLeftVisible) { easyVisibility = it }
+        vb.ivRight.bind(reviewVM.isRightVisible) { easyVisibility = it }
+        // # View Events -> UserIntents
+        vb.ivLeft.onClick { reviewVM.userPrevious.onNext(Unit) }
+        vb.ivRight.onClick { reviewVM.userNext.onNext(Unit) }
     }
 }
