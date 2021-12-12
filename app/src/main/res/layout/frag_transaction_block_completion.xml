@@ -6,18 +6,19 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/textview_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="TransactionCompletion"
         android:textColor="@color/colorOnDark"
         android:textSize="30sp"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="TransactionCompletion" />
 
     <com.tminus1010.budgetvalue._core.framework.view.tmTableView3.TMTableView3
         android:id="@+id/tmTableView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textview_title"
         tools:layout_height="60dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
