@@ -12,5 +12,4 @@ class BasicTextPresentationModel(val text: String?) : IHasToViewItemRecipe {
             vb.textview.text = text
         }
     }
-
 }
