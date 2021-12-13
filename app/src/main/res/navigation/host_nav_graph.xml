@@ -71,6 +71,9 @@
             <action
                 android:id="@+id/action_categorizeFrag_to_splitFrag"
                 app:destination="@id/splitFrag" />
+            <action
+                android:id="@+id/action_categorizeFrag_to_receiptCategorizationFrag"
+                app:destination="@id/receiptCategorizationFrag" />
         </fragment>
         <navigation
             android:id="@+id/createFutureNestedGraph"
@@ -95,6 +98,11 @@
             android:name="com.tminus1010.budgetvalue.transactions.view.SplitFrag"
             android:label="SplitFrag"
             tools:layout="@layout/frag_categorize_advanced" />
+        <fragment
+            android:id="@+id/receiptCategorizationFrag"
+            android:name="com.tminus1010.budgetvalue.transactions.view.ReceiptCategorizationFrag"
+            android:label="ReceiptCategorizationFrag"
+            tools:layout="@layout/frag_receipt_categorization" />
     </navigation>
     <fragment
         android:id="@+id/transactionsFrag"

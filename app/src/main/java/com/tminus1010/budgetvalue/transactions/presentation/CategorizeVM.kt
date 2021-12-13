@@ -73,6 +73,7 @@ class CategorizeVM @Inject constructor(
     val navToNewCategory = MutableSharedFlow<Unit>()
     val navToReplay = MutableSharedFlow<IReplay>()
     val navToSelectReplay = MutableSharedFlow<Unit>()
+    val navToReceiptCategorization = MutableSharedFlow<Transaction>()
 
     // # Mediation
     val clearSelection = MutableSharedFlow<Unit>()
@@ -153,6 +154,13 @@ class CategorizeVM @Inject constructor(
                             )
                         })
                     .toTypedArray(),
+                if (!inSelectionMode)
+                    ButtonVMItem(
+                        title = "Do Receipt Categorization",
+                        isEnabled = isTransactionAvailable,
+                        onClick = { navToReceiptCategorization.easyEmit(transactionsInteractor.mostRecentUncategorizedSpend.value!!.first!!) },
+                    )
+                else null,
                 if (!inSelectionMode)
                     ButtonVMItem(
                         title = "Use Replay",

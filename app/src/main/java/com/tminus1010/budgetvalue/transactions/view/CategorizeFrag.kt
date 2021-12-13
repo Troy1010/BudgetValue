@@ -9,14 +9,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import com.squareup.moshi.Moshi
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.all.extensions.bind
 import com.tminus1010.budgetvalue._core.all.extensions.easyCollect
+import com.tminus1010.budgetvalue._core.data.MoshiProvider.moshi
 import com.tminus1010.budgetvalue._core.framework.view.GenViewHolder2
 import com.tminus1010.budgetvalue._core.framework.view.LifecycleRVAdapter2
 import com.tminus1010.budgetvalue._core.framework.view.viewBinding
 import com.tminus1010.budgetvalue.categories.CategoriesVM
+import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.ui.CategorySettingsFrag
@@ -43,6 +46,9 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
 
     @Inject
     lateinit var transactionsInteractor: TransactionsInteractor
+
+    @Inject
+    lateinit var categoryAmountsConverter: CategoryAmountsConverter
     var categories = emptyList<Category>()
         set(value) {
             val shouldNotifyDataSetChanged = field.size != value.size
@@ -113,6 +119,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         categorizeVM.navToCategorySettings.easyCollect(viewLifecycleOwner) { CategorySettingsFrag.navTo(this, nav, it.name, false) }
         categorizeVM.navToReplay.easyCollect(viewLifecycleOwner) { CategorySettingsFrag.navTo(this, nav, it.name, false) }
         categorizeVM.navToSelectReplay.easyCollect(viewLifecycleOwner) { nav.navigate(R.id.useReplayFrag) }
+        categorizeVM.navToReceiptCategorization.easyCollect(viewLifecycleOwner) { ReceiptCategorizationFrag.navTo(nav, it, categoryAmountsConverter) }
     }
 
     override fun onResume() {
