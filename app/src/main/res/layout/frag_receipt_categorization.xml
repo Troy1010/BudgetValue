@@ -21,4 +21,14 @@
         app:layout_constraintTop_toBottomOf="@id/textview_title"
         tools:text="Something" />
 
+    <com.tminus1010.budgetvalue._core.framework.view.ButtonsView
+        android:id="@+id/buttonsview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:itemCount="3"
+        tools:layoutManager="LinearLayoutManager"
+        tools:listitem="@layout/item_button" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
