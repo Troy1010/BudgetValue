@@ -6,8 +6,6 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 fun <V : View, T> V.bind(liveData: LiveData<T>, lifecycle: LifecycleOwner? = null, lambda: V.(T) -> Unit) {
     val _lifecycle =
@@ -27,7 +25,7 @@ inline fun <V : View, reified T> V.bind(flow: Flow<T>, lifecycle: LifecycleOwner
     val _lifecycle =
         lifecycle ?: findViewTreeLifecycleOwner()
         ?: error("Could not find lifecycle. This might happen in Recyclerviews or other unattached views.\nEither attach the view, add a lifecycle to the view, or specify a lifecycle as argument.")
-    flow.easyCollect(_lifecycle) { lambda(it) }
+    flow.observe(_lifecycle) { lambda(it) }
 }
 
 fun View.widthObservable(): Observable<Int> {

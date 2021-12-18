@@ -9,12 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import com.squareup.moshi.Moshi
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.all.extensions.bind
-import com.tminus1010.budgetvalue._core.all.extensions.easyCollect
-import com.tminus1010.budgetvalue._core.data.MoshiProvider.moshi
+import com.tminus1010.budgetvalue._core.all.extensions.observe
 import com.tminus1010.budgetvalue._core.framework.view.GenViewHolder2
 import com.tminus1010.budgetvalue._core.framework.view.LifecycleRVAdapter2
 import com.tminus1010.budgetvalue._core.framework.view.viewBinding
@@ -62,7 +60,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         categorizeVM.setup(categorySelectionVM)
         categorySelectionVM.inSelectionMode.subscribe(categorizeVM.inSelectionMode)
         categorySelectionVM.selectedCategories.subscribe(categorizeVM.selectedCategories)
-        categorizeVM.clearSelection.easyCollect(viewLifecycleOwner) { logz("about to clear selection"); categorySelectionVM.clearSelection().subscribe() }
+        categorizeVM.clearSelection.observe(viewLifecycleOwner) { logz("about to clear selection"); categorySelectionVM.clearSelection().subscribe() }
         // # Some of SelectionMode
         categorySelectionVM.inSelectionMode.observe(viewLifecycleOwner) { inSelectionMode ->
             vb.root.children
@@ -113,13 +111,13 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         //
         vb.buttonsview.bind(categorizeVM.buttons) { buttons = it }
         // # Bind Presentation Events
-        categorizeVM.navToCreateFuture.easyCollect(viewLifecycleOwner) { CreateFutureFrag.navTo(nav) }
-        categorizeVM.navToSplit.easyCollect(viewLifecycleOwner) { SplitFrag.navTo(nav, it) }
-        categorizeVM.navToNewCategory.easyCollect(viewLifecycleOwner) { CategorySettingsFrag.navTo(this, nav, null, true) }
-        categorizeVM.navToCategorySettings.easyCollect(viewLifecycleOwner) { CategorySettingsFrag.navTo(this, nav, it.name, false) }
-        categorizeVM.navToReplay.easyCollect(viewLifecycleOwner) { CategorySettingsFrag.navTo(this, nav, it.name, false) }
-        categorizeVM.navToSelectReplay.easyCollect(viewLifecycleOwner) { nav.navigate(R.id.useReplayFrag) }
-        categorizeVM.navToReceiptCategorization.easyCollect(viewLifecycleOwner) { ReceiptCategorizationFrag.navTo(nav, it, categoryAmountsConverter) }
+        categorizeVM.navToCreateFuture.observe(viewLifecycleOwner) { CreateFutureFrag.navTo(nav) }
+        categorizeVM.navToSplit.observe(viewLifecycleOwner) { SplitFrag.navTo(nav, it) }
+        categorizeVM.navToNewCategory.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(this, nav, null, true) }
+        categorizeVM.navToCategorySettings.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(this, nav, it.name, false) }
+        categorizeVM.navToReplay.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(this, nav, it.name, false) }
+        categorizeVM.navToSelectReplay.observe(viewLifecycleOwner) { nav.navigate(R.id.useReplayFrag) }
+        categorizeVM.navToReceiptCategorization.observe(viewLifecycleOwner) { ReceiptCategorizationFrag.navTo(nav, it, categoryAmountsConverter) }
     }
 
     override fun onResume() {

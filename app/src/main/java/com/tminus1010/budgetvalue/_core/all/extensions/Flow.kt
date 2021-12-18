@@ -20,7 +20,7 @@ inline fun <reified T> Flow<T>.doLogx(prefix: String? = null): Flow<T> {
         .onCompletion { if (it == null) "Completed".logx(prefix) else logz("$prefix`Error:", it) }
 }
 
-inline fun <reified T> Flow<T>.easyCollect(lifecycleOwner: LifecycleOwner, crossinline lambda: suspend (T) -> Unit) {
+inline fun <reified T> Flow<T>.observe(lifecycleOwner: LifecycleOwner, crossinline lambda: suspend (T) -> Unit) {
     val flow = this
     lifecycleOwner.lifecycleScope.launch {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
