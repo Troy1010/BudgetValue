@@ -29,6 +29,7 @@ class ReceiptCategorizationVM @Inject constructor(
     val userSetAmount = MutableSharedFlow<String?>()
     val userSelectCategory = MutableSharedFlow<String?>()
     val userFill = MutableSharedFlow<Unit>()
+    val userShowNewInnerFragment = MutableStateFlow(InnerFragmentType.AMOUNT)
     fun userSubmitPartialCategorization() {
         categoryAmounts[currentCategory.value!!] = categoryAmounts[currentCategory.value!!]?.let { it + currentAmount.value!! } ?: currentAmount.value!!
         userSelectCategory.easyEmit(null)
@@ -53,10 +54,13 @@ class ReceiptCategorizationVM @Inject constructor(
             .easyStateIn(viewModelScope, null)
     private val categoryAmounts = mutableMapOf<Category, BigDecimal>()
 
+    enum class InnerFragmentType { AMOUNT, CATEGROY }
+
     // # Presentation Events
     val navUp = MutableSharedFlow<Unit>()
 
     // # Presentation State
+    val innerFragmentType = userShowNewInnerFragment
     val description = transaction.map { it!!.description }
     val buttons =
         MutableStateFlow(

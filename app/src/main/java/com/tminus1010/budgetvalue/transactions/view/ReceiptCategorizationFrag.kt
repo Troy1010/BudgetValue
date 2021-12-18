@@ -36,6 +36,11 @@ class ReceiptCategorizationFrag : Fragment(R.layout.frag_receipt_categorization)
         // # Bind Presentation Events
         receiptCategorizationVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         // # Bind Presentation State
+        vb.framelayout.bind(receiptCategorizationVM.innerFragmentType) {
+            childFragmentManager.beginTransaction()
+                .replace(id, ChooseAmountFrag())
+                .commitNow()
+        }
         vb.textviewDescription.bind(receiptCategorizationVM.description) { text = it }
         vb.buttonsview.bind(receiptCategorizationVM.buttons) { buttons = it }
     }
