@@ -32,7 +32,7 @@ class ReceiptCategorizationFrag : Fragment(R.layout.frag_receipt_categorization)
         super.onViewCreated(view, savedInstanceState)
         vb = FragReceiptCategorizationBinding.bind(view)
         // # Setup VM
-        receiptCategorizationVM.transaction.onNext(transaction)
+        receiptCategorizationVM.transaction.value = transaction
         // # Bind Presentation Events
         receiptCategorizationVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         // # Bind Presentation State

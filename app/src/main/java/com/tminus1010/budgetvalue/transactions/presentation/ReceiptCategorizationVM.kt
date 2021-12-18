@@ -13,11 +13,7 @@ import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.budgetvalue.transactions.app.interactor.SaveTransactionInteractor
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.subjects.BehaviorSubject
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.*
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -27,7 +23,7 @@ class ReceiptCategorizationVM @Inject constructor(
     private val saveTransactionInteractor: SaveTransactionInteractor,
 ) : ViewModel() {
     // # Setup
-    val transaction = BehaviorSubject.create<Transaction>()
+    val transaction = MutableStateFlow<Transaction?>(null)
 
     // # User Intents
     val userSetAmount = MutableSharedFlow<String?>()
@@ -40,7 +36,7 @@ class ReceiptCategorizationVM @Inject constructor(
     }
 
     fun userSubmitCategorization() {
-        saveTransactionInteractor.saveTransaction(transaction.value.copy(categoryAmounts = categoryAmounts))
+        saveTransactionInteractor.saveTransaction(transaction.value!!.copy(categoryAmounts = categoryAmounts))
         navUp.easyEmit(Unit)
         // # Assumes VM will be cleared.
     }
@@ -52,7 +48,7 @@ class ReceiptCategorizationVM @Inject constructor(
     private val currentAmount =
         merge(
             userSetAmount.map { moshi.fromJson<BigDecimal>(it) },
-            userFill.map { CategoryAmounts(categoryAmounts).defaultAmount(transaction.value.amount) }
+            userFill.map { CategoryAmounts(categoryAmounts).defaultAmount(transaction.value!!.amount) }
         )
             .easyStateIn(viewModelScope, null)
     private val categoryAmounts = mutableMapOf<Category, BigDecimal>()
@@ -61,7 +57,7 @@ class ReceiptCategorizationVM @Inject constructor(
     val navUp = MutableSharedFlow<Unit>()
 
     // # Presentation State
-    val description = transaction.map { it.description }
+    val description = transaction.map { it!!.description }
     val buttons =
         MutableStateFlow(
             listOf(
