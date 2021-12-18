@@ -6,8 +6,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.tminus1010.tmcommonkotlin.core.logx
 import io.reactivex.rxjava3.core.Observable
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.rx3.asObservable
 
 
@@ -27,4 +29,8 @@ inline fun <reified T> Flow<T>.observe(lifecycleOwner: LifecycleOwner, crossinli
             flow.collect { lambda(it) }
         }
     }
+}
+
+fun <T : Any?> Flow<T>.easyStateIn(coroutineScope: CoroutineScope, initialValue: T): StateFlow<T> {
+    return runBlocking { return@runBlocking this@easyStateIn.stateIn(coroutineScope, SharingStarted.Eagerly, initialValue) }
 }
