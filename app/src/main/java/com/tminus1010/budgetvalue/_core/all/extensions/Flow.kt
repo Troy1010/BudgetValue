@@ -31,6 +31,11 @@ inline fun <reified T> Flow<T>.observe(lifecycleOwner: LifecycleOwner, crossinli
     }
 }
 
+fun <T> Flow<T>.observe(coroutineScope: CoroutineScope, lambda: suspend (T) -> Unit) {
+    val flow = this
+    coroutineScope.launch { flow.collect { lambda(it) } }
+}
+
 fun <T : Any?> Flow<T>.easyStateIn(coroutineScope: CoroutineScope, initialValue: T): StateFlow<T> {
     return runBlocking { return@runBlocking this@easyStateIn.stateIn(coroutineScope, SharingStarted.Eagerly, initialValue) }
 }
