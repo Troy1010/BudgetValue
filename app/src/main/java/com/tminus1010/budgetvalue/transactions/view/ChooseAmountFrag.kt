@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.all.extensions.bind
 import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
+import com.tminus1010.budgetvalue._core.all.extensions.onClick
 import com.tminus1010.budgetvalue._core.framework.view.onDone
 import com.tminus1010.budgetvalue.databinding.FragChooseAmountBinding
 import com.tminus1010.budgetvalue.transactions.presentation.ChooseAmountVM
@@ -22,11 +23,12 @@ class ChooseAmountFrag : Fragment(R.layout.frag_choose_amount) {
         // # Setup View
         vb.tmTableViewPlusMinus.initialize(
             recipeGrid = chooseAmountVM.buttons.map { it.map { it.toViewItemRecipe(requireContext()) } },
-            shouldFitItemWidthsInsideTable = true
+            shouldFitItemWidthsInsideTable = true,
         )
         // # Bind Presentation State
         vb.moneyEditText.bind(chooseAmountVM.amount) { setText(it) }
         // # Bind User Intents
         vb.moneyEditText.onDone { chooseAmountVM.userSetAmount.easyEmit(it) }
+        vb.buttonSubmit.onClick { chooseAmountVM.userShowChooseCategory.easyEmit(Unit) }
     }
 }

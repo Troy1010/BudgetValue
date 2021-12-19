@@ -7,6 +7,7 @@ import com.tminus1010.budgetvalue._core.all.extensions.observe
 import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue.transactions.app.CurrentChosenAmountProvider
+import com.tminus1010.budgetvalue.transactions.app.NavigationEventProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.map
@@ -16,6 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ChooseAmountVM @Inject constructor(
     currentChosenAmountProvider: CurrentChosenAmountProvider,
+    navigationEventProvider: NavigationEventProvider
 ) : ViewModel() {
     // # User Intents
     val userPlus10 = MutableSharedFlow<Unit>()
@@ -36,7 +38,7 @@ class ChooseAmountVM @Inject constructor(
         .apply { observe(viewModelScope) { currentChosenAmountProvider.currentChosenAmount.value = currentChosenAmountProvider.currentChosenAmount.value - BigDecimal("0.01") } }
     val userSetAmount = MutableSharedFlow<String>()
         .apply { observe(viewModelScope) { currentChosenAmountProvider.currentChosenAmount.value = it.toMoneyBigDecimal() } }
-    val userSubmitAmount = MutableSharedFlow<Unit>()
+    val userShowChooseCategory = navigationEventProvider.showChooseCategory
 
     // # Presentation State
     val amount = currentChosenAmountProvider.currentChosenAmount.map { it.toString().toMoneyBigDecimal().toString() }
