@@ -14,11 +14,19 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textview_description"
+        android:id="@+id/textview_amount"
         style="@style/AppTheme.StandardTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/textview_title"
+        tools:text="$10.00" />
+
+    <TextView
+        android:id="@+id/textview_description"
+        style="@style/AppTheme.StandardTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/textview_amount"
         tools:text="Something" />
 
     <FrameLayout

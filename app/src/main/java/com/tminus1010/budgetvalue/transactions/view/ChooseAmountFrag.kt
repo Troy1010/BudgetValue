@@ -7,7 +7,9 @@ import androidx.fragment.app.viewModels
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.databinding.FragChooseAmountBinding
 import com.tminus1010.budgetvalue.transactions.presentation.ChooseAmountVM
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ChooseAmountFrag : Fragment(R.layout.frag_choose_amount) {
     lateinit var vb: FragChooseAmountBinding
     val chooseAmountVM by viewModels<ChooseAmountVM>()

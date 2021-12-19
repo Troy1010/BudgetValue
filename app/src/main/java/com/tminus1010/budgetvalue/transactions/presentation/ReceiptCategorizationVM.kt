@@ -9,11 +9,16 @@ import com.tminus1010.budgetvalue._core.data.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.transactions.app.CurrentChosenAmountProvider
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.budgetvalue.transactions.app.interactor.SaveTransactionInteractor
+import com.tminus1010.budgetvalue.transactions.view.ChooseAmountFrag
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -21,6 +26,7 @@ import javax.inject.Inject
 class ReceiptCategorizationVM @Inject constructor(
     moshiWithCategoriesProvider: MoshiWithCategoriesProvider,
     private val saveTransactionInteractor: SaveTransactionInteractor,
+    private val currentChosenAmountProvider: CurrentChosenAmountProvider
 ) : ViewModel() {
     // # Setup
     val transaction = MutableStateFlow<Transaction?>(null)
@@ -29,7 +35,7 @@ class ReceiptCategorizationVM @Inject constructor(
     val userSetAmount = MutableSharedFlow<String?>()
     val userSelectCategory = MutableSharedFlow<String?>()
     val userFill = MutableSharedFlow<Unit>()
-    val userShowNewInnerFragment = MutableStateFlow(InnerFragmentType.AMOUNT)
+    val userShowNewInnerFragment = MutableStateFlow(ChooseAmountFrag())
     fun userSubmitPartialCategorization() {
         categoryAmounts[currentCategory.value!!] = categoryAmounts[currentCategory.value!!]?.let { it + currentAmount.value!! } ?: currentAmount.value!!
         userSelectCategory.easyEmit(null)
@@ -54,14 +60,13 @@ class ReceiptCategorizationVM @Inject constructor(
             .easyStateIn(viewModelScope, null)
     private val categoryAmounts = mutableMapOf<Category, BigDecimal>()
 
-    enum class InnerFragmentType { AMOUNT, CATEGROY }
-
     // # Presentation Events
     val navUp = MutableSharedFlow<Unit>()
 
     // # Presentation State
-    val innerFragmentType = userShowNewInnerFragment
+    val fragment = userShowNewInnerFragment
     val description = transaction.map { it!!.description }
+    val currentCategorizationAmount = currentChosenAmountProvider.currentChosenAmount.map { it.toString() }
     val buttons =
         MutableStateFlow(
             listOf(
