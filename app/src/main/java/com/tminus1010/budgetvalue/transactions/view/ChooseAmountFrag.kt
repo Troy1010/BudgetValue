@@ -21,7 +21,7 @@ class ChooseAmountFrag : Fragment(R.layout.frag_choose_amount) {
         vb = FragChooseAmountBinding.bind(view)
         // # Setup View
         vb.tmTableViewPlusMinus.initialize(
-            chooseAmountVM.buttons.map { it.map { it.toViewItemRecipe(requireContext()) } },
+            recipeGrid = chooseAmountVM.buttons.map { it.map { it.toViewItemRecipe(requireContext()) } },
             shouldFitItemWidthsInsideTable = true
         )
         // # Bind Presentation State
