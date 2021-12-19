@@ -8,6 +8,9 @@ import javax.inject.Inject
 @HiltViewModel
 class ChooseAmountVM @Inject constructor(
 ) : ViewModel() {
+    // TODO: How to link these userIntents to the parent's VM?
+    //      Solution 1: Share the vm, and mediate from this one to the other
+    //      Solution 2: ?
     // # Presentation State
     val buttons =
         listOf(
