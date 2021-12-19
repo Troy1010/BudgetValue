@@ -4,13 +4,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="match_parent"
+    <com.tminus1010.budgetvalue._core.framework.view.MoneyEditText
+        android:id="@+id/moneyEditText"
+        style="@style/AppTheme.StandardEditText"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Choose Amount Frag"
-        android:textColor="#fff"
-        android:textSize="32sp"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:imeOptions="actionDone"
+        android:inputType="numberDecimal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.5" />
+
+    <Button
+        android:id="@+id/button_submit"
+        style="@style/MainButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Submit Amount"
+        app:layout_constraintBottom_toBottomOf="@id/moneyEditText"
+        app:layout_constraintStart_toEndOf="@id/moneyEditText"
+        app:layout_constraintTop_toTopOf="@id/moneyEditText"
+        app:layout_constraintWidth_percent="0.5" />
+
+    <com.tminus1010.budgetvalue._core.framework.view.tmTableView3.TMTableView3
+        android:id="@+id/tmTableView_plus_minus"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/moneyEditText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
