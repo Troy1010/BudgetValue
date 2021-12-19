@@ -43,7 +43,6 @@ class ReceiptCategorizationFrag : Fragment(R.layout.frag_receipt_categorization)
         }
         vb.textviewDescription.bind(receiptCategorizationVM.description) { text = it }
         vb.buttonsview.bind(receiptCategorizationVM.buttons) { buttons = it }
-        vb.textviewAmount.bind(receiptCategorizationVM.currentCategorizationAmount) { text = it }
     }
 
     companion object {

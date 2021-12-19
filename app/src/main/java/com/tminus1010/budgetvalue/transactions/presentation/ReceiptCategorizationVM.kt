@@ -66,7 +66,6 @@ class ReceiptCategorizationVM @Inject constructor(
     // # Presentation State
     val fragment = userShowNewInnerFragment
     val description = transaction.map { it!!.description }
-    val currentCategorizationAmount = currentChosenAmountProvider.currentChosenAmount.map { it.toString() }
     val buttons =
         MutableStateFlow(
             listOf(
