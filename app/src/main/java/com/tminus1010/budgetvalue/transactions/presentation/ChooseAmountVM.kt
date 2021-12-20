@@ -7,7 +7,8 @@ import com.tminus1010.budgetvalue._core.all.extensions.observe
 import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue.transactions.app.CurrentChosenAmountProvider
-import com.tminus1010.budgetvalue.transactions.app.NavigationEventProvider
+import com.tminus1010.budgetvalue.transactions.app.SubFragEventProvider
+import com.tminus1010.budgetvalue.transactions.view.CategorizeFrag
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.map
@@ -17,9 +18,11 @@ import javax.inject.Inject
 @HiltViewModel
 class ChooseAmountVM @Inject constructor(
     currentChosenAmountProvider: CurrentChosenAmountProvider,
-    navigationEventProvider: NavigationEventProvider
+    subFragEventProvider: SubFragEventProvider
 ) : ViewModel() {
     // # User Intents
+    val userPlus100 = MutableSharedFlow<Unit>()
+        .apply { observe(viewModelScope) { currentChosenAmountProvider.currentChosenAmount.value = currentChosenAmountProvider.currentChosenAmount.value + BigDecimal("100") } }
     val userPlus10 = MutableSharedFlow<Unit>()
         .apply { observe(viewModelScope) { currentChosenAmountProvider.currentChosenAmount.value = currentChosenAmountProvider.currentChosenAmount.value + BigDecimal("10") } }
     val userPlus1 = MutableSharedFlow<Unit>()
@@ -28,6 +31,8 @@ class ChooseAmountVM @Inject constructor(
         .apply { observe(viewModelScope) { currentChosenAmountProvider.currentChosenAmount.value = currentChosenAmountProvider.currentChosenAmount.value + BigDecimal("0.1") } }
     val userPlus001 = MutableSharedFlow<Unit>()
         .apply { observe(viewModelScope) { currentChosenAmountProvider.currentChosenAmount.value = currentChosenAmountProvider.currentChosenAmount.value + BigDecimal("0.01") } }
+    val userMinus100 = MutableSharedFlow<Unit>()
+        .apply { observe(viewModelScope) { currentChosenAmountProvider.currentChosenAmount.value = currentChosenAmountProvider.currentChosenAmount.value - BigDecimal("100") } }
     val userMinus10 = MutableSharedFlow<Unit>()
         .apply { observe(viewModelScope) { currentChosenAmountProvider.currentChosenAmount.value = currentChosenAmountProvider.currentChosenAmount.value - BigDecimal("10") } }
     val userMinus1 = MutableSharedFlow<Unit>()
@@ -38,12 +43,23 @@ class ChooseAmountVM @Inject constructor(
         .apply { observe(viewModelScope) { currentChosenAmountProvider.currentChosenAmount.value = currentChosenAmountProvider.currentChosenAmount.value - BigDecimal("0.01") } }
     val userSetAmount = MutableSharedFlow<String>()
         .apply { observe(viewModelScope) { currentChosenAmountProvider.currentChosenAmount.value = it.toMoneyBigDecimal() } }
-    val userShowChooseCategory = navigationEventProvider.showChooseCategory
+    val userShowChooseCategory = MutableSharedFlow<Unit>()
+        .apply { observe(viewModelScope) { subFragEventProvider.showFragment.easyEmit(CategorizeFrag()) } } // TODO: show ChooseCategoryFrag
 
     // # Presentation State
     val amount = currentChosenAmountProvider.currentChosenAmount.map { it.toString().toMoneyBigDecimal().toString() }
     val buttons =
         listOf(
+            listOf(
+                ButtonVMItem(
+                    title = "Plus $100",
+                    onClick = { userPlus100.easyEmit(Unit) }
+                ),
+                ButtonVMItem(
+                    title = "Minus $100",
+                    onClick = { userMinus100.easyEmit(Unit) }
+                ),
+            ),
             listOf(
                 ButtonVMItem(
                     title = "Plus $10",

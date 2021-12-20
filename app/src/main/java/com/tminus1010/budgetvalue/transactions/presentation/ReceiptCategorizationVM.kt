@@ -9,7 +9,7 @@ import com.tminus1010.budgetvalue._core.data.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.transactions.app.NavigationEventProvider
+import com.tminus1010.budgetvalue.transactions.app.SubFragEventProvider
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.budgetvalue.transactions.app.interactor.SaveTransactionInteractor
 import com.tminus1010.budgetvalue.transactions.view.ChooseAmountFrag
@@ -23,7 +23,7 @@ import javax.inject.Inject
 class ReceiptCategorizationVM @Inject constructor(
     moshiWithCategoriesProvider: MoshiWithCategoriesProvider,
     private val saveTransactionInteractor: SaveTransactionInteractor,
-    private val navigationEventProvider: NavigationEventProvider
+    private val subFragEventProvider: SubFragEventProvider
 ) : ViewModel() {
     // # Setup
     val transaction = MutableStateFlow<Transaction?>(null)
@@ -60,11 +60,7 @@ class ReceiptCategorizationVM @Inject constructor(
     val navUp = MutableSharedFlow<Unit>()
 
     // # Presentation State
-    val fragment =
-        merge(
-            flow { emit(ChooseAmountFrag()) },
-            navigationEventProvider.showChooseCategory.map { ChooseAmountFrag() }
-        )
+    val fragment = subFragEventProvider.showFragment.onStart { emit(ChooseAmountFrag()) }
     val description = transaction.map { it!!.description }
     val buttons =
         MutableStateFlow(

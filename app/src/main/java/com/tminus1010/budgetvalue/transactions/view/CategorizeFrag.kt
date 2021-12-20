@@ -122,6 +122,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
 
     override fun onResume() {
         super.onResume()
+        // Duct-tape solution
         if (UseReplayFrag.chosenReplay != null)
             categorizeVM.userReplay(UseReplayFrag.chosenReplay!!)
                 .also { UseReplayFrag.chosenReplay = null }
