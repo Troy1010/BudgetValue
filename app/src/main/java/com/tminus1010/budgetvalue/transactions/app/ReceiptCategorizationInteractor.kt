@@ -6,6 +6,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CurrentChosenAmountProvider @Inject constructor() {
+class ReceiptCategorizationInteractor @Inject constructor() {
     val currentChosenAmount = MutableStateFlow(BigDecimal("0"))
 }

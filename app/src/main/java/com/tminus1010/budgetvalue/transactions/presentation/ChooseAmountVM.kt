@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
 import com.tminus1010.budgetvalue._core.all.extensions.observe
 import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
-import com.tminus1010.budgetvalue.transactions.app.CurrentChosenAmountProvider
+import com.tminus1010.budgetvalue.transactions.app.ReceiptCategorizationInteractor
 import com.tminus1010.budgetvalue.transactions.app.SubFragEventProvider
 import com.tminus1010.budgetvalue.transactions.view.ChooseCategorySubFrag
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,37 +17,37 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChooseAmountVM @Inject constructor(
-    currentChosenAmountProvider: CurrentChosenAmountProvider,
+    receiptCategorizationInteractor: ReceiptCategorizationInteractor,
     subFragEventProvider: SubFragEventProvider
 ) : ViewModel() {
     // # User Intents
     val userPlus100 = MutableSharedFlow<Unit>()
-        .apply { observe(viewModelScope) { currentChosenAmountProvider.currentChosenAmount.value = currentChosenAmountProvider.currentChosenAmount.value + BigDecimal("100") } }
+        .apply { observe(viewModelScope) { receiptCategorizationInteractor.currentChosenAmount.value = receiptCategorizationInteractor.currentChosenAmount.value + BigDecimal("100") } }
     val userPlus10 = MutableSharedFlow<Unit>()
-        .apply { observe(viewModelScope) { currentChosenAmountProvider.currentChosenAmount.value = currentChosenAmountProvider.currentChosenAmount.value + BigDecimal("10") } }
+        .apply { observe(viewModelScope) { receiptCategorizationInteractor.currentChosenAmount.value = receiptCategorizationInteractor.currentChosenAmount.value + BigDecimal("10") } }
     val userPlus1 = MutableSharedFlow<Unit>()
-        .apply { observe(viewModelScope) { currentChosenAmountProvider.currentChosenAmount.value = currentChosenAmountProvider.currentChosenAmount.value + BigDecimal("1") } }
+        .apply { observe(viewModelScope) { receiptCategorizationInteractor.currentChosenAmount.value = receiptCategorizationInteractor.currentChosenAmount.value + BigDecimal("1") } }
     val userPlus01 = MutableSharedFlow<Unit>()
-        .apply { observe(viewModelScope) { currentChosenAmountProvider.currentChosenAmount.value = currentChosenAmountProvider.currentChosenAmount.value + BigDecimal("0.1") } }
+        .apply { observe(viewModelScope) { receiptCategorizationInteractor.currentChosenAmount.value = receiptCategorizationInteractor.currentChosenAmount.value + BigDecimal("0.1") } }
     val userPlus001 = MutableSharedFlow<Unit>()
-        .apply { observe(viewModelScope) { currentChosenAmountProvider.currentChosenAmount.value = currentChosenAmountProvider.currentChosenAmount.value + BigDecimal("0.01") } }
+        .apply { observe(viewModelScope) { receiptCategorizationInteractor.currentChosenAmount.value = receiptCategorizationInteractor.currentChosenAmount.value + BigDecimal("0.01") } }
     val userMinus100 = MutableSharedFlow<Unit>()
-        .apply { observe(viewModelScope) { currentChosenAmountProvider.currentChosenAmount.value = currentChosenAmountProvider.currentChosenAmount.value - BigDecimal("100") } }
+        .apply { observe(viewModelScope) { receiptCategorizationInteractor.currentChosenAmount.value = receiptCategorizationInteractor.currentChosenAmount.value - BigDecimal("100") } }
     val userMinus10 = MutableSharedFlow<Unit>()
-        .apply { observe(viewModelScope) { currentChosenAmountProvider.currentChosenAmount.value = currentChosenAmountProvider.currentChosenAmount.value - BigDecimal("10") } }
+        .apply { observe(viewModelScope) { receiptCategorizationInteractor.currentChosenAmount.value = receiptCategorizationInteractor.currentChosenAmount.value - BigDecimal("10") } }
     val userMinus1 = MutableSharedFlow<Unit>()
-        .apply { observe(viewModelScope) { currentChosenAmountProvider.currentChosenAmount.value = currentChosenAmountProvider.currentChosenAmount.value - BigDecimal("1") } }
+        .apply { observe(viewModelScope) { receiptCategorizationInteractor.currentChosenAmount.value = receiptCategorizationInteractor.currentChosenAmount.value - BigDecimal("1") } }
     val userMinus01 = MutableSharedFlow<Unit>()
-        .apply { observe(viewModelScope) { currentChosenAmountProvider.currentChosenAmount.value = currentChosenAmountProvider.currentChosenAmount.value - BigDecimal("0.1") } }
+        .apply { observe(viewModelScope) { receiptCategorizationInteractor.currentChosenAmount.value = receiptCategorizationInteractor.currentChosenAmount.value - BigDecimal("0.1") } }
     val userMinus001 = MutableSharedFlow<Unit>()
-        .apply { observe(viewModelScope) { currentChosenAmountProvider.currentChosenAmount.value = currentChosenAmountProvider.currentChosenAmount.value - BigDecimal("0.01") } }
+        .apply { observe(viewModelScope) { receiptCategorizationInteractor.currentChosenAmount.value = receiptCategorizationInteractor.currentChosenAmount.value - BigDecimal("0.01") } }
     val userSetAmount = MutableSharedFlow<String>()
-        .apply { observe(viewModelScope) { currentChosenAmountProvider.currentChosenAmount.value = it.toMoneyBigDecimal() } }
+        .apply { observe(viewModelScope) { receiptCategorizationInteractor.currentChosenAmount.value = it.toMoneyBigDecimal() } }
     val userShowChooseCategory = MutableSharedFlow<Unit>()
         .apply { observe(viewModelScope) { subFragEventProvider.showFragment.easyEmit(ChooseCategorySubFrag()) } }
 
     // # Presentation State
-    val amount = currentChosenAmountProvider.currentChosenAmount.map { it.toString().toMoneyBigDecimal().toString() }
+    val amount = receiptCategorizationInteractor.currentChosenAmount.map { it.toString().toMoneyBigDecimal().toString() }
     val buttons =
         listOf(
             listOf(
