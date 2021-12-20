@@ -8,7 +8,7 @@ import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue.transactions.app.CurrentChosenAmountProvider
 import com.tminus1010.budgetvalue.transactions.app.SubFragEventProvider
-import com.tminus1010.budgetvalue.transactions.view.CategorizeFrag
+import com.tminus1010.budgetvalue.transactions.view.ChooseCategorySubFrag
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.map
@@ -44,7 +44,7 @@ class ChooseAmountVM @Inject constructor(
     val userSetAmount = MutableSharedFlow<String>()
         .apply { observe(viewModelScope) { currentChosenAmountProvider.currentChosenAmount.value = it.toMoneyBigDecimal() } }
     val userShowChooseCategory = MutableSharedFlow<Unit>()
-        .apply { observe(viewModelScope) { subFragEventProvider.showFragment.easyEmit(CategorizeFrag()) } } // TODO: show ChooseCategoryFrag
+        .apply { observe(viewModelScope) { subFragEventProvider.showFragment.easyEmit(ChooseCategorySubFrag()) } }
 
     // # Presentation State
     val amount = currentChosenAmountProvider.currentChosenAmount.map { it.toString().toMoneyBigDecimal().toString() }
