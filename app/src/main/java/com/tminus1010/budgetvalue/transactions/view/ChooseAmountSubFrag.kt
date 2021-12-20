@@ -9,17 +9,17 @@ import com.tminus1010.budgetvalue._core.all.extensions.bind
 import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
 import com.tminus1010.budgetvalue._core.all.extensions.onClick
 import com.tminus1010.budgetvalue._core.framework.view.onDone
-import com.tminus1010.budgetvalue.databinding.FragChooseAmountBinding
+import com.tminus1010.budgetvalue.databinding.SubfragChooseAmountBinding
 import com.tminus1010.budgetvalue.transactions.presentation.ChooseAmountVM
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ChooseAmountFrag : Fragment(R.layout.frag_choose_amount) {
-    lateinit var vb: FragChooseAmountBinding
+class ChooseAmountSubFrag : Fragment(R.layout.subfrag_choose_amount) {
+    lateinit var vb: SubfragChooseAmountBinding
     val chooseAmountVM by viewModels<ChooseAmountVM>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        vb = FragChooseAmountBinding.bind(view)
+        vb = SubfragChooseAmountBinding.bind(view)
         // # Setup View
         vb.tmTableViewPlusMinus.initialize(
             recipeGrid = chooseAmountVM.buttons.map { it.map { it.toViewItemRecipe(requireContext()) } },

@@ -12,7 +12,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.app.SubFragEventProvider
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.budgetvalue.transactions.app.interactor.SaveTransactionInteractor
-import com.tminus1010.budgetvalue.transactions.view.ChooseAmountFrag
+import com.tminus1010.budgetvalue.transactions.view.ChooseAmountSubFrag
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -60,7 +60,7 @@ class ReceiptCategorizationVM @Inject constructor(
     val navUp = MutableSharedFlow<Unit>()
 
     // # Presentation State
-    val fragment = subFragEventProvider.showFragment.onStart { emit(ChooseAmountFrag()) }
+    val fragment = subFragEventProvider.showFragment.onStart { emit(ChooseAmountSubFrag()) }
     val description = transaction.map { it!!.description }
     val buttons =
         MutableStateFlow(
