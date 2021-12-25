@@ -31,6 +31,7 @@ class ChooseCategorySubFrag : Fragment(R.layout.subfrag_choose_category) {
         vb.recyclerviewCategories.layoutManager =
             GridLayoutManager(requireActivity(), spanSize, GridLayoutManager.VERTICAL, false)
         // # Bind Presentation State
+        vb.textviewPartialAmount.bind(chooseCategoryVM.partialAmountToCategorize) { text = it }
         vb.recyclerviewCategories.bind(chooseCategoryVM.categoryButtonVMItems) { categories ->
             adapter = object : LifecycleRVAdapter2<GenViewHolder2<ItemCategoryBtnBinding>>() {
                 override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =

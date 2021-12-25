@@ -7,3 +7,7 @@ fun <T> MutableSharedFlow<T>.easyEmit(t: T) {
     val flow = this
     runBlocking { flow.emit(t) }
 }
+
+fun <T> MutableSharedFlow<T>.onNext(t: T) {
+    easyEmit(t)
+}
