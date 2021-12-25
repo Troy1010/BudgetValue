@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
+import com.tminus1010.budgetvalue.transactions.app.ReceiptCategorizationInteractor
 import com.tminus1010.budgetvalue.transactions.app.SubFragEventProvider
 import com.tminus1010.budgetvalue.transactions.view.ChooseAmountSubFrag
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,6 +16,7 @@ import javax.inject.Inject
 class ChooseCategoryVM @Inject constructor(
     categoriesInteractor: CategoriesInteractor,
     subFragEventProvider: SubFragEventProvider,
+    receiptCategorizationInteractor: ReceiptCategorizationInteractor,
 ) : ViewModel() {
     // # Sub VMItems
     val categoryButtonVMItems =
@@ -24,7 +26,8 @@ class ChooseCategoryVM @Inject constructor(
                     ButtonVMItem(
                         title = it.name,
                         onClick = {
-                            logz("Category selected:$it")
+                            receiptCategorizationInteractor.currentCategory.easyEmit(it)
+                            receiptCategorizationInteractor.userSubmitPartialCategorization()
                             subFragEventProvider.showFragment.easyEmit(ChooseAmountSubFrag())
                         },
                     )

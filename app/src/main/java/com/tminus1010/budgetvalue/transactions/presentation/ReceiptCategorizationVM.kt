@@ -4,11 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
 import com.tminus1010.budgetvalue._core.all.extensions.easyStateIn
+import com.tminus1010.budgetvalue._core.all.extensions.observe
 import com.tminus1010.budgetvalue._core.data.MoshiProvider.moshi
 import com.tminus1010.budgetvalue._core.data.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.transactions.app.ReceiptCategorizationInteractor
 import com.tminus1010.budgetvalue.transactions.app.SubFragEventProvider
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.budgetvalue.transactions.app.interactor.SaveTransactionInteractor
@@ -23,7 +25,8 @@ import javax.inject.Inject
 class ReceiptCategorizationVM @Inject constructor(
     moshiWithCategoriesProvider: MoshiWithCategoriesProvider,
     private val saveTransactionInteractor: SaveTransactionInteractor,
-    private val subFragEventProvider: SubFragEventProvider
+    private val subFragEventProvider: SubFragEventProvider,
+    private val receiptCategorizationInteractor: ReceiptCategorizationInteractor
 ) : ViewModel() {
     // # Setup
     val transaction = MutableStateFlow<Transaction?>(null)
@@ -32,6 +35,7 @@ class ReceiptCategorizationVM @Inject constructor(
     val userSetAmount = MutableSharedFlow<String?>()
     val userSelectCategory = MutableSharedFlow<String?>()
     val userFill = MutableSharedFlow<Unit>()
+        .apply { observe(viewModelScope) { receiptCategorizationInteractor.currentChosenAmount.easyEmit(CategoryAmounts(categoryAmounts).defaultAmount(transaction.value!!.amount)) } }
     fun userSubmitPartialCategorization() {
         categoryAmounts[currentCategory.value!!] = categoryAmounts[currentCategory.value!!]?.let { it + currentAmount.value!! } ?: currentAmount.value!!
         userSelectCategory.easyEmit(null)
