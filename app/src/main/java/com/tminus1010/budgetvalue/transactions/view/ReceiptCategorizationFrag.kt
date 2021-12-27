@@ -41,6 +41,7 @@ class ReceiptCategorizationFrag : Fragment(R.layout.frag_receipt_categorization)
                 .replace(id, it)
                 .commitNow()
         }
+        vb.textviewAmountToCategorize.bind(receiptCategorizationVM.amountLeft) { text = it }
         vb.textviewDescription.bind(receiptCategorizationVM.description) { text = it }
         vb.buttonsview.bind(receiptCategorizationVM.buttons) { buttons = it }
     }

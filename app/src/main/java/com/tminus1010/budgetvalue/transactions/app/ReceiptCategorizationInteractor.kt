@@ -7,10 +7,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.app.interactor.SaveTransactionInteractor
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.rx3.asFlow
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -44,7 +41,7 @@ class ReceiptCategorizationInteractor @Inject constructor(
     // # Internal
     private val categoryAmounts = mutableMapOf<Category, BigDecimal>()
     private val categoryAmountsChanged = MutableSharedFlow<Unit>()
-    private val categoryAmountsFlow = categoryAmountsChanged.map { categoryAmounts }
+    private val categoryAmountsFlow = categoryAmountsChanged.onStart { emit(Unit) }.map { categoryAmounts }
 
     // # Model State
     val currentChosenAmount = MutableStateFlow(BigDecimal("0"))

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
 import com.tminus1010.budgetvalue._core.all.extensions.easyStateIn
 import com.tminus1010.budgetvalue._core.all.extensions.observe
+import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.data.MoshiProvider.moshi
 import com.tminus1010.budgetvalue._core.data.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
@@ -65,6 +66,7 @@ class ReceiptCategorizationVM @Inject constructor(
 
     // # Presentation State
     val fragment = subFragEventProvider.showFragment.onStart { emit(ChooseAmountSubFrag()) }
+    val amountLeft = receiptCategorizationInteractor.amountLeftToCategorize.map { it.toString().toMoneyBigDecimal().toString() }
     val description = transaction.map { it!!.description }
     val buttons =
         MutableStateFlow(
