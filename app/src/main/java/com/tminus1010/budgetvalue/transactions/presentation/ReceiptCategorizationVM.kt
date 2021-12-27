@@ -72,13 +72,17 @@ class ReceiptCategorizationVM @Inject constructor(
         MutableStateFlow(
             listOf(
                 ButtonVMItem(
+                    title = "Show categorization so far",
+                    onClick = {  }
+                ),
+                ButtonVMItem(
                     title = "Submit Partial Categorization",
                     onClick = { userSubmitPartialCategorization() }
                 ),
                 ButtonVMItem(
                     title = "Submit Categorization",
                     onClick = { userSubmitCategorization() }
-                )
+                ),
             )
         )
 }
