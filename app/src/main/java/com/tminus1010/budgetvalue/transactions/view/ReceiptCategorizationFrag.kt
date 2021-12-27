@@ -33,13 +33,16 @@ class ReceiptCategorizationFrag : Fragment(R.layout.frag_receipt_categorization)
         vb = FragReceiptCategorizationBinding.bind(view)
         // # Setup VM
         receiptCategorizationVM.transaction.value = transaction
+        //If we ever start to show an empty child fragment (b/c user pressed back button), navigate up.
+        childFragmentManager.addOnBackStackChangedListener { if (childFragmentManager.backStackEntryCount == 0) parentFragmentManager.popBackStack() }
         // # Bind Presentation Events
         receiptCategorizationVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         // # Bind Presentation State
         vb.framelayout.bind(receiptCategorizationVM.fragment) {
             childFragmentManager.beginTransaction()
                 .replace(id, it)
-                .commitNow()
+                .addToBackStack(null)
+                .commit()
         }
         vb.textviewAmountToCategorize.bind(receiptCategorizationVM.amountLeft) { text = it }
         vb.textviewDescription.bind(receiptCategorizationVM.description) { text = it }
