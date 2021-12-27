@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue._core.framework.view.tmTableView3.ViewItemReci
 import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe
 import com.tminus1010.budgetvalue.databinding.ItemHeaderBinding
 
-class HeaderPresentationModel(val text: String):IHasToViewItemRecipe {
+class HeaderPresentationModel(val text: String) : IHasToViewItemRecipe {
     override fun toViewItemRecipe(context: Context): IViewItemRecipe3 {
         return ViewItemRecipe3__(context, ItemHeaderBinding::inflate) { vb ->
             vb.textview.text = text
