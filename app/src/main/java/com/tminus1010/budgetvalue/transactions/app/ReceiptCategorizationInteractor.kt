@@ -38,8 +38,7 @@ class ReceiptCategorizationInteractor @Inject constructor(
         currentChosenAmount.easyEmit(CategoryAmounts(categoryAmounts).defaultAmount(transaction.amount))
     }
 
-    // # Internal
-    private val categoryAmounts = SourceHashMap<Category, BigDecimal>()
+    val categoryAmounts = SourceHashMap<Category, BigDecimal>()
 
     // # Model State
     val categoryAmountsFlow = categoryAmounts.observable.asFlow()
