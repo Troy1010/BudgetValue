@@ -36,7 +36,7 @@ class ReceiptCategorizationHostFrag : Fragment(R.layout.frag_receipt_categorizat
         receiptCategorizationVM.transaction.value = transaction
         childFragmentManager.addOnBackStackChangedListener {
             //Notify VM of "currentFrag" view event
-            receiptCategorizationVM.currentFrag.easyEmit(childFragmentManager.fragments.last())
+            receiptCategorizationVM.currentFrag.easyEmit(childFragmentManager.fragments.lastOrNull())
             //If we ever start to show an empty child fragment (b/c user pressed back button), navigate up.
             if (childFragmentManager.backStackEntryCount == 0) parentFragmentManager.popBackStack()
         }
