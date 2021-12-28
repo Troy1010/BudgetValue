@@ -27,7 +27,7 @@ class ReceiptCategorizationInteractor @Inject constructor(
         saveTransactionInteractor.saveTransaction(
             transactionsInteractor.mostRecentUncategorizedSpendFlow.value!!
                 .copy(categoryAmounts = categoryAmountsRedefined.value)
-        )
+        ).subscribe()
     }
 
     fun fill(transaction: Transaction) {

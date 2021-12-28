@@ -33,6 +33,7 @@ class ReceiptCategorizationHostVM @Inject constructor(
 
     fun userSubmitCategorization() {
         receiptCategorizationInteractor.submitCategorization()
+        navUp.easyEmit(Unit)
     }
 
     // # Presentation Events
