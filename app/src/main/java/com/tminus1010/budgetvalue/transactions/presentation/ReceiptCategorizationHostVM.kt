@@ -1,5 +1,6 @@
 package com.tminus1010.budgetvalue.transactions.presentation
 
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
 import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
@@ -23,6 +24,7 @@ class ReceiptCategorizationHostVM @Inject constructor(
 ) : ViewModel() {
     // # Setup
     val transaction = MutableStateFlow<Transaction?>(null)
+    val currentFrag = MutableStateFlow<Fragment?>(null)
 
     // # User Intents
     fun userShowCategorizationSoFar() {
@@ -40,6 +42,7 @@ class ReceiptCategorizationHostVM @Inject constructor(
         MutableStateFlow(
             listOf(
                 ButtonVMItem(
+                    isEnabledFlow = currentFrag.map { it !is ReceiptCategorizationSoFarSubFrag },
                     title = "Show categorization so far",
                     onClick = { userShowCategorizationSoFar() }
                 ),

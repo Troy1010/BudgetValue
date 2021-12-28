@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.all.extensions.bind
+import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
 import com.tminus1010.budgetvalue._core.all.extensions.observe
 import com.tminus1010.budgetvalue._core.data.MoshiProvider.moshi
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
@@ -33,8 +34,12 @@ class ReceiptCategorizationHostFrag : Fragment(R.layout.frag_receipt_categorizat
         vb = FragReceiptCategorizationBinding.bind(view)
         // # Setup VM
         receiptCategorizationVM.transaction.value = transaction
-        //If we ever start to show an empty child fragment (b/c user pressed back button), navigate up.
-        childFragmentManager.addOnBackStackChangedListener { if (childFragmentManager.backStackEntryCount == 0) parentFragmentManager.popBackStack() }
+        childFragmentManager.addOnBackStackChangedListener {
+            //Notify VM of "currentFrag" view event
+            receiptCategorizationVM.currentFrag.easyEmit(childFragmentManager.fragments.last())
+            //If we ever start to show an empty child fragment (b/c user pressed back button), navigate up.
+            if (childFragmentManager.backStackEntryCount == 0) parentFragmentManager.popBackStack()
+        }
         // # Bind Presentation Events
         receiptCategorizationVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         // # Bind Presentation State
