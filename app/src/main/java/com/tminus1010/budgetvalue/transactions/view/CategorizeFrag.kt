@@ -117,7 +117,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         categorizeVM.navToCategorySettings.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(this, nav, it.name, false) }
         categorizeVM.navToReplay.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(this, nav, it.name, false) }
         categorizeVM.navToSelectReplay.observe(viewLifecycleOwner) { nav.navigate(R.id.useReplayFrag) }
-        categorizeVM.navToReceiptCategorization.observe(viewLifecycleOwner) { ReceiptCategorizationFrag.navTo(nav, it, categoryAmountsConverter) }
+        categorizeVM.navToReceiptCategorization.observe(viewLifecycleOwner) { ReceiptCategorizationHostFrag.navTo(nav, it, categoryAmountsConverter) }
     }
 
     override fun onResume() {

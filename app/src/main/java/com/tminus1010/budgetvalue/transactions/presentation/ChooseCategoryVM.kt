@@ -30,7 +30,7 @@ class ChooseCategoryVM @Inject constructor(
                         title = it.name,
                         onClick = {
                             receiptCategorizationInteractor.currentCategory.easyEmit(it)
-                            receiptCategorizationInteractor.userSubmitPartialCategorization()
+                            receiptCategorizationInteractor.submitPartialCategorization()
                             subFragEventProvider.showFragment.easyEmit(ChooseAmountSubFrag())
                         },
                     )

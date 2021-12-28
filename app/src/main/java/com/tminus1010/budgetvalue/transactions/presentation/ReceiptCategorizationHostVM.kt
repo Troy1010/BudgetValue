@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
 @HiltViewModel
-class ReceiptCategorizationVM @Inject constructor(
+class ReceiptCategorizationHostVM @Inject constructor(
     private val subFragEventProvider: SubFragEventProvider,
     receiptCategorizationInteractor: ReceiptCategorizationInteractor
 ) : ViewModel() {
@@ -45,7 +45,7 @@ class ReceiptCategorizationVM @Inject constructor(
                 ),
                 ButtonVMItem(
                     title = "Submit Categorization",
-                    onClick = { receiptCategorizationInteractor.userSubmitCategorization() }
+                    onClick = { receiptCategorizationInteractor.submitCategorization() }
                 ),
             )
         )

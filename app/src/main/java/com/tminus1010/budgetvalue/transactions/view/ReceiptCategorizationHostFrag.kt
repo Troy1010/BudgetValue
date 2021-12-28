@@ -13,7 +13,7 @@ import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.databinding.FragReceiptCategorizationBinding
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.budgetvalue.transactions.data.TransactionDTO
-import com.tminus1010.budgetvalue.transactions.presentation.ReceiptCategorizationVM
+import com.tminus1010.budgetvalue.transactions.presentation.ReceiptCategorizationHostVM
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
@@ -21,8 +21,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ReceiptCategorizationFrag : Fragment(R.layout.frag_receipt_categorization) {
-    val receiptCategorizationVM by viewModels<ReceiptCategorizationVM>()
+class ReceiptCategorizationHostFrag : Fragment(R.layout.frag_receipt_categorization) {
+    val receiptCategorizationVM by viewModels<ReceiptCategorizationHostVM>()
     lateinit var vb: FragReceiptCategorizationBinding
 
     @Inject

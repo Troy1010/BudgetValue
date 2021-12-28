@@ -100,7 +100,7 @@
             tools:layout="@layout/frag_categorize_advanced" />
         <fragment
             android:id="@+id/receiptCategorizationFrag"
-            android:name="com.tminus1010.budgetvalue.transactions.view.ReceiptCategorizationFrag"
+            android:name="com.tminus1010.budgetvalue.transactions.view.ReceiptCategorizationHostFrag"
             android:label="ReceiptCategorizationFrag"
             tools:layout="@layout/frag_receipt_categorization" />
     </navigation>

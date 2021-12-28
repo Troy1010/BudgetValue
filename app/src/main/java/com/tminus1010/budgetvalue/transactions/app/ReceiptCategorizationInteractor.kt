@@ -7,7 +7,9 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.app.interactor.SaveTransactionInteractor
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.rx3.asFlow
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -18,21 +20,20 @@ class ReceiptCategorizationInteractor @Inject constructor(
     private val saveTransactionInteractor: SaveTransactionInteractor,
     private val transactionsInteractor: TransactionsInteractor
 ) {
-    // # UserIntents
-    fun userSubmitPartialCategorization() {
+    // # Model Action
+    fun submitPartialCategorization() {
         categoryAmounts[currentCategory.value!!] = categoryAmounts[currentCategory.value!!]?.let { it + currentChosenAmount.value } ?: currentChosenAmount.value
         currentChosenAmount.easyEmit(BigDecimal("0"))
         currentCategory.easyEmit(null)
     }
 
-    fun userSubmitCategorization() {
+    fun submitCategorization() {
         saveTransactionInteractor.saveTransaction(
             transactionsInteractor.mostRecentUncategorizedSpend.value!!.first!!
                 .copy(categoryAmounts = categoryAmounts)
         )
     }
 
-    // # Model Action
     fun fill(transaction: Transaction) {
         currentChosenAmount.easyEmit(CategoryAmounts(categoryAmounts).defaultAmount(transaction.amount))
     }
