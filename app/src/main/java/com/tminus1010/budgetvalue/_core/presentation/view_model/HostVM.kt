@@ -5,7 +5,7 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.presentation.service.GetExtraMenuItemPartials
 import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
-import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItems
+import com.tminus1010.budgetvalue._core.presentation.model.MenuPresentationModel
 import com.tminus1010.budgetvalue._core.presentation.model.UnformattedString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -25,7 +25,7 @@ class HostVM @Inject constructor(
     val navToFutures = PublishSubject.create<Unit>()
     val navToReplays = PublishSubject.create<Unit>()
     val topMenuVMItems =
-        MenuVMItems(
+        MenuPresentationModel(
             MenuVMItem(
                 title = "History",
                 onClick = { navToHistory.onNext(Unit); unCheckAllMenuItems.onNext(Unit) },
