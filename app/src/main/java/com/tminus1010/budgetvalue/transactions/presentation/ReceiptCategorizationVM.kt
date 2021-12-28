@@ -1,65 +1,33 @@
 package com.tminus1010.budgetvalue.transactions.presentation
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
-import com.tminus1010.budgetvalue._core.all.extensions.easyStateIn
-import com.tminus1010.budgetvalue._core.all.extensions.observe
 import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
-import com.tminus1010.budgetvalue._core.data.MoshiProvider.moshi
-import com.tminus1010.budgetvalue._core.data.MoshiWithCategoriesProvider
-import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
-import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.app.ReceiptCategorizationInteractor
 import com.tminus1010.budgetvalue.transactions.app.SubFragEventProvider
 import com.tminus1010.budgetvalue.transactions.app.Transaction
-import com.tminus1010.budgetvalue.transactions.app.interactor.SaveTransactionInteractor
 import com.tminus1010.budgetvalue.transactions.view.ChooseAmountSubFrag
-import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
+import com.tminus1010.budgetvalue.transactions.view.ReceiptCategorizationSoFarSubFrag
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
-import java.math.BigDecimal
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
 @HiltViewModel
 class ReceiptCategorizationVM @Inject constructor(
-    moshiWithCategoriesProvider: MoshiWithCategoriesProvider,
-    private val saveTransactionInteractor: SaveTransactionInteractor,
     private val subFragEventProvider: SubFragEventProvider,
-    private val receiptCategorizationInteractor: ReceiptCategorizationInteractor
+    receiptCategorizationInteractor: ReceiptCategorizationInteractor
 ) : ViewModel() {
     // # Setup
     val transaction = MutableStateFlow<Transaction?>(null)
 
     // # User Intents
-    val userSetAmount = MutableSharedFlow<String?>()
-    val userSelectCategory = MutableSharedFlow<String?>()
-    val userFill = MutableSharedFlow<Unit>()
-        .apply { observe(viewModelScope) { receiptCategorizationInteractor.currentChosenAmount.easyEmit(CategoryAmounts(categoryAmounts).defaultAmount(transaction.value!!.amount)) } }
-    fun userSubmitPartialCategorization() {
-        categoryAmounts[currentCategory.value!!] = categoryAmounts[currentCategory.value!!]?.let { it + currentAmount.value!! } ?: currentAmount.value!!
-        userSelectCategory.easyEmit(null)
-        userSetAmount.easyEmit(null)
+    fun userShowCategorizationSoFar() {
+        subFragEventProvider.showFragment.easyEmit(ReceiptCategorizationSoFarSubFrag())
     }
-
-    fun userSubmitCategorization() {
-        saveTransactionInteractor.saveTransaction(transaction.value!!.copy(categoryAmounts = categoryAmounts))
-        navUp.easyEmit(Unit)
-        // # Assumes VM will be cleared.
-    }
-
-    // # Internal
-    private val currentCategory =
-        userSelectCategory.map { moshiWithCategoriesProvider.moshi.fromJson<Category>(it) }
-            .easyStateIn(viewModelScope, null)
-    private val currentAmount =
-        merge(
-            userSetAmount.map { moshi.fromJson<BigDecimal>(it) },
-            userFill.map { CategoryAmounts(categoryAmounts).defaultAmount(transaction.value!!.amount) }
-        )
-            .easyStateIn(viewModelScope, null)
-    private val categoryAmounts = mutableMapOf<Category, BigDecimal>()
 
     // # Presentation Events
     val navUp = MutableSharedFlow<Unit>()
@@ -73,15 +41,11 @@ class ReceiptCategorizationVM @Inject constructor(
             listOf(
                 ButtonVMItem(
                     title = "Show categorization so far",
-                    onClick = {  }
-                ),
-                ButtonVMItem(
-                    title = "Submit Partial Categorization",
-                    onClick = { userSubmitPartialCategorization() }
+                    onClick = { userShowCategorizationSoFar() }
                 ),
                 ButtonVMItem(
                     title = "Submit Categorization",
-                    onClick = { userSubmitCategorization() }
+                    onClick = { receiptCategorizationInteractor.userSubmitCategorization() }
                 ),
             )
         )

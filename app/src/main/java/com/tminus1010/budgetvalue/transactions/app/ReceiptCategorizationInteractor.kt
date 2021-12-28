@@ -1,8 +1,8 @@
 package com.tminus1010.budgetvalue.transactions.app
 
 import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
-import com.tminus1010.budgetvalue._core.all.extensions.onNext
 import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
+import com.tminus1010.budgetvalue._core.framework.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.app.interactor.SaveTransactionInteractor
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
@@ -23,7 +23,6 @@ class ReceiptCategorizationInteractor @Inject constructor(
         categoryAmounts[currentCategory.value!!] = categoryAmounts[currentCategory.value!!]?.let { it + currentChosenAmount.value } ?: currentChosenAmount.value
         currentChosenAmount.easyEmit(BigDecimal("0"))
         currentCategory.easyEmit(null)
-        categoryAmountsChanged.onNext(Unit)
     }
 
     fun userSubmitCategorization() {
@@ -39,11 +38,10 @@ class ReceiptCategorizationInteractor @Inject constructor(
     }
 
     // # Internal
-    private val categoryAmounts = mutableMapOf<Category, BigDecimal>()
-    private val categoryAmountsChanged = MutableSharedFlow<Unit>()
-    private val categoryAmountsFlow = categoryAmountsChanged.onStart { emit(Unit) }.map { categoryAmounts }
+    private val categoryAmounts = SourceHashMap<Category, BigDecimal>()
 
     // # Model State
+    val categoryAmountsFlow = categoryAmounts.observable.asFlow()
     val currentChosenAmount = MutableStateFlow(BigDecimal("0"))
     val currentCategory = MutableStateFlow<Category?>(null)
     val amountLeftToCategorize =
