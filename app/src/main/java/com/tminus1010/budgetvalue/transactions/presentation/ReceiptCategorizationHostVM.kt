@@ -20,15 +20,19 @@ import javax.inject.Inject
 @HiltViewModel
 class ReceiptCategorizationHostVM @Inject constructor(
     private val subFragEventProvider: SubFragEventProvider,
-    receiptCategorizationInteractor: ReceiptCategorizationInteractor
+    private val receiptCategorizationInteractor: ReceiptCategorizationInteractor
 ) : ViewModel() {
-    // # Setup
+    // # View Events
     val transaction = MutableStateFlow<Transaction?>(null)
     val currentFrag = MutableStateFlow<Fragment?>(null)
 
     // # User Intents
     fun userShowCategorizationSoFar() {
         subFragEventProvider.showFragment.easyEmit(ReceiptCategorizationSoFarSubFrag())
+    }
+
+    fun userSubmitCategorization() {
+        receiptCategorizationInteractor.submitCategorization()
     }
 
     // # Presentation Events
@@ -48,7 +52,7 @@ class ReceiptCategorizationHostVM @Inject constructor(
                 ),
                 ButtonVMItem(
                     title = "Submit Categorization",
-                    onClick = { receiptCategorizationInteractor.submitCategorization() }
+                    onClick = { userSubmitCategorization() }
                 ),
             )
         )
