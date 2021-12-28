@@ -43,7 +43,7 @@ class ChooseAmountVM @Inject constructor(
         .apply { observe(viewModelScope) { receiptCategorizationInteractor.currentChosenAmount.value = receiptCategorizationInteractor.currentChosenAmount.value - BigDecimal("0.01") } }
     val userSetAmount = MutableSharedFlow<String>()
         .apply { observe(viewModelScope) { receiptCategorizationInteractor.currentChosenAmount.value = it.toMoneyBigDecimal() } }
-    val userShowChooseCategory = MutableSharedFlow<Unit>()
+    val userSubmitAmount = MutableSharedFlow<Unit>()
         .apply { observe(viewModelScope) { subFragEventProvider.showFragment.easyEmit(ChooseCategorySubFrag()) } }
 
     // # Presentation State

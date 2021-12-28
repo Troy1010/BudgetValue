@@ -29,6 +29,6 @@ class ChooseAmountSubFrag : Fragment(R.layout.subfrag_choose_amount) {
         vb.moneyEditText.bind(chooseAmountVM.amount) { setText(it) }
         // # Bind User Intents
         vb.moneyEditText.onDone { chooseAmountVM.userSetAmount.easyEmit(it) }
-        vb.buttonSubmit.onClick { chooseAmountVM.userShowChooseCategory.easyEmit(Unit) }
+        vb.buttonSubmit.onClick { chooseAmountVM.userSubmitAmount.easyEmit(Unit) }
     }
 }
