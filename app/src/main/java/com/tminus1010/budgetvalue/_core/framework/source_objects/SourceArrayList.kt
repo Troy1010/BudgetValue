@@ -2,10 +2,12 @@ package com.tminus1010.budgetvalue._core.framework.source_objects
 
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import kotlinx.coroutines.rx3.asFlow
 
 class SourceArrayList<T> : ArrayList<T>() {
     private val subject = BehaviorSubject.createDefault<List<T>>(emptyList())
     val observable: Observable<List<T>> = subject
+    val flow = subject.asFlow()
 
     override fun clear() {
         super.clear()

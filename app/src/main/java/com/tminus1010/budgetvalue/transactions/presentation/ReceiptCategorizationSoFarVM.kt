@@ -9,15 +9,15 @@ import com.tminus1010.budgetvalue.transactions.app.ReceiptCategorizationInteract
 import com.tminus1010.budgetvalue.transactions.presentation.models.TextPresentationModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
+import java.math.BigDecimal
 import javax.inject.Inject
 
 @HiltViewModel
 class ReceiptCategorizationSoFarVM @Inject constructor(
     private val receiptCategorizationInteractor: ReceiptCategorizationInteractor,
 ) : ViewModel() {
-    // # User Intents
-    fun userRemove(category: Category) {
-        receiptCategorizationInteractor.categoryAmounts.remove(category)
+    fun remove(category: Category, amount: BigDecimal) {
+        receiptCategorizationInteractor.categoryAmounts.remove(Pair(category, amount))
     }
 
     // # Presentation State
@@ -26,27 +26,27 @@ class ReceiptCategorizationSoFarVM @Inject constructor(
             listOf(
                 listOf(
                     listOf(
-                        HeaderPresentationModel("Category"),
                         HeaderPresentationModel("Amount"),
+                        HeaderPresentationModel("Category"),
                     ),
                 ),
                 it.map { (category, amount) ->
                     listOf(
                         TextPresentationModel(
-                            text1 = category.name,
-                            menuPresentationModel = MenuPresentationModel(
-                                MenuVMItem(
-                                    title = "Remove",
-                                    onClick = { userRemove(category) },
-                                )
-                            )
-                        ),
-                        TextPresentationModel(
                             text1 = amount.toPlainString(),
                             menuPresentationModel = MenuPresentationModel(
                                 MenuVMItem(
                                     title = "Remove",
-                                    onClick = { userRemove(category) },
+                                    onClick = { remove(category, amount) },
+                                )
+                            )
+                        ),
+                        TextPresentationModel(
+                            text1 = category.name,
+                            menuPresentationModel = MenuPresentationModel(
+                                MenuVMItem(
+                                    title = "Remove",
+                                    onClick = { remove(category, amount) },
                                 )
                             )
                         ),

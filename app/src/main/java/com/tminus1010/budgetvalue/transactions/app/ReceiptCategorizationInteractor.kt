@@ -2,13 +2,12 @@ package com.tminus1010.budgetvalue.transactions.app
 
 import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
 import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
-import com.tminus1010.budgetvalue._core.framework.source_objects.SourceHashMap
+import com.tminus1010.budgetvalue._core.framework.source_objects.SourceArrayList
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.app.interactor.SaveTransactionInteractor
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.*
 import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -20,29 +19,30 @@ class ReceiptCategorizationInteractor @Inject constructor(
 ) {
     // # Model Action
     fun submitPartialCategorization(category: Category) {
-        categoryAmounts[category] = categoryAmounts[category]?.let { it + rememberedAmount.value } ?: rememberedAmount.value
+        categoryAmounts.add(Pair(category, rememberedAmount.value))
         rememberedAmount.easyEmit(BigDecimal("0"))
     }
 
     fun submitCategorization() {
         saveTransactionInteractor.saveTransaction(
             transactionsInteractor.mostRecentUncategorizedSpendFlow.value!!
-                .copy(categoryAmounts = categoryAmounts)
+                .copy(categoryAmounts = categoryAmountsRedefined.value)
         )
     }
 
     fun fill(transaction: Transaction) {
-        rememberedAmount.easyEmit(CategoryAmounts(categoryAmounts).defaultAmount(transaction.amount))
+        rememberedAmount.easyEmit(categoryAmountsRedefined.value.defaultAmount(transaction.amount))
     }
 
-    val categoryAmounts = SourceHashMap<Category, BigDecimal>()
+    val categoryAmounts = SourceArrayList<Pair<Category, BigDecimal>>()
+    val categoryAmountsRedefined = categoryAmounts.flow.map { CategoryAmounts(it.fold(mutableMapOf()) { acc, v -> acc[v.first] = (acc[v.first] ?: BigDecimal("0")) + v.second; acc }) }.stateIn(GlobalScope, SharingStarted.Eagerly, CategoryAmounts())
 
     // # Model State
     val rememberedAmount = MutableStateFlow(BigDecimal("0"))
     val amountLeftToCategorize =
         combine(
             transactionsInteractor.mostRecentUncategorizedSpendFlow,
-            categoryAmounts.flow.map { CategoryAmounts(it) }
+            categoryAmountsRedefined
         ) { transaction, categoryAmounts ->
             categoryAmounts.defaultAmount(transaction?.amount ?: BigDecimal("0"))
         }
