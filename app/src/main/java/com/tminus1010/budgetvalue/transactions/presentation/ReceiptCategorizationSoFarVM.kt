@@ -22,7 +22,7 @@ class ReceiptCategorizationSoFarVM @Inject constructor(
 
     // # Presentation State
     val recipeGrid =
-        receiptCategorizationInteractor.categoryAmountsFlow.map {
+        receiptCategorizationInteractor.categoryAmounts.flow.map {
             listOf(
                 listOf(
                     listOf(

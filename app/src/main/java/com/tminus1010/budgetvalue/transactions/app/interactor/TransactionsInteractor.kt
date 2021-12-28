@@ -16,6 +16,11 @@ import com.tminus1010.tmcommonkotlin.rx.nonLazy
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.rx3.asFlow
 import java.io.InputStream
 import java.time.LocalDate
 import java.util.concurrent.TimeUnit
@@ -98,4 +103,12 @@ class TransactionsInteractor @Inject constructor(
             .mapBox(TransactionsAggregate::mostRecentUncategorizedSpend)
             .replayNonError(1)
             .nonLazy()
+    val mostRecentUncategorizedSpendFlow =
+        transactionsRepo.transactionsAggregate
+            .mapBox(TransactionsAggregate::mostRecentUncategorizedSpend)
+            .replayNonError(1)
+            .nonLazy()
+            .asFlow()
+            .map { it.first }
+            .stateIn(GlobalScope, SharingStarted.Eagerly, null)
 }

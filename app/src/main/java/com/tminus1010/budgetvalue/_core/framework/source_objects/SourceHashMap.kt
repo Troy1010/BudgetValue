@@ -6,6 +6,7 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
+import kotlinx.coroutines.rx3.asFlow
 import java.util.function.BiFunction
 import java.util.function.Function
 
@@ -50,6 +51,11 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue
         .map { this.toMap() }
         .startWithItem(this)
         .toBehaviorSubject()
+
+    /**
+     * this is the flow version of [observable]
+     */
+    val flow = observable.asFlow()
 
     /**
      * this observable emits whenever an entry is added or removed. (only once per transaction)
