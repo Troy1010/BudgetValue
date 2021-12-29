@@ -1,5 +1,6 @@
 package com.tminus1010.budgetvalue.transactions.data
 
+import com.tminus1010.budgetvalue._core.all.extensions.isPositive
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import java.io.BufferedReader
@@ -41,13 +42,14 @@ class TransactionParser @Inject constructor(
                     break
                 }
             if (amount == null) continue
-            // from left to right, see if any denote the fact that this should be a negative value
-            for ((i, s) in row.withIndex())
-                if (s.matches(Regex("""^Debit${'$'}"""))) {
-                    amount = "-$amount"
-                    row.removeAt(i)
-                    break
-                }
+            // if amount is not negative, then from left to right, see if any denote the fact that this should be a negative value
+            if (amount.toBigDecimal().isPositive)
+                for ((i, s) in row.withIndex())
+                    if (s.matches(Regex("""^Debit${'$'}"""))) {
+                        amount = "-$amount"
+                        row.removeAt(i)
+                        break
+                    }
             if (amount == null) continue
             // find description
             var description: String? = null
