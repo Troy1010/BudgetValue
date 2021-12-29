@@ -1,25 +1,23 @@
 package com.tminus1010.budgetvalue._core.data
 
 import androidx.room.*
-import com.tminus1010.budgetvalue.categories.models.CategoryDTO
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
+import com.tminus1010.budgetvalue.categories.models.Category
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserCategoriesDAO {
-    @Query("SELECT * FROM `CategoryDTO`")
-    fun fetchUserCategories(): Observable<List<CategoryDTO>>
+    @Query("SELECT * FROM `Category`")
+    fun fetchUserCategories(): Flow<List<Category>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun push(category: CategoryDTO): Completable
+    suspend fun push(category: Category)
 
     @Delete
-    fun delete(category: CategoryDTO): Completable
+    suspend fun delete(category: Category)
 
     @Update
-    fun update(category: CategoryDTO): Completable
+    suspend fun update(category: Category)
 
-    @Query("SELECT COUNT(1) FROM `CategoryDTO` WHERE name=:categoryName")
-    fun hasCategory(categoryName: String): Single<Int>
+    @Query("SELECT COUNT(1) FROM `Category` WHERE name=:categoryName")
+    suspend fun hasCategory(categoryName: String): Int
 }

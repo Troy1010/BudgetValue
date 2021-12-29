@@ -1,37 +1,44 @@
 package com.tminus1010.budgetvalue.history
 
+import android.view.View
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue._core.categoryComparator
+import com.tminus1010.budgetvalue._core.all.extensions.asObservable2
+import com.tminus1010.budgetvalue._core.domain.DatePeriodService
 import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
-import com.tminus1010.budgetvalue._core.middleware.Rx
-import com.tminus1010.budgetvalue._core.data.repos.CurrentDatePeriod
-import com.tminus1010.budgetvalue._shared.date_period_getter.DatePeriodGetter
-import com.tminus1010.budgetvalue.budgeted.BudgetedDomain
+import com.tminus1010.budgetvalue._core.categoryComparator
+import com.tminus1010.budgetvalue._core.data.repo.CurrentDatePeriodRepo
+import com.tminus1010.budgetvalue._core.framework.Rx
+import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
+import com.tminus1010.budgetvalue.budgeted.BudgetedInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.history.presentation.BasicHeaderWithSubtitlePresentationModel
+import com.tminus1010.budgetvalue.history.presentation.BasicTextPresentationModel
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
-import com.tminus1010.budgetvalue.reconciliations.data.ReconciliationsRepo
-import com.tminus1010.budgetvalue.reconciliations.domain.ActiveReconciliationDefaultAmountUC
-import com.tminus1010.budgetvalue.transactions.domain.TransactionsDomain
+import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
+import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
+import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
+import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
+import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.rx.nonLazy
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
 class HistoryVM @Inject constructor(
-    transactionsDomain: TransactionsDomain,
-    activeReconciliationDefaultAmountUC: ActiveReconciliationDefaultAmountUC,
-    budgetedDomain: BudgetedDomain,
-    private val datePeriodGetter: DatePeriodGetter,
-    private val currentDatePeriod: CurrentDatePeriod,
+    transactionsInteractor: TransactionsInteractor,
+    budgetedInteractor: BudgetedInteractor,
+    private val datePeriodService: DatePeriodService,
+    private val currentDatePeriodRepo: CurrentDatePeriodRepo,
     private val plansRepo: PlansRepo,
     private val reconciliationRepo: ReconciliationsRepo,
 ) : ViewModel() {
-    val activeCategories: Observable<List<Category>> =
-        Observable.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans, reconciliationRepo.activeReconciliationCAs, transactionsDomain.transactionBlocks, budgetedDomain.budgeted)
+    private val activeCategories: Observable<List<Category>> =
+        Observable.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans.asObservable2(), reconciliationRepo.activeReconciliationCAs, transactionsInteractor.transactionBlocks, budgetedInteractor.budgeted)
         { reconciliations, plans, activeReconciliationCAs, transactionBlocks, budgeted ->
             sequenceOf<Set<Category>>()
                 .plus(reconciliations.map { it.categoryAmounts.keys })
@@ -45,16 +52,16 @@ class HistoryVM @Inject constructor(
         }
 
 
-    val historyVMItems =
-        Rx.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans, activeReconciliationDefaultAmountUC(), reconciliationRepo.activeReconciliationCAs, transactionsDomain.transactionBlocks, budgetedDomain.budgeted)
+    private val historyVMItems =
+        Rx.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks, budgetedInteractor.budgeted)
             .observeOn(Schedulers.computation())
             .throttleLatest(500, TimeUnit.MILLISECONDS)
-            .map { (reconciliations, plans, activeReconciliationDefaultAmount, activeReconciliationCAs, transactionBlocks, budgeted) ->
+            .map { (reconciliations, plans, transactionBlocks, budgeted) ->
                 // # Define blocks
                 val blockPeriods = sortedSetOf<LocalDatePeriod>(compareBy { it.startDate })
-                transactionBlocks?.forEach { if (!datePeriodGetter.isDatePeriodValid(it.datePeriod)) error("datePeriod was not valid:${it.datePeriod}") }
-                transactionBlocks?.forEach { blockPeriods.add(it.datePeriod) }
-                reconciliations?.forEach { blockPeriods.add(datePeriodGetter.getDatePeriod(it.localDate)) }
+                transactionBlocks?.forEach { if (!datePeriodService.isDatePeriodValid(it.datePeriod!!)) error("datePeriod was not valid:${it.datePeriod}") }
+                transactionBlocks?.forEach { blockPeriods.add(it.datePeriod!!) }
+                reconciliations?.forEach { blockPeriods.add(datePeriodService.getDatePeriod(it.localDate)) }
                 plans?.forEach { blockPeriods.add(it.localDatePeriod) }
                 // # Define historyColumnDatas
                 val historyColumnDatas = arrayListOf<HistoryVMItem>()
@@ -62,21 +69,12 @@ class HistoryVM @Inject constructor(
                 for (blockPeriod in blockPeriods) {
                     listOfNotNull(
                         transactionBlocks?.filter { it.datePeriod == blockPeriod } // TODO("sort by sortDate")
-                            ?.let { it.map { HistoryVMItem.TransactionBlockVMItem(it, currentDatePeriod) } },
+                            ?.let { it.map { HistoryVMItem.TransactionBlockVMItem(it, currentDatePeriodRepo) } },
                         reconciliations?.filter { it.localDate in blockPeriod }
                             ?.let { it.map { HistoryVMItem.ReconciliationVMItem(it, reconciliationRepo) } },
                         plans?.filter { it.localDatePeriod.startDate in blockPeriod }
-                            ?.let { it.map { HistoryVMItem.PlanVMItem(it, currentDatePeriod, plansRepo) } },
+                            ?.let { it.map { HistoryVMItem.PlanVMItem(it, currentDatePeriodRepo, plansRepo) } },
                     ).flatten().also { historyColumnDatas.addAll(it) }
-                }
-                // ## Add Active Reconciliation
-                if (activeReconciliationCAs != null && activeReconciliationDefaultAmount != null) {
-                    historyColumnDatas.add(
-                        HistoryVMItem.ActiveReconciliationVMItem(
-                            activeReconciliationCAs,
-                            activeReconciliationDefaultAmount,
-                        )
-                    )
                 }
                 // ## Add Budgeted
                 if (budgeted != null) historyColumnDatas.add(HistoryVMItem.BudgetedVMItem(budgeted))
@@ -85,4 +83,39 @@ class HistoryVM @Inject constructor(
             }
             .replayNonError(1)
             .nonLazy()
+
+    // # Presentation Event
+    val showPopupMenu = PublishSubject.create<Pair<View, List<MenuVMItem>>>()
+
+    // # Presentation State
+    val recipeGrid =
+        Observable.combineLatest(activeCategories, historyVMItems)
+        { activeCategories, historyVMItems ->
+            listOf(
+                listOf(
+                    BasicTextPresentationModel("Categories"),
+                    BasicTextPresentationModel("Default"),
+                    *activeCategories.map {
+                        BasicTextPresentationModel(it.name)
+                    }.toTypedArray()
+                ),
+                *historyVMItems.map { historyVMItem ->
+                    listOf(
+                        BasicHeaderWithSubtitlePresentationModel(historyVMItem.title, historyVMItem.subTitle.value?.first ?: "") { showPopupMenu.onNext(Pair(it, historyVMItem.menuVMItems)) }, // TODO("Duct-tape solution to non-resizing frozen row")
+                        BasicTextPresentationModel(historyVMItem.defaultAmount),
+                        *historyVMItem.amountStrings(activeCategories).map {
+                            BasicTextPresentationModel(it)
+                        }.toTypedArray()
+                    )
+                }.toTypedArray()
+            ).reflectXY()
+        }
+    val dividerMap =
+        activeCategories
+            .map {
+                it.withIndex()
+                    .distinctUntilChangedWith(compareBy { it.value.type })
+                    .associate { it.index to it.value.type.name }
+                    .mapKeys { it.key + 2 } // header row, default row
+            }
 }

@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.tminus1010.budgetvalue">
 
+    <!-- mockk() does not work in instrumentation tests without android:extractNativeLibs="true" -->
     <application
         android:name="._core.App"
+        android:extractNativeLibs="true"
         tools:replace="android:name" />
 </manifest>

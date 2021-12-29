@@ -1,16 +1,20 @@
 package com.tminus1010.budgetvalue._core.data
 
 import androidx.room.*
-import com.tminus1010.budgetvalue.all.data.models.AccountDTO
-import com.tminus1010.budgetvalue.plans.models.PlanDTO
-import com.tminus1010.budgetvalue.reconciliations.models.ReconciliationDTO
-import com.tminus1010.budgetvalue.replay_or_future.models.BasicFutureDTO
-import com.tminus1010.budgetvalue.replay_or_future.models.BasicReplayDTO
-import com.tminus1010.budgetvalue.replay_or_future.models.TotalFutureDTO
-import com.tminus1010.budgetvalue.transactions.models.TransactionDTO
+import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
+import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
+import com.tminus1010.budgetvalue.accounts.data.AccountDTO
+import com.tminus1010.budgetvalue.plans.data.model.PlanDTO
+import com.tminus1010.budgetvalue.plans.domain.Plan
+import com.tminus1010.budgetvalue.reconcile.data.model.ReconciliationDTO
+import com.tminus1010.budgetvalue.replay_or_future.data.model.BasicFutureDTO
+import com.tminus1010.budgetvalue.replay_or_future.data.model.BasicReplayDTO
+import com.tminus1010.budgetvalue.replay_or_future.data.model.TotalFutureDTO
+import com.tminus1010.budgetvalue.transactions.data.TransactionDTO
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.flow.Flow
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -68,7 +72,32 @@ interface MiscDAO {
     @Query("UPDATE TransactionDTO SET categoryAmounts=:categoryAmounts WHERE id=:id")
     fun updateTransactionCategoryAmounts(id: String, categoryAmounts: Map<String, BigDecimal>): Completable
 
-    // # PlanCategoryAmounts
+    // # Plan
+    @Query("select * from `Plan`")
+    fun getPlans(): Flow<List<Plan>>
+
+    @Query("select * from `Plan` WHERE localDatePeriod=:localDatePeriod")
+    suspend fun getPlan(localDatePeriod: LocalDatePeriod): Plan
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(plan: Plan)
+
+    @Update
+    suspend fun update(plan: Plan)
+
+    @Delete
+    suspend fun delete(plan: Plan)
+
+    @Query("DELETE FROM `Plan`")
+    suspend fun clearPlans2()
+
+    @Query("UPDATE `Plan` SET categoryAmounts=:categoryAmounts WHERE localDatePeriod=:localDatePeriod")
+    suspend fun updatePlanCategoryAmounts(localDatePeriod: LocalDatePeriod, categoryAmounts: CategoryAmounts)
+
+    @Query("UPDATE `Plan` SET total=:total WHERE localDatePeriod=:localDatePeriod")
+    suspend fun updatePlanAmount(localDatePeriod: LocalDatePeriod, total: BigDecimal)
+
+    //
 
     @Query("select * from PlanDTO")
     fun fetchPlans(): Observable<List<PlanDTO>>

@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue._core.data
 
 import android.content.SharedPreferences
-import com.squareup.moshi.Moshi
+import com.tminus1010.budgetvalue._core.data.MoshiProvider.moshi
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
@@ -15,7 +15,6 @@ import javax.inject.Singleton
 @Singleton
 class SharedPrefWrapper @Inject constructor(
     private val sharedPreferences: SharedPreferences,
-    private val moshi: Moshi,
 ) {
     companion object {
         enum class Key {
@@ -38,7 +37,7 @@ class SharedPrefWrapper @Inject constructor(
         activeReconciliationCAsPublisher
             .startWithItem(moshi.fromJson(sharedPreferences.getString(Key.RECONCILE_CATEGORY_AMOUNTS.name, null) ?: "{}"))
             .distinctUntilChanged()
-            .replay(1).autoConnect().also { it.subscribe {  } }
+            .replay(1).autoConnect().also { it.subscribe { } }
 
     fun pushActiveReconciliationCAs(categoryAmounts: Map<String, String>?): Completable {
         categoryAmounts

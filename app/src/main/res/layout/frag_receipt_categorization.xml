@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textview_title"
+        style="@style/AppTheme.StandardTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Receipt Categorization"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textview_description"
+        style="@style/AppTheme.StandardTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/textview_title"
+        tools:text="Something" />
+
+
+    <TextView
+        android:id="@+id/textview_amount_to_categorize_header"
+        style="@style/AppTheme.StandardTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Amount left:"
+        app:layout_constraintEnd_toStartOf="@id/textview_amount_to_categorize"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textview_description" />
+
+
+    <TextView
+        android:id="@+id/textview_amount_to_categorize"
+        style="@style/AppTheme.StandardTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/textview_amount_to_categorize_header"
+        app:layout_constraintTop_toBottomOf="@id/textview_description"
+        tools:text="$10.45" />
+
+    <FrameLayout
+        android:id="@+id/framelayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/buttonsview"
+        app:layout_constraintTop_toBottomOf="@id/textview_amount_to_categorize_header" />
+
+    <com.tminus1010.budgetvalue._core.framework.view.ButtonsView
+        android:id="@+id/buttonsview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:itemCount="3"
+        tools:layoutManager="LinearLayoutManager"
+        tools:listitem="@layout/item_button" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

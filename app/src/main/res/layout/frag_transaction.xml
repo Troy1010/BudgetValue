@@ -5,21 +5,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.TMTableView3
+    <com.tminus1010.budgetvalue._core.framework.view.tmTableView3.TMTableView3
         android:id="@+id/tmTableView_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_height="60dp" />
 
-    <com.tminus1010.budgetvalue._core.middleware.view.tmTableView3.TMTableView3
+    <com.tminus1010.budgetvalue._core.framework.view.tmTableView3.TMTableView3
         android:id="@+id/tmTableView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/buttonsview"
         app:layout_constraintTop_toBottomOf="@id/tmTableView_title" />
 
-    <com.tminus1010.budgetvalue._core.middleware.view.ButtonsView
+    <com.tminus1010.budgetvalue._core.framework.view.ButtonsView
         android:id="@+id/buttonsview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

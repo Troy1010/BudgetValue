@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/frame_left"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_left"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_left"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/colorOnDark" />
+
+    <ImageView
+        android:id="@+id/iv_right"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_right"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/colorOnDark" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        style="@style/AppTheme.StandardTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/barrier_bottom_of_title"
+        app:layout_constraintEnd_toStartOf="@id/iv_right"
+        app:layout_constraintStart_toEndOf="@id/iv_left"
+        app:layout_constraintTop_toTopOf="@id/iv_left"
+        tools:text="Title" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_bottom_of_title"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="iv_left, iv_right, tv_title, frame_left" />
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/pieChart1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/divider"
+        app:layout_constraintTop_toBottomOf="@id/barrier_bottom_of_title" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/colorBackgroundHighlight"
+        app:layout_constraintBottom_toTopOf="@id/spinner_use_period_type" />
+
+    <Spinner
+        android:id="@+id/spinner_use_period_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/spinner_duration" />
+
+    <Spinner
+        android:id="@+id/spinner_duration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

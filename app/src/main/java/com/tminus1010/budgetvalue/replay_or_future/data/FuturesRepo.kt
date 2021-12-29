@@ -2,11 +2,11 @@ package com.tminus1010.budgetvalue.replay_or_future.data
 
 import com.tminus1010.budgetvalue._core.data.MiscDAO
 import com.tminus1010.budgetvalue.categories.CategoryAmountFormulasConverter
-import com.tminus1010.budgetvalue.categories.ICategoryParser
-import com.tminus1010.budgetvalue.replay_or_future.models.BasicFuture
-import com.tminus1010.budgetvalue.replay_or_future.models.IFuture
-import com.tminus1010.budgetvalue.replay_or_future.models.TerminationStatus
-import com.tminus1010.budgetvalue.replay_or_future.models.TotalFuture
+import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
+import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture
+import com.tminus1010.budgetvalue.replay_or_future.domain.IFuture
+import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
+import com.tminus1010.budgetvalue.replay_or_future.domain.TotalFuture
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -15,7 +15,7 @@ import javax.inject.Inject
 class FuturesRepo @Inject constructor(
     private val miscDAO: MiscDAO,
     private val categoryAmountFormulasConverter: CategoryAmountFormulasConverter,
-    private val categoryParser: ICategoryParser,
+    private val categoriesInteractor: CategoriesInteractor,
 ) {
     fun add(future: IFuture): Completable {
         return when (future) {
@@ -43,9 +43,9 @@ class FuturesRepo @Inject constructor(
     fun fetchFutures(): Observable<List<IFuture>> =
         Observable.combineLatest(
             miscDAO.fetchBasicFutures().subscribeOn(Schedulers.io())
-                .map { it.map { BasicFuture.fromDTO(it, categoryAmountFormulasConverter, categoryParser) } },
+                .map { it.map { BasicFuture.fromDTO(it, categoryAmountFormulasConverter, categoriesInteractor) } },
             miscDAO.fetchTotalFutures().subscribeOn(Schedulers.io())
-                .map { it.map { TotalFuture.fromDTO(it, categoryAmountFormulasConverter, categoryParser) } },
+                .map { it.map { TotalFuture.fromDTO(it, categoryAmountFormulasConverter, categoriesInteractor) } },
         ) { basicFutures, totalFutures -> basicFutures + totalFutures }
             .subscribeOn(Schedulers.io())
 }

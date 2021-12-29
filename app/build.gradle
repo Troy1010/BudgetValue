@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     buildToolsVersion "30.0.3"
 
     compileOptions.sourceCompatibility JavaVersion.VERSION_1_8
@@ -19,7 +19,7 @@ android {
     defaultConfig {
         applicationId "com.tminus1010.budgetvalue"
         minSdkVersion 26
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
 
@@ -42,11 +42,20 @@ android {
     }
 
     buildFeatures {
-        viewBinding = true
+        viewBinding true
     }
 
     lintOptions {
         error("VisibleForTests")
+    }
+
+    sourceSets {
+        androidTest {
+            java.srcDirs += "src/sharedTest/java"
+        }
+        test {
+            java.srcDirs += "src/sharedTest/java"
+        }
     }
 }
 
@@ -151,12 +160,12 @@ dependencies {
     implementation "com.squareup.moshi:moshi-kotlin:1.11.0"
 
     // # Lifecycle
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.3.1"
-    implementation "androidx.lifecycle:lifecycle-common-java8:2.3.1"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.1"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
+    implementation "androidx.lifecycle:lifecycle-common-java8:2.4.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.0"
     // # Lifecycle & Rx
-    implementation "androidx.lifecycle:lifecycle-reactivestreams-ktx:2.3.1"
+    implementation "androidx.lifecycle:lifecycle-reactivestreams-ktx:2.4.0"
 
     // # RecyclerMargin
     // for LayoutMarginDecoration
@@ -169,8 +178,11 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2-native-mt"
     // # Coroutine & Lifecycle
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.3.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
     // # Coroutines & Rx
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-rx3:1.3.8"
+
+    // # MPAndroidChart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }
