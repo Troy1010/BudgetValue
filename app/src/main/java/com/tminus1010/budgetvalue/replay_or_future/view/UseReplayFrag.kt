@@ -9,9 +9,10 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.framework.view.recipe_factories.itemTextViewRB
 import com.tminus1010.budgetvalue._core.framework.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragReplaysBinding
+import com.tminus1010.budgetvalue.replay_or_future.app.ReplayInteractor
 import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
-import com.tminus1010.budgetvalue.replay_or_future.domain.BasicReplay
 import com.tminus1010.budgetvalue.replay_or_future.presentation.ReplaysVM
+import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,7 +22,15 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class UseReplayFrag : Fragment(R.layout.frag_replays) {
     private val vb by viewBinding(FragReplaysBinding::bind)
-    @Inject lateinit var replaysRepo: ReplaysRepo
+
+    @Inject
+    lateinit var replaysRepo: ReplaysRepo
+
+    @Inject
+    lateinit var replayInteractor: ReplayInteractor
+
+    @Inject
+    lateinit var transactionsInteractor: TransactionsInteractor
     val replaysVM by viewModels<ReplaysVM>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,7 +44,7 @@ class UseReplayFrag : Fragment(R.layout.frag_replays) {
                 replays.map { replay ->
                     listOf(
                         itemTextViewRB().create(replay.name) {
-                            chosenReplay = replay as BasicReplay
+                            replayInteractor.useReplayOnTransaction(replay, transactionsInteractor.mostRecentUncategorizedSpendFlow.value!!).subscribe()
                             nav.navigateUp()
                         }
                     )
@@ -50,7 +59,6 @@ class UseReplayFrag : Fragment(R.layout.frag_replays) {
     }
 
     companion object {
-        var chosenReplay: BasicReplay? = null
         fun navTo(nav: NavController) {
             nav.navigate(R.id.futuresReviewFrag)
         }

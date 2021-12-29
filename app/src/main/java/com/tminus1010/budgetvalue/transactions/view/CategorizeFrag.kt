@@ -24,7 +24,6 @@ import com.tminus1010.budgetvalue.categories.ui.CategorySettingsFrag
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
 import com.tminus1010.budgetvalue.replay_or_future.view.CreateFutureFrag
-import com.tminus1010.budgetvalue.replay_or_future.view.UseReplayFrag
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.budgetvalue.transactions.presentation.CategorizeVM
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -118,13 +117,5 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         categorizeVM.navToReplay.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(this, nav, it.name, false) }
         categorizeVM.navToSelectReplay.observe(viewLifecycleOwner) { nav.navigate(R.id.useReplayFrag) }
         categorizeVM.navToReceiptCategorization.observe(viewLifecycleOwner) { ReceiptCategorizationHostFrag.navTo(nav, it, categoryAmountsConverter) }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        // Duct-tape solution
-        if (UseReplayFrag.chosenReplay != null)
-            categorizeVM.userReplay(UseReplayFrag.chosenReplay!!)
-                .also { UseReplayFrag.chosenReplay = null }
     }
 }
