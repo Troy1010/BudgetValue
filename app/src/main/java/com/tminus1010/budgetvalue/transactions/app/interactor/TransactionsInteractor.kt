@@ -9,7 +9,7 @@ import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.budgetvalue.transactions.app.TransactionBlock
 import com.tminus1010.budgetvalue.transactions.app.TransactionsAggregate
-import com.tminus1010.budgetvalue.transactions.data.TransactionParser
+import com.tminus1010.budgetvalue.transactions.data.TransactionAdapter
 import com.tminus1010.budgetvalue.transactions.data.repo.TransactionsRepo
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import com.tminus1010.tmcommonkotlin.rx.nonLazy
@@ -31,13 +31,13 @@ import javax.inject.Singleton
 class TransactionsInteractor @Inject constructor(
     private val transactionsRepo: TransactionsRepo,
     private val datePeriodService: DatePeriodService,
-    private val transactionParser: TransactionParser,
+    private val transactionAdapter: TransactionAdapter,
     private val futuresRepo: FuturesRepo,
     private val latestDateOfMostRecentImport: LatestDateOfMostRecentImport
 ) {
     // # Input
     fun importTransactions(inputStream: InputStream): Completable =
-        importTransactions(transactionParser.parseToTransactions(inputStream))
+        importTransactions(transactionAdapter.parseToTransactions(inputStream))
 
     fun importTransactions(transactions: List<Transaction>): Completable {
         return futuresRepo.fetchFutures().toSingle().map { futures ->
@@ -60,7 +60,7 @@ class TransactionsInteractor @Inject constructor(
         }
             .flatMapCompletable { it }
             .andThen(
-                Completable.fromAction { latestDateOfMostRecentImport.set(transactions.sortedBy { it.date }.last().date) }
+                Completable.fromAction { transactions.maxByOrNull { it.date }?.also { latestDateOfMostRecentImport.set(it.date) } }
                     .delay(2, TimeUnit.SECONDS) // TODO("Duct-tape solution to the fact that the previous completable completes before the repo emits, which ruins IsReconciliationReady")
             )
     }
