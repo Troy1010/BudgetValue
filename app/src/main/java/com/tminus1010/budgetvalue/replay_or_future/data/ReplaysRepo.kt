@@ -8,13 +8,21 @@ import com.tminus1010.budgetvalue.replay_or_future.domain.IReplay
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.rx3.asFlow
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class ReplaysRepo @Inject constructor(
     private val miscDAO: MiscDAO,
     private val categoryAmountFormulasConverter: CategoryAmountFormulasConverter,
     private val categoriesInteractor: CategoriesInteractor,
 ) {
+    val replays = fetchReplays().asFlow().stateIn(GlobalScope, SharingStarted.Eagerly, listOf())
+
     fun add(basicReplay: BasicReplay): Completable =
         miscDAO.add(basicReplay.toDTO(categoryAmountFormulasConverter)).subscribeOn(Schedulers.io())
 
