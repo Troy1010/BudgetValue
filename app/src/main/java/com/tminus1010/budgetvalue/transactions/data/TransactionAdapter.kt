@@ -13,15 +13,14 @@ import javax.inject.Inject
 class TransactionAdapter @Inject constructor() {
     fun parseToTransactions(inputStream: InputStream): List<Transaction> {
         return BufferedReader(InputStreamReader(inputStream)).lineSequence()
-            .map { line -> line.split(",") }
-            .mapNotNull { row -> runCatching { parseToTransaction(row) }.getOrElse { logz("Ignoring row:$row\nbecause:", it); null } }
+            .mapNotNull { line -> runCatching { parseToTransaction(line.split(",")) }.getOrElse { logz("Ignoring line:$line\nbecause:", it); null } }
             .toList()
     }
 
     private val dateTimeFormatter1 = DateTimeFormatter.ofPattern("yyyyMMdd")
 
     /**
-     * [row] represents a row of strings from a CSV document.
+     * [row] represents a row from a CSV document.
      */
     private fun parseToTransaction(row: Iterable<String>): Transaction {
         return Transaction(
@@ -33,7 +32,7 @@ class TransactionAdapter @Inject constructor() {
                 .toMoneyBigDecimal(),
             categoryAmounts = mapOf(),
             categorizationDate = null,
-            id = row.joinToString(",")
+            id = row.joinToString(","),
         )
     }
 }
