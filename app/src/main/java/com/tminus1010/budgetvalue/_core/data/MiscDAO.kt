@@ -77,7 +77,7 @@ interface MiscDAO {
     fun getPlans(): Flow<List<Plan>>
 
     @Query("select * from `Plan` WHERE localDatePeriod=:localDatePeriod")
-    suspend fun getPlan(localDatePeriod: LocalDatePeriod): Plan
+    suspend fun getPlan(localDatePeriod: LocalDatePeriod): Plan?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(plan: Plan)

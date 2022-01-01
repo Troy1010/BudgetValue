@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.transactions.presentation.models
+package com.tminus1010.budgetvalue.transactions.presentation.model
 
 import android.content.Context
 import android.view.LayoutInflater

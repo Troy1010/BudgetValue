@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.data.repo.CurrentDatePeriodRepo
 import com.tminus1010.budgetvalue.history.presentation.BasicTextPresentationModel
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
-import com.tminus1010.budgetvalue.transactions.presentation.models.TransactionBlockCompletionVMItem
+import com.tminus1010.budgetvalue.transactions.presentation.model.TransactionBlockCompletionVMItem
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow

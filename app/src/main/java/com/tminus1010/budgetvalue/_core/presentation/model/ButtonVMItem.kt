@@ -27,8 +27,7 @@ data class ButtonVMItem(
         if (text != null)
             text = title
         setOnClickListener { onClick() }
-        onLongClick
-            ?.also { setOnLongClickListener { it(); true } }
+        onLongClick?.also { setOnLongClickListener { it(); true } }
         this@ButtonVMItem.isEnabled?.observe(button.lifecycleOwner!!) { isEnabled = it }
             ?: run { isEnabled = true }
         isEnabledFlow?.observe(button.lifecycleOwner!!) { isEnabled = it }

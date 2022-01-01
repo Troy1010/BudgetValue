@@ -48,9 +48,8 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     lateinit var categoryAmountsConverter: CategoryAmountsConverter
     var categories = emptyList<Category>()
         set(value) {
-            val shouldNotifyDataSetChanged = field.size != value.size
             field = value
-            if (shouldNotifyDataSetChanged) vb.recyclerviewCategories.adapter?.notifyDataSetChanged()
+            vb.recyclerviewCategories.adapter?.notifyDataSetChanged()
         }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,7 +58,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         categorizeVM.setup(categorySelectionVM)
         categorySelectionVM.inSelectionMode.subscribe(categorizeVM.inSelectionMode)
         categorySelectionVM.selectedCategories.subscribe(categorizeVM.selectedCategories)
-        categorizeVM.clearSelection.observe(viewLifecycleOwner) { logz("about to clear selection"); categorySelectionVM.clearSelection().subscribe() }
+        categorizeVM.clearSelection.observe(viewLifecycleOwner) { categorySelectionVM.clearSelection().subscribe() }
         // # Some of SelectionMode
         categorySelectionVM.inSelectionMode.observe(viewLifecycleOwner) { inSelectionMode ->
             vb.root.children
@@ -107,14 +106,13 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 }
             }
         }
-        //
         vb.buttonsview.bind(categorizeVM.buttons) { buttons = it }
         // # Bind Presentation Events
         categorizeVM.navToCreateFuture.observe(viewLifecycleOwner) { CreateFutureFrag.navTo(nav) }
         categorizeVM.navToSplit.observe(viewLifecycleOwner) { SplitFrag.navTo(nav, it) }
-        categorizeVM.navToNewCategory.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(this, nav, null, true) }
-        categorizeVM.navToCategorySettings.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(this, nav, it.name, false) }
-        categorizeVM.navToReplay.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(this, nav, it.name, false) }
+        categorizeVM.navToNewCategory.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, null, true) }
+        categorizeVM.navToCategorySettings.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, it.name, false) }
+        categorizeVM.navToReplay.observe(viewLifecycleOwner) { TODO() }
         categorizeVM.navToSelectReplay.observe(viewLifecycleOwner) { nav.navigate(R.id.useReplayFrag) }
         categorizeVM.navToReceiptCategorization.observe(viewLifecycleOwner) { ReceiptCategorizationHostFrag.navTo(nav, it, categoryAmountsConverter) }
     }

@@ -12,7 +12,7 @@ import com.tminus1010.budgetvalue._core.framework.view.viewBinding
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.databinding.FragCreateFutureBinding
 import com.tminus1010.budgetvalue.replay_or_future.presentation.CreateFutureVM
-import com.tminus1010.budgetvalue.transactions.presentation.models.SearchType
+import com.tminus1010.budgetvalue.transactions.presentation.model.SearchType
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav

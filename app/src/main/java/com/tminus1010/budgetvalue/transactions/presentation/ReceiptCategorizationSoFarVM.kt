@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.reconcile.presentation.model.HeaderPresentationModel
 import com.tminus1010.budgetvalue.transactions.app.ReceiptCategorizationInteractor
-import com.tminus1010.budgetvalue.transactions.presentation.models.TextPresentationModel
+import com.tminus1010.budgetvalue._core.presentation.model.TextVMItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
 import java.math.BigDecimal
@@ -32,7 +32,7 @@ class ReceiptCategorizationSoFarVM @Inject constructor(
                 ),
                 it.map { (category, amount) ->
                     listOf(
-                        TextPresentationModel(
+                        TextVMItem(
                             text1 = amount.toPlainString(),
                             menuPresentationModel = MenuPresentationModel(
                                 MenuVMItem(
@@ -41,7 +41,7 @@ class ReceiptCategorizationSoFarVM @Inject constructor(
                                 )
                             )
                         ),
-                        TextPresentationModel(
+                        TextVMItem(
                             text1 = category.name,
                             menuPresentationModel = MenuPresentationModel(
                                 MenuVMItem(

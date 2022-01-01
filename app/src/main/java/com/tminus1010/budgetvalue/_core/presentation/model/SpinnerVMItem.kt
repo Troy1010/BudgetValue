@@ -1,15 +1,24 @@
 package com.tminus1010.budgetvalue._core.presentation.model
 
+import android.content.Context
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue._core.framework.view.tmTableView3.IViewItemRecipe3
+import com.tminus1010.budgetvalue._core.framework.view.tmTableView3.ViewItemRecipe3__
+import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe
+import com.tminus1010.budgetvalue.databinding.ItemSpinnerBinding
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.util.concurrent.atomic.AtomicBoolean
 
 @Suppress("UNCHECKED_CAST")
-class SpinnerVMItem<T>(private val values: Array<T>, private val initialValue: T, private val lambda: (T) -> Unit) {
+class SpinnerVMItem<T>(
+    private val values: Array<T>,
+    private val initialValue: T,
+    private val onNewItem: (T) -> Unit
+) : IHasToViewItemRecipe {
     constructor(values: Array<T>, behaviorSubject: BehaviorSubject<T>) : this(values, behaviorSubject.value, behaviorSubject::onNext)
 
     init {
@@ -24,10 +33,16 @@ class SpinnerVMItem<T>(private val values: Array<T>, private val initialValue: T
             var didFirstSelectionHappen = AtomicBoolean(false)
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 if (didFirstSelectionHappen.getAndSet(true))
-                    lambda(spinner.selectedItem as T)
+                    onNewItem(spinner.selectedItem as T)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) = Unit
+        }
+    }
+
+    override fun toViewItemRecipe(context: Context): IViewItemRecipe3 {
+        return ViewItemRecipe3__(context, ItemSpinnerBinding::inflate) { vb ->
+            bind(vb.spinner)
         }
     }
 }

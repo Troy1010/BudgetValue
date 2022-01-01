@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.transactions.presentation.models
+package com.tminus1010.budgetvalue.transactions.presentation.model
 
 import com.tminus1010.budgetvalue._core.data.repo.CurrentDatePeriodRepo
 import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe

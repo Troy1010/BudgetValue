@@ -21,11 +21,9 @@ class CategoriesInteractor @Inject constructor(
             ?: unrecognizedCategory.also { logz("Warning: returning category Unrecognized for unrecognized name:$categoryName") }
     }
 
-    val userCategories =
-        categoriesRepo.userCategories
-            .map { it.sortedWith(categoryComparator) }
-            .asObservable()
-
+    val userCategoriesFlow = categoriesRepo.userCategories.map { it.sortedWith(categoryComparator) }
+    @Deprecated("use userCategoriesFlow")
+    val userCategories = userCategoriesFlow.asObservable()
     private val nameToCategoryMap =
         userCategories
             .map { it.associateBy { it.name } as HashMap<String, Category> }

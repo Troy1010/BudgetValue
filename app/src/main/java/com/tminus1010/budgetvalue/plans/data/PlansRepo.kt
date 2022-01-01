@@ -24,8 +24,9 @@ class PlansRepo @Inject constructor(
     suspend fun updatePlan(plan: Plan) = miscDAO.update(plan)
     suspend fun delete(plan: Plan) = miscDAO.delete(plan)
     suspend fun updatePlanCategoryAmount(plan: Plan, category: Category, amount: BigDecimal) {
+        val planRedefined = miscDAO.getPlan(plan.localDatePeriod) ?: return
         val categoryAmounts =
-            miscDAO.getPlan(plan.localDatePeriod).categoryAmounts
+            planRedefined.categoryAmounts
                 .toMutableMap()
                 .also { if (amount.isZero) it.remove(category) else it[category] = amount }
                 .let { CategoryAmounts(it) }

@@ -15,7 +15,7 @@ import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
 import com.tminus1010.budgetvalue.replay_or_future.domain.TotalFuture
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.budgetvalue.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
-import com.tminus1010.budgetvalue.transactions.presentation.models.SearchType
+import com.tminus1010.budgetvalue.transactions.presentation.model.SearchType
 import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import dagger.hilt.android.lifecycle.HiltViewModel

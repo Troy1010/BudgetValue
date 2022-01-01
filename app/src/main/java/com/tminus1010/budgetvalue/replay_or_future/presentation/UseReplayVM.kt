@@ -11,7 +11,7 @@ import com.tminus1010.budgetvalue.replay_or_future.domain.BasicReplay
 import com.tminus1010.budgetvalue.replay_or_future.domain.IReplay
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.budgetvalue.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
-import com.tminus1010.budgetvalue.transactions.presentation.models.TextPresentationModel
+import com.tminus1010.budgetvalue._core.presentation.model.TextVMItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -49,7 +49,7 @@ class UseReplayVM @Inject constructor(
         replaysRepo.replays
             .map { replays ->
                 replays.map { replay ->
-                    TextPresentationModel(
+                    TextVMItem(
                         text1 = replay.name,
                         onClick = { chooseReplay(replay) },
                         menuPresentationModel = MenuPresentationModel(

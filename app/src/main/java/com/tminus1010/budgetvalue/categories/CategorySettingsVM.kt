@@ -1,114 +1,127 @@
 package com.tminus1010.budgetvalue.categories
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.disposables
+import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue._core.InvalidCategoryNameException
-import com.tminus1010.budgetvalue._core.all.extensions.nonLazyCache
-import com.tminus1010.budgetvalue._core.framework.Rx
+import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
+import com.tminus1010.budgetvalue._core.presentation.model.*
 import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.domain.DeleteCategoryFromActiveDomainUC
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.models.CategoryType
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
-import com.tminus1010.tmcommonkotlin.rx.extensions.observe
-import com.tminus1010.tmcommonkotlin.rx.extensions.value
-import com.tminus1010.tmcommonkotlin.tuple.Box
+import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.kotlin.subscribeBy
-import io.reactivex.rxjava3.subjects.BehaviorSubject
-import io.reactivex.rxjava3.subjects.PublishSubject
-import io.reactivex.rxjava3.subjects.Subject
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.rx3.asObservable
-import java.math.BigDecimal
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CategorySettingsVM @Inject constructor(
     private val deleteCategoryFromActiveDomainUC: DeleteCategoryFromActiveDomainUC,
     private val categoriesRepo: CategoriesRepo,
-    private val errorSubject: Subject<Throwable>,
+    private val categoriesInteractor: CategoriesInteractor,
 ) : ViewModel() {
-    // # Input
-    // if categoryName is null, we are making a new category
-    fun setup(categoryName: String?) {
-        if (categoryName == null)
-            _categoryToPush.onNext(Category(""))
-        else
-            categoriesRepo.userCategories
-                .take(1)
-                .asObservable()
-                .map { it.find { it.name == categoryName }!! }
-                .observe(disposables) { _categoryToPush.onNext(it) }
+    // # View Events
+    val originalCategoryName = MutableStateFlow("")
+    val isForNewCategory = MutableStateFlow(true)
+
+    // # Internal
+    private val newCategoryToPush = MutableSharedFlow<Category>()
+    private val categoryToPush =
+        merge(
+            combine(isForNewCategory, originalCategoryName)
+            { isForNewCategory, originalCategoryName ->
+                if (isForNewCategory)
+                    Category("")
+                else
+                    categoriesInteractor.parseCategory(originalCategoryName)
+            },
+            newCategoryToPush,
+        )
+            .stateIn(viewModelScope, SharingStarted.Eagerly, Category(""))
+
+    // # User Intents
+    fun userSetCategoryName(s: String) {
+        newCategoryToPush.easyEmit(categoryToPush.value.copy(name = s))
     }
 
-    fun userSetName(categoryName: String) {
-        if (categoryName != _categoryToPush.value!!.name)
-            _categoryToPush.onNext(categoryToPush.value!!.copy(name = categoryName))
+    fun userSetCategoryDefaultAmountFormula(amountFormula: AmountFormula) {
+        newCategoryToPush.easyEmit(categoryToPush.value.copy(defaultAmountFormula = amountFormula))
     }
 
-    private val userDefaultAmountFormulaValue = BehaviorSubject.create<BigDecimal>()
-    fun userSetDefaultAmountFormulaValue(defaultAmountFormulaValue: BigDecimal) {
-        userDefaultAmountFormulaValue.onNext(defaultAmountFormulaValue)
-    }
-
-    private val userDefaultAmountFormulaIsPercentage = BehaviorSubject.createDefault(false)
-    fun userSetDefaultAmountFormulaIsPercentage(isPercentage: Boolean) {
-        userDefaultAmountFormulaIsPercentage.onNext(isPercentage)
-    }
-
-    fun userSetType(type: CategoryType) {
-        if (type != _categoryToPush.value!!.type)
-            _categoryToPush.onNext(categoryToPush.value!!.copy(type = type))
+    fun userSetCategoryType(categoryType: CategoryType) {
+        newCategoryToPush.easyEmit(categoryToPush.value.copy(type = categoryType))
     }
 
     fun userDeleteCategory() {
-        deleteCategoryFromActiveDomainUC(categoryToPush.value!!)
-            .subscribe()
+        deleteCategoryFromActiveDomainUC(categoryToPush.value).subscribe()
+        navUp.easyEmit(Unit)
     }
 
-    fun userSaveCategory() {
-        Completable.fromCallable {
-            if (categoryToPush.value!!.name == "" ||
-                categoryToPush.value!!.name.equals(CategoriesInteractor.defaultCategory.name, ignoreCase = true) ||
-                categoryToPush.value!!.name.equals(CategoriesInteractor.unrecognizedCategory.name, ignoreCase = true)
+    fun userSubmit() {
+        viewModelScope.launch(CoroutineExceptionHandler { _, e -> errors.easyEmit(e) }) {
+            if (categoryToPush.value.name == "" ||
+                categoryToPush.value.name.equals(CategoriesInteractor.defaultCategory.name, ignoreCase = true) ||
+                categoryToPush.value.name.equals(CategoriesInteractor.unrecognizedCategory.name, ignoreCase = true)
             ) throw InvalidCategoryNameException()
+            categoriesRepo.push(categoryToPush.value)
+            navUp.easyEmit(Unit)
         }
-            .andThen(Rx.fromSuspend<Boolean> { categoriesRepo.hasCategory(categoryToPush.value!!.name) })
-            .flatMapCompletable {
-                if (it)
-                    Rx.completableFromSuspend { categoriesRepo.update(categoryToPush.value!!) }
-                else
-                    Rx.completableFromSuspend { categoriesRepo.push(categoryToPush.value!!) }
-            }
-            .subscribeBy(
-                onComplete = { navigateUp.onNext(Unit) },
-                onError = { errorSubject.onNext(it) },
-            )
     }
 
-    // # Output
-    private val _categoryToPush = BehaviorSubject.create<Category>()
-    val navigateUp: PublishSubject<Unit> = PublishSubject.create()
-    val categoryToPush: Observable<Category> =
-        Observable.combineLatest(
-            _categoryToPush,
-            userDefaultAmountFormulaValue.map { Box(it) }.startWithItem(Box(null)),
-            userDefaultAmountFormulaIsPercentage.map { Box(it) }.startWithItem(Box(null)),
-        )
-        { categoryToPush, (amountFormulaValue), (amountFormulaIsPercentage) ->
-            val defaultAmountFormula =
-                if (amountFormulaValue == null || amountFormulaIsPercentage == null)
+    // # Presentation Events
+    val errors = MutableSharedFlow<Throwable>()
+    val navUp = MutableSharedFlow<Unit>()
+    val showDeleteConfirmationPopup = MutableSharedFlow<String>()
+
+    // # Presentation State
+    val title = isForNewCategory.flatMapConcat { if (it) flowOf("Create a new Category") else categoryToPush.map { "Settings (${it.name})" } }
+    val optionsRecipeGrid =
+        combine(isForNewCategory, categoryToPush)
+        { isForNewCategory, categoryToPush ->
+            listOf(
+                listOfNotNull(
+                    if (isForNewCategory) TextVMItem("Name") else null,
+                    TextVMItem("Default Amount"),
+                    TextVMItem("Type"),
+                ),
+                listOfNotNull(
+                    if (isForNewCategory)
+                        EditTextVMItem(
+                            text = categoryToPush.name,
+                            onDone = { userSetCategoryName(it) },
+                        )
+                    else
+                        null,
+                    AmountFormulaPresentationModel1(
+                        amountFormula = this.categoryToPush.map { it.defaultAmountFormula }.stateIn(viewModelScope),
+                        onNewAmountFormula = { userSetCategoryDefaultAmountFormula(it) }
+                    ),
+                    SpinnerVMItem(
+                        values = CategoryType.getPickableValues().toTypedArray(),
+                        initialValue = categoryToPush.type,
+                        onNewItem = { userSetCategoryType(it) }
+                    ),
+                ),
+            ).reflectXY()
+        }
+    val buttons =
+        isForNewCategory.map { isForNewCategory ->
+            listOfNotNull(
+                if (isForNewCategory)
                     null
                 else
-                    (if (amountFormulaIsPercentage) AmountFormula.Percentage(amountFormulaValue) else AmountFormula.Value(amountFormulaValue))
-            if (defaultAmountFormula == null)
-                categoryToPush
-            else
-                categoryToPush.copy(defaultAmountFormula = defaultAmountFormula)
+                    ButtonVMItem(
+                        title = "Delete",
+                        onClick = { showDeleteConfirmationPopup.easyEmit(originalCategoryName.value) }
+                    ),
+                ButtonVMItem(
+                    title = "Done",
+                    onClick = { userSubmit() }
+                ),
+            )
         }
-            .nonLazyCache(disposables)
 }

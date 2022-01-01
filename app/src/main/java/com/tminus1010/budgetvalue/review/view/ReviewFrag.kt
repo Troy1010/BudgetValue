@@ -8,7 +8,6 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.all.extensions.bind
 import com.tminus1010.budgetvalue._core.all.extensions.easyVisibility
 import com.tminus1010.budgetvalue._core.all.extensions.onClick
-import com.tminus1010.budgetvalue._core.presentation.model.bind
 import com.tminus1010.budgetvalue.all.presentation.extensions.bind
 import com.tminus1010.budgetvalue.databinding.FragReviewBinding
 import com.tminus1010.budgetvalue.review.presentation.NoMoreDataException
@@ -38,8 +37,8 @@ class ReviewFrag : Fragment(R.layout.frag_review) {
         }
         // # Bind Presentation State
         vb.pieChart1.bind(reviewVM.pieChartVMItem)
-        vb.spinnerDuration.bind(reviewVM.selectableDurationSpinnerVMItem)
-        vb.spinnerUsePeriodType.bind(reviewVM.usePeriodTypeSpinnerVMItem)
+        reviewVM.selectableDurationSpinnerVMItem.bind(vb.spinnerDuration)
+        reviewVM.usePeriodTypeSpinnerVMItem.bind(vb.spinnerUsePeriodType)
         vb.tvTitle.bind(reviewVM.title) { text = it }
         vb.ivLeft.bind(reviewVM.isLeftVisible) { easyVisibility = it }
         vb.ivRight.bind(reviewVM.isRightVisible) { easyVisibility = it }

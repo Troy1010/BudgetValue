@@ -13,8 +13,8 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.all.extensions.unCheckAllMenuItems
 import com.tminus1010.budgetvalue._core.framework.view.Toaster
 import com.tminus1010.budgetvalue._core.presentation.view_model.HostVM
-import com.tminus1010.budgetvalue._core.presentation_and_view._extensions.easyAlertDialog
-import com.tminus1010.budgetvalue._core.presentation_and_view._extensions.getString
+import com.tminus1010.budgetvalue._core.all.extensions.easyAlertDialog
+import com.tminus1010.budgetvalue._core.all.extensions.getString
 import com.tminus1010.budgetvalue.accounts.presentation.AccountsVM
 import com.tminus1010.budgetvalue.app_init.AppInteractor
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding

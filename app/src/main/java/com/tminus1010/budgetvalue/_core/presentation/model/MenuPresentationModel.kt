@@ -6,7 +6,7 @@ import android.view.View
 data class MenuPresentationModel(
     private val menuVMItems: List<MenuVMItem>
 ) {
-    constructor(vararg menuVMItems: MenuVMItem) : this(menuVMItems.toList())
+    constructor(vararg menuVMItems: MenuVMItem?) : this(menuVMItems.toList().filterNotNull())
 
     fun bind(menu: Menu) {
         menu.clear()
