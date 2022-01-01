@@ -11,7 +11,7 @@ data class CategoryAmounts constructor(private val map: Map<Category, BigDecimal
     constructor(vararg categoryAmounts: Pair<Category, BigDecimal>) : this(categoryAmounts.associate { it.first to it.second })
 
     init {
-        if (CategoriesInteractor.defaultCategory in this.keys) error("CategoryAmounts should not have defaultCategory")
+        if (CategoriesInteractor.defaultCategory in this.keys) error("CategoryAmounts should not have defaultCategory. WARNING: If a sortedMap was given, remember that equality is determined by the sortedBy lambda.")
     }
 
     operator fun plus(map: Map<Category, BigDecimal>): CategoryAmounts {

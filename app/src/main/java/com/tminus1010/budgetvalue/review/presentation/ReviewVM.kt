@@ -7,18 +7,18 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.utils.ColorTemplate
-import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.all.extensions.divertErrors
 import com.tminus1010.budgetvalue._core.all.extensions.mapBox
 import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
-import com.tminus1010.budgetvalue.transactions.app.TransactionBlock
-import com.tminus1010.budgetvalue.review.SelectableDuration
-import com.tminus1010.budgetvalue.review.UsePeriodType
+import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.presentation.model.PieChartVMItem
 import com.tminus1010.budgetvalue._core.presentation.model.SpinnerVMItem
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.transactions.data.repo.TransactionsRepo
+import com.tminus1010.budgetvalue.review.SelectableDuration
+import com.tminus1010.budgetvalue.review.UsePeriodType
+import com.tminus1010.budgetvalue.transactions.app.TransactionBlock
 import com.tminus1010.budgetvalue.transactions.app.TransactionsAggregate
+import com.tminus1010.budgetvalue.transactions.data.repo.TransactionsRepo
 import com.tminus1010.tmcommonkotlin.core.extensions.nextOrSame
 import com.tminus1010.tmcommonkotlin.core.extensions.previousOrSame
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
@@ -34,6 +34,7 @@ import java.math.BigDecimal
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.Month
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
@@ -192,23 +193,27 @@ class ReviewVM @Inject constructor(
 
     private val transactionBlock =
         Observable.combineLatest(
-            transactionsRepo.transactionsAggregate.map(TransactionsAggregate::transactions),
+            transactionsRepo.transactionsAggregate.map(TransactionsAggregate::spends),
             period,
             ::TransactionBlock,
         )
+            .throttleLatest(50, TimeUnit.MILLISECONDS)
 
     /**
      * A [PieEntry] represents 1 chunk of the pie, but without everything it needs, like color.
      */
     private val pieEntries =
         transactionBlock.map { transactionBlock ->
-            val categoryAmounts = CategoryAmounts(transactionBlock.categoryAmounts.plus(Category("Uncategorized") to transactionBlock.defaultAmount))
+            val categoryAmountsRedefined =
+                CategoryAmounts(transactionBlock.categoryAmounts.plus(Category("Uncategorized") to transactionBlock.defaultAmount))
             listOfNotNull(
-                categoryAmounts.filter { it.value.abs() < transactionBlock.amount.abs() * BigDecimal(0.03) }
-                    .let { if (it.isEmpty()) null else PieEntry(it.values.sum().abs().toFloat(), "Other") },
-                *categoryAmounts.filter { it.value.abs() >= transactionBlock.amount.abs() * BigDecimal(0.03) }
-                    .map { PieEntry(it.value.abs().toFloat(), it.key.name) }.toTypedArray()
+                *categoryAmountsRedefined.filter { it.value.abs() >= transactionBlock.amount.abs() * BigDecimal(0.03) }
+                    .map { it.value.abs() to PieEntry(it.value.abs().toFloat(), it.key.name) }.toTypedArray(),
+                categoryAmountsRedefined.filter { it.value.abs() < transactionBlock.amount.abs() * BigDecimal(0.03) }
+                    .let { if (it.isEmpty()) null else it.values.sum().abs() to PieEntry(it.values.sum().abs().toFloat(), "Other") },
             )
+                .sortedBy { it.first }
+                .map { it.second }
         }
 
     /**
@@ -236,8 +241,7 @@ class ReviewVM @Inject constructor(
      */
     val pieChartVMItem =
         PieChartVMItem(
-            pieData.divertErrors(errors),
-            centerText = "Spending"
+            pieData = pieData.divertErrors(errors),
         )
 
     val selectableDurationSpinnerVMItem =
