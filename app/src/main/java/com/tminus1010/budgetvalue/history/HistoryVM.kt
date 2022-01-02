@@ -3,10 +3,10 @@ package com.tminus1010.budgetvalue.history
 import android.view.View
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.all.extensions.asObservable2
-import com.tminus1010.budgetvalue._core.domain.DatePeriodService
-import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.categoryComparator
 import com.tminus1010.budgetvalue._core.data.repo.CurrentDatePeriodRepo
+import com.tminus1010.budgetvalue._core.domain.DatePeriodService
+import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.framework.Rx
 import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue.budgeted.BudgetedInteractor
@@ -38,12 +38,11 @@ class HistoryVM @Inject constructor(
     private val reconciliationRepo: ReconciliationsRepo,
 ) : ViewModel() {
     private val activeCategories: Observable<List<Category>> =
-        Observable.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans.asObservable2(), reconciliationRepo.activeReconciliationCAs, transactionsInteractor.transactionBlocks, budgetedInteractor.budgeted)
-        { reconciliations, plans, activeReconciliationCAs, transactionBlocks, budgeted ->
+        Observable.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks, budgetedInteractor.budgeted)
+        { reconciliations, plans, transactionBlocks, budgeted ->
             sequenceOf<Set<Category>>()
                 .plus(reconciliations.map { it.categoryAmounts.keys })
                 .plus(plans.map { it.categoryAmounts.keys })
-                .plus(listOf(activeReconciliationCAs.keys))
                 .plus(transactionBlocks.map { it.categoryAmounts.keys })
                 .plus(listOf(budgeted.categoryAmounts.keys))
                 .fold(setOf<Category>()) { acc, v -> acc + v }
@@ -84,7 +83,7 @@ class HistoryVM @Inject constructor(
             .replayNonError(1)
             .nonLazy()
 
-    // # Presentation Event
+    // # Presentation Events
     val showPopupMenu = PublishSubject.create<Pair<View, List<MenuVMItem>>>()
 
     // # Presentation State

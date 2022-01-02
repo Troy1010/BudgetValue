@@ -11,6 +11,7 @@ import com.tminus1010.budgetvalue.reconcile.app.interactor.ActiveReconciliationI
 import com.tminus1010.budgetvalue.reconcile.app.interactor.BudgetedWithActiveReconciliationInteractor
 import com.tminus1010.budgetvalue.reconcile.app.interactor.SaveActiveReconciliationInteractor
 import com.tminus1010.budgetvalue.reconcile.domain.ReconciliationToDo
+import com.tminus1010.tmcommonkotlin.core.logx
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -26,15 +27,15 @@ class ReconciliationHostVM @Inject constructor(
     // # User Intents
     fun userSave() {
         if (
-            !budgetedWithActiveReconciliationInteractor.categoryAmountsAndTotal.value!!.isAllValid
+            !budgetedWithActiveReconciliationInteractor.categoryAmountsAndTotal.value!!.isAllValid.logx("aaa")
             || (
-                    activeReconciliationInteractor.categoryAmountsAndTotal.value!!.categoryAmounts.isEmpty()
-                            && activeReconciliationInteractor.categoryAmountsAndTotal.value!!.defaultAmount.isZero
+                    activeReconciliationInteractor.categoryAmountsAndTotal.value!!.categoryAmounts.isEmpty().logx("bbb")
+                            && activeReconciliationInteractor.categoryAmountsAndTotal.value!!.defaultAmount.isZero.logx("ccc")
                     )
         )
             toast.onNext("Invalid input")
         else
-            saveActiveReconciliationInteractor.saveActiveReconiliation.subscribe()
+            saveActiveReconciliationInteractor.saveActiveReconciliation.subscribe()
     }
 
     // # Presentation Events

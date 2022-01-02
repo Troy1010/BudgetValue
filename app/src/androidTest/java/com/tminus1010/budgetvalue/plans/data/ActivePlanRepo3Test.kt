@@ -1,8 +1,12 @@
 package com.tminus1010.budgetvalue.plans.data
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.room.Room
+import com.tminus1010.budgetvalue.FakeDataStore
 import com.tminus1010.budgetvalue.Given
 import com.tminus1010.budgetvalue.__core_testing.app
+import com.tminus1010.budgetvalue._core.all.dependency_injection.DataStoreModule
 import com.tminus1010.budgetvalue._core.all.dependency_injection.DatabaseModule
 import com.tminus1010.budgetvalue._core.data.CategoryDatabase
 import com.tminus1010.budgetvalue._core.data.MiscDatabase
@@ -30,7 +34,7 @@ import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@UninstallModules(DatabaseModule::class)
+@UninstallModules(DatabaseModule::class, DataStoreModule::class)
 @HiltAndroidTest
 class ActivePlanRepo3Test {
     @Test
@@ -138,6 +142,12 @@ class ActivePlanRepo3Test {
                 .addTypeConverter(roomWithCategoriesTypeConverter)
                 .fallbackToDestructiveMigration()
                 .build()
+        }
+
+        @Provides
+        @Singleton
+        fun dataStore(): DataStore<Preferences> {
+            return FakeDataStore()
         }
     }
 }

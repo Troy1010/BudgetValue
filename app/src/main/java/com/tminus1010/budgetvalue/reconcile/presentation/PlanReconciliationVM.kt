@@ -9,6 +9,7 @@ import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.reconcile.app.interactor.ActiveReconciliationInteractor
 import com.tminus1010.budgetvalue.reconcile.app.interactor.BudgetedWithActiveReconciliationInteractor
+import com.tminus1010.budgetvalue.reconcile.data.ActiveReconciliationRepo
 import com.tminus1010.budgetvalue.reconcile.domain.ReconciliationToDo
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.reconcile.presentation.model.HeaderPresentationModel
@@ -16,11 +17,13 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PlanReconciliationVM @Inject constructor(
-    private val reconciliationsRepo: ReconciliationsRepo,
+    private val activeReconciliationRepo: ActiveReconciliationRepo,
     categoriesInteractor: CategoriesInteractor,
     activeReconciliationInteractor: ActiveReconciliationInteractor,
     budgetedWithActiveReconciliationInteractor: BudgetedWithActiveReconciliationInteractor,
@@ -30,7 +33,7 @@ class PlanReconciliationVM @Inject constructor(
 
     // # User Intents
     fun userUpdateActiveReconciliationCategoryAmount(category: Category, s: String) {
-        reconciliationsRepo.pushActiveReconciliationCA(Pair(category, s.toMoneyBigDecimal())).subscribe()
+        GlobalScope.launch { activeReconciliationRepo.pushCategoryAmount(category, s.toMoneyBigDecimal()) }
     }
 
     // # Presentation State

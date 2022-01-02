@@ -7,6 +7,7 @@ import com.tminus1010.budgetvalue.accounts.app.AccountsAggregate
 import com.tminus1010.budgetvalue.accounts.data.AccountsRepo
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.plans.domain.Plan
+import com.tminus1010.budgetvalue.reconcile.data.ActiveReconciliationRepo
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.reconcile.domain.Reconciliation
 import com.tminus1010.budgetvalue.transactions.app.TransactionBlock
@@ -24,6 +25,7 @@ import javax.inject.Singleton
 class ActiveReconciliationDefaultAmountInteractor @Inject constructor(
     plansRepo: PlansRepo,
     reconciliationsRepo: ReconciliationsRepo,
+    activeReconciliationRepo: ActiveReconciliationRepo,
     transactionsInteractor: TransactionsInteractor,
     accountsRepo: AccountsRepo,
 ) {
@@ -33,7 +35,7 @@ class ActiveReconciliationDefaultAmountInteractor @Inject constructor(
             reconciliationsRepo.reconciliations,
             transactionsInteractor.transactionBlocks,
             accountsRepo.accountsAggregate.map(AccountsAggregate::total),
-            reconciliationsRepo.activeReconciliationCAs,
+            activeReconciliationRepo.activeReconciliationCAs.asObservable2(),
             ::calcActiveReconciliationDefaultAmount
         )
             .replayNonError(1).nonLazy()

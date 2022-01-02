@@ -41,11 +41,11 @@ class ActiveReconciliationRepo @Inject constructor(
         dataStore.edit { it[key] = moshiWithCategoriesProvider.moshi.toJson(categoryAmounts) }
     }
 
-    suspend fun pushCategoryAmount(category: Category, amount: BigDecimal) {
+    suspend fun pushCategoryAmount(category: Category, amount: BigDecimal?) {
         push(
             activeReconciliationCAs.first()
                 .toMutableMap()
-                .also { if (amount.isZero) it.remove(category) else it[category] = amount }
+                .also { if (amount == null || amount.isZero) it.remove(category) else it[category] = amount }
                 .let { CategoryAmounts(it) }
         )
     }
