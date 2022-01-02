@@ -47,7 +47,7 @@ class ActiveReconciliationRepoTest {
     fun push() = runBlocking {
         // # Given
         // # When
-        activeReconciliationRepo.push(CategoryAmounts(Given.categories[0] to BigDecimal("7")))
+        activeReconciliationRepo.pushCategoryAmounts(CategoryAmounts(Given.categories[0] to BigDecimal("7")))
         Thread.sleep(500) // Why is this necessary..?
         // # Then
         assertEquals(

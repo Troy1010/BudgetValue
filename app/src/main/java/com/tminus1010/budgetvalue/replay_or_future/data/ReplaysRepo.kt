@@ -24,7 +24,7 @@ class ReplaysRepo @Inject constructor(
     val replays = fetchReplays().asFlow().stateIn(GlobalScope, SharingStarted.Eagerly, listOf())
 
     fun add(basicReplay: BasicReplay): Completable =
-        miscDAO.add(basicReplay.toDTO(categoryAmountFormulasConverter)).subscribeOn(Schedulers.io())
+        miscDAO.push(basicReplay.toDTO(categoryAmountFormulasConverter)).subscribeOn(Schedulers.io())
 
     fun delete(basicReplayName: String): Completable =
         miscDAO.delete(basicReplayName).subscribeOn(Schedulers.io())

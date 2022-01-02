@@ -8,6 +8,7 @@ import com.tminus1010.budgetvalue._core.presentation.model.*
 import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.domain.DeleteCategoryFromActiveDomainUC
+import com.tminus1010.budgetvalue.categories.domain.ReplaceCategoryGloballyUC
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.models.CategoryType
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
@@ -23,12 +24,14 @@ class CategorySettingsVM @Inject constructor(
     private val deleteCategoryFromActiveDomainUC: DeleteCategoryFromActiveDomainUC,
     private val categoriesRepo: CategoriesRepo,
     private val categoriesInteractor: CategoriesInteractor,
+    private val replaceCategoryGloballyUC: ReplaceCategoryGloballyUC
 ) : ViewModel() {
     // # View Events
     val originalCategoryName = MutableStateFlow("")
     val isForNewCategory = MutableStateFlow(true)
 
     // # Internal
+    private val originalCategory = originalCategoryName.map { if (it == "") null else categoriesInteractor.parseCategory(it) }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
     private val newCategoryToPush = MutableSharedFlow<Category>()
     private val categoryToPush =
         merge(
@@ -67,7 +70,10 @@ class CategorySettingsVM @Inject constructor(
                 categoryToPush.value.name.equals(CategoriesInteractor.defaultCategory.name, ignoreCase = true) ||
                 categoryToPush.value.name.equals(CategoriesInteractor.unrecognizedCategory.name, ignoreCase = true)
             ) throw InvalidCategoryNameException()
-            categoriesRepo.push(categoryToPush.value)
+            if (originalCategoryName.value != "" && originalCategoryName.value != categoryToPush.value.name)
+                replaceCategoryGloballyUC.replaceCategoryGlobally(originalCategory.value!!, categoryToPush.value)
+            else
+                categoriesRepo.push(categoryToPush.value)
             navUp.easyEmit(Unit)
         }
     }
@@ -80,22 +86,18 @@ class CategorySettingsVM @Inject constructor(
     // # Presentation State
     val title = isForNewCategory.flatMapConcat { if (it) flowOf("Create a new Category") else categoryToPush.map { "Settings (${it.name})" } }
     val optionsRecipeGrid =
-        combine(isForNewCategory, categoryToPush)
-        { isForNewCategory, categoryToPush ->
+        categoryToPush.map { categoryToPush ->
             listOf(
                 listOfNotNull(
-                    if (isForNewCategory) TextVMItem("Name") else null,
+                    TextVMItem("Name"),
                     TextVMItem("Default Amount"),
                     TextVMItem("Type"),
                 ),
                 listOfNotNull(
-                    if (isForNewCategory)
-                        EditTextVMItem(
-                            text = categoryToPush.name,
-                            onDone = { userSetCategoryName(it) },
-                        )
-                    else
-                        null,
+                    EditTextVMItem(
+                        text = categoryToPush.name,
+                        onDone = { userSetCategoryName(it) },
+                    ),
                     AmountFormulaPresentationModel1(
                         amountFormula = this.categoryToPush.map { it.defaultAmountFormula }.stateIn(viewModelScope),
                         onNewAmountFormula = { userSetCategoryDefaultAmountFormula(it) }

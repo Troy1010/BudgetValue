@@ -22,7 +22,7 @@ class TransactionsRepo @Inject constructor(
         miscDAO.tryAdd(transaction.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
 
     fun push(transaction: Transaction) =
-        miscDAO.add(transaction.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
+        miscDAO.push(transaction.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
 
     fun delete(transaction: Transaction) =
         miscDAO.delete(transaction.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())

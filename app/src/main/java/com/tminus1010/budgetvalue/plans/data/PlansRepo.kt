@@ -15,10 +15,7 @@ class PlansRepo @Inject constructor(
     miscDatabase: MiscDatabase,
 ) {
     private val miscDAO = miscDatabase.miscDAO()
-    val plans =
-        miscDAO.getPlans()
-            .stateIn(GlobalScope, SharingStarted.Eagerly, null)
-
+    val plans = miscDAO.getPlans().stateIn(GlobalScope, SharingStarted.Eagerly, null)
     suspend fun push(plan: Plan) = miscDAO.insert(plan)
     suspend fun updatePlanAmount(plan: Plan, amount: BigDecimal) = miscDAO.updatePlanAmount(plan.localDatePeriod, amount)
     suspend fun updatePlan(plan: Plan) = miscDAO.update(plan)

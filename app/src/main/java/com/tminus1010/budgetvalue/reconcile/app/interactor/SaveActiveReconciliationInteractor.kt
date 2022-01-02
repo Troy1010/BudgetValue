@@ -32,5 +32,5 @@ class SaveActiveReconciliationInteractor @Inject constructor(
             )
         }
             .flatMapCompletable { it }
-            .andThen(Rx.completableFromSuspend { activeReconciliationRepo.push(CategoryAmounts()) })
+            .andThen(Rx.completableFromSuspend { activeReconciliationRepo.pushCategoryAmounts(CategoryAmounts()) })
 }

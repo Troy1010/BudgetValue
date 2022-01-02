@@ -57,6 +57,10 @@ class ActivePlanRepo3 @Inject constructor(
         push(activePlan.first().copy(total = total))
     }
 
+    suspend fun pushCategoryAmounts(categoryAmounts: CategoryAmounts) {
+        push(activePlan.first().copy(categoryAmounts = categoryAmounts))
+    }
+
     suspend fun updateCategoryAmount(category: Category, amount: BigDecimal) {
         val oldActivePlan = activePlan.first()
         val categoryAmounts =

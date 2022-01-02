@@ -27,6 +27,13 @@ data class CategoryAmounts constructor(private val map: Map<Category, BigDecimal
             .let { CategoryAmounts(it) }
     }
 
+    fun replaceKey(originalCategory: Category, newCategory: Category): CategoryAmounts {
+        val categoryAmounts = this.toMutableMap()
+        categoryAmounts[originalCategory]?.also { categoryAmounts[newCategory] = it }
+        categoryAmounts.remove(originalCategory)
+        return CategoryAmounts(categoryAmounts)
+    }
+
     fun fillIntoCategory(fillCategory: Category, totalAmount: BigDecimal): CategoryAmounts {
         return if (fillCategory == CategoriesInteractor.defaultCategory)
             this

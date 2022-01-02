@@ -46,7 +46,7 @@ interface MiscDAO {
     fun clearTransactions(): Completable
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    fun add(transactionDTO: TransactionDTO): Completable
+    fun push(transactionDTO: TransactionDTO): Completable
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun tryAdd(transactionDTO: TransactionDTO): Completable
@@ -97,36 +97,13 @@ interface MiscDAO {
     @Query("UPDATE `Plan` SET total=:total WHERE localDatePeriod=:localDatePeriod")
     suspend fun updatePlanAmount(localDatePeriod: LocalDatePeriod, total: BigDecimal)
 
-    //
-
-    @Query("select * from PlanDTO")
-    fun fetchPlans(): Observable<List<PlanDTO>>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun add(planDTO: PlanDTO): Completable
-
-    @Update
-    fun update(planDTO: PlanDTO): Completable
-
-    @Delete
-    fun delete(planDTO: PlanDTO): Completable
-
-    @Query("DELETE FROM PlanDTO")
-    fun clearPlans(): Completable
-
-    @Query("UPDATE PlanDTO SET categoryAmounts=:categoryAmounts WHERE startDate=:startDate")
-    fun updatePlanCategoryAmounts(startDate: LocalDate, categoryAmounts: Map<String, BigDecimal>): Completable
-
-    @Query("UPDATE PlanDTO SET amount=:amount WHERE startDate=:startDate")
-    fun updatePlanAmount(startDate: LocalDate, amount: BigDecimal): Completable
-
     // # Reconciliations
 
     @Query("select * from ReconciliationDTO")
     fun fetchReconciliations(): Observable<List<ReconciliationDTO>>
 
-    @Insert
-    fun add(reconciliationDTO: ReconciliationDTO): Completable
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun push(reconciliationDTO: ReconciliationDTO): Completable
 
     @Update
     fun update(reconciliationDTO: ReconciliationDTO): Completable
@@ -146,7 +123,7 @@ interface MiscDAO {
     fun fetchBasicReplays(): Observable<List<BasicReplayDTO>>
 
     @Insert
-    fun add(basicReplayDTO: BasicReplayDTO): Completable
+    fun push(basicReplayDTO: BasicReplayDTO): Completable
 
     @Query("DELETE FROM BasicReplayDTO WHERE name=:basicReplayName")
     fun delete(basicReplayName: String): Completable
@@ -160,7 +137,7 @@ interface MiscDAO {
     fun fetchBasicFutures(): Observable<List<BasicFutureDTO>>
 
     @Insert
-    fun add(basicFutureDTO: BasicFutureDTO): Completable
+    fun push(basicFutureDTO: BasicFutureDTO): Completable
 
     @Query("DELETE FROM BasicFutureDTO WHERE name=:name")
     fun deleteBasicFuture(name: String): Completable
@@ -172,7 +149,7 @@ interface MiscDAO {
     fun fetchTotalFutures(): Observable<List<TotalFutureDTO>>
 
     @Insert
-    fun add(totalFutureDTO: TotalFutureDTO): Completable
+    fun push(totalFutureDTO: TotalFutureDTO): Completable
 
     @Query("DELETE FROM TotalFutureDTO WHERE name=:name")
     fun deleteTotalFuture(name: String): Completable

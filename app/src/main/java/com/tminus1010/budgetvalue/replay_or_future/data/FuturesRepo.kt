@@ -19,8 +19,8 @@ class FuturesRepo @Inject constructor(
 ) {
     fun add(future: IFuture): Completable {
         return when (future) {
-            is BasicFuture -> miscDAO.add(future.toDTO(categoryAmountFormulasConverter))
-            is TotalFuture -> miscDAO.add(future.toDTO(categoryAmountFormulasConverter))
+            is BasicFuture -> miscDAO.push(future.toDTO(categoryAmountFormulasConverter))
+            is TotalFuture -> miscDAO.push(future.toDTO(categoryAmountFormulasConverter))
             else -> error("unhandled IFuture")
         }.subscribeOn(Schedulers.io())
     }

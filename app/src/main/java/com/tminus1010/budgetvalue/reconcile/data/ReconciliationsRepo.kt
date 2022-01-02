@@ -15,7 +15,7 @@ class ReconciliationsRepo @Inject constructor(
     private val categoryAmountsConverter: CategoryAmountsConverter,
 ) {
     fun push(reconciliation: Reconciliation): Completable =
-        miscDAO.add(reconciliation.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
+        miscDAO.push(reconciliation.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
 
     fun delete(reconciliation: Reconciliation): Completable =
         miscDAO.delete(reconciliation.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
