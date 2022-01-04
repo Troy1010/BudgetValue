@@ -43,9 +43,11 @@ class IsPlanFeatureEnabledUC @Inject constructor(
             .cold()
 
     private val isPlanFeatureEnabled =
-        latestDateOfMostRecentImportWhenPlanFeatureWasEnabled
-            .map { (it) -> it != null }
-            .distinctUntilChanged()
+//        latestDateOfMostRecentImportWhenPlanFeatureWasEnabled
+//            .map { (it) -> it != null }
+//            .distinctUntilChanged()
+        // * Requirement is not obvious. Perhaps PlanFeature should be enabled by default?
+        Observable.just(true)
             .cold()
 
     init {
