@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.categories.domain
 
 import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.plans.data.ActivePlanRepo3
+import com.tminus1010.budgetvalue.plans.data.ActivePlanRepo
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.reconcile.data.ActiveReconciliationRepo
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
@@ -13,7 +13,7 @@ class ReplaceCategoryGloballyUC @Inject constructor(
     private val reconciliationsRepo: ReconciliationsRepo,
     private val plansRepo: PlansRepo,
     private val activeReconciliationRepo: ActiveReconciliationRepo,
-    private val activePlanRepo: ActivePlanRepo3,
+    private val activePlanRepo: ActivePlanRepo,
 ) {
     suspend fun replaceCategoryGlobally(originalCategory: Category, newCategory: Category) {
         categoriesRepo.push(newCategory)

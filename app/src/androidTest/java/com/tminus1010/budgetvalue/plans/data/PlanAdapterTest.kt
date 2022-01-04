@@ -15,7 +15,6 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -59,7 +58,7 @@ class PlanAdapterTest {
     lateinit var datePeriodService: DatePeriodService
 
     @Inject
-    lateinit var activePlanRepo: ActivePlanRepo3
+    lateinit var activePlanRepo: ActivePlanRepo
 
     @Inject
     lateinit var categoriesRepo: CategoriesRepo

@@ -20,7 +20,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ActivePlanRepo3 @Inject constructor(
+class ActivePlanRepo @Inject constructor(
     private val dataStore: DataStore<Preferences>,
     private val moshiWithCategoriesProvider: MoshiWithCategoriesProvider,
     datePeriodService: DatePeriodService

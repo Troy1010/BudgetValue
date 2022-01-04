@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.categories.domain
 import com.tminus1010.budgetvalue._core.framework.Rx
 import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.plans.data.ActivePlanRepo3
+import com.tminus1010.budgetvalue.plans.data.ActivePlanRepo
 import com.tminus1010.budgetvalue.reconcile.data.ActiveReconciliationRepo
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -15,7 +15,7 @@ import javax.inject.Singleton
 open class DeleteCategoryFromActiveDomainUC @Inject constructor(
     private val categoriesRepo: CategoriesRepo,
     private val activeReconciliationRepo: ActiveReconciliationRepo,
-    private val activePlanRepo: ActivePlanRepo3,
+    private val activePlanRepo: ActivePlanRepo,
 ) {
     operator fun invoke(category: Category): Completable =
         Rx.merge(

@@ -5,14 +5,14 @@ import com.tminus1010.budgetvalue._core.all.extensions.isZero
 import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
 import com.tminus1010.budgetvalue._core.framework.Rx
-import com.tminus1010.budgetvalue.plans.data.ActivePlanRepo3
+import com.tminus1010.budgetvalue.plans.data.ActivePlanRepo
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
 class SetActivePlanFromHistoryInteractor @Inject constructor(
-    activePlanRepo: ActivePlanRepo3,
+    activePlanRepo: ActivePlanRepo,
     transactionsInteractor: TransactionsInteractor,
     private val plansRepo: PlansRepo
 ) {
