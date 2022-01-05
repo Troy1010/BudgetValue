@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.transactions.data
 
 import com.tminus1010.budgetvalue._core.all.extensions.ifNull
+import com.tminus1010.budgetvalue._core.all.extensions.isPositive
 import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import java.io.BufferedReader
@@ -29,7 +30,14 @@ class TransactionAdapter @Inject constructor() {
             description = row.maxByOrNull { Regex("""[A-z]""").findAll(it).count() }!!,
             amount = row.find { Regex("""^(-?)([0-9]{0,3},)*[0-9]{1,3}(\.[0-9]*)?${'$'}""").matches(it) }
                 .ifNull { row.find { Regex("""^(-?)[0-9]{1,100}(\.[0-9]*)?${'$'}""").matches(it) } }!!
-                .toMoneyBigDecimal(),
+                .toMoneyBigDecimal()
+                .let { amount ->
+                    // if amount is not negative, then see if any columns denote the fact that this should be a negative value
+                    if (amount.isPositive && row.find { Regex("""^Debit${'$'}""").matches(it) } != null)
+                        -amount
+                    else
+                        amount
+                },
             categoryAmounts = mapOf(),
             categorizationDate = null,
             id = row.joinToString(","),
