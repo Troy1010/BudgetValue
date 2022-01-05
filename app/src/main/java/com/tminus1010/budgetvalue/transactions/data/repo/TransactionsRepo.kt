@@ -5,6 +5,11 @@ import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.transactions.app.TransactionsAggregate
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -13,6 +18,11 @@ class TransactionsRepo @Inject constructor(
     private val miscDAO: MiscDAO,
     private val categoryAmountsConverter: CategoryAmountsConverter,
 ) {
+    val transactionsAggregateFlow =
+        miscDAO.fetchTransactionsFlow()
+            .map { TransactionsAggregate(it, categoryAmountsConverter) }
+            .shareIn(GlobalScope, SharingStarted.WhileSubscribed())
+
     val transactionsAggregate =
         miscDAO.fetchTransactions().subscribeOn(Schedulers.io())
             .map { TransactionsAggregate(it, categoryAmountsConverter) }

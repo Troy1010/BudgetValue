@@ -22,13 +22,15 @@ import com.tminus1010.budgetvalue.history.HistoryFrag
 import com.tminus1010.budgetvalue.importZ.data.ImportTransactions
 import com.tminus1010.budgetvalue.importZ.view.services.LaunchSelectFile
 import com.tminus1010.budgetvalue.plans.app.convenience_service.IsPlanFeatureEnabledUC
-import com.tminus1010.budgetvalue.plans.app.convenience_service.SetActivePlanFromHistoryUC
+import com.tminus1010.budgetvalue.plans.app.interactor.SetActivePlanFromHistoryInteractor
 import com.tminus1010.budgetvalue.reconcile.data.IsReconciliationFeatureEnabled
 import com.tminus1010.budgetvalue.replay_or_future.view.FuturesReviewFrag
 import com.tminus1010.budgetvalue.replay_or_future.view.ReplaysFrag
 import com.tminus1010.budgetvalue.transactions.view.TransactionListFrag
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -50,7 +52,7 @@ class HostActivity : AppCompatActivity() {
     lateinit var toaster: Toaster
 
     @Inject
-    lateinit var setActivePlanFromHistoryUC: SetActivePlanFromHistoryUC
+    lateinit var setActivePlanFromHistoryInteractor: SetActivePlanFromHistoryInteractor
 
     @Inject
     lateinit var importTransactions: ImportTransactions
@@ -73,7 +75,7 @@ class HostActivity : AppCompatActivity() {
         // # Events
         accountsVM.navToSelectFile.observe(this) { launchSelectFile(this) }
         isPlanFeatureEnabledUC.onChangeToTrue.observe(this) {
-            setActivePlanFromHistoryUC.subscribe()
+            GlobalScope.launch { setActivePlanFromHistoryInteractor.setActivePlanFromHistory() }
             easyAlertDialog(getString(hostVM.levelUpPlan))
         }
         isReconciliationFeatureEnabled.onChangeToTrue.observe(this) {

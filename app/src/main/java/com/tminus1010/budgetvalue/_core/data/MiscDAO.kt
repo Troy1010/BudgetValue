@@ -55,6 +55,9 @@ interface MiscDAO {
     fun tryAdd(transactionsDTO: List<TransactionDTO>): Completable
 
     @Query("select * from TransactionDTO")
+    fun fetchTransactionsFlow(): Flow<List<TransactionDTO>>
+
+    @Query("select * from TransactionDTO")
     fun fetchTransactions(): Observable<List<TransactionDTO>>
 
     @Query("select * from TransactionDTO WHERE description=:description")

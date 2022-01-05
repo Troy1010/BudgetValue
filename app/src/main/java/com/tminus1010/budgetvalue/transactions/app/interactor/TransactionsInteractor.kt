@@ -17,6 +17,7 @@ import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -84,6 +85,9 @@ class TransactionsInteractor @Inject constructor(
     }
 
     // # Output
+    val transactionBlocksFlow =
+        transactionsRepo.transactionsAggregateFlow
+            .map { getBlocksFromTransactions(it.transactions) }
     val transactionBlocks: Observable<List<TransactionBlock>> =
         transactionsRepo.transactionsAggregate
             .map(TransactionsAggregate::transactions)
