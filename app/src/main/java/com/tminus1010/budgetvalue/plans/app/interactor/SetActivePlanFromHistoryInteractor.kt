@@ -13,11 +13,11 @@ class SetActivePlanFromHistoryInteractor @Inject constructor(
     private val transactionsInteractor: TransactionsInteractor,
 ) {
     suspend fun setActivePlanFromHistory() {
-        val relevantTransactionBlocks = transactionsInteractor.transactionBlocksFlow.first().filter { it.defaultAmount.isZero }
+        val relevantTransactionBlocks = transactionsInteractor.spendBlocksFlow.first().filter { it.defaultAmount.isZero }
         val categoryAmounts =
             relevantTransactionBlocks
                 .fold(CategoryAmounts()) { acc, v -> acc.addTogether(v.categoryAmounts) }
-                .mapValues { (_, v) -> (v / relevantTransactionBlocks.size.toBigDecimal()).toString().toMoneyBigDecimal() }
+                .mapValues { (_, v) -> (-v / relevantTransactionBlocks.size.toBigDecimal()).toString().toMoneyBigDecimal() }
         activePlanRepo.pushCategoryAmounts(CategoryAmounts(categoryAmounts))
     }
 }

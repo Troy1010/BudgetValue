@@ -1,6 +1,8 @@
 package com.tminus1010.budgetvalue.plans.view
 
+import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.tminus1010.budgetvalue.*
@@ -29,6 +31,11 @@ class PlanFrag : Fragment(R.layout.frag_plan) {
     private val vb by viewBinding(FragPlanBinding::bind)
     private val planVM: PlanVM by activityViewModels()
     private val categoriesVM: CategoriesVM by activityViewModels()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        vb.buttonsview.bind(planVM.buttons) { buttons = it }
+    }
+
     override fun onStart() {
         super.onStart()
         // # TMTableView

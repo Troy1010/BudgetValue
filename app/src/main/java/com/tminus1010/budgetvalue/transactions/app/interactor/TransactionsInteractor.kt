@@ -95,6 +95,9 @@ class TransactionsInteractor @Inject constructor(
     val spendBlocks: Observable<List<TransactionBlock>> =
         transactionBlocks
             .map { it.map { it.spendBlock } }
+    val spendBlocksFlow =
+        transactionBlocksFlow
+            .map { it.map { it.spendBlock } }
     private val spends: Observable<List<Transaction>> =
         transactionsRepo.transactionsAggregate
             .map(TransactionsAggregate::spends)
