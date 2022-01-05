@@ -7,46 +7,42 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.tminus1010.budgetvalue._core.all.extensions.isZero
 import com.tminus1010.budgetvalue._core.data.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
-import com.tminus1010.budgetvalue._core.domain.DatePeriodService
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.plans.domain.Plan
+import com.tminus1010.budgetvalue.plans.domain.ActivePlan
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
 import java.math.BigDecimal
-import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ActivePlanRepo @Inject constructor(
     private val dataStore: DataStore<Preferences>,
-    private val moshiWithCategoriesProvider: MoshiWithCategoriesProvider,
-    datePeriodService: DatePeriodService
+    private val moshiWithCategoriesProvider: MoshiWithCategoriesProvider
 ) {
     private val key = stringPreferencesKey("ActivePlanRepo3")
 
     val activePlan =
         dataStore.data
-            .map { moshiWithCategoriesProvider.moshi.fromJson<Plan>(it[key]) }
+            .map { moshiWithCategoriesProvider.moshi.fromJson<ActivePlan>(it[key]) }
             .filterNotNull()
             .distinctUntilChanged()
             .stateIn(
                 GlobalScope,
                 SharingStarted.Eagerly,
-                Plan(
-                    datePeriodService.getDatePeriod(LocalDate.now()), // TODO: Make an ActivePlan class (of a sealed class), which does not need a localDatePeriod.
+                ActivePlan(
                     total = BigDecimal.ZERO,
                     categoryAmounts = CategoryAmounts(),
                 )
             )
 
-    private suspend fun push(plan: Plan?) {
-        if (plan == null)
+    private suspend fun push(activePlan: ActivePlan?) {
+        if (activePlan == null)
             dataStore.edit { it.remove(key) }
         else
-            dataStore.edit { it[key] = moshiWithCategoriesProvider.moshi.toJson(plan) }
+            dataStore.edit { it[key] = moshiWithCategoriesProvider.moshi.toJson(activePlan) }
     }
 
     suspend fun clearCategoryAmounts() {

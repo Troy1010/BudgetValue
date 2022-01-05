@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.data.ActivePlanRepo
+import com.tminus1010.budgetvalue.plans.domain.ActivePlan
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,7 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * [PlanVM] represents the activePlan of [ActivePlanRepo]
+ * [PlanVM] represents the [ActivePlan] of [ActivePlanRepo]
  */
 @HiltViewModel
 class PlanVM @Inject constructor(

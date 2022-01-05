@@ -1,5 +1,6 @@
 package com.tminus1010.budgetvalue.reconcile.domain
 
+import androidx.room.Ignore
 import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.categories.models.Category
 import java.math.BigDecimal
@@ -15,6 +16,7 @@ sealed class CategoryAmountsAndTotal {
     ) : CategoryAmountsAndTotal() {
         constructor(categoryAmounts: Map<Category, BigDecimal>, total: BigDecimal) : this(CategoryAmounts(categoryAmounts), total)
 
+        @delegate:Ignore
         override val defaultAmount by lazy { categoryAmounts.defaultAmount(total) }
     }
 
@@ -24,6 +26,7 @@ sealed class CategoryAmountsAndTotal {
     ) : CategoryAmountsAndTotal() {
         constructor(categoryAmounts: Map<Category, BigDecimal>, total: BigDecimal) : this(CategoryAmounts(categoryAmounts), total)
 
+        @delegate:Ignore
         override val total by lazy { categoryAmounts.total(defaultAmount) }
     }
 }
