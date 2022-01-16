@@ -21,12 +21,7 @@ class OuterDecoration3(
 ) : RecyclerView.ItemDecoration() {
     val defaultDividerDrawable by lazy { ContextCompat.getDrawable(context, R.drawable.divider)!! }
 
-    override fun getItemOffsets(
-        outRect: Rect,
-        view: View,
-        parent: RecyclerView,
-        state: RecyclerView.State,
-    ) {
+    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         if (orientation == Orientation.HORIZONTAL) TODO()
         when (val j = parent.getChildAdapterPosition(view) + rowFreezeCount) {
             in dividerMap.keys -> outRect.apply { top = dividerMap[j]!!.intrinsicHeight }
