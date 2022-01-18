@@ -153,8 +153,8 @@ dependencies {
     implementation 'com.jakewharton.rxbinding4:rxbinding-viewpager2:4.0.0'
 
     // # Mockk
-    testImplementation "io.mockk:mockk:1.10.2"
-    androidTestImplementation "io.mockk:mockk-android:1.10.2"
+    testImplementation "io.mockk:mockk:1.11.0"
+    androidTestImplementation "io.mockk:mockk-android:1.11.0"
 
     // # Moshi
     implementation "com.squareup.moshi:moshi-kotlin:1.11.0"
@@ -164,7 +164,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-common-java8:2.4.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.0"
-    // # Lifecycle & Rx
+    // ## Lifecycle & Rx
     implementation "androidx.lifecycle:lifecycle-reactivestreams-ktx:2.4.0"
 
     // # RecyclerMargin
@@ -177,10 +177,10 @@ dependencies {
     // # Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2-native-mt"
-    // # Coroutine & Lifecycle
+    // ## Coroutine & Lifecycle
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
-    // # Coroutines & Rx
+    // ## Coroutines & Rx
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-rx3:1.3.8"
 
     // # MPAndroidChart
