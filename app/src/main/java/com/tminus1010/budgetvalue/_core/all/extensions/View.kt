@@ -1,18 +1,12 @@
 package com.tminus1010.budgetvalue._core.all.extensions
 
 import android.view.View
-import androidx.lifecycle.*
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.flow.Flow
-
-fun <V : View, T> V.bind(liveData: LiveData<T>, lifecycle: LifecycleOwner? = null, lambda: V.(T) -> Unit) {
-    val _lifecycle =
-        lifecycle ?: findViewTreeLifecycleOwner()
-        ?: error("Could not find lifecycle. This might happen in Recyclerviews or other unattached views.\nEither attach the view, add a lifecycle to the view, or specify a lifecycle as argument.")
-    liveData.observe(_lifecycle) { lambda(it) }
-}
 
 fun <V : View, T> V.bind(observable: Observable<T>, lifecycle: LifecycleOwner? = null, lambda: V.(T) -> Unit) {
     val _lifecycle =
