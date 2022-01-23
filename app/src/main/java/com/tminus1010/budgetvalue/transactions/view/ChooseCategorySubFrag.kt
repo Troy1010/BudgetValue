@@ -10,13 +10,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.all.extensions.bind
-import com.tminus1010.budgetvalue._core.all.extensions.observe
 import com.tminus1010.budgetvalue._core.framework.view.GenViewHolder2
 import com.tminus1010.budgetvalue._core.framework.view.LifecycleRVAdapter2
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
 import com.tminus1010.budgetvalue.databinding.SubfragChooseCategoryBinding
 import com.tminus1010.budgetvalue.transactions.presentation.ChooseCategoryVM
-import com.tminus1010.tmcommonkotlin.view.extensions.nav
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.toPX
 import dagger.hilt.android.AndroidEntryPoint
 

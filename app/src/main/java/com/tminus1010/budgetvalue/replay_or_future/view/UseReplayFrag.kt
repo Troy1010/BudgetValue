@@ -7,9 +7,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.all.extensions.bind
-import com.tminus1010.budgetvalue._core.all.extensions.observe
 import com.tminus1010.budgetvalue.databinding.FragReplaysBinding
 import com.tminus1010.budgetvalue.replay_or_future.presentation.UseReplayVM
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
 
