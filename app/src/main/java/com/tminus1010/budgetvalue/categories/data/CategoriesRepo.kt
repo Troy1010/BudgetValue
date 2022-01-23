@@ -1,6 +1,5 @@
 package com.tminus1010.budgetvalue.categories.data
 
-import com.tminus1010.budgetvalue._core.all.extensions.doLogx
 import com.tminus1010.budgetvalue._core.data.CategoryDatabase
 import com.tminus1010.budgetvalue.categories.models.Category
 import kotlinx.coroutines.GlobalScope
@@ -18,7 +17,6 @@ class CategoriesRepo @Inject constructor(
 
     val userCategories: Flow<List<Category>> =
         userCategoriesDAO.fetchUserCategories()
-            .doLogx("fetchUserCategories")
             .shareIn(GlobalScope, SharingStarted.WhileSubscribed(), 1)
 
     suspend fun push(category: Category) {

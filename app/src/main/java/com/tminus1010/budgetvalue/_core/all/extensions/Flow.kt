@@ -4,7 +4,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.tminus1010.tmcommonkotlin.core.logx
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
@@ -15,11 +14,6 @@ import kotlinx.coroutines.rx3.asObservable
 
 fun <T : Any> Flow<T?>.asObservable2(): Observable<T> {
     return filterNotNull().asObservable()
-}
-
-inline fun <reified T> Flow<T>.doLogx(prefix: String? = null): Flow<T> {
-    return onEach { it.logx(prefix) }
-        .onCompletion { if (it == null) "Completed".logx(prefix) else logz("$prefix`Error:", it) }
 }
 
 inline fun <reified T> Flow<T>.observe(lifecycleOwner: LifecycleOwner, crossinline lambda: suspend (T) -> Unit) {
