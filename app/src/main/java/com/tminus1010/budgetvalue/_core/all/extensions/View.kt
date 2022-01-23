@@ -49,13 +49,6 @@ fun View.heightObservable(): Observable<Int> {
         .distinctUntilChanged()
 }
 
-var View.easyVisibility: Boolean
-    get() = visibility == View.VISIBLE
-    set(value) {
-        visibility = if (value) View.VISIBLE else View.GONE
-    }
-
-
 var View.lifecycleOwner: LifecycleOwner?
     get() = findViewTreeLifecycleOwner()
     set(value) {
