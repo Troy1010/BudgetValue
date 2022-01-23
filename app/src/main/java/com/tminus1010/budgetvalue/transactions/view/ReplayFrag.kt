@@ -12,7 +12,6 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.InvalidCategoryAmounts
 import com.tminus1010.budgetvalue._core.InvalidSearchText
 import com.tminus1010.budgetvalue._core.all.extensions.bind
-import com.tminus1010.budgetvalue._core.all.extensions.easyVisibility
 import com.tminus1010.budgetvalue._core.framework.view.recipe_factories.*
 import com.tminus1010.budgetvalue._core.framework.view.viewBinding
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
@@ -24,6 +23,7 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
+import com.tminus1010.tmcommonkotlin.view.extensions.easyVisibility
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.subjects.Subject

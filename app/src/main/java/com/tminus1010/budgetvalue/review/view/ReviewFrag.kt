@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.all.extensions.bind
-import com.tminus1010.budgetvalue._core.all.extensions.easyVisibility
 import com.tminus1010.budgetvalue._core.all.extensions.onClick
 import com.tminus1010.budgetvalue.all.presentation.extensions.bind
 import com.tminus1010.budgetvalue.databinding.FragReviewBinding
@@ -16,6 +15,7 @@ import com.tminus1010.budgetvalue.review.presentation.ReviewVM
 import com.tminus1010.budgetvalue.review.presentation.TooFarBackException
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
+import com.tminus1010.tmcommonkotlin.view.extensions.easyVisibility
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
