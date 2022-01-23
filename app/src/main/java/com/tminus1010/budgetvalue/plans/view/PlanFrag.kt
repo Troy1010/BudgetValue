@@ -7,8 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.tminus1010.budgetvalue.*
 import com.tminus1010.budgetvalue._core.all.extensions.asObservable2
-import com.tminus1010.budgetvalue._core.all.extensions.bind
-import com.tminus1010.budgetvalue._core.all.extensions.easyText
+import com.tminus1010.budgetvalue._core.all.extensions.easyText2
 import com.tminus1010.budgetvalue._core.framework.Rx
 import com.tminus1010.budgetvalue._core.framework.view.onDone
 import com.tminus1010.budgetvalue._core.framework.view.tmTableView3.*
@@ -19,6 +18,7 @@ import com.tminus1010.budgetvalue.databinding.FragPlanBinding
 import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
 import com.tminus1010.budgetvalue.plans.presentation.PlanVM
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
+import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,7 +42,7 @@ class PlanFrag : Fragment(R.layout.frag_plan) {
         val expectedIncomeRecipeFactory = ViewItemRecipeFactory3<ItemMoneyEditTextBinding, Observable<String>>(
             { ItemMoneyEditTextBinding.inflate(LayoutInflater.from(context)) },
             { d, vb, lifecycleOwner ->
-                vb.moneyedittext.bind(d, lifecycleOwner) { easyText = it }
+                vb.moneyedittext.bind(d, lifecycleOwner) { easyText2 = it }
                 vb.moneyedittext.onDone { planVM.userSaveExpectedIncome(it) }
             }
         )
@@ -51,7 +51,7 @@ class PlanFrag : Fragment(R.layout.frag_plan) {
             { (category, d), vb, lifecycleOwner ->
                 vb.moneyedittext.onDone { planVM.userSaveActivePlanCA(category, it) }
                 if (d == null) return@ViewItemRecipeFactory3
-                vb.moneyedittext.easyText = d
+                vb.moneyedittext.easyText2 = d
             }
         )
         Rx.combineLatest(categoriesVM.userCategories, planVM.activePlanCAs.asObservable2())

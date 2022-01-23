@@ -3,12 +3,12 @@ package com.tminus1010.budgetvalue._core.framework.view.tmTableView3
 import android.content.Context
 import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
-import com.tminus1010.budgetvalue._core.all.extensions.bind
 import com.tminus1010.budgetvalue._core.all.extensions.easyText
 import com.tminus1010.budgetvalue.databinding.ItemEmptyBinding
 import com.tminus1010.budgetvalue.databinding.ItemHeaderBinding
 import com.tminus1010.budgetvalue.databinding.ItemTextViewBinding
 import com.tminus1010.budgetvalue.databinding.ItemTitledDividerBinding
+import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import io.reactivex.rxjava3.core.Observable
 
 interface IRecipeFactories {

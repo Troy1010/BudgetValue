@@ -4,7 +4,7 @@ import android.graphics.Color
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.data.PieData
-import com.tminus1010.budgetvalue._core.all.extensions.bind
+import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import io.reactivex.rxjava3.core.Observable
 
 class PieChartVMItem(

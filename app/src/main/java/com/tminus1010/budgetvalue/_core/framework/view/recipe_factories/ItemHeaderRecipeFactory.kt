@@ -3,10 +3,10 @@ package com.tminus1010.budgetvalue._core.framework.view.recipe_factories
 import android.content.Context
 import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
-import com.tminus1010.budgetvalue._core.all.extensions.bind
 import com.tminus1010.budgetvalue._core.framework.view.tmTableView3.IViewItemRecipe3
 import com.tminus1010.budgetvalue._core.framework.view.tmTableView3.ViewItemRecipe3__
 import com.tminus1010.budgetvalue.databinding.ItemHeaderBinding
+import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import io.reactivex.rxjava3.core.Observable
 
 fun Fragment.itemHeaderRF() = ItemHeaderRecipeFactory(requireContext())

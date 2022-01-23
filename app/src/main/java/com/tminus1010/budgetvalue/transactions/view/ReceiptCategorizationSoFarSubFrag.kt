@@ -5,9 +5,9 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.all.extensions.bind
 import com.tminus1010.budgetvalue.databinding.SubfragReceiptCategorizationSoFarBinding
 import com.tminus1010.budgetvalue.transactions.presentation.ReceiptCategorizationSoFarVM
+import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

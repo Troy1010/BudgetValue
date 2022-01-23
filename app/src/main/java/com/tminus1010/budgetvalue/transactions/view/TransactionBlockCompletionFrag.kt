@@ -6,10 +6,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.all.extensions.bind
-import com.tminus1010.budgetvalue._core.all.extensions.lifecycleOwner
 import com.tminus1010.budgetvalue.databinding.FragTransactionBlockCompletionBinding
 import com.tminus1010.budgetvalue.transactions.presentation.TransactionBlockCompletionVM
+import com.tminus1010.tmcommonkotlin.misc.extensions.bind
+import com.tminus1010.tmcommonkotlin.misc.extensions.lifecycleOwner
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

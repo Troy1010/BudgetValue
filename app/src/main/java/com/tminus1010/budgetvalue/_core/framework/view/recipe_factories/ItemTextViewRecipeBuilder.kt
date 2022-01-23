@@ -3,12 +3,12 @@ package com.tminus1010.budgetvalue._core.framework.view.recipe_factories
 import android.content.Context
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.all.extensions.bind
 import com.tminus1010.budgetvalue._core.all.extensions.getColorByAttr
 import com.tminus1010.budgetvalue._core.framework.view.tmTableView3.IViewItemRecipe3
 import com.tminus1010.budgetvalue._core.framework.view.tmTableView3.ViewItemRecipe3__
 import com.tminus1010.budgetvalue._core.presentation.model.AmountPresentationModel
 import com.tminus1010.budgetvalue.databinding.ItemTextViewBinding
+import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.toPX
 import io.reactivex.rxjava3.core.Observable
 

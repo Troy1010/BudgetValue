@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue._core.all.extensions.add
-import com.tminus1010.budgetvalue._core.all.extensions.bind
 import com.tminus1010.budgetvalue._core.all.extensions.easyText
 import com.tminus1010.budgetvalue._core.framework.view.onDone
 import com.tminus1010.budgetvalue._core.framework.view.tmTableView3.IViewItemRecipe3
@@ -14,6 +13,7 @@ import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.databinding.ItemAmountFormulaBinding
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
+import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import com.tminus1010.tmcommonkotlin.view.extensions.easyVisibility
 import io.reactivex.rxjava3.core.Observable

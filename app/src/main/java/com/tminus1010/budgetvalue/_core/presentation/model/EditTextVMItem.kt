@@ -1,13 +1,13 @@
 package com.tminus1010.budgetvalue._core.presentation.model
 
 import android.content.Context
-import com.tminus1010.budgetvalue._core.all.extensions.bind
 import com.tminus1010.budgetvalue._core.all.extensions.easyText2
 import com.tminus1010.budgetvalue._core.framework.view.onDone
 import com.tminus1010.budgetvalue._core.framework.view.tmTableView3.IViewItemRecipe3
 import com.tminus1010.budgetvalue._core.framework.view.tmTableView3.ViewItemRecipe3__
 import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe
 import com.tminus1010.budgetvalue.databinding.ItemEditTextBinding
+import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import kotlinx.coroutines.flow.Flow
 
 class EditTextVMItem(
