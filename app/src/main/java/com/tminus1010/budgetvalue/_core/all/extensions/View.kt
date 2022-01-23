@@ -9,17 +9,17 @@ import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.flow.Flow
 
 fun <V : View, T> V.bind(observable: Observable<T>, lifecycle: LifecycleOwner? = null, lambda: V.(T) -> Unit) {
-    val _lifecycle =
+    val lifecycleRedef =
         lifecycle ?: findViewTreeLifecycleOwner()
-        ?: error("Could not find lifecycle. This might happen in Recyclerviews or other unattached views.\nEither attach the view, add a lifecycle to the view, or specify a lifecycle as argument.")
-    observable.observe(_lifecycle) { lambda(it) }
+        ?: error("Could not find lifecycle. This might happen in Recyclerviews or other unattached views.\nEither add a lifecycle to the view, attach to a view with a lifecycle, or specify a lifecycle as argument.")
+    observable.observe(lifecycleRedef) { lambda(it) }
 }
 
 inline fun <V : View, reified T> V.bind(flow: Flow<T>, lifecycle: LifecycleOwner? = null, crossinline lambda: V.(T) -> Unit) {
-    val _lifecycle =
+    val lifecycleRedef =
         lifecycle ?: findViewTreeLifecycleOwner()
-        ?: error("Could not find lifecycle. This might happen in Recyclerviews or other unattached views.\nEither attach the view, add a lifecycle to the view, or specify a lifecycle as argument.")
-    flow.observe(_lifecycle) { lambda(it) }
+        ?: error("Could not find lifecycle. This might happen in Recyclerviews or other unattached views.\nEither add a lifecycle to the view, attach to a view with a lifecycle, or specify a lifecycle as argument.")
+    flow.observe(lifecycleRedef) { lambda(it) }
 }
 
 fun View.widthObservable(): Observable<Int> {
