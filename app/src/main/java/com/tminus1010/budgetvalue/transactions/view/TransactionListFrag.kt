@@ -13,7 +13,6 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.schedulers.Schedulers
 
 @AndroidEntryPoint
 class TransactionListFrag : Fragment(R.layout.frag_transactions) {
@@ -22,18 +21,14 @@ class TransactionListFrag : Fragment(R.layout.frag_transactions) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // # Events
+        // # Bind Presentation Events
         transactionsVM.navToTransaction.observe(viewLifecycleOwner) { TransactionFrag.navTo(nav, it) }
         transactionsVM.alertDialog.observe(viewLifecycleOwner) { it.show(requireContext()) }
-        // # Presentation State
+        // # Bind Presentation State
         vb.buttonsview.buttons = transactionsVM.buttons
-        vb.tmTableView.bind(
-            transactionsVM.transactionVMItems
-                .observeOn(Schedulers.computation())
-                .map { it.map { it.toViewItemRecipes(requireContext()) } }
-        ) {
+        vb.tmTableView.bind(transactionsVM.transactionVMItems) {
             initialize(
-                recipeGrid = it,
+                recipeGrid = it.map { it.toViewItemRecipes(requireContext()) },
                 shouldFitItemWidthsInsideTable = true
             )
         }
