@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue
 
-import com.tminus1010.budgetvalue.app_init.AppInteractor
+import com.tminus1010.budgetvalue.app_init.AppInitInteractor
 import com.tminus1010.budgetvalue.reconcile.domain.Reconciliation
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import io.reactivex.rxjava3.core.Observable
@@ -8,8 +8,8 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.time.LocalDate
 
 object Given {
-    val givenCategories = Observable.just(AppInteractor.initCategories)
-    val categories = AppInteractor.initCategories
+    val givenCategories = Observable.just(AppInitInteractor.initCategories)
+    val categories = AppInitInteractor.initCategories
 
     //    val givenPlan1 = Plan(
 //        localDatePeriod = Observable.just(LocalDatePeriod(LocalDate.now(), Period.ofWeeks(2))),

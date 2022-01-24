@@ -1,29 +1,23 @@
 package com.tminus1010.budgetvalue.app_init
 
-import com.tminus1010.budgetvalue._core.framework.Rx
 import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.models.CategoryType
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.CompletableObserver
+import com.tminus1010.tmcommonkotlin.core.logx
 import java.math.BigDecimal
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class AppInteractor @Inject constructor(
-    appInitRepo: AppInitRepo,
-    private val categoriesRepo: CategoriesRepo
-) : Completable() {
-    val x =
-        if (appInitRepo.fetchAppInitBool())
-            complete()
-        else
-            Rx.merge(initCategories.map { Rx.completableFromSuspend { categoriesRepo.push(it) } })
-                .andThen(appInitRepo.pushAppInitBool(true))
-
-    override fun subscribeActual(observer: CompletableObserver) = x.subscribe(observer)
+class AppInitInteractor @Inject constructor(
+    private val appInitRepo: AppInitRepo,
+    private val categoriesRepo: CategoriesRepo,
+) {
+    suspend fun tryInitializeApp() {
+        if (!appInitRepo.isAppInitialized().logx("isAppInitialized")) {
+            initCategories.forEach { categoriesRepo.push(it) }
+            appInitRepo.pushAppInitBool2(true)
+        }
+    }
 
     companion object {
         val initCategories

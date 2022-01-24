@@ -10,13 +10,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue._core.all.extensions.easyAlertDialog
+import com.tminus1010.budgetvalue._core.all.extensions.getString
 import com.tminus1010.budgetvalue._core.all.extensions.unCheckAllMenuItems
 import com.tminus1010.budgetvalue._core.framework.view.Toaster
 import com.tminus1010.budgetvalue._core.presentation.view_model.HostVM
-import com.tminus1010.budgetvalue._core.all.extensions.easyAlertDialog
-import com.tminus1010.budgetvalue._core.all.extensions.getString
 import com.tminus1010.budgetvalue.accounts.presentation.AccountsVM
-import com.tminus1010.budgetvalue.app_init.AppInteractor
+import com.tminus1010.budgetvalue.app_init.AppInitInteractor
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.history.HistoryFrag
 import com.tminus1010.budgetvalue.importZ.data.ImportTransactions
@@ -40,7 +40,7 @@ class HostActivity : AppCompatActivity() {
     private val accountsVM by viewModels<AccountsVM>()
 
     @Inject
-    lateinit var appInteractor: AppInteractor
+    lateinit var appInitInteractor: AppInitInteractor
 
     @Inject
     lateinit var isPlanFeatureEnabledUC: IsPlanFeatureEnabledUC
@@ -66,7 +66,7 @@ class HostActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(vb.root)
         // # Initialize app once per install
-        appInteractor.subscribe()
+        GlobalScope.launch { appInitInteractor.tryInitializeApp() }
         // # Bind bottom menu to navigation.
         // In order for NavigationUI.setupWithNavController to work, the ids in R.menu.* must exactly match R.navigation.*
         NavigationUI.setupWithNavController(vb.bottomNavigation, hostFrag.navController)

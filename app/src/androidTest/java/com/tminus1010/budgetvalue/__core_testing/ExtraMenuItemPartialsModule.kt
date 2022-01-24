@@ -4,8 +4,8 @@ import android.app.Application
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue._core.presentation.service.GetExtraMenuItemPartials
+import com.tminus1010.budgetvalue.app_init.AppInitInteractor
 import com.tminus1010.budgetvalue.app_init.AppInitRepo
-import com.tminus1010.budgetvalue.app_init.AppInteractor
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
 import com.tminus1010.budgetvalue.replay_or_future.domain.TotalFuture
@@ -22,6 +22,8 @@ import dagger.hilt.components.SingletonComponent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Singleton
 
@@ -30,13 +32,14 @@ import javax.inject.Singleton
 object ExtraMenuItemPartialsModule {
     @Provides
     @Singleton
-    fun getExtraMenuItemPartials(appInitRepo: AppInitRepo, appInteractor: AppInteractor, transactionsInteractor: TransactionsInteractor, futuresRepo: FuturesRepo, application: Application) = object : GetExtraMenuItemPartials() {
+    fun getExtraMenuItemPartials(appInitRepo: AppInitRepo, appInitInteractor: AppInitInteractor, transactionsInteractor: TransactionsInteractor, futuresRepo: FuturesRepo, application: Application) = object : GetExtraMenuItemPartials() {
         override fun invoke(nav: BehaviorSubject<NavController>): Array<MenuVMItem> {
             return arrayOf(
                 MenuVMItem("Redo App Init") {
-                    appInitRepo.pushAppInitBool(false)
-                        .andThen(appInteractor)
-                        .subscribe()
+                    GlobalScope.launch {
+                        appInitRepo.pushAppInitBool2(false)
+                        appInitInteractor.tryInitializeApp()
+                    }
                 },
                 MenuVMItem("Import Transaction for Future") {
                     futuresRepo.fetchFutures().toSingle()

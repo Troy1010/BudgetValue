@@ -19,7 +19,7 @@ class SharedPrefWrapper @Inject constructor(
 
     // # AppInitBool
 
-    fun fetchAppInitBool(): Boolean =
+    fun isAppInitialized(): Boolean =
         sharedPreferences.getBoolean(Key.APP_INIT_BOOL.name, false)
 
     fun pushAppInitBool(boolean: Boolean): Completable {
