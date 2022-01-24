@@ -9,7 +9,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.R
 import androidx.appcompat.widget.AppCompatEditText
-import com.tminus1010.budgetvalue._core.all.extensions.easyText
+import com.tminus1010.budgetvalue._core.all.extensions.easyText2
 import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -25,7 +25,7 @@ class MoneyEditText @JvmOverloads constructor(
     override val onEditorActionListener: Observable<Triple<TextView, Int, KeyEvent>> = _onEditorActionListener
 
     init {
-        easyText = "0"
+        easyText2 = "0"
         onDone { s ->
             s.toMoneyBigDecimal().toString()
                 .also { if (it != s) setText(it) }
@@ -35,10 +35,10 @@ class MoneyEditText @JvmOverloads constructor(
             false
         }
         setOnFocusChangeListener { v, hasFocus ->
-            val _text = text
+            val textRedef = text
             if (hasFocus) {
-                if (_text?.getOrNull(0) == '0')
-                    _text.delete(0, 1)
+                if (textRedef?.getOrNull(0) == '0')
+                    textRedef.delete(0, 1)
             }
             _onFocusChanged.onNext(Pair(v, hasFocus))
         }
