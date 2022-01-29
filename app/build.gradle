@@ -1,4 +1,6 @@
 import com.tminus1010.budgetvalue.LaunchApp
+import com.tminus1010.budgetvalue.LaunchDevEnv_Main
+import com.tminus1010.budgetvalue.Quit
 
 plugins {
     id 'com.android.application'
@@ -62,7 +64,11 @@ android {
 }
 
 tasks.register("app", LaunchApp, android.getAdbExecutable().absolutePath)
-    .configure {it.group = "launch" }
+        .configure { it.group = "launch" }
+tasks.register("DevEnv_Main", LaunchDevEnv_Main, android.getAdbExecutable().absolutePath)
+        .configure { it.group = "launch" }
+tasks.register("quit", Quit, android.getAdbExecutable().absolutePath)
+        .configure { it.group = "launch" }
 
 dependencies {
     // # Kotlin
