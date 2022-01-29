@@ -65,6 +65,10 @@ android {
     }
 }
 
+budgetValuePluginExtension {
+    adbAbsolutePath = android.getAdbExecutable().absolutePath
+}
+
 tasks.register("launchApp", LaunchApp, android.getAdbExecutable().absolutePath)
         .configure { it.group = "adb" }
 tasks.register("launchDevEnv_Main", LaunchDevEnv_Main, android.getAdbExecutable().absolutePath)
