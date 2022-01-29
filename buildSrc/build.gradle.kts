@@ -20,3 +20,12 @@ dependencies {
     implementation("com.tminus1010.tmcommonkotlin:tmcommonkotlin-dsl:+")
     implementation("com.google.dagger:hilt-android-gradle-plugin:2.37")
 }
+
+gradlePlugin {
+    plugins {
+        create("BudgetValuePlugin") {
+            id = "BudgetValuePlugin"
+            implementationClass = "com.tminus1010.budgetvalue.BudgetValuePlugin"
+        }
+    }
+}
