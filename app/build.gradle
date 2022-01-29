@@ -64,15 +64,15 @@ android {
     }
 }
 
-tasks.register("app", LaunchApp, android.getAdbExecutable().absolutePath)
+tasks.register("launchApp", LaunchApp, android.getAdbExecutable().absolutePath)
         .configure { it.group = "adb" }
-tasks.register("DevEnv_Main", LaunchDevEnv_Main, android.getAdbExecutable().absolutePath)
+tasks.register("launchDevEnv_Main", LaunchDevEnv_Main, android.getAdbExecutable().absolutePath)
         .configure { it.group = "adb" }
-tasks.register("quit", Quit, android.getAdbExecutable().absolutePath)
+tasks.register("quitApp", Quit, android.getAdbExecutable().absolutePath)
         .configure { it.group = "adb" }
-TaskContainerKt.tryRegisterOrderedPair(tasks, "quit", "app")
+TaskContainerKt.tryRegisterOrderedPair(tasks, "quitApp", "launchApp")
         .configure { it.group = "adb" }
-TaskContainerKt.tryRegisterOrderedPair(tasks, "quit", "DevEnv_Main")
+TaskContainerKt.tryRegisterOrderedPair(tasks, "quitApp", "launchDevEnv_Main")
         .configure { it.group = "adb" }
 
 dependencies {
