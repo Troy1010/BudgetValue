@@ -21,6 +21,8 @@ open class BudgetValuePlugin : Plugin<Project> {
             tasks.tryRegisterOrderedPair("installDebug", "launchApp")
             tasks.tryRegisterOrderedPair("clean_uninstallDebug", "installDebug_launchApp")
                 .configure { group = "combo" }
+            tasks.tryRegisterOrderedPair("uninstallDebug", "installDebug_launchApp")
+                .configure { group = "combo" }
             tasks.tryRegisterOrderedPair("installDebug", "launchDevEnv_Main")
             tasks.tryRegisterOrderedPair("clean_uninstallDebug", "installDebug_launchDevEnv_Main")
                 .configure { group = "combo" }
