@@ -37,6 +37,7 @@ class DevEnv_UnlockedFeatures {
 
     @Test
     fun unlockedFeatures() {
+        logz("DevEnv_UnlockedFeatures")
         // # Stall forever
         while (true) Thread.sleep(5000)
     }

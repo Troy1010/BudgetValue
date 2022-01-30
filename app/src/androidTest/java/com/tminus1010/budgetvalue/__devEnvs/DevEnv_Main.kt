@@ -28,6 +28,7 @@ class DevEnv_Main {
 
     @Test
     fun main() {
+        logz("DevEnv_Main")
         // # Stall forever
         while (true) Thread.sleep(5000)
     }
