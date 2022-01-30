@@ -5,12 +5,12 @@ import org.gradle.api.Project
 import tmextensions.tryRegisterOrderedPair
 
 open class BudgetValuePlugin : Plugin<Project> {
-    open class BudgetValuePluginExtension {
+    open class Extension {
         var adbAbsolutePath: String? = null
     }
 
     override fun apply(project: Project) {
-        val budgetValuePluginExtension = project.extensions.create("budgetValuePluginExtension", BudgetValuePluginExtension::class.java)
+        val budgetValuePluginExtension = project.extensions.create("budgetValuePluginExtension", Extension::class.java)
         project.afterEvaluate {
             tasks.register("launchApp", LaunchApp::class.java, budgetValuePluginExtension.adbAbsolutePath ?: throw AdbAbsolutePathWasNullException())
                 .configure { group = "adb" }
