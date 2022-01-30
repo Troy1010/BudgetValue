@@ -2,7 +2,6 @@ package com.tminus1010.budgetvalue
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.tasks.TaskContainer
 import tmextensions.tryRegisterOrderedPair
 
 open class BudgetValuePlugin : Plugin<Project> {
@@ -32,33 +31,22 @@ open class BudgetValuePlugin : Plugin<Project> {
                 dependsOn(tasks.named("installDebug_launchApp"))
             }
             //
-            registerEasyRebuildAndLaunchDevEnv(tasks, "DevEnv_Main")
-            registerEasyInstallAndLaunchDevEnv(tasks, "DevEnv_Main")
-            registerEasyRebuildAndLaunchDevEnv(tasks, "DevEnv_UnlockedFeatures")
-            registerEasyInstallAndLaunchDevEnv(tasks, "DevEnv_UnlockedFeatures")
-        }
-    }
-
-    private fun registerEasyRebuildAndLaunchDevEnv(tasks: TaskContainer, nameOfDevEnv: String) {
-        runCatching { tasks.register("launch$nameOfDevEnv", LaunchDevEnv::class.java, budgetValuePluginSettings.adbAbsolutePath, nameOfDevEnv) }
-        tasks.tryRegisterOrderedPair("installDebug", "launch$nameOfDevEnv")
-        tasks.tryRegisterOrderedPair("installDebugAndroidTest", "installDebug_launch$nameOfDevEnv")
-        tasks.tryRegisterOrderedPair("clean", "installDebugAndroidTest_installDebug_launch$nameOfDevEnv")
-        tasks.register("easyRebuildAndLaunch$nameOfDevEnv") {
-            description = "Launches slowly, but reliably.\nWhen successful, it will throw a timeout failure.. just ignore it."
-            group = "easy"
-            dependsOn(tasks.named("clean_installDebugAndroidTest_installDebug_launch$nameOfDevEnv"))
-        }
-    }
-
-    private fun registerEasyInstallAndLaunchDevEnv(tasks: TaskContainer, nameOfDevEnv: String) {
-        runCatching { tasks.register("launch$nameOfDevEnv", LaunchDevEnv::class.java, budgetValuePluginSettings.adbAbsolutePath, nameOfDevEnv) }
-        tasks.tryRegisterOrderedPair("installDebug", "launch$nameOfDevEnv")
-        tasks.tryRegisterOrderedPair("installDebugAndroidTest", "installDebug_launch$nameOfDevEnv")
-        tasks.register("easyInstallAndLaunch$nameOfDevEnv") {
-            description = "Launches quickly (if build cache is available), but less reliably.\nWhen successful, it will throw a timeout failure.. just ignore it."
-            group = "easy"
-            dependsOn(tasks.named("installDebugAndroidTest_installDebug_launch$nameOfDevEnv"))
+            listOf("DevEnv_Main", "DevEnv_UnlockedFeatures").forEach {
+                tasks.register("launch$it", LaunchDevEnv::class.java, budgetValuePluginSettings.adbAbsolutePath, it)
+                tasks.tryRegisterOrderedPair("installDebug", "launch$it")
+                tasks.tryRegisterOrderedPair("installDebugAndroidTest", "installDebug_launch$it")
+                tasks.tryRegisterOrderedPair("clean", "installDebugAndroidTest_installDebug_launch$it")
+                tasks.register("easyRebuildAndLaunch$it") {
+                    description = "Launches slowly, but reliably.\nWhen successful, it will throw a timeout failure.. just ignore it."
+                    group = "easy"
+                    dependsOn(tasks.named("clean_installDebugAndroidTest_installDebug_launch$it"))
+                }
+                tasks.register("easyInstallAndLaunch$it") {
+                    description = "Launches quickly (if build cache is available), but less reliably.\nWhen successful, it will throw a timeout failure.. just ignore it."
+                    group = "easy"
+                    dependsOn(tasks.named("installDebugAndroidTest_installDebug_launch$it"))
+                }
+            }
         }
     }
 }
