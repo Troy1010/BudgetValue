@@ -33,18 +33,20 @@ open class BudgetValuePlugin : Plugin<Project> {
             // easyRebuildAndLaunchDevEnvs, easyInstallAndLaunchDevEnvs
             listOf("DevEnv_Main", "DevEnv_UnlockedFeatures").forEach {
                 tasks.register("launch$it", LaunchDevEnv::class.java, budgetValuePluginSettings.adbAbsolutePath, it)
-                tasks.tryRegisterOrderedPair("installDebug", "launch$it")
-                tasks.tryRegisterOrderedPair("installDebugAndroidTest", "installDebug_launch$it") // TODO: Installs can happen simultaneously..
-                tasks.tryRegisterOrderedPair("clean", "installDebugAndroidTest_installDebug_launch$it")
+                tasks.register("(installDebug,installDebugAndroidTest)_launch$it") {
+                    dependsOn(tasks.named("installDebug"), tasks.named("installDebugAndroidTest"))
+                    finalizedBy(tasks.named("launch$it"))
+                }
+                tasks.tryRegisterOrderedPair("clean", "(installDebug,installDebugAndroidTest)_launch$it")
                 tasks.register("easyRebuildAndLaunch$it") {
                     description = "Launches slowly, but reliably. When successful, it will throw a timeout failure.. just ignore it."
                     group = "easy"
-                    dependsOn(tasks.named("clean_installDebugAndroidTest_installDebug_launch$it"))
+                    dependsOn(tasks.named("clean_(installDebug,installDebugAndroidTest)_launch$it"))
                 }
                 tasks.register("installAndLaunch$it") {
                     description = "Launches quickly (if build cache is available), but less reliably. When successful, it will throw a timeout failure.. just ignore it."
                     group = "launch"
-                    dependsOn(tasks.named("installDebugAndroidTest_installDebug_launch$it"))
+                    dependsOn(tasks.named("(installDebug,installDebugAndroidTest)_launch$it"))
                 }
             }
         }
