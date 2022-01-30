@@ -7,14 +7,17 @@ import tmextensions.tryRegisterOrderedPair
 open class BudgetValuePlugin : Plugin<Project> {
     open class Settings {
         var adbAbsolutePath: String? = null
+            get() {
+                return field ?: throw AdbAbsolutePathWasNullException()
+            }
     }
 
     override fun apply(project: Project) {
         val budgetValuePluginSettings = project.extensions.create("budgetValuePluginSettings", Settings::class.java)
         project.afterEvaluate {
-            tasks.register("launchApp", LaunchApp::class.java, budgetValuePluginSettings.adbAbsolutePath ?: throw AdbAbsolutePathWasNullException())
-            tasks.register("launchDevEnv_Main", LaunchDevEnv_Main::class.java, budgetValuePluginSettings.adbAbsolutePath ?: throw AdbAbsolutePathWasNullException())
-            tasks.register("quitApp", QuitApp::class.java, budgetValuePluginSettings.adbAbsolutePath ?: throw AdbAbsolutePathWasNullException())
+            tasks.register("launchApp", LaunchApp::class.java, budgetValuePluginSettings.adbAbsolutePath)
+            tasks.register("launchDevEnv_Main", LaunchDevEnv_Main::class.java, budgetValuePluginSettings.adbAbsolutePath)
+            tasks.register("quitApp", QuitApp::class.java, budgetValuePluginSettings.adbAbsolutePath)
             tasks.tryRegisterOrderedPair("installDebug", "launchApp")
                 .configure { group = "install" }
             tasks.tryRegisterOrderedPair("clean_uninstallDebug", "installDebug_launchApp")
