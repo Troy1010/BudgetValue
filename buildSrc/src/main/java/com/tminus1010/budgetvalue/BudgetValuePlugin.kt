@@ -24,16 +24,17 @@ open class BudgetValuePlugin : Plugin<Project> {
             tasks.tryRegisterOrderedPair("installDebug", "launchApp")
             tasks.tryRegisterOrderedPair("clean", "installDebug_launchApp")
             tasks.tryRegisterOrderedPair("installDebug", "launchDevEnv_Main")
-            tasks.tryRegisterOrderedPair("clean", "installDebug_launchDevEnv_Main")
+            tasks.tryRegisterOrderedPair("installDebugAndroidTest", "installDebug_launchDevEnv_Main")
+            tasks.tryRegisterOrderedPair("clean", "installDebugAndroidTest_installDebug_launchDevEnv_Main")
             tasks.register("easyRebuildAndLaunchApp") {
                 description = "Launches slowly, but reliably"
                 group = "easy"
                 dependsOn(tasks.named("clean_installDebug_launchApp"))
             }
             tasks.register("easyRebuildAndLaunchDevEnv_Main") {
-                description = "Launches slowly, but reliably"
+                description = "Launches slowly, but reliably. When successful, it will throw a timeout failure.. just ignore it."
                 group = "easy"
-                dependsOn(tasks.named("clean_installDebug_launchDevEnv_Main"))
+                dependsOn(tasks.named("clean_installDebugAndroidTest_installDebug_launchDevEnv_Main"))
             }
         }
     }
