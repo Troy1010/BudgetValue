@@ -6,9 +6,9 @@ import tmextensions.tryRegisterOrderedPair
 
 open class BudgetValuePlugin : Plugin<Project> {
     open class Settings {
-        var adbAbsolutePath: String? = null
+        var adbAbsolutePath: String = ""
             get() {
-                return field ?: throw AdbAbsolutePathWasNullException()
+                return field.also { if (it == "") throw AdbAbsolutePathWasEmptyException() }
             }
     }
 
