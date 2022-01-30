@@ -16,19 +16,22 @@ open class BudgetValuePlugin : Plugin<Project> {
         val budgetValuePluginSettings = project.extensions.create("budgetValuePluginSettings", Settings::class.java)
         project.afterEvaluate {
             tasks.register("launchApp", LaunchApp::class.java, budgetValuePluginSettings.adbAbsolutePath)
-            tasks.register("launchDevEnv_Main", LaunchDevEnv_Main::class.java, budgetValuePluginSettings.adbAbsolutePath)
+            tasks.register("launchDevEnv_Main", LaunchDevEnv::class.java, budgetValuePluginSettings.adbAbsolutePath, "DevEnv_Main")
+                .configure { group = "aa" }
+            tasks.register("launchDevEnv_UnlockedFeatures", LaunchDevEnv::class.java, budgetValuePluginSettings.adbAbsolutePath, "DevEnv_UnlockedFeatures")
+                .configure { group = "aa" }
             tasks.register("quitApp", QuitApp::class.java, budgetValuePluginSettings.adbAbsolutePath)
             tasks.tryRegisterOrderedPair("installDebug", "launchApp")
             tasks.tryRegisterOrderedPair("clean", "installDebug_launchApp")
             tasks.tryRegisterOrderedPair("installDebug", "launchDevEnv_Main")
             tasks.tryRegisterOrderedPair("clean", "installDebug_launchDevEnv_Main")
             tasks.register("easyRebuildAndLaunchApp") {
-                description = "Launches app slowly, but reliably"
+                description = "Launches slowly, but reliably"
                 group = "easy"
                 dependsOn(tasks.named("clean_installDebug_launchApp"))
             }
             tasks.register("easyRebuildAndLaunchDevEnv_Main") {
-                description = "Launches DevEnv_Main slowly, but reliably"
+                description = "Launches slowly, but reliably"
                 group = "easy"
                 dependsOn(tasks.named("clean_installDebug_launchDevEnv_Main"))
             }
