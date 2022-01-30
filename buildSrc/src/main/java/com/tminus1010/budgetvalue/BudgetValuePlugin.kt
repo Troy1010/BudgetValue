@@ -13,17 +13,16 @@ open class BudgetValuePlugin : Plugin<Project> {
         val budgetValuePluginExtension = project.extensions.create("budgetValuePluginExtension", Extension::class.java)
         project.afterEvaluate {
             tasks.register("launchApp", LaunchApp::class.java, budgetValuePluginExtension.adbAbsolutePath ?: throw AdbAbsolutePathWasNullException())
-                .configure { group = "adb" }
             tasks.register("launchDevEnv_Main", LaunchDevEnv_Main::class.java, budgetValuePluginExtension.adbAbsolutePath ?: throw AdbAbsolutePathWasNullException())
-                .configure { group = "adb" }
             tasks.register("quitApp", QuitApp::class.java, budgetValuePluginExtension.adbAbsolutePath ?: throw AdbAbsolutePathWasNullException())
-                .configure { group = "adb" }
             tasks.tryRegisterOrderedPair("installDebug", "launchApp")
+                .configure { group = "install" }
             tasks.tryRegisterOrderedPair("clean_uninstallDebug", "installDebug_launchApp")
                 .configure { group = "combo" }
             tasks.tryRegisterOrderedPair("uninstallDebug", "installDebug_launchApp")
                 .configure { group = "combo" }
             tasks.tryRegisterOrderedPair("installDebug", "launchDevEnv_Main")
+                .configure { group = "install" }
             tasks.tryRegisterOrderedPair("clean_uninstallDebug", "installDebug_launchDevEnv_Main")
                 .configure { group = "combo" }
         }
