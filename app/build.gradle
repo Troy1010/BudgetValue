@@ -1,8 +1,3 @@
-import com.tminus1010.budgetvalue.LaunchApp
-import com.tminus1010.budgetvalue.LaunchDevEnv_Main
-import com.tminus1010.budgetvalue.Quit
-import tmextensions.*
-
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
@@ -68,17 +63,6 @@ android {
 budgetValuePluginExtension {
     adbAbsolutePath = android.getAdbExecutable().absolutePath
 }
-
-tasks.register("launchApp", LaunchApp, android.getAdbExecutable().absolutePath)
-        .configure { it.group = "adb" }
-tasks.register("launchDevEnv_Main", LaunchDevEnv_Main, android.getAdbExecutable().absolutePath)
-        .configure { it.group = "adb" }
-tasks.register("quitApp", Quit, android.getAdbExecutable().absolutePath)
-        .configure { it.group = "adb" }
-TaskContainerKt.tryRegisterOrderedPair(tasks, "quitApp", "launchApp")
-        .configure { it.group = "adb" }
-TaskContainerKt.tryRegisterOrderedPair(tasks, "quitApp", "launchDevEnv_Main")
-        .configure { it.group = "adb" }
 
 dependencies {
     // # Kotlin
