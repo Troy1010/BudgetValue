@@ -16,7 +16,7 @@ open class BudgetValuePlugin : Plugin<Project> {
                 .configure { group = "adb" }
             tasks.register("launchDevEnv_Main", LaunchDevEnv_Main::class.java, budgetValuePluginExtension.adbAbsolutePath ?: throw AdbAbsolutePathWasNullException())
                 .configure { group = "adb" }
-            tasks.register("quitApp", Quit::class.java, budgetValuePluginExtension.adbAbsolutePath ?: throw AdbAbsolutePathWasNullException())
+            tasks.register("quitApp", QuitApp::class.java, budgetValuePluginExtension.adbAbsolutePath ?: throw AdbAbsolutePathWasNullException())
                 .configure { group = "adb" }
             tasks.tryRegisterOrderedPair("quitApp", "launchApp")
                 .configure { group = "adb" }
