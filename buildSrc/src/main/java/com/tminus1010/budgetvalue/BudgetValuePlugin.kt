@@ -30,11 +30,11 @@ open class BudgetValuePlugin : Plugin<Project> {
                 group = "launch"
                 dependsOn(tasks.named("installDebug_launchApp"))
             }
-            //
+            // easyRebuildAndLaunchDevEnvs, easyInstallAndLaunchDevEnvs
             listOf("DevEnv_Main", "DevEnv_UnlockedFeatures").forEach {
                 tasks.register("launch$it", LaunchDevEnv::class.java, budgetValuePluginSettings.adbAbsolutePath, it)
                 tasks.tryRegisterOrderedPair("installDebug", "launch$it")
-                tasks.tryRegisterOrderedPair("installDebugAndroidTest", "installDebug_launch$it")
+                tasks.tryRegisterOrderedPair("installDebugAndroidTest", "installDebug_launch$it") // TODO: Installs can happen simultaneously..
                 tasks.tryRegisterOrderedPair("clean", "installDebugAndroidTest_installDebug_launch$it")
                 tasks.register("easyRebuildAndLaunch$it") {
                     description = "Launches slowly, but reliably. When successful, it will throw a timeout failure.. just ignore it."
