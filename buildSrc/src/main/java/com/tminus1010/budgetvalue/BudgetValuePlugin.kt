@@ -5,16 +5,16 @@ import org.gradle.api.Project
 import tmextensions.tryRegisterOrderedPair
 
 open class BudgetValuePlugin : Plugin<Project> {
-    open class Extension {
+    open class Settings {
         var adbAbsolutePath: String? = null
     }
 
     override fun apply(project: Project) {
-        val budgetValuePluginExtension = project.extensions.create("budgetValuePluginExtension", Extension::class.java)
+        val budgetValuePluginSettings = project.extensions.create("budgetValuePluginSettings", Settings::class.java)
         project.afterEvaluate {
-            tasks.register("launchApp", LaunchApp::class.java, budgetValuePluginExtension.adbAbsolutePath ?: throw AdbAbsolutePathWasNullException())
-            tasks.register("launchDevEnv_Main", LaunchDevEnv_Main::class.java, budgetValuePluginExtension.adbAbsolutePath ?: throw AdbAbsolutePathWasNullException())
-            tasks.register("quitApp", QuitApp::class.java, budgetValuePluginExtension.adbAbsolutePath ?: throw AdbAbsolutePathWasNullException())
+            tasks.register("launchApp", LaunchApp::class.java, budgetValuePluginSettings.adbAbsolutePath ?: throw AdbAbsolutePathWasNullException())
+            tasks.register("launchDevEnv_Main", LaunchDevEnv_Main::class.java, budgetValuePluginSettings.adbAbsolutePath ?: throw AdbAbsolutePathWasNullException())
+            tasks.register("quitApp", QuitApp::class.java, budgetValuePluginSettings.adbAbsolutePath ?: throw AdbAbsolutePathWasNullException())
             tasks.tryRegisterOrderedPair("installDebug", "launchApp")
                 .configure { group = "install" }
             tasks.tryRegisterOrderedPair("clean_uninstallDebug", "installDebug_launchApp")

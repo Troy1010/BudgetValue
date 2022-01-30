@@ -60,7 +60,7 @@ android {
     }
 }
 
-budgetValuePluginExtension {
+budgetValuePluginSettings {
     adbAbsolutePath = android.getAdbExecutable().absolutePath
 }
 
