@@ -18,10 +18,12 @@ open class BudgetValuePlugin : Plugin<Project> {
                 .configure { group = "adb" }
             tasks.register("quitApp", QuitApp::class.java, budgetValuePluginExtension.adbAbsolutePath ?: throw AdbAbsolutePathWasNullException())
                 .configure { group = "adb" }
-            tasks.tryRegisterOrderedPair("quitApp", "launchApp")
-                .configure { group = "adb" }
-            tasks.tryRegisterOrderedPair("quitApp", "launchDevEnv_Main")
-                .configure { group = "adb" }
+            tasks.tryRegisterOrderedPair("installDebug", "launchApp")
+            tasks.tryRegisterOrderedPair("clean_uninstallDebug", "installDebug_launchApp")
+                .configure { group = "combo" }
+            tasks.tryRegisterOrderedPair("installDebug", "launchDevEnv_Main")
+            tasks.tryRegisterOrderedPair("clean_uninstallDebug", "installDebug_launchDevEnv_Main")
+                .configure { group = "combo" }
         }
     }
 }
