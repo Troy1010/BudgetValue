@@ -19,15 +19,19 @@ open class BudgetValuePlugin : Plugin<Project> {
             tasks.register("launchDevEnv_Main", LaunchDevEnv_Main::class.java, budgetValuePluginSettings.adbAbsolutePath)
             tasks.register("quitApp", QuitApp::class.java, budgetValuePluginSettings.adbAbsolutePath)
             tasks.tryRegisterOrderedPair("installDebug", "launchApp")
-                .configure { group = "install" }
-            tasks.tryRegisterOrderedPair("clean_uninstallDebug", "installDebug_launchApp")
-                .configure { group = "combo" }
-            tasks.tryRegisterOrderedPair("uninstallDebug", "installDebug_launchApp")
-                .configure { group = "combo" }
+            tasks.tryRegisterOrderedPair("clean", "installDebug_launchApp")
             tasks.tryRegisterOrderedPair("installDebug", "launchDevEnv_Main")
-                .configure { group = "install" }
-            tasks.tryRegisterOrderedPair("clean_uninstallDebug", "installDebug_launchDevEnv_Main")
-                .configure { group = "combo" }
+            tasks.tryRegisterOrderedPair("clean", "installDebug_launchDevEnv_Main")
+            tasks.register("easyRebuildAndLaunchApp") {
+                description = "Launches app slowly, but reliably"
+                group = "easy"
+                dependsOn(tasks.named("clean_installDebug_launchApp"))
+            }
+            tasks.register("easyRebuildAndLaunchDevEnv_Main") {
+                description = "Launches DevEnv_Main slowly, but reliably"
+                group = "easy"
+                dependsOn(tasks.named("clean_installDebug_launchDevEnv_Main"))
+            }
         }
     }
 }
