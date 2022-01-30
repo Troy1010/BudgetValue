@@ -25,9 +25,9 @@ open class BudgetValuePlugin : Plugin<Project> {
                 group = "easy"
                 dependsOn(tasks.named("clean_installDebug_launchApp"))
             }
-            tasks.register("easyInstallAndLaunchApp") {
-                description = "Launches more quickly, but less reliably"
-                group = "easy"
+            tasks.register("installAndLaunchApp") {
+                description = "Launches more quickly (if build cache is available), but less reliably"
+                group = "launch"
                 dependsOn(tasks.named("installDebug_launchApp"))
             }
             //
@@ -37,13 +37,13 @@ open class BudgetValuePlugin : Plugin<Project> {
                 tasks.tryRegisterOrderedPair("installDebugAndroidTest", "installDebug_launch$it")
                 tasks.tryRegisterOrderedPair("clean", "installDebugAndroidTest_installDebug_launch$it")
                 tasks.register("easyRebuildAndLaunch$it") {
-                    description = "Launches slowly, but reliably.\nWhen successful, it will throw a timeout failure.. just ignore it."
+                    description = "Launches slowly, but reliably. When successful, it will throw a timeout failure.. just ignore it."
                     group = "easy"
                     dependsOn(tasks.named("clean_installDebugAndroidTest_installDebug_launch$it"))
                 }
-                tasks.register("easyInstallAndLaunch$it") {
-                    description = "Launches quickly (if build cache is available), but less reliably.\nWhen successful, it will throw a timeout failure.. just ignore it."
-                    group = "easy"
+                tasks.register("installAndLaunch$it") {
+                    description = "Launches quickly (if build cache is available), but less reliably. When successful, it will throw a timeout failure.. just ignore it."
+                    group = "launch"
                     dependsOn(tasks.named("installDebugAndroidTest_installDebug_launch$it"))
                 }
             }
