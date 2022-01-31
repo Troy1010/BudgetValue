@@ -23,9 +23,9 @@ open class BudgetValuePlugin : Plugin<Project> {
                 group = "launch"
                 dependsOn(tasks.named("installDebug"), tasks.named("launchApp"))
             }
-            tasks.register("easyRebuildAndLaunchApp") {
+            tasks.register("rebuildAndLaunchApp") {
                 description = "Launches slowly, but reliably"
-                group = "easy"
+                group = "launch"
                 dependsOn(tasks.named("clean"), tasks.named("installDebug"), tasks.named("launchApp"))
             }
             // # Register launchDevEnvs
@@ -37,9 +37,9 @@ open class BudgetValuePlugin : Plugin<Project> {
                     group = "launch"
                     dependsOn(tasks.named("installDebug"), tasks.named("installDebugAndroidTest"), tasks.named("launch$it"))
                 }
-                tasks.register("easyRebuildAndLaunch$it") {
+                tasks.register("rebuildAndLaunch$it") {
                     description = "Launches slowly, but reliably. When successful, it will throw a timeout failure.. just ignore it."
-                    group = "easy"
+                    group = "launch"
                     dependsOn(tasks.named("clean"), tasks.named("installDebug"), tasks.named("installDebugAndroidTest"), tasks.named("launch$it"))
                 }
             }
