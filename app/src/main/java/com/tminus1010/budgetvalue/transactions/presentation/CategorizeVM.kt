@@ -44,7 +44,7 @@ class CategorizeVM @Inject constructor(
 
     fun userSimpleCategorize(category: Category) {
         saveTransactionInteractor.saveTransaction(
-            transactionsInteractor.mostRecentUncategorizedSpend.unbox
+            transactionsInteractor.mostRecentUncategorizedSpend2.value!!
                 .categorize(category)
         )
             .observe(disposables)
@@ -52,7 +52,7 @@ class CategorizeVM @Inject constructor(
 
     fun userReplay(replay: IReplay) {
         saveTransactionInteractor.saveTransaction(
-            replay.categorize(transactionsInteractor.mostRecentUncategorizedSpend.unbox)
+            replay.categorize(transactionsInteractor.mostRecentUncategorizedSpend2.value!!)
         )
             .observe(disposables)
     }
@@ -99,7 +99,7 @@ class CategorizeVM @Inject constructor(
         { replays, (transaction) ->
             if (transaction == null) emptyList() else
                 replays.filter { it.predicate(transaction) }
-        }!!
+        }
     val isUndoAvailable = saveTransactionInteractor.isUndoAvailable
     val isRedoAvailable = saveTransactionInteractor.isRedoAvailable
     val isTransactionAvailable: Observable<Boolean> =

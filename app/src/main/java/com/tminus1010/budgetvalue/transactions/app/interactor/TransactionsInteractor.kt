@@ -21,7 +21,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.rx3.asFlow
 import java.io.InputStream
 import java.time.LocalDate
 import java.util.concurrent.TimeUnit
@@ -91,7 +90,7 @@ class TransactionsInteractor @Inject constructor(
             .map(TransactionsAggregate::transactions)
             .map(::getBlocksFromTransactions)
     val transactionBlocks2 =
-        transactionsRepo.transactionsAggregateFlow
+        transactionsRepo.transactionsAggregate2
             .map { getBlocksFromTransactions(it.transactions) }
     @Deprecated("use spendBlocks2")
     val spendBlocks: Observable<List<TransactionBlock>> =
@@ -106,7 +105,7 @@ class TransactionsInteractor @Inject constructor(
             .map(TransactionsAggregate::spends)
             .replay(1).refCount()
     private val spends2 =
-        transactionsRepo.transactionsAggregateFlow
+        transactionsRepo.transactionsAggregate2
             .map { it.spends }
             .shareIn(GlobalScope, SharingStarted.WhileSubscribed())
     @Deprecated("use uncategorizedSpends2")
@@ -123,11 +122,7 @@ class TransactionsInteractor @Inject constructor(
             .replayNonError(1)
             .nonLazy()
     val mostRecentUncategorizedSpend2 =
-        transactionsRepo.transactionsAggregate
-            .mapBox(TransactionsAggregate::mostRecentUncategorizedSpend)
-            .replayNonError(1)
-            .nonLazy()
-            .asFlow()
-            .map { it.first }
+        transactionsRepo.transactionsAggregate2
+            .map { it.mostRecentUncategorizedSpend }
             .stateIn(GlobalScope, SharingStarted.Eagerly, null)
 }

@@ -17,15 +17,16 @@ class TransactionsRepo @Inject constructor(
     private val miscDAO: MiscDAO,
     private val categoryAmountsConverter: CategoryAmountsConverter,
 ) {
-    val transactionsAggregateFlow =
-        miscDAO.fetchTransactionsFlow()
-            .map { TransactionsAggregate(it, categoryAmountsConverter) }
-            .shareIn(GlobalScope, SharingStarted.WhileSubscribed())
-
+    @Deprecated("use transactionsAggregate2")
     val transactionsAggregate =
         miscDAO.fetchTransactions().subscribeOn(Schedulers.io())
             .map { TransactionsAggregate(it, categoryAmountsConverter) }
             .replay(1).refCount()
+
+    val transactionsAggregate2 =
+        miscDAO.fetchTransactionsFlow()
+            .map { TransactionsAggregate(it, categoryAmountsConverter) }
+            .shareIn(GlobalScope, SharingStarted.WhileSubscribed())
 
     fun tryPush(transaction: Transaction) =
         miscDAO.tryAdd(transaction.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
@@ -36,6 +37,7 @@ class TransactionsRepo @Inject constructor(
     fun delete(transaction: Transaction) =
         miscDAO.delete(transaction.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
 
+    @Deprecated("use update2")
     fun update(transaction: Transaction) =
         miscDAO.update(transaction.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
 
