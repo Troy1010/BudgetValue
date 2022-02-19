@@ -21,7 +21,7 @@ class TransactionListFrag : Fragment(R.layout.frag_transactions) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // # Bind Presentation Events
+        // # Events
         transactionsVM.navToTransaction.observe(viewLifecycleOwner) { TransactionFrag.navTo(nav, it) }
         transactionsVM.alertDialog.observe(viewLifecycleOwner) { it.show(requireContext()) }
         // # Bind Presentation State

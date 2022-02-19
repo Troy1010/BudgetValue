@@ -44,7 +44,7 @@ class ChooseCategorySubFrag : Fragment(R.layout.subfrag_choose_category) {
                 }
             }
         }
-        // # Bind Presentation Events
+        // # Events
         chooseCategoryVM.navUp.observe(this) { parentFragmentManager.popBackStack() }
     }
 }

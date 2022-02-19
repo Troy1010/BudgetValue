@@ -21,7 +21,7 @@ class UseReplayFrag : Fragment(R.layout.frag_replays) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = FragReplaysBinding.bind(view)
-        // # Bind Presentation Events
+        // # Events
         useReplayVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         // # Bind Presentation State
         vb.tmTableView.bind(useReplayVM.replays) {

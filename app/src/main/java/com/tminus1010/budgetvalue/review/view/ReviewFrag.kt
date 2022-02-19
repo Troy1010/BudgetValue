@@ -26,7 +26,7 @@ class ReviewFrag : Fragment(R.layout.frag_review) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = FragReviewBinding.bind(view)
-        // # Bind Presentation Events
+        // # Events
         reviewVM.errors.observe(viewLifecycleOwner) {
             when (it) {
                 is NoMostRecentSpendException -> logz("Swallowing error:${it.javaClass.simpleName}")

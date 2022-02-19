@@ -28,7 +28,7 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
         // # Mediation
         categorySettingsVM.originalCategoryName.easyEmit(requireArguments().getString(KEY_CATEGORY_NAME, ""))
         categorySettingsVM.isForNewCategory.easyEmit(requireArguments().getBoolean(KEY_IS_FOR_NEW_CATEGORY))
-        // # Bind Presentation Events
+        // # Events
         categorySettingsVM.errors.observe(viewLifecycleOwner) {
             when (it) {
                 is InvalidCategoryNameException -> easyToast("Invalid name")

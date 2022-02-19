@@ -40,7 +40,7 @@ class ReceiptCategorizationHostFrag : Fragment(R.layout.frag_receipt_categorizat
             //If we ever start to show an empty child fragment (b/c user pressed back button), navigate up.
             if (childFragmentManager.backStackEntryCount == 0) parentFragmentManager.popBackStack()
         }
-        // # Bind Presentation Events
+        // # Events
         receiptCategorizationVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         // # Bind Presentation State
         vb.framelayout.bind(receiptCategorizationVM.fragment) {

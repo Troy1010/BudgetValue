@@ -107,7 +107,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
             }
         }
         vb.buttonsview.bind(categorizeVM.buttons) { buttons = it }
-        // # Bind Presentation Events
+        // # Events
         categorizeVM.navToCreateFuture.observe(viewLifecycleOwner) { CreateFutureFrag.navTo(nav) }
         categorizeVM.navToSplit.observe(viewLifecycleOwner) { SplitFrag.navTo(nav, it) }
         categorizeVM.navToNewCategory.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, null, true) }
