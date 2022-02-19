@@ -27,13 +27,13 @@ class UseReplayVM @Inject constructor(
     private val toaster: Toaster,
 ) : ViewModel() {
     fun chooseReplay(replay: IReplay) {
-        replayInteractor.useReplayOnTransaction(replay, transactionsInteractor.mostRecentUncategorizedSpendFlow.value!!).subscribe()
+        replayInteractor.useReplayOnTransaction(replay, transactionsInteractor.mostRecentUncategorizedSpend2.value!!).subscribe()
         navUp.easyEmit(Unit)
     }
 
     fun chooseReplayAndApplyToAllMatching(replay: IReplay) {
         categorizeAllMatchingUncategorizedTransactions(
-            predicate = { transactionsInteractor.mostRecentUncategorizedSpendFlow.value!!.description.uppercase() in it.description.uppercase() },
+            predicate = { transactionsInteractor.mostRecentUncategorizedSpend2.value!!.description.uppercase() in it.description.uppercase() },
             categorization = {
                 when (replay) {
                     is BasicReplay -> replay.categorize(it)

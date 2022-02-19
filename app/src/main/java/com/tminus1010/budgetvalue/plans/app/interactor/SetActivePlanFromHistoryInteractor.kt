@@ -13,7 +13,7 @@ class SetActivePlanFromHistoryInteractor @Inject constructor(
     private val transactionsInteractor: TransactionsInteractor,
 ) {
     suspend fun setActivePlanFromHistory() {
-        val relevantTransactionBlocks = transactionsInteractor.spendBlocksFlow.first().filter { it.defaultAmount.isZero }
+        val relevantTransactionBlocks = transactionsInteractor.spendBlocks2.first().filter { it.defaultAmount.isZero }
         val categoryAmounts =
             relevantTransactionBlocks
                 .fold(CategoryAmounts()) { acc, v -> acc.addTogether(v.categoryAmounts) }

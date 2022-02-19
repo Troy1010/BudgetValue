@@ -2,14 +2,13 @@ package com.tminus1010.budgetvalue.transactions.data.repo
 
 import com.tminus1010.budgetvalue._core.data.MiscDAO
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
-import com.tminus1010.budgetvalue.transactions.app.TransactionsAggregate
 import com.tminus1010.budgetvalue.transactions.app.Transaction
+import com.tminus1010.budgetvalue.transactions.app.TransactionsAggregate
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
-import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -40,6 +39,9 @@ class TransactionsRepo @Inject constructor(
     fun update(transaction: Transaction) =
         miscDAO.update(transaction.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
 
+    suspend fun update2(transaction: Transaction) =
+        miscDAO.update2(transaction.toDTO(categoryAmountsConverter))
+
     fun tryPush(transactions: List<Transaction>) =
         miscDAO.tryAdd(transactions.map { it.toDTO(categoryAmountsConverter) }).subscribeOn(Schedulers.io())
 
@@ -52,4 +54,7 @@ class TransactionsRepo @Inject constructor(
     fun getTransaction(id: String) =
         miscDAO.getTransaction(id).subscribeOn(Schedulers.io())
             .map { Transaction.fromDTO(it, categoryAmountsConverter) }
+
+    suspend fun getTransaction2(id: String) =
+        Transaction.fromDTO(miscDAO.getTransaction2(id), categoryAmountsConverter)
 }

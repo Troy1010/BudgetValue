@@ -7,6 +7,7 @@ import com.tminus1010.budgetvalue._core.all.extensions.unbox
 import com.tminus1010.budgetvalue._core.framework.view.Toaster
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
+import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
 import com.tminus1010.budgetvalue.replay_or_future.domain.IReplay
@@ -20,7 +21,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
@@ -30,7 +35,8 @@ class CategorizeVM @Inject constructor(
     private val transactionsInteractor: TransactionsInteractor,
     replaysRepo: ReplaysRepo,
     categorizeAllMatchingUncategorizedTransactions: CategorizeAllMatchingUncategorizedTransactions,
-    private val toaster: Toaster
+    private val toaster: Toaster,
+    private val categoriesInteractor: CategoriesInteractor
 ) : ViewModel() {
     // # Input
     val inSelectionMode = BehaviorSubject.create<Boolean>()
@@ -59,6 +65,15 @@ class CategorizeVM @Inject constructor(
     fun userRedo() {
         saveTransactionInteractor.redo()
             .observe(disposables)
+    }
+
+    fun userCategorizeAllAsUnknown() {
+        GlobalScope.launch {
+            val categoryUnknown = categoriesInteractor.userCategoriesFlow.take(1).first().find { it.name.equals("Unknown", ignoreCase = true) }!! // TODO: Handle this error
+            saveTransactionInteractor.saveTransactions(
+                transactionsInteractor.uncategorizedSpends2.first().map { it.categorize(categoryUnknown) }
+            )
+        }
     }
 
     private lateinit var _categorySelectionVM: CategorySelectionVM
@@ -154,6 +169,13 @@ class CategorizeVM @Inject constructor(
                             )
                         })
                     .toTypedArray(),
+                if (!inSelectionMode)
+                    ButtonVMItem(
+                        title = "Categorize all as Unknown",
+                        isEnabled = isTransactionAvailable,
+                        onClick = { userCategorizeAllAsUnknown() },
+                    )
+                else null,
                 if (!inSelectionMode)
                     ButtonVMItem(
                         title = "Do Receipt Categorization",

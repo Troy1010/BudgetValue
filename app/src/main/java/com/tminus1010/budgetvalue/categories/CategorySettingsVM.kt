@@ -67,8 +67,8 @@ class CategorySettingsVM @Inject constructor(
     fun userSubmit() {
         viewModelScope.launch(CoroutineExceptionHandler { _, e -> errors.easyEmit(e) }) {
             if (categoryToPush.value.name == "" ||
-                categoryToPush.value.name.equals(CategoriesInteractor.defaultCategory.name, ignoreCase = true) ||
-                categoryToPush.value.name.equals(CategoriesInteractor.unrecognizedCategory.name, ignoreCase = true)
+                categoryToPush.value.name.equals(Category.DEFAULT.name, ignoreCase = true) ||
+                categoryToPush.value.name.equals(Category.UNRECOGNIZED.name, ignoreCase = true)
             ) throw InvalidCategoryNameException()
             if (originalCategoryName.value != "" && originalCategoryName.value != categoryToPush.value.name)
                 replaceCategoryGloballyUC.replaceCategoryGlobally(originalCategory.value!!, categoryToPush.value)

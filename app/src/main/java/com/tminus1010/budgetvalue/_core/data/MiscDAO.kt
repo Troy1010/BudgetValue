@@ -66,11 +66,18 @@ interface MiscDAO {
     @Delete
     fun delete(transaction: TransactionDTO): Completable
 
+    @Deprecated("Use update2")
     @Update
     fun update(transaction: TransactionDTO): Completable
 
+    @Update
+    suspend fun update2(transaction: TransactionDTO)
+
     @Query("select * from TransactionDTO WHERE id=:id")
     fun getTransaction(id: String): Single<TransactionDTO>
+
+    @Query("select * from TransactionDTO WHERE id=:id")
+    suspend fun getTransaction2(id: String): TransactionDTO
 
     @Query("UPDATE TransactionDTO SET categoryAmounts=:categoryAmounts WHERE id=:id")
     fun updateTransactionCategoryAmounts(id: String, categoryAmounts: Map<String, BigDecimal>): Completable

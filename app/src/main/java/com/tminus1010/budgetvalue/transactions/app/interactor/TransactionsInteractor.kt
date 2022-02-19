@@ -17,9 +17,9 @@ import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.rx3.asFlow
 import java.io.InputStream
@@ -85,32 +85,44 @@ class TransactionsInteractor @Inject constructor(
     }
 
     // # Output
-    val transactionBlocksFlow =
-        transactionsRepo.transactionsAggregateFlow
-            .map { getBlocksFromTransactions(it.transactions) }
+    @Deprecated("use transactionBlocks2")
     val transactionBlocks: Observable<List<TransactionBlock>> =
         transactionsRepo.transactionsAggregate
             .map(TransactionsAggregate::transactions)
             .map(::getBlocksFromTransactions)
+    val transactionBlocks2 =
+        transactionsRepo.transactionsAggregateFlow
+            .map { getBlocksFromTransactions(it.transactions) }
+    @Deprecated("use spendBlocks2")
     val spendBlocks: Observable<List<TransactionBlock>> =
         transactionBlocks
             .map { it.map { it.spendBlock } }
-    val spendBlocksFlow =
-        transactionBlocksFlow
+    val spendBlocks2 =
+        transactionBlocks2
             .map { it.map { it.spendBlock } }
+    @Deprecated("use spends2")
     private val spends: Observable<List<Transaction>> =
         transactionsRepo.transactionsAggregate
             .map(TransactionsAggregate::spends)
             .replay(1).refCount()
+    private val spends2 =
+        transactionsRepo.transactionsAggregateFlow
+            .map { it.spends }
+            .shareIn(GlobalScope, SharingStarted.WhileSubscribed())
+    @Deprecated("use uncategorizedSpends2")
     val uncategorizedSpends: Observable<List<Transaction>> =
         spends
             .map { it.filter { it.isUncategorized } }
+    val uncategorizedSpends2 =
+        spends2
+            .map { it.filter { it.isUncategorized } }
+    @Deprecated("use mostRecentUncategorizedSpend2")
     val mostRecentUncategorizedSpend =
         transactionsRepo.transactionsAggregate
             .mapBox(TransactionsAggregate::mostRecentUncategorizedSpend)
             .replayNonError(1)
             .nonLazy()
-    val mostRecentUncategorizedSpendFlow =
+    val mostRecentUncategorizedSpend2 =
         transactionsRepo.transactionsAggregate
             .mapBox(TransactionsAggregate::mostRecentUncategorizedSpend)
             .replayNonError(1)

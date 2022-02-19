@@ -14,4 +14,9 @@ data class Category(
     val isRequired: Boolean = false,
 ) {
     override fun toString() = name // for logs
+
+    companion object {
+        val DEFAULT = Category("Default", CategoryType.Special, AmountFormula.Value(BigDecimal.ZERO), true)
+        val UNRECOGNIZED = Category("Unrecognized", CategoryType.Special, AmountFormula.Value(BigDecimal.ZERO), true)
+    }
 }

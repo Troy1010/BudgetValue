@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue._core.domain
 
 import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
-import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
@@ -11,7 +10,7 @@ data class CategoryAmountFormulas constructor(private val map: Map<Category, Amo
     constructor(vararg categoryAmountFormulas: Pair<Category, AmountFormula>) : this(categoryAmountFormulas.associate { it.first to it.second })
 
     init {
-        if (CategoriesInteractor.defaultCategory in this.keys) error("CategoryAmountFormulas should not have defaultCategory")
+        if (Category.DEFAULT in this.keys) error("CategoryAmountFormulas should not have defaultCategory")
     }
 
     operator fun plus(map: Map<Category, AmountFormula>): CategoryAmountFormulas {
@@ -19,7 +18,7 @@ data class CategoryAmountFormulas constructor(private val map: Map<Category, Amo
     }
 
     fun fillIntoCategory(fillCategory: Category, totalAmount: BigDecimal): CategoryAmountFormulas {
-        return if (fillCategory == CategoriesInteractor.defaultCategory)
+        return if (fillCategory == Category.DEFAULT)
             this
         else
             this

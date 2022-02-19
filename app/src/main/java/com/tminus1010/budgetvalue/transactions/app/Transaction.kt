@@ -3,7 +3,6 @@ package com.tminus1010.budgetvalue.transactions.app
 
 import com.tminus1010.budgetvalue._core.all.extensions.copy
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
-import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.data.TransactionDTO
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
@@ -40,7 +39,7 @@ data class Transaction(
     }
 
     fun categorize(category: Category): Transaction {
-        if (category == CategoriesInteractor.defaultCategory) return this
+        if (category == Category.DEFAULT) return this
         return categorize(
             categoryAmounts
                 .filter { it.key != category }

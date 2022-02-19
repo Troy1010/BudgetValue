@@ -1,9 +1,10 @@
 package com.tminus1010.budgetvalue.transactions.app.interactor
 
-import com.tminus1010.budgetvalue._core.framework.source_objects.SourceArrayList
 import com.tminus1010.budgetvalue._core.domain.Redoable
-import com.tminus1010.budgetvalue.transactions.data.repo.TransactionsRepo
+import com.tminus1010.budgetvalue._core.framework.Rx
+import com.tminus1010.budgetvalue._core.framework.source_objects.SourceArrayList
 import com.tminus1010.budgetvalue.transactions.app.Transaction
+import com.tminus1010.budgetvalue.transactions.data.repo.TransactionsRepo
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
@@ -23,6 +24,16 @@ class SaveTransactionInteractor @Inject constructor(
                     undo = transactionsRepo.update(oldTransaction.copy(id = transaction.id))
                 ).let { it.redo.doOnComplete { undoQueue.add(it) } }
             }
+    }
+
+    suspend fun saveTransactions(transactions: List<Transaction>) {
+        val oldTransactions = transactions.map { transactionsRepo.getTransaction2(it.id) } // TODO: Make sure error is throw if an old transaction can't be found, or implement its removal
+        val redoable =
+            Redoable(
+                Rx.completableFromSuspend { transactions.forEach { transactionsRepo.update2(it) } },
+                Rx.completableFromSuspend { oldTransactions.forEach { transactionsRepo.update2(it) } }
+            )
+        redoable.redo.doOnComplete { undoQueue.add(redoable) }.blockingAwait()
     }
 
     fun undo(): Completable {
