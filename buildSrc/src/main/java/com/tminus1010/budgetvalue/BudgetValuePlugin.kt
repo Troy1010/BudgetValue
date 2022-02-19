@@ -18,12 +18,12 @@ open class BudgetValuePlugin : Plugin<Project> {
             // # Register launchApp
             tasks.register("launchApp", LaunchApp::class.java, budgetValuePluginSettings.adbAbsolutePath)
                 .configure { setMustRunAfter(listOf("installDebug")) }
-            tasks.register("installAndLaunchApp") {
+            tasks.register("installLaunchApp") {
                 description = "Launches more quickly (if build cache is available), but less reliably"
                 group = "budgetvalue"
                 dependsOn("installDebug", "launchApp")
             }
-            tasks.register("rebuildAndLaunchApp") {
+            tasks.register("easySlowLaunchApp") {
                 description = "Launches slowly, but reliably"
                 group = "budgetvalue"
                 dependsOn("clean", "installDebug", "launchApp")
@@ -32,12 +32,12 @@ open class BudgetValuePlugin : Plugin<Project> {
             layout.projectDirectory.dir("src/androidTest/java/com/tminus1010/budgetvalue/__devEnvs").asFileTree.filter { it.name.startsWith("DevEnv") }.map { it.name.dropLast(3) }.forEach {
                 tasks.register("launch$it", LaunchDevEnv::class.java, budgetValuePluginSettings.adbAbsolutePath, it)
                     .configure { setMustRunAfter(listOf("installDebug", "installDebugAndroidTest")) }
-                tasks.register("installAndLaunch$it") {
+                tasks.register("installLaunch$it") {
                     description = "Launches quickly (if build cache is available), but less reliably. When successful, it will throw a timeout failure.. just ignore it."
                     group = "budgetvalue"
                     dependsOn("installDebug", "installDebugAndroidTest", "launch$it")
                 }
-                tasks.register("rebuildAndLaunch$it") {
+                tasks.register("easySlowLaunch$it") {
                     description = "Launches slowly, but reliably. When successful, it will throw a timeout failure.. just ignore it."
                     group = "budgetvalue"
                     dependsOn("clean", "installDebug", "installDebugAndroidTest", "launch$it")
