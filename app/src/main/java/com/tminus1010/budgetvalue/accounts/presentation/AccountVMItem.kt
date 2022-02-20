@@ -18,7 +18,7 @@ class AccountVMItem(private val account: Account, private val accountsRepo: Acco
         accountsRepo.delete(account).subscribe()
     }
 
-    // # Presentation State
+    // # State
     val title get() = account.name
     val amount get() = account.amount.toString()
 }

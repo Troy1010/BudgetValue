@@ -21,7 +21,7 @@ class AccountsReconciliationSubFrag : Fragment(R.layout.item_tm_table_view) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = ItemTmTableViewBinding.bind(view)
-        // # Presentation State
+        // # State
         vb.tmTableView.bind(Observables.combineLatest(accountsReconciliationVM.recipeGrid, accountsReconciliationVM.dividerMap))
         { (recipeGrid, dividerMap) ->
             initialize(

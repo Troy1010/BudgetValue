@@ -25,7 +25,7 @@ class ChooseCategoryVM @Inject constructor(
         navUp.easyEmit(Unit)
     }
 
-    // # Presentation State
+    // # State
     val partialAmountToCategorize = receiptCategorizationInteractor.rememberedAmount.map { if (it.isZero) null else it.toString().toMoneyBigDecimal().toString() }
     val categoryButtonVMItems =
         categoriesInteractor.userCategories.asFlow()

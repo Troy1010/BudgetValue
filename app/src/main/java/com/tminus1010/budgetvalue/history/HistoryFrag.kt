@@ -24,7 +24,7 @@ class HistoryFrag : Fragment(R.layout.frag_history) {
         super.onViewCreated(view, savedInstanceState)
         // # Presentation Events
         historyVM.showPopupMenu.observe(viewLifecycleOwner) { (view, menuItems) -> PopupMenu(requireActivity(), view).show(menuItems) }
-        // # Presentation State
+        // # State
         vb.tmTableViewHistory.bind(Observables.combineLatest(historyVM.recipeGrid, historyVM.dividerMap)) { (recipeGrid, dividerMap) ->
             initialize(
                 recipeGrid.map { it.map { it.toViewItemRecipe(context) } },

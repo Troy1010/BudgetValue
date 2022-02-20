@@ -20,7 +20,7 @@ class TransactionBlockCompletionFrag : Fragment(R.layout.frag_transaction_block_
         super.onViewCreated(view, savedInstanceState)
         vb = FragTransactionBlockCompletionBinding.bind(view)
         vb.root.lifecycleOwner = viewLifecycleOwner
-        // # Presentation State
+        // # State
         vb.tmTableView.bind(transactionBlockCompletionVM.transactionVMItems) {
             initialize(
                 recipeGrid = it.map { it.map { it.toViewItemRecipe(context) } },

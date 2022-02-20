@@ -18,7 +18,7 @@ class TransactionsVM @Inject constructor(
     // # User Intents
     val userTryClearTransactionHistory = PublishSubject.create<Unit>()
 
-    // # Presentation State
+    // # State
     val transactionVMItems =
         transactionsRepo.transactionsAggregate
             .map { it.transactions.map(::TransactionVMItem) }

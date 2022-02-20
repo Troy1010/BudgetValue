@@ -30,7 +30,7 @@ class AccountsReconciliationVM @Inject constructor(
         GlobalScope.launch { activeReconciliationRepo.pushCategoryAmount(category, s.toMoneyBigDecimal()) }
     }
 
-    // # Presentation State
+    // # State
     val recipeGrid =
         Observable.combineLatest(categoriesInteractor.userCategories, activeReconciliationInteractor.categoryAmountsAndTotal, budgetedWithActiveReconciliationInteractor.categoryAmountsAndTotal)
         { categories, activeReconciliation, budgetedWithActiveReconciliation ->

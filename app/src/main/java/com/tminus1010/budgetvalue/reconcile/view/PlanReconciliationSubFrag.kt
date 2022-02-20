@@ -29,7 +29,7 @@ class PlanReconciliationSubFrag : Fragment(R.layout.item_tm_table_view) {
         vb = ItemTmTableViewBinding.bind(view)
         // # Mediation
         planReconciliationVM.reconciliationToDo.onNext(reconciliationToDo)
-        // # Presentation State
+        // # State
         vb.tmTableView.bind(Observables.combineLatest(planReconciliationVM.recipeGrid, planReconciliationVM.dividerMap))
         { (recipeGrid, dividerMap) ->
             initialize(

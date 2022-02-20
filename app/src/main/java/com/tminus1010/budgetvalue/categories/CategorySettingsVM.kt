@@ -83,7 +83,7 @@ class CategorySettingsVM @Inject constructor(
     val navUp = MutableSharedFlow<Unit>()
     val showDeleteConfirmationPopup = MutableSharedFlow<String>()
 
-    // # Presentation State
+    // # State
     val title = isForNewCategory.flatMapConcat { if (it) flowOf("Create a new Category") else categoryToPush.map { "Settings (${it.name})" } }
     val optionsRecipeGrid =
         categoryToPush.map { categoryToPush ->

@@ -44,7 +44,7 @@ class UseReplayVM @Inject constructor(
         navUp.easyEmit(Unit)
     }
 
-    // # Presentation State
+    // # State
     val replays =
         replaysRepo.replays
             .map { replays ->
