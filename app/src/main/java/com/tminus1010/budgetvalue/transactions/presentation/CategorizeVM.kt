@@ -3,7 +3,6 @@ package com.tminus1010.budgetvalue.transactions.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
-import com.tminus1010.budgetvalue._core.all.extensions.unbox
 import com.tminus1010.budgetvalue._core.framework.view.Toaster
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
@@ -180,7 +179,7 @@ class CategorizeVM @Inject constructor(
                     ButtonVMItem(
                         title = "Do Receipt Categorization",
                         isEnabled = isTransactionAvailable,
-                        onClick = { navToReceiptCategorization.easyEmit(transactionsInteractor.mostRecentUncategorizedSpend.value!!.first!!) },
+                        onClick = { navToReceiptCategorization.easyEmit(transactionsInteractor.mostRecentUncategorizedSpend2.value!!) },
                     )
                 else null,
                 if (!inSelectionMode)
