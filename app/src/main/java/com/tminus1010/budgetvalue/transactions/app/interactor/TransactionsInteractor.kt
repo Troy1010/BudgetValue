@@ -115,6 +115,7 @@ class TransactionsInteractor @Inject constructor(
     val uncategorizedSpends2 =
         spends2
             .map { it.filter { it.isUncategorized } }
+            .stateIn(GlobalScope, SharingStarted.Eagerly, emptyList())
     @Deprecated("use mostRecentUncategorizedSpend2")
     val mostRecentUncategorizedSpend =
         transactionsRepo.transactionsAggregate
