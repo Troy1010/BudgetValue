@@ -41,7 +41,7 @@ class ReconciliationHostVM @Inject constructor(
     // # Presentation Events
     val toast = PublishSubject.create<String>()
 
-    // # Presentation State
+    // # State
     val currentReconciliationToDo =
         reconciliationsToDoUC.mapBox { it.firstOrNull() }
     val title =

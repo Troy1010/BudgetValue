@@ -86,7 +86,7 @@ class HistoryVM @Inject constructor(
     // # Presentation Events
     val showPopupMenu = PublishSubject.create<Pair<View, List<MenuVMItem>>>()
 
-    // # Presentation State
+    // # State
     val recipeGrid =
         Observable.combineLatest(activeCategories, historyVMItems)
         { activeCategories, historyVMItems ->

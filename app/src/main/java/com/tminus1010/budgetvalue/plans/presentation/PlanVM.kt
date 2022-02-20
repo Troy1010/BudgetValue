@@ -35,7 +35,7 @@ class PlanVM @Inject constructor(
         GlobalScope.launch { setActivePlanFromHistoryInteractor.setActivePlanFromHistory() }
     }
 
-    // # Presentation State
+    // # State
     val defaultAmount =
         activePlanRepo.activePlan
             .map { it.defaultAmount.toString() }

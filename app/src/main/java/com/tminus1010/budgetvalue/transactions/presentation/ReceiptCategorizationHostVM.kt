@@ -39,7 +39,7 @@ class ReceiptCategorizationHostVM @Inject constructor(
     // # Presentation Events
     val navUp = MutableSharedFlow<Unit>()
 
-    // # Presentation State
+    // # State
     val fragment = subFragEventProvider.showFragment.onStart { emit(ChooseAmountSubFrag()) }
     val amountLeft = receiptCategorizationInteractor.amountLeftToCategorize.map { it.toString().toMoneyBigDecimal().toString() }
     val description = transaction.map { it!!.description }

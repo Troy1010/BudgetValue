@@ -92,7 +92,7 @@ class CategorizeVM @Inject constructor(
     // # Mediation
     val clearSelection = MutableSharedFlow<Unit>()
 
-    // # Presentation State
+    // # State
     val matchingReplays =
         Observable.combineLatest(replaysRepo.fetchReplays(), transactionsInteractor.mostRecentUncategorizedSpend)
         { replays, (transaction) ->

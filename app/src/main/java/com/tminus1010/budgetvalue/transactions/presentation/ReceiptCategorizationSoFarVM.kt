@@ -20,7 +20,7 @@ class ReceiptCategorizationSoFarVM @Inject constructor(
         receiptCategorizationInteractor.categoryAmounts.remove(Pair(category, amount))
     }
 
-    // # Presentation State
+    // # State
     val recipeGrid =
         receiptCategorizationInteractor.categoryAmounts.flow.map {
             listOf(

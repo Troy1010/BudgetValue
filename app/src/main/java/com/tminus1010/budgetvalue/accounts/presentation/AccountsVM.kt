@@ -20,7 +20,7 @@ class AccountsVM @Inject constructor(
     // # Events
     val navToSelectFile = PublishSubject.create<Unit>()
 
-    // # Presentation State
+    // # State
     val accountVMItemList =
         accountsRepo.accountsAggregate
             .map { AccountVMItemList(it, accountsRepo) }

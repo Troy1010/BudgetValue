@@ -15,7 +15,7 @@ class TransactionBlockCompletionVM @Inject constructor(
     private val transactionsInteractor: TransactionsInteractor,
     private val currentDatePeriodRepo: CurrentDatePeriodRepo,
 ) : ViewModel() {
-    // # Presentation State
+    // # State
     val transactionVMItems =
         transactionsInteractor.transactionBlocks
             .map {
