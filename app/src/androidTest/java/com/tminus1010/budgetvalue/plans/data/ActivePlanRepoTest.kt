@@ -15,7 +15,6 @@ import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
 import com.tminus1010.budgetvalue._core.domain.DatePeriodService
 import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import com.tminus1010.budgetvalue.plans.domain.Plan
-import com.tminus1010.tmcommonkotlin.core.logx
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

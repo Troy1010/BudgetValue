@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue._core.domain
 
 import com.tminus1010.budgetvalue.Given
-import com.tminus1010.tmcommonkotlin.core.logx
 import junit.framework.Assert.fail
 import org.junit.Test
 import java.math.BigDecimal
