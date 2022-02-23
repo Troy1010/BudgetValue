@@ -21,6 +21,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx3.asFlow
+import kotlinx.coroutines.rx3.asObservable
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
@@ -88,13 +89,15 @@ class CategorizeVM @Inject constructor(
     // # Mediation
     val clearSelection = MutableSharedFlow<Unit>()
 
-    // # State
-    val matchingReplays =
-        Observable.combineLatest(replaysRepo.fetchReplays(), transactionsInteractor.mostRecentUncategorizedSpend)
-        { replays, (transaction) ->
+    // # Internal
+    private val matchingReplays =
+        combine(replaysRepo.fetchReplays().asFlow(), transactionsInteractor.mostRecentUncategorizedSpend2)
+        { replays, transaction ->
             if (transaction == null) emptyList() else
                 replays.filter { it.predicate(transaction) }
         }
+
+    // # State
     val isUndoAvailable = saveTransactionInteractor.isUndoAvailable
     val isRedoAvailable = saveTransactionInteractor.isRedoAvailable
     val isTransactionAvailable =
@@ -114,7 +117,7 @@ class CategorizeVM @Inject constructor(
         transactionsInteractor.uncategorizedSpends2
             .map { it.size.toString() }
     val buttons =
-        Observable.combineLatest(inSelectionMode, matchingReplays)
+        Observable.combineLatest(inSelectionMode, matchingReplays.asObservable())
         { inSelectionMode, matchingReplays ->
             listOfNotNull(
                 if (inSelectionMode)
