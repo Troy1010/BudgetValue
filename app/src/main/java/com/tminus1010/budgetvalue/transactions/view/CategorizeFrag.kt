@@ -55,7 +55,6 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Mediation
-        categorizeVM.setup(categorySelectionVM)
         categorySelectionVM.inSelectionMode.subscribe(categorizeVM.inSelectionMode)
         categorySelectionVM.selectedCategories.subscribe(categorizeVM.selectedCategories)
         categorizeVM.clearSelection.observe(viewLifecycleOwner) { categorySelectionVM.clearSelection().subscribe() }

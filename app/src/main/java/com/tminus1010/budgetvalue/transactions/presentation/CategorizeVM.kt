@@ -37,10 +37,11 @@ class CategorizeVM @Inject constructor(
     private val categoriesInteractor: CategoriesInteractor,
     private val spinnerService: SpinnerService,
 ) : ViewModel() {
-    // # Input
+    // # Setup
     val inSelectionMode = BehaviorSubject.create<Boolean>()
     val selectedCategories = BehaviorSubject.create<List<Category>>()
 
+    // # User Intents
     fun userSimpleCategorize(category: Category) {
         saveTransactionInteractor.saveTransaction(
             transactionsInteractor.mostRecentUncategorizedSpend2.value!!.categorize(category)
@@ -76,11 +77,6 @@ class CategorizeVM @Inject constructor(
                 transactionsInteractor.uncategorizedSpends2.first().map { it.categorize(categoryUnknown) }
             )
         })
-    }
-
-    private lateinit var _categorySelectionVM: CategorySelectionVM
-    fun setup(categorySelectionVM: CategorySelectionVM) {
-        _categorySelectionVM = categorySelectionVM
     }
 
     // # Presentation Events
