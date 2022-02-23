@@ -43,9 +43,9 @@ class CategorizeVM @Inject constructor(
 
     fun userSimpleCategorize(category: Category) {
         saveTransactionInteractor.saveTransaction(
-            transactionsInteractor.mostRecentUncategorizedSpend2.value!!
-                .categorize(category)
+            transactionsInteractor.mostRecentUncategorizedSpend2.value!!.categorize(category)
         )
+            .let(spinnerService::decorate)
             .subscribe()
     }
 
@@ -53,6 +53,7 @@ class CategorizeVM @Inject constructor(
         saveTransactionInteractor.saveTransaction(
             replay.categorize(transactionsInteractor.mostRecentUncategorizedSpend2.value!!)
         )
+            .let(spinnerService::decorate)
             .subscribe()
     }
 
