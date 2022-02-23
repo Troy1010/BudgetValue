@@ -103,6 +103,7 @@ class CategorizeVM @Inject constructor(
     val isTransactionAvailable =
         transactionsInteractor.mostRecentUncategorizedSpend2
             .map { it != null }
+            .stateIn(GlobalScope, SharingStarted.Eagerly, false)
     val date =
         transactionsInteractor.mostRecentUncategorizedSpend2
             .map { it?.date?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")) ?: "" }

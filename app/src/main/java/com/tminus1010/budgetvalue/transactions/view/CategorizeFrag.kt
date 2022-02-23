@@ -90,7 +90,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 holder.vb.btnCategory.setOnClickListener {
                     if (categorySelectionVM.inSelectionMode.value!!)
                         selectionModeAction()
-                    else if (categorizeVM.isTransactionAvailable.value!!)
+                    else if (categorizeVM.isTransactionAvailable.value)
                         categorizeVM.userSimpleCategorize(categories[holder.adapterPosition])
                 }
                 holder.vb.btnCategory.setOnLongClickListener { selectionModeAction(); true }
