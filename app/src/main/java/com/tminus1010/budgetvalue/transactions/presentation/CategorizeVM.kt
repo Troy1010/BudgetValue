@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue.transactions.presentation
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
 import com.tminus1010.budgetvalue._core.framework.view.SpinnerService
 import com.tminus1010.budgetvalue._core.framework.view.Toaster
@@ -15,7 +14,6 @@ import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.budgetvalue.transactions.app.interactor.SaveTransactionInteractor
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.budgetvalue.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
-import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
@@ -48,26 +46,26 @@ class CategorizeVM @Inject constructor(
             transactionsInteractor.mostRecentUncategorizedSpend2.value!!
                 .categorize(category)
         )
-            .observe(disposables)
+            .subscribe()
     }
 
     fun userReplay(replay: IReplay) {
         saveTransactionInteractor.saveTransaction(
             replay.categorize(transactionsInteractor.mostRecentUncategorizedSpend2.value!!)
         )
-            .observe(disposables)
+            .subscribe()
     }
 
     fun userUndo() {
         saveTransactionInteractor.undo()
             .let(spinnerService::decorate)
-            .observe(disposables)
+            .subscribe()
     }
 
     fun userRedo() {
         saveTransactionInteractor.redo()
             .let(spinnerService::decorate)
-            .observe(disposables)
+            .subscribe()
     }
 
     fun userCategorizeAllAsUnknown() {
