@@ -29,13 +29,11 @@ import com.tminus1010.budgetvalue.reconcile.data.IsReconciliationFeatureEnabled
 import com.tminus1010.budgetvalue.replay_or_future.view.FuturesReviewFrag
 import com.tminus1010.budgetvalue.replay_or_future.view.ReplaysFrag
 import com.tminus1010.budgetvalue.transactions.view.TransactionListFrag
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -97,11 +95,7 @@ class HostActivity : AppCompatActivity() {
         // # State
         isPlanFeatureEnabledUC.observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }
         isReconciliationFeatureEnabled.observe(this) { vb.bottomNavigation.menu.findItem(R.id.reconciliationHostFrag).isVisible = it }
-        Observable.merge(
-            Observable.just(true),
-            Observable.timer(9, TimeUnit.SECONDS).map { false },
-            Completable.timer(10, TimeUnit.SECONDS).toObservable(),
-        ).repeat().observe(this) { vb.frameProgressBar.visibility = if (it) View.VISIBLE else View.GONE }
+        spinnerService.isSpinnerVisible.observe(this) { vb.frameProgressBar.visibility = if (it) View.VISIBLE else View.GONE }
     }
 
     override fun onStart() {

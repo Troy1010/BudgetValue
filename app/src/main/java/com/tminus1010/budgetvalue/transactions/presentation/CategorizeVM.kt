@@ -60,11 +60,13 @@ class CategorizeVM @Inject constructor(
 
     fun userUndo() {
         saveTransactionInteractor.undo()
+            .let(spinnerService::decorate)
             .observe(disposables)
     }
 
     fun userRedo() {
         saveTransactionInteractor.redo()
+            .let(spinnerService::decorate)
             .observe(disposables)
     }
 
