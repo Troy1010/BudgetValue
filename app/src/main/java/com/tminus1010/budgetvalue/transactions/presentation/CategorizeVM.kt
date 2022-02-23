@@ -5,7 +5,6 @@ import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
 import com.tminus1010.budgetvalue._core.framework.view.SpinnerService
 import com.tminus1010.budgetvalue._core.framework.view.Toaster
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
-import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
@@ -14,16 +13,14 @@ import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.budgetvalue.transactions.app.interactor.SaveTransactionInteractor
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.budgetvalue.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
-import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx3.asFlow
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
@@ -100,20 +97,21 @@ class CategorizeVM @Inject constructor(
         }
     val isUndoAvailable = saveTransactionInteractor.isUndoAvailable
     val isRedoAvailable = saveTransactionInteractor.isRedoAvailable
-    val isTransactionAvailable: Observable<Boolean> =
-        transactionsInteractor.mostRecentUncategorizedSpend
-            .map { it.first != null }
-    val date: Observable<String> =
-        transactionsInteractor.mostRecentUncategorizedSpend
-            .map { it.first?.date?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")) ?: "" }
-    val latestUncategorizedTransactionAmount: Observable<String> =
-        transactionsInteractor.mostRecentUncategorizedSpend
-            .map { it.first?.defaultAmount?.toString() ?: "" }
-    val latestUncategorizedTransactionDescription: Observable<String> =
-        transactionsInteractor.mostRecentUncategorizedSpend
-            .map { it.first?.description ?: "" }
+    val isTransactionAvailable =
+        transactionsInteractor.mostRecentUncategorizedSpend2
+            .map { it != null }
+    val date =
+        transactionsInteractor.mostRecentUncategorizedSpend2
+            .map { it?.date?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")) ?: "" }
+    val latestUncategorizedTransactionAmount =
+        transactionsInteractor.mostRecentUncategorizedSpend2
+            .map { it?.defaultAmount?.toString() }
+    val latestUncategorizedTransactionDescription =
+        transactionsInteractor.mostRecentUncategorizedSpend2
+            .map { it?.description }
+            .stateIn(GlobalScope, SharingStarted.Eagerly, null)
     val uncategorizedSpendsSize =
-        transactionsInteractor.uncategorizedSpends
+        transactionsInteractor.uncategorizedSpends2
             .map { it.size.toString() }
     val buttons =
         Observable.combineLatest(inSelectionMode, matchingReplays)
@@ -128,8 +126,8 @@ class CategorizeVM @Inject constructor(
                 if (inSelectionMode)
                     ButtonVMItem(
                         title = "Split",
-                        isEnabled = isTransactionAvailable,
-                        onClick = { navToSplit.easyEmit(transactionsInteractor.mostRecentUncategorizedSpend.value!!.first!!) },
+                        isEnabled2 = isTransactionAvailable,
+                        onClick = { navToSplit.easyEmit(transactionsInteractor.mostRecentUncategorizedSpend2.value!!) },
                     )
                 else null,
                 if (inSelectionMode)
@@ -145,7 +143,7 @@ class CategorizeVM @Inject constructor(
                 if (inSelectionMode)
                     ButtonVMItem(
                         title = "Categorize All Matching Descriptions As This Category",
-                        isEnabled = selectedCategories.map { it.size == 1 },
+                        isEnabled2 = combine(selectedCategories.map { it.size == 1 }.asFlow(), isTransactionAvailable) { a, b -> a && b },
                         onClick = {
                             categorizeAllMatchingUncategorizedTransactions(
                                 predicate = { latestUncategorizedTransactionDescription.value!!.uppercase() in it.description.uppercase() },
@@ -170,14 +168,14 @@ class CategorizeVM @Inject constructor(
                 if (!inSelectionMode)
                     ButtonVMItem(
                         title = "Categorize all as Unknown",
-                        isEnabled = isTransactionAvailable,
+                        isEnabled2 = isTransactionAvailable,
                         onClick = { userCategorizeAllAsUnknown() },
                     )
                 else null,
                 if (!inSelectionMode)
                     ButtonVMItem(
                         title = "Do Receipt Categorization",
-                        isEnabled = isTransactionAvailable,
+                        isEnabled2 = isTransactionAvailable,
                         onClick = { navToReceiptCategorization.easyEmit(transactionsInteractor.mostRecentUncategorizedSpend2.value!!) },
                     )
                 else null,

@@ -47,7 +47,7 @@ class ReceiptCategorizationHostVM @Inject constructor(
         MutableStateFlow(
             listOf(
                 ButtonVMItem(
-                    isEnabledFlow = currentFrag.map { it !is ReceiptCategorizationSoFarSubFrag },
+                    isEnabled2 = currentFrag.map { it !is ReceiptCategorizationSoFarSubFrag },
                     title = "Show categorization so far",
                     onClick = { userShowCategorizationSoFar() }
                 ),
