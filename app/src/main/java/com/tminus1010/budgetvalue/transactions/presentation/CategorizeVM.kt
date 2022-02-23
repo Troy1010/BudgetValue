@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.transactions.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
+import com.tminus1010.budgetvalue._core.framework.view.SpinnerService
 import com.tminus1010.budgetvalue._core.framework.view.Toaster
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
@@ -35,7 +36,8 @@ class CategorizeVM @Inject constructor(
     replaysRepo: ReplaysRepo,
     categorizeAllMatchingUncategorizedTransactions: CategorizeAllMatchingUncategorizedTransactions,
     private val toaster: Toaster,
-    private val categoriesInteractor: CategoriesInteractor
+    private val categoriesInteractor: CategoriesInteractor,
+    private val spinnerService: SpinnerService,
 ) : ViewModel() {
     // # Input
     val inSelectionMode = BehaviorSubject.create<Boolean>()
@@ -68,10 +70,12 @@ class CategorizeVM @Inject constructor(
 
     fun userCategorizeAllAsUnknown() {
         GlobalScope.launch {
+            spinnerService.asyncTaskStarted()
             val categoryUnknown = categoriesInteractor.userCategories2.take(1).first().find { it.name.equals("Unknown", ignoreCase = true) }!! // TODO: Handle this error
             saveTransactionInteractor.saveTransactions(
                 transactionsInteractor.uncategorizedSpends2.first().map { it.categorize(categoryUnknown) }
             )
+            spinnerService.asyncTaskEnded()
         }
     }
 

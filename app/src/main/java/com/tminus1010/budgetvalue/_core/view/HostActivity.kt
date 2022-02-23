@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,7 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.all.extensions.easyAlertDialog
 import com.tminus1010.budgetvalue._core.all.extensions.getString
 import com.tminus1010.budgetvalue._core.all.extensions.unCheckAllMenuItems
+import com.tminus1010.budgetvalue._core.framework.view.SpinnerService
 import com.tminus1010.budgetvalue._core.framework.view.Toaster
 import com.tminus1010.budgetvalue._core.presentation.view_model.HostVM
 import com.tminus1010.budgetvalue.accounts.presentation.AccountsVM
@@ -29,8 +31,11 @@ import com.tminus1010.budgetvalue.replay_or_future.view.ReplaysFrag
 import com.tminus1010.budgetvalue.transactions.view.TransactionListFrag
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -59,6 +64,9 @@ class HostActivity : AppCompatActivity() {
 
     @Inject
     lateinit var launchSelectFile: LaunchSelectFile
+
+    @Inject
+    lateinit var spinnerService: SpinnerService
 
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.frag_nav_host) as HostFrag }
     private val nav by lazy { findNavController(R.id.frag_nav_host) }
@@ -89,6 +97,11 @@ class HostActivity : AppCompatActivity() {
         // # State
         isPlanFeatureEnabledUC.observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }
         isReconciliationFeatureEnabled.observe(this) { vb.bottomNavigation.menu.findItem(R.id.reconciliationHostFrag).isVisible = it }
+        Observable.merge(
+            Observable.just(true),
+            Observable.timer(9, TimeUnit.SECONDS).map { false },
+            Completable.timer(10, TimeUnit.SECONDS).toObservable(),
+        ).repeat().observe(this) { vb.frameProgressBar.visibility = if (it) View.VISIBLE else View.GONE }
     }
 
     override fun onStart() {

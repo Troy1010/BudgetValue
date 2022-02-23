@@ -6,6 +6,27 @@
     android:layout_height="match_parent"
     tools:context="._core.view.HostActivity">
 
+    <FrameLayout
+        android:id="@+id/frame_progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:elevation="10dp">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.8"
+            android:background="#000" />
+
+        <ProgressBar
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
+
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/frag_nav_host"
         android:name="com.tminus1010.budgetvalue._core.view.HostFrag"
