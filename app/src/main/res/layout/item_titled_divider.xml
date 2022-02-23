@@ -4,9 +4,9 @@
     android:id="@+id/textview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="left"
-    android:textStyle="bold"
-    android:paddingHorizontal="5dp"
-    tools:text="Header"
     android:background="?colorPrimary"
-    android:textColor="@color/colorOnLight" />
+    android:gravity="start"
+    android:paddingHorizontal="5dp"
+    android:textColor="@color/colorOnLight"
+    android:textStyle="bold"
+    tools:text="Header" />

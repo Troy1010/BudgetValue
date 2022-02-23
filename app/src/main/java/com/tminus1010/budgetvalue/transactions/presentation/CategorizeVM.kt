@@ -1,8 +1,8 @@
 package com.tminus1010.budgetvalue.transactions.presentation
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
+import com.tminus1010.budgetvalue._core.framework.view.SpinnerService
 import com.tminus1010.budgetvalue._core.framework.view.Toaster
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
@@ -14,7 +14,6 @@ import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.budgetvalue.transactions.app.interactor.SaveTransactionInteractor
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.budgetvalue.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
-import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
@@ -35,49 +34,49 @@ class CategorizeVM @Inject constructor(
     replaysRepo: ReplaysRepo,
     categorizeAllMatchingUncategorizedTransactions: CategorizeAllMatchingUncategorizedTransactions,
     private val toaster: Toaster,
-    private val categoriesInteractor: CategoriesInteractor
+    private val categoriesInteractor: CategoriesInteractor,
+    private val spinnerService: SpinnerService,
 ) : ViewModel() {
-    // # Input
+    // # Setup
     val inSelectionMode = BehaviorSubject.create<Boolean>()
     val selectedCategories = BehaviorSubject.create<List<Category>>()
 
+    // # User Intents
     fun userSimpleCategorize(category: Category) {
         saveTransactionInteractor.saveTransaction(
-            transactionsInteractor.mostRecentUncategorizedSpend2.value!!
-                .categorize(category)
+            transactionsInteractor.mostRecentUncategorizedSpend2.value!!.categorize(category)
         )
-            .observe(disposables)
+            .let(spinnerService::decorate)
+            .subscribe()
     }
 
     fun userReplay(replay: IReplay) {
         saveTransactionInteractor.saveTransaction(
             replay.categorize(transactionsInteractor.mostRecentUncategorizedSpend2.value!!)
         )
-            .observe(disposables)
+            .let(spinnerService::decorate)
+            .subscribe()
     }
 
     fun userUndo() {
         saveTransactionInteractor.undo()
-            .observe(disposables)
+            .let(spinnerService::decorate)
+            .subscribe()
     }
 
     fun userRedo() {
         saveTransactionInteractor.redo()
-            .observe(disposables)
+            .let(spinnerService::decorate)
+            .subscribe()
     }
 
     fun userCategorizeAllAsUnknown() {
-        GlobalScope.launch {
+        GlobalScope.launch(block = spinnerService.decorate {
             val categoryUnknown = categoriesInteractor.userCategories2.take(1).first().find { it.name.equals("Unknown", ignoreCase = true) }!! // TODO: Handle this error
             saveTransactionInteractor.saveTransactions(
                 transactionsInteractor.uncategorizedSpends2.first().map { it.categorize(categoryUnknown) }
             )
-        }
-    }
-
-    private lateinit var _categorySelectionVM: CategorySelectionVM
-    fun setup(categorySelectionVM: CategorySelectionVM) {
-        _categorySelectionVM = categorySelectionVM
+        })
     }
 
     // # Presentation Events
