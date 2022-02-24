@@ -205,7 +205,7 @@ class CategorizeVM @Inject constructor(
                 else null,
                 if (!inSelectionMode)
                     ButtonVMItem(
-                        title = "Make New Category",
+                        title = "Create New Category",
                         onClick = { navToNewCategory.easyEmit(Unit) }
                     )
                 else null,

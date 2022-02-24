@@ -109,7 +109,7 @@ class CreateFutureVM @Inject constructor(
     val searchTypeHeader = "Search Type"
     val searchType =
         userSetSearchType
-            .startWithItem(SearchType.TOTAL)!!
+            .startWithItem(SearchType.DESCRIPTION)
             .cold()
     val searchDescriptionHeader = "Description"
     val searchDescription =
