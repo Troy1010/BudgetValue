@@ -6,12 +6,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.framework.view.recipe_factories.itemHeaderRF
-import com.tminus1010.budgetvalue._core.framework.view.recipe_factories.itemTextViewRB
 import com.tminus1010.budgetvalue._core.framework.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragFuturesReviewBinding
-import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture
-import com.tminus1010.budgetvalue.replay_or_future.domain.TotalFuture
 import com.tminus1010.budgetvalue.replay_or_future.presentation.FuturesReviewVM
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,28 +19,9 @@ class FuturesReviewFrag : Fragment(R.layout.frag_futures_review) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        vb.tmTableViewFutures.bind(futuresReviewVM.futures) {
+        vb.tmTableViewFutures.bind(futuresReviewVM.recipeGrid) {
             initialize(
-                listOf(
-                    listOf(
-                        itemHeaderRF().create(futuresReviewVM.nameHeader),
-                        itemHeaderRF().create(futuresReviewVM.terminationStatusHeader),
-                        itemHeaderRF().create(futuresReviewVM.searchByHeader),
-                    ),
-                    *it.map {
-                        listOf(
-                            itemTextViewRB().create(it.name),
-                            itemTextViewRB().style(10).create(it.terminationStatus.displayStr),
-                            itemTextViewRB().create(
-                                when (it) {
-                                    is BasicFuture -> it.searchText.take(10)
-                                    is TotalFuture -> it.searchTotal.toString()
-                                    else -> error("Unhandled IFuture:$it")
-                                }
-                            )
-                        )
-                    }.toTypedArray()
-                ),
+                recipeGrid = it.map { it.map { it.toViewItemRecipe(requireContext()) } },
                 shouldFitItemWidthsInsideTable = true,
                 rowFreezeCount = 1,
             )
