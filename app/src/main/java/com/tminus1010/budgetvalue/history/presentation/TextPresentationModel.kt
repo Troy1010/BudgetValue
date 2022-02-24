@@ -5,10 +5,20 @@ import com.tminus1010.budgetvalue._core.framework.view.tmTableView3.IViewItemRec
 import com.tminus1010.budgetvalue._core.framework.view.tmTableView3.ViewItemRecipe3__
 import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe
 import com.tminus1010.budgetvalue.databinding.ItemTextViewBinding
+import com.tminus1010.tmcommonkotlin.view.extensions.toPX
 
-class BasicTextPresentationModel(val text: String?) : IHasToViewItemRecipe {
+data class TextPresentationModel(
+    val text: String?,
+    val style: Style = Style.ONE,
+) : IHasToViewItemRecipe {
+    enum class Style { ONE, TWO }
+
     override fun toViewItemRecipe(context: Context): IViewItemRecipe3 {
         return ViewItemRecipe3__(context, ItemTextViewBinding::inflate) { vb ->
+            if (style == Style.TWO) {
+                vb.textview.setPadding(10.toPX(context), 0, 10.toPX(context), 0)
+                vb.textview.requestLayout()
+            }
             vb.textview.text = text
         }
     }

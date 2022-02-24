@@ -12,7 +12,7 @@ import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue.budgeted.BudgetedInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.history.presentation.BasicHeaderWithSubtitlePresentationModel
-import com.tminus1010.budgetvalue.history.presentation.BasicTextPresentationModel
+import com.tminus1010.budgetvalue.history.presentation.TextPresentationModel
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
@@ -92,18 +92,18 @@ class HistoryVM @Inject constructor(
         { activeCategories, historyVMItems ->
             listOf(
                 listOf(
-                    BasicTextPresentationModel("Categories"),
-                    BasicTextPresentationModel("Default"),
+                    TextPresentationModel("Categories"),
+                    TextPresentationModel("Default"),
                     *activeCategories.map {
-                        BasicTextPresentationModel(it.name)
+                        TextPresentationModel(it.name)
                     }.toTypedArray()
                 ),
                 *historyVMItems.map { historyVMItem ->
                     listOf(
                         BasicHeaderWithSubtitlePresentationModel(historyVMItem.title, historyVMItem.subTitle.value?.first ?: "") { showPopupMenu.onNext(Pair(it, historyVMItem.menuVMItems)) }, // TODO("Duct-tape solution to non-resizing frozen row")
-                        BasicTextPresentationModel(historyVMItem.defaultAmount),
+                        TextPresentationModel(historyVMItem.defaultAmount),
                         *historyVMItem.amountStrings(activeCategories).map {
-                            BasicTextPresentationModel(it)
+                            TextPresentationModel(it)
                         }.toTypedArray()
                     )
                 }.toTypedArray()

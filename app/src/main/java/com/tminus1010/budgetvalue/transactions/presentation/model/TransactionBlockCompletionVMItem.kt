@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.transactions.presentation.model
 import com.tminus1010.budgetvalue._core.data.repo.CurrentDatePeriodRepo
 import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe
 import com.tminus1010.budgetvalue.history.HistoryVMItem
-import com.tminus1010.budgetvalue.history.presentation.BasicTextPresentationModel
+import com.tminus1010.budgetvalue.history.presentation.TextPresentationModel
 import com.tminus1010.budgetvalue.transactions.app.TransactionBlock
 
 class TransactionBlockCompletionVMItem(transactionBlock: TransactionBlock, currentDatePeriodRepo: CurrentDatePeriodRepo) {
@@ -13,7 +13,7 @@ class TransactionBlockCompletionVMItem(transactionBlock: TransactionBlock, curre
     fun toPresentationModels(): List<IHasToViewItemRecipe> {
         return listOf(
             ObservableTextPresentationModel(transactionTitle),
-            BasicTextPresentationModel("${(transactionCompletionPercentage*100).toInt()}%"),
+            TextPresentationModel("${(transactionCompletionPercentage*100).toInt()}%"),
         )
     }
 }
