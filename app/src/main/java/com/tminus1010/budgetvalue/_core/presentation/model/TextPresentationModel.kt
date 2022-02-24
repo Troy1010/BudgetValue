@@ -13,6 +13,7 @@ data class TextPresentationModel(
     val text: String? = null,
     val onClick: (() -> Unit)? = null,
     val onLongClick: (() -> Unit)? = null,
+    val menuPresentationModel: MenuPresentationModel? = null,
 ) : IHasToViewItemRecipe {
     enum class Style { ONE, TWO, HEADER }
 
@@ -22,6 +23,7 @@ data class TextPresentationModel(
                 vb.root.text = text
                 onClick?.also { onClick -> vb.root.setOnClickListener { onClick() } }
                 onLongClick?.also { onLongClick -> vb.root.setOnLongClickListener { onLongClick(); true } }
+                menuPresentationModel?.bind(vb.root)
             }
         else
             ViewItemRecipe3__(context, ItemTextViewBinding::inflate) { vb ->
@@ -32,6 +34,7 @@ data class TextPresentationModel(
                 vb.root.text = text
                 onClick?.also { onClick -> vb.root.setOnClickListener { onClick() } }
                 onLongClick?.also { onLongClick -> vb.root.setOnLongClickListener { onLongClick(); true } }
+                menuPresentationModel?.bind(vb.root)
             }
     }
 }
