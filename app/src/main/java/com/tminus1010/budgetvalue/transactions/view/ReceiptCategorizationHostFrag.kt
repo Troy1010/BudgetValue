@@ -42,7 +42,7 @@ class ReceiptCategorizationHostFrag : Fragment(R.layout.frag_receipt_categorizat
         }
         // # Events
         receiptCategorizationVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
-        // # Bind Presentation State
+        // # State
         vb.framelayout.bind(receiptCategorizationVM.fragment) {
             childFragmentManager.beginTransaction()
                 .replace(id, it)

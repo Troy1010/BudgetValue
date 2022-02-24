@@ -28,8 +28,9 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //
+        // # Setup
         createFutureVM.setup(categorySelectionVM) { nav.getBackStackEntry(R.id.categorizeNestedGraph).viewModelStore.remove<CreateFutureVM>() }
+        // # Events
         createFutureVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         createFutureVM.navTo.observe(viewLifecycleOwner) { it(nav) }
         // # TMTableView OtherUserInput

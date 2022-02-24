@@ -24,7 +24,7 @@ class TransactionListFrag : Fragment(R.layout.frag_transactions) {
         // # Events
         transactionsVM.navToTransaction.observe(viewLifecycleOwner) { TransactionFrag.navTo(nav, it) }
         transactionsVM.alertDialog.observe(viewLifecycleOwner) { it.show(requireContext()) }
-        // # Bind Presentation State
+        // # State
         vb.buttonsview.buttons = transactionsVM.buttons
         vb.tmTableView.bind(transactionsVM.transactionVMItems) {
             initialize(

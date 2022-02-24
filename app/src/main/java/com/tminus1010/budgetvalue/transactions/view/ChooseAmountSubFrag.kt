@@ -26,7 +26,7 @@ class ChooseAmountSubFrag : Fragment(R.layout.subfrag_choose_amount) {
             shouldFitItemWidthsInsideTable = true,
         )
         vb.moneyEditText.run { chooseAmountVM.amountMenuPresentationModel.bind(this) }
-        // # Bind Presentation State
+        // # State
         vb.moneyEditText.bind(chooseAmountVM.amount) { setText(it) }
         // # Bind User Intents
         vb.moneyEditText.onDone { chooseAmountVM.userSetAmount.easyEmit(it) }

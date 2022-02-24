@@ -23,7 +23,7 @@ class UseReplayFrag : Fragment(R.layout.frag_replays) {
         vb = FragReplaysBinding.bind(view)
         // # Events
         useReplayVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
-        // # Bind Presentation State
+        // # State
         vb.tmTableView.bind(useReplayVM.replays) {
             initialize(
                 recipeGrid = it.map { listOf(it.toViewItemRecipe(requireContext())) },

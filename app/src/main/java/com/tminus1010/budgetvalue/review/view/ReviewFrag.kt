@@ -35,7 +35,7 @@ class ReviewFrag : Fragment(R.layout.frag_review) {
                 else -> easyToast("An error occurred").run { logz("error:", it) }
             }
         }
-        // # Bind Presentation State
+        // # State
         vb.pieChart1.bind(reviewVM.pieChartVMItem)
         reviewVM.selectableDurationSpinnerVMItem.bind(vb.spinnerDuration)
         reviewVM.usePeriodTypeSpinnerVMItem.bind(vb.spinnerUsePeriodType)

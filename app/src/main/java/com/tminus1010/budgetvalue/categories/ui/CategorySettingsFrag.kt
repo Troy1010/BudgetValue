@@ -43,7 +43,7 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
                 .setNegativeButton("No") { _, _ -> }
                 .show()
         }
-        // # Bind Presentation State
+        // # State
         vb.tvTitle.bind(categorySettingsVM.title) { text = it }
         vb.buttonsview.bind(categorySettingsVM.buttons) { buttons = it }
         vb.tmTableView.bind(categorySettingsVM.optionsRecipeGrid) {

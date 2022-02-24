@@ -17,7 +17,7 @@ class ReceiptCategorizationSoFarSubFrag : Fragment(R.layout.subfrag_receipt_cate
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = SubfragReceiptCategorizationSoFarBinding.bind(view)
-        // # Bind Presentation State
+        // # State
         vb.tmTableView.bind(receiptCategorizationSoFarVM.recipeGrid) { recipeGrid ->
             initialize(
                 recipeGrid = recipeGrid.map { recipeList -> recipeList.map { it.toViewItemRecipe(context) } },
