@@ -13,7 +13,7 @@ class TransactionBlockCompletionVMItem(transactionBlock: TransactionBlock, curre
     fun toPresentationModels(): List<IHasToViewItemRecipe> {
         return listOf(
             ObservableTextPresentationModel(transactionTitle),
-            TextPresentationModel("${(transactionCompletionPercentage*100).toInt()}%"),
+            TextPresentationModel(text = "${(transactionCompletionPercentage*100).toInt()}%"),
         )
     }
 }

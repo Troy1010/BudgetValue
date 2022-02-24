@@ -58,7 +58,7 @@ class ReceiptCategorizationHostFrag : Fragment(R.layout.frag_receipt_categorizat
         private const val KEY1 = "KEY1"
         fun navTo(nav: NavController, transaction: Transaction, categoryAmountsConverter: CategoryAmountsConverter) {
             nav.navigate(
-                R.id.receiptCategorizationFrag,
+                R.id.receiptCategorizationHostFrag,
                 Bundle().apply {
                     putString(KEY1, moshi.toJson(transaction.toDTO(categoryAmountsConverter)))
                 },

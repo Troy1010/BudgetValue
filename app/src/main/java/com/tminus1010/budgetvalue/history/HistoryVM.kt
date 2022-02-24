@@ -92,18 +92,18 @@ class HistoryVM @Inject constructor(
         { activeCategories, historyVMItems ->
             listOf(
                 listOf(
-                    TextPresentationModel("Categories"),
-                    TextPresentationModel("Default"),
+                    TextPresentationModel(text = "Categories"),
+                    TextPresentationModel(text = "Default"),
                     *activeCategories.map {
-                        TextPresentationModel(it.name)
+                        TextPresentationModel(text = it.name)
                     }.toTypedArray()
                 ),
                 *historyVMItems.map { historyVMItem ->
                     listOf(
                         BasicHeaderWithSubtitlePresentationModel(historyVMItem.title, historyVMItem.subTitle.value?.first ?: "") { showPopupMenu.onNext(Pair(it, historyVMItem.menuVMItems)) }, // TODO("Duct-tape solution to non-resizing frozen row")
-                        TextPresentationModel(historyVMItem.defaultAmount),
+                        TextPresentationModel(text = historyVMItem.defaultAmount),
                         *historyVMItem.amountStrings(activeCategories).map {
-                            TextPresentationModel(it)
+                            TextPresentationModel(text = it)
                         }.toTypedArray()
                     )
                 }.toTypedArray()

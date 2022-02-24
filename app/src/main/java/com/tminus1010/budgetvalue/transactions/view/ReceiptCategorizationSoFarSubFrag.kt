@@ -13,7 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ReceiptCategorizationSoFarSubFrag : Fragment(R.layout.subfrag_receipt_categorization_so_far) {
     lateinit var vb: SubfragReceiptCategorizationSoFarBinding
-    val receiptCategorizationSoFarVM by viewModels<ReceiptCategorizationSoFarVM>() // Make a ChooseCategoryVM
+    val receiptCategorizationSoFarVM by viewModels<ReceiptCategorizationSoFarVM>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = SubfragReceiptCategorizationSoFarBinding.bind(view)

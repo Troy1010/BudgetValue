@@ -18,21 +18,21 @@ class FuturesReviewVM @Inject constructor(
             .map {
                 listOf(
                     listOf(
-                        TextPresentationModel("Name", TextPresentationModel.Style.HEADER),
-                        TextPresentationModel("Status", TextPresentationModel.Style.HEADER),
-                        TextPresentationModel("Search by", TextPresentationModel.Style.HEADER),
+                        TextPresentationModel(TextPresentationModel.Style.HEADER, "Name"),
+                        TextPresentationModel(TextPresentationModel.Style.HEADER, "Status"),
+                        TextPresentationModel(TextPresentationModel.Style.HEADER, "Search by"),
                     ),
                     *it.map {
                         listOf(
-                            TextPresentationModel(it.name, TextPresentationModel.Style.TWO),
-                            TextPresentationModel(it.terminationStatus.displayStr, TextPresentationModel.Style.TWO),
+                            TextPresentationModel(TextPresentationModel.Style.TWO, it.name),
+                            TextPresentationModel(TextPresentationModel.Style.TWO, it.terminationStatus.displayStr),
                             TextPresentationModel(
+                                TextPresentationModel.Style.TWO,
                                 when (it) {
                                     is BasicFuture -> it.searchText.take(10)
                                     is TotalFuture -> it.searchTotal.toString()
                                     else -> error("Unhandled IFuture:$it")
                                 },
-                                TextPresentationModel.Style.TWO
                             ),
                         )
                     }.toTypedArray()
