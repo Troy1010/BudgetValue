@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.transactions.presentation.model
 import com.tminus1010.budgetvalue._core.data.repo.CurrentDatePeriodRepo
 import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe
 import com.tminus1010.budgetvalue.history.HistoryVMItem
-import com.tminus1010.budgetvalue.history.presentation.TextPresentationModel
+import com.tminus1010.budgetvalue._core.presentation.model.TextPresentationModel
 import com.tminus1010.budgetvalue.transactions.app.TransactionBlock
 
 class TransactionBlockCompletionVMItem(transactionBlock: TransactionBlock, currentDatePeriodRepo: CurrentDatePeriodRepo) {

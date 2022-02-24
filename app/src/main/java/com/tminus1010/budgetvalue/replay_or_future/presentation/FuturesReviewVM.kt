@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.replay_or_future.presentation
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.history.presentation.TextPresentationModel
+import com.tminus1010.budgetvalue._core.presentation.model.TextPresentationModel
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture
 import com.tminus1010.budgetvalue.replay_or_future.domain.TotalFuture

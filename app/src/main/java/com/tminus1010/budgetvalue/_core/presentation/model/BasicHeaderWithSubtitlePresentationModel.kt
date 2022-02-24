@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.history.presentation
+package com.tminus1010.budgetvalue._core.presentation.model
 
 import android.content.Context
 import android.view.View

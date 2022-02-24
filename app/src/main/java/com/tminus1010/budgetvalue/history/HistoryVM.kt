@@ -11,8 +11,8 @@ import com.tminus1010.budgetvalue._core.framework.Rx
 import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue.budgeted.BudgetedInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.history.presentation.BasicHeaderWithSubtitlePresentationModel
-import com.tminus1010.budgetvalue.history.presentation.TextPresentationModel
+import com.tminus1010.budgetvalue._core.presentation.model.BasicHeaderWithSubtitlePresentationModel
+import com.tminus1010.budgetvalue._core.presentation.model.TextPresentationModel
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor

@@ -13,7 +13,7 @@ class TextVMItem(
     val text1: String? = null,
     val text2: Observable<Box<String?>>? = null,
     val onClick: (() -> Unit)? = null,
-    val menuPresentationModel: MenuPresentationModel? = null
+    val menuPresentationModel: MenuPresentationModel? = null,
 ) : IHasToViewItemRecipe {
     override fun toViewItemRecipe(context: Context): IViewItemRecipe3 {
         return ViewItemRecipe3__(context, ItemTextViewBinding::inflate) { vb ->
