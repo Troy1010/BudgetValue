@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue._core.presentation.model
 
 import android.content.Context
+import com.tminus1010.budgetvalue._core.all.extensions.getColorByAttr
 import com.tminus1010.budgetvalue._core.framework.view.tmTableView3.IViewItemRecipe3
 import com.tminus1010.budgetvalue._core.framework.view.tmTableView3.ViewItemRecipe3__
 import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe
@@ -14,6 +15,7 @@ class TextVMItem(
     val text2: Observable<Box<String?>>? = null,
     val onClick: (() -> Unit)? = null,
     val menuPresentationModel: MenuPresentationModel? = null,
+    val backgroundColor: Int? = null,
 ) : IHasToViewItemRecipe {
     override fun toViewItemRecipe(context: Context): IViewItemRecipe3 {
         return ViewItemRecipe3__(context, ItemTextViewBinding::inflate) { vb ->
@@ -21,6 +23,7 @@ class TextVMItem(
             text2?.also { vb.textview.bind(text2) { text = it.first } }
             vb.textview.setOnClickListener { onClick?.invoke() }
             vb.textview.run { menuPresentationModel?.bind(this) }
+            backgroundColor?.also { vb.root.setBackgroundColor(context.theme.getColorByAttr(backgroundColor)) }
         }
     }
 }
