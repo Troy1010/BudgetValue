@@ -8,6 +8,7 @@ import com.tminus1010.budgetvalue.databinding.ItemHeaderBinding
 import com.tminus1010.budgetvalue.databinding.ItemTextViewBinding
 import com.tminus1010.tmcommonkotlin.view.extensions.toPX
 
+// TODO: add functionality to TextVMItem, and use that instead. Figure out how it can be most easily unit-tested
 data class TextPresentationModel(
     val style: Style = Style.ONE,
     val text: String? = null,
