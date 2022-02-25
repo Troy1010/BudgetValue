@@ -47,7 +47,7 @@ abstract class CategoryAmountFormulaVMItemsBaseVM : ViewModel() {
         userCategoryIsPercentage[category] = isPercentage
     }
 
-    protected val userSetFillCategory = BehaviorSubject.create<Box<Category?>>()!!
+    protected val userSetFillCategory = BehaviorSubject.create<Box<Category?>>()
     fun userSetFillCategory(categoryName: String) {
         userSetFillCategory.onNext(Box(categoriesInteractor.parseCategory(categoryName)))
     }
