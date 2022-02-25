@@ -21,6 +21,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.ui.CategorySettingsFrag
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
+import com.tminus1010.budgetvalue.replay_or_future.view.CreateFuture2Frag
 import com.tminus1010.budgetvalue.replay_or_future.view.CreateFutureFrag
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.budgetvalue.transactions.presentation.CategorizeVM
@@ -108,6 +109,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         vb.buttonsview.bind(categorizeVM.buttons) { buttons = it }
         // # Events
         categorizeVM.navToCreateFuture.observe(viewLifecycleOwner) { CreateFutureFrag.navTo(nav) }
+        categorizeVM.navToCreateFuture2.observe(viewLifecycleOwner) { CreateFuture2Frag.navTo(nav) }
         categorizeVM.navToSplit.observe(viewLifecycleOwner) { SplitFrag.navTo(nav, it) }
         categorizeVM.navToNewCategory.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, null, true) }
         categorizeVM.navToCategorySettings.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, it.name, false) }

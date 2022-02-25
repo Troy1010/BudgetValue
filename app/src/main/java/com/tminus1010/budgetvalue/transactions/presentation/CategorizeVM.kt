@@ -2,6 +2,7 @@ package com.tminus1010.budgetvalue.transactions.presentation
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
+import com.tminus1010.budgetvalue._core.all.extensions.onNext
 import com.tminus1010.budgetvalue._core.framework.view.SpinnerService
 import com.tminus1010.budgetvalue._core.framework.view.Toaster
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
@@ -77,8 +78,13 @@ class CategorizeVM @Inject constructor(
         })
     }
 
+    fun userTryNavToCreateFuture2() {
+        navToCreateFuture2.onNext()
+    }
+
     // # Presentation Events
     val navToCreateFuture = MutableSharedFlow<Unit>()
+    val navToCreateFuture2 = MutableSharedFlow<Unit>()
     val navToSplit = MutableSharedFlow<Transaction>()
     val navToCategorySettings = MutableSharedFlow<Category>()
     val navToNewCategory = MutableSharedFlow<Unit>()
@@ -169,6 +175,13 @@ class CategorizeVM @Inject constructor(
                             )
                         })
                     .toTypedArray(),
+                if (!inSelectionMode)
+                    ButtonVMItem(
+                        title = "Create Future",
+                        isEnabled2 = isTransactionAvailable,
+                        onClick = { userTryNavToCreateFuture2() },
+                    )
+                else null,
                 if (!inSelectionMode)
                     ButtonVMItem(
                         title = "Categorize all as Unknown",

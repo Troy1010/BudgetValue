@@ -166,4 +166,9 @@
         android:name="com.tminus1010.budgetvalue.transactions.view.TransactionBlockCompletionFrag"
         android:label="TransactionBlockCompletionFrag"
         tools:layout="@layout/frag_transaction_block_completion" />
+    <fragment
+        android:id="@+id/createFuture2Frag"
+        android:name="com.tminus1010.budgetvalue.replay_or_future.view.CreateFuture2Frag"
+        android:label="CreateFuture2Frag"
+        tools:layout="@layout/frag_create_future_2" />
 </navigation>
