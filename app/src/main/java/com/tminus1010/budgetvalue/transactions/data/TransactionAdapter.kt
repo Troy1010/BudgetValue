@@ -25,7 +25,7 @@ class TransactionAdapter @Inject constructor() {
      */
     private fun parseToTransaction(row: Iterable<String>): Transaction {
         return Transaction(
-            date = row.find { Regex("""^[0-9]{13}${'$'}""").matches(it) }!!
+            date = (row.find { Regex("""^[0-9]{13}${'$'}""").matches(it) } ?: error("Could not find date"))
                 .let { LocalDate.parse(it.take(8), dateTimeFormatter1) },
             description = row.maxByOrNull { Regex("""[A-z]""").findAll(it).count() }!!,
             amount = row.find { Regex("""^(-?)([0-9]{0,3},)*[0-9]{1,3}(\.[0-9]*)?${'$'}""").matches(it) }
