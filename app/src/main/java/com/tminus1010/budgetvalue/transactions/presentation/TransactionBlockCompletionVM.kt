@@ -21,8 +21,8 @@ class TransactionBlockCompletionVM @Inject constructor(
             .map {
                 listOf(
                     listOf(
-                        TextPresentationModel(text = "Transaction Block"),
-                        TextPresentationModel(text = "Completion %"),
+                        TextPresentationModel(text1 = "Transaction Block"),
+                        TextPresentationModel(text1 = "Completion %"),
                     ),
                     *it.map { TransactionBlockCompletionVMItem(it, currentDatePeriodRepo).toPresentationModels() }.toTypedArray()
                 )

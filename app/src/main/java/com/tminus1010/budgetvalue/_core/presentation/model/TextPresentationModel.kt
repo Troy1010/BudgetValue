@@ -11,7 +11,7 @@ import com.tminus1010.tmcommonkotlin.view.extensions.toPX
 // TODO: add functionality to TextVMItem, and use that instead. Figure out how it can be most easily unit-tested
 data class TextPresentationModel(
     val style: Style = Style.ONE,
-    val text: String? = null,
+    val text1: String? = null,
     val onClick: (() -> Unit)? = null,
     val onLongClick: (() -> Unit)? = null,
     val menuPresentationModel: MenuPresentationModel? = null,
@@ -21,7 +21,7 @@ data class TextPresentationModel(
     override fun toViewItemRecipe(context: Context): IViewItemRecipe3 {
         return if (style == Style.HEADER)
             ViewItemRecipe3__(context, ItemHeaderBinding::inflate) { vb ->
-                vb.root.text = text
+                vb.root.text = text1
                 onClick?.also { onClick -> vb.root.setOnClickListener { onClick() } }
                 onLongClick?.also { onLongClick -> vb.root.setOnLongClickListener { onLongClick(); true } }
                 menuPresentationModel?.bind(vb.root)
@@ -32,7 +32,7 @@ data class TextPresentationModel(
                     vb.root.setPadding(10.toPX(context), 0, 10.toPX(context), 0)
                     vb.root.requestLayout()
                 }
-                vb.root.text = text
+                vb.root.text = text1
                 onClick?.also { onClick -> vb.root.setOnClickListener { onClick() } }
                 onLongClick?.also { onLongClick -> vb.root.setOnLongClickListener { onLongClick(); true } }
                 menuPresentationModel?.bind(vb.root)
