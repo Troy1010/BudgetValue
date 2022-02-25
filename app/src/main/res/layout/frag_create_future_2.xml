@@ -6,12 +6,18 @@
     android:layout_height="match_parent">
 
     <com.tminus1010.budgetvalue._core.framework.view.tmTableView3.TMTableView3
+        android:id="@+id/tmTableViewOtherInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.tminus1010.budgetvalue._core.framework.view.tmTableView3.TMTableView3
         android:id="@+id/tmTableViewCategoryAmounts"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
         app:layout_constraintBottom_toTopOf="@id/buttonsview"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/tmTableViewOtherInput" />
 
     <com.tminus1010.budgetvalue._core.framework.view.ButtonsView
         android:id="@+id/buttonsview"
