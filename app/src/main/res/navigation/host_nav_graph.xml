@@ -171,4 +171,9 @@
         android:name="com.tminus1010.budgetvalue.replay_or_future.view.CreateFuture2Frag"
         android:label="CreateFuture2Frag"
         tools:layout="@layout/frag_create_future_2" />
+    <fragment
+        android:id="@+id/selectCategoriesFrag"
+        android:name="com.tminus1010.budgetvalue.replay_or_future.view.SelectCategoriesFrag"
+        android:label="SelectCategoriesFrag"
+        tools:layout="@layout/frag_select_categories" />
 </navigation>
