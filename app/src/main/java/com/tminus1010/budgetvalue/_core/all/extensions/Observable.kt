@@ -27,7 +27,7 @@ fun <T> Observable<CategoryAmounts>.flatMapSourceHashMap(sourceHashMap: SourceHa
 fun <T> Observable<CategoryAmountFormulas>.flatMapSourceHashMap(sourceHashMap: SourceHashMap<Category, AmountFormula> = SourceHashMap(), outputChooser: (SourceHashMap<Category, AmountFormula>) -> Observable<T>): Observable<T> =
     map { it.toMap() }.flatMapSourceHashMap(sourceHashMap, outputChooser)
 
-fun <K, V, T> Observable<Map<K, V>>.flatMapSourceHashMap(sourceHashMap: SourceHashMap<K, V> = SourceHashMap(), outputChooser: (SourceHashMap<K, V>) -> Observable<T>): Observable<T> =
+fun <K, V: Any, T> Observable<Map<K, V>>.flatMapSourceHashMap(sourceHashMap: SourceHashMap<K, V> = SourceHashMap(), outputChooser: (SourceHashMap<K, V>) -> Observable<T>): Observable<T> =
     compose { upstream ->
         Observable.create<T> { downstream ->
             CompositeDisposable(
@@ -42,10 +42,10 @@ fun <K, V, T> Observable<Map<K, V>>.flatMapSourceHashMap(sourceHashMap: SourceHa
     }
 
 // TODO: Rewrite
-fun <K, V, T : Any> Flow<Map<K, V>>.flatMapSourceHashMap(sourceHashMap: SourceHashMap<K, V> = SourceHashMap(), outputChooser: (SourceHashMap<K, V>) -> Flow<T>): Flow<T> =
+fun <K, V: Any, T : Any> Flow<Map<K, V>>.flatMapSourceHashMap(sourceHashMap: SourceHashMap<K, V> = SourceHashMap(), outputChooser: (SourceHashMap<K, V>) -> Flow<T>): Flow<T> =
     asObservable().flatMapSourceHashMap(sourceHashMap) { sourceHashMap -> outputChooser(sourceHashMap).asObservable() }.asFlow()
 
-fun <K, V> Observable<Map<K, V>>.toSourceHashMap(disposables: CompositeDisposable, sourceHashMap: SourceHashMap<K, V> = SourceHashMap()): SourceHashMap<K, V> =
+fun <K, V: Any> Observable<Map<K, V>>.toSourceHashMap(disposables: CompositeDisposable, sourceHashMap: SourceHashMap<K, V> = SourceHashMap()): SourceHashMap<K, V> =
     this
         .subscribeBy(onNext = { sourceHashMap.adjustTo(it) })
         .also { disposables += it }
