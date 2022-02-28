@@ -24,7 +24,7 @@ data class AmountFormulaPresentationModel1(
         }
     }
 
-    fun userSet(s: String) {
+    fun userSetValue(s: String) {
         val newAmountFormula =
             when (amountFormula.value) {
                 is AmountFormula.Percentage -> AmountFormula.Percentage(s.toBigDecimal())
@@ -36,7 +36,7 @@ data class AmountFormulaPresentationModel1(
     fun bind(vb: ItemAmountFormulaBinding) {
         vb.moneyEditText.bind(amountFormula) { easyText2 = it.toDisplayStr() }
         vb.tvPercentage.bind(amountFormula) { easyVisibility = it is AmountFormula.Percentage }
-        vb.moneyEditText.onDone { userSet(it) }
+        vb.moneyEditText.onDone { userSetValue(it) }
         vb.root.bind(amountFormula) { amountFormula ->
             MenuPresentationModel(
                 if (amountFormula is AmountFormula.Value)

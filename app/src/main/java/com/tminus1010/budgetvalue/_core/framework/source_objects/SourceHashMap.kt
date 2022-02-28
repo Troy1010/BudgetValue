@@ -6,11 +6,14 @@ import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.rx3.asFlow
 import java.util.function.BiFunction
 import java.util.function.Function
 
-class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue: V? = null) : HashMap<K, V>() {
+class SourceHashMap<K, V : Any> constructor(map: Map<K, V> = emptyMap(), val exitValue: V? = null) : HashMap<K, V>() {
     constructor(exitValue: V?, vararg entries: Pair<K, V>) : this(entries.associate { it.first to it.second }, exitValue)
 
     private val observableMapPublisher = PublishSubject.create<MutableMap<K, BehaviorSubject<V>>>()
@@ -67,6 +70,13 @@ class SourceHashMap<K, V> constructor(map: Map<K, V> = emptyMap(), val exitValue
         .map { it.toMap() }
         .retry(100) // Duct-tape solution to avoid Concurrent Modification errors, but those might not exist anymore
         .toBehaviorSubject()
+
+    /**
+     * this is the flow version of [itemObservableMap]
+     */
+    val itemFlowMap = itemObservableMap
+        .map { it.mapValues { runBlocking { it.value.asFlow().stateIn(GlobalScope) } } }
+        .asFlow()
 
     val allEdits =
         changeSet

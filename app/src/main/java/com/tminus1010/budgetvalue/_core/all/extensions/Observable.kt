@@ -13,6 +13,9 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.Subject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.rx3.asFlow
+import kotlinx.coroutines.rx3.asObservable
 import java.math.BigDecimal
 import java.util.concurrent.Semaphore
 
@@ -37,6 +40,10 @@ fun <K, V, T> Observable<Map<K, V>>.flatMapSourceHashMap(sourceHashMap: SourceHa
             ).also { downstream.setDisposable(it) }
         }
     }
+
+// TODO: Rewrite
+fun <K, V, T : Any> Flow<Map<K, V>>.flatMapSourceHashMap(sourceHashMap: SourceHashMap<K, V> = SourceHashMap(), outputChooser: (SourceHashMap<K, V>) -> Flow<T>): Flow<T> =
+    asObservable().flatMapSourceHashMap(sourceHashMap) { sourceHashMap -> outputChooser(sourceHashMap).asObservable() }.asFlow()
 
 fun <K, V> Observable<Map<K, V>>.toSourceHashMap(disposables: CompositeDisposable, sourceHashMap: SourceHashMap<K, V> = SourceHashMap()): SourceHashMap<K, V> =
     this

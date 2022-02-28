@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue._core.all.extensions
 
 import com.tminus1010.budgetvalue._core.framework.source_objects.SourceHashMap
 
-fun <K, V> Map<K, V>.toSourceHashMap(exitValue: V): SourceHashMap<K, V> {
+fun <K, V: Any> Map<K, V>.toSourceHashMap(exitValue: V): SourceHashMap<K, V> {
     return SourceHashMap(this, exitValue)
 }
 
