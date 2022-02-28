@@ -28,7 +28,7 @@ class ChooseCategoryVM @Inject constructor(
     // # State
     val partialAmountToCategorize = receiptCategorizationInteractor.rememberedAmount.map { if (it.isZero) null else it.toString().toMoneyBigDecimal().toString() }
     val categoryButtonVMItems =
-        categoriesInteractor.userCategories.asFlow()
+        categoriesInteractor.userCategories2
             .map {
                 it.map { category ->
                     ButtonVMItem(
