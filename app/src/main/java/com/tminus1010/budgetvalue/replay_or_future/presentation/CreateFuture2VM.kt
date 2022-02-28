@@ -15,6 +15,7 @@ import com.tminus1010.budgetvalue.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.budgetvalue.transactions.presentation.model.SearchType
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.doLogx
+import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.misc.fnName
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
@@ -148,6 +149,16 @@ class CreateFuture2VM @Inject constructor(
                     ),
                     *it.toTypedArray(),
                 )
+            }
+    val dividerMap =
+        categoryAmountFormulas
+            .map {
+                it.map { it.key }.withIndex()
+                    .distinctUntilChangedWith(compareBy { it.value.type })
+                    .associate { it.index to it.value.type.name }
+//                    .mapKeys { it.key + 2 } // header row, default row
+                    .mapKeys { it.key + 1 } // header row
+                    .mapValues { DividerVMItem(it.value) }
             }
     val buttons =
         flowOf(

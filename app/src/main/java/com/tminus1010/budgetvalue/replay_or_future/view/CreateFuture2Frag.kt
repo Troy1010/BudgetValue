@@ -13,6 +13,7 @@ import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.combine
 
 
 @AndroidEntryPoint
@@ -29,12 +30,13 @@ class CreateFuture2Frag : Fragment(R.layout.frag_create_future_2) {
         vb.tmTableViewOtherInput.bind(createFuture2VM.otherInput) {
             initialize(
                 recipeGrid = it.map { it.map { it.toViewItemRecipe(requireContext()) } },
-                shouldFitItemWidthsInsideTable = true
+                shouldFitItemWidthsInsideTable = true,
             )
         }
-        vb.tmTableViewCategoryAmounts.bind(createFuture2VM.recipeGrid) {
+        vb.tmTableViewCategoryAmounts.bind(combine(createFuture2VM.recipeGrid, createFuture2VM.dividerMap) { a, b -> Pair(a, b) }) { (recipeGrid, dividerMap) ->
             initialize(
-                recipeGrid = it.map { it.map { it.toViewItemRecipe(requireContext()) } },
+                recipeGrid = recipeGrid.map { it.map { it.toViewItemRecipe(requireContext()) } },
+                dividerMap = dividerMap.mapValues { it.value.toViewItemRecipe(requireContext()) },
                 shouldFitItemWidthsInsideTable = true,
             )
         }
