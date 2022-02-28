@@ -33,14 +33,14 @@ class ChooseCategorySubFrag : Fragment(R.layout.subfrag_choose_category) {
             GridLayoutManager(requireActivity(), spanSize, GridLayoutManager.VERTICAL, false)
         // # State
         vb.textviewPartialAmount.bind(chooseCategoryVM.partialAmountToCategorize) { text = it }
-        vb.recyclerviewCategories.bind(chooseCategoryVM.categoryButtonVMItems) { categories ->
+        vb.recyclerviewCategories.bind(chooseCategoryVM.categoryButtonVMItems) { buttonVMItems ->
             adapter = object : LifecycleRVAdapter2<GenViewHolder2<ItemCategoryBtnBinding>>() {
                 override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
                     GenViewHolder2(ItemCategoryBtnBinding.inflate(LayoutInflater.from(requireContext()), parent, false))
 
-                override fun getItemCount() = categories.size
+                override fun getItemCount() = buttonVMItems.size
                 override fun onLifecycleAttached(holder: GenViewHolder2<ItemCategoryBtnBinding>) {
-                    categories[holder.adapterPosition].bind(holder.vb.btnCategory)
+                    buttonVMItems[holder.adapterPosition].bind(holder.vb.btnCategory)
                 }
             }
         }
