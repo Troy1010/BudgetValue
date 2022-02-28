@@ -2,7 +2,10 @@ package com.tminus1010.budgetvalue.replay_or_future.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tminus1010.budgetvalue._core.all.extensions.*
+import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
+import com.tminus1010.budgetvalue._core.all.extensions.flatMapSourceHashMap
+import com.tminus1010.budgetvalue._core.all.extensions.onNext
+import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.domain.CategoryAmountFormulas
 import com.tminus1010.budgetvalue._core.framework.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue._core.presentation.model.*
@@ -11,7 +14,10 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.budgetvalue.transactions.presentation.model.SearchType
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.doLogx
+import com.tminus1010.tmcommonkotlin.misc.fnName
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
 import java.math.BigDecimal
@@ -48,17 +54,12 @@ class CreateFuture2VM @Inject constructor(
         description.onNext(s)
     }
 
-    private val userCategoryAmounts = SourceHashMap<Category, BigDecimal>()
-    fun userInputCA(category: Category, amount: BigDecimal) {
-        if (amount.isZero)
-            userCategoryAmounts.remove(category)
+    private val userCategoryAmountFormulas = SourceHashMap<Category, AmountFormula>()
+    fun userSetCategoryAmountFormula(category: Category, amountFormula: AmountFormula) {
+        if (amountFormula.isZero())
+            userCategoryAmountFormulas.remove(category)
         else
-            userCategoryAmounts[category] = amount
-    }
-
-    private val userCategoryIsPercentage = SourceHashMap<Category, Boolean>()
-    fun userSetCategoryIsPercentage(category: Category, isPercentage: Boolean) {
-        userCategoryIsPercentage[category] = isPercentage
+            userCategoryAmountFormulas[category] = amountFormula
     }
 
     private val userSetFillCategory = MutableStateFlow<Category?>(null)
@@ -73,27 +74,13 @@ class CreateFuture2VM @Inject constructor(
     private val description = MutableStateFlow<String?>(null)
 
     // TODO: Do I need all of this? Is there an easier way..?
-
-    private val userCategoryAmountFormulas =
-        combine(userCategoryAmounts.flow, userCategoryIsPercentage.flow, selectedCategoriesModel.selectedCategories)
-        { userCategoryAmounts, userCategoryIsPercentage, selectedCategories ->
-            (userCategoryAmounts.keys + userCategoryIsPercentage.keys)
-                .filter { it in selectedCategories }
-                .associateWith {
-                    if (userCategoryIsPercentage[it] ?: false)
-                        AmountFormula.Percentage(userCategoryAmounts[it] ?: BigDecimal.ZERO)
-                    else
-                        AmountFormula.Value(userCategoryAmounts[it] ?: BigDecimal.ZERO)
-                }
-        }
-            .stateIn(viewModelScope, SharingStarted.Eagerly, mapOf()) // TODO: Is this necessary?
     private val categoryAmountFormulas =
-        combine(userCategoryAmountFormulas, selectedCategoriesModel.selectedCategories)
+        combine(userCategoryAmountFormulas.flow, selectedCategoriesModel.selectedCategories)
         { userCategoryAmountFormulas, selectedCategories ->
             CategoryAmountFormulas(selectedCategories.associateWith { it.defaultAmountFormula })
-                .plus(userCategoryAmountFormulas)
+                .plus(userCategoryAmountFormulas.filter { it.key in selectedCategories })
         }
-            .stateIn(viewModelScope, SharingStarted.Eagerly, CategoryAmountFormulas()) // TODO: Is this necessary?
+            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
     private val fillCategory =
         selectedCategoriesModel.selectedCategories
             .flatMapLatest { selectedCategories ->
@@ -104,9 +91,7 @@ class CreateFuture2VM @Inject constructor(
                     )
                 }
             }
-            .distinctUntilChanged()
-            .stateIn(viewModelScope, SharingStarted.Eagerly, null) // TODO: Is this necessary?
-
+            .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
     private val fillAmountFormula =
         combine(categoryAmountFormulas, fillCategory, totalGuess)
         { categoryAmountFormulas, fillCategory, total ->
@@ -114,18 +99,14 @@ class CreateFuture2VM @Inject constructor(
                 ?.let { categoryAmountFormulas.fillIntoCategory(fillCategory, total)[fillCategory] }
                 ?: AmountFormula.Value(BigDecimal.ZERO)
         }
-            .let { runBlocking { it.stateIn(viewModelScope) } }
-
-
+            .stateIn(viewModelScope, SharingStarted.Eagerly, AmountFormula.Value.ZERO)
     private val categoryAmountFormulaPartialRecipeGrid =
-        categoryAmountFormulas
-            .flatMapSourceHashMap { it.itemFlowMap }
-            .map { categoryAmountFormulaItemFlows ->
-                categoryAmountFormulaItemFlows.map { (category, amountFormula) ->
-//                    CategoryAmountFormulaVMItem(category, amountFormula, fillCategory, fillAmountFormula, ::userSetCategoryIsPercentage, ::userInputCA)
-                    CategoryAmountFormulaPresentationModel(category).toHasToViewItemRecipes()
-                }
+        combine(categoryAmountFormulas.flatMapSourceHashMap { it.itemFlowMap }, fillCategory)
+        { categoryAmountFormulaItemFlows, fillCategory ->
+            categoryAmountFormulaItemFlows.map { (category, amountFormula) ->
+                CategoryAmountFormulaPresentationModel(category, fillCategory, if (category == fillCategory) fillAmountFormula else amountFormula, { userSetFillCategory(it.name) }, { userSetCategoryAmountFormula(category, it) }).toHasToViewItemRecipes()
             }
+        }
 
 
     // # Events
