@@ -16,6 +16,7 @@ data class AmountFormulaPresentationModel2(
 ) : IHasToViewItemRecipe {
     fun bind(vb: ItemAmountFormulaBinding) {
         vb.root.isEnabled = false
+        vb.moneyEditText.isEnabled = false
         vb.moneyEditText.bind(amountFormula) { easyText2 = it.toDisplayStr() }
         vb.tvPercentage.bind(amountFormula) { easyVisibility = it is AmountFormula.Percentage }
     }

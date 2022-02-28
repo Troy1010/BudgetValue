@@ -101,13 +101,6 @@ class CreateFuture2VM @Inject constructor(
                 ?: AmountFormula.Value(BigDecimal.ZERO)
         }
             .stateIn(viewModelScope, SharingStarted.Eagerly, AmountFormula.Value.ZERO)
-    private val categoryAmountFormulaPartialRecipeGrid =
-        combine(categoryAmountFormulas.flatMapSourceHashMap { it.itemFlowMap }, fillCategory)
-        { categoryAmountFormulaItemFlows, fillCategory ->
-            categoryAmountFormulaItemFlows.map { (category, amountFormula) ->
-                CategoryAmountFormulaPresentationModel(category, fillCategory, if (category == fillCategory) fillAmountFormula else amountFormula, { userSetFillCategory(it.name) }, { userSetCategoryAmountFormula(category, it) }).toHasToViewItemRecipes()
-            }
-        }
 
 
     // # Events
@@ -139,7 +132,12 @@ class CreateFuture2VM @Inject constructor(
             )
         }
     val recipeGrid =
-        categoryAmountFormulaPartialRecipeGrid
+        combine(categoryAmountFormulas.flatMapSourceHashMap { it.itemFlowMap }, fillCategory)
+        { categoryAmountFormulaItemFlows, fillCategory ->
+            categoryAmountFormulaItemFlows.map { (category, amountFormula) ->
+                CategoryAmountFormulaPresentationModel(category, fillCategory, if (category == fillCategory) fillAmountFormula else amountFormula, { userSetFillCategory(it.name) }, { userSetCategoryAmountFormula(category, it) }).toHasToViewItemRecipes()
+            }
+        }
             .map {
                 listOf(
                     listOf(
