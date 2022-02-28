@@ -146,7 +146,7 @@ class CreateFuture2VM @Inject constructor(
                         TextPresentationModel(TextPresentationModel.Style.HEADER, "Amount"),
                         TextPresentationModel(TextPresentationModel.Style.HEADER, "Fill"),
                     ),
-                    *it.toTypedArray()
+                    *it.toTypedArray(),
                 )
             }
     val buttons =

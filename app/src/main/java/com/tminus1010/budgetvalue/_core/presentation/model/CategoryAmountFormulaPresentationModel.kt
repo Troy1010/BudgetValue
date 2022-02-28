@@ -17,7 +17,7 @@ data class CategoryAmountFormulaPresentationModel(
         return listOf(
             TextVMItem(category.name),
             if (fillCategory == category) AmountFormulaPresentationModel2(amountFormula) else AmountFormulaPresentationModel1(amountFormula, onNewAmountFormula),
-            CheckboxVMItem(initialValue = fillCategory == category, onCheckChanged = { if (it) userSetFillCategory(category) }),
+            CheckboxVMItem2(initialValue = fillCategory == category, onChecked = { userSetFillCategory(category) }),
         )
     }
 }
