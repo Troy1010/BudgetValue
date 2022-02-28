@@ -18,6 +18,7 @@ data class ButtonVMItem(
     val titleObservable: Observable<String>? = null,
     val isEnabled: Observable<Boolean>? = null,
     val isEnabled2: Flow<Boolean>? = null,
+    val alpha: Flow<Float>? = null,
     val onLongClick: (() -> Unit)? = null,
     val onClick: () -> Unit,
 ) : IHasToViewItemRecipe {
@@ -26,6 +27,8 @@ data class ButtonVMItem(
             bind(titleObservable) { text = title }
         if (text != null)
             text = title
+        if (this@ButtonVMItem.alpha != null)
+            bind(this@ButtonVMItem.alpha) { alpha = it }
         setOnClickListener { onClick() }
         onLongClick?.also { setOnLongClickListener { it(); true } }
         this@ButtonVMItem.isEnabled?.observe(button.lifecycleOwner!!) { isEnabled = it }
