@@ -22,7 +22,7 @@ class TextVMItem(
             vb.textview.text = text1
             text2?.also { vb.textview.bind(text2) { text = it.first } }
             vb.textview.setOnClickListener { onClick?.invoke() }
-            vb.textview.run { menuPresentationModel?.bind(this) }
+            menuPresentationModel?.bind(vb.textview)
             backgroundColor?.also { vb.root.setBackgroundColor(context.theme.getColorByAttr(backgroundColor)) }
         }
     }
