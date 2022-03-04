@@ -20,6 +20,7 @@ import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture
 import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
 import com.tminus1010.budgetvalue.replay_or_future.domain.TotalFuture
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
+import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.budgetvalue.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
 import com.tminus1010.budgetvalue.transactions.presentation.model.SearchType
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
@@ -39,6 +40,7 @@ class CreateFuture2VM @Inject constructor(
     private val futuresRepo: FuturesRepo,
     private val toaster: Toaster,
     private val categorizeAllMatchingUncategorizedTransactions: CategorizeAllMatchingUncategorizedTransactions,
+    private val transactionsInteractor: TransactionsInteractor,
 ) : ViewModel() {
     // # User Intents
     fun userTryNavToCategorySelection() {
@@ -97,8 +99,9 @@ class CreateFuture2VM @Inject constructor(
         this.searchType.onNext(searchType)
     }
 
+    private val userSetDescription = MutableSharedFlow<String?>()
     fun userSetDescription(s: String) {
-        description.onNext(s)
+        userSetDescription.onNext(s)
     }
 
     private val userCategoryAmountFormulas = SourceHashMap<Category, AmountFormula>()
@@ -118,8 +121,10 @@ class CreateFuture2VM @Inject constructor(
     private val totalGuess = MutableStateFlow(BigDecimal.TEN)
     private val isPermanent = MutableStateFlow(false)
     private val searchType = MutableStateFlow(SearchType.DESCRIPTION)
-    private val description = MutableStateFlow<String?>(null)
-
+    private val description =
+        transactionsInteractor.mostRecentUncategorizedSpend2
+            .flatMapLatest { userSetDescription.onStart { emit(it?.description) } }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
     private val categoryAmountFormulas =
         combine(userCategoryAmountFormulas.flow, selectedCategoriesModel.selectedCategories)
         { userCategoryAmountFormulas, selectedCategories ->
