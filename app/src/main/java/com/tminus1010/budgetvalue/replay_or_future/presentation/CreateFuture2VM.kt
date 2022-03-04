@@ -46,7 +46,7 @@ class CreateFuture2VM @Inject constructor(
     }
 
     @SuppressLint("VisibleForTests")
-    fun userSubmit() {
+    fun userTrySubmit() {
         when (searchType.value) {
             SearchType.DESCRIPTION_AND_TOTAL ->
                 TODO()
@@ -200,7 +200,7 @@ class CreateFuture2VM @Inject constructor(
                 ),
                 ButtonVMItem(
                     title = "Submit",
-                    onClick = { userSubmit() },
+                    onClick = { userTrySubmit() },
                 ),
             )
         )
