@@ -1,5 +1,6 @@
 package com.tminus1010.budgetvalue.replay_or_future.presentation
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
@@ -7,18 +8,25 @@ import com.tminus1010.budgetvalue._core.all.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue._core.all.extensions.onNext
 import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.domain.CategoryAmountFormulas
+import com.tminus1010.budgetvalue._core.framework.Rx
 import com.tminus1010.budgetvalue._core.framework.source_objects.SourceHashMap
+import com.tminus1010.budgetvalue._core.framework.view.Toaster
 import com.tminus1010.budgetvalue._core.presentation.model.*
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay_or_future.app.SelectCategoriesModel
+import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
+import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture
+import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
+import com.tminus1010.budgetvalue.replay_or_future.domain.TotalFuture
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
+import com.tminus1010.budgetvalue.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
 import com.tminus1010.budgetvalue.transactions.presentation.model.SearchType
-import com.tminus1010.tmcommonkotlin.coroutines.extensions.doLogx
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
-import com.tminus1010.tmcommonkotlin.misc.fnName
+import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.GlobalScope
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
 import java.math.BigDecimal
@@ -28,15 +36,46 @@ import javax.inject.Inject
 class CreateFuture2VM @Inject constructor(
     private val categoriesInteractor: CategoriesInteractor,
     private val selectedCategoriesModel: SelectCategoriesModel,
+    private val futuresRepo: FuturesRepo,
+    private val toaster: Toaster,
+    private val categorizeAllMatchingUncategorizedTransactions: CategorizeAllMatchingUncategorizedTransactions,
 ) : ViewModel() {
     // # User Intents
     fun userTryNavToCategorySelection() {
         navToCategorySelection.easyEmit()
     }
 
+    @SuppressLint("VisibleForTests")
     fun userSubmit() {
-        TODO()
-        navUp.onNext()
+        when (searchType.value) {
+            SearchType.DESCRIPTION_AND_TOTAL ->
+                TODO()
+            SearchType.TOTAL ->
+                TotalFuture(
+                    name = generateUniqueID(),
+                    searchTotal = totalGuess.value,
+                    categoryAmountFormulas = categoryAmountFormulas.value,
+                    fillCategory = fillCategory.value!!,
+                    terminationStatus = if (isPermanent.value) TerminationStatus.PERMANENT else TerminationStatus.WAITING_FOR_MATCH,
+                )
+            SearchType.DESCRIPTION ->
+                BasicFuture(
+                    name = generateUniqueID(),
+                    searchText = description.value!!,
+                    categoryAmountFormulas = categoryAmountFormulas.value,
+                    fillCategory = fillCategory.value!!,
+                    terminationStatus = if (isPermanent.value) TerminationStatus.PERMANENT else TerminationStatus.WAITING_FOR_MATCH,
+                )
+        }
+            .let { newFuture ->
+                Rx.merge(
+                    futuresRepo.add(newFuture),
+                    if (newFuture.terminationStatus == TerminationStatus.PERMANENT) categorizeAllMatchingUncategorizedTransactions(newFuture).doOnSuccess { toaster.toast("$it transactions categorized") }.ignoreElement() else null,
+                )
+            }
+            .andThen(Completable.fromAction { runBlocking { selectedCategoriesModel.clearSelection() } }.subscribeOn(Schedulers.io()))
+            .andThen(Completable.fromAction { navUp.onNext(Unit) })
+            .subscribe()
     }
 
     fun userSetTotalGuess(s: String) {
@@ -63,7 +102,7 @@ class CreateFuture2VM @Inject constructor(
             userCategoryAmountFormulas[category] = amountFormula
     }
 
-    private val userSetFillCategory = MutableStateFlow<Category?>(null)
+    private val userSetFillCategory = MutableSharedFlow<Category?>()
     fun userSetFillCategory(categoryName: String) {
         userSetFillCategory.onNext(categoriesInteractor.parseCategory(categoryName))
     }
@@ -74,25 +113,20 @@ class CreateFuture2VM @Inject constructor(
     private val searchType = MutableStateFlow(SearchType.DESCRIPTION)
     private val description = MutableStateFlow<String?>(null)
 
-    // TODO: Do I need all of this? Is there an easier way..?
     private val categoryAmountFormulas =
         combine(userCategoryAmountFormulas.flow, selectedCategoriesModel.selectedCategories)
         { userCategoryAmountFormulas, selectedCategories ->
             CategoryAmountFormulas(selectedCategories.associateWith { it.defaultAmountFormula })
                 .plus(userCategoryAmountFormulas.filter { it.key in selectedCategories })
         }
-            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
+            .stateIn(viewModelScope, SharingStarted.Eagerly, CategoryAmountFormulas())
     private val fillCategory =
         selectedCategoriesModel.selectedCategories
             .flatMapLatest { selectedCategories ->
-                userSetFillCategory.onStart {
-                    emit(
-                        selectedCategories.find { it.defaultAmountFormula.isZero() }
-                            ?: selectedCategories.getOrNull(0)
-                    )
-                }
+                userSetFillCategory
+                    .onStart { emit(selectedCategories.find { it.defaultAmountFormula.isZero() } ?: selectedCategories.getOrNull(0)) }
             }
-            .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
     private val fillAmountFormula =
         combine(categoryAmountFormulas, fillCategory, totalGuess)
         { categoryAmountFormulas, fillCategory, total ->
@@ -154,7 +188,6 @@ class CreateFuture2VM @Inject constructor(
                 it.map { it.key }.withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
                     .associate { it.index to it.value.type.name }
-//                    .mapKeys { it.key + 2 } // header row, default row
                     .mapKeys { it.key + 1 } // header row
                     .mapValues { DividerVMItem(it.value) }
             }
