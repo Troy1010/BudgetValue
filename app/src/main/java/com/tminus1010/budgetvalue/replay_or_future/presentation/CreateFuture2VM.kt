@@ -152,6 +152,7 @@ class CreateFuture2VM @Inject constructor(
     // # Events
     val navUp = MutableSharedFlow<Unit>()
     val navToCategorySelection = MutableSharedFlow<Unit>()
+    val navToChooseTransaction = MutableSharedFlow<Unit>()
 
     // # State
     val otherInput =
@@ -168,7 +169,16 @@ class CreateFuture2VM @Inject constructor(
                 if (listOf(SearchType.DESCRIPTION_AND_TOTAL, SearchType.DESCRIPTION).any { it == searchType })
                     listOf(
                         TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Description"),
-                        EditTextVMItem(text = description.value, onDone = { userSetDescription(it) }),
+                        EditTextVMItem(
+                            text = description.value,
+                            onDone = { userSetDescription(it) },
+                            menuPresentationModel = MenuPresentationModel(
+                                MenuVMItem(
+                                    title = "Copy selection from history",
+                                    onClick = { navToChooseTransaction.onNext() },
+                                )
+                            ),
+                        ),
                     )
                 else null,
                 listOf(
