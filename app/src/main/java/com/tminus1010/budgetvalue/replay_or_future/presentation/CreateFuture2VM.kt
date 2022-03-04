@@ -158,21 +158,21 @@ class CreateFuture2VM @Inject constructor(
         searchType.map { searchType ->
             listOfNotNull(
                 listOf(
-                    TextPresentationModel(text1 = "Total Guess"),
+                    TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Total Guess"),
                     MoneyEditVMItem(text1 = totalGuess.value.toString(), onDone = { userSetTotalGuess(it) }),
                 ),
                 listOf(
-                    TextPresentationModel(text1 = "Search Type"),
+                    TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Search Type"),
                     SpinnerVMItem(SearchType.values(), searchType, onNewItem = { userSetSearchType(it) }),
                 ),
                 if (listOf(SearchType.DESCRIPTION_AND_TOTAL, SearchType.DESCRIPTION).any { it == searchType })
                     listOf(
-                        TextPresentationModel(text1 = "Description"),
+                        TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Description"),
                         EditTextVMItem(text = description.value, onDone = { userSetDescription(it) }),
                     )
                 else null,
                 listOf(
-                    TextPresentationModel(text1 = "Is Permanent"),
+                    TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Is Permanent"),
                     CheckboxVMItem(isPermanent.value, onCheckChanged = { userSetIsPermanent(it) }),
                 ),
             )
