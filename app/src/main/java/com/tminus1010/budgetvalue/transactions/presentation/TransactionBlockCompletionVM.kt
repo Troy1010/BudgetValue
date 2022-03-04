@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.data.repo.CurrentDatePeriodRepo
 import com.tminus1010.budgetvalue._core.presentation.model.TextPresentationModel
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
-import com.tminus1010.budgetvalue.transactions.presentation.model.TransactionBlockCompletionVMItem
+import com.tminus1010.budgetvalue.transactions.presentation.model.TransactionBlockCompletionPresentationModel
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
@@ -24,7 +24,7 @@ class TransactionBlockCompletionVM @Inject constructor(
                         TextPresentationModel(text1 = "Transaction Block"),
                         TextPresentationModel(text1 = "Completion %"),
                     ),
-                    *it.map { TransactionBlockCompletionVMItem(it, currentDatePeriodRepo).toPresentationModels() }.toTypedArray()
+                    *it.map { TransactionBlockCompletionPresentationModel(it, currentDatePeriodRepo).toPresentationModels() }.toTypedArray()
                 )
             }
             .replayNonError(1)

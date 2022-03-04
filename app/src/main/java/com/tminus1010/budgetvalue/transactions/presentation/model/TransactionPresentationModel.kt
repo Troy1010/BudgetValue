@@ -12,7 +12,7 @@ import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
 import io.reactivex.rxjava3.subjects.PublishSubject
 
-class TransactionVMItem(private val transaction: Transaction) {
+class TransactionPresentationModel(private val transaction: Transaction) {
     val backgroundColor get() = if (transaction.isCategorized) R.attr.colorBackground else R.attr.colorSecondary
     val date get() = transaction.date.toDisplayStr()
     val amount get() = transaction.amount.toString()

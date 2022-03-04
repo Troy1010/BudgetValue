@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue._core.presentation.model.PopupVMItem
 import com.tminus1010.budgetvalue.transactions.data.repo.TransactionsRepo
-import com.tminus1010.budgetvalue.transactions.presentation.model.TransactionVMItem
+import com.tminus1010.budgetvalue.transactions.presentation.model.TransactionPresentationModel
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
@@ -21,7 +21,7 @@ class TransactionsVM @Inject constructor(
     // # State
     val transactionVMItems =
         transactionsRepo.transactionsAggregate
-            .map { it.transactions.map(::TransactionVMItem) }
+            .map { it.transactions.map(::TransactionPresentationModel) }
             .replayNonError(1)
     val buttons = listOf(
         ButtonVMItem(
@@ -31,7 +31,7 @@ class TransactionsVM @Inject constructor(
     )
 
     // # Events
-    val navToTransaction = transactionVMItems.switchMap { Observable.merge(it.map(TransactionVMItem::userTryNavToTransaction)) }
+    val navToTransaction = transactionVMItems.switchMap { Observable.merge(it.map(TransactionPresentationModel::userTryNavToTransaction)) }
     val alertDialog = userTryClearTransactionHistory.map {
         PopupVMItem(
             msg = "Are you sure you want to clear the transaction history?",
