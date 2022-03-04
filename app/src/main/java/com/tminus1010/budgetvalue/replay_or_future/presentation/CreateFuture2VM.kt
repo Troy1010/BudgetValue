@@ -47,35 +47,42 @@ class CreateFuture2VM @Inject constructor(
 
     @SuppressLint("VisibleForTests")
     fun userTrySubmit() {
-        when (searchType.value) {
-            SearchType.DESCRIPTION_AND_TOTAL ->
-                TODO()
-            SearchType.TOTAL ->
-                TotalFuture(
-                    name = generateUniqueID(),
-                    searchTotal = totalGuess.value,
-                    categoryAmountFormulas = categoryAmountFormulas.value,
-                    fillCategory = fillCategory.value!!,
-                    terminationStatus = if (isPermanent.value) TerminationStatus.PERMANENT else TerminationStatus.WAITING_FOR_MATCH,
-                )
-            SearchType.DESCRIPTION ->
-                BasicFuture(
-                    name = generateUniqueID(),
-                    searchText = description.value!!,
-                    categoryAmountFormulas = categoryAmountFormulas.value,
-                    fillCategory = fillCategory.value!!,
-                    terminationStatus = if (isPermanent.value) TerminationStatus.PERMANENT else TerminationStatus.WAITING_FOR_MATCH,
-                )
-        }
-            .let { newFuture ->
-                Rx.merge(
-                    futuresRepo.add(newFuture),
-                    if (newFuture.terminationStatus == TerminationStatus.PERMANENT) categorizeAllMatchingUncategorizedTransactions(newFuture).doOnSuccess { toaster.toast("$it transactions categorized") }.ignoreElement() else null,
-                )
+        try {
+            when (searchType.value) {
+                SearchType.DESCRIPTION_AND_TOTAL ->
+                    TODO()
+                SearchType.TOTAL ->
+                    TotalFuture(
+                        name = generateUniqueID(),
+                        searchTotal = totalGuess.value,
+                        categoryAmountFormulas = categoryAmountFormulas.value,
+                        fillCategory = fillCategory.value!!,
+                        terminationStatus = if (isPermanent.value) TerminationStatus.PERMANENT else TerminationStatus.WAITING_FOR_MATCH,
+                    )
+                SearchType.DESCRIPTION ->
+                    BasicFuture(
+                        name = generateUniqueID(),
+                        searchText = description.value?.ifEmpty { null } ?: throw NoDescriptionEnteredException(),
+                        categoryAmountFormulas = categoryAmountFormulas.value,
+                        fillCategory = fillCategory.value!!,
+                        terminationStatus = if (isPermanent.value) TerminationStatus.PERMANENT else TerminationStatus.WAITING_FOR_MATCH,
+                    )
             }
-            .andThen(Completable.fromAction { runBlocking { selectedCategoriesModel.clearSelection() } }.subscribeOn(Schedulers.io()))
-            .andThen(Completable.fromAction { navUp.onNext(Unit) })
-            .subscribe()
+                .let { newFuture ->
+                    Rx.merge(
+                        futuresRepo.add(newFuture),
+                        if (newFuture.terminationStatus == TerminationStatus.PERMANENT) categorizeAllMatchingUncategorizedTransactions(newFuture).doOnSuccess { toaster.toast("$it transactions categorized") }.ignoreElement() else null,
+                    )
+                }
+                .andThen(Completable.fromAction { runBlocking { selectedCategoriesModel.clearSelection() } }.subscribeOn(Schedulers.io()))
+                .andThen(Completable.fromAction { navUp.onNext(Unit) })
+                .subscribe()
+        } catch (e: Throwable) {
+            when (e) {
+                is NoDescriptionEnteredException -> toaster.toast("Fill description or use another search type")
+                else -> throw e
+            }
+        }
     }
 
     fun userSetTotalGuess(s: String) {
