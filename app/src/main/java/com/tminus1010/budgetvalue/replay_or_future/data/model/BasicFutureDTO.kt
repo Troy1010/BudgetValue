@@ -11,5 +11,5 @@ data class BasicFutureDTO(
     val searchText: String,
     val categoryAmountFormulasStr: String,
     val autoFillCategoryName: String,
-    val terminationStatus: TerminationStatus
+    val terminationStatus: TerminationStatus,
 )

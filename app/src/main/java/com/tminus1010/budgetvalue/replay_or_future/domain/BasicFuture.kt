@@ -34,7 +34,7 @@ data class BasicFuture(
                 searchText = searchText,
                 categoryAmountFormulas = categoryAmountFormulasConverter.toCategoryAmountFormulas(categoryAmountFormulasStr),
                 fillCategory = categoriesInteractor.parseCategory(autoFillCategoryName),
-                terminationStatus = terminationStatus
+                terminationStatus = terminationStatus,
             )
         }
     }
