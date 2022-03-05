@@ -26,7 +26,7 @@ class TransactionsRepo @Inject constructor(
     val transactionsAggregate2 =
         miscDAO.fetchTransactionsFlow()
             .map { TransactionsAggregate(it, categoryAmountsConverter) }
-            .shareIn(GlobalScope, SharingStarted.WhileSubscribed())
+            .shareIn(GlobalScope, SharingStarted.WhileSubscribed(), 1)
 
     fun tryPush(transaction: Transaction) =
         miscDAO.tryAdd(transaction.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
