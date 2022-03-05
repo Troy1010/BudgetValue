@@ -26,6 +26,7 @@ class CreateFuture2Frag : Fragment(R.layout.frag_create_future_2) {
         // # Events
         createFuture2VM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         createFuture2VM.navToCategorySelection.observe(viewLifecycleOwner) { nav.navigate(R.id.selectCategoriesFrag) }
+        createFuture2VM.navToChooseTransaction.observe(viewLifecycleOwner) { nav.navigate(R.id.chooseTransactionFrag) }
         // # State
         vb.tmTableViewOtherInput.bind(createFuture2VM.otherInput) {
             initialize(

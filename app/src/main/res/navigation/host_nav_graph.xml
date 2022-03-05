@@ -177,4 +177,9 @@
         android:name="com.tminus1010.budgetvalue.replay_or_future.view.SelectCategoriesFrag"
         android:label="SelectCategoriesFrag"
         tools:layout="@layout/frag_select_categories" />
+    <fragment
+        android:id="@+id/chooseTransactionFrag"
+        android:name="com.tminus1010.budgetvalue.transactions.view.ChooseTransactionFrag"
+        android:label="ChooseTransactionFrag"
+        tools:layout="@layout/frag_choose_transaction" />
 </navigation>
