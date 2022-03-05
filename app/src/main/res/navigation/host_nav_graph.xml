@@ -160,7 +160,8 @@
     <fragment
         android:id="@+id/accountsReconciliationSubFrag"
         android:name="com.tminus1010.budgetvalue.reconcile.view.AccountsReconciliationSubFrag"
-        android:label="AccountsReconciliationSubFrag" />
+        android:label="AccountsReconciliationSubFrag"
+        tools:layout="@layout/item_tm_table_view" />
     <fragment
         android:id="@+id/transactionBlockCompletionFrag"
         android:name="com.tminus1010.budgetvalue.transactions.view.TransactionBlockCompletionFrag"
