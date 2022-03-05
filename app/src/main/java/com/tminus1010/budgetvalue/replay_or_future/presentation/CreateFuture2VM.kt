@@ -64,7 +64,7 @@ class CreateFuture2VM @Inject constructor(
                 SearchType.DESCRIPTION ->
                     BasicFuture(
                         name = generateUniqueID(),
-                        searchText = description.value?.ifEmpty { null } ?: throw NoDescriptionEnteredException(),
+                        searchTexts = listOf(description.value?.ifEmpty { null } ?: throw NoDescriptionEnteredException()),
                         categoryAmountFormulas = categoryAmountFormulas.value,
                         fillCategory = fillCategory.value!!,
                         terminationStatus = if (isPermanent.value) TerminationStatus.PERMANENT else TerminationStatus.WAITING_FOR_MATCH,

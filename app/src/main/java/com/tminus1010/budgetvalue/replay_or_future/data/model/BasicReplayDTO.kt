@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 data class BasicReplayDTO(
     @PrimaryKey
     val name: String,
-    val searchTextsStr: String,
+    val searchTextsStr: String, // TODO: Just use List<String>, b/c adapter can handle it now.
     val categoryAmountFormulasStr: String,
     val autoFillCategoryName: String,
 )

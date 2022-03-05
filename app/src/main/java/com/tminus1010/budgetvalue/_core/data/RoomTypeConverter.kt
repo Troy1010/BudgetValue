@@ -9,7 +9,6 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import java.math.BigDecimal
 import java.time.LocalDate
-import java.util.*
 
 object RoomTypeConverter {
     @TypeConverter
@@ -58,5 +57,13 @@ object RoomTypeConverter {
 
     @TypeConverter
     fun toLocalDatePeriod(s: String): LocalDatePeriod? =
+        moshi.fromJson(s)
+
+    @TypeConverter
+    fun fromListOfString(x: List<String>): String =
+        moshi.toJson(x)
+
+    @TypeConverter
+    fun toListOfString(s: String): List<String>? =
         moshi.fromJson(s)
 }

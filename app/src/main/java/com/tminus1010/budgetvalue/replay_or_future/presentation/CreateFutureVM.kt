@@ -1,5 +1,6 @@
 package com.tminus1010.budgetvalue.replay_or_future.presentation
 
+import android.annotation.SuppressLint
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue._core.all.extensions.cold
 import com.tminus1010.budgetvalue._core.framework.Rx
@@ -61,6 +62,7 @@ class CreateFutureVM @Inject constructor(
         userSetIsPermanent.onNext(b)
     }
 
+    @SuppressLint("VisibleForTests")
     @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
     fun userSubmit() {
         when (searchType.value) {
@@ -77,7 +79,7 @@ class CreateFutureVM @Inject constructor(
             SearchType.DESCRIPTION ->
                 BasicFuture(
                     name = generateUniqueID(),
-                    searchText = searchDescription.value,
+                    searchTexts = listOf(searchDescription.value),
                     categoryAmountFormulas = categoryAmountFormulas.value,
                     fillCategory = fillCategory.value.first!!,
                     terminationStatus = if (isPermanent.value) TerminationStatus.PERMANENT else TerminationStatus.WAITING_FOR_MATCH,

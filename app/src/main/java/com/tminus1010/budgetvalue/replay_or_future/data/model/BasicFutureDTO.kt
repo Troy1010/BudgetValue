@@ -8,7 +8,7 @@ import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
 data class BasicFutureDTO(
     @PrimaryKey
     val name: String,
-    val searchText: String,
+    val searchTexts: List<String>,
     val categoryAmountFormulasStr: String,
     val autoFillCategoryName: String,
     val terminationStatus: TerminationStatus,

@@ -3,7 +3,9 @@ package com.tminus1010.budgetvalue._core.all.dependency_injection
 import android.app.Application
 import androidx.room.Room
 import com.tminus1010.budgetvalue._core.data.CategoryDatabase
+import com.tminus1010.budgetvalue._core.data.Migrations
 import com.tminus1010.budgetvalue._core.data.MiscDatabase
+import com.tminus1010.budgetvalue._core.data.MoshiProvider.moshi
 import com.tminus1010.budgetvalue._core.data.RoomWithCategoriesTypeConverter
 import dagger.Module
 import dagger.Provides
@@ -31,7 +33,7 @@ object DatabaseModule {
         roomWithCategoriesTypeConverter: RoomWithCategoriesTypeConverter,
     ): MiscDatabase {
         return Room.databaseBuilder(application, MiscDatabase::class.java, "MiscDatabase")
-//            .addMigrations(Migrations.MIGRATION_40_41(moshi))
+            .addMigrations(Migrations.z43_44(moshi))
             .addTypeConverter(roomWithCategoriesTypeConverter)
             .fallbackToDestructiveMigration()
             .build()

@@ -38,7 +38,7 @@ class FuturesReviewVM @Inject constructor(
                             TextPresentationModel(
                                 TextPresentationModel.Style.TWO,
                                 when (it) {
-                                    is BasicFuture -> it.searchText.take(10)
+                                    is BasicFuture -> it.searchTexts.first().take(10)
                                     is TotalFuture -> it.searchTotal.toString()
                                     else -> error("Unhandled IFuture:$it")
                                 },
