@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.categories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
-import com.tminus1010.budgetvalue._core.framework.source_objects.SourceArrayList
+import com.tminus1010.budgetvalue._core.framework.source_objects.SourceList
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.tmcommonkotlin.rx.nonLazy
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
@@ -27,7 +27,7 @@ class CategorySelectionVM @Inject constructor() : ViewModel() {
     }
 
     // # Internal
-    private val _selectedCategories = SourceArrayList<Category>()
+    private val _selectedCategories = SourceList<Category>()
 
     // # Output
     val selectedCategories = _selectedCategories.observable

@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.transactions.app
 
 import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
 import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
-import com.tminus1010.budgetvalue._core.framework.source_objects.SourceArrayList
+import com.tminus1010.budgetvalue._core.framework.source_objects.SourceList
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.app.interactor.SaveTransactionInteractor
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
@@ -34,7 +34,7 @@ class ReceiptCategorizationInteractor @Inject constructor(
         rememberedAmount.easyEmit(categoryAmountsRedefined.value.defaultAmount(transaction.amount))
     }
 
-    val categoryAmounts = SourceArrayList<Pair<Category, BigDecimal>>()
+    val categoryAmounts = SourceList<Pair<Category, BigDecimal>>()
     val categoryAmountsRedefined = categoryAmounts.flow.map { CategoryAmounts(it.fold(mutableMapOf()) { acc, v -> acc[v.first] = (acc[v.first] ?: BigDecimal("0")) + v.second; acc }) }.stateIn(GlobalScope, SharingStarted.Eagerly, CategoryAmounts())
 
     // # Model State

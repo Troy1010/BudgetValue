@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.transactions.app.interactor
 
 import com.tminus1010.budgetvalue._core.domain.Redoable
 import com.tminus1010.budgetvalue._core.framework.Rx
-import com.tminus1010.budgetvalue._core.framework.source_objects.SourceArrayList
+import com.tminus1010.budgetvalue._core.framework.source_objects.SourceList
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.budgetvalue.transactions.data.repo.TransactionsRepo
 import io.reactivex.rxjava3.core.Completable
@@ -49,8 +49,8 @@ class SaveTransactionInteractor @Inject constructor(
     }
 
     // # Internal
-    private val undoQueue = SourceArrayList<Redoable>()
-    private val redoQueue = SourceArrayList<Redoable>()
+    private val undoQueue = SourceList<Redoable>()
+    private val redoQueue = SourceList<Redoable>()
 
     // # Output
     val isUndoAvailable: Observable<Boolean> = undoQueue.observable

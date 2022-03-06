@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.replay_or_future.app
 
-import com.tminus1010.budgetvalue._core.framework.source_objects.SourceArrayList
+import com.tminus1010.budgetvalue._core.framework.source_objects.SourceList
 import com.tminus1010.budgetvalue.categories.models.Category
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
@@ -25,7 +25,7 @@ class SelectCategoriesModel @Inject constructor() {
     }
 
     // # Internal
-    private val _selectedCategories = SourceArrayList<Category>()
+    private val _selectedCategories = SourceList<Category>()
 
     // # Output
     val selectedCategories =
