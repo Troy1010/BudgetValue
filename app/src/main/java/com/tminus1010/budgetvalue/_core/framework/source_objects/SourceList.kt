@@ -4,11 +4,26 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.rx3.asFlow
 
-class SourceList<T> : ArrayList<T>() {
-    private val behaviorSubject = BehaviorSubject.createDefault<List<T>>(emptyList())
+class SourceList<T>(iterable: Iterable<T> = emptyList()) : ArrayList<T>() {
+    constructor(vararg values: T) : this(values.toList())
+
+    private val behaviorSubject = BehaviorSubject.createDefault(iterable.toList())
     val observable: Observable<List<T>> = behaviorSubject
     val flow = behaviorSubject.asFlow()
 
+    fun adjustTo(list: List<T>) {
+        // If there are too many items, remove some.
+        this.take(list.size)
+        // If any items don't match, reassign them
+        list.withIndex().forEach { (i, v) ->
+            if (i !in this.indices)
+                this.add(i, v)
+            else if (this[i] != v)
+                this[i] = v
+        }
+    }
+
+    // # ArrayList Overrides
     override fun clear() {
         super.clear()
         behaviorSubject.onNext(this)
