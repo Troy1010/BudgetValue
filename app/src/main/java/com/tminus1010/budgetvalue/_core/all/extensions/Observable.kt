@@ -14,15 +14,16 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.Subject
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx3.asFlow
 import kotlinx.coroutines.rx3.asObservable
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
 import java.util.concurrent.Semaphore
+import kotlin.coroutines.EmptyCoroutineContext
 
 @JvmName("flatMapSourceHashMap2")
 fun <T> Observable<CategoryAmounts>.flatMapSourceHashMap(sourceHashMap: SourceHashMap<Category, BigDecimal> = SourceHashMap(), outputChooser: (SourceHashMap<Category, BigDecimal>) -> Observable<T>): Observable<T> =
@@ -46,19 +47,22 @@ fun <K, V : Any, T> Observable<Map<K, V>>.flatMapSourceHashMap(sourceHashMap: So
         }
     }
 
+// TODO: Move to Flow.kt
 // TODO: Rewrite
 fun <K, V : Any, T : Any> Flow<Map<K, V>>.flatMapSourceHashMap(sourceHashMap: SourceHashMap<K, V> = SourceHashMap(), outputChooser: (SourceHashMap<K, V>) -> Flow<T>): Flow<T> =
     asObservable().flatMapSourceHashMap(sourceHashMap) { sourceHashMap -> outputChooser(sourceHashMap).asObservable() }.asFlow()
 
-fun <IN : Any, OUT : Any> Flow<List<IN>>.flatMapSourceList(sourceList: SourceList<IN>, outputChooser: (SourceList<IN>) -> Flow<OUT>): Flow<OUT> {
-    return flow {
-        withContext(Dispatchers.IO) {
+// TODO: Move to Flow.kt
+// TODO: Could this be simplified..?
+fun <IN : Any, OUT : Any> Flow<List<IN>>.flatMapSourceList(sourceList: SourceList<IN> = SourceList(), outputChooser: (SourceList<IN>) -> Flow<OUT>): Flow<OUT> {
+    return channelFlow {
+        launch {
+            outputChooser(sourceList)
+                .collect { send(it) }
+        }
+        withContext(EmptyCoroutineContext) {
             this@flatMapSourceList
                 .collect { sourceList.adjustTo(it) }
-        }
-        withContext(Dispatchers.IO) {
-            outputChooser(sourceList)
-                .collect { emit(it) }
         }
     }
 }
