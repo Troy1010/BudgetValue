@@ -50,7 +50,7 @@ fun <K, V : Any, T> Observable<Map<K, V>>.flatMapSourceHashMap(sourceHashMap: So
 // TODO: Move to Flow.kt
 // TODO: Rewrite
 fun <K, V : Any, T : Any> Flow<Map<K, V>>.flatMapSourceHashMap(sourceHashMap: SourceHashMap<K, V> = SourceHashMap(), outputChooser: (SourceHashMap<K, V>) -> Flow<T>): Flow<T> =
-    asObservable().flatMapSourceHashMap(sourceHashMap) { sourceHashMap -> outputChooser(sourceHashMap).asObservable() }.asFlow()
+    asObservable().flatMapSourceHashMap(sourceHashMap) { _sourceHashMap -> outputChooser(_sourceHashMap).asObservable() }.asFlow()
 
 // TODO: Move to Flow.kt
 // TODO: Could this be simplified..?
