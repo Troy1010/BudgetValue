@@ -5,6 +5,7 @@ import com.tminus1010.budgetvalue._core.all.extensions.cold
 import com.tminus1010.budgetvalue._core.all.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.domain.CategoryAmountFormulas
 import com.tminus1010.budgetvalue._core.framework.ColdObservable
+import com.tminus1010.budgetvalue._core.framework.source_objects.SourceList
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
@@ -82,10 +83,10 @@ class ReplayVM @Inject constructor(
         }!!
             .replayNonError(1)
 
-    override val _selectedCategories =
+    override val _selectedCategories: Observable<SourceList<Category>> =
         Observable.combineLatest(super._selectedCategories, replay)
         { selectedCategories, replay ->
-            selectedCategories.plus(replay.fillCategory)
+            SourceList(selectedCategories.plus(replay.fillCategory))
         }
     val amountOfSearchTexts =
         searchTexts.map { it.size.toString() }
