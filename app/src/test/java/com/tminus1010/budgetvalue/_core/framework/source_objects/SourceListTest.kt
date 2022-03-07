@@ -8,11 +8,9 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 
-@Ignore // This annotation only ignores for JUnit4
 class SourceListTest {
     @ParameterizedTest
     @MethodSource("getData")
-    @Test
     fun adjustTo(givenSourceList: SourceList<Int>, givenList: List<Int>) = runBlocking {
         // # When
         givenSourceList.adjustTo(givenList)
