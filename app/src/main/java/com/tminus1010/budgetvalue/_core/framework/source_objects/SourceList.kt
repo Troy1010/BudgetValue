@@ -1,15 +1,25 @@
 package com.tminus1010.budgetvalue._core.framework.source_objects
 
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.pairwise
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.rx3.asFlow
 
 class SourceList<T>(iterable: Iterable<T> = emptyList()) : ArrayList<T>() {
     constructor(vararg values: T) : this(values.toList())
 
-    private val behaviorSubject = BehaviorSubject.createDefault(iterable.toList())
+    private val behaviorSubject = BehaviorSubject.createDefault(listOf<T>())
+
+    init {
+        adjustTo(iterable.toList())
+    }
+
     val observable: Observable<List<T>> = behaviorSubject
     val flow = behaviorSubject.asFlow()
+    val onAddOrRemove = flow.onStart { emit(listOf()) }.pairwise().filter { it.first.size != it.second.size }.map { it.second }
 
     fun adjustTo(list: List<T>) {
         // If there are too many items, remove some.

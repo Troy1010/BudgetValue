@@ -54,7 +54,7 @@ fun <K, V : Any, T : Any> Flow<Map<K, V>>.flatMapSourceHashMap(sourceHashMap: So
 
 // TODO: Move to Flow.kt
 // TODO: Could this be simplified..?
-fun <IN : Any, OUT : Any> Flow<List<IN>>.flatMapSourceList(sourceList: SourceList<IN> = SourceList(), outputChooser: (SourceList<IN>) -> Flow<OUT>): Flow<OUT> {
+fun <IN, OUT> Flow<List<IN>>.flatMapSourceList(sourceList: SourceList<IN> = SourceList(), outputChooser: (SourceList<IN>) -> Flow<OUT>): Flow<OUT> {
     return channelFlow {
         launch {
             outputChooser(sourceList)
