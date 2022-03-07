@@ -24,6 +24,12 @@ class SourceList<T>(iterable: Iterable<T> = emptyList()) : ArrayList<T>() {
     }
 
     // # ArrayList Overrides
+    override fun set(index: Int, element: T): T {
+        val x = super.set(index, element)
+        behaviorSubject.onNext(this)
+        return x
+    }
+
     override fun clear() {
         super.clear()
         behaviorSubject.onNext(this)
