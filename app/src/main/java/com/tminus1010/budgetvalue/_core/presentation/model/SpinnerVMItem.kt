@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 @Suppress("UNCHECKED_CAST")
 class SpinnerVMItem<T>(
     private val values: Array<T>,
-    private val initialValue: T,
+    private val initialValue: T? = null,
     private val onNewItem: (T) -> Unit
 ) : IHasToViewItemRecipe {
     constructor(values: Array<T>, behaviorSubject: BehaviorSubject<T>) : this(values, behaviorSubject.value, behaviorSubject::onNext)
