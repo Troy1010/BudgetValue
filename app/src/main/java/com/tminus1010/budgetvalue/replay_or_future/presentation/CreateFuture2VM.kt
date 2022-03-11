@@ -20,7 +20,6 @@ import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture
 import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
 import com.tminus1010.budgetvalue.replay_or_future.domain.TotalFuture
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
-import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.budgetvalue.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
 import com.tminus1010.budgetvalue.transactions.presentation.model.SearchType
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
@@ -40,7 +39,7 @@ class CreateFuture2VM @Inject constructor(
     private val futuresRepo: FuturesRepo,
     private val toaster: Toaster,
     private val categorizeAllMatchingUncategorizedTransactions: CategorizeAllMatchingUncategorizedTransactions,
-    private val transactionsInteractor: TransactionsInteractor,
+    private val setSearchTextsSharedVM: SetSearchTextsSharedVM,
 ) : ViewModel() {
     // # User Intents
     fun userTryNavToCategorySelection() {
@@ -64,7 +63,7 @@ class CreateFuture2VM @Inject constructor(
                 SearchType.DESCRIPTION ->
                     BasicFuture(
                         name = generateUniqueID(),
-                        searchTexts = listOf(description.value?.ifEmpty { null } ?: throw NoDescriptionEnteredException()),
+                        searchTexts = setSearchTextsSharedVM.searchTexts.value,
                         categoryAmountFormulas = categoryAmountFormulas.value,
                         fillCategory = fillCategory.value!!,
                         terminationStatus = if (isPermanent.value) TerminationStatus.PERMANENT else TerminationStatus.WAITING_FOR_MATCH,
@@ -99,11 +98,6 @@ class CreateFuture2VM @Inject constructor(
         this.searchType.onNext(searchType)
     }
 
-    private val userSetDescription = MutableSharedFlow<String?>()
-    fun userSetDescription(s: String) {
-        userSetDescription.onNext(s)
-    }
-
     private val userCategoryAmountFormulas = SourceHashMap<Category, AmountFormula>()
     fun userSetCategoryAmountFormula(category: Category, amountFormula: AmountFormula) {
         if (amountFormula.isZero())
@@ -117,14 +111,14 @@ class CreateFuture2VM @Inject constructor(
         userSetFillCategory.onNext(categoriesInteractor.parseCategory(categoryName))
     }
 
+    fun userTryNavToSetSearchTexts() {
+        navToSetSearchTexts.onNext()
+    }
+
     // # Internal
     private val totalGuess = MutableStateFlow(BigDecimal.TEN)
     private val isPermanent = MutableStateFlow(false)
     private val searchType = MutableStateFlow(SearchType.DESCRIPTION)
-    private val description =
-        transactionsInteractor.mostRecentUncategorizedSpend2
-            .flatMapLatest { userSetDescription.onStart { emit(it?.description) } }
-            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
     private val categoryAmountFormulas =
         combine(userCategoryAmountFormulas.flow, selectedCategoriesModel.selectedCategories)
         { userCategoryAmountFormulas, selectedCategories ->
@@ -153,6 +147,7 @@ class CreateFuture2VM @Inject constructor(
     val navUp = MutableSharedFlow<Unit>()
     val navToCategorySelection = MutableSharedFlow<Unit>()
     val navToChooseTransaction = MutableSharedFlow<Unit>()
+    val navToSetSearchTexts = MutableSharedFlow<Unit>()
 
     // # State
     val otherInput =
@@ -168,16 +163,10 @@ class CreateFuture2VM @Inject constructor(
                 ),
                 if (listOf(SearchType.DESCRIPTION_AND_TOTAL, SearchType.DESCRIPTION).any { it == searchType })
                     listOf(
-                        TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Description"),
-                        EditTextVMItem(
-                            text = description.value,
-                            onDone = { userSetDescription(it) },
-                            menuPresentationModel = MenuPresentationModel(
-                                MenuVMItem(
-                                    title = "Copy selection from history",
-                                    onClick = { navToChooseTransaction.onNext() },
-                                )
-                            ),
+                        TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Search Texts"),
+                        ButtonVMItem(
+                            title = "View Search Texts (${setSearchTextsSharedVM.searchTexts.value.size})",
+                            onClick = { userTryNavToSetSearchTexts() },
                         ),
                     )
                 else null,

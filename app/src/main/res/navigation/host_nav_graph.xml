@@ -182,4 +182,9 @@
         android:name="com.tminus1010.budgetvalue.transactions.view.ChooseTransactionFrag"
         android:label="ChooseTransactionFrag"
         tools:layout="@layout/frag_choose_transaction" />
+    <fragment
+        android:id="@+id/setSearchTextsFrag"
+        android:name="com.tminus1010.budgetvalue.replay_or_future.view.SetSearchTextsFrag"
+        android:label="SetSearchTextsFrag"
+        tools:layout="@layout/frag_set_search_texts" />
 </navigation>
