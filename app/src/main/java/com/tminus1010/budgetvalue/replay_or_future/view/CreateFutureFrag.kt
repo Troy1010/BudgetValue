@@ -21,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
+@Deprecated("Use CreateFuture2Frag")
 class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
     private val vb by viewBinding(FragCreateFutureBinding::bind)
     private val createFutureVM by navGraphViewModels<CreateFutureVM>(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }

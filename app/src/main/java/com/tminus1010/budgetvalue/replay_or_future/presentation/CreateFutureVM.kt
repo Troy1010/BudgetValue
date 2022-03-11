@@ -27,6 +27,7 @@ import java.math.BigDecimal
 import javax.inject.Inject
 
 @HiltViewModel
+@Deprecated("Use CreateFuture2VM")
 class CreateFutureVM @Inject constructor(
     private val futuresRepo: FuturesRepo,
     private val transactionsInteractor: TransactionsInteractor,

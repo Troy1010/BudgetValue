@@ -82,8 +82,7 @@ class CategorizeVM @Inject constructor(
         navToCreateFuture2.onNext()
     }
 
-    // # Presentation Events
-    val navToCreateFuture = MutableSharedFlow<Unit>()
+    // # Events
     val navToCreateFuture2 = MutableSharedFlow<Unit>()
     val navToSplit = MutableSharedFlow<Transaction>()
     val navToCategorySettings = MutableSharedFlow<Category>()
@@ -127,12 +126,6 @@ class CategorizeVM @Inject constructor(
         Observable.combineLatest(inSelectionMode, matchingReplays.asObservable())
         { inSelectionMode, matchingReplays ->
             listOfNotNull(
-                if (inSelectionMode)
-                    ButtonVMItem(
-                        title = "Create Future",
-                        onClick = { navToCreateFuture.easyEmit(Unit) },
-                    )
-                else null,
                 if (inSelectionMode)
                     ButtonVMItem(
                         title = "Split",
