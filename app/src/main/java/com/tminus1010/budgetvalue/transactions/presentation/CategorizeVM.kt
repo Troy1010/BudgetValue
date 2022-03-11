@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.transactions.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
 import com.tminus1010.budgetvalue._core.all.extensions.onNext
 import com.tminus1010.budgetvalue._core.framework.view.SpinnerService
@@ -108,7 +109,7 @@ class CategorizeVM @Inject constructor(
     val isTransactionAvailable =
         transactionsInteractor.mostRecentUncategorizedSpend2
             .map { it != null }
-            .stateIn(GlobalScope, SharingStarted.Eagerly, false)
+            .stateIn(viewModelScope, SharingStarted.Eagerly, false)
     val date =
         transactionsInteractor.mostRecentUncategorizedSpend2
             .map { it?.date?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")) ?: "" }
@@ -118,7 +119,7 @@ class CategorizeVM @Inject constructor(
     val latestUncategorizedTransactionDescription =
         transactionsInteractor.mostRecentUncategorizedSpend2
             .map { it?.description }
-            .stateIn(GlobalScope, SharingStarted.Eagerly, null)
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
     val uncategorizedSpendsSize =
         transactionsInteractor.uncategorizedSpends2
             .map { it.size.toString() }
