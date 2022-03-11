@@ -38,11 +38,12 @@ class SourceHashMap<K, V : Any> constructor(map: Map<K, V> = emptyMap(), val exi
     val additionOrRemovals: Observable<AdditionOrRemoval<K, V>> = changeSet
         .filter { it.type == AddRemEditType.ADD || it.type == AddRemEditType.REMOVE }
         .map {
-            val additionOrRemovalType = when (it.type) {
-                AddRemEditType.ADD -> AddRemType.ADD
-                AddRemEditType.REMOVE -> AddRemType.REMOVE
-                else -> error("Unexpected ChangeType:$it")
-            }
+            val additionOrRemovalType =
+                when (it.type) {
+                    AddRemEditType.ADD -> AddRemType.ADD
+                    AddRemEditType.REMOVE -> AddRemType.REMOVE
+                    else -> error("Unexpected ChangeType:$it")
+                }
             AdditionOrRemoval(additionOrRemovalType, it.key, it.value)
         }
 
