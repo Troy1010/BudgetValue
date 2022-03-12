@@ -3,6 +3,8 @@ package com.tminus1010.budgetvalue.replay_or_future.presentation
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue._core.presentation.model.EditTextVMItem
+import com.tminus1010.budgetvalue._core.presentation.model.MenuPresentationModel
+import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flatMapLatest
@@ -23,6 +25,12 @@ class SetSearchTextsVM @Inject constructor(
                             EditTextVMItem(
                                 text = s,
                                 onDone = { sourceList[i] = it },
+                                menuPresentationModel = MenuPresentationModel(
+                                    MenuVMItem(
+                                        title = "Delete",
+                                        onClick = { sourceList.removeAt(i) }
+                                    )
+                                )
                             )
                         )
                     }.toTypedArray(),
