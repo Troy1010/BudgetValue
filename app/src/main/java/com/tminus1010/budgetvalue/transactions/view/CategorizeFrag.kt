@@ -59,18 +59,19 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         categorySelectionVM.inSelectionMode.subscribe(categorizeVM.inSelectionMode)
         categorySelectionVM.selectedCategories.subscribe(categorizeVM.selectedCategories)
         categorizeVM.clearSelection.observe(viewLifecycleOwner) { categorySelectionVM.clearSelection().subscribe() }
-        // # Some of SelectionMode
+        // # State
+        // ## Some of SelectionMode
         categorySelectionVM.inSelectionMode.observe(viewLifecycleOwner) { inSelectionMode ->
             vb.root.children
                 .filter { it != vb.recyclerviewCategories && it != vb.buttonsview }
                 .forEach { it.alpha = if (inSelectionMode) 0.5F else 1F }
         }
-        // # TextViews
+        // ## TextViews
         vb.textviewDate.bind(categorizeVM.date) { text = it }
         vb.textviewAmount.bind(categorizeVM.latestUncategorizedTransactionAmount) { text = it }
         vb.textviewDescription.bind(categorizeVM.latestUncategorizedTransactionDescription) { text = it }
         vb.textviewAmountLeft.bind(categorizeVM.uncategorizedSpendsSize) { text = it }
-        // # Categories RecyclerView
+        // ## Categories RecyclerView
         categoriesVM.userCategories.observe(viewLifecycleOwner) { categories = it }
         val spanSize = if (requireContext().resources.configuration.fontScale <= 1.0) 3 else 2
         vb.recyclerviewCategories.addItemDecoration(LayoutMarginDecoration(spanSize, 8.toPX(requireContext())))
