@@ -76,6 +76,7 @@ class CreateFutureVM @Inject constructor(
                     categoryAmountFormulas = categoryAmountFormulas.value,
                     fillCategory = fillCategory.value.first!!,
                     terminationStatus = if (isPermanent.value) TerminationStatus.PERMANENT else TerminationStatus.WAITING_FOR_MATCH,
+                    isAutomatic = true,
                 )
             SearchType.DESCRIPTION ->
                 BasicFuture(
@@ -84,6 +85,7 @@ class CreateFutureVM @Inject constructor(
                     categoryAmountFormulas = categoryAmountFormulas.value,
                     fillCategory = fillCategory.value.first!!,
                     terminationStatus = if (isPermanent.value) TerminationStatus.PERMANENT else TerminationStatus.WAITING_FOR_MATCH,
+                    isAutomatic = true,
                 )
         }
             .let { newFuture ->

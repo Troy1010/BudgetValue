@@ -100,7 +100,7 @@ class CategorizeVM @Inject constructor(
         combine(replaysRepo.fetchReplays().asFlow(), transactionsInteractor.mostRecentUncategorizedSpend2)
         { replays, transaction ->
             if (transaction == null) emptyList() else
-                replays.filter { it.predicate(transaction) }
+                replays.filter { it.shouldCategorizeOnImport(transaction) }
         }
 
     // # State

@@ -14,7 +14,7 @@ data class BasicReplay(
     override val categoryAmountFormulas: CategoryAmountFormulas,
     override val fillCategory: Category,
 ) : IReplay {
-    override fun predicate(transaction: Transaction): Boolean =
+    override fun shouldCategorizeOnImport(transaction: Transaction): Boolean =
         searchTexts.any { it.uppercase() in transaction.description.uppercase() }
 
     fun toDTO(categoryAmountFormulasConverter: CategoryAmountFormulasConverter) =

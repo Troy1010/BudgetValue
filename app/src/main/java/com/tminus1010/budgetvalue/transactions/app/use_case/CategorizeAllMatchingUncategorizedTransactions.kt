@@ -35,6 +35,6 @@ class CategorizeAllMatchingUncategorizedTransactions @Inject constructor(
      * Emits an [Int] representing how many transactions were categorized
      */
     operator fun invoke(replay: IReplayOrFuture): Single<Int> {
-        return invoke(replay::predicate, replay::categorize)
+        return invoke(replay::shouldCategorizeOnImport, replay::categorize)
     }
 }

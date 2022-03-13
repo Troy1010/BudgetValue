@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue.transactions.app.Transaction
 
 interface IReplayOrFuture {
     val name: String
-    fun predicate(transaction: Transaction): Boolean
+    fun shouldCategorizeOnImport(transaction: Transaction): Boolean
     val categoryAmountFormulas: CategoryAmountFormulas
     val fillCategory: Category
     fun categorize(transaction: Transaction): Transaction =

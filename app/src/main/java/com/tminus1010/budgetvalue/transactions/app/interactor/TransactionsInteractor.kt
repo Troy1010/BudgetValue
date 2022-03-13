@@ -43,7 +43,7 @@ class TransactionsInteractor @Inject constructor(
         return futuresRepo.fetchFutures().toSingle().map { futures ->
             Rx.merge(
                 transactions.map { transaction ->
-                    (futures.find { it.predicate(transaction) }
+                    (futures.find { it.shouldCategorizeOnImport(transaction) }
                         ?.let { future ->
                             transactionsRepo.push(future.categorize(transaction))
                                 .andThen(

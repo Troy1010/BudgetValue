@@ -4,7 +4,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.tminus1010.budgetvalue._core.domain.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 
 @Entity
@@ -15,7 +14,9 @@ data class BasicFuture(
     override val categoryAmountFormulas: CategoryAmountFormulas,
     override val fillCategory: Category,
     override val terminationStatus: TerminationStatus,
+    override val isAutomatic: Boolean,
 ) : IFuture {
-    override fun predicate(transaction: Transaction): Boolean =
-        searchTexts.any { it.uppercase() in transaction.description.uppercase() }
+    override fun shouldCategorizeOnImport(transaction: Transaction): Boolean {
+        return isAutomatic && searchTexts.any { it.uppercase() in transaction.description.uppercase() }
+    }
 }

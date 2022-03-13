@@ -18,7 +18,9 @@ data class TotalFuture(
     override val categoryAmountFormulas: CategoryAmountFormulas,
     override val fillCategory: Category,
     override val terminationStatus: TerminationStatus,
+    override val isAutomatic: Boolean,
 ) : IFuture {
-    override fun predicate(transaction: Transaction): Boolean =
-        searchTotal.easyEquals(transaction.amount)
+    override fun shouldCategorizeOnImport(transaction: Transaction): Boolean {
+        return isAutomatic && searchTotal.easyEquals(transaction.amount)
+    }
 }
