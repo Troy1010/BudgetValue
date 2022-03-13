@@ -22,7 +22,7 @@ data class BasicFuture(
             name = name,
             searchTexts = searchTexts,
             categoryAmountFormulasStr = categoryAmountFormulasConverter.toJson(categoryAmountFormulas),
-            autoFillCategoryName = fillCategory.name,
+            autoFillCategory = fillCategory,
             terminationStatus = terminationStatus,
         )
 
@@ -32,7 +32,7 @@ data class BasicFuture(
                 name = name,
                 searchTexts = searchTexts,
                 categoryAmountFormulas = categoryAmountFormulasConverter.toCategoryAmountFormulas(categoryAmountFormulasStr),
-                fillCategory = categoriesInteractor.parseCategory(autoFillCategoryName),
+                fillCategory = autoFillCategory,
                 terminationStatus = terminationStatus,
             )
         }
