@@ -40,7 +40,6 @@
         <item name="android:autoSizeTextType">uniform</item>
         <item name="android:autoSizeMaxTextSize">21sp</item>
         <item name="android:autoSizeMinTextSize">14sp</item>
-        <item name="android:text">Category</item>
     </style>
 
 </resources>
