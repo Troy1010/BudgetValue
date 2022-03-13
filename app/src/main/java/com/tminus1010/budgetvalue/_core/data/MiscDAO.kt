@@ -4,19 +4,17 @@ import androidx.room.*
 import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
 import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue.accounts.data.AccountDTO
-import com.tminus1010.budgetvalue.plans.data.model.PlanDTO
 import com.tminus1010.budgetvalue.plans.domain.Plan
 import com.tminus1010.budgetvalue.reconcile.data.model.ReconciliationDTO
-import com.tminus1010.budgetvalue.replay_or_future.data.model.BasicFutureDTO
 import com.tminus1010.budgetvalue.replay_or_future.data.model.BasicReplayDTO
 import com.tminus1010.budgetvalue.replay_or_future.data.model.TotalFutureDTO
+import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture
 import com.tminus1010.budgetvalue.transactions.data.TransactionDTO
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.flow.Flow
 import java.math.BigDecimal
-import java.time.LocalDate
 
 @Dao
 interface MiscDAO {
@@ -143,17 +141,17 @@ interface MiscDAO {
 
     // # Futures
 
-    @Query("select * from BasicFutureDTO")
-    fun fetchBasicFutures(): Observable<List<BasicFutureDTO>>
+    @Query("select * from BasicFuture")
+    fun fetchBasicFutures(): Observable<List<BasicFuture>>
 
     @Insert
-    fun push(basicFutureDTO: BasicFutureDTO): Completable
+    fun push(basicFutureDTO: BasicFuture): Completable
 
-    @Query("DELETE FROM BasicFutureDTO WHERE name=:name")
+    @Query("DELETE FROM BasicFuture WHERE name=:name")
     fun deleteBasicFuture(name: String): Completable
 
     @Update
-    fun update(basicFutureDTO: BasicFutureDTO): Completable
+    fun update(basicFutureDTO: BasicFuture): Completable
 
     @Query("select * from TotalFutureDTO")
     fun fetchTotalFutures(): Observable<List<TotalFutureDTO>>

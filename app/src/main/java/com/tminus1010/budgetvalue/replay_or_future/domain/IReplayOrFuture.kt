@@ -2,13 +2,12 @@ package com.tminus1010.budgetvalue.replay_or_future.domain
 
 import com.tminus1010.budgetvalue._core.domain.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 
 interface IReplayOrFuture {
     val name: String
     fun predicate(transaction: Transaction): Boolean
-    val categoryAmountFormulas: Map<Category, AmountFormula>
+    val categoryAmountFormulas: CategoryAmountFormulas
     val fillCategory: Category
     fun categorize(transaction: Transaction): Transaction =
         transaction.categorize(

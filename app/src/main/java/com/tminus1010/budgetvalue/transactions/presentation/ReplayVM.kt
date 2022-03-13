@@ -42,7 +42,7 @@ class ReplayVM @Inject constructor(
         val _replay = BasicReplay(
             name = name,
             searchTexts = searchTexts.value!!,
-            categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
+            categoryAmountFormulas = CategoryAmountFormulas(categoryAmountFormulas.value!!.filter { !it.value.isZero() }),
             fillCategory = _fillCategory.value.first!!,
         )
         replaysRepo.update(_replay)

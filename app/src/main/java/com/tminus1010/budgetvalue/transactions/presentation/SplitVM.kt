@@ -4,6 +4,7 @@ import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._core.all.extensions.cold
 import com.tminus1010.budgetvalue._core.all.extensions.nonLazyCache
 import com.tminus1010.budgetvalue._core.all.extensions.unbox
+import com.tminus1010.budgetvalue._core.domain.CategoryAmountFormulas
 import com.tminus1010.budgetvalue._core.framework.ColdObservable
 import com.tminus1010.budgetvalue._core.framework.view.Toaster
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
@@ -58,7 +59,7 @@ class SplitVM @Inject constructor(
             BasicReplay(
                 name = generateUniqueID(),
                 searchTexts = listOf(transactionToPush.unbox.description),
-                categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
+                categoryAmountFormulas = CategoryAmountFormulas(categoryAmountFormulas.value!!.filter { !it.value.isZero() }),
                 fillCategory = fillCategory.unbox
             )
         ).subscribeBy(
@@ -70,7 +71,7 @@ class SplitVM @Inject constructor(
         val replay = BasicReplay(
             name = name,
             searchTexts = listOf(transaction.unbox.description),
-            categoryAmountFormulas = categoryAmountFormulas.value!!.filter { !it.value.isZero() },
+            categoryAmountFormulas = CategoryAmountFormulas(categoryAmountFormulas.value!!.filter { !it.value.isZero() }),
             fillCategory = _fillCategory.value.first!!,
         )
         replaysRepo.add(replay)

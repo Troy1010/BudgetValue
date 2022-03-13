@@ -19,7 +19,7 @@ class FuturesRepo @Inject constructor(
 ) {
     fun add(future: IFuture): Completable {
         return when (future) {
-            is BasicFuture -> miscDAO.push(future.toDTO(categoryAmountFormulasConverter))
+            is BasicFuture -> miscDAO.push(future)
             is TotalFuture -> miscDAO.push(future.toDTO(categoryAmountFormulasConverter))
             else -> error("unhandled IFuture")
         }.subscribeOn(Schedulers.io())
@@ -27,7 +27,7 @@ class FuturesRepo @Inject constructor(
 
     fun setTerminationStatus(future: IFuture, terminationStatus: TerminationStatus): Completable {
         return when (future) {
-            is BasicFuture -> miscDAO.update(future.copy(terminationStatus = terminationStatus).toDTO(categoryAmountFormulasConverter))
+            is BasicFuture -> miscDAO.update(future.copy(terminationStatus = terminationStatus))
             is TotalFuture -> miscDAO.update(future.copy(terminationStatus = terminationStatus).toDTO(categoryAmountFormulasConverter))
             else -> error("unhandled IFuture")
         }.subscribeOn(Schedulers.io())
@@ -42,8 +42,7 @@ class FuturesRepo @Inject constructor(
 
     fun fetchFutures(): Observable<List<IFuture>> =
         Observable.combineLatest(
-            miscDAO.fetchBasicFutures().subscribeOn(Schedulers.io())
-                .map { it.map { BasicFuture.fromDTO(it, categoryAmountFormulasConverter, categoriesInteractor) } },
+            miscDAO.fetchBasicFutures().subscribeOn(Schedulers.io()),
             miscDAO.fetchTotalFutures().subscribeOn(Schedulers.io())
                 .map { it.map { TotalFuture.fromDTO(it, categoryAmountFormulasConverter, categoriesInteractor) } },
         ) { basicFutures, totalFutures -> basicFutures + totalFutures }

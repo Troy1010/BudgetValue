@@ -2,6 +2,7 @@ package com.tminus1010.budgetvalue._core.data
 
 import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
+import com.tminus1010.budgetvalue._core.domain.CategoryAmountFormulas
 import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
@@ -25,6 +26,14 @@ class RoomWithCategoriesTypeConverter @Inject constructor(
         moshiWithCategoriesProvider.moshi.toJson(x)
 
     @TypeConverter
-    fun toCategoryAmounts(s: String): CategoryAmounts =
+    fun fromJson3(s: String): CategoryAmounts =
+        moshiWithCategoriesProvider.moshi.fromJson(s)
+
+    @TypeConverter
+    fun toJson(x: CategoryAmountFormulas): String =
+        moshiWithCategoriesProvider.moshi.toJson(x)
+
+    @TypeConverter
+    fun fromJson4(s: String): CategoryAmountFormulas =
         moshiWithCategoriesProvider.moshi.fromJson(s)
 }
