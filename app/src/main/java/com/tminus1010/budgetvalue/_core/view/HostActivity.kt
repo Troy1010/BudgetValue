@@ -13,9 +13,11 @@ import androidx.navigation.ui.NavigationUI
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.all.extensions.easyAlertDialog
 import com.tminus1010.budgetvalue._core.all.extensions.getString
+import com.tminus1010.budgetvalue._core.all.extensions.onNext
 import com.tminus1010.budgetvalue._core.all.extensions.unCheckAllMenuItems
 import com.tminus1010.budgetvalue._core.framework.view.SpinnerService
 import com.tminus1010.budgetvalue._core.framework.view.Toaster
+import com.tminus1010.budgetvalue._core.presentation.Errors
 import com.tminus1010.budgetvalue._core.presentation.view_model.HostVM
 import com.tminus1010.budgetvalue.accounts.presentation.AccountsVM
 import com.tminus1010.budgetvalue.app_init.AppInitInteractor
@@ -32,6 +34,7 @@ import com.tminus1010.budgetvalue.transactions.view.TransactionListFrag
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.subjects.Subject
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -66,11 +69,19 @@ class HostActivity : AppCompatActivity() {
     @Inject
     lateinit var spinnerService: SpinnerService
 
+    @Inject
+    lateinit var errorSubject: Subject<Throwable>
+
+    @Inject
+    lateinit var errors: Errors
+
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.frag_nav_host) as HostFrag }
     private val nav by lazy { findNavController(R.id.frag_nav_host) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(vb.root)
+        // # Mediation
+        errorSubject.subscribe { errors.onNext(it) }
         // # Initialize app once per install
         GlobalScope.launch { appInitInteractor.tryInitializeApp() }
         // # Bind bottom menu to navigation.
