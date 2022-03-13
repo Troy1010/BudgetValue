@@ -17,12 +17,10 @@ import com.tminus1010.budgetvalue._core.framework.view.viewBinding
 import com.tminus1010.budgetvalue.categories.CategoriesVM
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.CategorySelectionVM
-import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.ui.CategorySettingsFrag
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
 import com.tminus1010.budgetvalue.replay_or_future.view.CreateFuture2Frag
-import com.tminus1010.budgetvalue.replay_or_future.view.CreateFutureFrag
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.budgetvalue.transactions.presentation.CategorizeVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
@@ -47,11 +45,6 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
 
     @Inject
     lateinit var categoryAmountsConverter: CategoryAmountsConverter
-    var categories = emptyList<Category>()
-        set(value) {
-            field = value
-            vb.recyclerviewCategories.adapter?.notifyDataSetChanged()
-        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -72,38 +65,38 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         vb.textviewDescription.bind(categorizeVM.latestUncategorizedTransactionDescription) { text = it }
         vb.textviewAmountLeft.bind(categorizeVM.uncategorizedSpendsSize) { text = it }
         // ## Categories RecyclerView
-        categoriesVM.userCategories.observe(viewLifecycleOwner) { categories = it }
         val spanSize = if (requireContext().resources.configuration.fontScale <= 1.0) 3 else 2
         vb.recyclerviewCategories.addItemDecoration(LayoutMarginDecoration(spanSize, 8.toPX(requireContext())))
-        vb.recyclerviewCategories.layoutManager =
-            GridLayoutManager(requireActivity(), spanSize, GridLayoutManager.VERTICAL, false)
-        vb.recyclerviewCategories.adapter = object : LifecycleRVAdapter2<GenViewHolder2<ItemCategoryBtnBinding>>() {
-            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-                GenViewHolder2(ItemCategoryBtnBinding.inflate(LayoutInflater.from(requireContext()), parent, false))
+        vb.recyclerviewCategories.layoutManager = GridLayoutManager(requireActivity(), spanSize, GridLayoutManager.VERTICAL, false)
+        vb.recyclerviewCategories.bind(categoriesVM.userCategories) { categories ->
+            adapter = object : LifecycleRVAdapter2<GenViewHolder2<ItemCategoryBtnBinding>>() {
+                override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+                    GenViewHolder2(ItemCategoryBtnBinding.inflate(LayoutInflater.from(requireContext()), parent, false))
 
-            override fun onBindViewHolder(holder: GenViewHolder2<ItemCategoryBtnBinding>, position: Int) {
-                val selectionModeAction = {
-                    if (categories[holder.adapterPosition] !in categorySelectionVM.selectedCategories.value!!)
-                        categorySelectionVM.selectCategories(categories[holder.adapterPosition])
-                    else
-                        categorySelectionVM.unselectCategories(categories[holder.adapterPosition])
+                override fun onBindViewHolder(holder: GenViewHolder2<ItemCategoryBtnBinding>, position: Int) {
+                    val selectionModeAction = {
+                        if (categories[holder.adapterPosition] !in categorySelectionVM.selectedCategories.value!!)
+                            categorySelectionVM.selectCategories(categories[holder.adapterPosition])
+                        else
+                            categorySelectionVM.unselectCategories(categories[holder.adapterPosition])
+                    }
+                    holder.vb.btnCategory.text = categories[holder.adapterPosition].name
+                    holder.vb.btnCategory.setOnClickListener {
+                        if (categorySelectionVM.inSelectionMode.value!!)
+                            selectionModeAction()
+                        else if (categorizeVM.isTransactionAvailable.value)
+                            categorizeVM.userSimpleCategorize(categories[holder.adapterPosition])
+                    }
+                    holder.vb.btnCategory.setOnLongClickListener { selectionModeAction(); true }
                 }
-                holder.vb.btnCategory.text = categories[holder.adapterPosition].name
-                holder.vb.btnCategory.setOnClickListener {
-                    if (categorySelectionVM.inSelectionMode.value!!)
-                        selectionModeAction()
-                    else if (categorizeVM.isTransactionAvailable.value)
-                        categorizeVM.userSimpleCategorize(categories[holder.adapterPosition])
-                }
-                holder.vb.btnCategory.setOnLongClickListener { selectionModeAction(); true }
-            }
 
-            override fun getItemCount() = categories.size
+                override fun getItemCount() = categories.size
 
-            override fun onLifecycleAttached(holder: GenViewHolder2<ItemCategoryBtnBinding>) {
-                val categoryName = categories[holder.adapterPosition].name
-                holder.vb.btnCategory.bind(categorySelectionVM.selectedCategories) {
-                    alpha = if (it.isEmpty() || categoryName in it.map { it.name }) 1F else 0.5F
+                override fun onLifecycleAttached(holder: GenViewHolder2<ItemCategoryBtnBinding>) {
+                    val categoryName = categories[holder.adapterPosition].name
+                    holder.vb.btnCategory.bind(categorySelectionVM.selectedCategories) {
+                        alpha = if (it.isEmpty() || categoryName in it.map { it.name }) 1F else 0.5F
+                    }
                 }
             }
         }
