@@ -116,7 +116,7 @@ class CreateFuture2VM @Inject constructor(
     }
 
     // # Internal
-    private val totalGuess = MutableStateFlow(BigDecimal.TEN)
+    private val totalGuess = MutableStateFlow(BigDecimal("-10"))
     private val isPermanent = MutableStateFlow(false)
     private val searchType = MutableStateFlow(SearchType.DESCRIPTION)
     private val categoryAmountFormulas =
