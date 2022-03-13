@@ -76,7 +76,7 @@ class CreateFuture2VM @Inject constructor(
                     )
                 }
                 .andThen(Completable.fromAction { runBlocking { selectedCategoriesModel.clearSelection() } }.subscribeOn(Schedulers.io()))
-                .andThen(Completable.fromAction { navUp.onNext(Unit) })
+                .andThen(Completable.fromAction { navUp.onNext() })
                 .subscribe()
         } catch (e: Throwable) {
             when (e) {
