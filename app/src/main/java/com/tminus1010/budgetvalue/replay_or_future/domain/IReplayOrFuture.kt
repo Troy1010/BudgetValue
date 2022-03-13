@@ -11,7 +11,7 @@ interface IReplayOrFuture {
     val fillCategory: Category
     fun categorize(transaction: Transaction): Transaction =
         transaction.categorize(
-            CategoryAmountFormulas(categoryAmountFormulas)
+            categoryAmountFormulas
                 .fillIntoCategory(fillCategory, transaction.amount)
                 .mapValues { it.value.calcAmount(transaction.amount) }
         )

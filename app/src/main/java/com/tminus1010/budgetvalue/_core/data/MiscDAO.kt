@@ -7,8 +7,8 @@ import com.tminus1010.budgetvalue.accounts.data.AccountDTO
 import com.tminus1010.budgetvalue.plans.domain.Plan
 import com.tminus1010.budgetvalue.reconcile.data.model.ReconciliationDTO
 import com.tminus1010.budgetvalue.replay_or_future.data.model.BasicReplayDTO
-import com.tminus1010.budgetvalue.replay_or_future.data.model.TotalFutureDTO
 import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture
+import com.tminus1010.budgetvalue.replay_or_future.domain.TotalFuture
 import com.tminus1010.budgetvalue.transactions.data.TransactionDTO
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -153,15 +153,15 @@ interface MiscDAO {
     @Update
     fun update(basicFutureDTO: BasicFuture): Completable
 
-    @Query("select * from TotalFutureDTO")
-    fun fetchTotalFutures(): Observable<List<TotalFutureDTO>>
+    @Query("select * from TotalFuture")
+    fun fetchTotalFutures(): Observable<List<TotalFuture>>
 
     @Insert
-    fun push(totalFutureDTO: TotalFutureDTO): Completable
+    fun push(totalFutureDTO: TotalFuture): Completable
 
-    @Query("DELETE FROM TotalFutureDTO WHERE name=:name")
+    @Query("DELETE FROM TotalFuture WHERE name=:name")
     fun deleteTotalFuture(name: String): Completable
 
     @Update
-    fun update(totalFutureDTO: TotalFutureDTO): Completable
+    fun update(totalFutureDTO: TotalFuture): Completable
 }
