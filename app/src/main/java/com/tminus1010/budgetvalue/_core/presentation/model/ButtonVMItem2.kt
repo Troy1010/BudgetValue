@@ -2,6 +2,7 @@ package com.tminus1010.budgetvalue._core.presentation.model
 
 import android.content.Context
 import android.widget.Button
+import com.tminus1010.budgetvalue._core.all.extensions.getColorByAttr
 import com.tminus1010.budgetvalue._core.framework.view.tmTableView3.IViewItemRecipe3
 import com.tminus1010.budgetvalue._core.framework.view.tmTableView3.ViewItemRecipe3__
 import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe
@@ -16,6 +17,7 @@ data class ButtonVMItem2(
     val isEnabled: Observable<Boolean>? = null,
     val isEnabled2: Flow<Boolean>? = null,
     val alpha: Flow<Float>? = null,
+    val backgroundColor: Int? = null,
     val onLongClick: (() -> Unit)? = null,
     val onClick: () -> Unit,
 ) : IHasToViewItemRecipe {
@@ -29,6 +31,8 @@ data class ButtonVMItem2(
             button.bind(isEnabled2) { button.isEnabled = it }
         if (alpha != null)
             button.bind(alpha) { alpha = it }
+        if (backgroundColor != null)
+            button.setBackgroundColor(button.context.theme.getColorByAttr(backgroundColor))
         button.setOnClickListener { onClick() }
         onLongClick?.also { button.setOnLongClickListener { it(); true } }
     }
