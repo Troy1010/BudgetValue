@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue._core.domain.DatePeriodService
 import com.tminus1010.budgetvalue._core.framework.Rx
 import com.tminus1010.budgetvalue.importZ.data.LatestDateOfMostRecentImport
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
-import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
+import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStrategy
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.budgetvalue.transactions.app.TransactionBlock
 import com.tminus1010.budgetvalue.transactions.app.TransactionsAggregate
@@ -47,8 +47,8 @@ class TransactionsInteractor @Inject constructor(
                         ?.let { future ->
                             transactionsRepo.push(future.categorize(transaction))
                                 .andThen(
-                                    if (future.terminationStatus == TerminationStatus.WAITING_FOR_MATCH)
-                                        futuresRepo.setTerminationStatus(future, TerminationStatus.TERMINATED(LocalDate.now()))
+                                    if (future.terminationStrategy == TerminationStrategy.WAITING_FOR_MATCH)
+                                        futuresRepo.setTerminationStatus(future, TerminationStrategy.TERMINATED(LocalDate.now()))
                                     else
                                         Completable.complete()
                                 )

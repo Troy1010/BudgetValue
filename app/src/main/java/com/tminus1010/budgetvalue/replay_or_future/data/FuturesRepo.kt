@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.replay_or_future.data
 import com.tminus1010.budgetvalue._core.data.MiscDAO
 import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture
 import com.tminus1010.budgetvalue.replay_or_future.domain.IFuture
-import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
+import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStrategy
 import com.tminus1010.budgetvalue.replay_or_future.domain.TotalFuture
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -21,10 +21,10 @@ class FuturesRepo @Inject constructor(
         }.subscribeOn(Schedulers.io())
     }
 
-    fun setTerminationStatus(future: IFuture, terminationStatus: TerminationStatus): Completable {
+    fun setTerminationStatus(future: IFuture, terminationStrategy: TerminationStrategy): Completable {
         return when (future) {
-            is BasicFuture -> miscDAO.update(future.copy(terminationStatus = terminationStatus))
-            is TotalFuture -> miscDAO.update(future.copy(terminationStatus = terminationStatus))
+            is BasicFuture -> miscDAO.update(future.copy(terminationStrategy = terminationStrategy))
+            is TotalFuture -> miscDAO.update(future.copy(terminationStrategy = terminationStrategy))
             else -> error("unhandled IFuture")
         }.subscribeOn(Schedulers.io())
     }

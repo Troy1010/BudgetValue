@@ -17,7 +17,7 @@ data class TotalFuture(
     val searchTotal: BigDecimal,
     override val categoryAmountFormulas: CategoryAmountFormulas,
     override val fillCategory: Category,
-    override val terminationStatus: TerminationStatus,
+    override val terminationStrategy: TerminationStrategy,
     override val isAutomatic: Boolean,
 ) : IFuture {
     override fun shouldCategorizeOnImport(transaction: Transaction): Boolean {

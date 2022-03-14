@@ -34,7 +34,7 @@ class FuturesReviewVM @Inject constructor(
                         val menuPresentationModel = MenuPresentationModel(MenuVMItem(title = "Delete", onClick = { userDeleteFuture(it) }))
                         listOf(
                             TextPresentationModel(TextPresentationModel.Style.TWO, it.name, menuPresentationModel = menuPresentationModel),
-                            TextPresentationModel(TextPresentationModel.Style.TWO, it.terminationStatus.displayStr, menuPresentationModel = menuPresentationModel),
+                            TextPresentationModel(TextPresentationModel.Style.TWO, it.terminationStrategy.displayStr, menuPresentationModel = menuPresentationModel),
                             TextPresentationModel(
                                 TextPresentationModel.Style.TWO,
                                 when (it) {

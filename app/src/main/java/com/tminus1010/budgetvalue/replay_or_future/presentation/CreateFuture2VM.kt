@@ -17,7 +17,7 @@ import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture
-import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
+import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStrategy
 import com.tminus1010.budgetvalue.replay_or_future.domain.TotalFuture
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.budgetvalue.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
@@ -58,7 +58,7 @@ class CreateFuture2VM @Inject constructor(
                         searchTotal = totalGuess.value,
                         categoryAmountFormulas = categoryAmountFormulas.value,
                         fillCategory = fillCategory.value!!,
-                        terminationStatus = if (isPermanent.value) TerminationStatus.PERMANENT else TerminationStatus.WAITING_FOR_MATCH,
+                        terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.WAITING_FOR_MATCH,
                         isAutomatic = isAutomatic.value,
                     )
                 SearchType.DESCRIPTION ->
@@ -67,14 +67,14 @@ class CreateFuture2VM @Inject constructor(
                         searchTexts = setSearchTextsSharedVM.searchTexts.value,
                         categoryAmountFormulas = categoryAmountFormulas.value,
                         fillCategory = fillCategory.value!!,
-                        terminationStatus = if (isPermanent.value) TerminationStatus.PERMANENT else TerminationStatus.WAITING_FOR_MATCH,
+                        terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.WAITING_FOR_MATCH,
                         isAutomatic = isAutomatic.value,
                     )
             }
                 .let { newFuture ->
                     Rx.merge(
                         futuresRepo.add(newFuture),
-                        if (newFuture.terminationStatus == TerminationStatus.PERMANENT) categorizeAllMatchingUncategorizedTransactions(newFuture).doOnSuccess { toaster.toast("$it transactions categorized") }.ignoreElement() else null,
+                        if (newFuture.terminationStrategy == TerminationStrategy.PERMANENT) categorizeAllMatchingUncategorizedTransactions(newFuture).doOnSuccess { toaster.toast("$it transactions categorized") }.ignoreElement() else null,
                     )
                 }
                 .andThen(Completable.fromAction { runBlocking { selectedCategoriesModel.clearSelection() } }.subscribeOn(Schedulers.io()))

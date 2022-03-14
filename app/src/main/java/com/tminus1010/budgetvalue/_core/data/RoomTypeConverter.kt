@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue._core.data
 import androidx.room.TypeConverter
 import com.tminus1010.budgetvalue._core.data.MoshiProvider.moshi
 import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
-import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
+import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStrategy
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
@@ -36,11 +36,11 @@ object RoomTypeConverter {
         moshi.fromJson(s)
 
     @TypeConverter
-    fun toJson(x: TerminationStatus): String =
+    fun toJson(x: TerminationStrategy): String =
         moshi.toJson(x)
 
     @TypeConverter
-    fun fromJson(s: String): TerminationStatus? =
+    fun fromJson(s: String): TerminationStrategy? =
         moshi.fromJson(s)
 
     @TypeConverter

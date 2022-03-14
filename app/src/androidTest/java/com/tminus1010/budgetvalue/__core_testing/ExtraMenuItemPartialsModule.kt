@@ -7,7 +7,7 @@ import com.tminus1010.budgetvalue._core.presentation.service.GetExtraMenuItemPar
 import com.tminus1010.budgetvalue.app_init.AppInitInteractor
 import com.tminus1010.budgetvalue.app_init.AppInitRepo
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
-import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
+import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStrategy
 import com.tminus1010.budgetvalue.replay_or_future.domain.TotalFuture
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
@@ -45,7 +45,7 @@ object ExtraMenuItemPartialsModule {
                     futuresRepo.fetchFutures().toSingle()
                         .flatMapCompletable { futures ->
                             val firstSearchTotal = futures
-                                .find { it is TotalFuture && it.terminationStatus == TerminationStatus.WAITING_FOR_MATCH }
+                                .find { it is TotalFuture && it.terminationStrategy == TerminationStrategy.WAITING_FOR_MATCH }
                                 ?.let { it as TotalFuture }
                                 ?.searchTotal
                             if (firstSearchTotal != null)

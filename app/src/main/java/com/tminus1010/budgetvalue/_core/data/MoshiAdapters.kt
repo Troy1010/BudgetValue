@@ -6,7 +6,7 @@ import com.squareup.moshi.ToJson
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.tminus1010.budgetvalue.categories.models.CategoryType
-import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
+import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStrategy
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -39,29 +39,29 @@ object MoshiAdapters {
 
 
     /**
-     * [TerminationStatus]
+     * [TerminationStrategy]
      */
     @ToJson
-    fun toJson(x: TerminationStatus): String =
+    fun toJson(x: TerminationStrategy): String =
         x.ordinal.toString()
             .plus("`")
             .plus(
-                if (x is TerminationStatus.TERMINATED)
+                if (x is TerminationStrategy.TERMINATED)
                     toJson(x.terminationDate)
                 else ""
             )
 
     @FromJson
-    fun fromJson3(s: String): TerminationStatus =
+    fun fromJson3(s: String): TerminationStrategy =
         when (s.takeWhile { it != '`' }.toLong()) {
-            TerminationStatus.TERMINATED.ordinal ->
-                TerminationStatus.TERMINATED(
+            TerminationStrategy.TERMINATED.ordinal ->
+                TerminationStrategy.TERMINATED(
                     terminationDate = fromJson4(s.dropWhile { it != '`' }.drop(1))
                 )
-            TerminationStatus.PERMANENT.ordinal ->
-                TerminationStatus.PERMANENT
-            TerminationStatus.WAITING_FOR_MATCH.ordinal ->
-                TerminationStatus.WAITING_FOR_MATCH
+            TerminationStrategy.PERMANENT.ordinal ->
+                TerminationStrategy.PERMANENT
+            TerminationStrategy.WAITING_FOR_MATCH.ordinal ->
+                TerminationStrategy.WAITING_FOR_MATCH
             else -> error("Unrecognized ordinal:${s.takeWhile { it != '`' }.toLong()}")
         }
 

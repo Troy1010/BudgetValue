@@ -13,7 +13,7 @@ data class BasicFuture(
     val searchTexts: List<String>,
     override val categoryAmountFormulas: CategoryAmountFormulas,
     override val fillCategory: Category,
-    override val terminationStatus: TerminationStatus,
+    override val terminationStrategy: TerminationStrategy,
     override val isAutomatic: Boolean,
 ) : IFuture {
     override fun shouldCategorizeOnImport(transaction: Transaction): Boolean {
