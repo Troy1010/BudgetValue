@@ -54,7 +54,7 @@ class PlanFrag : Fragment(R.layout.frag_plan) {
                 vb.moneyedittext.easyText2 = d
             }
         )
-        Rx.combineLatest(categoriesVM.userCategories, planVM.activePlanCAs.asObservable2())
+        Rx.combineLatest(categoriesVM.userCategories.asObservable2(), planVM.activePlanCAs.asObservable2())
             .throttleLatest(150, TimeUnit.MILLISECONDS)
             .observeOn(Schedulers.computation())
             .map { (categories, planCAsItemObservableMap) ->
