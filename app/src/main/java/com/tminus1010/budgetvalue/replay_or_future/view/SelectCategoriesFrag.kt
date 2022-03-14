@@ -21,6 +21,7 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toPX
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.map
 
 @AndroidEntryPoint
 class SelectCategoriesFrag : Fragment(R.layout.frag_select_categories) {
@@ -38,14 +39,14 @@ class SelectCategoriesFrag : Fragment(R.layout.frag_select_categories) {
         selectCategoriesVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         // # State
         vb.buttonsview.bind(selectCategoriesVM.buttons) { buttons = it }
-        vb.recyclerviewCategories.bind(selectCategoriesVM.categoryButtonVMItems) { buttonVMItems ->
+        vb.recyclerviewCategories.bind(selectCategoriesVM.categoryButtonVMItems.map { it.map { it.toViewItemRecipe(requireContext()) } }) { viewItemRecipes ->
             adapter = object : LifecycleRVAdapter2<GenViewHolder2<ItemCategoryBtnBinding>>() {
                 override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
                     GenViewHolder2(ItemCategoryBtnBinding.inflate(LayoutInflater.from(requireContext()), parent, false))
 
-                override fun getItemCount() = buttonVMItems.size
+                override fun getItemCount() = viewItemRecipes.size
                 override fun onLifecycleAttached(holder: GenViewHolder2<ItemCategoryBtnBinding>) {
-                    buttonVMItems[holder.adapterPosition].bind(holder.vb.btnCategory)
+                    viewItemRecipes[holder.adapterPosition].bind(holder.vb)
                 }
             }
         }

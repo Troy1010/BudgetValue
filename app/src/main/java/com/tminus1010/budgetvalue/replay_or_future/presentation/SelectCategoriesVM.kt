@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.replay_or_future.presentation
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
+import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem2
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay_or_future.app.SelectCategoriesModel
@@ -37,7 +38,7 @@ class SelectCategoriesVM @Inject constructor(
         categoriesInteractor.userCategories2
             .map { categories ->
                 categories.map { category ->
-                    ButtonVMItem(
+                    ButtonVMItem2(
                         title = category.name,
                         alpha = selectCategoriesModel.selectedCategories.map { if (category in it) 1F else 0.5F },
                         onClick = { userToggleCategory(category) }
