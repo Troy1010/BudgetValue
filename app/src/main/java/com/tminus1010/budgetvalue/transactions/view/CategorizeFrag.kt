@@ -46,7 +46,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         vm.navToSplit.observe(viewLifecycleOwner) { SplitFrag.navTo(nav, it) }
         vm.navToNewCategory.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, null, true) }
         vm.navToCategorySettings.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, it.name, false) }
-        vm.navToReplay.observe(viewLifecycleOwner) { TODO() }
+        vm.navToReplayOrFutureDetails.observe(viewLifecycleOwner) { TODO() }
         vm.navToSelectReplay.observe(viewLifecycleOwner) { nav.navigate(R.id.useReplayFrag) }
         vm.navToReceiptCategorization.observe(viewLifecycleOwner) { ReceiptCategorizationHostFrag.navTo(nav, it, categoryAmountsConverter) }
         // # State

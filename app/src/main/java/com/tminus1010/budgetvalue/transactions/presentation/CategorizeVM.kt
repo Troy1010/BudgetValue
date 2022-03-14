@@ -2,6 +2,7 @@ package com.tminus1010.budgetvalue.transactions.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.all.extensions.asObservable2
 import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
 import com.tminus1010.budgetvalue._core.all.extensions.onNext
@@ -13,8 +14,9 @@ import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem2
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay_or_future.app.SelectCategoriesModel
+import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
-import com.tminus1010.budgetvalue.replay_or_future.domain.IReplay
+import com.tminus1010.budgetvalue.replay_or_future.domain.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.budgetvalue.transactions.app.interactor.SaveTransactionInteractor
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
@@ -43,6 +45,7 @@ class CategorizeVM @Inject constructor(
     private val spinnerService: SpinnerService,
     selectCategoriesModel: SelectCategoriesModel,
     errors: Errors,
+    futuresRepo: FuturesRepo,
 ) : ViewModel() {
     // # User Intents
     fun userSimpleCategorize(category: Category) {
@@ -53,7 +56,7 @@ class CategorizeVM @Inject constructor(
             .subscribe()
     }
 
-    fun userReplay(replay: IReplay) {
+    fun userReplay(replay: IReplayOrFuture) {
         saveTransactionInteractor.saveTransaction(
             replay.categorize(transactionsInteractor.mostRecentUncategorizedSpend2.value!!)
         )
@@ -91,7 +94,7 @@ class CategorizeVM @Inject constructor(
     val navToSplit = MutableSharedFlow<Transaction>()
     val navToCategorySettings = MutableSharedFlow<Category>()
     val navToNewCategory = MutableSharedFlow<Unit>()
-    val navToReplay = MutableSharedFlow<IReplay>()
+    val navToReplayOrFutureDetails = MutableSharedFlow<IReplayOrFuture>()
     val navToSelectReplay = MutableSharedFlow<Unit>()
     val navToReceiptCategorization = MutableSharedFlow<Transaction>()
 
@@ -124,9 +127,10 @@ class CategorizeVM @Inject constructor(
         transactionsInteractor.uncategorizedSpends2
             .map { it.size.toString() }
     val recipeGrid =
-        categoriesInteractor.userCategories
-            .map { categories ->
-                categories.map { category ->
+        combine(futuresRepo.fetchFutures().asFlow().map { it.filter { !it.isAutomatic } }, categoriesInteractor.userCategories)
+        { nonAutomaticFutures, categories ->
+            listOf(
+                *categories.map { category ->
                     ButtonVMItem2(
                         title = category.name,
                         alpha = selectCategoriesModel.selectedCategories.map {
@@ -151,8 +155,17 @@ class CategorizeVM @Inject constructor(
                                 selectCategoriesModel.selectCategories(category)
                         },
                     )
-                }
-            }
+                }.toTypedArray(),
+                *nonAutomaticFutures.map {
+                    ButtonVMItem2(
+                        title = it.name,
+                        backgroundColor = R.attr.colorSecondary,
+                        onClick = { userReplay(it) },
+                        onLongClick = { navToReplayOrFutureDetails.onNext(it) },
+                    )
+                }.toTypedArray(),
+            )
+        }
             .divertErrors(errors)
     val buttons =
         Observable.combineLatest(selectCategoriesModel.selectedCategories.map { it.isNotEmpty() }.asObservable2(), matchingReplays.asObservable())
@@ -196,7 +209,7 @@ class CategorizeVM @Inject constructor(
                             ButtonVMItem(
                                 title = "Replay (${replay.name})",
                                 onClick = { userReplay(replay) },
-                                onLongClick = { navToReplay.easyEmit(replay) },
+                                onLongClick = { navToReplayOrFutureDetails.easyEmit(replay) },
                             )
                         })
                     .toTypedArray(),
