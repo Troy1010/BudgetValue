@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue._core.framework.view.tmTableView3
 
 import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewbinding.ViewBinding
 import com.tminus1010.budgetvalue._core.framework.view.ExposedLifecycleOwner
@@ -23,6 +24,10 @@ data class ViewItemRecipe3<VB : ViewBinding, D : Any?>(
         get() = createImpatientlyBoundView().apply { measureUnspecified() }.measuredHeight
 
     override fun createVB(): ViewBinding = vbLambda()
+    override fun createVB(viewGroup: ViewGroup?): ViewBinding {
+        TODO("Not yet implemented")
+    }
+
     override fun createImpatientlyBoundView(): View = createVB().also { bindImpatiently(it) }.root
     override fun intrinsicHeight(width: Int): Int {
         return createImpatientlyBoundView()

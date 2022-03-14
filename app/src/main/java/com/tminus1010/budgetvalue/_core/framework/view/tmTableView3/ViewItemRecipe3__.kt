@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue._core.framework.view.tmTableView3
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import com.tminus1010.budgetvalue._core.framework.view.ExposedLifecycleOwner
 import com.tminus1010.tmcommonkotlin.misc.extensions.lifecycleOwner
@@ -13,6 +14,7 @@ import io.reactivex.rxjava3.core.Completable
 data class ViewItemRecipe3__<VB : ViewBinding> constructor(
     private val context: Context,
     private val inflate: (LayoutInflater) -> VB,
+    private val inflate2: ((LayoutInflater, ViewGroup?, Boolean) -> VB)? = null,
     private val styler: ((VB) -> Unit)? = null,
     private val _bind: ((VB) -> Unit)? = null,
 ) : IViewItemRecipe3 {
@@ -39,6 +41,10 @@ data class ViewItemRecipe3__<VB : ViewBinding> constructor(
 
     override fun createVB(): VB =
         inflate(LayoutInflater.from(context))
+            .also { styler?.also { styler -> styler(it) } }
+
+    override fun createVB(viewGroup: ViewGroup?): VB =
+        inflate2!!(LayoutInflater.from(context), viewGroup, false)
             .also { styler?.also { styler -> styler(it) } }
 
     override fun createImpatientlyBoundView(): View =

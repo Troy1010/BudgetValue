@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue.transactions.view
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -17,7 +16,6 @@ import com.tminus1010.budgetvalue._core.presentation.Errors
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.ui.CategorySettingsFrag
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
-import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
 import com.tminus1010.budgetvalue.replay_or_future.view.CreateFuture2Frag
 import com.tminus1010.budgetvalue.transactions.presentation.CategorizeVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
@@ -61,13 +59,15 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         vb.recyclerviewCategories.layoutManager = GridLayoutManager(requireActivity(), spanSize, GridLayoutManager.VERTICAL, false)
         vb.recyclerviewCategories.bind(categorizeVM.recipeGrid.map { it.map { it.toViewItemRecipe(requireContext()) } }) { viewItemRecipes ->
             adapter = object : LifecycleRVAdapter2<GenViewHolder2<ViewBinding>>() {
-                override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GenViewHolder2<ViewBinding> =
-                    GenViewHolder2(ItemCategoryBtnBinding.inflate(LayoutInflater.from(requireContext()), parent, false))
+                override fun onCreateViewHolder(parent: ViewGroup, i: Int): GenViewHolder2<ViewBinding> =
+                    GenViewHolder2(viewItemRecipes[i].createVB(parent))
 
                 override fun getItemCount() = viewItemRecipes.size
                 override fun onLifecycleAttached(holder: GenViewHolder2<ViewBinding>) {
                     viewItemRecipes[holder.adapterPosition].bind(holder.vb)
                 }
+
+                override fun getItemViewType(position: Int) = position
             }
         }
         vb.buttonsview.bind(categorizeVM.buttons) { buttons = it }

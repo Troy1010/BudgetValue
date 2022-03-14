@@ -22,7 +22,7 @@ class ItemTitledDividerRecipeBuilder(private val context: Context) {
     }
 
     fun create(s: String): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, ItemTitledDividerBinding::inflate, styler) { vb ->
+        return ViewItemRecipe3__(context, ItemTitledDividerBinding::inflate, ItemTitledDividerBinding::inflate, styler) { vb ->
             vb.textview.text = s
         }
     }

@@ -34,7 +34,7 @@ data class ButtonVMItem2(
     }
 
     override fun toViewItemRecipe(context: Context): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, ItemCategoryBtnBinding::inflate) { vb ->
+        return ViewItemRecipe3__(context, ItemCategoryBtnBinding::inflate, ItemCategoryBtnBinding::inflate) { vb ->
             bind(vb.btnCategory)
         }
     }

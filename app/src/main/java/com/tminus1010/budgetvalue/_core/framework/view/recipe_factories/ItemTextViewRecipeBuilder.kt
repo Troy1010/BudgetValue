@@ -27,7 +27,7 @@ class ItemTextViewRecipeBuilder(private val context: Context) {
 
     @JvmName("createValidatedStringVMItem")
     fun create(amountPresentationModel: Observable<AmountPresentationModel>?): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, styler) { vb ->
+        return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, ItemTextViewBinding::inflate, styler) { vb ->
             if (amountPresentationModel == null) return@ViewItemRecipe3__
             vb.textview.bind(amountPresentationModel) {
                 text = it.s
@@ -44,7 +44,7 @@ class ItemTextViewRecipeBuilder(private val context: Context) {
     }
 
     fun create(amountPresentationModel: AmountPresentationModel): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, styler) { vb ->
+        return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, ItemTextViewBinding::inflate, styler) { vb ->
             vb.textview.text = amountPresentationModel.s
             vb.textview.setTextColor(
                 context.theme.getColorByAttr(
@@ -58,26 +58,26 @@ class ItemTextViewRecipeBuilder(private val context: Context) {
     }
 
     fun create(s: String?): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, styler) { vb ->
+        return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, ItemTextViewBinding::inflate, styler) { vb ->
             vb.textview.text = s
         }
     }
 
     fun create(d: Observable<String>): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, styler) { vb ->
+        return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, ItemTextViewBinding::inflate, styler) { vb ->
             vb.textview.bind(d) { text = it }
         }
     }
 
     fun create(s: String, onClick: () -> Unit): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, styler) { vb ->
+        return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, ItemTextViewBinding::inflate, styler) { vb ->
             vb.textview.text = s
             vb.textview.setOnClickListener { onClick() }
         }
     }
 
     fun create(s: String, context: Context, highlighted: Boolean, onClick: () -> Unit): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, styler) { vb ->
+        return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, ItemTextViewBinding::inflate, styler) { vb ->
             vb.textview.text = s
             vb.textview.setBackgroundColor(
                 context.theme.getColorByAttr(
