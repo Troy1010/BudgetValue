@@ -8,8 +8,8 @@ import com.tminus1010.budgetvalue._core.domain.CategoryAmountFormulas
 import com.tminus1010.budgetvalue._core.framework.ColdObservable
 import com.tminus1010.budgetvalue._core.framework.view.Toaster
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
-import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
+import com.tminus1010.budgetvalue.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
 import com.tminus1010.budgetvalue.replay_or_future.domain.BasicReplay
 import com.tminus1010.budgetvalue.replay_or_future.presentation.CategoryAmountFormulaVMItemsBaseVM
@@ -20,11 +20,13 @@ import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
+import kotlinx.coroutines.runBlocking
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -35,19 +37,18 @@ class SplitVM @Inject constructor(
     private val errorSubject: Subject<Throwable>,
     override val categoriesInteractor: CategoriesInteractor,
     private val toaster: Toaster,
-    private val categorizeAllMatchingUncategorizedTransactions: CategorizeAllMatchingUncategorizedTransactions
+    private val categorizeAllMatchingUncategorizedTransactions: CategorizeAllMatchingUncategorizedTransactions,
+    override val selectCategoriesModel: SelectCategoriesModel,
 ) : CategoryAmountFormulaVMItemsBaseVM() {
     // # Input
-    fun setup(_transaction: Transaction?, categorySelectionVM: CategorySelectionVM) {
-        this.categorySelectionVM = categorySelectionVM
-        _categorySelectionVM = categorySelectionVM
+    fun setup(_transaction: Transaction?) {
         transaction.onNext(Box(_transaction))
     }
 
     // TODO("Why does userSubmitCategorization not work for only 1 category?")
     fun userSubmitCategorization() {
         saveTransactionInteractor.saveTransaction(transactionToPush.unbox)
-            .andThen(_categorySelectionVM.clearSelection())
+            .andThen(Completable.fromAction { runBlocking { selectCategoriesModel.clearSelection() } })
             .observe(disposables,
                 onComplete = { navUp.onNext(Unit) },
                 onError = { errorSubject.onNext(it) }
@@ -63,7 +64,7 @@ class SplitVM @Inject constructor(
                 fillCategory = fillCategory.unbox
             )
         ).subscribeBy(
-            onSuccess = { toaster.toast("$it transactions categorized"); _categorySelectionVM.clearSelection().subscribe(); navUp.onNext(Unit) }
+            onSuccess = { toaster.toast("$it transactions categorized"); runBlocking { selectCategoriesModel.clearSelection() }; navUp.onNext(Unit) }
         )
     }
 
@@ -75,7 +76,7 @@ class SplitVM @Inject constructor(
             fillCategory = _fillCategory.value.first!!,
         )
         replaysRepo.add(replay)
-            .andThen(_categorySelectionVM.clearSelection())
+            .andThen(Completable.fromAction { runBlocking { selectCategoriesModel.clearSelection() } })
             .observe(disposables,
                 onComplete = { navUp.onNext(Unit) },
                 onError = { errorSubject.onNext(it) }
@@ -84,7 +85,6 @@ class SplitVM @Inject constructor(
 
     // # Internal
     private val transaction = BehaviorSubject.createDefault(Box<Transaction?>(null))
-    private lateinit var _categorySelectionVM: CategorySelectionVM
 
     // # Output
     override val _totalGuess: ColdObservable<BigDecimal> =

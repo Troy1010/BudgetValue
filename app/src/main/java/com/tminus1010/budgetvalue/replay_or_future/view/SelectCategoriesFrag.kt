@@ -24,6 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.map
 
 @AndroidEntryPoint
+@Deprecated("No longer using")
 class SelectCategoriesFrag : Fragment(R.layout.frag_select_categories) {
     private val vb by viewBinding(FragSelectCategoriesBinding::bind)
     private val selectCategoriesVM by viewModels<SelectCategoriesVM>()

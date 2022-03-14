@@ -8,14 +8,12 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
-import androidx.navigation.navGraphViewModels
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.InvalidCategoryAmounts
 import com.tminus1010.budgetvalue._core.InvalidSearchText
 import com.tminus1010.budgetvalue._core.all.extensions.easyText
 import com.tminus1010.budgetvalue._core.framework.view.recipe_factories.*
 import com.tminus1010.budgetvalue._core.framework.view.viewBinding
-import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.databinding.FragCategorizeAdvancedBinding
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.budgetvalue.transactions.presentation.SplitVM
@@ -34,7 +32,6 @@ import javax.inject.Inject
 class SplitFrag : Fragment(R.layout.frag_categorize_advanced) {
     private val vb by viewBinding(FragCategorizeAdvancedBinding::bind)
     private val splitVM: SplitVM by viewModels()
-    private val categorySelectionVM: CategorySelectionVM by navGraphViewModels(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
 
     @Inject
     lateinit var errorSubject: Subject<Throwable>
@@ -42,7 +39,7 @@ class SplitFrag : Fragment(R.layout.frag_categorize_advanced) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Mediation
-        _setupArgs?.also { _setupArgs = null; splitVM.setup(it.first, categorySelectionVM) }
+        _setupArgs?.also { _setupArgs = null; splitVM.setup(it.first) }
         // # Events
         splitVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         splitVM.saveReplayDialogBox.observe(viewLifecycleOwner) {

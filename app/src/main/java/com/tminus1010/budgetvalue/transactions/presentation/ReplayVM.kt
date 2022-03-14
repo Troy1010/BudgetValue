@@ -7,9 +7,9 @@ import com.tminus1010.budgetvalue._core.domain.CategoryAmountFormulas
 import com.tminus1010.budgetvalue._core.framework.ColdObservable
 import com.tminus1010.budgetvalue._core.framework.source_objects.SourceList
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
-import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
 import com.tminus1010.budgetvalue.replay_or_future.domain.BasicReplay
 import com.tminus1010.budgetvalue.replay_or_future.presentation.CategoryAmountFormulaVMItemsBaseVM
@@ -30,12 +30,12 @@ class ReplayVM @Inject constructor(
     private val replaysRepo: ReplaysRepo,
     private val errorSubject: Subject<Throwable>,
     override val categoriesInteractor: CategoriesInteractor,
+    override val selectCategoriesModel: SelectCategoriesModel,
 ) : CategoryAmountFormulaVMItemsBaseVM() {
     // # UserIntents
-    private val _replay = BehaviorSubject.create<BasicReplay>()
-    fun setup(_replay: BasicReplay, categorySelectionVM: CategorySelectionVM) {
-        this.categorySelectionVM = categorySelectionVM
-        this._replay.onNext(_replay)
+    val replay = BehaviorSubject.create<BasicReplay>()
+    fun setup(replay: BasicReplay) {
+        this.replay.onNext(replay)
     }
 
     fun userSaveReplay(name: String) {
@@ -71,7 +71,6 @@ class ReplayVM @Inject constructor(
     override val _totalGuess: ColdObservable<BigDecimal> =
         Observable.just(BigDecimal.ZERO)
             .cold()
-    val replay: Observable<BasicReplay> = _replay!!
     val userAddSearchTexts =
         userAddSearchText
             .scan(listOf<String>()) { acc, v -> acc.plus(v) }
@@ -80,13 +79,13 @@ class ReplayVM @Inject constructor(
         Observable.combineLatest(replay, userAddSearchTexts)
         { replay, userAddSearchTexts ->
             replay.searchTexts.plus(userAddSearchTexts)
-        }!!
+        }
             .replayNonError(1)
 
-    override val _selectedCategories: Observable<SourceList<Category>> =
+    override val _selectedCategories =
         Observable.combineLatest(super._selectedCategories, replay)
         { selectedCategories, replay ->
-            SourceList(selectedCategories.plus(replay.fillCategory))
+            selectedCategories.plus(replay.fillCategory)
         }
     val amountOfSearchTexts =
         searchTexts.map { it.size.toString() }
@@ -108,10 +107,10 @@ class ReplayVM @Inject constructor(
         Observable.combineLatest(categoryAmountFormulas, totalGuess)
         { categoryAmountFormulas, total ->
             categoryAmountFormulas.defaultAmount(total).toString()
-        }!!
-    val navUp = PublishSubject.create<Unit>()!!
-    val navToSelectTransactionName = PublishSubject.create<Unit>()!!
-    val deleteReplayDialogBox = PublishSubject.create<Unit>()!!
+        }
+    val navUp = PublishSubject.create<Unit>()
+    val navToSelectTransactionName = PublishSubject.create<Unit>()
+    val deleteReplayDialogBox = PublishSubject.create<Unit>()
     val buttons = listOf(
         ButtonVMItem(
             title = "Delete Replay",

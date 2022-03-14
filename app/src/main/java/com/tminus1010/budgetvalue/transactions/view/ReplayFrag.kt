@@ -7,20 +7,17 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
-import androidx.navigation.navGraphViewModels
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.InvalidCategoryAmounts
 import com.tminus1010.budgetvalue._core.InvalidSearchText
 import com.tminus1010.budgetvalue._core.framework.view.recipe_factories.*
 import com.tminus1010.budgetvalue._core.framework.view.viewBinding
-import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.databinding.FragCategorizeAdvancedBinding
 import com.tminus1010.budgetvalue.replay_or_future.domain.BasicReplay
 import com.tminus1010.budgetvalue.transactions.presentation.ReplayVM
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
-import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import com.tminus1010.tmcommonkotlin.view.extensions.easyVisibility
@@ -33,7 +30,6 @@ import javax.inject.Inject
 class ReplayFrag : Fragment(R.layout.frag_categorize_advanced) {
     private val vb by viewBinding(FragCategorizeAdvancedBinding::bind)
     private val replayVM by activityViewModels<ReplayVM>()
-    private val categorySelectionVM: CategorySelectionVM by navGraphViewModels(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
 
     @Inject
     lateinit var errorSubject: Subject<Throwable>
@@ -41,7 +37,7 @@ class ReplayFrag : Fragment(R.layout.frag_categorize_advanced) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Mediation
-        _setupArgs?.also { _setupArgs = null; replayVM.setup(it.first, categorySelectionVM) }
+        _setupArgs?.also { _setupArgs = null; replayVM.setup(it.first) }
         // # Events
         replayVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         errorSubject.observe(viewLifecycleOwner) {

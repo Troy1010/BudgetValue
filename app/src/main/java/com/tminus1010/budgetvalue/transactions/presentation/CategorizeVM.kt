@@ -2,26 +2,31 @@ package com.tminus1010.budgetvalue.transactions.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tminus1010.budgetvalue._core.all.extensions.asObservable2
 import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
 import com.tminus1010.budgetvalue._core.all.extensions.onNext
 import com.tminus1010.budgetvalue._core.framework.view.SpinnerService
 import com.tminus1010.budgetvalue._core.framework.view.Toaster
+import com.tminus1010.budgetvalue._core.presentation.Errors
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
+import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem2
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
 import com.tminus1010.budgetvalue.replay_or_future.domain.IReplay
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.budgetvalue.transactions.app.interactor.SaveTransactionInteractor
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.budgetvalue.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.divertErrors
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.subscribeBy
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.rx3.asFlow
 import kotlinx.coroutines.rx3.asObservable
 import java.time.format.DateTimeFormatter
@@ -36,10 +41,9 @@ class CategorizeVM @Inject constructor(
     private val toaster: Toaster,
     private val categoriesInteractor: CategoriesInteractor,
     private val spinnerService: SpinnerService,
+    selectCategoriesModel: SelectCategoriesModel,
+    errors: Errors,
 ) : ViewModel() {
-    // # Setup
-    val selectedCategories = BehaviorSubject.create<List<Category>>()
-
     // # User Intents
     fun userSimpleCategorize(category: Category) {
         saveTransactionInteractor.saveTransaction(
@@ -91,9 +95,6 @@ class CategorizeVM @Inject constructor(
     val navToSelectReplay = MutableSharedFlow<Unit>()
     val navToReceiptCategorization = MutableSharedFlow<Transaction>()
 
-    // # Mediation
-    val clearSelection = MutableSharedFlow<Unit>()
-
     // # Internal
     private val matchingReplays =
         combine(replaysRepo.fetchReplays().asFlow(), transactionsInteractor.mostRecentUncategorizedSpend2)
@@ -122,8 +123,39 @@ class CategorizeVM @Inject constructor(
     val uncategorizedSpendsSize =
         transactionsInteractor.uncategorizedSpends2
             .map { it.size.toString() }
+    val recipeGrid =
+        categoriesInteractor.userCategories2
+            .map { categories ->
+                categories.map { category ->
+                    ButtonVMItem2(
+                        title = category.name,
+                        alpha = selectCategoriesModel.selectedCategories.map {
+                            if (selectCategoriesModel.selectedCategories.value.isEmpty() || category in selectCategoriesModel.selectedCategories.value)
+                                1F
+                            else
+                                0.5F
+                        },
+                        onClick = {
+                            if (selectCategoriesModel.selectedCategories.value.isNotEmpty())
+                                if (category in selectCategoriesModel.selectedCategories.value)
+                                    selectCategoriesModel.unselectCategories(category)
+                                else
+                                    selectCategoriesModel.selectCategories(category)
+                            else
+                                userSimpleCategorize(category)
+                        },
+                        onLongClick = {
+                            if (category in selectCategoriesModel.selectedCategories.value)
+                                selectCategoriesModel.unselectCategories(category)
+                            else
+                                selectCategoriesModel.selectCategories(category)
+                        },
+                    )
+                }
+            }
+            .divertErrors(errors)
     val buttons =
-        Observable.combineLatest(selectedCategories.map { it.isNotEmpty() }, matchingReplays.asObservable())
+        Observable.combineLatest(selectCategoriesModel.selectedCategories.map { it.isNotEmpty() }.asObservable2(), matchingReplays.asObservable())
         { inSelectionMode, matchingReplays ->
             listOfNotNull(
                 if (inSelectionMode)
@@ -136,23 +168,23 @@ class CategorizeVM @Inject constructor(
                 if (inSelectionMode)
                     ButtonVMItem(
                         title = "Category Settings",
-                        isEnabled = selectedCategories.map { it.size == 1 },
+                        isEnabled = selectCategoriesModel.selectedCategories.asObservable2().map { it.size == 1 },
                         onClick = {
-                            navToCategorySettings.easyEmit(selectedCategories.value!!.first())
-                            clearSelection.easyEmit(Unit)
+                            navToCategorySettings.easyEmit(selectCategoriesModel.selectedCategories.value.first())
+                            runBlocking { selectCategoriesModel.clearSelection() }
                         }
                     )
                 else null,
                 if (inSelectionMode)
                     ButtonVMItem(
                         title = "Categorize All Matching Descriptions As This Category",
-                        isEnabled2 = combine(selectedCategories.map { it.size == 1 }.asFlow(), isTransactionAvailable) { a, b -> a && b },
+                        isEnabled2 = combine(selectCategoriesModel.selectedCategories.map { it.size == 1 }, isTransactionAvailable) { a, b -> a && b },
                         onClick = {
                             categorizeAllMatchingUncategorizedTransactions(
                                 predicate = { latestUncategorizedTransactionDescription.value!!.uppercase() in it.description.uppercase() },
-                                categorization = { it.categorize(selectedCategories.value!!.first()) }
+                                categorization = { it.categorize(selectCategoriesModel.selectedCategories.value.first()) }
                             ).subscribeBy { toaster.toast("$it transactions categorized") }
-                            clearSelection.easyEmit(Unit)
+                            runBlocking { selectCategoriesModel.clearSelection() }
                         }
                     )
                 else null,

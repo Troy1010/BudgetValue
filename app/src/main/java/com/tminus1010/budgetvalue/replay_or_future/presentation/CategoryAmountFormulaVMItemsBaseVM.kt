@@ -2,6 +2,7 @@ package com.tminus1010.budgetvalue.replay_or_future.presentation
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
+import com.tminus1010.budgetvalue._core.all.extensions.asObservable2
 import com.tminus1010.budgetvalue._core.all.extensions.cold
 import com.tminus1010.budgetvalue._core.all.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue._core.all.extensions.isZero
@@ -9,9 +10,9 @@ import com.tminus1010.budgetvalue._core.domain.CategoryAmountFormulas
 import com.tminus1010.budgetvalue._core.framework.ColdObservable
 import com.tminus1010.budgetvalue._core.framework.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue._core.presentation.model.CategoryAmountFormulaVMItem
-import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.tmcommonkotlin.rx.extensions.retryWithDelay
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
@@ -26,14 +27,9 @@ import java.util.concurrent.TimeUnit
  */
 abstract class CategoryAmountFormulaVMItemsBaseVM : ViewModel() {
     abstract val categoriesInteractor: CategoriesInteractor
+    abstract val selectCategoriesModel: SelectCategoriesModel
 
-    // # Workarounds
-    /**
-     * Expected to be setup
-     */
-    lateinit var categorySelectionVM: CategorySelectionVM
-
-    // # Input
+    // # User Intents
     protected val userCategoryAmounts = SourceHashMap<Category, BigDecimal>()
     fun userInputCA(category: Category, amount: BigDecimal) {
         if (amount.isZero)
@@ -54,7 +50,7 @@ abstract class CategoryAmountFormulaVMItemsBaseVM : ViewModel() {
 
     // # Internal
     protected open val _selectedCategories =
-        Observable.defer { categorySelectionVM.selectedCategories }
+        Observable.defer { selectCategoriesModel.selectedCategories.asObservable2() }
             .retryWithDelay(200, TimeUnit.MILLISECONDS)
     protected val selectedCategories =
         Observable.defer { _selectedCategories }.cold()

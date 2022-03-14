@@ -7,9 +7,9 @@ import com.tminus1010.budgetvalue._core.framework.Rx
 import com.tminus1010.budgetvalue._core.framework.view.Toaster
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
-import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.choose_transaction_description.ChooseTransactionDescriptionFrag
+import com.tminus1010.budgetvalue.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture
 import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStatus
@@ -23,6 +23,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
+import kotlinx.coroutines.runBlocking
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -33,13 +34,13 @@ class CreateFutureVM @Inject constructor(
     private val transactionsInteractor: TransactionsInteractor,
     override val categoriesInteractor: CategoriesInteractor,
     private val toaster: Toaster,
-    private val categorizeAllMatchingUncategorizedTransactions: CategorizeAllMatchingUncategorizedTransactions
+    private val categorizeAllMatchingUncategorizedTransactions: CategorizeAllMatchingUncategorizedTransactions,
+    override val selectCategoriesModel: SelectCategoriesModel,
 ) : CategoryAmountFormulaVMItemsBaseVM() {
     // # Workarounds
     lateinit var selfDestruct: () -> Unit
-    fun setup(categorySelectionVM: CategorySelectionVM, selfDestruct: () -> Unit) {
+    fun setup(selfDestruct: () -> Unit) {
         this.selfDestruct = selfDestruct
-        this.categorySelectionVM = categorySelectionVM
     }
 
     // # Input
@@ -94,7 +95,7 @@ class CreateFutureVM @Inject constructor(
                     if (newFuture.terminationStatus == TerminationStatus.PERMANENT) categorizeAllMatchingUncategorizedTransactions(newFuture).doOnSuccess { toaster.toast("$it transactions categorized") }.ignoreElement() else null,
                 )
             }
-            .andThen(categorySelectionVM.clearSelection())
+            .andThen(Completable.fromAction { runBlocking { selectCategoriesModel.clearSelection() } })
             .andThen(Completable.fromAction { navUp.onNext(Unit); selfDestruct() })
             .subscribe()
     }

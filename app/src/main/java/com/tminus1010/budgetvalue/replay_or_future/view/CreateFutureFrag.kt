@@ -8,7 +8,6 @@ import androidx.navigation.navGraphViewModels
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._core.framework.view.recipe_factories.*
 import com.tminus1010.budgetvalue._core.framework.view.viewBinding
-import com.tminus1010.budgetvalue.categories.CategorySelectionVM
 import com.tminus1010.budgetvalue.databinding.FragCreateFutureBinding
 import com.tminus1010.budgetvalue.replay_or_future.presentation.CreateFutureVM
 import com.tminus1010.budgetvalue.transactions.presentation.model.SearchType
@@ -25,12 +24,11 @@ import dagger.hilt.android.AndroidEntryPoint
 class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
     private val vb by viewBinding(FragCreateFutureBinding::bind)
     private val createFutureVM by navGraphViewModels<CreateFutureVM>(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
-    private val categorySelectionVM by navGraphViewModels<CategorySelectionVM>(R.id.categorizeNestedGraph) { defaultViewModelProviderFactory }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Setup
-        createFutureVM.setup(categorySelectionVM) { nav.getBackStackEntry(R.id.categorizeNestedGraph).viewModelStore.remove<CreateFutureVM>() }
+        createFutureVM.setup { nav.getBackStackEntry(R.id.categorizeNestedGraph).viewModelStore.remove<CreateFutureVM>() }
         // # Events
         createFutureVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         createFutureVM.navTo.observe(viewLifecycleOwner) { it(nav) }
