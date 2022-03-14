@@ -23,10 +23,8 @@ class CategoriesInteractor @Inject constructor(
 
     val userCategories2 = categoriesRepo.userCategories.map { it.sortedWith(categoryComparator) }.stateIn(GlobalScope, SharingStarted.Eagerly, emptyList())
 
-    @Deprecated("use userCategories2")
-    val userCategories = userCategories2.asObservable()
     private val nameToCategoryMap =
-        userCategories
+        userCategories2.asObservable()
             .map { it.associateBy { it.name } as HashMap<String, Category> }
             .replay(1).apply { connect() }
 }

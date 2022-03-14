@@ -30,7 +30,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     private val vb by viewBinding(FragCategorizeBinding::bind)
-    private val categorizeVM by activityViewModels<CategorizeVM>()
+    private val vm by activityViewModels<CategorizeVM>()
 
     @Inject
     lateinit var categoryAmountsConverter: CategoryAmountsConverter
@@ -42,22 +42,22 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         super.onViewCreated(view, savedInstanceState)
         // # Events
         errors.observe(viewLifecycleOwner) { throw it }
-        categorizeVM.navToCreateFuture2.observe(viewLifecycleOwner) { CreateFuture2Frag.navTo(nav) }
-        categorizeVM.navToSplit.observe(viewLifecycleOwner) { SplitFrag.navTo(nav, it) }
-        categorizeVM.navToNewCategory.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, null, true) }
-        categorizeVM.navToCategorySettings.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, it.name, false) }
-        categorizeVM.navToReplay.observe(viewLifecycleOwner) { TODO() }
-        categorizeVM.navToSelectReplay.observe(viewLifecycleOwner) { nav.navigate(R.id.useReplayFrag) }
-        categorizeVM.navToReceiptCategorization.observe(viewLifecycleOwner) { ReceiptCategorizationHostFrag.navTo(nav, it, categoryAmountsConverter) }
+        vm.navToCreateFuture2.observe(viewLifecycleOwner) { CreateFuture2Frag.navTo(nav) }
+        vm.navToSplit.observe(viewLifecycleOwner) { SplitFrag.navTo(nav, it) }
+        vm.navToNewCategory.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, null, true) }
+        vm.navToCategorySettings.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, it.name, false) }
+        vm.navToReplay.observe(viewLifecycleOwner) { TODO() }
+        vm.navToSelectReplay.observe(viewLifecycleOwner) { nav.navigate(R.id.useReplayFrag) }
+        vm.navToReceiptCategorization.observe(viewLifecycleOwner) { ReceiptCategorizationHostFrag.navTo(nav, it, categoryAmountsConverter) }
         // # State
-        vb.textviewDate.bind(categorizeVM.date) { text = it }
-        vb.textviewAmount.bind(categorizeVM.latestUncategorizedTransactionAmount) { text = it }
-        vb.textviewDescription.bind(categorizeVM.latestUncategorizedTransactionDescription) { text = it }
-        vb.textviewAmountLeft.bind(categorizeVM.uncategorizedSpendsSize) { text = it }
+        vb.textviewDate.bind(vm.date) { text = it }
+        vb.textviewAmount.bind(vm.latestUncategorizedTransactionAmount) { text = it }
+        vb.textviewDescription.bind(vm.latestUncategorizedTransactionDescription) { text = it }
+        vb.textviewAmountLeft.bind(vm.uncategorizedSpendsSize) { text = it }
         val spanSize = if (requireContext().resources.configuration.fontScale <= 1.0) 3 else 2
         vb.recyclerviewCategories.addItemDecoration(LayoutMarginDecoration(spanSize, 8.toPX(requireContext())))
         vb.recyclerviewCategories.layoutManager = GridLayoutManager(requireActivity(), spanSize, GridLayoutManager.VERTICAL, false)
-        vb.recyclerviewCategories.bind(categorizeVM.recipeGrid.map { it.map { it.toViewItemRecipe(requireContext()) } }) { viewItemRecipes ->
+        vb.recyclerviewCategories.bind(vm.recipeGrid.map { it.map { it.toViewItemRecipe(requireContext()) } }) { viewItemRecipes ->
             adapter = object : LifecycleRVAdapter2<GenViewHolder2<ViewBinding>>() {
                 override fun onCreateViewHolder(parent: ViewGroup, i: Int): GenViewHolder2<ViewBinding> =
                     GenViewHolder2(viewItemRecipes[i].createVB(parent))
@@ -70,6 +70,6 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 override fun getItemViewType(position: Int) = position
             }
         }
-        vb.buttonsview.bind(categorizeVM.buttons) { buttons = it }
+        vb.buttonsview.bind(vm.buttons) { buttons = it }
     }
 }

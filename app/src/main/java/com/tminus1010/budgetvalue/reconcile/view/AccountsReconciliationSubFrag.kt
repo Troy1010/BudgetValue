@@ -12,17 +12,17 @@ import com.tminus1010.budgetvalue.databinding.ItemTmTableViewBinding
 import com.tminus1010.budgetvalue.reconcile.presentation.AccountsReconciliationVM
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.kotlin.Observables
+import kotlinx.coroutines.flow.combine
 
 @AndroidEntryPoint
 class AccountsReconciliationSubFrag : Fragment(R.layout.item_tm_table_view) {
     lateinit var vb: ItemTmTableViewBinding
-    val accountsReconciliationVM by viewModels<AccountsReconciliationVM>()
+    val vm by viewModels<AccountsReconciliationVM>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = ItemTmTableViewBinding.bind(view)
         // # State
-        vb.tmTableView.bind(Observables.combineLatest(accountsReconciliationVM.recipeGrid, accountsReconciliationVM.dividerMap))
+        vb.tmTableView.bind(combine(vm.recipeGrid, vm.dividerMap) { a, b -> Pair(a, b) })
         { (recipeGrid, dividerMap) ->
             initialize(
                 recipeGrid = recipeGrid.map { recipeList ->

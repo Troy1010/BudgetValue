@@ -9,15 +9,15 @@ import com.tminus1010.budgetvalue._core.framework.view.recipe_factories.itemEmpt
 import com.tminus1010.budgetvalue._core.framework.view.recipe_factories.itemMoneyEditTextRF
 import com.tminus1010.budgetvalue._core.framework.view.recipe_factories.itemTextViewRB
 import com.tminus1010.budgetvalue._core.framework.view.recipe_factories.itemTitledDividerRB
-import com.tminus1010.budgetvalue._core.presentation.model.CategoryAmountPresentationModel
-import com.tminus1010.budgetvalue.reconcile.domain.ReconciliationToDo
 import com.tminus1010.budgetvalue._core.presentation.model.AmountPresentationModel
+import com.tminus1010.budgetvalue._core.presentation.model.CategoryAmountPresentationModel
 import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe
 import com.tminus1010.budgetvalue.databinding.ItemTmTableViewBinding
+import com.tminus1010.budgetvalue.reconcile.domain.ReconciliationToDo
 import com.tminus1010.budgetvalue.reconcile.presentation.PlanReconciliationVM
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.kotlin.Observables
+import kotlinx.coroutines.flow.combine
 
 @AndroidEntryPoint
 class PlanReconciliationSubFrag : Fragment(R.layout.item_tm_table_view) {
@@ -30,7 +30,7 @@ class PlanReconciliationSubFrag : Fragment(R.layout.item_tm_table_view) {
         // # Mediation
         planReconciliationVM.reconciliationToDo.onNext(reconciliationToDo)
         // # State
-        vb.tmTableView.bind(Observables.combineLatest(planReconciliationVM.recipeGrid, planReconciliationVM.dividerMap))
+        vb.tmTableView.bind(combine(planReconciliationVM.recipeGrid, planReconciliationVM.dividerMap) { a, b -> Pair(a, b) })
         { (recipeGrid, dividerMap) ->
             initialize(
                 recipeGrid = recipeGrid.map { recipeList ->
@@ -47,7 +47,7 @@ class PlanReconciliationSubFrag : Fragment(R.layout.item_tm_table_view) {
                 },
                 dividerMap = dividerMap.mapValues { itemTitledDividerRB().create(it.value) },
                 shouldFitItemWidthsInsideTable = true,
-                rowFreezeCount = 1
+                rowFreezeCount = 1,
             )
         }
     }

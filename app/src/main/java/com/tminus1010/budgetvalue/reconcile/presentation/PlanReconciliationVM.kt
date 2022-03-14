@@ -18,7 +18,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx3.asFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,7 +41,7 @@ class PlanReconciliationVM @Inject constructor(
 
     // # State
     val recipeGrid =
-        Observable.combineLatest(categoriesInteractor.userCategories, activeReconciliationInteractor.categoryAmountsAndTotal, budgetedWithActiveReconciliationInteractor.categoryAmountsAndTotal, reconciliationToDo)
+        combine(categoriesInteractor.userCategories2, activeReconciliationInteractor.categoryAmountsAndTotal.asFlow(), budgetedWithActiveReconciliationInteractor.categoryAmountsAndTotal.asFlow(), reconciliationToDo.asFlow())
         { categories, activeReconciliation, budgetedWithActiveReconciliation, reconciliationToDo ->
             listOf(
                 listOf(
@@ -66,7 +69,7 @@ class PlanReconciliationVM @Inject constructor(
             ).flatten()
         }
     val dividerMap =
-        categoriesInteractor.userCategories
+        categoriesInteractor.userCategories2
             .map {
                 it.withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
