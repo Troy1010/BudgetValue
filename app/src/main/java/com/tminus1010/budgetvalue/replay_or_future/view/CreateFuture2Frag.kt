@@ -19,30 +19,30 @@ import kotlinx.coroutines.flow.combine
 @AndroidEntryPoint
 class CreateFuture2Frag : Fragment(R.layout.frag_create_future_2) {
     private val vb by viewBinding(FragCreateFuture2Binding::bind)
-    private val createFuture2VM by viewModels<CreateFuture2VM>()
+    private val vm by viewModels<CreateFuture2VM>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Events
-        createFuture2VM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
-        createFuture2VM.navToCategorySelection.observe(viewLifecycleOwner) { nav.navigate(R.id.selectCategoriesFrag) }
-        createFuture2VM.navToChooseTransaction.observe(viewLifecycleOwner) { nav.navigate(R.id.chooseTransactionFrag) }
-        createFuture2VM.navToSetSearchTexts.observe(viewLifecycleOwner) { nav.navigate(R.id.setSearchTextsFrag) }
+        vm.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
+        vm.navToCategorySelection.observe(viewLifecycleOwner) { nav.navigate(R.id.selectCategoriesFrag) }
+        vm.navToChooseTransaction.observe(viewLifecycleOwner) { nav.navigate(R.id.chooseTransactionFrag) }
+        vm.navToSetSearchTexts.observe(viewLifecycleOwner) { nav.navigate(R.id.setSearchTextsFrag) }
         // # State
-        vb.tmTableViewOtherInput.bind(createFuture2VM.otherInput) {
+        vb.tmTableViewOtherInput.bind(vm.otherInput) {
             initialize(
                 recipeGrid = it.map { it.map { it.toViewItemRecipe(requireContext()) } },
                 shouldFitItemWidthsInsideTable = true,
             )
         }
-        vb.tmTableViewCategoryAmounts.bind(combine(createFuture2VM.recipeGrid, createFuture2VM.dividerMap) { a, b -> Pair(a, b) }) { (recipeGrid, dividerMap) ->
+        vb.tmTableViewCategoryAmounts.bind(combine(vm.recipeGrid, vm.dividerMap) { a, b -> Pair(a, b) }) { (recipeGrid, dividerMap) ->
             initialize(
                 recipeGrid = recipeGrid.map { it.map { it.toViewItemRecipe(requireContext()) } },
                 dividerMap = dividerMap.mapValues { it.value.toViewItemRecipe(requireContext()) },
                 shouldFitItemWidthsInsideTable = true,
             )
         }
-        vb.buttonsview.bind(createFuture2VM.buttons) { buttons = it }
+        vb.buttonsview.bind(vm.buttons) { buttons = it }
     }
 
     companion object {
