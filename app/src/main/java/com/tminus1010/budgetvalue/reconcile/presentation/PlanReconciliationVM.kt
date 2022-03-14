@@ -11,11 +11,9 @@ import com.tminus1010.budgetvalue.reconcile.app.interactor.ActiveReconciliationI
 import com.tminus1010.budgetvalue.reconcile.app.interactor.BudgetedWithActiveReconciliationInteractor
 import com.tminus1010.budgetvalue.reconcile.data.ActiveReconciliationRepo
 import com.tminus1010.budgetvalue.reconcile.domain.ReconciliationToDo
-import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.reconcile.presentation.model.HeaderPresentationModel
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.combine
@@ -41,7 +39,7 @@ class PlanReconciliationVM @Inject constructor(
 
     // # State
     val recipeGrid =
-        combine(categoriesInteractor.userCategories2, activeReconciliationInteractor.categoryAmountsAndTotal.asFlow(), budgetedWithActiveReconciliationInteractor.categoryAmountsAndTotal.asFlow(), reconciliationToDo.asFlow())
+        combine(categoriesInteractor.userCategories, activeReconciliationInteractor.categoryAmountsAndTotal.asFlow(), budgetedWithActiveReconciliationInteractor.categoryAmountsAndTotal.asFlow(), reconciliationToDo.asFlow())
         { categories, activeReconciliation, budgetedWithActiveReconciliation, reconciliationToDo ->
             listOf(
                 listOf(
@@ -69,7 +67,7 @@ class PlanReconciliationVM @Inject constructor(
             ).flatten()
         }
     val dividerMap =
-        categoriesInteractor.userCategories2
+        categoriesInteractor.userCategories
             .map {
                 it.withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })

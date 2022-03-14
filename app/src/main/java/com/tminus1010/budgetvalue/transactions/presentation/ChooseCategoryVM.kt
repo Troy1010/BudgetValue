@@ -11,7 +11,6 @@ import com.tminus1010.budgetvalue.transactions.app.ReceiptCategorizationInteract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.rx3.asFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,7 +27,7 @@ class ChooseCategoryVM @Inject constructor(
     // # State
     val partialAmountToCategorize = receiptCategorizationInteractor.rememberedAmount.map { if (it.isZero) null else it.toString().toMoneyBigDecimal().toString() }
     val categoryButtonVMItems =
-        categoriesInteractor.userCategories2
+        categoriesInteractor.userCategories
             .map {
                 it.map { category ->
                     ButtonVMItem(

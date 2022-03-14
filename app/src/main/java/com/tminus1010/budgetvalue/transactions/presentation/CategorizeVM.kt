@@ -75,7 +75,7 @@ class CategorizeVM @Inject constructor(
 
     fun userCategorizeAllAsUnknown() {
         GlobalScope.launch(block = spinnerService.decorate {
-            val categoryUnknown = categoriesInteractor.userCategories2.take(1).first().find { it.name.equals("Unknown", ignoreCase = true) }!! // TODO: Handle this error
+            val categoryUnknown = categoriesInteractor.userCategories.take(1).first().find { it.name.equals("Unknown", ignoreCase = true) }!! // TODO: Handle this error
             saveTransactionInteractor.saveTransactions(
                 transactionsInteractor.uncategorizedSpends2.first().map { it.categorize(categoryUnknown) }
             )
@@ -124,7 +124,7 @@ class CategorizeVM @Inject constructor(
         transactionsInteractor.uncategorizedSpends2
             .map { it.size.toString() }
     val recipeGrid =
-        categoriesInteractor.userCategories2
+        categoriesInteractor.userCategories
             .map { categories ->
                 categories.map { category ->
                     ButtonVMItem2(

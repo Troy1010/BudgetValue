@@ -34,7 +34,7 @@ class AccountsReconciliationVM @Inject constructor(
 
     // # State
     val recipeGrid =
-        combine(categoriesInteractor.userCategories2, activeReconciliationInteractor.categoryAmountsAndTotal.asFlow(), budgetedWithActiveReconciliationInteractor.categoryAmountsAndTotal.asFlow())
+        combine(categoriesInteractor.userCategories, activeReconciliationInteractor.categoryAmountsAndTotal.asFlow(), budgetedWithActiveReconciliationInteractor.categoryAmountsAndTotal.asFlow())
         { categories, activeReconciliation, budgetedWithActiveReconciliation ->
             listOf(
                 listOf(
@@ -59,7 +59,7 @@ class AccountsReconciliationVM @Inject constructor(
             ).flatten()
         }
     val dividerMap =
-        categoriesInteractor.userCategories2
+        categoriesInteractor.userCategories
             .map {
                 it.withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })

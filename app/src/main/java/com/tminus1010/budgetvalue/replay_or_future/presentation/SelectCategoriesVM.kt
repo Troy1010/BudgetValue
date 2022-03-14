@@ -35,7 +35,7 @@ class SelectCategoriesVM @Inject constructor(
 
     // # State
     val categoryButtonVMItems =
-        categoriesInteractor.userCategories2
+        categoriesInteractor.userCategories
             .map { categories ->
                 categories.map { category ->
                     ButtonVMItem2(

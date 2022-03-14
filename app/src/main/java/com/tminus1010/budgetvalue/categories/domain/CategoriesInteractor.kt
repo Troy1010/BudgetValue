@@ -21,10 +21,10 @@ class CategoriesInteractor @Inject constructor(
             ?: Category.UNRECOGNIZED.also { logz("Warning: returning category Unrecognized for unrecognized name:$categoryName") }
     }
 
-    val userCategories2 = categoriesRepo.userCategories.map { it.sortedWith(categoryComparator) }.stateIn(GlobalScope, SharingStarted.Eagerly, emptyList())
+    val userCategories = categoriesRepo.userCategories.map { it.sortedWith(categoryComparator) }.stateIn(GlobalScope, SharingStarted.Eagerly, emptyList())
 
     private val nameToCategoryMap =
-        userCategories2.asObservable()
+        userCategories.asObservable()
             .map { it.associateBy { it.name } as HashMap<String, Category> }
             .replay(1).apply { connect() }
 }
