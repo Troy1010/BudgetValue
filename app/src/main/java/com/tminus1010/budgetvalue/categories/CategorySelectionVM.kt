@@ -8,7 +8,6 @@ import com.tminus1010.tmcommonkotlin.rx.nonLazy
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,10 +30,5 @@ class CategorySelectionVM @Inject constructor() : ViewModel() {
 
     // # Output
     val selectedCategories = _selectedCategories.observable
-        .replayNonError(1).nonLazy(disposables)
-
-    val inSelectionMode: Observable<Boolean> = _selectedCategories.observable
-        .map { it.isNotEmpty() }
-        .distinctUntilChanged()
         .replayNonError(1).nonLazy(disposables)
 }

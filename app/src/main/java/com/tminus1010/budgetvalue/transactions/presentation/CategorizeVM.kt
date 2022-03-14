@@ -38,7 +38,6 @@ class CategorizeVM @Inject constructor(
     private val spinnerService: SpinnerService,
 ) : ViewModel() {
     // # Setup
-    val inSelectionMode = BehaviorSubject.create<Boolean>()
     val selectedCategories = BehaviorSubject.create<List<Category>>()
 
     // # User Intents
@@ -124,7 +123,7 @@ class CategorizeVM @Inject constructor(
         transactionsInteractor.uncategorizedSpends2
             .map { it.size.toString() }
     val buttons =
-        Observable.combineLatest(inSelectionMode, matchingReplays.asObservable())
+        Observable.combineLatest(selectedCategories.map { it.isNotEmpty() }, matchingReplays.asObservable())
         { inSelectionMode, matchingReplays ->
             listOfNotNull(
                 if (inSelectionMode)
