@@ -12,7 +12,7 @@ class AppInitInteractor @Inject constructor(
     private val categoriesRepo: CategoriesRepo,
 ) {
     suspend fun tryInitializeApp() {
-        if (!appInitRepo.isAppInitialized().logx("isAppInitialized")) {
+        if (!appInitRepo.isAppInitialized()) {
             initCategories.forEach { categoriesRepo.push(it) }
             appInitRepo.pushAppInitBool2(true)
         }
