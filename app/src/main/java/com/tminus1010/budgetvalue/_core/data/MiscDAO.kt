@@ -77,9 +77,6 @@ interface MiscDAO {
     @Query("select * from TransactionDTO WHERE id=:id")
     suspend fun getTransaction2(id: String): TransactionDTO
 
-    @Query("UPDATE TransactionDTO SET categoryAmounts=:categoryAmounts WHERE id=:id")
-    fun updateTransactionCategoryAmounts(id: String, categoryAmounts: Map<String, BigDecimal>): Completable
-
     // # Plan
     @Query("select * from `Plan`")
     fun getPlans(): Flow<List<Plan>>
@@ -121,9 +118,6 @@ interface MiscDAO {
 
     @Query("DELETE FROM ReconciliationDTO")
     fun clearReconciliations(): Completable
-
-    @Query("UPDATE ReconciliationDTO SET categoryAmounts=:categoryAmounts WHERE id=:id")
-    fun updateReconciliationCategoryAmounts(id: Int, categoryAmounts: Map<String, BigDecimal>): Completable
 
     // # Replays
 

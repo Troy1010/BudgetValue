@@ -20,14 +20,6 @@ object RoomTypeConverter {
         moshi.fromJson(s)
 
     @TypeConverter
-    fun fromCategoryAmountsToString(x: Map<String, BigDecimal>): String =
-        moshi.toJson(x)
-
-    @TypeConverter
-    fun toCategoryAmounts(s: String): HashMap<String, BigDecimal> =
-        moshi.fromJson(s)
-
-    @TypeConverter
     fun fromDateToString(x: LocalDate?): String? =
         moshi.toJson(x)
 
