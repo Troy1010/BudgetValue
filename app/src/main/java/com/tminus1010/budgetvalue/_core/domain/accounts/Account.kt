@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.accounts.app
+package com.tminus1010.budgetvalue._core.domain.accounts
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

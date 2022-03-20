@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue._core.all.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
 import com.tminus1010.budgetvalue._core.framework.Rx
 import com.tminus1010.budgetvalue._core.framework.source_objects.SourceHashMap
-import com.tminus1010.budgetvalue.accounts.data.AccountsRepo
+import com.tminus1010.budgetvalue._core.data.repo.AccountsRepo
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo

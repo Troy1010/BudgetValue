@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue._core.data
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.tminus1010.budgetvalue.accounts.app.Account
+import com.tminus1010.budgetvalue._core.domain.accounts.Account
 import com.tminus1010.budgetvalue.categories.models.CategoryDTO
 import com.tminus1010.budgetvalue.plans.data.model.PlanDTO
 import com.tminus1010.budgetvalue.plans.domain.Plan

@@ -1,8 +1,8 @@
-package com.tminus1010.budgetvalue.accounts.data
+package com.tminus1010.budgetvalue._core.data.repo
 
 import com.tminus1010.budgetvalue._core.data.MiscDAO
-import com.tminus1010.budgetvalue.accounts.app.Account
-import com.tminus1010.budgetvalue.accounts.app.AccountsAggregate
+import com.tminus1010.budgetvalue._core.domain.accounts.Account
+import com.tminus1010.budgetvalue._core.domain.accounts.AccountsAggregate
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable

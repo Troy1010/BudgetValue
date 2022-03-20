@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue._core.data
 import androidx.room.*
 import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
 import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
-import com.tminus1010.budgetvalue.accounts.app.Account
+import com.tminus1010.budgetvalue._core.domain.accounts.Account
 import com.tminus1010.budgetvalue.plans.domain.Plan
 import com.tminus1010.budgetvalue.reconcile.data.model.ReconciliationDTO
 import com.tminus1010.budgetvalue.replay_or_future.data.model.BasicReplayDTO
