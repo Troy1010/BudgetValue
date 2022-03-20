@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.tminus1010.budgetvalue.MockImportSelectionActivity
+import com.tminus1010.budgetvalue.__core_testing.MiscTestModule
 import com.tminus1010.budgetvalue._core.view.HostActivity
 import com.tminus1010.budgetvalue.importZ.view.services.LaunchSelectFile
 import dagger.Module
@@ -11,6 +12,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 import dagger.hilt.components.SingletonComponent
 import org.junit.Rule
 import org.junit.Test
@@ -19,6 +21,7 @@ import javax.inject.Singleton
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
+@UninstallModules(MiscTestModule::class)
 class DevEnv_Main {
     @get:Rule(order = 0)
     var hiltRule = HiltAndroidRule(this)
