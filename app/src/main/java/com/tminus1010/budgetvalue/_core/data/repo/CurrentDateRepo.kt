@@ -14,7 +14,7 @@ import javax.inject.Singleton
 
 // TODO("This is untested")
 @Singleton
-class CurrentDate @Inject constructor(app: Application) {
+class CurrentDateRepo @Inject constructor(app: Application) {
     private val currentDate =
         Observable.create<LocalDate> { downstream ->
             val broadcastReceiver =

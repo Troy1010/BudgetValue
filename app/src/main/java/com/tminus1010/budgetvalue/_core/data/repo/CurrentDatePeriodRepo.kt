@@ -6,11 +6,11 @@ import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import javax.inject.Inject
 
 class CurrentDatePeriodRepo @Inject constructor(
-    currentDate: CurrentDate,
+    currentDateRepo: CurrentDateRepo,
     datePeriodService: DatePeriodService,
 ) {
     val currentDatePeriod =
-        currentDate()
+        currentDateRepo()
             .map(datePeriodService::getDatePeriod)
             .distinctUntilChanged()
             .replayNonError(1)
