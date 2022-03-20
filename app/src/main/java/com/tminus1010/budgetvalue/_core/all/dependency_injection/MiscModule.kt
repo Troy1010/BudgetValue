@@ -1,7 +1,9 @@
 package com.tminus1010.budgetvalue._core.all.dependency_injection
 
+import com.tminus1010.budgetvalue._core.data.CategoryDatabase
 import com.tminus1010.budgetvalue._core.data.MiscDAO
 import com.tminus1010.budgetvalue._core.data.MiscDatabase
+import com.tminus1010.budgetvalue._core.data.UserCategoriesDAO
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,5 +21,9 @@ object MiscModule {
 
     @Provides
     @Singleton
-    fun providesMyDao(roomDatabase: MiscDatabase): MiscDAO = roomDatabase.miscDAO()
+    fun providesMiscDao(roomDatabase: MiscDatabase): MiscDAO = roomDatabase.miscDAO()
+
+    @Provides
+    @Singleton
+    fun provideCategoryDatabase(categoryDatabase: CategoryDatabase): UserCategoriesDAO = categoryDatabase.userCategoriesDAO()
 }

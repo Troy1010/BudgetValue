@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.categories.data
 
-import com.tminus1010.budgetvalue._core.data.CategoryDatabase
+import com.tminus1010.budgetvalue._core.data.UserCategoriesDAO
 import com.tminus1010.budgetvalue.categories.models.Category
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
@@ -11,10 +11,8 @@ import javax.inject.Singleton
 
 @Singleton
 class CategoriesRepo @Inject constructor(
-    categoryDatabase: CategoryDatabase,
+    private val userCategoriesDAO: UserCategoriesDAO,
 ) {
-    private val userCategoriesDAO = categoryDatabase.userCategoriesDAO()
-
     val userCategories: Flow<List<Category>> =
         userCategoriesDAO.fetchUserCategories()
             .shareIn(GlobalScope, SharingStarted.WhileSubscribed(), 1)
