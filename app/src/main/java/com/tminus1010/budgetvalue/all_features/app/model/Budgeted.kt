@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.budgeted
+package com.tminus1010.budgetvalue.all_features.app.model
 
 import com.tminus1010.budgetvalue.all_features.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.categories.models.Category

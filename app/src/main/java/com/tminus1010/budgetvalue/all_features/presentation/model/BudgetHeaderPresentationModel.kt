@@ -1,8 +1,9 @@
-package com.tminus1010.budgetvalue.budgeted.presentation
+package com.tminus1010.budgetvalue.all_features.presentation.model
 
 import android.content.Context
 import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.IViewItemRecipe3
 import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.ViewItemRecipe3__
+import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe
 import com.tminus1010.budgetvalue.databinding.ItemHeaderWithSubtitleBinding
 
 class BudgetHeaderPresentationModel(val title: String, val subTitle: String) : IHasToViewItemRecipe {

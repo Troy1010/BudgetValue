@@ -1,5 +1,6 @@
-package com.tminus1010.budgetvalue.app_init
+package com.tminus1010.budgetvalue.all_features.app
 
+import com.tminus1010.budgetvalue.all_features.data.repo.AppInitRepo
 import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.models.CategoryType

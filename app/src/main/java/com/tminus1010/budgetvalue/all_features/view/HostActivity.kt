@@ -21,7 +21,7 @@ import com.tminus1010.budgetvalue.all_features.presentation.Errors
 import com.tminus1010.budgetvalue.all_features.presentation.view_model.HostVM
 import com.tminus1010.budgetvalue.all_features.view.service.LaunchSelectFile
 import com.tminus1010.budgetvalue.all_features.presentation.view_model.AccountsVM
-import com.tminus1010.budgetvalue.app_init.AppInitInteractor
+import com.tminus1010.budgetvalue.all_features.app.AppInitInteractor
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.history.HistoryFrag
 import com.tminus1010.budgetvalue.importZ.data.ImportTransactions

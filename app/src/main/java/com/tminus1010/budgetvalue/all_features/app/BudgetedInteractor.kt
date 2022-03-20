@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.budgeted
+package com.tminus1010.budgetvalue.all_features.app
 
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.flatMapSourceHashMap
@@ -6,6 +6,7 @@ import com.tminus1010.budgetvalue.all_features.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.all_features.framework.Rx
 import com.tminus1010.budgetvalue.all_features.framework.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.all_features.data.repo.AccountsRepo
+import com.tminus1010.budgetvalue.all_features.app.model.Budgeted
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo

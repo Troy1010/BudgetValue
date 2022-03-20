@@ -4,8 +4,8 @@ import android.app.Application
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.all_features.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue.all_features.presentation.service.GetExtraMenuItemPartials
-import com.tminus1010.budgetvalue.app_init.AppInitInteractor
-import com.tminus1010.budgetvalue.app_init.AppInitRepo
+import com.tminus1010.budgetvalue.all_features.app.AppInitInteractor
+import com.tminus1010.budgetvalue.all_features.data.repo.AppInitRepo
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStrategy
 import com.tminus1010.budgetvalue.replay_or_future.domain.TotalFuture

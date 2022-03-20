@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.all_features.models
 
 import com.tminus1010.budgetvalue.all_features.domain.CategoryAmountFormulas
-import com.tminus1010.budgetvalue.app_init.AppInitInteractor
+import com.tminus1010.budgetvalue.all_features.app.AppInitInteractor
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import org.junit.Assert.assertEquals
 import org.junit.Test

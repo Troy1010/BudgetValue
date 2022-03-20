@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.reconcile.app.interactor
 
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.all_features.data.repo.AccountsRepo
-import com.tminus1010.budgetvalue.budgeted.BudgetedInteractor
+import com.tminus1010.budgetvalue.all_features.app.BudgetedInteractor
 import com.tminus1010.budgetvalue.reconcile.data.ActiveReconciliationRepo
 import com.tminus1010.budgetvalue.reconcile.domain.CategoryAmountsAndTotal
 import io.reactivex.rxjava3.core.Observable

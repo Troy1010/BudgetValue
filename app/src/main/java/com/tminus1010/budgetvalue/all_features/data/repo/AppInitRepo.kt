@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.app_init
+package com.tminus1010.budgetvalue.all_features.data.repo
 
 import com.tminus1010.budgetvalue.all_features.data.SharedPrefWrapper
 import io.reactivex.rxjava3.schedulers.Schedulers
