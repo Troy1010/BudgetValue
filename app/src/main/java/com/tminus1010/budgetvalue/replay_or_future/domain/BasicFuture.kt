@@ -5,6 +5,7 @@ import androidx.room.PrimaryKey
 import com.tminus1010.budgetvalue._core.domain.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.app.Transaction
+import java.math.BigDecimal
 
 @Entity
 data class BasicFuture(
@@ -15,6 +16,7 @@ data class BasicFuture(
     override val fillCategory: Category,
     override val terminationStrategy: TerminationStrategy,
     override val isAutomatic: Boolean,
+    val totalGuess: BigDecimal,
 ) : IFuture {
     override fun shouldCategorizeOnImport(transaction: Transaction): Boolean {
         return isAutomatic && searchTexts.any { it.uppercase() in transaction.description.uppercase() }

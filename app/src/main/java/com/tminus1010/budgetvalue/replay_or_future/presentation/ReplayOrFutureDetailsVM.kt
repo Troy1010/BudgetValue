@@ -16,9 +16,7 @@ import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
-import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture
-import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStrategy
-import com.tminus1010.budgetvalue.replay_or_future.domain.TotalFuture
+import com.tminus1010.budgetvalue.replay_or_future.domain.*
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.budgetvalue.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
 import com.tminus1010.budgetvalue.transactions.presentation.model.SearchType
@@ -33,7 +31,7 @@ import java.math.BigDecimal
 import javax.inject.Inject
 
 @HiltViewModel
-class CreateFuture2VM @Inject constructor(
+class ReplayOrFutureDetailsVM @Inject constructor(
     private val categoriesInteractor: CategoriesInteractor,
     private val selectedCategoriesModel: SelectCategoriesModel,
     private val futuresRepo: FuturesRepo,
@@ -41,6 +39,9 @@ class CreateFuture2VM @Inject constructor(
     private val categorizeAllMatchingUncategorizedTransactions: CategorizeAllMatchingUncategorizedTransactions,
     private val setSearchTextsSharedVM: SetSearchTextsSharedVM,
 ) : ViewModel() {
+    // # Setup
+    val replayOrFuture = MutableSharedFlow<IReplayOrFuture>(1)
+
     // # User Intents
     fun userTryNavToCategorySelection() {
         navToCategorySelection.easyEmit()
@@ -48,61 +49,23 @@ class CreateFuture2VM @Inject constructor(
 
     @SuppressLint("VisibleForTests")
     fun userTrySubmit() {
-        try {
-            when (searchType.value) {
-                SearchType.DESCRIPTION_AND_TOTAL ->
-                    TODO()
-                SearchType.TOTAL ->
-                    TotalFuture(
-                        name = generateUniqueID(),
-                        searchTotal = totalGuess.value,
-                        categoryAmountFormulas = categoryAmountFormulas.value,
-                        fillCategory = fillCategory.value!!,
-                        terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.WAITING_FOR_MATCH,
-                        isAutomatic = isAutomatic.value,
-                    )
-                SearchType.DESCRIPTION ->
-                    BasicFuture(
-                        name = generateUniqueID(),
-                        searchTexts = setSearchTextsSharedVM.searchTexts.value,
-                        categoryAmountFormulas = categoryAmountFormulas.value,
-                        fillCategory = fillCategory.value!!,
-                        terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.WAITING_FOR_MATCH,
-                        isAutomatic = isAutomatic.value,
-                        totalGuess = totalGuess.value,
-                    )
-            }
-                .let { newFuture ->
-                    Rx.merge(
-                        futuresRepo.add(newFuture),
-                        if (newFuture.terminationStrategy == TerminationStrategy.PERMANENT) categorizeAllMatchingUncategorizedTransactions(newFuture).doOnSuccess { toaster.toast("$it transactions categorized") }.ignoreElement() else null,
-                    )
-                }
-                .andThen(Completable.fromAction { runBlocking { selectedCategoriesModel.clearSelection() } }.subscribeOn(Schedulers.io()))
-                .andThen(Completable.fromAction { navUp.onNext() })
-                .subscribe()
-        } catch (e: Throwable) {
-            when (e) {
-                is NoDescriptionEnteredException -> toaster.toast("Fill description or use another search type")
-                else -> throw e
-            }
-        }
+        TODO()
     }
 
     fun userSetTotalGuess(s: String) {
-        totalGuess.onNext(s.toMoneyBigDecimal())
+        _totalGuess.onNext(s.toMoneyBigDecimal())
     }
 
     fun userSetIsPermanent(b: Boolean) {
-        isPermanent.onNext(b)
+        _isPermanent.onNext(b)
     }
 
     fun userSetIsAutomatic(b: Boolean) {
-        isAutomatic.onNext(b)
+        _isAutomatic.onNext(b)
     }
 
     fun userSetSearchType(searchType: SearchType) {
-        this.searchType.onNext(searchType)
+        this._searchType.onNext(searchType)
     }
 
     private val userCategoryAmountFormulas = SourceHashMap<Category, AmountFormula>()
@@ -122,24 +85,104 @@ class CreateFuture2VM @Inject constructor(
         navToSetSearchTexts.onNext()
     }
 
+    fun userDeleteFutureOrReplay() {
+        when (val x = replayOrFuture.replayCache[0]) {
+            is BasicFuture -> futuresRepo.delete(x).subscribe()
+            is BasicReplay,
+            is TotalFuture -> TODO()
+            else -> error("Oh no!")
+        }
+        navUp.onNext()
+    }
+
     // # Internal
-    private val totalGuess = MutableStateFlow(BigDecimal("-10"))
-    private val isPermanent = MutableStateFlow(false)
-    private val isAutomatic = MutableStateFlow(true)
-    private val searchType = MutableStateFlow(SearchType.DESCRIPTION)
-    private val categoryAmountFormulas =
+    private val _totalGuess = MutableSharedFlow<BigDecimal>()
+    private val totalGuess =
+        merge(
+            _totalGuess,
+            replayOrFuture
+                .map {
+                    when (it) {
+                        is BasicFuture -> it.totalGuess
+                        else -> error("Unhandled type:$it")
+                    }
+                },
+        )
+            .stateIn(viewModelScope, SharingStarted.Eagerly, BigDecimal("-10"))
+    private val _isPermanent = MutableSharedFlow<Boolean>()
+    private val isPermanent =
+        merge(
+            _isPermanent,
+            replayOrFuture
+                .map {
+                    when (it) {
+                        is BasicFuture -> it.terminationStrategy == TerminationStrategy.PERMANENT
+                        else -> error("Unhandled type:$it")
+                    }
+                },
+        )
+            .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+    private val _isAutomatic = MutableSharedFlow<Boolean>()
+    private val isAutomatic =
+        merge(
+            _isAutomatic,
+            replayOrFuture
+                .map {
+                    when (it) {
+                        is BasicFuture -> it.isAutomatic
+                        else -> error("Unhandled type:$it")
+                    }
+                },
+        )
+            .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+    private val _searchType = MutableSharedFlow<SearchType>()
+    private val searchType =
+        merge(
+            _searchType,
+            replayOrFuture
+                .map {
+                    when (it) {
+                        is BasicFuture -> SearchType.DESCRIPTION
+                        else -> error("Unhandled type:$it")
+                    }
+                },
+        )
+            .stateIn(viewModelScope, SharingStarted.Eagerly, SearchType.DESCRIPTION)
+    private val _categoryAmountFormulas =
         combine(userCategoryAmountFormulas.flow, selectedCategoriesModel.selectedCategories)
         { userCategoryAmountFormulas, selectedCategories ->
             CategoryAmountFormulas(selectedCategories.associateWith { it.defaultAmountFormula })
                 .plus(userCategoryAmountFormulas.filter { it.key in selectedCategories })
         }
+    private val categoryAmountFormulas =
+        merge(
+            _categoryAmountFormulas,
+            replayOrFuture
+                .map {
+                    when (it) {
+                        is BasicFuture -> it.categoryAmountFormulas
+                        else -> error("Unhandled type:$it")
+                    }
+                },
+        )
             .stateIn(viewModelScope, SharingStarted.Eagerly, CategoryAmountFormulas())
-    private val fillCategory =
+    private val _fillCategory =
         selectedCategoriesModel.selectedCategories
             .flatMapLatest { selectedCategories ->
                 userSetFillCategory
                     .onStart { emit(selectedCategories.find { it.defaultAmountFormula.isZero() } ?: selectedCategories.getOrNull(0)) }
             }
+    private val fillCategory =
+        merge(
+            _fillCategory,
+            replayOrFuture
+                .map {
+                    when (it) {
+                        is BasicFuture -> it.fillCategory
+                        else -> error("Unhandled type:$it")
+                    }
+                },
+        )
             .stateIn(viewModelScope, SharingStarted.Eagerly, null)
     private val fillAmountFormula =
         combine(categoryAmountFormulas, fillCategory, totalGuess)
@@ -217,6 +260,10 @@ class CreateFuture2VM @Inject constructor(
     val buttons =
         flowOf(
             listOfNotNull(
+                ButtonVMItem(
+                    title = "Delete",
+                    onClick = { userDeleteFutureOrReplay() },
+                ),
                 ButtonVMItem(
                     title = "Add Or Remove Categories",
                     onClick = { userTryNavToCategorySelection() },

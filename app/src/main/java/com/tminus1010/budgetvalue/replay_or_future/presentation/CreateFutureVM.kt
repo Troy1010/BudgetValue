@@ -87,6 +87,7 @@ class CreateFutureVM @Inject constructor(
                     fillCategory = fillCategory.value.first!!,
                     terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.WAITING_FOR_MATCH,
                     isAutomatic = true,
+                    totalGuess = totalGuess.value,
                 )
         }
             .let { newFuture ->

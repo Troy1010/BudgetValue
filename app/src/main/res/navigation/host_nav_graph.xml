@@ -129,7 +129,7 @@
     </fragment>
     <fragment
         android:id="@+id/futureDetailsFrag"
-        android:name="com.tminus1010.budgetvalue.replay_or_future.view.FutureDetailsFrag"
+        android:name="com.tminus1010.budgetvalue.replay_or_future.view.ReplayOrFutureDetailsFrag"
         android:label="FutureDetailsFrag"
         tools:layout="@layout/frag_create_future" />
     <fragment
