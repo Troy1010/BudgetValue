@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
-import com.tminus1010.budgetvalue._core.all.extensions.widthObservable
+import com.tminus1010.budgetvalue._core.all_layers.extensions.widthObservable
 import com.tminus1010.budgetvalue._core.framework.Orientation
 import com.tminus1010.budgetvalue._core.framework.view.tmTableView.IViewItemRecipe
 import com.tminus1010.budgetvalue.databinding.TableviewBinding

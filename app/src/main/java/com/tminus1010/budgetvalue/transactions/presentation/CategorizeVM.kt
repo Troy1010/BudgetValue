@@ -3,9 +3,9 @@ package com.tminus1010.budgetvalue.transactions.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.all.extensions.asObservable2
-import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
-import com.tminus1010.budgetvalue._core.all.extensions.onNext
+import com.tminus1010.budgetvalue._core.all_layers.extensions.asObservable2
+import com.tminus1010.budgetvalue._core.all_layers.extensions.easyEmit
+import com.tminus1010.budgetvalue._core.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue._core.framework.view.SpinnerService
 import com.tminus1010.budgetvalue._core.framework.view.Toaster
 import com.tminus1010.budgetvalue._core.presentation.Errors

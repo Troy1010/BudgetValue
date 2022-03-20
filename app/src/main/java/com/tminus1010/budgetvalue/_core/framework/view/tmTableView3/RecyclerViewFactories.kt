@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue._core.framework.view.tmTableView3
 import android.content.Context
 import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
-import com.tminus1010.budgetvalue._core.all.extensions.easyText
+import com.tminus1010.budgetvalue._core.all_layers.extensions.easyText
 import com.tminus1010.budgetvalue.databinding.ItemEmptyBinding
 import com.tminus1010.budgetvalue.databinding.ItemHeaderBinding
 import com.tminus1010.budgetvalue.databinding.ItemTextViewBinding

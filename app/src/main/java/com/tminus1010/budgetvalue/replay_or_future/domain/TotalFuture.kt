@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.replay_or_future.domain
 import androidx.annotation.VisibleForTesting
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.tminus1010.budgetvalue._core.all.extensions.easyEquals
+import com.tminus1010.budgetvalue._core.all_layers.extensions.easyEquals
 import com.tminus1010.budgetvalue._core.domain.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.app.Transaction

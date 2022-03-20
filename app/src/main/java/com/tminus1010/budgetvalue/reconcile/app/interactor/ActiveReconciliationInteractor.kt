@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.reconcile.app.interactor
 
-import com.tminus1010.budgetvalue._core.all.extensions.asObservable2
+import com.tminus1010.budgetvalue._core.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue._core.data.repo.AccountsRepo
 import com.tminus1010.budgetvalue.budgeted.BudgetedInteractor
 import com.tminus1010.budgetvalue.reconcile.data.ActiveReconciliationRepo

@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.all.extensions.show
+import com.tminus1010.budgetvalue._core.all_layers.extensions.show
 import com.tminus1010.budgetvalue._core.framework.view.recipe_factories.itemTitledDividerRB
 import com.tminus1010.budgetvalue._core.framework.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragHistoryBinding

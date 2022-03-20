@@ -2,10 +2,10 @@ package com.tminus1010.budgetvalue.replay_or_future.presentation
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue._core.all.extensions.asObservable2
-import com.tminus1010.budgetvalue._core.all.extensions.cold
-import com.tminus1010.budgetvalue._core.all.extensions.flatMapSourceHashMap
-import com.tminus1010.budgetvalue._core.all.extensions.isZero
+import com.tminus1010.budgetvalue._core.all_layers.extensions.asObservable2
+import com.tminus1010.budgetvalue._core.all_layers.extensions.cold
+import com.tminus1010.budgetvalue._core.all_layers.extensions.flatMapSourceHashMap
+import com.tminus1010.budgetvalue._core.all_layers.extensions.isZero
 import com.tminus1010.budgetvalue._core.domain.CategoryAmountFormulas
 import com.tminus1010.budgetvalue._core.framework.ColdObservable
 import com.tminus1010.budgetvalue._core.framework.source_objects.SourceHashMap

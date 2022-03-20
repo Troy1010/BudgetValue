@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.__core_testing
 
 import android.content.res.AssetManager
 import androidx.test.platform.app.InstrumentationRegistry
-import com.tminus1010.budgetvalue._core.all.dependency_injection.AssetsModule
+import com.tminus1010.budgetvalue._core.all_layers.dependency_injection.AssetsModule
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent

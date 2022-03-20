@@ -3,8 +3,8 @@ package com.tminus1010.budgetvalue.transactions.presentation.model
 import android.content.Context
 import android.view.LayoutInflater
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.all.extensions.easyText
-import com.tminus1010.budgetvalue._core.all.extensions.getColorByAttr
+import com.tminus1010.budgetvalue._core.all_layers.extensions.easyText
+import com.tminus1010.budgetvalue._core.all_layers.extensions.getColorByAttr
 import com.tminus1010.budgetvalue._core.framework.view.tmTableView3.IViewItemRecipe3
 import com.tminus1010.budgetvalue._core.framework.view.tmTableView3.ViewItemRecipeFactory3
 import com.tminus1010.budgetvalue.databinding.ItemTextViewBinding

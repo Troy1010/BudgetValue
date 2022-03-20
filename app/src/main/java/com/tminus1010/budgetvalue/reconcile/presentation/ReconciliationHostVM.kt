@@ -2,8 +2,8 @@ package com.tminus1010.budgetvalue.reconcile.presentation
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.all.extensions.isZero
-import com.tminus1010.budgetvalue._core.all.extensions.mapBox
+import com.tminus1010.budgetvalue._core.all_layers.extensions.isZero
+import com.tminus1010.budgetvalue._core.all_layers.extensions.mapBox
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue._core.presentation.model.UnformattedString
 import com.tminus1010.budgetvalue.reconcile.app.convenience_service.ReconciliationsToDoUC

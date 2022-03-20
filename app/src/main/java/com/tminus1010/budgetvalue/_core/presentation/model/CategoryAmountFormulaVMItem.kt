@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue._core.presentation.model
 
-import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
+import com.tminus1010.budgetvalue._core.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.framework.ColdObservable
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula

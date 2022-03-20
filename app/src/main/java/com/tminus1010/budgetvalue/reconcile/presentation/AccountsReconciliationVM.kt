@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.reconcile.presentation
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
+import com.tminus1010.budgetvalue._core.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.presentation.model.AmountPresentationModel
 import com.tminus1010.budgetvalue._core.presentation.model.CategoryAmountPresentationModel
 import com.tminus1010.budgetvalue.budgeted.presentation.BudgetHeaderPresentationModel

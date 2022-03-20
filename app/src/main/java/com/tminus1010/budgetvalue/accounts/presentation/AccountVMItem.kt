@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.accounts.presentation
 
-import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
+import com.tminus1010.budgetvalue._core.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.data.repo.AccountsRepo
 import com.tminus1010.budgetvalue._core.domain.accounts.Account
 

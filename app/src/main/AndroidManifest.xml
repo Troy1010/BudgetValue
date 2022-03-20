@@ -4,7 +4,7 @@
     package="com.tminus1010.budgetvalue">
 
     <application
-        android:name="com.tminus1010.budgetvalue._core.App"
+        android:name="com.tminus1010.budgetvalue._core.all_layers.App"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="false"

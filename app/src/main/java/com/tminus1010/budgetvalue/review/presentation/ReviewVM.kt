@@ -7,8 +7,8 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.utils.ColorTemplate
-import com.tminus1010.budgetvalue._core.all.extensions.divertErrors
-import com.tminus1010.budgetvalue._core.all.extensions.mapBox
+import com.tminus1010.budgetvalue._core.all_layers.extensions.divertErrors
+import com.tminus1010.budgetvalue._core.all_layers.extensions.mapBox
 import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
 import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue._core.presentation.model.PieChartVMItem

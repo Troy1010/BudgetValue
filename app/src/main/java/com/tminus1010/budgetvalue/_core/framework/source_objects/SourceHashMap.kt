@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue._core.framework.source_objects
 
-import com.tminus1010.budgetvalue._core.all.extensions.copy
+import com.tminus1010.budgetvalue._core.all_layers.extensions.copy
 import com.tminus1010.tmcommonkotlin.core.extensions.removeIf
 import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable

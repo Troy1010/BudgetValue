@@ -6,8 +6,8 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.tminus1010.budgetvalue.*
-import com.tminus1010.budgetvalue._core.all.extensions.asObservable2
-import com.tminus1010.budgetvalue._core.all.extensions.easyText2
+import com.tminus1010.budgetvalue._core.all_layers.extensions.asObservable2
+import com.tminus1010.budgetvalue._core.all_layers.extensions.easyText2
 import com.tminus1010.budgetvalue._core.framework.Rx
 import com.tminus1010.budgetvalue._core.framework.view.onDone
 import com.tminus1010.budgetvalue._core.framework.view.tmTableView3.*

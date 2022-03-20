@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue._core.domain
 
-import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
+import com.tminus1010.budgetvalue._core.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum

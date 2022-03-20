@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.transactions.app.interactor
 
-import com.tminus1010.budgetvalue._core.all.extensions.mapBox
+import com.tminus1010.budgetvalue._core.all_layers.extensions.mapBox
 import com.tminus1010.budgetvalue._core.domain.DatePeriodService
 import com.tminus1010.budgetvalue._core.framework.Rx
 import com.tminus1010.budgetvalue.importZ.data.LatestDateOfMostRecentImport

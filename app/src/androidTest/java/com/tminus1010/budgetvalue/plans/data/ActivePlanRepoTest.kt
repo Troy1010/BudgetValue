@@ -8,8 +8,8 @@ import androidx.room.Room
 import com.tminus1010.budgetvalue.FakeDataStore
 import com.tminus1010.budgetvalue.Given
 import com.tminus1010.budgetvalue.__core_testing.app
-import com.tminus1010.budgetvalue._core.all.dependency_injection.EnvironmentModule
-import com.tminus1010.budgetvalue._core.all.dependency_injection.IEnvironmentModule
+import com.tminus1010.budgetvalue._core.all_layers.dependency_injection.EnvironmentModule
+import com.tminus1010.budgetvalue._core.all_layers.dependency_injection.IEnvironmentModule
 import com.tminus1010.budgetvalue._core.data.CategoryDatabase
 import com.tminus1010.budgetvalue._core.data.MiscDatabase
 import com.tminus1010.budgetvalue._core.data.RoomWithCategoriesTypeConverter

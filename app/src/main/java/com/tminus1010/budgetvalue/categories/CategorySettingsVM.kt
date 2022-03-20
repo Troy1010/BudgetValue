@@ -2,8 +2,8 @@ package com.tminus1010.budgetvalue.categories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tminus1010.budgetvalue._core.InvalidCategoryNameException
-import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
+import com.tminus1010.budgetvalue._core.all_layers.InvalidCategoryNameException
+import com.tminus1010.budgetvalue._core.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue._core.presentation.model.*
 import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor

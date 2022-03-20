@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.replay_or_future.presentation
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
+import com.tminus1010.budgetvalue._core.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue._core.framework.view.Toaster
 import com.tminus1010.budgetvalue._core.presentation.model.MenuPresentationModel
 import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem

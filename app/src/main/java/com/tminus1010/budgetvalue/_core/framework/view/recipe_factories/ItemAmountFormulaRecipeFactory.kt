@@ -3,8 +3,8 @@ package com.tminus1010.budgetvalue._core.framework.view.recipe_factories
 import android.content.Context
 import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
-import com.tminus1010.budgetvalue._core.all.extensions.add
-import com.tminus1010.budgetvalue._core.all.extensions.easyText2
+import com.tminus1010.budgetvalue._core.all_layers.extensions.add
+import com.tminus1010.budgetvalue._core.all_layers.extensions.easyText2
 import com.tminus1010.budgetvalue._core.framework.view.onDone
 import com.tminus1010.budgetvalue._core.framework.view.tmTableView3.IViewItemRecipe3
 import com.tminus1010.budgetvalue._core.framework.view.tmTableView3.ViewItemRecipe3__

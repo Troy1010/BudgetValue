@@ -2,8 +2,8 @@ package com.tminus1010.budgetvalue.history
 
 import android.view.View
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue._core.all.extensions.asObservable2
-import com.tminus1010.budgetvalue._core.categoryComparator
+import com.tminus1010.budgetvalue._core.all_layers.extensions.asObservable2
+import com.tminus1010.budgetvalue._core.all_layers.categoryComparator
 import com.tminus1010.budgetvalue._core.data.repo.CurrentDatePeriodRepo
 import com.tminus1010.budgetvalue._core.domain.DatePeriodService
 import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod

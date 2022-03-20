@@ -2,8 +2,8 @@ package com.tminus1010.budgetvalue.transactions.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tminus1010.budgetvalue._core.all.extensions.easyEmit
-import com.tminus1010.budgetvalue._core.all.extensions.toMoneyBigDecimal
+import com.tminus1010.budgetvalue._core.all_layers.extensions.easyEmit
+import com.tminus1010.budgetvalue._core.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue._core.presentation.model.MenuPresentationModel

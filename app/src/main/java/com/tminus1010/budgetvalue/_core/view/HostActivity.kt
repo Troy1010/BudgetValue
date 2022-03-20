@@ -11,10 +11,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.all.extensions.easyAlertDialog
-import com.tminus1010.budgetvalue._core.all.extensions.getString
-import com.tminus1010.budgetvalue._core.all.extensions.onNext
-import com.tminus1010.budgetvalue._core.all.extensions.unCheckAllMenuItems
+import com.tminus1010.budgetvalue._core.all_layers.extensions.easyAlertDialog
+import com.tminus1010.budgetvalue._core.all_layers.extensions.getString
+import com.tminus1010.budgetvalue._core.all_layers.extensions.onNext
+import com.tminus1010.budgetvalue._core.all_layers.extensions.unCheckAllMenuItems
 import com.tminus1010.budgetvalue._core.framework.view.SpinnerService
 import com.tminus1010.budgetvalue._core.framework.view.Toaster
 import com.tminus1010.budgetvalue._core.presentation.Errors

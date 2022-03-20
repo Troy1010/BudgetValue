@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.budgeted
 
-import com.tminus1010.budgetvalue._core.all.extensions.asObservable2
-import com.tminus1010.budgetvalue._core.all.extensions.flatMapSourceHashMap
+import com.tminus1010.budgetvalue._core.all_layers.extensions.asObservable2
+import com.tminus1010.budgetvalue._core.all_layers.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
 import com.tminus1010.budgetvalue._core.framework.Rx
 import com.tminus1010.budgetvalue._core.framework.source_objects.SourceHashMap

@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.reconcile.app.interactor
 
 import androidx.annotation.VisibleForTesting
-import com.tminus1010.budgetvalue._core.all.extensions.asObservable2
+import com.tminus1010.budgetvalue._core.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
 import com.tminus1010.budgetvalue._core.domain.accounts.AccountsAggregate
 import com.tminus1010.budgetvalue._core.data.repo.AccountsRepo
