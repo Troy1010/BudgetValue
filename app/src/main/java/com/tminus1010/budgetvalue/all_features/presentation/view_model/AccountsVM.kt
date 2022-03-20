@@ -1,7 +1,8 @@
-package com.tminus1010.budgetvalue.accounts.presentation
+package com.tminus1010.budgetvalue.all_features.presentation.view_model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
+import com.tminus1010.budgetvalue.all_features.presentation.model.AccountsPresentationModel
 import com.tminus1010.budgetvalue.all_features.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue.all_features.data.repo.AccountsRepo
 import com.tminus1010.budgetvalue.all_features.domain.accounts.Account
@@ -23,7 +24,7 @@ class AccountsVM @Inject constructor(
     // # State
     val accountVMItemList =
         accountsRepo.accountsAggregate
-            .map { AccountVMItemList(it, accountsRepo) }
+            .map { AccountsPresentationModel(it, accountsRepo) }
             .replayNonError(1)
             .nonLazy(disposables)
     val buttons =

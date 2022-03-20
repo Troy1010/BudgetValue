@@ -13,8 +13,8 @@ import com.tminus1010.budgetvalue.all_features.all_layers.extensions.onClick
 import com.tminus1010.budgetvalue.all_features.framework.view.GenViewHolder2
 import com.tminus1010.budgetvalue.all_features.framework.view.onDone
 import com.tminus1010.budgetvalue.all_features.framework.view.viewBinding
-import com.tminus1010.budgetvalue.accounts.presentation.AccountVMItem
-import com.tminus1010.budgetvalue.accounts.presentation.AccountsVM
+import com.tminus1010.budgetvalue.all_features.presentation.model.AccountPresentationModel
+import com.tminus1010.budgetvalue.all_features.presentation.view_model.AccountsVM
 import com.tminus1010.budgetvalue.databinding.FragImportBinding
 import com.tminus1010.budgetvalue.databinding.ItemAccountBinding
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -24,7 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class ImportFrag : Fragment(R.layout.frag_import) {
     private val accountsVM by activityViewModels<AccountsVM>()
     private val vb by viewBinding(FragImportBinding::bind)
-    var accounts = emptyList<AccountVMItem>()
+    var accounts = emptyList<AccountPresentationModel>()
         set(value) {
             field = value; vb.recyclerviewAccounts.adapter?.notifyDataSetChanged()
         }
