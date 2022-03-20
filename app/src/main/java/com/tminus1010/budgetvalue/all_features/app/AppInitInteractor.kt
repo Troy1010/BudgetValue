@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.all_features.app
 
 import com.tminus1010.budgetvalue.all_features.data.repo.AppInitRepo
-import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
+import com.tminus1010.budgetvalue.all_features.data.repo.CategoriesRepo
 import com.tminus1010.budgetvalue.all_features.app.model.Category
 import com.tminus1010.budgetvalue.all_features.app.model.CategoryType
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula

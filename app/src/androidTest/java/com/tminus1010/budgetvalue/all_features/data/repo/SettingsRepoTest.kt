@@ -12,7 +12,6 @@ import com.tminus1010.budgetvalue.all_features.all_layers.dependency_injection.I
 import com.tminus1010.budgetvalue.all_features.data.CategoryDatabase
 import com.tminus1010.budgetvalue.all_features.data.MiscDatabase
 import com.tminus1010.budgetvalue.all_features.data.RoomWithCategoriesTypeConverter
-import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

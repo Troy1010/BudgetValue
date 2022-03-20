@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3
 import java.lang.Math.max
 import kotlin.math.floor
 
+@Deprecated("use commonlib's TMTableView")
 object ColumnWidthCalculator3 {
     fun generateIntrinsicWidths(viewItemRecipes: Iterable<Iterable<IViewItemRecipe3>>): List<List<Int>> {
         val intrinsicWidths = ArrayList<ArrayList<Int>>()

@@ -11,6 +11,7 @@ import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView2.Synch
 import com.tminus1010.tmcommonkotlin.misc.extensions.measureUnspecified
 import com.tminus1010.tmcommonkotlin.misc.extensions.scrollTo
 
+@Deprecated("use commonlib's TMTableView")
 class OuterRVAdapter3(
     val context: Context,
     val recipeGrid: RecipeGrid3,

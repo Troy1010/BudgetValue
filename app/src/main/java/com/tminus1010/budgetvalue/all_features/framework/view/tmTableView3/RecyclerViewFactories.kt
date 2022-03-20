@@ -11,6 +11,7 @@ import com.tminus1010.budgetvalue.databinding.ItemTitledDividerBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import io.reactivex.rxjava3.core.Observable
 
+@Deprecated("use commonlib's TMTableView")
 interface IRecipeFactories {
     val titledDivider: ViewItemRecipeFactory3<ItemTitledDividerBinding, String>
     val textView: ViewItemRecipeFactory3<ItemTextViewBinding, Any>
@@ -49,6 +50,7 @@ val Fragment.recipeFactories
             )
     }
 
+@Deprecated("use commonlib's TMTableView")
 fun NothingRecipe(context: Context) = ViewItemRecipe3<ItemEmptyBinding, Unit?>(
     { ItemEmptyBinding.inflate(LayoutInflater.from(context)) },
     { _, _, _ -> }

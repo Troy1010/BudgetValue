@@ -5,13 +5,16 @@ import io.reactivex.rxjava3.core.Completable
 import kotlin.math.max
 
 
+@Deprecated("use commonlib's TMTableView")
 interface IColumnWidthsProvider3 {
     fun getColumnWidth(i: Int): Int
 }
+@Deprecated("use commonlib's TMTableView")
 class ColWidthsProviderFixedWidth3(recipes2d: List<List<IViewItemRecipe3>>, fixedWidth: Int): IColumnWidthsProvider3 {
     private val colWidths = ColumnWidthCalculator3.generateColumnWidths(recipes2d, fixedWidth)
     override fun getColumnWidth(i: Int) = colWidths[i]
 }
+@Deprecated("use commonlib's TMTableView")
 class ColWidthsProvider3(val recipes2d: List<List<IViewItemRecipe3>>): IColumnWidthsProvider3 {
     private val colWidths = HashMap<Int, Int>()
     init {
@@ -25,9 +28,11 @@ class ColWidthsProvider3(val recipes2d: List<List<IViewItemRecipe3>>): IColumnWi
             .also { colWidths[i] = it }
     }
 }
+@Deprecated("use commonlib's TMTableView")
 interface IRowHeightProvider3 {
     fun getRowHeight(j: Int): Int
 }
+@Deprecated("use commonlib's TMTableView")
 class RowHeightProvider3(val recipes2d: List<List<IViewItemRecipe3>>, val columnHeightProvider: IColumnWidthsProvider3): IRowHeightProvider3 {
     private val rowHeights = HashMap<Int, Int>()
     init {

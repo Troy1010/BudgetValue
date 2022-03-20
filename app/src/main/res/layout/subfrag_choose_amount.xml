@@ -26,7 +26,7 @@
         app:layout_constraintTop_toTopOf="@id/moneyEditText"
         app:layout_constraintWidth_percent="0.5" />
 
-    <com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.TMTableView3
+    <com.tminus1010.tmcommonkotlin.misc.tmTableView.TMTableView3
         android:id="@+id/tmTableView_plus_minus"
         android:layout_width="match_parent"
         android:layout_height="0dp"

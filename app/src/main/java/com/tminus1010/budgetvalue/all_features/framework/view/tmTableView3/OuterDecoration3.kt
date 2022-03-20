@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_features.framework.Orientation
 
+@Deprecated("use commonlib's TMTableView")
 class OuterDecoration3(
     val context: Context,
     val orientation: Orientation = Orientation.VERTICAL,

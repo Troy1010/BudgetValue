@@ -4,6 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 
+@Deprecated("use commonlib's TMTableView")
 interface IViewItemRecipe3 {
     val intrinsicWidth: Int
     val intrinsicHeight: Int

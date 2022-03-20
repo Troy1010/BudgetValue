@@ -13,6 +13,7 @@ import com.tminus1010.budgetvalue.all_features.data.MiscDatabase
 import com.tminus1010.budgetvalue.all_features.data.RoomWithCategoriesTypeConverter
 import com.tminus1010.budgetvalue.all_features.app.model.Category
 import com.tminus1010.budgetvalue.all_features.app.model.CategoryType
+import com.tminus1010.budgetvalue.all_features.data.repo.CategoriesRepo
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

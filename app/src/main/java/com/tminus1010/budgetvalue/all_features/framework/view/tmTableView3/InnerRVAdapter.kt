@@ -5,6 +5,7 @@ import androidx.viewbinding.ViewBinding
 import com.tminus1010.budgetvalue.all_features.framework.view.GenViewHolder2
 import com.tminus1010.budgetvalue.all_features.framework.view.LifecycleRVAdapter2
 
+@Deprecated("use commonlib's TMTableView")
 class InnerRVAdapter(
     private val recipeGrid: RecipeGrid3,
     private val j: Int,

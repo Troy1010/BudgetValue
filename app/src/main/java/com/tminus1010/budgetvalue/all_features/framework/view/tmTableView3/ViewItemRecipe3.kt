@@ -10,6 +10,7 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.measureUnspecified
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 
+@Deprecated("use commonlib's TMTableView")
 data class ViewItemRecipe3<VB : ViewBinding, D : Any?>(
     private val vbLambda: () -> VB,
     private val bindAction: (D, VB, LifecycleOwner) -> Unit,

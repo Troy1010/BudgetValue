@@ -11,6 +11,7 @@ import com.tminus1010.budgetvalue.all_features.framework.Orientation
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView.Decoration
 
+@Deprecated("use commonlib's TMTableView")
 class InnerFrozenRowDecoration3(
     context: Context,
     orientation: Orientation,

@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.categories.data
+package com.tminus1010.budgetvalue.all_features.data.repo
 
 import com.tminus1010.budgetvalue.all_features.data.UserCategoriesDAO
 import com.tminus1010.budgetvalue.all_features.app.model.Category

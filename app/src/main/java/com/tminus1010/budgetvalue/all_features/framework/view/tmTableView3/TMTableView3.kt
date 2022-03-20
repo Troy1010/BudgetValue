@@ -22,6 +22,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.Disposable
 import java.util.concurrent.TimeUnit
 
+@Deprecated("use commonlib's TMTableView")
 class TMTableView3 @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,

@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.categories.domain
 
-import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
+import com.tminus1010.budgetvalue.all_features.data.repo.CategoriesRepo
 import com.tminus1010.budgetvalue.all_features.app.model.Category
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted

@@ -54,35 +54,36 @@ class PlanFrag : Fragment(R.layout.frag_plan) {
                 vb.moneyedittext.easyText2 = d
             }
         )
-        Rx.combineLatest(categoriesVM.userCategories.asObservable2(), planVM.activePlanCAs.asObservable2())
-            .throttleLatest(150, TimeUnit.MILLISECONDS)
-            .observeOn(Schedulers.computation())
-            .map { (categories, planCAsItemObservableMap) ->
-                val recipes2D = listOf(
-                    listOf(recipeFactories.header.createOne("Category"))
-                            + recipeFactories.textView.createOne("Expected Income")
-                            + recipeFactories.textView.createOne("Default")
-                            + recipeFactories.textView.createMany(categories.map { it.name }),
-                    listOf(recipeFactories.header.createOne("Plan"))
-                            + expectedIncomeRecipeFactory.createOne(planVM.expectedIncome.asObservable2())
-                            + recipeFactories.textViewWithLifecycle.createOne(planVM.defaultAmount.asObservable2())
-                            + planCAsRecipeFactory.createMany(categories.map { Pair(it, planCAsItemObservableMap[it]) })
-                )
-                    .reflectXY()
-                val dividerMap = categories
-                    .withIndex()
-                    .distinctUntilChangedWith(compareBy { it.value.type })
-                    .associate { it.index to recipeFactories.titledDivider.createOne(it.value.type.name) }
-                    .mapKeys { it.key + 3 } // header row, expected income row, and default row
-                Pair(recipes2D, dividerMap)
-            }
-            .observe(viewLifecycleOwner) { (recipes2D, dividerMap) ->
-                vb.tmTableView.initialize(
-                    recipeGrid = recipes2D,
-                    shouldFitItemWidthsInsideTable = true,
-                    dividerMap = dividerMap,
-                    rowFreezeCount = 1,
-                )
-            }
+        TODO()
+//        Rx.combineLatest(categoriesVM.userCategories.asObservable2(), planVM.activePlanCAs.asObservable2())
+//            .throttleLatest(150, TimeUnit.MILLISECONDS)
+//            .observeOn(Schedulers.computation())
+//            .map { (categories, planCAsItemObservableMap) ->
+//                val recipes2D = listOf(
+//                    listOf(recipeFactories.header.createOne("Category"))
+//                            + recipeFactories.textView.createOne("Expected Income")
+//                            + recipeFactories.textView.createOne("Default")
+//                            + recipeFactories.textView.createMany(categories.map { it.name }),
+//                    listOf(recipeFactories.header.createOne("Plan"))
+//                            + expectedIncomeRecipeFactory.createOne(planVM.expectedIncome.asObservable2())
+//                            + recipeFactories.textViewWithLifecycle.createOne(planVM.defaultAmount.asObservable2())
+//                            + planCAsRecipeFactory.createMany(categories.map { Pair(it, planCAsItemObservableMap[it]) })
+//                )
+//                    .reflectXY()
+//                val dividerMap = categories
+//                    .withIndex()
+//                    .distinctUntilChangedWith(compareBy { it.value.type })
+//                    .associate { it.index to recipeFactories.titledDivider.createOne(it.value.type.name) }
+//                    .mapKeys { it.key + 3 } // header row, expected income row, and default row
+//                Pair(recipes2D, dividerMap)
+//            }
+//            .observe(viewLifecycleOwner) { (recipes2D, dividerMap) ->
+//                vb.tmTableView.initialize(
+//                    recipeGrid = recipes2D,
+//                    shouldFitItemWidthsInsideTable = true,
+//                    dividerMap = dividerMap,
+//                    rowFreezeCount = 1,
+//                )
+//            }
     }
 }

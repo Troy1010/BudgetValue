@@ -16,6 +16,7 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.pairwise
  *
  * @param fixedWidth a value besides null will resize items to make the entire grid have fixedWidth.
  */
+@Deprecated("use commonlib's TMTableView")
 class RecipeGrid3(
     private val recipes2d: List<List<IViewItemRecipe3>>,
     private val fixedWidth: Int? = null,
@@ -34,7 +35,7 @@ class RecipeGrid3(
             val maxSize = recipes2d.fold(0) { acc, v -> acc.coerceAtLeast(v.size) }
             return recipes2d.map {
                 val amountOfEmptyRecipeItemsToAdd = maxSize - it.size
-                it.plus((0 until amountOfEmptyRecipeItemsToAdd).map { ViewItemRecipe3(context, ItemEmptyBinding::inflate) { } })
+                it.plus((0 until amountOfEmptyRecipeItemsToAdd).map { ViewItemRecipe3__(context, ItemEmptyBinding::inflate) { } })
             }
         }
 
