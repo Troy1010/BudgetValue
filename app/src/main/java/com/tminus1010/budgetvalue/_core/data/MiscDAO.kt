@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue._core.data
 import androidx.room.*
 import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
 import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
-import com.tminus1010.budgetvalue.accounts.data.AccountDTO
+import com.tminus1010.budgetvalue.accounts.app.Account
 import com.tminus1010.budgetvalue.plans.domain.Plan
 import com.tminus1010.budgetvalue.reconcile.data.model.ReconciliationDTO
 import com.tminus1010.budgetvalue.replay_or_future.data.model.BasicReplayDTO
@@ -20,23 +20,23 @@ import java.math.BigDecimal
 interface MiscDAO {
     // # Accounts
 
-    @Query("DELETE FROM AccountDTO")
+    @Query("DELETE FROM Account")
     fun clearAccounts(): Completable
 
-    @Query("select * from AccountDTO")
-    fun fetchAccounts(): Observable<List<AccountDTO>>
+    @Query("select * from Account")
+    fun fetchAccounts(): Observable<List<Account>>
 
-    @Query("select * from AccountDTO where id=:id")
-    fun getAccount(id: Int): Observable<AccountDTO>
+    @Query("select * from Account where id=:id")
+    fun getAccount(id: Int): Observable<Account>
 
     @Insert
-    fun addAccount(accountDTO: AccountDTO): Completable
+    fun addAccount(account: Account): Completable
 
     @Delete
-    fun deleteAccount(accountDTO: AccountDTO): Completable
+    fun deleteAccount(account: Account): Completable
 
     @Update
-    fun update(accountDTO: AccountDTO): Completable
+    fun update(account: Account): Completable
 
     // # Transactions
 

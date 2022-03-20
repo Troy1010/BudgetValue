@@ -12,17 +12,15 @@ import javax.inject.Singleton
 
 @Singleton
 class AccountsRepo @Inject constructor(
-    private val miscDAO: MiscDAO
+    private val miscDAO: MiscDAO,
 ) {
     val accountsAggregate =
         miscDAO.fetchAccounts().subscribeOn(Schedulers.io())
-            .map { it.map(Account::fromDTO) }
             .map(::AccountsAggregate)
             .replayNonError(1)
 
     private fun getAccount(id: Int): Observable<Account> =
         miscDAO.getAccount(id).subscribeOn(Schedulers.io())
-            .map { Account.fromDTO(it) }
 
     fun update(account: Account): Completable =
         getAccount(account.id)
@@ -31,12 +29,12 @@ class AccountsRepo @Inject constructor(
                 if (it == account)
                     Completable.complete()
                 else
-                    miscDAO.update(account.toDTO()).subscribeOn(Schedulers.io())
+                    miscDAO.update(account).subscribeOn(Schedulers.io())
             }
 
     fun add(account: Account): Completable =
-        miscDAO.addAccount(account.toDTO()).subscribeOn(Schedulers.io())
+        miscDAO.addAccount(account).subscribeOn(Schedulers.io())
 
     fun delete(account: Account): Completable =
-        miscDAO.deleteAccount(account.toDTO()).subscribeOn(Schedulers.io())
+        miscDAO.deleteAccount(account).subscribeOn(Schedulers.io())
 }

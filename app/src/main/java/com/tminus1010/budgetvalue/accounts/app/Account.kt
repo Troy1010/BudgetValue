@@ -1,18 +1,14 @@
 package com.tminus1010.budgetvalue.accounts.app
 
-import com.tminus1010.budgetvalue.accounts.data.AccountDTO
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.math.BigDecimal
 
 
+@Entity
 data class Account(
     val name: String,
     val amount: BigDecimal,
+    @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-) {
-    fun toDTO(): AccountDTO =
-        AccountDTO(name, amount.toString(), id)
-    companion object {
-        fun fromDTO(accountDTO: AccountDTO) =
-            Account(accountDTO.name, accountDTO.amount.toBigDecimal(), accountDTO.id)
-    }
-}
+)
