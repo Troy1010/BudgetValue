@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.plans.data
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.isZero
 import com.tminus1010.budgetvalue.all_features.data.MiscDatabase
 import com.tminus1010.budgetvalue.all_features.domain.CategoryAmounts
-import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.all_features.app.model.Category
 import com.tminus1010.budgetvalue.plans.domain.Plan
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted

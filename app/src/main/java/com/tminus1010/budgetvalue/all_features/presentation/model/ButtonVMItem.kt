@@ -2,13 +2,13 @@ package com.tminus1010.budgetvalue.all_features.presentation.model
 
 import android.content.Context
 import android.widget.Button
-import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.IViewItemRecipe3
-import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.ViewItemRecipe3__
-import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.ViewItemRecipe3
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.misc.extensions.lifecycleOwner
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.flow.Flow
@@ -38,7 +38,7 @@ data class ButtonVMItem(
     }
 
     override fun toViewItemRecipe(context: Context): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, ItemButtonBinding::inflate) { vb ->
+        return ViewItemRecipe3(context, ItemButtonBinding::inflate) { vb ->
             bind(vb.btnItem)
         }
     }

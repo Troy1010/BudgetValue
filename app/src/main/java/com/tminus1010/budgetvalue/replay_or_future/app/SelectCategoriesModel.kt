@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.replay_or_future.app
 
 import com.tminus1010.budgetvalue.all_features.framework.source_objects.SourceList
-import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.all_features.app.model.Category
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map

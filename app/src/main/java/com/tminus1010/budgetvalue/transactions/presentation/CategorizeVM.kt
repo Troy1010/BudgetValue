@@ -12,7 +12,7 @@ import com.tminus1010.budgetvalue.all_features.presentation.Errors
 import com.tminus1010.budgetvalue.all_features.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue.all_features.presentation.model.ButtonVMItem2
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
-import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.all_features.app.model.Category
 import com.tminus1010.budgetvalue.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo

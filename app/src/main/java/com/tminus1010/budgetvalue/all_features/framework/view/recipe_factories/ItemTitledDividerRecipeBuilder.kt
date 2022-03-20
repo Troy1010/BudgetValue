@@ -2,8 +2,8 @@ package com.tminus1010.budgetvalue.all_features.framework.view.recipe_factories
 
 import android.content.Context
 import androidx.fragment.app.Fragment
-import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.IViewItemRecipe3
-import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.ViewItemRecipe3__
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.ViewItemRecipe3
 import com.tminus1010.budgetvalue.databinding.ItemTitledDividerBinding
 import com.tminus1010.tmcommonkotlin.view.extensions.toPX
 
@@ -22,7 +22,7 @@ class ItemTitledDividerRecipeBuilder(private val context: Context) {
     }
 
     fun create(s: String): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, ItemTitledDividerBinding::inflate, ItemTitledDividerBinding::inflate, styler) { vb ->
+        return ViewItemRecipe3(context, ItemTitledDividerBinding::inflate, ItemTitledDividerBinding::inflate, styler) { vb ->
             vb.textview.text = s
         }
     }

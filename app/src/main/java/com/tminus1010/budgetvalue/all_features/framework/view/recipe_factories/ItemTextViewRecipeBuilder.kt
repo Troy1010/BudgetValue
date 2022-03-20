@@ -4,11 +4,11 @@ import android.content.Context
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.getColorByAttr
-import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.IViewItemRecipe3
-import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.ViewItemRecipe3__
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
 import com.tminus1010.budgetvalue.all_features.presentation.model.AmountPresentationModel
 import com.tminus1010.budgetvalue.databinding.ItemTextViewBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.ViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.view.extensions.toPX
 import io.reactivex.rxjava3.core.Observable
 
@@ -27,8 +27,8 @@ class ItemTextViewRecipeBuilder(private val context: Context) {
 
     @JvmName("createValidatedStringVMItem")
     fun create(amountPresentationModel: Observable<AmountPresentationModel>?): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, ItemTextViewBinding::inflate, styler) { vb ->
-            if (amountPresentationModel == null) return@ViewItemRecipe3__
+        return ViewItemRecipe3(context, ItemTextViewBinding::inflate, ItemTextViewBinding::inflate, styler) { vb ->
+            if (amountPresentationModel == null) return@ViewItemRecipe3
             vb.textview.bind(amountPresentationModel) {
                 text = it.s
                 setTextColor(
@@ -44,7 +44,7 @@ class ItemTextViewRecipeBuilder(private val context: Context) {
     }
 
     fun create(amountPresentationModel: AmountPresentationModel): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, ItemTextViewBinding::inflate, styler) { vb ->
+        return ViewItemRecipe3(context, ItemTextViewBinding::inflate, ItemTextViewBinding::inflate, styler) { vb ->
             vb.textview.text = amountPresentationModel.s
             vb.textview.setTextColor(
                 context.theme.getColorByAttr(
@@ -58,26 +58,26 @@ class ItemTextViewRecipeBuilder(private val context: Context) {
     }
 
     fun create(s: String?): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, ItemTextViewBinding::inflate, styler) { vb ->
+        return ViewItemRecipe3(context, ItemTextViewBinding::inflate, ItemTextViewBinding::inflate, styler) { vb ->
             vb.textview.text = s
         }
     }
 
     fun create(d: Observable<String>): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, ItemTextViewBinding::inflate, styler) { vb ->
+        return ViewItemRecipe3(context, ItemTextViewBinding::inflate, ItemTextViewBinding::inflate, styler) { vb ->
             vb.textview.bind(d) { text = it }
         }
     }
 
     fun create(s: String, onClick: () -> Unit): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, ItemTextViewBinding::inflate, styler) { vb ->
+        return ViewItemRecipe3(context, ItemTextViewBinding::inflate, ItemTextViewBinding::inflate, styler) { vb ->
             vb.textview.text = s
             vb.textview.setOnClickListener { onClick() }
         }
     }
 
     fun create(s: String, context: Context, highlighted: Boolean, onClick: () -> Unit): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, ItemTextViewBinding::inflate, ItemTextViewBinding::inflate, styler) { vb ->
+        return ViewItemRecipe3(context, ItemTextViewBinding::inflate, ItemTextViewBinding::inflate, styler) { vb ->
             vb.textview.text = s
             vb.textview.setBackgroundColor(
                 context.theme.getColorByAttr(

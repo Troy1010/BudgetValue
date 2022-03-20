@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue.all_features.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue.all_features.presentation.model.EditTextVMItem
 import com.tminus1010.budgetvalue.all_features.presentation.model.MenuPresentationModel
 import com.tminus1010.budgetvalue.all_features.presentation.model.MenuVMItem
-import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map

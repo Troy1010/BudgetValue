@@ -13,7 +13,7 @@ import com.tminus1010.budgetvalue.all_features.framework.view.onDone
 import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.*
 import com.tminus1010.budgetvalue.all_features.framework.view.viewBinding
 import com.tminus1010.budgetvalue.categories.CategoriesVM
-import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.all_features.app.model.Category
 import com.tminus1010.budgetvalue.databinding.FragPlanBinding
 import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
 import com.tminus1010.budgetvalue.plans.presentation.PlanVM

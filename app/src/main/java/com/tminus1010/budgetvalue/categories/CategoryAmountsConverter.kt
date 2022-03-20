@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.categories
 
 import com.tminus1010.budgetvalue.all_features.data.MoshiProvider.moshi
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
-import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.all_features.app.model.Category
 import com.tminus1010.tmcommonkotlin.core.extensions.associate
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson

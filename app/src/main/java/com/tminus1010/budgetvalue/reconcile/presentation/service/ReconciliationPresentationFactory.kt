@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.reconcile.presentation.service
 
 import com.tminus1010.budgetvalue.all_features.presentation.model.CategoryAmountPresentationModel
-import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.all_features.app.model.Category
 import java.math.BigDecimal
 import javax.inject.Inject
 

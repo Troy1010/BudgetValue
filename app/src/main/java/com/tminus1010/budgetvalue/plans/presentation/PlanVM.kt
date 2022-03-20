@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.all_features.presentation.model.ButtonVMItem
-import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.all_features.app.model.Category
 import com.tminus1010.budgetvalue.plans.app.interactor.SetActivePlanFromHistoryInteractor
 import com.tminus1010.budgetvalue.plans.data.ActivePlanRepo
 import com.tminus1010.budgetvalue.plans.domain.ActivePlan

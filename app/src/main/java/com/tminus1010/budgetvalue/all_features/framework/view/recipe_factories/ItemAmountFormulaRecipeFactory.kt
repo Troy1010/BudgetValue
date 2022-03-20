@@ -6,11 +6,11 @@ import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.add
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.easyText2
 import com.tminus1010.budgetvalue.all_features.framework.view.onDone
-import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.IViewItemRecipe3
-import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.ViewItemRecipe3__
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.ViewItemRecipe3
 import com.tminus1010.budgetvalue.all_features.presentation.model.CategoryAmountFormulaVMItem
 import com.tminus1010.budgetvalue.all_features.presentation.model.MenuVMItem
-import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.all_features.app.model.Category
 import com.tminus1010.budgetvalue.databinding.ItemAmountFormulaBinding
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
@@ -23,7 +23,7 @@ fun Fragment.itemAmountFormulaRF() = ItemAmountFormulaRecipeFactory(requireConte
 class ItemAmountFormulaRecipeFactory(private val context: Context) {
     val inflate: (LayoutInflater) -> ItemAmountFormulaBinding = ItemAmountFormulaBinding::inflate
 
-    fun create(d: CategoryAmountFormulaVMItem, fillCategory: Observable<Box<Category?>>, requestRootView: () -> Unit, menuItems: Observable<List<MenuVMItem>>): IViewItemRecipe3 = ViewItemRecipe3__(context, inflate) { vb ->
+    fun create(d: CategoryAmountFormulaVMItem, fillCategory: Observable<Box<Category?>>, requestRootView: () -> Unit, menuItems: Observable<List<MenuVMItem>>): IViewItemRecipe3 = ViewItemRecipe3(context, inflate) { vb ->
         vb.root.bind(fillCategory) { (it) -> isEnabled = d.category != it }
         vb.moneyEditText.onDone(d::userSetAmount)
         vb.moneyEditText.bind(menuItems) { setOnCreateContextMenuListener { menu, _, _ -> menu.add(it) } }

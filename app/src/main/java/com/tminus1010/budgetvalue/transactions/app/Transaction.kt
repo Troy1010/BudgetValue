@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.transactions.app
 
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.copy
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
-import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.all_features.app.model.Category
 import com.tminus1010.budgetvalue.transactions.data.TransactionDTO
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import java.math.BigDecimal

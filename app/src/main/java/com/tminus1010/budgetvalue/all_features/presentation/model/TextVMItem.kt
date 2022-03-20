@@ -2,9 +2,9 @@ package com.tminus1010.budgetvalue.all_features.presentation.model
 
 import android.content.Context
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.getColorByAttr
-import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.IViewItemRecipe3
-import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.ViewItemRecipe3__
-import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.ViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
 import com.tminus1010.budgetvalue.databinding.ItemTextViewBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.tuple.Box
@@ -18,7 +18,7 @@ class TextVMItem(
     val backgroundColor: Int? = null,
 ) : IHasToViewItemRecipe {
     override fun toViewItemRecipe(context: Context): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, ItemTextViewBinding::inflate) { vb ->
+        return ViewItemRecipe3(context, ItemTextViewBinding::inflate) { vb ->
             vb.textview.text = text1
             text2?.also { vb.textview.bind(text2) { text = it.first } }
             vb.textview.setOnClickListener { onClick?.invoke() }

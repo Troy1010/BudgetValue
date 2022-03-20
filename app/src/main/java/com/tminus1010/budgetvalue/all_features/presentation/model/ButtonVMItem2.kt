@@ -3,9 +3,9 @@ package com.tminus1010.budgetvalue.all_features.presentation.model
 import android.content.Context
 import android.widget.Button
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.getColorByAttr
-import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.IViewItemRecipe3
-import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.ViewItemRecipe3__
-import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.ViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import io.reactivex.rxjava3.core.Observable
@@ -38,7 +38,7 @@ data class ButtonVMItem2(
     }
 
     override fun toViewItemRecipe(context: Context): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, ItemCategoryBtnBinding::inflate, ItemCategoryBtnBinding::inflate) { vb ->
+        return ViewItemRecipe3(context, ItemCategoryBtnBinding::inflate, ItemCategoryBtnBinding::inflate) { vb ->
             bind(vb.btnCategory)
         }
     }

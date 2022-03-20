@@ -3,10 +3,10 @@ package com.tminus1010.budgetvalue.all_features.presentation.model
 import android.content.Context
 import android.widget.EditText
 import com.tminus1010.budgetvalue.all_features.framework.view.onDone
-import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.IViewItemRecipe3
-import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.ViewItemRecipe3__
-import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe
-import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.ViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
+import com.tminus1010.budgetvalue.all_features.app.model.Category
 import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
 import java.math.BigDecimal
 
@@ -23,7 +23,7 @@ class CategoryAmountPresentationModel(
     }
 
     override fun toViewItemRecipe(context: Context): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, ItemMoneyEditTextBinding::inflate) { vb ->
+        return ViewItemRecipe3(context, ItemMoneyEditTextBinding::inflate) { vb ->
             bind(vb.moneyedittext)
         }
     }

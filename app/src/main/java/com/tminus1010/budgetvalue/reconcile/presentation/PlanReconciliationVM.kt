@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue.all_features.presentation.model.AmountPresenta
 import com.tminus1010.budgetvalue.all_features.presentation.model.CategoryAmountPresentationModel
 import com.tminus1010.budgetvalue.all_features.presentation.model.BudgetHeaderPresentationModel
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
-import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.all_features.app.model.Category
 import com.tminus1010.budgetvalue.reconcile.app.interactor.ActiveReconciliationInteractor
 import com.tminus1010.budgetvalue.reconcile.app.interactor.BudgetedWithActiveReconciliationInteractor
 import com.tminus1010.budgetvalue.reconcile.data.ActiveReconciliationRepo

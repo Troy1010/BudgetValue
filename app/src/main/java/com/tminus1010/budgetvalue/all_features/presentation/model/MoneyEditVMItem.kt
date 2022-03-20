@@ -3,9 +3,9 @@ package com.tminus1010.budgetvalue.all_features.presentation.model
 import android.content.Context
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.easyText2
 import com.tminus1010.budgetvalue.all_features.framework.view.onDone
-import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.IViewItemRecipe3
-import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.ViewItemRecipe3__
-import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.ViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
 import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import kotlinx.coroutines.flow.Flow
@@ -16,7 +16,7 @@ class MoneyEditVMItem(
     val onDone: (String) -> Unit,
 ) : IHasToViewItemRecipe {
     override fun toViewItemRecipe(context: Context): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, ItemMoneyEditTextBinding::inflate) { vb ->
+        return ViewItemRecipe3(context, ItemMoneyEditTextBinding::inflate) { vb ->
             if (text1 != null) vb.moneyedittext.easyText2 = text1
             if (text2 != null) vb.moneyedittext.bind(text2) { easyText2 = it }
             vb.moneyedittext.onDone(onDone)

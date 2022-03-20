@@ -13,7 +13,7 @@ import com.tminus1010.budgetvalue.all_features.framework.source_objects.SourceHa
 import com.tminus1010.budgetvalue.all_features.framework.view.Toaster
 import com.tminus1010.budgetvalue.all_features.presentation.model.*
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
-import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.all_features.app.model.Category
 import com.tminus1010.budgetvalue.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture

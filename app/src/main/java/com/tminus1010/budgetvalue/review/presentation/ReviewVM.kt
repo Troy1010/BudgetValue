@@ -13,7 +13,7 @@ import com.tminus1010.budgetvalue.all_features.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.all_features.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue.all_features.presentation.model.PieChartVMItem
 import com.tminus1010.budgetvalue.all_features.presentation.model.SpinnerVMItem
-import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.all_features.app.model.Category
 import com.tminus1010.budgetvalue.review.SelectableDuration
 import com.tminus1010.budgetvalue.review.UsePeriodType
 import com.tminus1010.budgetvalue.transactions.app.TransactionBlock

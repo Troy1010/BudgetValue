@@ -4,12 +4,12 @@ import android.content.Context
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.easyText2
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.all_features.framework.view.onDone
-import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.IViewItemRecipe3
-import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.ViewItemRecipe3__
-import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.ViewItemRecipe3
 import com.tminus1010.budgetvalue.databinding.ItemAmountFormulaBinding
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
 import com.tminus1010.tmcommonkotlin.view.extensions.easyVisibility
 import kotlinx.coroutines.flow.StateFlow
 
@@ -56,6 +56,6 @@ data class AmountFormulaPresentationModel1(
     }
 
     override fun toViewItemRecipe(context: Context): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, ItemAmountFormulaBinding::inflate, _bind = ::bind)
+        return ViewItemRecipe3(context, ItemAmountFormulaBinding::inflate, _bind = ::bind)
     }
 }

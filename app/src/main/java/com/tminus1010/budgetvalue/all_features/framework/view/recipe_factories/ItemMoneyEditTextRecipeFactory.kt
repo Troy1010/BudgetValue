@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.easyText2
 import com.tminus1010.budgetvalue.all_features.framework.view.onDone
-import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.IViewItemRecipe3
-import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.ViewItemRecipe3__
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.ViewItemRecipe3
 import com.tminus1010.budgetvalue.all_features.presentation.model.CategoryAmountPresentationModel
 import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
@@ -17,28 +17,28 @@ fun Fragment.itemMoneyEditTextRF() = ItemMoneyEditTextRecipeFactory(requireConte
 class ItemMoneyEditTextRecipeFactory(private val context: Context) {
     private val inflate: (LayoutInflater) -> ItemMoneyEditTextBinding = ItemMoneyEditTextBinding::inflate
     fun create(s: String): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, inflate) { vb ->
+        return ViewItemRecipe3(context, inflate) { vb ->
             vb.moneyedittext.easyText2 = s
         }
     }
 
     fun create(d: Observable<String>?): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, inflate) { vb ->
-            if (d == null) return@ViewItemRecipe3__
+        return ViewItemRecipe3(context, inflate) { vb ->
+            if (d == null) return@ViewItemRecipe3
             vb.moneyedittext.bind(d) { easyText2 = it }
         }
     }
 
     fun create(d: Observable<String>?, onDone: (String) -> Unit): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, inflate) { vb ->
+        return ViewItemRecipe3(context, inflate) { vb ->
             vb.moneyedittext.onDone(onDone)
-            if (d == null) return@ViewItemRecipe3__
+            if (d == null) return@ViewItemRecipe3
             vb.moneyedittext.bind(d) { easyText2 = it }
         }
     }
 
     fun create(categoryAmountPresentationModel: CategoryAmountPresentationModel): IViewItemRecipe3 {
-        return ViewItemRecipe3__(context, inflate) { vb ->
+        return ViewItemRecipe3(context, inflate) { vb ->
             categoryAmountPresentationModel.bind(vb.moneyedittext)
         }
     }

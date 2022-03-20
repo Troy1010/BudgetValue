@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.easyText
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.getColorByAttr
-import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.IViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
 import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.ViewItemRecipeFactory3
 import com.tminus1010.budgetvalue.databinding.ItemTextViewBinding
 import com.tminus1010.budgetvalue.transactions.app.Transaction

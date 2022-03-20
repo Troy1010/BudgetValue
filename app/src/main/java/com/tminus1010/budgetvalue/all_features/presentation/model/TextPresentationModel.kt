@@ -1,9 +1,9 @@
 package com.tminus1010.budgetvalue.all_features.presentation.model
 
 import android.content.Context
-import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.IViewItemRecipe3
-import com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.ViewItemRecipe3__
-import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.ViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
 import com.tminus1010.budgetvalue.databinding.ItemHeaderBinding
 import com.tminus1010.budgetvalue.databinding.ItemTextViewBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
@@ -23,7 +23,7 @@ data class TextPresentationModel(
 
     override fun toViewItemRecipe(context: Context): IViewItemRecipe3 {
         return if (style == Style.HEADER)
-            ViewItemRecipe3__(context, ItemHeaderBinding::inflate) { vb ->
+            ViewItemRecipe3(context, ItemHeaderBinding::inflate) { vb ->
                 vb.root.text = text1
                 if (text2 != null) vb.root.bind(text2) { text = it }
                 onClick?.also { onClick -> vb.root.setOnClickListener { onClick() } }
@@ -31,7 +31,7 @@ data class TextPresentationModel(
                 menuPresentationModel?.bind(vb.root)
             }
         else
-            ViewItemRecipe3__(context, ItemTextViewBinding::inflate) { vb ->
+            ViewItemRecipe3(context, ItemTextViewBinding::inflate) { vb ->
                 if (style == Style.TWO) {
                     vb.root.setPadding(10.toPX(context), 0, 10.toPX(context), 0)
                     vb.root.requestLayout()

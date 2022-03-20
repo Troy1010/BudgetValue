@@ -11,11 +11,11 @@ import com.tminus1010.budgetvalue.all_features.framework.view.recipe_factories.i
 import com.tminus1010.budgetvalue.all_features.framework.view.recipe_factories.itemTitledDividerRB
 import com.tminus1010.budgetvalue.all_features.presentation.model.AmountPresentationModel
 import com.tminus1010.budgetvalue.all_features.presentation.model.CategoryAmountPresentationModel
-import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe
 import com.tminus1010.budgetvalue.databinding.ItemTmTableViewBinding
 import com.tminus1010.budgetvalue.reconcile.domain.ReconciliationToDo
 import com.tminus1010.budgetvalue.reconcile.presentation.PlanReconciliationVM
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.combine
 

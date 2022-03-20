@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.transactions.presentation.model
 import com.tminus1010.budgetvalue.all_features.data.repo.CurrentDatePeriodRepo
 import com.tminus1010.budgetvalue.all_features.presentation.model.TextPresentationModel
 import com.tminus1010.budgetvalue.all_features.presentation.model.TextVMItem
-import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
 import com.tminus1010.budgetvalue.history.HistoryVMItem
 import com.tminus1010.budgetvalue.transactions.app.TransactionBlock
 

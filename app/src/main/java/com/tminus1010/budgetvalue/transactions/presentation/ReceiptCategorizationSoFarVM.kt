@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.transactions.presentation
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.all_features.presentation.model.MenuPresentationModel
 import com.tminus1010.budgetvalue.all_features.presentation.model.MenuVMItem
-import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.all_features.app.model.Category
 import com.tminus1010.budgetvalue.reconcile.presentation.model.HeaderPresentationModel
 import com.tminus1010.budgetvalue.transactions.app.ReceiptCategorizationInteractor
 import com.tminus1010.budgetvalue.all_features.presentation.model.TextVMItem

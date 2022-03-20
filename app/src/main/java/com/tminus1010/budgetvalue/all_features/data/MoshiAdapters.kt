@@ -5,7 +5,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.ToJson
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import com.tminus1010.budgetvalue.categories.models.CategoryType
+import com.tminus1010.budgetvalue.all_features.app.model.CategoryType
 import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStrategy
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import java.math.BigDecimal

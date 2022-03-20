@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.all_features.data
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.all_features.app.model.Category
 import javax.inject.Inject
 
 /**

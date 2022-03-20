@@ -10,7 +10,7 @@ import com.tminus1010.budgetvalue.all_features.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue.all_features.framework.Rx
 import com.tminus1010.budgetvalue.all_features.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue.all_features.app.BudgetedInteractor
-import com.tminus1010.budgetvalue.categories.models.Category
+import com.tminus1010.budgetvalue.all_features.app.model.Category
 import com.tminus1010.budgetvalue.all_features.presentation.model.BasicHeaderWithSubtitlePresentationModel
 import com.tminus1010.budgetvalue.all_features.presentation.model.TextPresentationModel
 import com.tminus1010.budgetvalue.plans.data.PlansRepo

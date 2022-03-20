@@ -9,8 +9,8 @@ import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.domain.DeleteCategoryFromActiveDomainUC
 import com.tminus1010.budgetvalue.categories.domain.ReplaceCategoryGloballyUC
-import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue.categories.models.CategoryType
+import com.tminus1010.budgetvalue.all_features.app.model.Category
+import com.tminus1010.budgetvalue.all_features.app.model.CategoryType
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import dagger.hilt.android.lifecycle.HiltViewModel
