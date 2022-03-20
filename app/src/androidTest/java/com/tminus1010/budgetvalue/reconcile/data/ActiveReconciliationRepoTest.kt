@@ -1,13 +1,15 @@
 package com.tminus1010.budgetvalue.reconcile.data
 
+import android.app.Application
+import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.room.Room
 import com.tminus1010.budgetvalue.FakeDataStore
 import com.tminus1010.budgetvalue.Given
 import com.tminus1010.budgetvalue.__core_testing.app
-import com.tminus1010.budgetvalue._core.all.dependency_injection.DataStoreModule
-import com.tminus1010.budgetvalue._core.all.dependency_injection.DatabaseModule
+import com.tminus1010.budgetvalue._core.all.dependency_injection.EnvironmentModule
+import com.tminus1010.budgetvalue._core.all.dependency_injection.IEnvironmentModule
 import com.tminus1010.budgetvalue._core.data.CategoryDatabase
 import com.tminus1010.budgetvalue._core.data.MiscDatabase
 import com.tminus1010.budgetvalue._core.data.RoomWithCategoriesTypeConverter
@@ -28,7 +30,7 @@ import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@UninstallModules(DatabaseModule::class, DataStoreModule::class)
+@UninstallModules(EnvironmentModule::class)
 @HiltAndroidTest
 class ActiveReconciliationRepoTest {
     @Test
@@ -84,7 +86,13 @@ class ActiveReconciliationRepoTest {
 
     @InstallIn(SingletonComponent::class)
     @Module
-    object MockModule {
+    object MockModule : IEnvironmentModule {
+        @Provides
+        @Singleton
+        override fun providesSharedPreferences(application: Application): SharedPreferences {
+            return super.providesSharedPreferences(application)
+        }
+
         @Provides
         @Singleton
         fun categoryDatabase(): CategoryDatabase {
