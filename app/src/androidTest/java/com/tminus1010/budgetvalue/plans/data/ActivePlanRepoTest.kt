@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.room.Room
 import com.tminus1010.budgetvalue.FakeDataStore
 import com.tminus1010.budgetvalue.Given
+import com.tminus1010.budgetvalue.__core_testing.MiscTestModule
 import com.tminus1010.budgetvalue.__core_testing.app
 import com.tminus1010.budgetvalue._core.all.dependency_injection.EnvironmentModule
 import com.tminus1010.budgetvalue._core.all.dependency_injection.IEnvironmentModule
@@ -33,7 +34,7 @@ import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@UninstallModules(EnvironmentModule::class)
+@UninstallModules(EnvironmentModule::class, MiscTestModule::class)
 @HiltAndroidTest
 class ActivePlanRepoTest {
     @Test
@@ -54,6 +55,7 @@ class ActivePlanRepoTest {
     @Test
     fun clearCategoryAmounts() = runBlocking {
         // # Given
+        Given.categories.forEach { categoriesRepo.push(it) }
         activePlanRepo.updateCategoryAmount(Given.categories[0], BigDecimal("9"))
         Thread.sleep(500) // Why is this necessary..?
         // # When
@@ -73,6 +75,7 @@ class ActivePlanRepoTest {
     @Test
     fun updateCategoryAmount() = runBlocking {
         // # Given
+        Given.categories.forEach { categoriesRepo.push(it) }
         // # When
         activePlanRepo.updateCategoryAmount(Given.categories[0], BigDecimal("22"))
         Thread.sleep(500) // Why is this necessary..?
