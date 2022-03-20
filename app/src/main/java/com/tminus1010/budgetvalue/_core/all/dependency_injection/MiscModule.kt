@@ -11,7 +11,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object MiscModule {
-
     @Provides
     @Singleton
     fun provideErrorSubject(): Subject<Throwable> = PublishSubject.create()
