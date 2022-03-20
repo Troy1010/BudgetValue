@@ -7,7 +7,6 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.room.Room
 import com.tminus1010.budgetvalue.FakeDataStore
 import com.tminus1010.budgetvalue.Given
-import com.tminus1010.budgetvalue.__core_testing.MiscTestModule
 import com.tminus1010.budgetvalue.__core_testing.app
 import com.tminus1010.budgetvalue._core.all.dependency_injection.EnvironmentModule
 import com.tminus1010.budgetvalue._core.all.dependency_injection.IEnvironmentModule
@@ -34,7 +33,7 @@ import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@UninstallModules(EnvironmentModule::class, MiscTestModule::class)
+@UninstallModules(EnvironmentModule::class)
 @HiltAndroidTest
 class ActivePlanRepoTest {
     @Test

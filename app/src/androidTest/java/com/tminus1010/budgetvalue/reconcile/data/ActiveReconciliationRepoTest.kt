@@ -14,6 +14,7 @@ import com.tminus1010.budgetvalue._core.data.CategoryDatabase
 import com.tminus1010.budgetvalue._core.data.MiscDatabase
 import com.tminus1010.budgetvalue._core.data.RoomWithCategoriesTypeConverter
 import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
+import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,6 +37,7 @@ class ActiveReconciliationRepoTest {
     @Test
     fun default() = runBlocking {
         // # Given
+        Given.categories.forEach { categoriesRepo.push(it) }
         // # When
         // # Then
         assertEquals(
@@ -48,6 +50,7 @@ class ActiveReconciliationRepoTest {
     @Test
     fun push() = runBlocking {
         // # Given
+        Given.categories.forEach { categoriesRepo.push(it) }
         // # When
         activeReconciliationRepo.pushCategoryAmounts(CategoryAmounts(Given.categories[0] to BigDecimal("7")))
         Thread.sleep(500) // Why is this necessary..?
@@ -62,6 +65,7 @@ class ActiveReconciliationRepoTest {
     @Test
     fun pushCategoryAmount() = runBlocking {
         // # Given
+        Given.categories.forEach { categoriesRepo.push(it) }
         // # When
         activeReconciliationRepo.pushCategoryAmount(Given.categories[0], BigDecimal("7"))
         Thread.sleep(500) // Why is this necessary..?
@@ -78,6 +82,9 @@ class ActiveReconciliationRepoTest {
 
     @Inject
     lateinit var activeReconciliationRepo: ActiveReconciliationRepo
+
+    @Inject
+    lateinit var categoriesRepo: CategoriesRepo
 
     @Before
     fun before() {

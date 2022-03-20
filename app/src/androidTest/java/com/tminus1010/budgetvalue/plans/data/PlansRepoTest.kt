@@ -40,15 +40,18 @@ import javax.inject.Singleton
 class PlansRepoTest {
     @Test
     fun default() = runBlocking {
+        // # Given
+        Given.categories.forEach { categoriesRepo.push(it) }
         // # When
         val result = plansRepo.plans.value
         // # Then
-        assertEquals(null, result)
+        assertEquals(listOf<Plan>(), result)
     }
 
     @Test
     fun push() = runBlocking {
         // # Given
+        Given.categories.forEach { categoriesRepo.push(it) }
         val givenPlan =
             Plan(
                 datePeriodService.getDatePeriod(LocalDate.now()),
@@ -65,6 +68,7 @@ class PlansRepoTest {
     @Test
     fun updatePlanCategoryAmount() = runBlocking {
         // # Given
+        Given.categories.forEach { categoriesRepo.push(it) }
         val givenPlan =
             Plan(
                 datePeriodService.getDatePeriod(LocalDate.now()),
@@ -92,6 +96,7 @@ class PlansRepoTest {
     @Test
     fun updatePlanAmount() = runBlocking {
         // # Given
+        Given.categories.forEach { categoriesRepo.push(it) }
         val givenPlan =
             Plan(
                 datePeriodService.getDatePeriod(LocalDate.now()),
@@ -119,6 +124,7 @@ class PlansRepoTest {
     @Test
     fun updatePlan() = runBlocking {
         // # Given
+        Given.categories.forEach { categoriesRepo.push(it) }
         val givenPlan =
             Plan(
                 datePeriodService.getDatePeriod(LocalDate.now()),
@@ -143,6 +149,7 @@ class PlansRepoTest {
     @Test
     fun delete() = runBlocking {
         // # Given
+        Given.categories.forEach { categoriesRepo.push(it) }
         val givenPlan =
             Plan(
                 datePeriodService.getDatePeriod(LocalDate.now()),
@@ -170,22 +177,9 @@ class PlansRepoTest {
     @Inject
     lateinit var categoriesRepo: CategoriesRepo
 
-    lateinit var moshiWithCategoriesProvider: MoshiWithCategoriesProvider
-
     @Before
     fun before() {
         hiltAndroidRule.inject()
-        moshiWithCategoriesProvider =
-            MoshiWithCategoriesProvider(
-                MoshiWithCategoriesAdapters(
-                    CategoriesInteractor(
-                        mockk {
-                            every { userCategories } returns
-                                    flowOf(listOf(), Given.categories)
-                        }
-                    )
-                )
-            )
     }
 
     @InstallIn(SingletonComponent::class)
