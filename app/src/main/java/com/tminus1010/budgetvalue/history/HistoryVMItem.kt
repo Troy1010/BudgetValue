@@ -1,9 +1,9 @@
 package com.tminus1010.budgetvalue.history
 
-import com.tminus1010.budgetvalue._core.all_layers.extensions.mapBox
-import com.tminus1010.budgetvalue._core.data.repo.CurrentDatePeriodRepo
-import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
-import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
+import com.tminus1010.budgetvalue.all_features.all_layers.extensions.mapBox
+import com.tminus1010.budgetvalue.all_features.data.repo.CurrentDatePeriodRepo
+import com.tminus1010.budgetvalue.all_features.domain.CategoryAmounts
+import com.tminus1010.budgetvalue.all_features.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue.budgeted.Budgeted
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.plans.data.PlansRepo

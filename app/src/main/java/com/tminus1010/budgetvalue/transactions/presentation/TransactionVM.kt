@@ -3,8 +3,8 @@ package com.tminus1010.budgetvalue.transactions.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
-import com.tminus1010.budgetvalue._core.presentation.model.TextVMItem
+import com.tminus1010.budgetvalue.all_features.presentation.model.ButtonVMItem
+import com.tminus1010.budgetvalue.all_features.presentation.model.TextVMItem
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.budgetvalue.transactions.app.interactor.SaveTransactionInteractor
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr

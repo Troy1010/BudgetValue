@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.reconcile.data
 
-import com.tminus1010.budgetvalue._core.all_layers.extensions.mapBox
+import com.tminus1010.budgetvalue.all_features.all_layers.extensions.mapBox
 import com.tminus1010.budgetvalue.reconcile.domain.ReconciliationAggregate
 import com.tminus1010.budgetvalue.reconcile.domain.Reconciliation
 import com.tminus1010.tmcommonkotlin.tuple.Box

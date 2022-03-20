@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.tminus1010.budgetvalue._core.framework.view.tmTableView3.TMTableView3
+    <com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.TMTableView3
         android:id="@+id/tmTableViewTop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_height="200dp" />
 
-    <com.tminus1010.budgetvalue._core.framework.view.tmTableView3.TMTableView3
+    <com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.TMTableView3
         android:id="@+id/tmTableView"
         android:layout_width="match_parent"
         android:layout_height="0dp"

@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.framework.view.viewBinding
+import com.tminus1010.budgetvalue.all_features.framework.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragChooseTransactionBinding
 import com.tminus1010.budgetvalue.transactions.presentation.ChooseTransactionSharedVM
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind

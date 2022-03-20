@@ -6,10 +6,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.all_layers.extensions.mapBox
-import com.tminus1010.budgetvalue._core.framework.view.recipe_factories.itemEditTextRF
-import com.tminus1010.budgetvalue._core.framework.view.recipe_factories.itemTextViewRB
-import com.tminus1010.budgetvalue._core.framework.view.viewBinding
+import com.tminus1010.budgetvalue.all_features.all_layers.extensions.mapBox
+import com.tminus1010.budgetvalue.all_features.framework.view.recipe_factories.itemEditTextRF
+import com.tminus1010.budgetvalue.all_features.framework.view.recipe_factories.itemTextViewRB
+import com.tminus1010.budgetvalue.all_features.framework.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragChooseTransactionDesciption2Binding
 import com.tminus1010.budgetvalue.transactions.app.TransactionsAggregate
 import com.tminus1010.budgetvalue.transactions.data.repo.TransactionsRepo

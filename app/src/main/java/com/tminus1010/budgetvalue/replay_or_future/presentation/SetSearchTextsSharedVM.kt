@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.replay_or_future.presentation
 
-import com.tminus1010.budgetvalue._core.framework.source_objects.SourceList
+import com.tminus1010.budgetvalue.all_features.framework.source_objects.SourceList
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted

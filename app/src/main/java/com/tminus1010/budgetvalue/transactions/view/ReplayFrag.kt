@@ -8,10 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.all_layers.InvalidCategoryAmounts
-import com.tminus1010.budgetvalue._core.all_layers.InvalidSearchText
-import com.tminus1010.budgetvalue._core.framework.view.recipe_factories.*
-import com.tminus1010.budgetvalue._core.framework.view.viewBinding
+import com.tminus1010.budgetvalue.all_features.all_layers.InvalidCategoryAmounts
+import com.tminus1010.budgetvalue.all_features.all_layers.InvalidSearchText
+import com.tminus1010.budgetvalue.all_features.framework.view.recipe_factories.*
+import com.tminus1010.budgetvalue.all_features.framework.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragCategorizeAdvancedBinding
 import com.tminus1010.budgetvalue.replay_or_future.domain.BasicReplay
 import com.tminus1010.budgetvalue.transactions.presentation.ReplayVM

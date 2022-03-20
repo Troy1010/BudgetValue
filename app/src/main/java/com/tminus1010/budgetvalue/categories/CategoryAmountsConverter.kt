@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.categories
 
-import com.tminus1010.budgetvalue._core.data.MoshiProvider.moshi
+import com.tminus1010.budgetvalue.all_features.data.MoshiProvider.moshi
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.tmcommonkotlin.core.extensions.associate

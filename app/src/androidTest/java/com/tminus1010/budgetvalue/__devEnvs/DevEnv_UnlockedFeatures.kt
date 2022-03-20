@@ -4,8 +4,8 @@ import android.content.Intent
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.tminus1010.budgetvalue.MockImportSelectionActivity
-import com.tminus1010.budgetvalue._core.view.HostActivity
-import com.tminus1010.budgetvalue._core.view.service.LaunchSelectFile
+import com.tminus1010.budgetvalue.all_features.view.HostActivity
+import com.tminus1010.budgetvalue.all_features.view.service.LaunchSelectFile
 import com.tminus1010.budgetvalue.plans.app.convenience_service.IsPlanFeatureEnabledUC
 import com.tminus1010.budgetvalue.reconcile.data.IsReconciliationFeatureEnabled
 import dagger.Module

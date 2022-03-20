@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.app_init
 
-import com.tminus1010.budgetvalue._core.data.SharedPrefWrapper
+import com.tminus1010.budgetvalue.all_features.data.SharedPrefWrapper
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 

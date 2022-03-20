@@ -8,11 +8,11 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.all_layers.extensions.easyText
-import com.tminus1010.budgetvalue._core.all_layers.extensions.onClick
-import com.tminus1010.budgetvalue._core.framework.view.GenViewHolder2
-import com.tminus1010.budgetvalue._core.framework.view.onDone
-import com.tminus1010.budgetvalue._core.framework.view.viewBinding
+import com.tminus1010.budgetvalue.all_features.all_layers.extensions.easyText
+import com.tminus1010.budgetvalue.all_features.all_layers.extensions.onClick
+import com.tminus1010.budgetvalue.all_features.framework.view.GenViewHolder2
+import com.tminus1010.budgetvalue.all_features.framework.view.onDone
+import com.tminus1010.budgetvalue.all_features.framework.view.viewBinding
 import com.tminus1010.budgetvalue.accounts.presentation.AccountVMItem
 import com.tminus1010.budgetvalue.accounts.presentation.AccountsVM
 import com.tminus1010.budgetvalue.databinding.FragImportBinding

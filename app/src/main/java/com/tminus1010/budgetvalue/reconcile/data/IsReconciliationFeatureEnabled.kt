@@ -4,8 +4,8 @@ import android.app.Application
 import androidx.annotation.VisibleForTesting
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import com.tminus1010.budgetvalue._core.all_layers.extensions.cold
-import com.tminus1010.budgetvalue._core.data.dataStore
+import com.tminus1010.budgetvalue.all_features.all_layers.extensions.cold
+import com.tminus1010.budgetvalue.all_features.data.dataStore
 import com.tminus1010.tmcommonkotlin.rx.extensions.pairwise
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import io.reactivex.rxjava3.core.Observable

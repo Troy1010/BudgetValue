@@ -2,17 +2,17 @@ package com.tminus1010.budgetvalue.history
 
 import android.view.View
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue._core.all_layers.extensions.asObservable2
-import com.tminus1010.budgetvalue._core.all_layers.categoryComparator
-import com.tminus1010.budgetvalue._core.data.repo.CurrentDatePeriodRepo
-import com.tminus1010.budgetvalue._core.domain.DatePeriodService
-import com.tminus1010.budgetvalue._core.domain.LocalDatePeriod
-import com.tminus1010.budgetvalue._core.framework.Rx
-import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
+import com.tminus1010.budgetvalue.all_features.all_layers.extensions.asObservable2
+import com.tminus1010.budgetvalue.all_features.all_layers.categoryComparator
+import com.tminus1010.budgetvalue.all_features.data.repo.CurrentDatePeriodRepo
+import com.tminus1010.budgetvalue.all_features.domain.DatePeriodService
+import com.tminus1010.budgetvalue.all_features.domain.LocalDatePeriod
+import com.tminus1010.budgetvalue.all_features.framework.Rx
+import com.tminus1010.budgetvalue.all_features.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue.budgeted.BudgetedInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
-import com.tminus1010.budgetvalue._core.presentation.model.BasicHeaderWithSubtitlePresentationModel
-import com.tminus1010.budgetvalue._core.presentation.model.TextPresentationModel
+import com.tminus1010.budgetvalue.all_features.presentation.model.BasicHeaderWithSubtitlePresentationModel
+import com.tminus1010.budgetvalue.all_features.presentation.model.TextPresentationModel
 import com.tminus1010.budgetvalue.plans.data.PlansRepo
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor

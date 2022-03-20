@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.transactions.app.use_case
 
-import com.tminus1010.budgetvalue._core.framework.Rx
+import com.tminus1010.budgetvalue.all_features.framework.Rx
 import com.tminus1010.budgetvalue.replay_or_future.domain.IReplayOrFuture
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor

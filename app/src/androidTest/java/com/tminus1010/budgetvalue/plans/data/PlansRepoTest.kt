@@ -7,11 +7,11 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.room.Room
 import com.tminus1010.budgetvalue.Given
 import com.tminus1010.budgetvalue.__core_testing.app
-import com.tminus1010.budgetvalue._core.all_layers.dependency_injection.EnvironmentModule
-import com.tminus1010.budgetvalue._core.all_layers.dependency_injection.IEnvironmentModule
-import com.tminus1010.budgetvalue._core.data.*
-import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
-import com.tminus1010.budgetvalue._core.domain.DatePeriodService
+import com.tminus1010.budgetvalue.all_features.all_layers.dependency_injection.EnvironmentModule
+import com.tminus1010.budgetvalue.all_features.all_layers.dependency_injection.IEnvironmentModule
+import com.tminus1010.budgetvalue.all_features.data.*
+import com.tminus1010.budgetvalue.all_features.domain.CategoryAmounts
+import com.tminus1010.budgetvalue.all_features.domain.DatePeriodService
 import com.tminus1010.budgetvalue.categories.data.CategoriesRepo
 import com.tminus1010.budgetvalue.plans.domain.Plan
 import dagger.Module

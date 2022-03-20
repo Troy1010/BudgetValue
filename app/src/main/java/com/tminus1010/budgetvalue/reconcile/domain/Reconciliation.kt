@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.reconcile.domain
 
-import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
+import com.tminus1010.budgetvalue.all_features.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.reconcile.data.model.ReconciliationDTO

@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.replay_or_future.data
 
-import com.tminus1010.budgetvalue._core.data.MiscDAO
+import com.tminus1010.budgetvalue.all_features.data.MiscDAO
 import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture
 import com.tminus1010.budgetvalue.replay_or_future.domain.IFuture
 import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStrategy

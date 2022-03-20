@@ -14,7 +14,7 @@
         android:textSize="52sp"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.tminus1010.budgetvalue._core.framework.view.tmTableView3.TMTableView3
+    <com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.TMTableView3
         android:id="@+id/tmTableView_futures"
         android:layout_width="match_parent"
         android:layout_height="0dp"

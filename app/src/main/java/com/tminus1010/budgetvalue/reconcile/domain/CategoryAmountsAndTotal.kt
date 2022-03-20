@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.reconcile.domain
 
 import androidx.room.Ignore
-import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
+import com.tminus1010.budgetvalue.all_features.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.categories.models.Category
 import java.math.BigDecimal
 

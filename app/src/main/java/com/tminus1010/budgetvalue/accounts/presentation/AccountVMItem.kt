@@ -1,8 +1,8 @@
 package com.tminus1010.budgetvalue.accounts.presentation
 
-import com.tminus1010.budgetvalue._core.all_layers.extensions.toMoneyBigDecimal
-import com.tminus1010.budgetvalue._core.data.repo.AccountsRepo
-import com.tminus1010.budgetvalue._core.domain.accounts.Account
+import com.tminus1010.budgetvalue.all_features.all_layers.extensions.toMoneyBigDecimal
+import com.tminus1010.budgetvalue.all_features.data.repo.AccountsRepo
+import com.tminus1010.budgetvalue.all_features.domain.accounts.Account
 
 class AccountVMItem(private val account: Account, private val accountsRepo: AccountsRepo) {
     // # User Intents

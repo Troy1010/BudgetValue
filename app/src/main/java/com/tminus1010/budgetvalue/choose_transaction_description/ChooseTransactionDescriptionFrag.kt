@@ -6,8 +6,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.navGraphViewModels
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.framework.view.recipe_factories.itemTextViewRB
-import com.tminus1010.budgetvalue._core.framework.view.viewBinding
+import com.tminus1010.budgetvalue.all_features.framework.view.recipe_factories.itemTextViewRB
+import com.tminus1010.budgetvalue.all_features.framework.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragTransactionsBinding
 import com.tminus1010.budgetvalue.replay_or_future.presentation.CreateFutureVM
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor

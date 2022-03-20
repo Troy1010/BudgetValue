@@ -1,17 +1,17 @@
 package com.tminus1010.budgetvalue.replay_or_future.presentation
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue._core.all_layers.extensions.easyEmit
-import com.tminus1010.budgetvalue._core.framework.view.Toaster
-import com.tminus1010.budgetvalue._core.presentation.model.MenuPresentationModel
-import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
+import com.tminus1010.budgetvalue.all_features.all_layers.extensions.easyEmit
+import com.tminus1010.budgetvalue.all_features.framework.view.Toaster
+import com.tminus1010.budgetvalue.all_features.presentation.model.MenuPresentationModel
+import com.tminus1010.budgetvalue.all_features.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue.replay_or_future.app.ReplayInteractor
 import com.tminus1010.budgetvalue.replay_or_future.data.ReplaysRepo
 import com.tminus1010.budgetvalue.replay_or_future.domain.BasicReplay
 import com.tminus1010.budgetvalue.replay_or_future.domain.IReplay
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.budgetvalue.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
-import com.tminus1010.budgetvalue._core.presentation.model.TextVMItem
+import com.tminus1010.budgetvalue.all_features.presentation.model.TextVMItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.coroutines.flow.MutableSharedFlow

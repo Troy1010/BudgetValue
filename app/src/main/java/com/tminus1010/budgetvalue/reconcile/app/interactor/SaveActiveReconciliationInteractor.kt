@@ -1,8 +1,8 @@
 package com.tminus1010.budgetvalue.reconcile.app.interactor
 
-import com.tminus1010.budgetvalue._core.all_layers.extensions.asObservable2
-import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
-import com.tminus1010.budgetvalue._core.framework.Rx
+import com.tminus1010.budgetvalue.all_features.all_layers.extensions.asObservable2
+import com.tminus1010.budgetvalue.all_features.domain.CategoryAmounts
+import com.tminus1010.budgetvalue.all_features.framework.Rx
 import com.tminus1010.budgetvalue.reconcile.app.convenience_service.ActiveReconciliationDefaultAmountUC
 import com.tminus1010.budgetvalue.reconcile.data.ActiveReconciliationRepo
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo

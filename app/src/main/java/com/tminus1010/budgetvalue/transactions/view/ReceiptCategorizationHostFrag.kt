@@ -6,8 +6,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.all_layers.extensions.easyEmit
-import com.tminus1010.budgetvalue._core.data.MoshiProvider.moshi
+import com.tminus1010.budgetvalue.all_features.all_layers.extensions.easyEmit
+import com.tminus1010.budgetvalue.all_features.data.MoshiProvider.moshi
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.databinding.FragReceiptCategorizationBinding
 import com.tminus1010.budgetvalue.transactions.app.Transaction

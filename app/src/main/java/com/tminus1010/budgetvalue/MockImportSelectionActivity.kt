@@ -8,8 +8,8 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tminus1010.budgetvalue._core.framework.view.Toaster
-import com.tminus1010.budgetvalue._core.framework.view.GenViewHolder2
+import com.tminus1010.budgetvalue.all_features.framework.view.Toaster
+import com.tminus1010.budgetvalue.all_features.framework.view.GenViewHolder2
 import com.tminus1010.budgetvalue.databinding.ActivityMockImportSelectionBinding
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
 import com.tminus1010.budgetvalue.importZ.data.ImportTransactions

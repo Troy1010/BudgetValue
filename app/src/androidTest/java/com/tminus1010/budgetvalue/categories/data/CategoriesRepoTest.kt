@@ -6,11 +6,11 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.room.Room
 import com.tminus1010.budgetvalue.__core_testing.app
-import com.tminus1010.budgetvalue._core.all_layers.dependency_injection.EnvironmentModule
-import com.tminus1010.budgetvalue._core.all_layers.dependency_injection.IEnvironmentModule
-import com.tminus1010.budgetvalue._core.data.CategoryDatabase
-import com.tminus1010.budgetvalue._core.data.MiscDatabase
-import com.tminus1010.budgetvalue._core.data.RoomWithCategoriesTypeConverter
+import com.tminus1010.budgetvalue.all_features.all_layers.dependency_injection.EnvironmentModule
+import com.tminus1010.budgetvalue.all_features.all_layers.dependency_injection.IEnvironmentModule
+import com.tminus1010.budgetvalue.all_features.data.CategoryDatabase
+import com.tminus1010.budgetvalue.all_features.data.MiscDatabase
+import com.tminus1010.budgetvalue.all_features.data.RoomWithCategoriesTypeConverter
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.categories.models.CategoryType
 import dagger.Module

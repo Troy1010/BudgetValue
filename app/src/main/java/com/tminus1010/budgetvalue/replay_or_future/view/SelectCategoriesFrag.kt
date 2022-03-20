@@ -10,9 +10,9 @@ import androidx.navigation.NavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.framework.view.GenViewHolder2
-import com.tminus1010.budgetvalue._core.framework.view.LifecycleRVAdapter2
-import com.tminus1010.budgetvalue._core.framework.view.viewBinding
+import com.tminus1010.budgetvalue.all_features.framework.view.GenViewHolder2
+import com.tminus1010.budgetvalue.all_features.framework.view.LifecycleRVAdapter2
+import com.tminus1010.budgetvalue.all_features.framework.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragSelectCategoriesBinding
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
 import com.tminus1010.budgetvalue.replay_or_future.presentation.SelectCategoriesVM

@@ -9,11 +9,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.data.MoshiWithCategoriesProvider
-import com.tminus1010.budgetvalue._core.framework.view.GenViewHolder2
-import com.tminus1010.budgetvalue._core.framework.view.LifecycleRVAdapter2
-import com.tminus1010.budgetvalue._core.framework.view.viewBinding
-import com.tminus1010.budgetvalue._core.presentation.Errors
+import com.tminus1010.budgetvalue.all_features.data.MoshiWithCategoriesProvider
+import com.tminus1010.budgetvalue.all_features.framework.view.GenViewHolder2
+import com.tminus1010.budgetvalue.all_features.framework.view.LifecycleRVAdapter2
+import com.tminus1010.budgetvalue.all_features.framework.view.viewBinding
+import com.tminus1010.budgetvalue.all_features.presentation.Errors
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.categories.ui.CategorySettingsFrag
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding

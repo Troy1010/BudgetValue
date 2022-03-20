@@ -1,8 +1,8 @@
 package com.tminus1010.budgetvalue.transactions.data
 
-import com.tminus1010.budgetvalue._core.all_layers.extensions.ifNull
-import com.tminus1010.budgetvalue._core.all_layers.extensions.isPositive
-import com.tminus1010.budgetvalue._core.all_layers.extensions.toMoneyBigDecimal
+import com.tminus1010.budgetvalue.all_features.all_layers.extensions.ifNull
+import com.tminus1010.budgetvalue.all_features.all_layers.extensions.isPositive
+import com.tminus1010.budgetvalue.all_features.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import java.io.BufferedReader
 import java.io.InputStream

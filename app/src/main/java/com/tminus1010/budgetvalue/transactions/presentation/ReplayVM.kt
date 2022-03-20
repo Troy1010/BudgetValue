@@ -1,11 +1,11 @@
 package com.tminus1010.budgetvalue.transactions.presentation
 
 import androidx.lifecycle.disposables
-import com.tminus1010.budgetvalue._core.all_layers.extensions.cold
-import com.tminus1010.budgetvalue._core.all_layers.extensions.nonLazyCache
-import com.tminus1010.budgetvalue._core.domain.CategoryAmountFormulas
-import com.tminus1010.budgetvalue._core.framework.ColdObservable
-import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
+import com.tminus1010.budgetvalue.all_features.all_layers.extensions.cold
+import com.tminus1010.budgetvalue.all_features.all_layers.extensions.nonLazyCache
+import com.tminus1010.budgetvalue.all_features.domain.CategoryAmountFormulas
+import com.tminus1010.budgetvalue.all_features.framework.ColdObservable
+import com.tminus1010.budgetvalue.all_features.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.replay_or_future.app.SelectCategoriesModel

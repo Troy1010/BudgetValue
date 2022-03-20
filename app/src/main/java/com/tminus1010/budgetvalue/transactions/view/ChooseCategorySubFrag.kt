@@ -9,8 +9,8 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.framework.view.GenViewHolder2
-import com.tminus1010.budgetvalue._core.framework.view.LifecycleRVAdapter2
+import com.tminus1010.budgetvalue.all_features.framework.view.GenViewHolder2
+import com.tminus1010.budgetvalue.all_features.framework.view.LifecycleRVAdapter2
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
 import com.tminus1010.budgetvalue.databinding.SubfragChooseCategoryBinding
 import com.tminus1010.budgetvalue.transactions.presentation.ChooseCategoryVM

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.tminus1010.budgetvalue._core.framework.view.MoneyEditText
+    <com.tminus1010.budgetvalue.all_features.framework.view.MoneyEditText
         android:id="@+id/moneyEditText"
         style="@style/AppTheme.StandardEditText"
         android:layout_width="0dp"
@@ -26,7 +26,7 @@
         app:layout_constraintTop_toTopOf="@id/moneyEditText"
         app:layout_constraintWidth_percent="0.5" />
 
-    <com.tminus1010.budgetvalue._core.framework.view.tmTableView3.TMTableView3
+    <com.tminus1010.budgetvalue.all_features.framework.view.tmTableView3.TMTableView3
         android:id="@+id/tmTableView_plus_minus"
         android:layout_width="match_parent"
         android:layout_height="0dp"

@@ -1,10 +1,10 @@
 package com.tminus1010.budgetvalue.replay_or_future.presentation
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
-import com.tminus1010.budgetvalue._core.presentation.model.EditTextVMItem
-import com.tminus1010.budgetvalue._core.presentation.model.MenuPresentationModel
-import com.tminus1010.budgetvalue._core.presentation.model.MenuVMItem
+import com.tminus1010.budgetvalue.all_features.presentation.model.ButtonVMItem
+import com.tminus1010.budgetvalue.all_features.presentation.model.EditTextVMItem
+import com.tminus1010.budgetvalue.all_features.presentation.model.MenuPresentationModel
+import com.tminus1010.budgetvalue.all_features.presentation.model.MenuVMItem
 import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flatMapLatest

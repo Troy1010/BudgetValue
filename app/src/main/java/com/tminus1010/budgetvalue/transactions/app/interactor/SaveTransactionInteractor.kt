@@ -1,8 +1,8 @@
 package com.tminus1010.budgetvalue.transactions.app.interactor
 
-import com.tminus1010.budgetvalue._core.domain.Redoable
-import com.tminus1010.budgetvalue._core.framework.Rx
-import com.tminus1010.budgetvalue._core.framework.source_objects.SourceList
+import com.tminus1010.budgetvalue.all_features.domain.Redoable
+import com.tminus1010.budgetvalue.all_features.framework.Rx
+import com.tminus1010.budgetvalue.all_features.framework.source_objects.SourceList
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.budgetvalue.transactions.data.repo.TransactionsRepo
 import io.reactivex.rxjava3.core.Completable

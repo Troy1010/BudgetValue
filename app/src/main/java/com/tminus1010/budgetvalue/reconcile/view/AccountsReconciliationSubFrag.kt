@@ -5,8 +5,8 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._core.framework.view.recipe_factories.itemTextViewRB
-import com.tminus1010.budgetvalue._core.framework.view.recipe_factories.itemTitledDividerRB
+import com.tminus1010.budgetvalue.all_features.framework.view.recipe_factories.itemTextViewRB
+import com.tminus1010.budgetvalue.all_features.framework.view.recipe_factories.itemTitledDividerRB
 import com.tminus1010.budgetvalue.budgeted.presentation.IHasToViewItemRecipe
 import com.tminus1010.budgetvalue.databinding.ItemTmTableViewBinding
 import com.tminus1010.budgetvalue.reconcile.presentation.AccountsReconciliationVM

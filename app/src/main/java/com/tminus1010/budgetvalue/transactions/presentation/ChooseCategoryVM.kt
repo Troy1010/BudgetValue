@@ -1,10 +1,10 @@
 package com.tminus1010.budgetvalue.transactions.presentation
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue._core.all_layers.extensions.easyEmit
-import com.tminus1010.budgetvalue._core.all_layers.extensions.isZero
-import com.tminus1010.budgetvalue._core.all_layers.extensions.toMoneyBigDecimal
-import com.tminus1010.budgetvalue._core.presentation.model.ButtonVMItem
+import com.tminus1010.budgetvalue.all_features.all_layers.extensions.easyEmit
+import com.tminus1010.budgetvalue.all_features.all_layers.extensions.isZero
+import com.tminus1010.budgetvalue.all_features.all_layers.extensions.toMoneyBigDecimal
+import com.tminus1010.budgetvalue.all_features.presentation.model.ButtonVMItem
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.budgetvalue.transactions.app.ReceiptCategorizationInteractor
