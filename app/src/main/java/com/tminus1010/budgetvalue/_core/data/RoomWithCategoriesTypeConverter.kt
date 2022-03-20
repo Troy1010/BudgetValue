@@ -7,11 +7,13 @@ import com.tminus1010.budgetvalue._core.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.categories.models.Category
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
+import dagger.Reusable
 import javax.inject.Inject
 
 @ProvidedTypeConverter
+@Reusable
 class RoomWithCategoriesTypeConverter @Inject constructor(
-    private val moshiWithCategoriesProvider: MoshiWithCategoriesProvider
+    private val moshiWithCategoriesProvider: MoshiWithCategoriesProvider,
 ) {
     @TypeConverter
     fun toJson(x: Category): String =

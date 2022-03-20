@@ -9,30 +9,30 @@ import com.tminus1010.budgetvalue._core.data.MiscDatabase
 import com.tminus1010.budgetvalue._core.data.RoomWithCategoriesTypeConverter
 import dagger.Module
 import dagger.Provides
+import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object EnvironmentModule : IEnvironmentModule {
     @Provides
-    @Singleton
+    @Reusable
     override fun provideDataStore(application: Application): DataStore<Preferences> =
         super.provideDataStore(application)
 
     @Provides
-    @Singleton
+    @Reusable
     override fun providesCategoryDatabase(application: Application): CategoryDatabase =
         super.providesCategoryDatabase(application)
 
     @Provides
-    @Singleton
+    @Reusable
     override fun providesMiscDatabase(application: Application, roomWithCategoriesTypeConverter: RoomWithCategoriesTypeConverter): MiscDatabase =
         super.providesMiscDatabase(application, roomWithCategoriesTypeConverter)
 
     @Provides
-    @Singleton
+    @Reusable
     override fun providesSharedPreferences(application: Application): SharedPreferences =
         super.providesSharedPreferences(application)
 }

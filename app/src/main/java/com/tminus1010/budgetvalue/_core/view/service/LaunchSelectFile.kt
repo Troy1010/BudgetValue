@@ -1,9 +1,11 @@
-package com.tminus1010.budgetvalue.importZ.view.services
+package com.tminus1010.budgetvalue._core.view.service
 
 import android.content.Intent
 import com.tminus1010.budgetvalue._core.view.HostActivity
+import dagger.Reusable
 import javax.inject.Inject
 
+@Reusable
 open class LaunchSelectFile @Inject constructor() {
     open operator fun invoke(hostActivity: HostActivity) {
         hostActivity.activityResultLauncher.launch(
