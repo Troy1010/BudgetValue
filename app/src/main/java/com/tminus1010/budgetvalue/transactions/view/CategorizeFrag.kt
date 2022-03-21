@@ -15,7 +15,7 @@ import com.tminus1010.budgetvalue.all_features.framework.view.LifecycleRVAdapter
 import com.tminus1010.budgetvalue.all_features.framework.view.viewBinding
 import com.tminus1010.budgetvalue.all_features.presentation.Errors
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
-import com.tminus1010.budgetvalue.categories.ui.CategorySettingsFrag
+import com.tminus1010.budgetvalue.all_features.ui.category_settings.CategorySettingsFrag
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.replay_or_future.view.CreateFuture2Frag
 import com.tminus1010.budgetvalue.replay_or_future.view.ReplayOrFutureDetailsFrag

@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.categories
+package com.tminus1010.budgetvalue.all_features.ui.category_settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,6 +11,7 @@ import com.tminus1010.budgetvalue.categories.domain.DeleteCategoryFromActiveDoma
 import com.tminus1010.budgetvalue.categories.domain.ReplaceCategoryGloballyUC
 import com.tminus1010.budgetvalue.all_features.app.model.Category
 import com.tminus1010.budgetvalue.all_features.app.model.CategoryType
+import com.tminus1010.budgetvalue.all_features.presentation.Errors
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +25,8 @@ class CategorySettingsVM @Inject constructor(
     private val deleteCategoryFromActiveDomainUC: DeleteCategoryFromActiveDomainUC,
     private val categoriesRepo: CategoriesRepo,
     private val categoriesInteractor: CategoriesInteractor,
-    private val replaceCategoryGloballyUC: ReplaceCategoryGloballyUC
+    private val replaceCategoryGloballyUC: ReplaceCategoryGloballyUC,
+    private val errors: Errors,
 ) : ViewModel() {
     // # View Events
     val originalCategoryName = MutableStateFlow("")
@@ -79,7 +81,6 @@ class CategorySettingsVM @Inject constructor(
     }
 
     // # Presentation Events
-    val errors = MutableSharedFlow<Throwable>()
     val navUp = MutableSharedFlow<Unit>()
     val showDeleteConfirmationPopup = MutableSharedFlow<String>()
 

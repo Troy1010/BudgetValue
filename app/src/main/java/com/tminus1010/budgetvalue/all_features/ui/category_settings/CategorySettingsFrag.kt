@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.categories.ui
+package com.tminus1010.budgetvalue.all_features.ui.category_settings
 
 import android.os.Bundle
 import android.view.View
@@ -10,26 +10,30 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_features.all_layers.InvalidCategoryNameException
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.all_features.framework.view.viewBinding
-import com.tminus1010.budgetvalue.categories.CategorySettingsVM
+import com.tminus1010.budgetvalue.all_features.presentation.Errors
 import com.tminus1010.budgetvalue.databinding.FragCategorySettingsBinding
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
     private val vb by viewBinding(FragCategorySettingsBinding::bind)
     private val categorySettingsVM by viewModels<CategorySettingsVM>()
 
+    @Inject
+    lateinit var errors: Errors
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // # Mediation
+        // # Setup
         categorySettingsVM.originalCategoryName.easyEmit(requireArguments().getString(KEY_CATEGORY_NAME, ""))
         categorySettingsVM.isForNewCategory.easyEmit(requireArguments().getBoolean(KEY_IS_FOR_NEW_CATEGORY))
         // # Events
-        categorySettingsVM.errors.observe(viewLifecycleOwner) {
+        errors.observe(viewLifecycleOwner) {
             when (it) {
                 is InvalidCategoryNameException -> easyToast("Invalid name")
                 else -> throw it
@@ -63,7 +67,7 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
                 Bundle().apply {
                     putBoolean(KEY_IS_FOR_NEW_CATEGORY, isForNewCategory)
                     putString(KEY_CATEGORY_NAME, categoryName)
-                }
+                },
             )
         }
     }

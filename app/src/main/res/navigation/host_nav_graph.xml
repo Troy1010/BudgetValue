@@ -53,7 +53,7 @@
         app:startDestination="@id/categorizeFrag">
         <fragment
             android:id="@+id/categorySettingsFrag"
-            android:name="com.tminus1010.budgetvalue.categories.ui.CategorySettingsFrag"
+            android:name="com.tminus1010.budgetvalue.all_features.ui.category_settings.CategorySettingsFrag"
             android:label="CategorySettingsFrag"
             tools:layout="@layout/frag_category_settings" />
         <fragment
