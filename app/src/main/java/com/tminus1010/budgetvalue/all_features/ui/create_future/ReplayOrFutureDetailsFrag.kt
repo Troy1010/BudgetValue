@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.replay_or_future.view
+package com.tminus1010.budgetvalue.all_features.ui.create_future
 
 import android.os.Bundle
 import android.view.View
@@ -14,7 +14,6 @@ import com.tminus1010.budgetvalue.databinding.FragCreateFutureBinding
 import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture
 import com.tminus1010.budgetvalue.replay_or_future.domain.BasicReplay
 import com.tminus1010.budgetvalue.replay_or_future.domain.IReplayOrFuture
-import com.tminus1010.budgetvalue.replay_or_future.presentation.ReplayOrFutureDetailsVM
 import com.tminus1010.tmcommonkotlin.core.tryOrNull
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
@@ -68,7 +67,7 @@ class ReplayOrFutureDetailsFrag : Fragment(R.layout.frag_create_future) {
 
     companion object {
         fun navTo(nav: NavController, moshiWithCategoriesProvider: MoshiWithCategoriesProvider, iReplayOrFuture: IReplayOrFuture) {
-            nav.navigate(R.id.futureDetailsFrag, Bundle().apply {
+            nav.navigate(R.id.replayOrFutureDetailsFrag, Bundle().apply {
                 putString(KEY1,
                     when (iReplayOrFuture) {
                         is BasicFuture -> moshiWithCategoriesProvider.moshi.toJson(iReplayOrFuture)

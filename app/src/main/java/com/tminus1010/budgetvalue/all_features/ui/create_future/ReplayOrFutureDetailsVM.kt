@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.replay_or_future.presentation
+package com.tminus1010.budgetvalue.all_features.ui.create_future
 
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
@@ -16,6 +16,7 @@ import com.tminus1010.budgetvalue.all_features.app.model.Category
 import com.tminus1010.budgetvalue.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.domain.*
+import com.tminus1010.budgetvalue.replay_or_future.presentation.SetSearchTextsSharedVM
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.budgetvalue.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
 import com.tminus1010.budgetvalue.transactions.presentation.model.SearchType
