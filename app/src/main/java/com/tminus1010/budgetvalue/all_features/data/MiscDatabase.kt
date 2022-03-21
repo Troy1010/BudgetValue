@@ -13,7 +13,7 @@ import com.tminus1010.budgetvalue.transactions.data.TransactionDTO
 
 @TypeConverters(RoomTypeConverter::class, RoomWithCategoriesTypeConverter::class)
 @Database(
-    version = 44,
+    version = 45,
     entities = [TransactionDTO::class, Account::class, ReconciliationDTO::class, BasicReplayDTO::class, BasicFuture::class, TotalFuture::class, Plan::class],
 //    autoMigrations = [AutoMigration(from = 41, to = 42)]
 )
