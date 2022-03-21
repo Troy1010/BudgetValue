@@ -154,7 +154,7 @@
         tools:layout="@layout/frag_reconciliation_host" />
     <fragment
         android:id="@+id/reviewFrag"
-        android:name="com.tminus1010.budgetvalue.review.view.ReviewFrag"
+        android:name="com.tminus1010.budgetvalue.all_features.ui.review.ReviewFrag"
         android:label="ReviewFrag"
         tools:layout="@layout/frag_review" />
     <fragment

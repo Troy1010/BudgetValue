@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.review
+package com.tminus1010.budgetvalue.all_features.ui.review
 
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.easyCapitalize
 
