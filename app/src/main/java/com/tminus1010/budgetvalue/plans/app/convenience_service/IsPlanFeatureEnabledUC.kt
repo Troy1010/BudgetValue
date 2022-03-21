@@ -8,7 +8,7 @@ import com.tminus1010.budgetvalue.all_features.all_layers.extensions.cold
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.mapBox
 import com.tminus1010.budgetvalue.all_features.data.MoshiProvider.moshi
 import com.tminus1010.budgetvalue.all_features.data.dataStore
-import com.tminus1010.budgetvalue.importZ.data.LatestDateOfMostRecentImport
+import com.tminus1010.budgetvalue.all_features.data.repo.LatestDateOfMostRecentImportRepo
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
@@ -27,7 +27,7 @@ import javax.inject.Inject
 class IsPlanFeatureEnabledUC @Inject constructor(
     private val app: Application,
     transactionsInteractor: TransactionsInteractor,
-    latestDateOfMostRecentImport: LatestDateOfMostRecentImport,
+    latestDateOfMostRecentImportRepo: LatestDateOfMostRecentImportRepo,
 ) : Observable<Boolean>() {
     private val key = stringPreferencesKey("IsPlanFeatureEnabled")
 
@@ -57,7 +57,7 @@ class IsPlanFeatureEnabledUC @Inject constructor(
                     .filter { it.size >= 3 && it.takeLast(3).all { it.isFullyCategorized } }
                     .toSingle()
             }
-            .flatMap { latestDateOfMostRecentImport.filterNotNullBox().toSingle() }
+            .flatMap { latestDateOfMostRecentImportRepo.filterNotNullBox().toSingle() }
             .subscribeBy(onSuccess = { set(it) })
     }
 

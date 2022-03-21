@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.importZ.data
+package com.tminus1010.budgetvalue.all_features.data.repo
 
 import android.app.Application
 import androidx.datastore.preferences.core.edit
@@ -18,8 +18,9 @@ import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
 
+// TODO: migrate to flow
 @Singleton
-class LatestDateOfMostRecentImport @Inject constructor(
+class LatestDateOfMostRecentImportRepo @Inject constructor(
     private val app: Application,
 ) : Observable<Box<LocalDate?>>() {
     private val key = stringPreferencesKey("LatestDateOfMostRecentImport")

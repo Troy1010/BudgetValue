@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.transactions.app.interactor
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.mapBox
 import com.tminus1010.budgetvalue.all_features.domain.DatePeriodService
 import com.tminus1010.budgetvalue.all_features.framework.Rx
-import com.tminus1010.budgetvalue.importZ.data.LatestDateOfMostRecentImport
+import com.tminus1010.budgetvalue.all_features.data.repo.LatestDateOfMostRecentImportRepo
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStrategy
 import com.tminus1010.budgetvalue.transactions.app.Transaction
@@ -33,7 +33,7 @@ class TransactionsInteractor @Inject constructor(
     private val datePeriodService: DatePeriodService,
     private val transactionAdapter: TransactionAdapter,
     private val futuresRepo: FuturesRepo,
-    private val latestDateOfMostRecentImport: LatestDateOfMostRecentImport
+    private val latestDateOfMostRecentImportRepo: LatestDateOfMostRecentImportRepo
 ) {
     // # Input
     fun importTransactions(inputStream: InputStream): Completable =
@@ -60,7 +60,7 @@ class TransactionsInteractor @Inject constructor(
         }
             .flatMapCompletable { it }
             .andThen(
-                Completable.fromAction { transactions.maxByOrNull { it.date }?.also { latestDateOfMostRecentImport.set(it.date) } }
+                Completable.fromAction { transactions.maxByOrNull { it.date }?.also { latestDateOfMostRecentImportRepo.set(it.date) } }
                     .delay(2, TimeUnit.SECONDS) // TODO("Duct-tape solution to the fact that the previous completable completes before the repo emits, which ruins IsReconciliationReady")
             )
     }
