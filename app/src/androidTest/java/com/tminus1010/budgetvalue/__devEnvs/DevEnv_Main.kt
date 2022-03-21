@@ -4,8 +4,8 @@ import android.content.Intent
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.tminus1010.budgetvalue.MockImportSelectionActivity
-import com.tminus1010.budgetvalue.all_features.view.HostActivity
-import com.tminus1010.budgetvalue.all_features.view.service.LaunchSelectFile
+import com.tminus1010.budgetvalue.all_features.ui.host.HostActivity
+import com.tminus1010.budgetvalue.all_features.ui.all_features.LaunchSelectFile
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -5,8 +5,8 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.cold
 import com.tminus1010.budgetvalue.all_features.framework.Rx
 import com.tminus1010.budgetvalue.all_features.framework.view.Toaster
-import com.tminus1010.budgetvalue.all_features.presentation.model.ButtonVMItem
-import com.tminus1010.budgetvalue.all_features.presentation.model.MenuVMItem
+import com.tminus1010.budgetvalue.all_features.ui.all_features.model.ButtonVMItem
+import com.tminus1010.budgetvalue.all_features.ui.all_features.model.MenuVMItem
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.choose_transaction_description.ChooseTransactionDescriptionFrag
 import com.tminus1010.budgetvalue.replay_or_future.app.SelectCategoriesModel

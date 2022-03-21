@@ -11,8 +11,8 @@ import com.tminus1010.budgetvalue.all_features.all_layers.extensions.divertError
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.mapBox
 import com.tminus1010.budgetvalue.all_features.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.all_features.domain.LocalDatePeriod
-import com.tminus1010.budgetvalue.all_features.presentation.model.PieChartVMItem
-import com.tminus1010.budgetvalue.all_features.presentation.model.SpinnerVMItem
+import com.tminus1010.budgetvalue.all_features.ui.all_features.model.PieChartVMItem
+import com.tminus1010.budgetvalue.all_features.ui.all_features.model.SpinnerVMItem
 import com.tminus1010.budgetvalue.all_features.app.model.Category
 import com.tminus1010.budgetvalue.review.SelectableDuration
 import com.tminus1010.budgetvalue.review.UsePeriodType

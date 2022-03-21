@@ -13,8 +13,8 @@ import com.tminus1010.budgetvalue.all_features.all_layers.extensions.onClick
 import com.tminus1010.budgetvalue.all_features.framework.view.GenViewHolder2
 import com.tminus1010.budgetvalue.all_features.framework.view.onDone
 import com.tminus1010.budgetvalue.all_features.framework.view.viewBinding
-import com.tminus1010.budgetvalue.all_features.presentation.model.AccountPresentationModel
-import com.tminus1010.budgetvalue.all_features.presentation.view_model.AccountsVM
+import com.tminus1010.budgetvalue.all_features.ui.all_features.model.AccountPresentationModel
+import com.tminus1010.budgetvalue.all_features.ui.importZ.AccountsVM
 import com.tminus1010.budgetvalue.databinding.FragImportBinding
 import com.tminus1010.budgetvalue.databinding.ItemAccountBinding
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe

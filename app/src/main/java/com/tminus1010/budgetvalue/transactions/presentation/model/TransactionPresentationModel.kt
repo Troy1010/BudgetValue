@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.transactions.presentation.model
 
 import android.content.Context
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.all_features.presentation.model.TextVMItem
+import com.tminus1010.budgetvalue.all_features.ui.all_features.model.TextVMItem
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3

@@ -9,8 +9,8 @@ import com.tminus1010.budgetvalue.all_features.framework.view.recipe_factories.i
 import com.tminus1010.budgetvalue.all_features.framework.view.recipe_factories.itemMoneyEditTextRF
 import com.tminus1010.budgetvalue.all_features.framework.view.recipe_factories.itemTextViewRB
 import com.tminus1010.budgetvalue.all_features.framework.view.recipe_factories.itemTitledDividerRB
-import com.tminus1010.budgetvalue.all_features.presentation.model.AmountPresentationModel
-import com.tminus1010.budgetvalue.all_features.presentation.model.CategoryAmountPresentationModel
+import com.tminus1010.budgetvalue.all_features.ui.all_features.model.AmountPresentationModel
+import com.tminus1010.budgetvalue.all_features.ui.all_features.model.CategoryAmountPresentationModel
 import com.tminus1010.budgetvalue.databinding.ItemTmTableViewBinding
 import com.tminus1010.budgetvalue.reconcile.domain.ReconciliationToDo
 import com.tminus1010.budgetvalue.reconcile.presentation.PlanReconciliationVM

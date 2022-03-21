@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.all_features.all_layers.extensions
 
 import android.content.Context
 import androidx.appcompat.app.AlertDialog
-import com.tminus1010.budgetvalue.all_features.presentation.model.UnformattedString
+import com.tminus1010.budgetvalue.all_features.ui.all_features.model.UnformattedString
 
 fun Context.easyAlertDialog(s: String) {
     AlertDialog.Builder(this)

@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.toMoneyBigDecimal
-import com.tminus1010.budgetvalue.all_features.presentation.model.ButtonVMItem
-import com.tminus1010.budgetvalue.all_features.presentation.model.MenuVMItem
-import com.tminus1010.budgetvalue.all_features.presentation.model.MenuPresentationModel
+import com.tminus1010.budgetvalue.all_features.ui.all_features.model.ButtonVMItem
+import com.tminus1010.budgetvalue.all_features.ui.all_features.model.MenuVMItem
+import com.tminus1010.budgetvalue.all_features.ui.all_features.model.MenuPresentationModel
 import com.tminus1010.budgetvalue.transactions.app.ReceiptCategorizationInteractor
 import com.tminus1010.budgetvalue.transactions.app.SubFragEventProvider
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor

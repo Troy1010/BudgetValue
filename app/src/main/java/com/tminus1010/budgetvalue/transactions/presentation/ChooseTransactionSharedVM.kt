@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.transactions.presentation
 
-import com.tminus1010.budgetvalue.all_features.presentation.model.TextVMItem
+import com.tminus1010.budgetvalue.all_features.ui.all_features.model.TextVMItem
 import com.tminus1010.budgetvalue.transactions.data.repo.TransactionsRepo
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.flow.map

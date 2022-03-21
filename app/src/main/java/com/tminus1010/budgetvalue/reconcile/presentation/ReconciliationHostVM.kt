@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.isZero
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.mapBox
-import com.tminus1010.budgetvalue.all_features.presentation.model.ButtonVMItem
-import com.tminus1010.budgetvalue.all_features.presentation.model.UnformattedString
+import com.tminus1010.budgetvalue.all_features.ui.all_features.model.ButtonVMItem
+import com.tminus1010.budgetvalue.all_features.ui.all_features.model.UnformattedString
 import com.tminus1010.budgetvalue.reconcile.app.convenience_service.ReconciliationsToDoUC
 import com.tminus1010.budgetvalue.reconcile.app.interactor.ActiveReconciliationInteractor
 import com.tminus1010.budgetvalue.reconcile.app.interactor.BudgetedWithActiveReconciliationInteractor

@@ -9,7 +9,7 @@ import com.tminus1010.budgetvalue.all_features.all_layers.extensions.isZero
 import com.tminus1010.budgetvalue.all_features.domain.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.all_features.framework.ColdObservable
 import com.tminus1010.budgetvalue.all_features.framework.source_objects.SourceHashMap
-import com.tminus1010.budgetvalue.all_features.presentation.model.CategoryAmountFormulaVMItem
+import com.tminus1010.budgetvalue.all_features.ui.all_features.model.CategoryAmountFormulaVMItem
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.all_features.app.model.Category
 import com.tminus1010.budgetvalue.replay_or_future.app.SelectCategoriesModel

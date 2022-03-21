@@ -1,9 +1,9 @@
 package com.tminus1010.budgetvalue.replay_or_future.presentation
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.all_features.presentation.model.MenuPresentationModel
-import com.tminus1010.budgetvalue.all_features.presentation.model.MenuVMItem
-import com.tminus1010.budgetvalue.all_features.presentation.model.TextPresentationModel
+import com.tminus1010.budgetvalue.all_features.ui.all_features.model.MenuPresentationModel
+import com.tminus1010.budgetvalue.all_features.ui.all_features.model.MenuVMItem
+import com.tminus1010.budgetvalue.all_features.ui.all_features.model.TextPresentationModel
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture
 import com.tminus1010.budgetvalue.replay_or_future.domain.IFuture

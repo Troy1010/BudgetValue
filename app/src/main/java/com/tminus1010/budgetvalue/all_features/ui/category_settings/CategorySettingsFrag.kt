@@ -10,7 +10,7 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_features.all_layers.InvalidCategoryNameException
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.all_features.framework.view.viewBinding
-import com.tminus1010.budgetvalue.all_features.presentation.Errors
+import com.tminus1010.budgetvalue.all_features.ui.errors.Errors
 import com.tminus1010.budgetvalue.databinding.FragCategorySettingsBinding
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind

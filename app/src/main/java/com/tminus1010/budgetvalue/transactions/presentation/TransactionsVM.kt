@@ -1,8 +1,8 @@
 package com.tminus1010.budgetvalue.transactions.presentation
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.all_features.presentation.model.ButtonVMItem
-import com.tminus1010.budgetvalue.all_features.presentation.model.PopupVMItem
+import com.tminus1010.budgetvalue.all_features.ui.all_features.model.ButtonVMItem
+import com.tminus1010.budgetvalue.all_features.ui.all_features.model.PopupVMItem
 import com.tminus1010.budgetvalue.transactions.data.repo.TransactionsRepo
 import com.tminus1010.budgetvalue.transactions.presentation.model.TransactionPresentationModel
 import com.tminus1010.tmcommonkotlin.rx.replayNonError

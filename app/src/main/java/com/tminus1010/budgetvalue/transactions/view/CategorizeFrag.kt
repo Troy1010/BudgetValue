@@ -13,7 +13,7 @@ import com.tminus1010.budgetvalue.all_features.data.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue.all_features.framework.view.GenViewHolder2
 import com.tminus1010.budgetvalue.all_features.framework.view.LifecycleRVAdapter2
 import com.tminus1010.budgetvalue.all_features.framework.view.viewBinding
-import com.tminus1010.budgetvalue.all_features.presentation.Errors
+import com.tminus1010.budgetvalue.all_features.ui.errors.Errors
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.all_features.ui.category_settings.CategorySettingsFrag
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
