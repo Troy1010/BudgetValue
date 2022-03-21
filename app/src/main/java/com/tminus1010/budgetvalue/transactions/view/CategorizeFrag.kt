@@ -13,12 +13,13 @@ import com.tminus1010.budgetvalue.all_features.data.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue.all_features.framework.view.GenViewHolder2
 import com.tminus1010.budgetvalue.all_features.framework.view.LifecycleRVAdapter2
 import com.tminus1010.budgetvalue.all_features.framework.view.viewBinding
-import com.tminus1010.budgetvalue.all_features.ui.errors.Errors
-import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.all_features.ui.category_settings.CategorySettingsFrag
-import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.all_features.ui.create_future.CreateFuture2Frag
 import com.tminus1010.budgetvalue.all_features.ui.create_future.ReplayOrFutureDetailsFrag
+import com.tminus1010.budgetvalue.all_features.ui.errors.Errors
+import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
+import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
+import com.tminus1010.budgetvalue.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue.transactions.presentation.CategorizeVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
@@ -41,6 +42,9 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     lateinit var moshiWithCategoriesProvider: MoshiWithCategoriesProvider
 
     @Inject
+    lateinit var selectCategoriesModel: SelectCategoriesModel
+
+    @Inject
     lateinit var errors: Errors
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -51,7 +55,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         vm.navToSplit.observe(viewLifecycleOwner) { SplitFrag.navTo(nav, it) }
         vm.navToNewCategory.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, null, true) }
         vm.navToCategorySettings.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, it.name, false) }
-        vm.navToReplayOrFutureDetails.observe(viewLifecycleOwner) { ReplayOrFutureDetailsFrag.navTo(nav, moshiWithCategoriesProvider, it) }
+        vm.navToReplayOrFutureDetails.observe(viewLifecycleOwner) { ReplayOrFutureDetailsFrag.navTo(nav, moshiWithCategoriesProvider, it, selectCategoriesModel) }
         vm.navToSelectReplay.observe(viewLifecycleOwner) { nav.navigate(R.id.useReplayFrag) }
         vm.navToReceiptCategorization.observe(viewLifecycleOwner) { ReceiptCategorizationHostFrag.navTo(nav, it, categoryAmountsConverter) }
         // # State

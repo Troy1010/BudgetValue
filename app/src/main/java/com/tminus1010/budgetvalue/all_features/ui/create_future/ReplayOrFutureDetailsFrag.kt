@@ -11,6 +11,7 @@ import com.tminus1010.budgetvalue.all_features.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.all_features.data.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue.all_features.framework.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragCreateFutureBinding
+import com.tminus1010.budgetvalue.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture
 import com.tminus1010.budgetvalue.replay_or_future.domain.BasicReplay
 import com.tminus1010.budgetvalue.replay_or_future.domain.IReplayOrFuture
@@ -22,6 +23,7 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -66,13 +68,14 @@ class ReplayOrFutureDetailsFrag : Fragment(R.layout.frag_create_future) {
     }
 
     companion object {
-        fun navTo(nav: NavController, moshiWithCategoriesProvider: MoshiWithCategoriesProvider, iReplayOrFuture: IReplayOrFuture) {
+        fun navTo(nav: NavController, moshiWithCategoriesProvider: MoshiWithCategoriesProvider, replayOrFuture: IReplayOrFuture, selectCategoriesModel: SelectCategoriesModel) {
+            runBlocking { selectCategoriesModel.clearSelection(); selectCategoriesModel.selectCategories(*replayOrFuture.categoryAmountFormulas.keys.toTypedArray()) }
             nav.navigate(R.id.replayOrFutureDetailsFrag, Bundle().apply {
                 putString(KEY1,
-                    when (iReplayOrFuture) {
-                        is BasicFuture -> moshiWithCategoriesProvider.moshi.toJson(iReplayOrFuture)
-                        is BasicReplay -> moshiWithCategoriesProvider.moshi.toJson(iReplayOrFuture)
-                        else -> error("Unhandled type:$iReplayOrFuture")
+                    when (replayOrFuture) {
+                        is BasicFuture -> moshiWithCategoriesProvider.moshi.toJson(replayOrFuture)
+                        is BasicReplay -> moshiWithCategoriesProvider.moshi.toJson(replayOrFuture)
+                        else -> error("Unhandled type:$replayOrFuture")
                     }
                 )
             })

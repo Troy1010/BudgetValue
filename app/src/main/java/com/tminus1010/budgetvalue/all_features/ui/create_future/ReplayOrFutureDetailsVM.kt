@@ -7,12 +7,12 @@ import com.tminus1010.budgetvalue.all_features.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.toMoneyBigDecimal
+import com.tminus1010.budgetvalue.all_features.app.model.Category
 import com.tminus1010.budgetvalue.all_features.domain.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.all_features.framework.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.all_features.framework.view.Toaster
 import com.tminus1010.budgetvalue.all_features.ui.all_features.model.*
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
-import com.tminus1010.budgetvalue.all_features.app.model.Category
 import com.tminus1010.budgetvalue.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.domain.*
@@ -85,7 +85,8 @@ class ReplayOrFutureDetailsVM @Inject constructor(
         when (val x = replayOrFuture.replayCache[0]) {
             is BasicFuture -> futuresRepo.delete(x).subscribe()
             is BasicReplay,
-            is TotalFuture -> TODO()
+            is TotalFuture,
+            -> TODO()
             else -> error("Oh no!")
         }
         navUp.onNext()
@@ -151,16 +152,17 @@ class ReplayOrFutureDetailsVM @Inject constructor(
                 .plus(userCategoryAmountFormulas.filter { it.key in selectedCategories })
         }
     private val categoryAmountFormulas =
-        merge(
-            _categoryAmountFormulas,
-            replayOrFuture
-                .map {
-                    when (it) {
-                        is BasicFuture -> it.categoryAmountFormulas
-                        else -> error("Unhandled type:$it")
-                    }
-                },
-        )
+        replayOrFuture
+            .map {
+                when (it) {
+                    is BasicFuture -> it.categoryAmountFormulas
+                    else -> error("Unhandled type:$it")
+                }
+            }
+            .flatMapLatest { oldCategoryAmountFormulas ->
+                _categoryAmountFormulas
+                    .map { oldCategoryAmountFormulas + it }
+            }
             .stateIn(viewModelScope, SharingStarted.Eagerly, CategoryAmountFormulas())
     private val _fillCategory =
         selectedCategoriesModel.selectedCategories
