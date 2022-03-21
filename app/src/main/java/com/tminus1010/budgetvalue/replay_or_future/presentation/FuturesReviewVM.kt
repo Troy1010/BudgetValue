@@ -24,7 +24,7 @@ class FuturesReviewVM @Inject constructor(
 
     // # State
     val recipeGrid =
-        futuresRepo.fetchFutures()
+        futuresRepo.futures
             .map {
                 listOf(
                     listOf(

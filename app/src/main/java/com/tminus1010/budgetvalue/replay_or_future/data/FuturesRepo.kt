@@ -5,8 +5,11 @@ import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture
 import com.tminus1010.budgetvalue.replay_or_future.domain.IFuture
 import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStrategy
 import com.tminus1010.budgetvalue.replay_or_future.domain.TotalFuture
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.shareIn
 import javax.inject.Inject
 
 class FuturesRepo @Inject constructor(
@@ -36,9 +39,10 @@ class FuturesRepo @Inject constructor(
         }
     }
 
-    fun fetchFutures(): Flow<List<IFuture>> =
+    val futures: Flow<List<IFuture>> =
         combine(
             miscDAO.fetchBasicFutures(),
             miscDAO.fetchTotalFutures(),
         ) { a, b -> a + b }
+            .shareIn(GlobalScope, SharingStarted.WhileSubscribed(), 1)
 }

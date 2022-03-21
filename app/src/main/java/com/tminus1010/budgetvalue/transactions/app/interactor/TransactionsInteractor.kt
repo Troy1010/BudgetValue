@@ -42,7 +42,7 @@ class TransactionsInteractor @Inject constructor(
         importTransactions(transactionAdapter.parseToTransactions(inputStream))
 
     fun importTransactions(transactions: List<Transaction>): Completable {
-        return futuresRepo.fetchFutures().asObservable2().toSingle().map { futures ->
+        return futuresRepo.futures.asObservable2().toSingle().map { futures ->
             Rx.merge(
                 transactions.map { transaction ->
                     (futures.find { it.shouldCategorizeOnImport(transaction) }

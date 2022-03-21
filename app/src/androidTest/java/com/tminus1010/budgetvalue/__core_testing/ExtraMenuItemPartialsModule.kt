@@ -43,7 +43,7 @@ object ExtraMenuItemPartialsModule {
                     }
                 },
                 MenuVMItem("Import Transaction for Future") {
-                    futuresRepo.fetchFutures().asObservable2().toSingle()
+                    futuresRepo.futures.asObservable2().toSingle()
                         .flatMapCompletable { futures ->
                             val firstSearchTotal = futures
                                 .find { it is TotalFuture && it.terminationStrategy == TerminationStrategy.WAITING_FOR_MATCH }
