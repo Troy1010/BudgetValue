@@ -17,7 +17,7 @@ import com.tminus1010.budgetvalue.all_features.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.unCheckAllMenuItems
 import com.tminus1010.budgetvalue.all_features.framework.view.SpinnerService
 import com.tminus1010.budgetvalue.all_features.framework.view.Toaster
-import com.tminus1010.budgetvalue.all_features.ui.importZ.AccountsVM
+import com.tminus1010.budgetvalue.all_features.ui.importZ.ImportVM
 import com.tminus1010.budgetvalue.all_features.app.AppInitInteractor
 import com.tminus1010.budgetvalue.all_features.ui.all_features.LaunchSelectFile
 import com.tminus1010.budgetvalue.all_features.ui.errors.Errors
@@ -42,7 +42,7 @@ import javax.inject.Inject
 class HostActivity : AppCompatActivity() {
     private val vb by lazy { ActivityHostBinding.inflate(layoutInflater) }
     private val hostVM by viewModels<HostVM>()
-    private val accountsVM by viewModels<AccountsVM>()
+    private val importVM by viewModels<ImportVM>()
 
     @Inject
     lateinit var appInitInteractor: AppInitInteractor
@@ -89,7 +89,7 @@ class HostActivity : AppCompatActivity() {
         //
         vb.bottomNavigation.selectedItemId = R.id.reviewFrag
         // # Events
-        accountsVM.navToSelectFile.observe(this) { launchSelectFile(this) }
+        importVM.navToSelectFile.observe(this) { launchSelectFile(this) }
         isPlanFeatureEnabledUC.onChangeToTrue.observe(this) {
             GlobalScope.launch { setActivePlanFromHistoryInteractor.setActivePlanFromHistory() }
             easyAlertDialog(getString(hostVM.levelUpPlan))

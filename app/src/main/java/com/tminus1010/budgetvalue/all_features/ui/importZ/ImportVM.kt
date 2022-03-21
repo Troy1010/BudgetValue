@@ -15,7 +15,7 @@ import java.math.BigDecimal
 import javax.inject.Inject
 
 @HiltViewModel
-class AccountsVM @Inject constructor(
+class ImportVM @Inject constructor(
     private val accountsRepo: AccountsRepo,
 ) : ViewModel() {
     // # Events

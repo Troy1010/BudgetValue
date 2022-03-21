@@ -21,7 +21,7 @@
     </fragment>
     <fragment
         android:id="@+id/importFrag"
-        android:name="com.tminus1010.budgetvalue.importZ.view.ImportFrag"
+        android:name="com.tminus1010.budgetvalue.all_features.ui.importZ.ImportFrag"
         android:label="Import"
         tools:layout="@layout/frag_import" />
     <fragment
