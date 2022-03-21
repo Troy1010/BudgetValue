@@ -13,10 +13,11 @@ import com.tminus1010.budgetvalue.all_features.all_layers.dependency_injection.I
 import com.tminus1010.budgetvalue.all_features.data.CategoryDatabase
 import com.tminus1010.budgetvalue.all_features.data.MiscDatabase
 import com.tminus1010.budgetvalue.all_features.data.RoomWithCategoriesTypeConverter
+import com.tminus1010.budgetvalue.all_features.data.repo.ActivePlanRepo
 import com.tminus1010.budgetvalue.all_features.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.all_features.domain.DatePeriodService
 import com.tminus1010.budgetvalue.all_features.data.repo.CategoriesRepo
-import com.tminus1010.budgetvalue.plans.domain.ActivePlan
+import com.tminus1010.budgetvalue.all_features.domain.plan.ActivePlan
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

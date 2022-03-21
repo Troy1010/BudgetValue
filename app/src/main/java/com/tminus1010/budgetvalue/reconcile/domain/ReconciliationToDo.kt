@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.reconcile.domain
 
 import com.tminus1010.budgetvalue.transactions.app.TransactionBlock
-import com.tminus1010.budgetvalue.plans.domain.Plan
+import com.tminus1010.budgetvalue.all_features.domain.plan.Plan
 import java.math.BigDecimal
 
 // TODO("Anytime is not exactly something ToDo.. perhaps this should be renamed?")

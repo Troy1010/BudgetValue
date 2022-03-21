@@ -2,8 +2,8 @@ package com.tminus1010.budgetvalue.categories.domain
 
 import com.tminus1010.budgetvalue.all_features.data.repo.CategoriesRepo
 import com.tminus1010.budgetvalue.all_features.app.model.Category
-import com.tminus1010.budgetvalue.plans.data.ActivePlanRepo
-import com.tminus1010.budgetvalue.plans.data.PlansRepo
+import com.tminus1010.budgetvalue.all_features.data.repo.ActivePlanRepo
+import com.tminus1010.budgetvalue.all_features.data.repo.PlansRepo
 import com.tminus1010.budgetvalue.reconcile.data.ActiveReconciliationRepo
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import javax.inject.Inject

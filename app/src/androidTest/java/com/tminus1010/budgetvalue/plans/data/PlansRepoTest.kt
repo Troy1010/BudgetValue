@@ -13,7 +13,8 @@ import com.tminus1010.budgetvalue.all_features.data.*
 import com.tminus1010.budgetvalue.all_features.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.all_features.domain.DatePeriodService
 import com.tminus1010.budgetvalue.all_features.data.repo.CategoriesRepo
-import com.tminus1010.budgetvalue.plans.domain.Plan
+import com.tminus1010.budgetvalue.all_features.data.repo.PlansRepo
+import com.tminus1010.budgetvalue.all_features.domain.plan.Plan
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

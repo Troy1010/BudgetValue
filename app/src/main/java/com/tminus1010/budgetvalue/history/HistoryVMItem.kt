@@ -6,8 +6,8 @@ import com.tminus1010.budgetvalue.all_features.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.all_features.ui.all_features.model.MenuVMItem
 import com.tminus1010.budgetvalue.all_features.app.model.Budgeted
 import com.tminus1010.budgetvalue.all_features.app.model.Category
-import com.tminus1010.budgetvalue.plans.data.PlansRepo
-import com.tminus1010.budgetvalue.plans.domain.Plan
+import com.tminus1010.budgetvalue.all_features.data.repo.PlansRepo
+import com.tminus1010.budgetvalue.all_features.domain.plan.Plan
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.reconcile.domain.Reconciliation
 import com.tminus1010.budgetvalue.transactions.app.TransactionBlock

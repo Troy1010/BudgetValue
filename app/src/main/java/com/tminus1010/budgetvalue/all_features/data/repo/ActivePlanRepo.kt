@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.plans.data
+package com.tminus1010.budgetvalue.all_features.data.repo
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -8,7 +8,7 @@ import com.tminus1010.budgetvalue.all_features.all_layers.extensions.isZero
 import com.tminus1010.budgetvalue.all_features.data.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue.all_features.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.all_features.app.model.Category
-import com.tminus1010.budgetvalue.plans.domain.ActivePlan
+import com.tminus1010.budgetvalue.all_features.domain.plan.ActivePlan
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import kotlinx.coroutines.GlobalScope

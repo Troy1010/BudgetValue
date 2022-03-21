@@ -10,7 +10,7 @@ import com.tminus1010.budgetvalue.all_features.ui.all_features.model.MoneyEditVM
 import com.tminus1010.budgetvalue.all_features.ui.all_features.model.TextVMItem
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.all_features.app.ActivePlanInteractor
-import com.tminus1010.budgetvalue.plans.data.ActivePlanRepo
+import com.tminus1010.budgetvalue.all_features.data.repo.ActivePlanRepo
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -4,7 +4,7 @@ import androidx.room.*
 import com.tminus1010.budgetvalue.all_features.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.all_features.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue.all_features.domain.accounts.Account
-import com.tminus1010.budgetvalue.plans.domain.Plan
+import com.tminus1010.budgetvalue.all_features.domain.plan.Plan
 import com.tminus1010.budgetvalue.reconcile.data.model.ReconciliationDTO
 import com.tminus1010.budgetvalue.replay_or_future.data.model.BasicReplayDTO
 import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture

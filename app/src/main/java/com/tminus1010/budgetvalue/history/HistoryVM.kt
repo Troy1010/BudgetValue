@@ -13,7 +13,7 @@ import com.tminus1010.budgetvalue.all_features.app.BudgetedInteractor
 import com.tminus1010.budgetvalue.all_features.app.model.Category
 import com.tminus1010.budgetvalue.all_features.ui.all_features.model.BasicHeaderWithSubtitlePresentationModel
 import com.tminus1010.budgetvalue.all_features.ui.all_features.model.TextPresentationModel
-import com.tminus1010.budgetvalue.plans.data.PlansRepo
+import com.tminus1010.budgetvalue.all_features.data.repo.PlansRepo
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
