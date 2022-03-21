@@ -23,7 +23,7 @@ import com.tminus1010.budgetvalue.all_features.ui.all_features.LaunchSelectFile
 import com.tminus1010.budgetvalue.all_features.ui.errors.Errors
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.history.HistoryFrag
-import com.tminus1010.budgetvalue.importZ.data.ImportTransactions
+import com.tminus1010.budgetvalue.all_features.data.ImportTransactions
 import com.tminus1010.budgetvalue.plans.app.convenience_service.IsPlanFeatureEnabledUC
 import com.tminus1010.budgetvalue.plans.app.interactor.SetActivePlanFromHistoryInteractor
 import com.tminus1010.budgetvalue.reconcile.data.IsReconciliationFeatureEnabled

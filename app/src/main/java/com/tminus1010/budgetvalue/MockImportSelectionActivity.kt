@@ -12,7 +12,7 @@ import com.tminus1010.budgetvalue.all_features.framework.view.Toaster
 import com.tminus1010.budgetvalue.all_features.framework.view.GenViewHolder2
 import com.tminus1010.budgetvalue.databinding.ActivityMockImportSelectionBinding
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
-import com.tminus1010.budgetvalue.importZ.data.ImportTransactions
+import com.tminus1010.budgetvalue.all_features.data.ImportTransactions
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
