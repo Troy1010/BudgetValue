@@ -125,12 +125,12 @@
         tools:layout="@layout/frag_futures_review">
         <action
             android:id="@+id/action_futuresReviewFrag_to_futureDetailsFrag"
-            app:destination="@id/futureDetailsFrag" />
+            app:destination="@id/replayOrFutureDetailsFrag" />
     </fragment>
     <fragment
-        android:id="@+id/futureDetailsFrag"
+        android:id="@+id/replayOrFutureDetailsFrag"
         android:name="com.tminus1010.budgetvalue.replay_or_future.view.ReplayOrFutureDetailsFrag"
-        android:label="FutureDetailsFrag"
+        android:label="ReplayOrFutureDetailsFrag"
         tools:layout="@layout/frag_create_future" />
     <fragment
         android:id="@+id/replayFrag"
