@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.plans.app.interactor
+package com.tminus1010.budgetvalue.all_features.app
 
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.isZero
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.toMoneyBigDecimal
@@ -8,7 +8,7 @@ import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsIntera
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
-class SetActivePlanFromHistoryInteractor @Inject constructor(
+class ActivePlanInteractor @Inject constructor(
     private val activePlanRepo: ActivePlanRepo,
     private val transactionsInteractor: TransactionsInteractor,
 ) {

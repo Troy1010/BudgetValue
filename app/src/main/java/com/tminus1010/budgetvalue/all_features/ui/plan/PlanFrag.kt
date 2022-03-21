@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.plans.view
+package com.tminus1010.budgetvalue.all_features.ui.plan
 
 import android.os.Bundle
 import android.view.View
@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_features.framework.view.viewBinding
-import com.tminus1010.budgetvalue.all_features.ui.plan.PlanVM
 import com.tminus1010.budgetvalue.databinding.FragPlanBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import dagger.hilt.android.AndroidEntryPoint

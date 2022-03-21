@@ -6,7 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.tminus1010.budgetvalue.MockImportSelectionActivity
 import com.tminus1010.budgetvalue.all_features.ui.host.HostActivity
 import com.tminus1010.budgetvalue.all_features.ui.all_features.LaunchSelectFile
-import com.tminus1010.budgetvalue.plans.app.convenience_service.IsPlanFeatureEnabledUC
+import com.tminus1010.budgetvalue.all_features.app.IsPlanFeatureEnabledUC
 import com.tminus1010.budgetvalue.reconcile.data.IsReconciliationFeatureEnabled
 import dagger.Module
 import dagger.Provides

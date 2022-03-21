@@ -31,7 +31,7 @@
         tools:layout="@layout/frag_reconcile" />
     <fragment
         android:id="@+id/planFrag"
-        android:name="com.tminus1010.budgetvalue.plans.view.PlanFrag"
+        android:name="com.tminus1010.budgetvalue.all_features.ui.plan.PlanFrag"
         android:label="Plan"
         tools:layout="@layout/frag_plan" />
     <fragment

@@ -24,8 +24,8 @@ import com.tminus1010.budgetvalue.all_features.ui.errors.Errors
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.history.HistoryFrag
 import com.tminus1010.budgetvalue.all_features.data.ImportTransactions
-import com.tminus1010.budgetvalue.plans.app.convenience_service.IsPlanFeatureEnabledUC
-import com.tminus1010.budgetvalue.plans.app.interactor.SetActivePlanFromHistoryInteractor
+import com.tminus1010.budgetvalue.all_features.app.IsPlanFeatureEnabledUC
+import com.tminus1010.budgetvalue.all_features.app.ActivePlanInteractor
 import com.tminus1010.budgetvalue.reconcile.data.IsReconciliationFeatureEnabled
 import com.tminus1010.budgetvalue.replay_or_future.view.FuturesReviewFrag
 import com.tminus1010.budgetvalue.replay_or_future.view.ReplaysFrag
@@ -57,7 +57,7 @@ class HostActivity : AppCompatActivity() {
     lateinit var toaster: Toaster
 
     @Inject
-    lateinit var setActivePlanFromHistoryInteractor: SetActivePlanFromHistoryInteractor
+    lateinit var activePlanInteractor: ActivePlanInteractor
 
     @Inject
     lateinit var importTransactions: ImportTransactions
@@ -91,7 +91,7 @@ class HostActivity : AppCompatActivity() {
         // # Events
         importVM.navToSelectFile.observe(this) { launchSelectFile(this) }
         isPlanFeatureEnabledUC.onChangeToTrue.observe(this) {
-            GlobalScope.launch { setActivePlanFromHistoryInteractor.setActivePlanFromHistory() }
+            GlobalScope.launch { activePlanInteractor.setActivePlanFromHistory() }
             easyAlertDialog(getString(hostVM.levelUpPlan))
         }
         isReconciliationFeatureEnabled.onChangeToTrue.observe(this) {

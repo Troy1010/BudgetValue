@@ -9,7 +9,7 @@ import com.tminus1010.budgetvalue.all_features.ui.all_features.model.DividerVMIt
 import com.tminus1010.budgetvalue.all_features.ui.all_features.model.MoneyEditVMItem
 import com.tminus1010.budgetvalue.all_features.ui.all_features.model.TextVMItem
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
-import com.tminus1010.budgetvalue.plans.app.interactor.SetActivePlanFromHistoryInteractor
+import com.tminus1010.budgetvalue.all_features.app.ActivePlanInteractor
 import com.tminus1010.budgetvalue.plans.data.ActivePlanRepo
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
@@ -25,7 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PlanVM @Inject constructor(
     private val activePlanRepo: ActivePlanRepo,
-    private val setActivePlanFromHistoryInteractor: SetActivePlanFromHistoryInteractor,
+    private val activePlanInteractor: ActivePlanInteractor,
     private val categoriesInteractor: CategoriesInteractor,
 ) : ViewModel() {
     // # User Intents
@@ -38,7 +38,7 @@ class PlanVM @Inject constructor(
     }
 
     fun userSetActivePlanFromHistory() {
-        GlobalScope.launch { setActivePlanFromHistoryInteractor.setActivePlanFromHistory() }
+        GlobalScope.launch { activePlanInteractor.setActivePlanFromHistory() }
     }
 
     // # Internal

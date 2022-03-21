@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.plans.app.convenience_service
+package com.tminus1010.budgetvalue.all_features.app
 
 import android.app.Application
 import androidx.annotation.VisibleForTesting
