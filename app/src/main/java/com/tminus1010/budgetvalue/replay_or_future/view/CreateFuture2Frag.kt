@@ -8,7 +8,7 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_features.framework.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragCreateFuture2Binding
-import com.tminus1010.budgetvalue.replay_or_future.presentation.CreateFuture2VM
+import com.tminus1010.budgetvalue.all_features.presentation.view_model.CreateFuture2VM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.nav

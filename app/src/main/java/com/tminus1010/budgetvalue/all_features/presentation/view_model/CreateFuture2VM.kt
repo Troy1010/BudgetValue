@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.replay_or_future.presentation
+package com.tminus1010.budgetvalue.all_features.presentation.view_model
 
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
@@ -19,6 +19,8 @@ import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture
 import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStrategy
 import com.tminus1010.budgetvalue.replay_or_future.domain.TotalFuture
+import com.tminus1010.budgetvalue.replay_or_future.presentation.NoDescriptionEnteredException
+import com.tminus1010.budgetvalue.replay_or_future.presentation.SetSearchTextsSharedVM
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.budgetvalue.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
 import com.tminus1010.budgetvalue.transactions.presentation.model.SearchType
