@@ -17,7 +17,7 @@ import com.tminus1010.budgetvalue.all_features.ui.errors.Errors
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.all_features.ui.category_settings.CategorySettingsFrag
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
-import com.tminus1010.budgetvalue.replay_or_future.view.CreateFuture2Frag
+import com.tminus1010.budgetvalue.all_features.ui.create_future.CreateFuture2Frag
 import com.tminus1010.budgetvalue.replay_or_future.view.ReplayOrFutureDetailsFrag
 import com.tminus1010.budgetvalue.transactions.presentation.CategorizeVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe

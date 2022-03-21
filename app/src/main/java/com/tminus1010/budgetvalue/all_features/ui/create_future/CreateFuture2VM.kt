@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.all_features.ui.create_future_2
+package com.tminus1010.budgetvalue.all_features.ui.create_future
 
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
