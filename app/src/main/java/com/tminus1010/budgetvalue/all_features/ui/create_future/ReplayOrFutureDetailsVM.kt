@@ -23,6 +23,7 @@ import com.tminus1010.budgetvalue.transactions.presentation.model.SearchType
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.runBlocking
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -83,7 +84,7 @@ class ReplayOrFutureDetailsVM @Inject constructor(
 
     fun userDeleteFutureOrReplay() {
         when (val x = replayOrFuture.replayCache[0]) {
-            is BasicFuture -> futuresRepo.delete(x).subscribe()
+            is BasicFuture -> runBlocking { futuresRepo.delete(x) }
             is BasicReplay,
             is TotalFuture,
             -> TODO()

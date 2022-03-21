@@ -127,7 +127,7 @@ class CategorizeVM @Inject constructor(
         transactionsInteractor.uncategorizedSpends2
             .map { it.size.toString() }
     val recipeGrid =
-        combine(futuresRepo.fetchFutures().asFlow().map { it.filter { !it.isAutomatic } }, categoriesInteractor.userCategories)
+        combine(futuresRepo.fetchFutures().map { it.filter { !it.isAutomatic } }, categoriesInteractor.userCategories)
         { nonAutomaticFutures, categories ->
             listOf(
                 *categories.map { category ->

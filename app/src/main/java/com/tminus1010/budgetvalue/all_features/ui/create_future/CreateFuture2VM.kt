@@ -7,13 +7,13 @@ import com.tminus1010.budgetvalue.all_features.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.toMoneyBigDecimal
+import com.tminus1010.budgetvalue.all_features.app.model.Category
 import com.tminus1010.budgetvalue.all_features.domain.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.all_features.framework.Rx
 import com.tminus1010.budgetvalue.all_features.framework.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.all_features.framework.view.Toaster
 import com.tminus1010.budgetvalue.all_features.ui.all_features.model.*
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
-import com.tminus1010.budgetvalue.all_features.app.model.Category
 import com.tminus1010.budgetvalue.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture
@@ -51,38 +51,39 @@ class CreateFuture2VM @Inject constructor(
     @SuppressLint("VisibleForTests")
     fun userTrySubmit() {
         try {
-            when (searchType.value) {
-                SearchType.DESCRIPTION_AND_TOTAL ->
-                    TODO()
-                SearchType.TOTAL ->
-                    TotalFuture(
-                        name = generateUniqueID(),
-                        searchTotal = totalGuess.value,
-                        categoryAmountFormulas = categoryAmountFormulas.value,
-                        fillCategory = fillCategory.value!!,
-                        terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.WAITING_FOR_MATCH,
-                        isAutomatic = isAutomatic.value,
-                    )
-                SearchType.DESCRIPTION ->
-                    BasicFuture(
-                        name = generateUniqueID(),
-                        searchTexts = setSearchTextsSharedVM.searchTexts.value,
-                        categoryAmountFormulas = categoryAmountFormulas.value,
-                        fillCategory = fillCategory.value!!,
-                        terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.WAITING_FOR_MATCH,
-                        isAutomatic = isAutomatic.value,
-                        totalGuess = totalGuess.value,
-                    )
-            }
-                .let { newFuture ->
-                    Rx.merge(
-                        futuresRepo.add(newFuture),
-                        if (newFuture.terminationStrategy == TerminationStrategy.PERMANENT) categorizeAllMatchingUncategorizedTransactions(newFuture).doOnSuccess { toaster.toast("$it transactions categorized") }.ignoreElement() else null,
-                    )
+            val futureToPush =
+                when (searchType.value) {
+                    SearchType.DESCRIPTION_AND_TOTAL ->
+                        TODO()
+                    SearchType.TOTAL ->
+                        TotalFuture(
+                            name = generateUniqueID(),
+                            searchTotal = totalGuess.value,
+                            categoryAmountFormulas = categoryAmountFormulas.value,
+                            fillCategory = fillCategory.value!!,
+                            terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.WAITING_FOR_MATCH,
+                            isAutomatic = isAutomatic.value,
+                        )
+                    SearchType.DESCRIPTION ->
+                        BasicFuture(
+                            name = generateUniqueID(),
+                            searchTexts = setSearchTextsSharedVM.searchTexts.value,
+                            categoryAmountFormulas = categoryAmountFormulas.value,
+                            fillCategory = fillCategory.value!!,
+                            terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.WAITING_FOR_MATCH,
+                            isAutomatic = isAutomatic.value,
+                            totalGuess = totalGuess.value,
+                        )
                 }
-                .andThen(Completable.fromAction { runBlocking { selectedCategoriesModel.clearSelection() } }.subscribeOn(Schedulers.io()))
-                .andThen(Completable.fromAction { navUp.onNext() })
-                .subscribe()
+            runBlocking {
+                futuresRepo.push(futureToPush)
+                if (futureToPush.terminationStrategy == TerminationStrategy.PERMANENT) {
+                    val number = categorizeAllMatchingUncategorizedTransactions(futureToPush).blockingGet()
+                    toaster.toast("$number transactions categorized")
+                    selectedCategoriesModel.clearSelection()
+                    navUp.emit(Unit)
+                }
+            }
         } catch (e: Throwable) {
             when (e) {
                 is NoDescriptionEnteredException -> toaster.toast("Fill description or use another search type")

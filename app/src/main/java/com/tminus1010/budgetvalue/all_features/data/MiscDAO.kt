@@ -135,26 +135,20 @@ interface MiscDAO {
     // # Futures
 
     @Query("select * from BasicFuture")
-    fun fetchBasicFutures(): Observable<List<BasicFuture>>
+    fun fetchBasicFutures(): Flow<List<BasicFuture>>
 
-    @Insert
-    fun push(basicFuture: BasicFuture): Completable
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun push(basicFuture: BasicFuture)
 
     @Query("DELETE FROM BasicFuture WHERE name=:name")
-    fun deleteBasicFuture(name: String): Completable
-
-    @Update
-    fun update(basicFuture: BasicFuture): Completable
+    suspend fun deleteBasicFuture(name: String)
 
     @Query("select * from TotalFuture")
-    fun fetchTotalFutures(): Observable<List<TotalFuture>>
+    fun fetchTotalFutures(): Flow<List<TotalFuture>>
 
-    @Insert
-    fun push(totalFuture: TotalFuture): Completable
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun push(totalFuture: TotalFuture)
 
     @Query("DELETE FROM TotalFuture WHERE name=:name")
-    fun deleteTotalFuture(name: String): Completable
-
-    @Update
-    fun update(totalFuture: TotalFuture): Completable
+    suspend fun deleteTotalFuture(name: String)
 }

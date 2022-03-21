@@ -67,38 +67,39 @@ class CreateFutureVM @Inject constructor(
     @SuppressLint("VisibleForTests")
     @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
     fun userSubmit() {
-        when (searchType.value) {
-            SearchType.DESCRIPTION_AND_TOTAL ->
-                TODO()
-            SearchType.TOTAL ->
-                TotalFuture(
-                    name = generateUniqueID(),
-                    searchTotal = _totalGuess.value,
-                    categoryAmountFormulas = categoryAmountFormulas.value,
-                    fillCategory = fillCategory.value.first!!,
-                    terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.WAITING_FOR_MATCH,
-                    isAutomatic = true,
-                )
-            SearchType.DESCRIPTION ->
-                BasicFuture(
-                    name = generateUniqueID(),
-                    searchTexts = listOf(searchDescription.value),
-                    categoryAmountFormulas = categoryAmountFormulas.value,
-                    fillCategory = fillCategory.value.first!!,
-                    terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.WAITING_FOR_MATCH,
-                    isAutomatic = true,
-                    totalGuess = totalGuess.value,
-                )
-        }
-            .let { newFuture ->
-                Rx.merge(
-                    futuresRepo.add(newFuture),
-                    if (newFuture.terminationStrategy == TerminationStrategy.PERMANENT) categorizeAllMatchingUncategorizedTransactions(newFuture).doOnSuccess { toaster.toast("$it transactions categorized") }.ignoreElement() else null,
-                )
-            }
-            .andThen(Completable.fromAction { runBlocking { selectCategoriesModel.clearSelection() } })
-            .andThen(Completable.fromAction { navUp.onNext(Unit); selfDestruct() })
-            .subscribe()
+        TODO()
+//        when (searchType.value) {
+//            SearchType.DESCRIPTION_AND_TOTAL ->
+//                TODO()
+//            SearchType.TOTAL ->
+//                TotalFuture(
+//                    name = generateUniqueID(),
+//                    searchTotal = _totalGuess.value,
+//                    categoryAmountFormulas = categoryAmountFormulas.value,
+//                    fillCategory = fillCategory.value.first!!,
+//                    terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.WAITING_FOR_MATCH,
+//                    isAutomatic = true,
+//                )
+//            SearchType.DESCRIPTION ->
+//                BasicFuture(
+//                    name = generateUniqueID(),
+//                    searchTexts = listOf(searchDescription.value),
+//                    categoryAmountFormulas = categoryAmountFormulas.value,
+//                    fillCategory = fillCategory.value.first!!,
+//                    terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.WAITING_FOR_MATCH,
+//                    isAutomatic = true,
+//                    totalGuess = totalGuess.value,
+//                )
+//        }
+//            .let { newFuture ->
+//                Rx.merge(
+//                    futuresRepo.add(newFuture),
+//                    if (newFuture.terminationStrategy == TerminationStrategy.PERMANENT) categorizeAllMatchingUncategorizedTransactions(newFuture).doOnSuccess { toaster.toast("$it transactions categorized") }.ignoreElement() else null,
+//                )
+//            }
+//            .andThen(Completable.fromAction { runBlocking { selectCategoriesModel.clearSelection() } })
+//            .andThen(Completable.fromAction { navUp.onNext(Unit); selfDestruct() })
+//            .subscribe()
     }
 
     // # Output

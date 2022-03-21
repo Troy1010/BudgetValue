@@ -9,6 +9,8 @@ import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture
 import com.tminus1010.budgetvalue.replay_or_future.domain.IFuture
 import com.tminus1010.budgetvalue.replay_or_future.domain.TotalFuture
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,7 +19,7 @@ class FuturesReviewVM @Inject constructor(
 ) : ViewModel() {
     // # User Intents
     fun userDeleteFuture(future: IFuture) {
-        futuresRepo.delete(future).subscribe()
+        runBlocking { futuresRepo.delete(future) }
     }
 
     // # State

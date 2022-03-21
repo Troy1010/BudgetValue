@@ -2,6 +2,7 @@ package com.tminus1010.budgetvalue.__core_testing
 
 import android.app.Application
 import androidx.navigation.NavController
+import com.tminus1010.budgetvalue.all_features.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.all_features.ui.all_features.model.MenuVMItem
 import com.tminus1010.budgetvalue.all_features.ui.host.GetExtraMenuItemPartials
 import com.tminus1010.budgetvalue.all_features.app.AppInitInteractor
@@ -42,7 +43,7 @@ object ExtraMenuItemPartialsModule {
                     }
                 },
                 MenuVMItem("Import Transaction for Future") {
-                    futuresRepo.fetchFutures().toSingle()
+                    futuresRepo.fetchFutures().asObservable2().toSingle()
                         .flatMapCompletable { futures ->
                             val firstSearchTotal = futures
                                 .find { it is TotalFuture && it.terminationStrategy == TerminationStrategy.WAITING_FOR_MATCH }
