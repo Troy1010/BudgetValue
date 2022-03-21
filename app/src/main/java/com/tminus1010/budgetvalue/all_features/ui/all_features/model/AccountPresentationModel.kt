@@ -3,19 +3,21 @@ package com.tminus1010.budgetvalue.all_features.ui.all_features.model
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.all_features.data.repo.AccountsRepo
 import com.tminus1010.budgetvalue.all_features.domain.accounts.Account
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class AccountPresentationModel(private val account: Account, private val accountsRepo: AccountsRepo) {
     // # User Intents
     fun userSetTitle(s: String) {
-        accountsRepo.update(account.copy(name = s)).subscribe()
+        GlobalScope.launch { accountsRepo.update(account.copy(name = s)) }
     }
 
     fun userSetAmount(s: String) {
-        accountsRepo.update(account.copy(amount = s.toMoneyBigDecimal())).subscribe()
+        GlobalScope.launch { accountsRepo.update(account.copy(amount = s.toMoneyBigDecimal())) }
     }
 
     fun userDeleteAccount() {
-        accountsRepo.delete(account).subscribe()
+        GlobalScope.launch { accountsRepo.delete(account) }
     }
 
     // # State

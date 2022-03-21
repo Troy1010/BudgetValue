@@ -28,30 +28,30 @@ class ImportFrag : Fragment(R.layout.frag_import) {
         // # State
         vb.buttonsview.bind(viewModel.buttons) { buttons = it }
         vb.recyclerviewAccounts.layoutManager = LinearLayoutManager(requireActivity())
-        vb.recyclerviewAccounts.bind(viewModel.accountVMItemList) { accountVMItems ->
+        vb.recyclerviewAccounts.bind(viewModel.accountVMItemList) { accountsPresentationModel ->
             adapter = object : RecyclerView.Adapter<GenViewHolder2<ItemAccountBinding>>() {
                 override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
                     GenViewHolder2(ItemAccountBinding.inflate(layoutInflater, parent, false))
 
-                override fun getItemCount() = accountVMItems.size
+                override fun getItemCount() = accountsPresentationModel.size
                 override fun onBindViewHolder(holder: GenViewHolder2<ItemAccountBinding>, position: Int) {
                     val vb = holder.vb
-                    val accountVMItem = accountVMItems[position]
-                    vb.edittextName.easyText2 = accountVMItem.title
+                    val accountPresentationModel = accountsPresentationModel[position]
+                    vb.edittextName.easyText2 = accountPresentationModel.title
                     vb.edittextName.onDone {
                         // TODO("There should be a better way to avoid NO_POSITION error.")
                         if (holder.adapterPosition == RecyclerView.NO_POSITION) return@onDone
-                        val accountVMItem = accountVMItems[holder.adapterPosition]
+                        val accountVMItem = accountsPresentationModel[holder.adapterPosition]
                         accountVMItem.userSetTitle(it)
                     }
-                    vb.edittextAmount.easyText2 = accountVMItem.amount
+                    vb.edittextAmount.easyText2 = accountPresentationModel.amount
                     vb.edittextAmount.onDone {
                         // TODO("There should be a better way to avoid NO_POSITION error.")
                         if (holder.adapterPosition == RecyclerView.NO_POSITION) return@onDone
-                        val accountVMItem = accountVMItems[holder.adapterPosition]
+                        val accountVMItem = accountsPresentationModel[holder.adapterPosition]
                         accountVMItem.userSetAmount(it)
                     }
-                    vb.btnDeleteAccount.onClick { accountVMItem.userDeleteAccount() }
+                    vb.btnDeleteAccount.onClick { accountPresentationModel.userDeleteAccount() }
                 }
             }
         }

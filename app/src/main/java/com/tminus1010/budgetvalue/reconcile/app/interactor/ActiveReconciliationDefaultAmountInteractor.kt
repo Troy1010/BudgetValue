@@ -16,6 +16,7 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import com.tminus1010.tmcommonkotlin.rx.nonLazy
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import io.reactivex.rxjava3.core.Observable
+import kotlinx.coroutines.flow.map
 import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -34,7 +35,7 @@ class ActiveReconciliationDefaultAmountInteractor @Inject constructor(
             plansRepo.plans.asObservable2(),
             reconciliationsRepo.reconciliations,
             transactionsInteractor.transactionBlocks,
-            accountsRepo.accountsAggregate.map(AccountsAggregate::total),
+            accountsRepo.accountsAggregate.map { it.total }.asObservable2(),
             activeReconciliationRepo.activeReconciliationCAs.asObservable2(),
             ::calcActiveReconciliationDefaultAmount
         )

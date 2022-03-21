@@ -14,7 +14,7 @@ class ActiveReconciliationInteractor @Inject constructor(
     activeReconciliationRepo: ActiveReconciliationRepo,
 ) {
     val categoryAmountsAndTotal =
-        Observable.combineLatest(accountsRepo.accountsAggregate, budgetedInteractor.budgeted, activeReconciliationRepo.activeReconciliationCAs.asObservable2())
+        Observable.combineLatest(accountsRepo.accountsAggregate.asObservable2(), budgetedInteractor.budgeted, activeReconciliationRepo.activeReconciliationCAs.asObservable2())
         { accountsAggregate, budgeted, activeReconciliationCAs ->
             CategoryAmountsAndTotal.FromTotal(
                 activeReconciliationCAs,

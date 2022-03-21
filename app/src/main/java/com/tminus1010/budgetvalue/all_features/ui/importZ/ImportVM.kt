@@ -1,17 +1,20 @@
 package com.tminus1010.budgetvalue.all_features.ui.importZ
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.disposables
+import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.invoke
 import com.tminus1010.budgetvalue.all_features.data.repo.AccountsRepo
 import com.tminus1010.budgetvalue.all_features.domain.accounts.Account
 import com.tminus1010.budgetvalue.all_features.ui.all_features.model.AccountsPresentationModel
 import com.tminus1010.budgetvalue.all_features.ui.all_features.model.ButtonVMItem
-import com.tminus1010.tmcommonkotlin.rx.nonLazy
-import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.PublishSubject
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -19,6 +22,11 @@ import javax.inject.Inject
 class ImportVM @Inject constructor(
     private val accountsRepo: AccountsRepo,
 ) : ViewModel() {
+    // # User Intents
+    fun userAddAccount() {
+        GlobalScope.launch { accountsRepo.add(Account("", BigDecimal.ZERO)) }
+    }
+
     // # Events
     val navToSelectFile = PublishSubject.create<Unit>()
 
@@ -26,8 +34,7 @@ class ImportVM @Inject constructor(
     val accountVMItemList =
         accountsRepo.accountsAggregate
             .map { AccountsPresentationModel(it, accountsRepo) }
-            .replayNonError(1)
-            .nonLazy(disposables)
+            .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
     val buttons =
         flowOf(
             listOfNotNull(
@@ -37,7 +44,7 @@ class ImportVM @Inject constructor(
                 ),
                 ButtonVMItem(
                     title = "Add Account",
-                    onClick = { accountsRepo.add(Account("", BigDecimal.ZERO)).subscribe() }
+                    onClick = { userAddAccount() }
                 ),
             )
         )

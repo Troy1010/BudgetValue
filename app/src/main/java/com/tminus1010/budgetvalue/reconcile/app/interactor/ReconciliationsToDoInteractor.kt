@@ -64,7 +64,7 @@ class ReconciliationsToDoInteractor @Inject constructor(
             .doLogx("www")
 
     private val accountReconciliationsToDo =
-        Observable.combineLatest(accountsRepo.accountsAggregate, budgetedInteractor.budgeted)
+        Observable.combineLatest(accountsRepo.accountsAggregate.asObservable2(), budgetedInteractor.budgeted)
         { accountsAggregate, budgeted ->
             val difference = accountsAggregate.total - budgeted.totalAmount
             Box(if (difference.isZero) null else ReconciliationToDo.Accounts(difference))

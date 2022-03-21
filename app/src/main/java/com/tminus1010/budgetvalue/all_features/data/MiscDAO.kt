@@ -19,24 +19,23 @@ import java.math.BigDecimal
 @Dao
 interface MiscDAO {
     // # Accounts
-
     @Query("DELETE FROM Account")
-    fun clearAccounts(): Completable
+    suspend fun clearAccounts()
 
     @Query("select * from Account")
-    fun fetchAccounts(): Observable<List<Account>>
+    fun fetchAccounts(): Flow<List<Account>>
 
     @Query("select * from Account where id=:id")
-    fun getAccount(id: Int): Observable<Account>
+    suspend fun getAccount(id: Int): Account
 
-    @Insert
-    fun addAccount(account: Account): Completable
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(account: Account)
 
     @Delete
-    fun deleteAccount(account: Account): Completable
+    suspend fun delete(account: Account)
 
     @Update
-    fun update(account: Account): Completable
+    suspend fun update(account: Account)
 
     // # Transactions
 

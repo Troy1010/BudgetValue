@@ -60,7 +60,7 @@ class BudgetedInteractor @Inject constructor(
         Observable.combineLatest(categoryAmounts, totalAmount, ::Budgeted)
             .replayNonError(1)
     val difference =
-        Observable.combineLatest(accountsRepo.accountsAggregate, budgeted)
+        Observable.combineLatest(accountsRepo.accountsAggregate.asObservable2(), budgeted)
         { accountsAggregate, budgeted ->
             accountsAggregate.total - budgeted.categoryAmounts.values.sum()
         }
