@@ -209,23 +209,22 @@ class ReplayOrFutureDetailsVM @Inject constructor(
                     .map { it + oldCategoryAmountFormulas }
             }
             .stateIn(viewModelScope, SharingStarted.Eagerly, CategoryAmountFormulas())
-    private val _fillCategory =
-        selectedCategoriesModel.selectedCategories
-            .flatMapLatest { selectedCategories ->
-                userSetFillCategory
-                    .onStart { emit(selectedCategories.find { it.defaultAmountFormula.isZero() } ?: selectedCategories.getOrNull(0)) }
-            }
+    // I might want to change this requirement
     private val fillCategory =
-        merge(
-            _fillCategory,
-            replayOrFuture
-                .map {
-                    when (it) {
-                        is BasicFuture -> it.fillCategory
-                        else -> error("Unhandled type:$it")
+        replayOrFuture
+            .map {
+                when (it) {
+                    is BasicFuture -> it.fillCategory
+                    else -> error("Unhandled type:$it")
+                }
+            }
+            .flatMapLatest {
+                selectedCategoriesModel.selectedCategories
+                    .flatMapLatest { selectedCategories ->
+                        userSetFillCategory
+                            .onStart { emit(selectedCategories.find { it.defaultAmountFormula.isZero() } ?: selectedCategories.getOrNull(0)) }
                     }
-                },
-        )
+            }
             .stateIn(viewModelScope, SharingStarted.Eagerly, null)
     private val fillAmountFormula =
         combine(categoryAmountFormulas, fillCategory, totalGuess)
