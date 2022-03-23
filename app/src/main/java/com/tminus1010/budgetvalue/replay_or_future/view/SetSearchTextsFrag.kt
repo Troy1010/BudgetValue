@@ -9,8 +9,10 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_features.framework.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragSetSearchTextsBinding
 import com.tminus1010.budgetvalue.replay_or_future.presentation.SetSearchTextsVM
+import com.tminus1010.budgetvalue.transactions.view.ChooseTransactionFrag
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
+import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -22,7 +24,7 @@ class SetSearchTextsFrag : Fragment(R.layout.frag_set_search_texts) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Events
-        viewModel.navToCopyFromTransactions.observe(viewLifecycleOwner) { TODO() }
+        viewModel.navToChooseTransaction.observe(viewLifecycleOwner) { ChooseTransactionFrag.navTo(nav) }
         // # State
         vb.tmTableView.bind(viewModel.recipeGrid) {
             initialize(
