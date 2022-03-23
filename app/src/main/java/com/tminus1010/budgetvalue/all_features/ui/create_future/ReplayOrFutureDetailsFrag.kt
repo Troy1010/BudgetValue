@@ -2,6 +2,7 @@ package com.tminus1010.budgetvalue.all_features.ui.create_future
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
@@ -45,6 +46,7 @@ class ReplayOrFutureDetailsFrag : Fragment(R.layout.frag_create_future) {
         super.onViewCreated(view, savedInstanceState)
         // # Setup
         vm.replayOrFuture.easyEmit(replayOrFuture)
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) { vm.userTryNavUp() }
         // # Events
         vm.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         vm.navToCategorySelection.observe(viewLifecycleOwner) { nav.navigate(R.id.selectCategoriesFrag) }

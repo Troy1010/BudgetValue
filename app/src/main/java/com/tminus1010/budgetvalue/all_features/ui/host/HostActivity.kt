@@ -15,17 +15,17 @@ import com.tminus1010.budgetvalue.all_features.all_layers.extensions.easyAlertDi
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.getString
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.unCheckAllMenuItems
+import com.tminus1010.budgetvalue.all_features.app.ActivePlanInteractor
+import com.tminus1010.budgetvalue.all_features.app.AppInitInteractor
+import com.tminus1010.budgetvalue.all_features.app.IsPlanFeatureEnabledUC
+import com.tminus1010.budgetvalue.all_features.data.ImportTransactions
 import com.tminus1010.budgetvalue.all_features.framework.view.SpinnerService
 import com.tminus1010.budgetvalue.all_features.framework.view.Toaster
-import com.tminus1010.budgetvalue.all_features.ui.importZ.ImportVM
-import com.tminus1010.budgetvalue.all_features.app.AppInitInteractor
 import com.tminus1010.budgetvalue.all_features.ui.all_features.LaunchSelectFile
 import com.tminus1010.budgetvalue.all_features.ui.errors.Errors
+import com.tminus1010.budgetvalue.all_features.ui.importZ.ImportVM
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.history.HistoryFrag
-import com.tminus1010.budgetvalue.all_features.data.ImportTransactions
-import com.tminus1010.budgetvalue.all_features.app.IsPlanFeatureEnabledUC
-import com.tminus1010.budgetvalue.all_features.app.ActivePlanInteractor
 import com.tminus1010.budgetvalue.reconcile.data.IsReconciliationFeatureEnabled
 import com.tminus1010.budgetvalue.replay_or_future.view.FuturesReviewFrag
 import com.tminus1010.budgetvalue.replay_or_future.view.ReplaysFrag
@@ -118,6 +118,11 @@ class HostActivity : AppCompatActivity() {
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         hostVM.topMenuVMItems.bind(menu)
         return true
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressedDispatcher.onBackPressed()
+        return super.onSupportNavigateUp()
     }
 
     val activityResultLauncher =

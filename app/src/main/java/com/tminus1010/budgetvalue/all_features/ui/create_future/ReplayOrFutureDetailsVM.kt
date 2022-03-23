@@ -79,8 +79,7 @@ class ReplayOrFutureDetailsVM @Inject constructor(
                     val number = categorizeAllMatchingUncategorizedTransactions(futureToPush).blockingGet()
                     toaster.toast("$number transactions categorized")
                 }
-                selectedCategoriesModel.clearSelection()
-                navUp.emit(Unit)
+                userTryNavUp()
             }
         } catch (e: Throwable) {
             when (e) {
@@ -131,6 +130,11 @@ class ReplayOrFutureDetailsVM @Inject constructor(
             -> TODO()
             else -> error("Oh no!")
         }
+        userTryNavUp()
+    }
+
+    fun userTryNavUp() {
+        runBlocking { selectedCategoriesModel.clearSelection() }
         navUp.onNext()
     }
 
