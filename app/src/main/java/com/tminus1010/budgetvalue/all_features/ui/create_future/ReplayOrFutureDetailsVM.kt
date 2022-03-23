@@ -3,10 +3,7 @@ package com.tminus1010.budgetvalue.all_features.ui.create_future
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tminus1010.budgetvalue.all_features.all_layers.extensions.easyEmit
-import com.tminus1010.budgetvalue.all_features.all_layers.extensions.flatMapSourceHashMap
-import com.tminus1010.budgetvalue.all_features.all_layers.extensions.onNext
-import com.tminus1010.budgetvalue.all_features.all_layers.extensions.toMoneyBigDecimal
+import com.tminus1010.budgetvalue.all_features.all_layers.extensions.*
 import com.tminus1010.budgetvalue.all_features.app.model.Category
 import com.tminus1010.budgetvalue.all_features.domain.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.all_features.framework.source_objects.SourceHashMap
@@ -54,7 +51,7 @@ class ReplayOrFutureDetailsVM @Inject constructor(
                         TODO()
                     SearchType.TOTAL ->
                         TotalFuture(
-                            name = replayOrFuture.replayCache[0].name,
+                            name = name.value ?: throw NoDescriptionEnteredException(),
                             searchTotal = totalGuess.value,
                             categoryAmountFormulas = categoryAmountFormulas.value,
                             fillCategory = fillCategory.value!!,
@@ -63,7 +60,7 @@ class ReplayOrFutureDetailsVM @Inject constructor(
                         )
                     SearchType.DESCRIPTION ->
                         BasicFuture(
-                            name = replayOrFuture.replayCache[0].name,
+                            name = name.value ?: throw NoDescriptionEnteredException(),
                             searchTexts = setSearchTextsSharedVM.searchTexts.value,
                             categoryAmountFormulas = categoryAmountFormulas.value,
                             fillCategory = fillCategory.value!!,
@@ -74,6 +71,7 @@ class ReplayOrFutureDetailsVM @Inject constructor(
                 }
             runBlocking {
                 futuresRepo.push(futureToPush)
+                if (futureToPush.name != replayOrFuture.value!!.name) futuresRepo.delete(replayOrFuture.value!! as IFuture)
                 if (futureToPush.terminationStrategy == TerminationStrategy.PERMANENT) {
                     val number = categorizeAllMatchingUncategorizedTransactions(futureToPush).blockingGet()
                     toaster.toast("$number transactions categorized")
@@ -121,6 +119,11 @@ class ReplayOrFutureDetailsVM @Inject constructor(
         userSetFillCategory.onNext(categoriesInteractor.parseCategory(categoryName))
     }
 
+    private val userSetName = MutableSharedFlow<String>()
+    fun userSetName(s: String) {
+        userSetName.onNext(s)
+    }
+
     fun userTryNavToSetSearchTexts() {
         navToSetSearchTexts.onNext()
     }
@@ -142,6 +145,16 @@ class ReplayOrFutureDetailsVM @Inject constructor(
     }
 
     // # Internal
+    private val name =
+        replayOrFuture
+            .map {
+                when (it) {
+                    is BasicFuture -> it.name
+                    else -> error("Unhandled type:$it")
+                }
+            }
+            .flatMapLatest { userSetName.onStart { emit(it) } }
+            .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
     private val totalGuess =
         replayOrFuture
             .map {
@@ -237,6 +250,10 @@ class ReplayOrFutureDetailsVM @Inject constructor(
     val otherInput =
         searchType.map { searchType ->
             listOfNotNull(
+                listOf(
+                    TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Name"),
+                    EditTextVMItem(text = name.value!!, onDone = { userSetName(it) }),
+                ),
                 listOf(
                     TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Total Guess"),
                     MoneyEditVMItem(text1 = totalGuess.value.toString(), onDone = { userSetTotalGuess(it) }),
