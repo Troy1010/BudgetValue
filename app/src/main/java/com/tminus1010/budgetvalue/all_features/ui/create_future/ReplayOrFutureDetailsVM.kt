@@ -143,59 +143,45 @@ class ReplayOrFutureDetailsVM @Inject constructor(
 
     // # Internal
     private val totalGuess =
-        merge(
-            userSetTotalGuess,
-            replayOrFuture
-                .map {
-                    when (it) {
-                        is BasicFuture -> it.totalGuess
-                        else -> error("Unhandled type:$it")
-                    }
-                },
-        )
+        replayOrFuture
+            .map {
+                when (it) {
+                    is BasicFuture -> it.totalGuess
+                    else -> error("Unhandled type:$it")
+                }
+            }
+            .flatMapLatest { userSetTotalGuess.onStart { emit(it) } }
             .stateIn(viewModelScope, SharingStarted.Eagerly, BigDecimal("-10"))
     private val isPermanent =
-        merge(
-            userSetIsPermanent,
-            replayOrFuture
-                .map {
-                    when (it) {
-                        is BasicFuture -> it.terminationStrategy == TerminationStrategy.PERMANENT
-                        else -> error("Unhandled type:$it")
-                    }
-                },
-        )
+        replayOrFuture
+            .map {
+                when (it) {
+                    is BasicFuture -> it.terminationStrategy == TerminationStrategy.PERMANENT
+                    else -> error("Unhandled type:$it")
+                }
+            }
+            .flatMapLatest { userSetIsPermanent.onStart { emit(it) } }
             .stateIn(viewModelScope, SharingStarted.Eagerly, false)
     private val isAutomatic =
-        merge(
-            userSetIsAutomatic,
-            replayOrFuture
-                .map {
-                    when (it) {
-                        is BasicFuture -> it.isAutomatic
-                        else -> error("Unhandled type:$it")
-                    }
-                },
-        )
+        replayOrFuture
+            .map {
+                when (it) {
+                    is BasicFuture -> it.isAutomatic
+                    else -> error("Unhandled type:$it")
+                }
+            }
+            .flatMapLatest { userSetIsAutomatic.onStart { emit(it) } }
             .stateIn(viewModelScope, SharingStarted.Eagerly, true)
     private val searchType =
-        merge(
-            userSetSearchType,
-            replayOrFuture
-                .map {
-                    when (it) {
-                        is BasicFuture -> SearchType.DESCRIPTION
-                        else -> error("Unhandled type:$it")
-                    }
-                },
-        )
+        replayOrFuture
+            .map {
+                when (it) {
+                    is BasicFuture -> SearchType.DESCRIPTION
+                    else -> error("Unhandled type:$it")
+                }
+            }
+            .flatMapLatest { userSetSearchType.onStart { emit(it) } }
             .stateIn(viewModelScope, SharingStarted.Eagerly, SearchType.DESCRIPTION)
-    private val _categoryAmountFormulas =
-        combine(userCategoryAmountFormulas.flow, selectedCategoriesModel.selectedCategories)
-        { userCategoryAmountFormulas, selectedCategories ->
-            CategoryAmountFormulas(selectedCategories.associateWith { it.defaultAmountFormula })
-                .plus(userCategoryAmountFormulas.filter { it.key in selectedCategories })
-        }
     private val categoryAmountFormulas =
         replayOrFuture
             .map {
@@ -205,10 +191,15 @@ class ReplayOrFutureDetailsVM @Inject constructor(
                 }
             }
             .flatMapLatest { oldCategoryAmountFormulas ->
-                _categoryAmountFormulas
-                    .map { it + oldCategoryAmountFormulas }
+                combine(userCategoryAmountFormulas.flow, selectedCategoriesModel.selectedCategories)
+                { userCategoryAmountFormulas, selectedCategories ->
+                    CategoryAmountFormulas(selectedCategories.associateWith { it.defaultAmountFormula })
+                        .plus(oldCategoryAmountFormulas)
+                        .plus(userCategoryAmountFormulas.filter { it.key in selectedCategories })
+                }
             }
             .stateIn(viewModelScope, SharingStarted.Eagerly, CategoryAmountFormulas())
+
     // I might want to change this requirement
     private val fillCategory =
         replayOrFuture
@@ -219,11 +210,12 @@ class ReplayOrFutureDetailsVM @Inject constructor(
                 }
             }
             .flatMapLatest {
-                selectedCategoriesModel.selectedCategories
+                selectedCategoriesModel.selectedCategories.drop(1)
                     .flatMapLatest { selectedCategories ->
                         userSetFillCategory
                             .onStart { emit(selectedCategories.find { it.defaultAmountFormula.isZero() } ?: selectedCategories.getOrNull(0)) }
                     }
+                    .onStart { emit(it) }
             }
             .stateIn(viewModelScope, SharingStarted.Eagerly, null)
     private val fillAmountFormula =
@@ -234,7 +226,6 @@ class ReplayOrFutureDetailsVM @Inject constructor(
                 ?: AmountFormula.Value(BigDecimal.ZERO)
         }
             .stateIn(viewModelScope, SharingStarted.Eagerly, AmountFormula.Value.ZERO)
-
 
     // # Events
     val navUp = MutableSharedFlow<Unit>()
