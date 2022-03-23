@@ -92,18 +92,22 @@ class CreateFuture2VM @Inject constructor(
         }
     }
 
+    private val totalGuess = MutableStateFlow(BigDecimal("-10"))
     fun userSetTotalGuess(s: String) {
         totalGuess.onNext(s.toMoneyBigDecimal())
     }
 
+    private val isPermanent = MutableStateFlow(false)
     fun userSetIsPermanent(b: Boolean) {
         isPermanent.onNext(b)
     }
 
+    private val isAutomatic = MutableStateFlow(true)
     fun userSetIsAutomatic(b: Boolean) {
         isAutomatic.onNext(b)
     }
 
+    private val searchType = MutableStateFlow(SearchType.DESCRIPTION)
     fun userSetSearchType(searchType: SearchType) {
         this.searchType.onNext(searchType)
     }
@@ -126,10 +130,6 @@ class CreateFuture2VM @Inject constructor(
     }
 
     // # Internal
-    private val totalGuess = MutableStateFlow(BigDecimal("-10"))
-    private val isPermanent = MutableStateFlow(false)
-    private val isAutomatic = MutableStateFlow(true)
-    private val searchType = MutableStateFlow(SearchType.DESCRIPTION)
     private val categoryAmountFormulas =
         combine(userCategoryAmountFormulas.flow, selectedCategoriesModel.selectedCategories)
         { userCategoryAmountFormulas, selectedCategories ->

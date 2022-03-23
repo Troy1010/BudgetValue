@@ -22,7 +22,6 @@ import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.budgetvalue.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
 import com.tminus1010.budgetvalue.transactions.presentation.model.SearchType
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
-import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
@@ -89,20 +88,24 @@ class ReplayOrFutureDetailsVM @Inject constructor(
         }
     }
 
+    private val userSetTotalGuess = MutableSharedFlow<BigDecimal>()
     fun userSetTotalGuess(s: String) {
-        _totalGuess.onNext(s.toMoneyBigDecimal())
+        userSetTotalGuess.onNext(s.toMoneyBigDecimal())
     }
 
+    private val userSetIsPermanent = MutableSharedFlow<Boolean>()
     fun userSetIsPermanent(b: Boolean) {
-        _isPermanent.onNext(b)
+        userSetIsPermanent.onNext(b)
     }
 
+    private val userSetIsAutomatic = MutableSharedFlow<Boolean>()
     fun userSetIsAutomatic(b: Boolean) {
-        _isAutomatic.onNext(b)
+        userSetIsAutomatic.onNext(b)
     }
 
+    private val userSetSearchType = MutableSharedFlow<SearchType>()
     fun userSetSearchType(searchType: SearchType) {
-        this._searchType.onNext(searchType)
+        userSetSearchType.onNext(searchType)
     }
 
     private val userCategoryAmountFormulas = SourceHashMap<Category, AmountFormula>()
@@ -139,10 +142,9 @@ class ReplayOrFutureDetailsVM @Inject constructor(
     }
 
     // # Internal
-    private val _totalGuess = MutableSharedFlow<BigDecimal>()
     private val totalGuess =
         merge(
-            _totalGuess,
+            userSetTotalGuess,
             replayOrFuture
                 .map {
                     when (it) {
@@ -152,10 +154,9 @@ class ReplayOrFutureDetailsVM @Inject constructor(
                 },
         )
             .stateIn(viewModelScope, SharingStarted.Eagerly, BigDecimal("-10"))
-    private val _isPermanent = MutableSharedFlow<Boolean>()
     private val isPermanent =
         merge(
-            _isPermanent,
+            userSetIsPermanent,
             replayOrFuture
                 .map {
                     when (it) {
@@ -165,10 +166,9 @@ class ReplayOrFutureDetailsVM @Inject constructor(
                 },
         )
             .stateIn(viewModelScope, SharingStarted.Eagerly, false)
-    private val _isAutomatic = MutableSharedFlow<Boolean>()
     private val isAutomatic =
         merge(
-            _isAutomatic,
+            userSetIsAutomatic,
             replayOrFuture
                 .map {
                     when (it) {
@@ -178,10 +178,9 @@ class ReplayOrFutureDetailsVM @Inject constructor(
                 },
         )
             .stateIn(viewModelScope, SharingStarted.Eagerly, true)
-    private val _searchType = MutableSharedFlow<SearchType>()
     private val searchType =
         merge(
-            _searchType,
+            userSetSearchType,
             replayOrFuture
                 .map {
                     when (it) {
