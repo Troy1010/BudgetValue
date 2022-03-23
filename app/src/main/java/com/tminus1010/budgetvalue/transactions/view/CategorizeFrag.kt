@@ -33,7 +33,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     private val vb by viewBinding(FragCategorizeBinding::bind)
-    private val vm by activityViewModels<CategorizeVM>()
+    private val viewModel by activityViewModels<CategorizeVM>()
 
     @Inject
     lateinit var categoryAmountsConverter: CategoryAmountsConverter
@@ -51,22 +51,22 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         super.onViewCreated(view, savedInstanceState)
         // # Events
         errors.observe(viewLifecycleOwner) { throw it }
-        vm.navToCreateFuture2.observe(viewLifecycleOwner) { CreateFuture2Frag.navTo(nav) }
-        vm.navToSplit.observe(viewLifecycleOwner) { SplitFrag.navTo(nav, it) }
-        vm.navToNewCategory.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, null, true) }
-        vm.navToCategorySettings.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, it.name, false) }
-        vm.navToReplayOrFutureDetails.observe(viewLifecycleOwner) { ReplayOrFutureDetailsFrag.navTo(nav, moshiWithCategoriesProvider, it, selectCategoriesModel) }
-        vm.navToSelectReplay.observe(viewLifecycleOwner) { nav.navigate(R.id.useReplayFrag) }
-        vm.navToReceiptCategorization.observe(viewLifecycleOwner) { ReceiptCategorizationHostFrag.navTo(nav, it, categoryAmountsConverter) }
+        viewModel.navToCreateFuture2.observe(viewLifecycleOwner) { CreateFuture2Frag.navTo(nav) }
+        viewModel.navToSplit.observe(viewLifecycleOwner) { SplitFrag.navTo(nav, it) }
+        viewModel.navToNewCategory.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, null, true) }
+        viewModel.navToCategorySettings.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, it.name, false) }
+        viewModel.navToReplayOrFutureDetails.observe(viewLifecycleOwner) { ReplayOrFutureDetailsFrag.navTo(nav, moshiWithCategoriesProvider, it, selectCategoriesModel) }
+        viewModel.navToSelectReplay.observe(viewLifecycleOwner) { nav.navigate(R.id.useReplayFrag) }
+        viewModel.navToReceiptCategorization.observe(viewLifecycleOwner) { ReceiptCategorizationHostFrag.navTo(nav, it, categoryAmountsConverter) }
         // # State
-        vb.textviewDate.bind(vm.date) { text = it }
-        vb.textviewAmount.bind(vm.latestUncategorizedTransactionAmount) { text = it }
-        vb.textviewDescription.bind(vm.latestUncategorizedTransactionDescription) { text = it }
-        vb.textviewAmountLeft.bind(vm.uncategorizedSpendsSize) { text = it }
+        vb.textviewDate.bind(viewModel.date) { text = it }
+        vb.textviewAmount.bind(viewModel.latestUncategorizedTransactionAmount) { text = it }
+        vb.textviewDescription.bind(viewModel.latestUncategorizedTransactionDescription) { text = it }
+        vb.textviewAmountLeft.bind(viewModel.uncategorizedSpendsSize) { text = it }
         val spanSize = if (requireContext().resources.configuration.fontScale <= 1.0) 3 else 2
         vb.recyclerviewCategories.addItemDecoration(LayoutMarginDecoration(spanSize, 8.toPX(requireContext())))
         vb.recyclerviewCategories.layoutManager = GridLayoutManager(requireActivity(), spanSize, GridLayoutManager.VERTICAL, false)
-        vb.recyclerviewCategories.bind(vm.recipeGrid.map { it.map { it.toViewItemRecipe(requireContext()) } }) { viewItemRecipes ->
+        vb.recyclerviewCategories.bind(viewModel.recipeGrid.map { it.map { it.toViewItemRecipe(requireContext()) } }) { viewItemRecipes ->
             adapter = object : LifecycleRVAdapter2<GenViewHolder2<ViewBinding>>() {
                 override fun onCreateViewHolder(parent: ViewGroup, i: Int): GenViewHolder2<ViewBinding> =
                     GenViewHolder2(viewItemRecipes[i].createVB(parent))
@@ -79,6 +79,6 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
                 override fun getItemViewType(position: Int) = position
             }
         }
-        vb.buttonsview.bind(vm.buttons) { buttons = it }
+        vb.buttonsview.bind(viewModel.buttons) { buttons = it }
     }
 }
