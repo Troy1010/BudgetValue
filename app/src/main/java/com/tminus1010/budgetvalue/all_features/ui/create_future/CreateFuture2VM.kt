@@ -9,7 +9,6 @@ import com.tminus1010.budgetvalue.all_features.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.all_features.app.model.Category
 import com.tminus1010.budgetvalue.all_features.domain.CategoryAmountFormulas
-import com.tminus1010.budgetvalue.all_features.framework.Rx
 import com.tminus1010.budgetvalue.all_features.framework.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.all_features.framework.view.Toaster
 import com.tminus1010.budgetvalue.all_features.ui.all_features.model.*
@@ -25,10 +24,7 @@ import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.budgetvalue.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
 import com.tminus1010.budgetvalue.transactions.presentation.model.SearchType
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
-import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
 import java.math.BigDecimal
@@ -50,6 +46,19 @@ class CreateFuture2VM @Inject constructor(
 
     @SuppressLint("VisibleForTests")
     fun userTrySubmit() {
+        saveReplayDialogBox.onNext(
+            categoryAmountFormulas.value
+                .map { (category, amountFormula) ->
+                    if (category != fillCategory.value)
+                        amountFormula.toDisplayStr2() + " " + category.name
+                    else
+                        category.name
+                }
+                .joinToString(", ")
+        )
+    }
+
+    fun userTrySubmitWithName(s: String) {
         try {
             val futureToPush =
                 when (searchType.value) {
@@ -57,7 +66,7 @@ class CreateFuture2VM @Inject constructor(
                         TODO()
                     SearchType.TOTAL ->
                         TotalFuture(
-                            name = generateUniqueID(),
+                            name = s,
                             searchTotal = totalGuess.value,
                             categoryAmountFormulas = categoryAmountFormulas.value,
                             fillCategory = fillCategory.value!!,
@@ -66,7 +75,7 @@ class CreateFuture2VM @Inject constructor(
                         )
                     SearchType.DESCRIPTION ->
                         BasicFuture(
-                            name = generateUniqueID(),
+                            name = s,
                             searchTexts = setSearchTextsSharedVM.searchTexts.value,
                             categoryAmountFormulas = categoryAmountFormulas.value,
                             fillCategory = fillCategory.value!!,
@@ -80,9 +89,9 @@ class CreateFuture2VM @Inject constructor(
                 if (futureToPush.terminationStrategy == TerminationStrategy.PERMANENT) {
                     val number = categorizeAllMatchingUncategorizedTransactions(futureToPush).blockingGet()
                     toaster.toast("$number transactions categorized")
-                    selectedCategoriesModel.clearSelection()
-                    navUp.emit(Unit)
                 }
+                selectedCategoriesModel.clearSelection()
+                navUp.emit(Unit)
             }
         } catch (e: Throwable) {
             when (e) {
@@ -159,6 +168,7 @@ class CreateFuture2VM @Inject constructor(
     val navToCategorySelection = MutableSharedFlow<Unit>()
     val navToChooseTransaction = MutableSharedFlow<Unit>()
     val navToSetSearchTexts = MutableSharedFlow<Unit>()
+    val saveReplayDialogBox = MutableSharedFlow<String>()
 
     // # State
     val otherInput =
