@@ -16,11 +16,13 @@ import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.domain.*
+import com.tminus1010.budgetvalue.replay_or_future.presentation.NoDescriptionEnteredException
 import com.tminus1010.budgetvalue.replay_or_future.presentation.SetSearchTextsSharedVM
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.budgetvalue.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
 import com.tminus1010.budgetvalue.transactions.presentation.model.SearchType
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
+import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
@@ -46,7 +48,46 @@ class ReplayOrFutureDetailsVM @Inject constructor(
 
     @SuppressLint("VisibleForTests")
     fun userTrySubmit() {
-        TODO()
+        try {
+            val futureToPush =
+                when (searchType.value) {
+                    SearchType.DESCRIPTION_AND_TOTAL ->
+                        TODO()
+                    SearchType.TOTAL ->
+                        TotalFuture(
+                            name = replayOrFuture.replayCache[0].name,
+                            searchTotal = totalGuess.value,
+                            categoryAmountFormulas = categoryAmountFormulas.value,
+                            fillCategory = fillCategory.value!!,
+                            terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.WAITING_FOR_MATCH,
+                            isAutomatic = isAutomatic.value,
+                        )
+                    SearchType.DESCRIPTION ->
+                        BasicFuture(
+                            name = replayOrFuture.replayCache[0].name,
+                            searchTexts = setSearchTextsSharedVM.searchTexts.value,
+                            categoryAmountFormulas = categoryAmountFormulas.value,
+                            fillCategory = fillCategory.value!!,
+                            terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.WAITING_FOR_MATCH,
+                            isAutomatic = isAutomatic.value,
+                            totalGuess = totalGuess.value,
+                        )
+                }
+            runBlocking {
+                futuresRepo.push(futureToPush)
+                if (futureToPush.terminationStrategy == TerminationStrategy.PERMANENT) {
+                    val number = categorizeAllMatchingUncategorizedTransactions(futureToPush).blockingGet()
+                    toaster.toast("$number transactions categorized")
+                }
+                selectedCategoriesModel.clearSelection()
+                navUp.emit(Unit)
+            }
+        } catch (e: Throwable) {
+            when (e) {
+                is NoDescriptionEnteredException -> toaster.toast("Fill description or use another search type")
+                else -> throw e
+            }
+        }
     }
 
     fun userSetTotalGuess(s: String) {
@@ -162,7 +203,7 @@ class ReplayOrFutureDetailsVM @Inject constructor(
             }
             .flatMapLatest { oldCategoryAmountFormulas ->
                 _categoryAmountFormulas
-                    .map { oldCategoryAmountFormulas + it }
+                    .map { it + oldCategoryAmountFormulas }
             }
             .stateIn(viewModelScope, SharingStarted.Eagerly, CategoryAmountFormulas())
     private val _fillCategory =
