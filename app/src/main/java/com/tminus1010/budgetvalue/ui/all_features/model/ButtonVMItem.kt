@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.Flow
 
 data class ButtonVMItem(
     val title: String? = null,
+    val title2: Flow<String?>? = null,
     val titleObservable: Observable<String>? = null,
     val isEnabled: Observable<Boolean>? = null,
     val isEnabled2: Flow<Boolean>? = null,
@@ -24,7 +25,9 @@ data class ButtonVMItem(
 ) : IHasToViewItemRecipe {
     fun bind(button: Button) = button.apply {
         if (titleObservable != null)
-            bind(titleObservable) { text = title }
+            bind(titleObservable) { text = it }
+        if (title2 != null)
+            bind(title2) { text = it }
         if (text != null)
             text = title
         if (this@ButtonVMItem.alpha != null)
