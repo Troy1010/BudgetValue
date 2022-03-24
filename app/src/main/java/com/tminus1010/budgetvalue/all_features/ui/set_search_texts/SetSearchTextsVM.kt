@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.replay_or_future.presentation
+package com.tminus1010.budgetvalue.all_features.ui.set_search_texts
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

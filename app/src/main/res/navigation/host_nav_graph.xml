@@ -184,7 +184,7 @@
         tools:layout="@layout/frag_choose_transaction" />
     <fragment
         android:id="@+id/setSearchTextsFrag"
-        android:name="com.tminus1010.budgetvalue.replay_or_future.view.SetSearchTextsFrag"
+        android:name="com.tminus1010.budgetvalue.all_features.ui.set_search_texts.SetSearchTextsFrag"
         android:label="SetSearchTextsFrag"
         tools:layout="@layout/frag_set_search_texts" />
 </navigation>

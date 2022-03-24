@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.replay_or_future.presentation
+package com.tminus1010.budgetvalue.all_features.ui.set_search_texts
 
 import com.tminus1010.budgetvalue.all_features.framework.source_objects.SourceList
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
