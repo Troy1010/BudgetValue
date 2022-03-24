@@ -10,7 +10,7 @@ import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.DividerVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.MoneyEditVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.TextVMItem
-import com.tminus1010.budgetvalue._unrestructured.categories.domain.CategoriesInteractor
+import com.tminus1010.budgetvalue.app.CategoriesInteractor
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import dagger.hilt.android.lifecycle.HiltViewModel

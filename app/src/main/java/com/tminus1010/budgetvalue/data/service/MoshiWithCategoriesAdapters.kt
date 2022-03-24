@@ -6,7 +6,7 @@ import com.squareup.moshi.Types
 import com.tminus1010.budgetvalue.data.service.MoshiProvider.moshi
 import com.tminus1010.budgetvalue.domain.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
-import com.tminus1010.budgetvalue._unrestructured.categories.domain.CategoriesInteractor
+import com.tminus1010.budgetvalue.app.CategoriesInteractor
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.tmcommonkotlin.core.extensions.associate
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson

@@ -11,7 +11,7 @@ import com.tminus1010.budgetvalue.framework.view.Toaster
 import com.tminus1010.budgetvalue.ui.errors.Errors
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem2
-import com.tminus1010.budgetvalue._unrestructured.categories.domain.CategoriesInteractor
+import com.tminus1010.budgetvalue.app.CategoriesInteractor
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.data.FuturesRepo

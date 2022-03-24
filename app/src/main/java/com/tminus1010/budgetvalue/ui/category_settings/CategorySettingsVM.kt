@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue.all_layers.InvalidCategoryNameException
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.ui.all_features.model.*
 import com.tminus1010.budgetvalue.data.CategoriesRepo
-import com.tminus1010.budgetvalue._unrestructured.categories.domain.CategoriesInteractor
+import com.tminus1010.budgetvalue.app.CategoriesInteractor
 import com.tminus1010.budgetvalue._unrestructured.categories.domain.DeleteCategoryFromActiveDomainUC
 import com.tminus1010.budgetvalue._unrestructured.categories.domain.ReplaceCategoryGloballyUC
 import com.tminus1010.budgetvalue.domain.Category

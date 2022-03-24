@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue._unrestructured.replay_or_future.data
 
 import com.tminus1010.budgetvalue.data.service.MiscDAO
 import com.tminus1010.budgetvalue._unrestructured.categories.CategoryAmountFormulasConverter
-import com.tminus1010.budgetvalue._unrestructured.categories.domain.CategoriesInteractor
+import com.tminus1010.budgetvalue.app.CategoriesInteractor
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.BasicReplay
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.IReplay
 import io.reactivex.rxjava3.core.Completable

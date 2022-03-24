@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._unrestructured.categories.domain
+package com.tminus1010.budgetvalue.app
 
 import com.tminus1010.budgetvalue.data.CategoriesRepo
 import com.tminus1010.budgetvalue.domain.Category

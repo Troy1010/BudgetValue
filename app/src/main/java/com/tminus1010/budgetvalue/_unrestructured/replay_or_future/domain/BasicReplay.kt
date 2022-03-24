@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain
 
 import com.tminus1010.budgetvalue.domain.CategoryAmountFormulas
 import com.tminus1010.budgetvalue._unrestructured.categories.CategoryAmountFormulasConverter
-import com.tminus1010.budgetvalue._unrestructured.categories.domain.CategoriesInteractor
+import com.tminus1010.budgetvalue.app.CategoriesInteractor
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.data.model.BasicReplayDTO
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction

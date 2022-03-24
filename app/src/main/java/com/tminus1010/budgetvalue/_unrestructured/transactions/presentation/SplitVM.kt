@@ -8,7 +8,7 @@ import com.tminus1010.budgetvalue.domain.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.framework.ColdObservable
 import com.tminus1010.budgetvalue.framework.view.Toaster
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
-import com.tminus1010.budgetvalue._unrestructured.categories.domain.CategoriesInteractor
+import com.tminus1010.budgetvalue.app.CategoriesInteractor
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.data.ReplaysRepo
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.BasicReplay

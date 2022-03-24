@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue._unrestructured.categories
 
 import com.tminus1010.budgetvalue.data.service.MoshiProvider.moshi
-import com.tminus1010.budgetvalue._unrestructured.categories.domain.CategoriesInteractor
+import com.tminus1010.budgetvalue.app.CategoriesInteractor
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.AmountFormula
 import com.tminus1010.tmcommonkotlin.core.extensions.associate
