@@ -9,6 +9,7 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import javax.inject.Inject
 
+@Deprecated("use moshi")
 class CategoryAmountFormulasConverter @Inject constructor(
     private val categoryParser: CategoriesInteractor,
 ) {

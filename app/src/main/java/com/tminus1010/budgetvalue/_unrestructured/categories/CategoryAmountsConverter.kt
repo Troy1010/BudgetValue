@@ -9,6 +9,7 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import java.math.BigDecimal
 import javax.inject.Inject
 
+@Deprecated("use moshi")
 class CategoryAmountsConverter @Inject constructor(
     private val categoriesInteractor: CategoriesInteractor,
 ) {
