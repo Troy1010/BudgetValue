@@ -5,10 +5,10 @@ import com.tminus1010.budgetvalue.all_features.all_layers.extensions.flatMapSour
 import com.tminus1010.budgetvalue.all_features.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.all_features.framework.Rx
 import com.tminus1010.budgetvalue.all_features.framework.source_objects.SourceHashMap
-import com.tminus1010.budgetvalue.all_features.data.repo.AccountsRepo
+import com.tminus1010.budgetvalue.all_features.data.AccountsRepo
 import com.tminus1010.budgetvalue.all_features.app.model.Budgeted
 import com.tminus1010.budgetvalue.all_features.app.model.Category
-import com.tminus1010.budgetvalue.all_features.data.repo.PlansRepo
+import com.tminus1010.budgetvalue.all_features.data.PlansRepo
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum

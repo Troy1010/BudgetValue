@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.all_features.ui.all_features.model
 
-import com.tminus1010.budgetvalue.all_features.data.repo.AccountsRepo
+import com.tminus1010.budgetvalue.all_features.data.AccountsRepo
 import com.tminus1010.budgetvalue.all_features.domain.accounts.AccountsAggregate
 
 class AccountsPresentationModel private constructor(private val accountsAggregate: AccountsAggregate, private val accountPresentationModelList: List<AccountPresentationModel>) : List<AccountPresentationModel> by accountPresentationModelList {

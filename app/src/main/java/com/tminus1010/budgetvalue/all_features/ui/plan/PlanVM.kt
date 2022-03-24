@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue.all_features.all_layers.extensions.flatMapSour
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.all_features.app.ActivePlanInteractor
 import com.tminus1010.budgetvalue.all_features.app.model.Category
-import com.tminus1010.budgetvalue.all_features.data.repo.ActivePlanRepo
+import com.tminus1010.budgetvalue.all_features.data.ActivePlanRepo
 import com.tminus1010.budgetvalue.all_features.ui.all_features.model.ButtonVMItem
 import com.tminus1010.budgetvalue.all_features.ui.all_features.model.DividerVMItem
 import com.tminus1010.budgetvalue.all_features.ui.all_features.model.MoneyEditVMItem

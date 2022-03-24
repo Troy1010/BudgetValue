@@ -3,8 +3,8 @@ package com.tminus1010.budgetvalue.reconcile.app.interactor
 import androidx.annotation.VisibleForTesting
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.all_features.domain.CategoryAmounts
-import com.tminus1010.budgetvalue.all_features.data.repo.AccountsRepo
-import com.tminus1010.budgetvalue.all_features.data.repo.PlansRepo
+import com.tminus1010.budgetvalue.all_features.data.AccountsRepo
+import com.tminus1010.budgetvalue.all_features.data.PlansRepo
 import com.tminus1010.budgetvalue.all_features.domain.plan.Plan
 import com.tminus1010.budgetvalue.reconcile.data.ActiveReconciliationRepo
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo

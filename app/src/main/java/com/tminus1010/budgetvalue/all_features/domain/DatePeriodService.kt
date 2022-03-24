@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.all_features.domain
 
-import com.tminus1010.budgetvalue.all_features.data.repo.SettingsRepo
+import com.tminus1010.budgetvalue.all_features.data.SettingsRepo
 import java.time.LocalDate
 import java.time.Month
 import java.time.temporal.ChronoUnit

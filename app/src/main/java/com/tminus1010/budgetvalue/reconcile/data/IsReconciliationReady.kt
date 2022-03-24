@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.reconcile.data
 
-import com.tminus1010.budgetvalue.all_features.data.repo.LatestDateOfMostRecentImportRepo
+import com.tminus1010.budgetvalue.all_features.data.LatestDateOfMostRecentImportRepo
 import com.tminus1010.budgetvalue.all_features.app.IsPlanFeatureEnabledUC
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import io.reactivex.rxjava3.core.Observable

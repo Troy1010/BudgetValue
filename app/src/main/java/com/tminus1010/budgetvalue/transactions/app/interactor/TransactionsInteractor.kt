@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.transactions.app.interactor
 
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.mapBox
-import com.tminus1010.budgetvalue.all_features.data.repo.LatestDateOfMostRecentImportRepo
+import com.tminus1010.budgetvalue.all_features.data.LatestDateOfMostRecentImportRepo
 import com.tminus1010.budgetvalue.all_features.domain.DatePeriodService
 import com.tminus1010.budgetvalue.all_features.framework.Rx
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo

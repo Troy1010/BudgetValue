@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.transactions.presentation
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.all_features.data.repo.CurrentDatePeriodRepo
+import com.tminus1010.budgetvalue.all_features.data.CurrentDatePeriodRepo
 import com.tminus1010.budgetvalue.all_features.ui.all_features.model.TextPresentationModel
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.budgetvalue.transactions.presentation.model.TransactionBlockCompletionPresentationModel

@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue.all_features.all_layers.extensions.asObservabl
 import com.tminus1010.budgetvalue.all_features.ui.all_features.model.MenuVMItem
 import com.tminus1010.budgetvalue.all_features.ui.host.GetExtraMenuItemPartials
 import com.tminus1010.budgetvalue.all_features.app.AppInitInteractor
-import com.tminus1010.budgetvalue.all_features.data.repo.AppInitRepo
+import com.tminus1010.budgetvalue.all_features.data.AppInitRepo
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStrategy
 import com.tminus1010.budgetvalue.replay_or_future.domain.TotalFuture

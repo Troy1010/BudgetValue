@@ -11,8 +11,8 @@ import com.tminus1010.budgetvalue.all_features.all_layers.dependency_injection.E
 import com.tminus1010.budgetvalue.all_features.all_layers.dependency_injection.IEnvironmentModule
 import com.tminus1010.budgetvalue.all_features.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.all_features.domain.DatePeriodService
-import com.tminus1010.budgetvalue.all_features.data.repo.CategoriesRepo
-import com.tminus1010.budgetvalue.all_features.data.repo.PlansRepo
+import com.tminus1010.budgetvalue.all_features.data.CategoriesRepo
+import com.tminus1010.budgetvalue.all_features.data.PlansRepo
 import com.tminus1010.budgetvalue.all_features.data.service.CategoryDatabase
 import com.tminus1010.budgetvalue.all_features.data.service.MiscDatabase
 import com.tminus1010.budgetvalue.all_features.data.service.RoomWithCategoriesTypeConverter

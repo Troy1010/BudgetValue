@@ -9,6 +9,8 @@ import com.tminus1010.budgetvalue.FakeDataStore
 import com.tminus1010.budgetvalue.__core_testing.app
 import com.tminus1010.budgetvalue.all_features.all_layers.dependency_injection.EnvironmentModule
 import com.tminus1010.budgetvalue.all_features.all_layers.dependency_injection.IEnvironmentModule
+import com.tminus1010.budgetvalue.all_features.data.CategoriesRepo
+import com.tminus1010.budgetvalue.all_features.data.SettingsRepo
 import com.tminus1010.budgetvalue.all_features.data.service.CategoryDatabase
 import com.tminus1010.budgetvalue.all_features.data.service.MiscDatabase
 import com.tminus1010.budgetvalue.all_features.data.service.RoomWithCategoriesTypeConverter
