@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.transactions.app
+package com.tminus1010.budgetvalue.all_features.ui.all_features
 
 import androidx.fragment.app.Fragment
 import kotlinx.coroutines.flow.MutableSharedFlow

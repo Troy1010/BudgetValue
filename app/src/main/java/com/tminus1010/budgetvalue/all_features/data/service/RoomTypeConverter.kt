@@ -4,7 +4,7 @@ import androidx.room.TypeConverter
 import com.tminus1010.budgetvalue.all_features.data.service.MoshiProvider.moshi
 import com.tminus1010.budgetvalue.all_features.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStrategy
-import com.tminus1010.budgetvalue.transactions.app.AmountFormula
+import com.tminus1010.budgetvalue.all_features.domain.AmountFormula
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import java.math.BigDecimal

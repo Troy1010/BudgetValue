@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.all_features.ui.all_features.model
 
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
 import com.tminus1010.budgetvalue.all_features.domain.Category
-import com.tminus1010.budgetvalue.transactions.app.AmountFormula
+import com.tminus1010.budgetvalue.all_features.domain.AmountFormula
 import kotlinx.coroutines.flow.StateFlow
 
 // TODO

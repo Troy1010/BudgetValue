@@ -13,7 +13,7 @@ import com.tminus1010.budgetvalue.all_features.ui.all_features.model.CategoryAmo
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.all_features.domain.Category
 import com.tminus1010.budgetvalue.replay_or_future.app.SelectCategoriesModel
-import com.tminus1010.budgetvalue.transactions.app.AmountFormula
+import com.tminus1010.budgetvalue.all_features.domain.AmountFormula
 import com.tminus1010.tmcommonkotlin.rx.extensions.retryWithDelay
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import com.tminus1010.tmcommonkotlin.tuple.Box

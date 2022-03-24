@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue.all_features.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.all_features.ui.all_features.model.ButtonVMItem
 import com.tminus1010.budgetvalue.transactions.app.ReceiptCategorizationInteractor
-import com.tminus1010.budgetvalue.transactions.app.SubFragEventProvider
+import com.tminus1010.budgetvalue.all_features.ui.all_features.SubFragEventProvider
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.budgetvalue.transactions.view.ChooseAmountSubFrag
 import com.tminus1010.budgetvalue.transactions.view.ReceiptCategorizationSoFarSubFrag

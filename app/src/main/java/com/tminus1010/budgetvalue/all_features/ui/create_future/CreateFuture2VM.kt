@@ -20,7 +20,7 @@ import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture
 import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStrategy
 import com.tminus1010.budgetvalue.replay_or_future.domain.TotalFuture
 import com.tminus1010.budgetvalue.all_features.ui.set_search_texts.SetSearchTextsSharedVM
-import com.tminus1010.budgetvalue.transactions.app.AmountFormula
+import com.tminus1010.budgetvalue.all_features.domain.AmountFormula
 import com.tminus1010.budgetvalue.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
 import com.tminus1010.budgetvalue.transactions.presentation.model.SearchType
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith

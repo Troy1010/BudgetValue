@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue.all_features.domain
 
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.toMoneyBigDecimal
-import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import java.math.BigDecimal
 

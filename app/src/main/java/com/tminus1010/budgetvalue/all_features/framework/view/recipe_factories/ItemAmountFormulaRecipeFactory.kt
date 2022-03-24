@@ -12,7 +12,7 @@ import com.tminus1010.budgetvalue.all_features.ui.all_features.model.CategoryAmo
 import com.tminus1010.budgetvalue.all_features.ui.all_features.model.MenuVMItem
 import com.tminus1010.budgetvalue.all_features.domain.Category
 import com.tminus1010.budgetvalue.databinding.ItemAmountFormulaBinding
-import com.tminus1010.budgetvalue.transactions.app.AmountFormula
+import com.tminus1010.budgetvalue.all_features.domain.AmountFormula
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import com.tminus1010.tmcommonkotlin.view.extensions.easyVisibility

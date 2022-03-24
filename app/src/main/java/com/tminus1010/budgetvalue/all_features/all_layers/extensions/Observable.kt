@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue.all_features.framework.ColdObservable
 import com.tminus1010.budgetvalue.all_features.framework.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.all_features.framework.source_objects.SourceList
 import com.tminus1010.budgetvalue.all_features.domain.Category
-import com.tminus1010.budgetvalue.transactions.app.AmountFormula
+import com.tminus1010.budgetvalue.all_features.domain.AmountFormula
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Observable

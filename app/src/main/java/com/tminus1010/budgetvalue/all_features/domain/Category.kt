@@ -2,7 +2,6 @@ package com.tminus1010.budgetvalue.all_features.domain
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import java.math.BigDecimal
 
 @Entity

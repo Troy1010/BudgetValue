@@ -7,7 +7,7 @@ import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.tminus1010.budgetvalue.all_features.domain.CategoryType
 import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStrategy
-import com.tminus1010.budgetvalue.transactions.app.AmountFormula
+import com.tminus1010.budgetvalue.all_features.domain.AmountFormula
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

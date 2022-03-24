@@ -15,7 +15,7 @@ import com.tminus1010.budgetvalue.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.domain.*
 import com.tminus1010.budgetvalue.all_features.ui.set_search_texts.SetSearchTextsSharedVM
-import com.tminus1010.budgetvalue.transactions.app.AmountFormula
+import com.tminus1010.budgetvalue.all_features.domain.AmountFormula
 import com.tminus1010.budgetvalue.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
 import com.tminus1010.budgetvalue.transactions.presentation.model.SearchType
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith

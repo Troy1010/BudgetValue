@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue.all_features.all_layers.extensions.easyText2
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.ViewItemRecipe3
 import com.tminus1010.budgetvalue.databinding.ItemAmountFormulaBinding
-import com.tminus1010.budgetvalue.transactions.app.AmountFormula
+import com.tminus1010.budgetvalue.all_features.domain.AmountFormula
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
 import com.tminus1010.tmcommonkotlin.view.extensions.easyVisibility

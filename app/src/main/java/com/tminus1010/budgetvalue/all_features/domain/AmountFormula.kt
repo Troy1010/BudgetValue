@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.transactions.app
+package com.tminus1010.budgetvalue.all_features.domain
 
 import java.math.BigDecimal
 import java.math.RoundingMode
