@@ -57,33 +57,12 @@
                 app:destination="@id/categorySettingsFrag"
                 app:popUpTo="@id/categorizeFrag" />
             <action
-                android:id="@+id/action_categorizeFrag_to_createFutureFrag"
-                app:destination="@id/createFutureNestedGraph" />
-            <action
                 android:id="@+id/action_categorizeFrag_to_splitFrag"
                 app:destination="@id/splitFrag" />
             <action
                 android:id="@+id/action_categorizeFrag_to_receiptCategorizationFrag"
                 app:destination="@id/receiptCategorizationHostFrag" />
         </fragment>
-        <navigation
-            android:id="@+id/createFutureNestedGraph"
-            app:startDestination="@id/createFutureFrag">
-            <fragment
-                android:id="@+id/chooseTransactionDescriptionFrag"
-                android:name="com.tminus1010.budgetvalue._unrestructured.choose_transaction_description.ChooseTransactionDescriptionFrag"
-                android:label="ChooseTransactionDescriptionFrag"
-                tools:layout="@layout/frag_transactions" />
-            <fragment
-                android:id="@+id/createFutureFrag"
-                android:name="com.tminus1010.budgetvalue._unrestructured.replay_or_future.view.CreateFutureFrag"
-                android:label="CreateFutureFrag"
-                tools:layout="@layout/frag_create_future">
-                <action
-                    android:id="@+id/action_createFutureFrag_to_chooseTransactionDescriptionFrag"
-                    app:destination="@id/chooseTransactionDescriptionFrag" />
-            </fragment>
-        </navigation>
         <fragment
             android:id="@+id/splitFrag"
             android:name="com.tminus1010.budgetvalue._unrestructured.transactions.view.SplitFrag"
