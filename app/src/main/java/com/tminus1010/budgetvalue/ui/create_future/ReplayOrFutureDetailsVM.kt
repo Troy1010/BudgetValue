@@ -131,7 +131,6 @@ class ReplayOrFutureDetailsVM @Inject constructor(
     fun userDeleteFutureOrReplay() {
         when (val x = replayOrFuture.replayCache[0]) {
             is BasicFuture -> runBlocking { futuresRepo.delete(x) }
-            is BasicReplay,
             is TotalFuture,
             -> TODO()
             else -> error("Oh no!")

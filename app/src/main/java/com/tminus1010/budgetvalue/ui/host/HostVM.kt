@@ -23,7 +23,6 @@ class HostVM @Inject constructor(
     val navToHistory = PublishSubject.create<Unit>()
     val navToTransactions = PublishSubject.create<Unit>()
     val navToFutures = PublishSubject.create<Unit>()
-    val navToReplays = PublishSubject.create<Unit>()
 
     // # State
     val topMenuVMItems =
@@ -39,10 +38,6 @@ class HostVM @Inject constructor(
             MenuVMItem(
                 title = "Futures",
                 onClick = { navToFutures.onNext(Unit); unCheckAllMenuItems.onNext(Unit) },
-            ),
-            MenuVMItem(
-                title = "Replays",
-                onClick = { navToReplays.onNext(Unit); unCheckAllMenuItems.onNext(Unit) },
             ),
             *getExtraMenuItemPartials(nav)
         )

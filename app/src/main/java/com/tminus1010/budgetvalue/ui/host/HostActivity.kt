@@ -28,7 +28,6 @@ import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue._unrestructured.history.HistoryFrag
 import com.tminus1010.budgetvalue._unrestructured.reconcile.data.IsReconciliationFeatureEnabled
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.view.FuturesReviewFrag
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.view.ReplaysFrag
 import com.tminus1010.budgetvalue._unrestructured.transactions.view.TransactionListFrag
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -97,7 +96,6 @@ class HostActivity : AppCompatActivity() {
         isReconciliationFeatureEnabled.onChangeToTrue.observe(this) {
             easyAlertDialog(getString(hostVM.levelUpReconciliation))
         }
-        hostVM.navToReplays.observe(this) { ReplaysFrag.navTo(nav) }
         hostVM.navToFutures.observe(this) { FuturesReviewFrag.navTo(nav) }
         hostVM.navToTransactions.observe(this) { TransactionListFrag.navTo(nav) }
         hostVM.navToHistory.observe(this) { HistoryFrag.navTo(nav) }

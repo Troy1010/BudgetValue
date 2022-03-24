@@ -11,15 +11,6 @@
         app:popUpTo="@id/importFrag"
         app:popUpToInclusive="true" />
     <fragment
-        android:id="@+id/replaysFrag"
-        android:name="com.tminus1010.budgetvalue._unrestructured.replay_or_future.view.ReplaysFrag"
-        android:label="ReplaysFrag"
-        tools:layout="@layout/frag_replays">
-        <action
-            android:id="@+id/action_replaysFrag_to_replayFrag"
-            app:destination="@id/replayFrag" />
-    </fragment>
-    <fragment
         android:id="@+id/importFrag"
         android:name="com.tminus1010.budgetvalue.ui.importZ.ImportFrag"
         android:label="Import"
@@ -132,21 +123,6 @@
         android:name="com.tminus1010.budgetvalue.ui.create_future.ReplayOrFutureDetailsFrag"
         android:label="ReplayOrFutureDetailsFrag"
         tools:layout="@layout/frag_create_future" />
-    <fragment
-        android:id="@+id/replayFrag"
-        android:name="com.tminus1010.budgetvalue._unrestructured.transactions.view.ReplayFrag"
-        android:label="ReplayFrag"
-        tools:layout="@layout/frag_categorize_advanced" />
-    <fragment
-        android:id="@+id/chooseTransactionDescriptionFrag2"
-        android:name="com.tminus1010.budgetvalue._unrestructured.choose_transaction_description.ChooseTransactionDescriptionFrag2"
-        android:label="ChooseTransactionDescriptionFrag"
-        tools:layout="@layout/frag_choose_transaction_desciption_2" />
-    <fragment
-        android:id="@+id/useReplayFrag"
-        android:name="com.tminus1010.budgetvalue._unrestructured.replay_or_future.view.UseReplayFrag"
-        android:label="UseReplayFrag"
-        tools:layout="@layout/frag_replays" />
     <fragment
         android:id="@+id/reconciliationHostFrag"
         android:name="com.tminus1010.budgetvalue._unrestructured.reconcile.view.ReconciliationHostFrag"

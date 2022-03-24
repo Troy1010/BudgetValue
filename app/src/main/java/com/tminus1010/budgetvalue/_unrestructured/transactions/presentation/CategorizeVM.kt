@@ -3,34 +3,30 @@ package com.tminus1010.budgetvalue._unrestructured.transactions.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
-import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
-import com.tminus1010.budgetvalue.all_layers.extensions.onNext
-import com.tminus1010.budgetvalue.framework.view.SpinnerService
-import com.tminus1010.budgetvalue.framework.view.Toaster
-import com.tminus1010.budgetvalue.ui.errors.Errors
-import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
-import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem2
-import com.tminus1010.budgetvalue.app.CategoriesInteractor
-import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.app.SelectCategoriesModel
-import com.tminus1010.budgetvalue.data.FuturesRepo
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.data.ReplaysRepo
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.IReplayOrFuture
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.SaveTransactionInteractor
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
+import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
+import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
+import com.tminus1010.budgetvalue.all_layers.extensions.onNext
+import com.tminus1010.budgetvalue.app.CategoriesInteractor
+import com.tminus1010.budgetvalue.data.FuturesRepo
+import com.tminus1010.budgetvalue.domain.Category
+import com.tminus1010.budgetvalue.framework.view.SpinnerService
+import com.tminus1010.budgetvalue.framework.view.Toaster
+import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
+import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem2
+import com.tminus1010.budgetvalue.ui.errors.Errors
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.divertErrors
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.rx3.asFlow
-import kotlinx.coroutines.rx3.asObservable
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
@@ -38,7 +34,6 @@ import javax.inject.Inject
 class CategorizeVM @Inject constructor(
     private val saveTransactionInteractor: SaveTransactionInteractor,
     private val transactionsInteractor: TransactionsInteractor,
-    replaysRepo: ReplaysRepo,
     categorizeAllMatchingUncategorizedTransactions: CategorizeAllMatchingUncategorizedTransactions,
     private val toaster: Toaster,
     private val categoriesInteractor: CategoriesInteractor,
@@ -95,16 +90,7 @@ class CategorizeVM @Inject constructor(
     val navToCategorySettings = MutableSharedFlow<Category>()
     val navToNewCategory = MutableSharedFlow<Unit>()
     val navToReplayOrFutureDetails = MutableSharedFlow<IReplayOrFuture>()
-    val navToSelectReplay = MutableSharedFlow<Unit>()
     val navToReceiptCategorization = MutableSharedFlow<Transaction>()
-
-    // # Internal
-    private val matchingReplays =
-        combine(replaysRepo.fetchReplays().asFlow(), transactionsInteractor.mostRecentUncategorizedSpend2)
-        { replays, transaction ->
-            if (transaction == null) emptyList() else
-                replays.filter { it.shouldCategorizeOnImport(transaction) }
-        }
 
     // # State
     val isUndoAvailable = saveTransactionInteractor.isUndoAvailable
@@ -168,98 +154,80 @@ class CategorizeVM @Inject constructor(
         }
             .divertErrors(errors)
     val buttons =
-        Observable.combineLatest(selectCategoriesModel.selectedCategories.map { it.isNotEmpty() }.asObservable2(), matchingReplays.asObservable())
-        { inSelectionMode, matchingReplays ->
-            listOfNotNull(
-                if (inSelectionMode)
-                    ButtonVMItem(
-                        title = "Split",
-                        isEnabled2 = isTransactionAvailable,
-                        onClick = { navToSplit.easyEmit(transactionsInteractor.mostRecentUncategorizedSpend2.value!!) },
-                    )
-                else null,
-                if (inSelectionMode)
-                    ButtonVMItem(
-                        title = "Category Settings",
-                        isEnabled = selectCategoriesModel.selectedCategories.asObservable2().map { it.size == 1 },
-                        onClick = {
-                            navToCategorySettings.easyEmit(selectCategoriesModel.selectedCategories.value.first())
-                            runBlocking { selectCategoriesModel.clearSelection() }
-                        }
-                    )
-                else null,
-                if (inSelectionMode)
-                    ButtonVMItem(
-                        title = "Categorize All Matching Descriptions As This Category",
-                        isEnabled2 = combine(selectCategoriesModel.selectedCategories.map { it.size == 1 }, isTransactionAvailable) { a, b -> a && b },
-                        onClick = {
-                            categorizeAllMatchingUncategorizedTransactions(
-                                predicate = { latestUncategorizedTransactionDescription.value!!.uppercase() in it.description.uppercase() },
-                                categorization = { it.categorize(selectCategoriesModel.selectedCategories.value.first()) }
-                            ).subscribeBy { toaster.toast("$it transactions categorized") }
-                            runBlocking { selectCategoriesModel.clearSelection() }
-                        }
-                    )
-                else null,
-                *(if (inSelectionMode)
-                    emptyList()
-                else
-                    matchingReplays
-                        .map { replay ->
-                            ButtonVMItem(
-                                title = "Replay (${replay.name})",
-                                onClick = { userReplay(replay) },
-                                onLongClick = { navToReplayOrFutureDetails.easyEmit(replay) },
-                            )
-                        })
-                    .toTypedArray(),
-                if (!inSelectionMode)
-                    ButtonVMItem(
-                        title = "Create Future",
-                        isEnabled2 = isTransactionAvailable,
-                        onClick = { userTryNavToCreateFuture2() },
-                    )
-                else null,
-                if (!inSelectionMode)
-                    ButtonVMItem(
-                        title = "Categorize all as Unknown",
-                        isEnabled2 = isTransactionAvailable,
-                        onClick = { userCategorizeAllAsUnknown() },
-                    )
-                else null,
-                if (!inSelectionMode)
-                    ButtonVMItem(
-                        title = "Do Receipt Categorization",
-                        isEnabled2 = isTransactionAvailable,
-                        onClick = { navToReceiptCategorization.easyEmit(transactionsInteractor.mostRecentUncategorizedSpend2.value!!) },
-                    )
-                else null,
-                if (!inSelectionMode)
-                    ButtonVMItem(
-                        title = "Use Replay",
-                        onClick = { navToSelectReplay.easyEmit(Unit) },
-                    )
-                else null,
-                if (!inSelectionMode)
-                    ButtonVMItem(
-                        title = "Redo",
-                        isEnabled = isRedoAvailable,
-                        onClick = { userRedo() },
-                    )
-                else null,
-                if (!inSelectionMode)
-                    ButtonVMItem(
-                        title = "Undo",
-                        isEnabled = isUndoAvailable,
-                        onClick = { userUndo() },
-                    )
-                else null,
-                if (!inSelectionMode)
-                    ButtonVMItem(
-                        title = "Create New Category",
-                        onClick = { navToNewCategory.easyEmit(Unit) }
-                    )
-                else null,
-            )
-        }
+        selectCategoriesModel.selectedCategories.map { it.isNotEmpty() }.asObservable2()
+            .map { inSelectionMode ->
+                listOfNotNull(
+                    if (inSelectionMode)
+                        ButtonVMItem(
+                            title = "Split",
+                            isEnabled2 = isTransactionAvailable,
+                            onClick = { navToSplit.easyEmit(transactionsInteractor.mostRecentUncategorizedSpend2.value!!) },
+                        )
+                    else null,
+                    if (inSelectionMode)
+                        ButtonVMItem(
+                            title = "Category Settings",
+                            isEnabled = selectCategoriesModel.selectedCategories.asObservable2().map { it.size == 1 },
+                            onClick = {
+                                navToCategorySettings.easyEmit(selectCategoriesModel.selectedCategories.value.first())
+                                runBlocking { selectCategoriesModel.clearSelection() }
+                            }
+                        )
+                    else null,
+                    if (inSelectionMode)
+                        ButtonVMItem(
+                            title = "Categorize All Matching Descriptions As This Category",
+                            isEnabled2 = combine(selectCategoriesModel.selectedCategories.map { it.size == 1 }, isTransactionAvailable) { a, b -> a && b },
+                            onClick = {
+                                categorizeAllMatchingUncategorizedTransactions(
+                                    predicate = { latestUncategorizedTransactionDescription.value!!.uppercase() in it.description.uppercase() },
+                                    categorization = { it.categorize(selectCategoriesModel.selectedCategories.value.first()) }
+                                ).subscribeBy { toaster.toast("$it transactions categorized") }
+                                runBlocking { selectCategoriesModel.clearSelection() }
+                            }
+                        )
+                    else null,
+                    if (!inSelectionMode)
+                        ButtonVMItem(
+                            title = "Create Future",
+                            isEnabled2 = isTransactionAvailable,
+                            onClick = { userTryNavToCreateFuture2() },
+                        )
+                    else null,
+                    if (!inSelectionMode)
+                        ButtonVMItem(
+                            title = "Categorize all as Unknown",
+                            isEnabled2 = isTransactionAvailable,
+                            onClick = { userCategorizeAllAsUnknown() },
+                        )
+                    else null,
+                    if (!inSelectionMode)
+                        ButtonVMItem(
+                            title = "Do Receipt Categorization",
+                            isEnabled2 = isTransactionAvailable,
+                            onClick = { navToReceiptCategorization.easyEmit(transactionsInteractor.mostRecentUncategorizedSpend2.value!!) },
+                        )
+                    else null,
+                    if (!inSelectionMode)
+                        ButtonVMItem(
+                            title = "Redo",
+                            isEnabled = isRedoAvailable,
+                            onClick = { userRedo() },
+                        )
+                    else null,
+                    if (!inSelectionMode)
+                        ButtonVMItem(
+                            title = "Undo",
+                            isEnabled = isUndoAvailable,
+                            onClick = { userUndo() },
+                        )
+                    else null,
+                    if (!inSelectionMode)
+                        ButtonVMItem(
+                            title = "Create New Category",
+                            onClick = { navToNewCategory.easyEmit(Unit) }
+                        )
+                    else null,
+                )
+            }
 }

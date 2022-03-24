@@ -14,7 +14,6 @@ import com.tminus1010.budgetvalue.framework.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragCreateFutureBinding
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.BasicFuture
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.BasicReplay
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.IReplayOrFuture
 import com.tminus1010.tmcommonkotlin.core.tryOrNull
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
@@ -38,7 +37,6 @@ class ReplayOrFutureDetailsFrag : Fragment(R.layout.frag_create_future) {
     val replayOrFuture: IReplayOrFuture
         get() = requireArguments().getString(KEY1).let {
             tryOrNull { moshiWithCategoriesProvider.moshi.fromJson<BasicFuture>(it)!! }
-                ?: tryOrNull { moshiWithCategoriesProvider.moshi.fromJson<BasicReplay>(it)!! }
                 ?: error("Oh no!")
         }
 
@@ -76,7 +74,6 @@ class ReplayOrFutureDetailsFrag : Fragment(R.layout.frag_create_future) {
                 putString(KEY1,
                     when (replayOrFuture) {
                         is BasicFuture -> moshiWithCategoriesProvider.moshi.toJson(replayOrFuture)
-                        is BasicReplay -> moshiWithCategoriesProvider.moshi.toJson(replayOrFuture)
                         else -> error("Unhandled type:$replayOrFuture")
                     }
                 )

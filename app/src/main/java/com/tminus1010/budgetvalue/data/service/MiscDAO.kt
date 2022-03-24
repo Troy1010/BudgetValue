@@ -6,7 +6,6 @@ import com.tminus1010.budgetvalue.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue.domain.accounts.Account
 import com.tminus1010.budgetvalue.domain.plan.Plan
 import com.tminus1010.budgetvalue._unrestructured.reconcile.data.model.ReconciliationDTO
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.data.model.BasicReplayDTO
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.BasicFuture
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.TotalFuture
 import com.tminus1010.budgetvalue._unrestructured.transactions.data.TransactionDTO
@@ -77,6 +76,7 @@ interface MiscDAO {
     suspend fun getTransaction2(id: String): TransactionDTO
 
     // # Plan
+
     @Query("select * from `Plan`")
     fun getPlans(): Flow<List<Plan>>
 
@@ -117,20 +117,6 @@ interface MiscDAO {
 
     @Query("DELETE FROM ReconciliationDTO")
     fun clearReconciliations(): Completable
-
-    // # Replays
-
-    @Query("select * from BasicReplayDTO")
-    fun fetchBasicReplays(): Observable<List<BasicReplayDTO>>
-
-    @Insert
-    fun push(basicReplayDTO: BasicReplayDTO): Completable
-
-    @Query("DELETE FROM BasicReplayDTO WHERE name=:basicReplayName")
-    fun delete(basicReplayName: String): Completable
-
-    @Update
-    fun update(basicReplayDTO: BasicReplayDTO): Completable
 
     // # Futures
 
