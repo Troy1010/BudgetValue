@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._unrestructured.replay_or_future.data
+package com.tminus1010.budgetvalue.data
 
 import com.tminus1010.budgetvalue.data.service.MiscDAO
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.BasicFuture

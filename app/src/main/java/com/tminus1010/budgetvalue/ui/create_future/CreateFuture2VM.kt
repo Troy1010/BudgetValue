@@ -15,7 +15,7 @@ import com.tminus1010.budgetvalue.framework.view.Toaster
 import com.tminus1010.budgetvalue.ui.all_features.model.*
 import com.tminus1010.budgetvalue.app.CategoriesInteractor
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.app.SelectCategoriesModel
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.data.FuturesRepo
+import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.BasicFuture
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.TerminationStrategy
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.TotalFuture

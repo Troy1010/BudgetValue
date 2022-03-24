@@ -7,7 +7,7 @@ import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
 import com.tminus1010.budgetvalue.ui.host.GetExtraMenuItemPartials
 import com.tminus1010.budgetvalue.app.AppInitInteractor
 import com.tminus1010.budgetvalue.data.AppInitRepo
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.data.FuturesRepo
+import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.TerminationStrategy
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.TotalFuture
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction

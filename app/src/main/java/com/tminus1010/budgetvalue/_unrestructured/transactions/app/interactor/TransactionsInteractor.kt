@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue.all_layers.extensions.mapBox
 import com.tminus1010.budgetvalue.data.LatestDateOfMostRecentImportRepo
 import com.tminus1010.budgetvalue.domain.DatePeriodService
 import com.tminus1010.budgetvalue.framework.Rx
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.data.FuturesRepo
+import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.TerminationStrategy
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionBlock

@@ -14,7 +14,7 @@ import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem2
 import com.tminus1010.budgetvalue.app.CategoriesInteractor
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.app.SelectCategoriesModel
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.data.FuturesRepo
+import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.data.ReplaysRepo
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.IReplayOrFuture
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction

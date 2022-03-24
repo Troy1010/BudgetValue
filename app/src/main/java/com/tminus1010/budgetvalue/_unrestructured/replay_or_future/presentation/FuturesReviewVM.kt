@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuPresentationModel
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.TextPresentationModel
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.data.FuturesRepo
+import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.BasicFuture
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.IFuture
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.TotalFuture
