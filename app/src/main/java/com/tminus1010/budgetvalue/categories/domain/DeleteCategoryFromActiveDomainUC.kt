@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.categories.domain
 
 import com.tminus1010.budgetvalue.all_features.framework.Rx
 import com.tminus1010.budgetvalue.all_features.data.CategoriesRepo
-import com.tminus1010.budgetvalue.all_features.app.model.Category
+import com.tminus1010.budgetvalue.all_features.domain.Category
 import com.tminus1010.budgetvalue.all_features.data.ActivePlanRepo
 import com.tminus1010.budgetvalue.reconcile.data.ActiveReconciliationRepo
 import io.reactivex.rxjava3.core.Completable

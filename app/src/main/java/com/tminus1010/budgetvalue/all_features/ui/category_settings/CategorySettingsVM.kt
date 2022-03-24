@@ -9,8 +9,8 @@ import com.tminus1010.budgetvalue.all_features.data.CategoriesRepo
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.categories.domain.DeleteCategoryFromActiveDomainUC
 import com.tminus1010.budgetvalue.categories.domain.ReplaceCategoryGloballyUC
-import com.tminus1010.budgetvalue.all_features.app.model.Category
-import com.tminus1010.budgetvalue.all_features.app.model.CategoryType
+import com.tminus1010.budgetvalue.all_features.domain.Category
+import com.tminus1010.budgetvalue.all_features.domain.CategoryType
 import com.tminus1010.budgetvalue.all_features.ui.errors.Errors
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY

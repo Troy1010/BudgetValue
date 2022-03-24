@@ -2,8 +2,8 @@ package com.tminus1010.budgetvalue.all_features.app
 
 import com.tminus1010.budgetvalue.all_features.data.AppInitRepo
 import com.tminus1010.budgetvalue.all_features.data.CategoriesRepo
-import com.tminus1010.budgetvalue.all_features.app.model.Category
-import com.tminus1010.budgetvalue.all_features.app.model.CategoryType
+import com.tminus1010.budgetvalue.all_features.domain.Category
+import com.tminus1010.budgetvalue.all_features.domain.CategoryType
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import java.math.BigDecimal
 import javax.inject.Inject

@@ -11,8 +11,8 @@ import com.tminus1010.budgetvalue.all_features.all_layers.dependency_injection.I
 import com.tminus1010.budgetvalue.all_features.data.service.CategoryDatabase
 import com.tminus1010.budgetvalue.all_features.data.service.MiscDatabase
 import com.tminus1010.budgetvalue.all_features.data.service.RoomWithCategoriesTypeConverter
-import com.tminus1010.budgetvalue.all_features.app.model.Category
-import com.tminus1010.budgetvalue.all_features.app.model.CategoryType
+import com.tminus1010.budgetvalue.all_features.domain.Category
+import com.tminus1010.budgetvalue.all_features.domain.CategoryType
 import com.tminus1010.budgetvalue.all_features.data.CategoriesRepo
 import dagger.Module
 import dagger.Provides

@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.all_features.data.service
 
 import androidx.room.*
-import com.tminus1010.budgetvalue.all_features.app.model.Category
+import com.tminus1010.budgetvalue.all_features.domain.Category
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.all_features.app.model
+package com.tminus1010.budgetvalue.all_features.domain
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

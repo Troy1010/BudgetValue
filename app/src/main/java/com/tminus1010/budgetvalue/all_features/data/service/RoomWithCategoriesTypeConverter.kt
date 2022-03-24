@@ -4,7 +4,7 @@ import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 import com.tminus1010.budgetvalue.all_features.domain.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.all_features.domain.CategoryAmounts
-import com.tminus1010.budgetvalue.all_features.app.model.Category
+import com.tminus1010.budgetvalue.all_features.domain.Category
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import dagger.Reusable

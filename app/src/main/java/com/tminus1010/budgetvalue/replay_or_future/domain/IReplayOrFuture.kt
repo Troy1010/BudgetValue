@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.replay_or_future.domain
 
 import com.tminus1010.budgetvalue.all_features.domain.CategoryAmountFormulas
-import com.tminus1010.budgetvalue.all_features.app.model.Category
+import com.tminus1010.budgetvalue.all_features.domain.Category
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 
 interface IReplayOrFuture {

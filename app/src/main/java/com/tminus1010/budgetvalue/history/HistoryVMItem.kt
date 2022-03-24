@@ -4,8 +4,8 @@ import com.tminus1010.budgetvalue.all_features.all_layers.extensions.mapBox
 import com.tminus1010.budgetvalue.all_features.data.CurrentDatePeriodRepo
 import com.tminus1010.budgetvalue.all_features.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.all_features.ui.all_features.model.MenuVMItem
-import com.tminus1010.budgetvalue.all_features.app.model.Budgeted
-import com.tminus1010.budgetvalue.all_features.app.model.Category
+import com.tminus1010.budgetvalue.all_features.domain.Budgeted
+import com.tminus1010.budgetvalue.all_features.domain.Category
 import com.tminus1010.budgetvalue.all_features.data.PlansRepo
 import com.tminus1010.budgetvalue.all_features.domain.plan.Plan
 import com.tminus1010.budgetvalue.reconcile.data.ReconciliationsRepo

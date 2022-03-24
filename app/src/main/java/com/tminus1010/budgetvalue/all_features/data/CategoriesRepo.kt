@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.all_features.data
 
 import com.tminus1010.budgetvalue.all_features.data.service.UserCategoriesDAO
-import com.tminus1010.budgetvalue.all_features.app.model.Category
+import com.tminus1010.budgetvalue.all_features.domain.Category
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted

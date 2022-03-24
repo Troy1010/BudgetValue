@@ -1,6 +1,5 @@
-package com.tminus1010.budgetvalue.all_features.app.model
+package com.tminus1010.budgetvalue.all_features.domain
 
-import com.tminus1010.budgetvalue.all_features.domain.CategoryAmounts
 import java.math.BigDecimal
 
 class Budgeted(

@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.categories.domain
 
 import com.tminus1010.budgetvalue.all_features.data.CategoriesRepo
-import com.tminus1010.budgetvalue.all_features.app.model.Category
+import com.tminus1010.budgetvalue.all_features.domain.Category
 import com.tminus1010.budgetvalue.all_features.data.ActivePlanRepo
 import com.tminus1010.budgetvalue.all_features.data.PlansRepo
 import com.tminus1010.budgetvalue.reconcile.data.ActiveReconciliationRepo

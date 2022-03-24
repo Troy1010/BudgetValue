@@ -13,7 +13,7 @@ import com.tminus1010.budgetvalue.all_features.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.all_features.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue.all_features.ui.all_features.model.PieChartVMItem
 import com.tminus1010.budgetvalue.all_features.ui.all_features.model.SpinnerVMItem
-import com.tminus1010.budgetvalue.all_features.app.model.Category
+import com.tminus1010.budgetvalue.all_features.domain.Category
 import com.tminus1010.budgetvalue.all_features.ui.review.presentation.NoMoreDataException
 import com.tminus1010.budgetvalue.all_features.ui.review.presentation.NoMostRecentSpendException
 import com.tminus1010.budgetvalue.all_features.ui.review.presentation.TooFarBackException

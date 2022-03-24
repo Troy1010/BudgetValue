@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.all_features.all_layers
 
-import com.tminus1010.budgetvalue.all_features.app.model.Category
+import com.tminus1010.budgetvalue.all_features.domain.Category
 
 // * TODO("Give this to a VM, and allow the user to change it.")
 val categoryComparator = compareBy<Category>({ category -> category.type }, { category -> category.name })

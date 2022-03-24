@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.reconcile.domain
 
 import com.tminus1010.budgetvalue.all_features.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
-import com.tminus1010.budgetvalue.all_features.app.model.Category
+import com.tminus1010.budgetvalue.all_features.domain.Category
 import com.tminus1010.budgetvalue.reconcile.data.model.ReconciliationDTO
 import java.math.BigDecimal
 import java.time.LocalDate

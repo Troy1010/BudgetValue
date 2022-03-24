@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue.all_features.framework.view.onDone
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.ViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
-import com.tminus1010.budgetvalue.all_features.app.model.Category
+import com.tminus1010.budgetvalue.all_features.domain.Category
 import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
 import java.math.BigDecimal
 
