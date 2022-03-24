@@ -8,7 +8,9 @@ import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.BasicFuture
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.IFuture
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.TotalFuture
+import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -22,6 +24,9 @@ class FuturesReviewVM @Inject constructor(
         runBlocking { futuresRepo.delete(future) }
     }
 
+    // # Events
+    val navToFutureDetails = MutableSharedFlow<IFuture>()
+
     // # State
     val recipeGrid =
         futuresRepo.futures
@@ -33,7 +38,11 @@ class FuturesReviewVM @Inject constructor(
                         TextPresentationModel(TextPresentationModel.Style.HEADER, "Search by"),
                     ),
                     *it.map {
-                        val menuPresentationModel = MenuPresentationModel(MenuVMItem(title = "Delete", onClick = { userDeleteFuture(it) }))
+                        val menuPresentationModel =
+                            MenuPresentationModel(
+                                MenuVMItem(title = "Delete", onClick = { userDeleteFuture(it) }),
+                                MenuVMItem(title = "Edit", onClick = { navToFutureDetails.onNext(it) }),
+                            )
                         listOf(
                             TextPresentationModel(TextPresentationModel.Style.TWO, it.name, menuPresentationModel = menuPresentationModel),
                             TextPresentationModel(TextPresentationModel.Style.TWO, it.terminationStrategy.displayStr, menuPresentationModel = menuPresentationModel),
