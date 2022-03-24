@@ -1,22 +1,19 @@
 package com.tminus1010.budgetvalue._unrestructured.transactions.view
 
-import android.app.AlertDialog
 import android.database.sqlite.SQLiteConstraintException
 import android.os.Bundle
 import android.view.View
-import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.all_layers.InvalidCategoryAmounts
-import com.tminus1010.budgetvalue.all_layers.InvalidSearchText
-import com.tminus1010.budgetvalue.all_layers.extensions.easyText
-import com.tminus1010.budgetvalue.framework.view.recipe_factories.*
-import com.tminus1010.budgetvalue.framework.view.viewBinding
-import com.tminus1010.budgetvalue.databinding.FragCategorizeAdvancedBinding
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
 import com.tminus1010.budgetvalue._unrestructured.transactions.presentation.SplitVM
+import com.tminus1010.budgetvalue.all_layers.InvalidCategoryAmounts
+import com.tminus1010.budgetvalue.all_layers.InvalidSearchText
+import com.tminus1010.budgetvalue.databinding.FragCategorizeAdvancedBinding
+import com.tminus1010.budgetvalue.framework.view.recipe_factories.*
+import com.tminus1010.budgetvalue.framework.view.viewBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -31,7 +28,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SplitFrag : Fragment(R.layout.frag_categorize_advanced) {
     private val vb by viewBinding(FragCategorizeAdvancedBinding::bind)
-    private val splitVM: SplitVM by viewModels()
+    private val viewModel: SplitVM by viewModels()
 
     @Inject
     lateinit var errorSubject: Subject<Throwable>
@@ -39,22 +36,9 @@ class SplitFrag : Fragment(R.layout.frag_categorize_advanced) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Mediation
-        _setupArgs?.also { _setupArgs = null; splitVM.setup(it.first) }
+        _setupArgs?.also { _setupArgs = null; viewModel.setup(it.first) }
         // # Events
-        splitVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
-        splitVM.saveReplayDialogBox.observe(viewLifecycleOwner) {
-            if (splitVM.areCurrentCAsValid.value) {
-                val editText = EditText(requireContext())
-                editText.easyText = it
-                AlertDialog.Builder(requireContext())
-                    .setMessage("What would you like to name this replay?")
-                    .setView(editText)
-                    .setPositiveButton("Submit") { _, _ -> splitVM.userSaveReplay(editText.easyText) }
-                    .setNegativeButton("Cancel") { _, _ -> }
-                    .show()
-            } else
-                errorSubject.onNext(InvalidCategoryAmounts(""))
-        }
+        viewModel.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         errorSubject.observe(viewLifecycleOwner) {
             when (it) {
                 is InvalidCategoryAmounts -> easyToast("Invalid category amounts")
@@ -64,10 +48,10 @@ class SplitFrag : Fragment(R.layout.frag_categorize_advanced) {
             }
         }
         // # State
-        vb.buttonsview.buttons = splitVM.buttons
-        vb.tvAmountToSplit.bind(splitVM.amountToCategorizeMsg) { (it) -> easyVisibility = it != null; text = it }
+        vb.buttonsview.buttons = viewModel.buttons
+        vb.tvAmountToSplit.bind(viewModel.amountToCategorizeMsg) { (it) -> easyVisibility = it != null; text = it }
         // ## TMTableView CategoryAmounts
-        splitVM.categoryAmountFormulaVMItems
+        viewModel.categoryAmountFormulaVMItems
             .map { categoryAmountFormulaVMItems ->
                 val recipes2D =
                     listOf(
@@ -79,8 +63,8 @@ class SplitFrag : Fragment(R.layout.frag_categorize_advanced) {
                         *categoryAmountFormulaVMItems.map {
                             listOf(
                                 itemTextViewRB().create(it.category.name),
-                                itemAmountFormulaRF().create(it, splitVM.fillCategory, { getView()?.requestFocus() }, it.menuVMItems),
-                                itemCheckboxRF().create(it.isFillCategory, it.category.name, splitVM::userSetFillCategory),
+                                itemAmountFormulaRF().create(it, viewModel.fillCategory, { getView()?.requestFocus() }, it.menuVMItems),
+                                itemCheckboxRF().create(it.isFillCategory, it.category.name, viewModel::userSetFillCategory),
                             )
                         }.toTypedArray(),
                     )
