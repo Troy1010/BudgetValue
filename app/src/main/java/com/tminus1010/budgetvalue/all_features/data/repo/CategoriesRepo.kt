@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.all_features.data.repo
 
-import com.tminus1010.budgetvalue.all_features.data.UserCategoriesDAO
+import com.tminus1010.budgetvalue.all_features.data.service.UserCategoriesDAO
 import com.tminus1010.budgetvalue.all_features.app.model.Category
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow

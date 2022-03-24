@@ -6,7 +6,7 @@ import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.room.Room
-import com.tminus1010.budgetvalue.all_features.data.*
+import com.tminus1010.budgetvalue.all_features.data.service.*
 
 interface IEnvironmentModule {
     fun provideDataStore(application: Application): DataStore<Preferences> =

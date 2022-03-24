@@ -1,9 +1,9 @@
 package com.tminus1010.budgetvalue.all_features.all_layers.dependency_injection
 
-import com.tminus1010.budgetvalue.all_features.data.CategoryDatabase
-import com.tminus1010.budgetvalue.all_features.data.MiscDAO
-import com.tminus1010.budgetvalue.all_features.data.MiscDatabase
-import com.tminus1010.budgetvalue.all_features.data.UserCategoriesDAO
+import com.tminus1010.budgetvalue.all_features.data.service.CategoryDatabase
+import com.tminus1010.budgetvalue.all_features.data.service.MiscDAO
+import com.tminus1010.budgetvalue.all_features.data.service.MiscDatabase
+import com.tminus1010.budgetvalue.all_features.data.service.UserCategoriesDAO
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

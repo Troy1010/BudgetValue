@@ -18,7 +18,7 @@ import com.tminus1010.budgetvalue.all_features.all_layers.extensions.unCheckAllM
 import com.tminus1010.budgetvalue.all_features.app.ActivePlanInteractor
 import com.tminus1010.budgetvalue.all_features.app.AppInitInteractor
 import com.tminus1010.budgetvalue.all_features.app.IsPlanFeatureEnabledUC
-import com.tminus1010.budgetvalue.all_features.data.ImportTransactions
+import com.tminus1010.budgetvalue.all_features.data.service.ImportTransactions
 import com.tminus1010.budgetvalue.all_features.framework.view.SpinnerService
 import com.tminus1010.budgetvalue.all_features.framework.view.Toaster
 import com.tminus1010.budgetvalue.all_features.ui.all_features.LaunchSelectFile

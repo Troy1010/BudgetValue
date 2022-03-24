@@ -1,7 +1,7 @@
-package com.tminus1010.budgetvalue.all_features.data
+package com.tminus1010.budgetvalue.all_features.data.service
 
 import androidx.room.TypeConverter
-import com.tminus1010.budgetvalue.all_features.data.MoshiProvider.moshi
+import com.tminus1010.budgetvalue.all_features.data.service.MoshiProvider.moshi
 import com.tminus1010.budgetvalue.all_features.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStrategy
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.all_features.data.MoshiWithCategoriesProvider
+import com.tminus1010.budgetvalue.all_features.data.service.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue.all_features.framework.view.GenViewHolder2
 import com.tminus1010.budgetvalue.all_features.framework.view.LifecycleRVAdapter2
 import com.tminus1010.budgetvalue.all_features.framework.view.viewBinding

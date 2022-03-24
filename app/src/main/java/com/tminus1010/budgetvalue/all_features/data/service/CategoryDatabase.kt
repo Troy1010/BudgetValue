@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.all_features.data
+package com.tminus1010.budgetvalue.all_features.data.service
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

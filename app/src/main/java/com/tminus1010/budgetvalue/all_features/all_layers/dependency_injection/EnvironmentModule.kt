@@ -4,9 +4,9 @@ import android.app.Application
 import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.tminus1010.budgetvalue.all_features.data.CategoryDatabase
-import com.tminus1010.budgetvalue.all_features.data.MiscDatabase
-import com.tminus1010.budgetvalue.all_features.data.RoomWithCategoriesTypeConverter
+import com.tminus1010.budgetvalue.all_features.data.service.CategoryDatabase
+import com.tminus1010.budgetvalue.all_features.data.service.MiscDatabase
+import com.tminus1010.budgetvalue.all_features.data.service.RoomWithCategoriesTypeConverter
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable

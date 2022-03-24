@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.all_features.data.repo
 
-import com.tminus1010.budgetvalue.all_features.data.MiscDAO
+import com.tminus1010.budgetvalue.all_features.data.service.MiscDAO
 import com.tminus1010.budgetvalue.all_features.domain.accounts.Account
 import com.tminus1010.budgetvalue.all_features.domain.accounts.AccountsAggregate
 import kotlinx.coroutines.GlobalScope

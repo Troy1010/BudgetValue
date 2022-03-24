@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.reconcile.data
 
-import com.tminus1010.budgetvalue.all_features.data.MiscDAO
+import com.tminus1010.budgetvalue.all_features.data.service.MiscDAO
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.reconcile.domain.Reconciliation
 import io.reactivex.rxjava3.core.Completable

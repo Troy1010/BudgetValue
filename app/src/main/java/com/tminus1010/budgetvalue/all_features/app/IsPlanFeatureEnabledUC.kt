@@ -6,8 +6,8 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.cold
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.mapBox
-import com.tminus1010.budgetvalue.all_features.data.MoshiProvider.moshi
-import com.tminus1010.budgetvalue.all_features.data.dataStore
+import com.tminus1010.budgetvalue.all_features.data.service.MoshiProvider.moshi
+import com.tminus1010.budgetvalue.all_features.data.service.dataStore
 import com.tminus1010.budgetvalue.all_features.data.repo.LatestDateOfMostRecentImportRepo
 import com.tminus1010.budgetvalue.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson

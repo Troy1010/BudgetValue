@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.all_features.data
+package com.tminus1010.budgetvalue.all_features.data.service
 
 import android.content.SharedPreferences
 import io.reactivex.rxjava3.core.Completable

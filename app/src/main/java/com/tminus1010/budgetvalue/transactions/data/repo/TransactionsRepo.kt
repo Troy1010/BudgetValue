@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.transactions.data.repo
 
-import com.tminus1010.budgetvalue.all_features.data.MiscDAO
+import com.tminus1010.budgetvalue.all_features.data.service.MiscDAO
 import com.tminus1010.budgetvalue.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.transactions.app.Transaction
 import com.tminus1010.budgetvalue.transactions.app.TransactionsAggregate

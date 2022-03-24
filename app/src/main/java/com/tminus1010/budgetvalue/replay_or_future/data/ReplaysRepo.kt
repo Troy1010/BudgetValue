@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.replay_or_future.data
 
-import com.tminus1010.budgetvalue.all_features.data.MiscDAO
+import com.tminus1010.budgetvalue.all_features.data.service.MiscDAO
 import com.tminus1010.budgetvalue.categories.CategoryAmountFormulasConverter
 import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.replay_or_future.domain.BasicReplay
