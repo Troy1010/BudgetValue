@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.all.domain
 
 import com.tminus1010.budgetvalue.Given
-import com.tminus1010.budgetvalue.reconcile.domain.ReconciliationAggregate
+import com.tminus1010.budgetvalue._unrestructured.reconcile.domain.ReconciliationAggregate
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

@@ -12,7 +12,7 @@
         app:popUpToInclusive="true" />
     <fragment
         android:id="@+id/replaysFrag"
-        android:name="com.tminus1010.budgetvalue.replay_or_future.view.ReplaysFrag"
+        android:name="com.tminus1010.budgetvalue._unrestructured.replay_or_future.view.ReplaysFrag"
         android:label="ReplaysFrag"
         tools:layout="@layout/frag_replays">
         <action
@@ -21,27 +21,27 @@
     </fragment>
     <fragment
         android:id="@+id/importFrag"
-        android:name="com.tminus1010.budgetvalue.all_features.ui.importZ.ImportFrag"
+        android:name="com.tminus1010.budgetvalue.ui.importZ.ImportFrag"
         android:label="Import"
         tools:layout="@layout/frag_import" />
     <fragment
         android:id="@+id/reconcileFrag"
-        android:name="com.tminus1010.budgetvalue.reconcile.view.ReconciliationHostFrag"
+        android:name="com.tminus1010.budgetvalue._unrestructured.reconcile.view.ReconciliationHostFrag"
         android:label="Reconcile"
         tools:layout="@layout/frag_reconcile" />
     <fragment
         android:id="@+id/planFrag"
-        android:name="com.tminus1010.budgetvalue.all_features.ui.plan.PlanFrag"
+        android:name="com.tminus1010.budgetvalue.ui.plan.PlanFrag"
         android:label="Plan"
         tools:layout="@layout/frag_plan" />
     <fragment
         android:id="@+id/historyFrag"
-        android:name="com.tminus1010.budgetvalue.history.HistoryFrag"
+        android:name="com.tminus1010.budgetvalue._unrestructured.history.HistoryFrag"
         android:label="History"
         tools:layout="@layout/frag_history" />
     <fragment
         android:id="@+id/errorFrag"
-        android:name="com.tminus1010.budgetvalue.all_features.ui.errors.ErrorFrag"
+        android:name="com.tminus1010.budgetvalue.ui.errors.ErrorFrag"
         android:label="ErrorFrag"
         tools:layout="@layout/frag_error">
         <action
@@ -53,12 +53,12 @@
         app:startDestination="@id/categorizeFrag">
         <fragment
             android:id="@+id/categorySettingsFrag"
-            android:name="com.tminus1010.budgetvalue.all_features.ui.category_settings.CategorySettingsFrag"
+            android:name="com.tminus1010.budgetvalue.ui.category_settings.CategorySettingsFrag"
             android:label="CategorySettingsFrag"
             tools:layout="@layout/frag_category_settings" />
         <fragment
             android:id="@+id/categorizeFrag"
-            android:name="com.tminus1010.budgetvalue.transactions.view.CategorizeFrag"
+            android:name="com.tminus1010.budgetvalue._unrestructured.transactions.view.CategorizeFrag"
             android:label="CategorizeFrag"
             tools:layout="@layout/frag_categorize">
             <action
@@ -80,12 +80,12 @@
             app:startDestination="@id/createFutureFrag">
             <fragment
                 android:id="@+id/chooseTransactionDescriptionFrag"
-                android:name="com.tminus1010.budgetvalue.choose_transaction_description.ChooseTransactionDescriptionFrag"
+                android:name="com.tminus1010.budgetvalue._unrestructured.choose_transaction_description.ChooseTransactionDescriptionFrag"
                 android:label="ChooseTransactionDescriptionFrag"
                 tools:layout="@layout/frag_transactions" />
             <fragment
                 android:id="@+id/createFutureFrag"
-                android:name="com.tminus1010.budgetvalue.replay_or_future.view.CreateFutureFrag"
+                android:name="com.tminus1010.budgetvalue._unrestructured.replay_or_future.view.CreateFutureFrag"
                 android:label="CreateFutureFrag"
                 tools:layout="@layout/frag_create_future">
                 <action
@@ -95,18 +95,18 @@
         </navigation>
         <fragment
             android:id="@+id/splitFrag"
-            android:name="com.tminus1010.budgetvalue.transactions.view.SplitFrag"
+            android:name="com.tminus1010.budgetvalue._unrestructured.transactions.view.SplitFrag"
             android:label="SplitFrag"
             tools:layout="@layout/frag_categorize_advanced" />
         <fragment
             android:id="@+id/receiptCategorizationHostFrag"
-            android:name="com.tminus1010.budgetvalue.transactions.view.ReceiptCategorizationHostFrag"
+            android:name="com.tminus1010.budgetvalue._unrestructured.transactions.view.ReceiptCategorizationHostFrag"
             android:label="ReceiptCategorizationHostFrag"
             tools:layout="@layout/frag_receipt_categorization" />
     </navigation>
     <fragment
         android:id="@+id/transactionsFrag"
-        android:name="com.tminus1010.budgetvalue.transactions.view.TransactionListFrag"
+        android:name="com.tminus1010.budgetvalue._unrestructured.transactions.view.TransactionListFrag"
         android:label="TransactionsFrag"
         tools:layout="@layout/frag_transactions">
         <action
@@ -115,12 +115,12 @@
     </fragment>
     <fragment
         android:id="@+id/transactionFrag"
-        android:name="com.tminus1010.budgetvalue.transactions.view.TransactionFrag"
+        android:name="com.tminus1010.budgetvalue._unrestructured.transactions.view.TransactionFrag"
         android:label="TransactionFrag"
         tools:layout="@layout/frag_transaction" />
     <fragment
         android:id="@+id/futuresReviewFrag"
-        android:name="com.tminus1010.budgetvalue.replay_or_future.view.FuturesReviewFrag"
+        android:name="com.tminus1010.budgetvalue._unrestructured.replay_or_future.view.FuturesReviewFrag"
         android:label="FuturesReviewFrag"
         tools:layout="@layout/frag_futures_review">
         <action
@@ -129,62 +129,62 @@
     </fragment>
     <fragment
         android:id="@+id/replayOrFutureDetailsFrag"
-        android:name="com.tminus1010.budgetvalue.all_features.ui.create_future.ReplayOrFutureDetailsFrag"
+        android:name="com.tminus1010.budgetvalue.ui.create_future.ReplayOrFutureDetailsFrag"
         android:label="ReplayOrFutureDetailsFrag"
         tools:layout="@layout/frag_create_future" />
     <fragment
         android:id="@+id/replayFrag"
-        android:name="com.tminus1010.budgetvalue.transactions.view.ReplayFrag"
+        android:name="com.tminus1010.budgetvalue._unrestructured.transactions.view.ReplayFrag"
         android:label="ReplayFrag"
         tools:layout="@layout/frag_categorize_advanced" />
     <fragment
         android:id="@+id/chooseTransactionDescriptionFrag2"
-        android:name="com.tminus1010.budgetvalue.choose_transaction_description.ChooseTransactionDescriptionFrag2"
+        android:name="com.tminus1010.budgetvalue._unrestructured.choose_transaction_description.ChooseTransactionDescriptionFrag2"
         android:label="ChooseTransactionDescriptionFrag"
         tools:layout="@layout/frag_choose_transaction_desciption_2" />
     <fragment
         android:id="@+id/useReplayFrag"
-        android:name="com.tminus1010.budgetvalue.replay_or_future.view.UseReplayFrag"
+        android:name="com.tminus1010.budgetvalue._unrestructured.replay_or_future.view.UseReplayFrag"
         android:label="UseReplayFrag"
         tools:layout="@layout/frag_replays" />
     <fragment
         android:id="@+id/reconciliationHostFrag"
-        android:name="com.tminus1010.budgetvalue.reconcile.view.ReconciliationHostFrag"
+        android:name="com.tminus1010.budgetvalue._unrestructured.reconcile.view.ReconciliationHostFrag"
         android:label="ReconciliationHostFrag"
         tools:layout="@layout/frag_reconciliation_host" />
     <fragment
         android:id="@+id/reviewFrag"
-        android:name="com.tminus1010.budgetvalue.all_features.ui.review.ReviewFrag"
+        android:name="com.tminus1010.budgetvalue.ui.review.ReviewFrag"
         android:label="ReviewFrag"
         tools:layout="@layout/frag_review" />
     <fragment
         android:id="@+id/accountsReconciliationSubFrag"
-        android:name="com.tminus1010.budgetvalue.reconcile.view.AccountsReconciliationSubFrag"
+        android:name="com.tminus1010.budgetvalue._unrestructured.reconcile.view.AccountsReconciliationSubFrag"
         android:label="AccountsReconciliationSubFrag"
         tools:layout="@layout/item_tm_table_view" />
     <fragment
         android:id="@+id/transactionBlockCompletionFrag"
-        android:name="com.tminus1010.budgetvalue.transactions.view.TransactionBlockCompletionFrag"
+        android:name="com.tminus1010.budgetvalue._unrestructured.transactions.view.TransactionBlockCompletionFrag"
         android:label="TransactionBlockCompletionFrag"
         tools:layout="@layout/frag_transaction_block_completion" />
     <fragment
         android:id="@+id/createFuture2Frag"
-        android:name="com.tminus1010.budgetvalue.all_features.ui.create_future.CreateFuture2Frag"
+        android:name="com.tminus1010.budgetvalue.ui.create_future.CreateFuture2Frag"
         android:label="CreateFuture2Frag"
         tools:layout="@layout/frag_create_future_2" />
     <fragment
         android:id="@+id/selectCategoriesFrag"
-        android:name="com.tminus1010.budgetvalue.replay_or_future.view.SelectCategoriesFrag"
+        android:name="com.tminus1010.budgetvalue._unrestructured.replay_or_future.view.SelectCategoriesFrag"
         android:label="SelectCategoriesFrag"
         tools:layout="@layout/frag_select_categories" />
     <fragment
         android:id="@+id/chooseTransactionFrag"
-        android:name="com.tminus1010.budgetvalue.transactions.view.ChooseTransactionFrag"
+        android:name="com.tminus1010.budgetvalue._unrestructured.transactions.view.ChooseTransactionFrag"
         android:label="ChooseTransactionFrag"
         tools:layout="@layout/frag_choose_transaction" />
     <fragment
         android:id="@+id/setSearchTextsFrag"
-        android:name="com.tminus1010.budgetvalue.all_features.ui.set_search_texts.SetSearchTextsFrag"
+        android:name="com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsFrag"
         android:label="SetSearchTextsFrag"
         tools:layout="@layout/frag_set_search_texts" />
 </navigation>

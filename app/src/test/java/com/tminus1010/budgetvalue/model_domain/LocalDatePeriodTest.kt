@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.model_domain
 
-import com.tminus1010.budgetvalue.all_features.domain.LocalDatePeriod
+import com.tminus1010.budgetvalue.domain.LocalDatePeriod
 import org.junit.Test
 
 import org.junit.Assert.*

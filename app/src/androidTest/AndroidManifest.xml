@@ -5,7 +5,7 @@
 
     <!-- mockk() does not work in instrumentation tests without android:extractNativeLibs="true" -->
     <application
-        android:name=".all_features.all_layers.App"
+        android:name="com.tminus1010.budgetvalue.all_layers.App"
         android:extractNativeLibs="true"
         tools:replace="android:name" />
 </manifest>

@@ -1,8 +1,8 @@
 package com.tminus1010.budgetvalue.all_features.models
 
-import com.tminus1010.budgetvalue.all_features.domain.CategoryAmountFormulas
-import com.tminus1010.budgetvalue.all_features.app.AppInitInteractor
-import com.tminus1010.budgetvalue.all_features.domain.AmountFormula
+import com.tminus1010.budgetvalue.domain.CategoryAmountFormulas
+import com.tminus1010.budgetvalue.app.AppInitInteractor
+import com.tminus1010.budgetvalue.domain.AmountFormula
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.math.BigDecimal

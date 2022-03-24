@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.tminus1010.budgetvalue.all_features.framework.view.MoneyEditText
+    <com.tminus1010.budgetvalue.framework.view.MoneyEditText
         android:id="@+id/moneyEditText"
         style="@style/AppTheme.StandardEditText"
         android:layout_width="0dp"

@@ -1,0 +1,23 @@
+package com.tminus1010.budgetvalue.ui.set_search_texts
+
+import com.tminus1010.budgetvalue.framework.source_objects.SourceList
+import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.TransactionsInteractor
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class SetSearchTextsSharedVM @Inject constructor(
+    transactionsInteractor: TransactionsInteractor,
+) {
+    // # State
+    val searchTexts =
+        transactionsInteractor.mostRecentUncategorizedSpend2
+            .filterNotNull()
+            .map { SourceList(it.description) }
+            .stateIn(GlobalScope, SharingStarted.Eagerly, SourceList())
+}
