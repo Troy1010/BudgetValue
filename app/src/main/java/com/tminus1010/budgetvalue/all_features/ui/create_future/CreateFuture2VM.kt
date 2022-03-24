@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.all_features.ui.create_future
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tminus1010.budgetvalue.all_features.all_layers.NoDescriptionEnteredException
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.onNext
@@ -18,7 +19,6 @@ import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.domain.BasicFuture
 import com.tminus1010.budgetvalue.replay_or_future.domain.TerminationStrategy
 import com.tminus1010.budgetvalue.replay_or_future.domain.TotalFuture
-import com.tminus1010.budgetvalue.replay_or_future.presentation.NoDescriptionEnteredException
 import com.tminus1010.budgetvalue.all_features.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.budgetvalue.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions

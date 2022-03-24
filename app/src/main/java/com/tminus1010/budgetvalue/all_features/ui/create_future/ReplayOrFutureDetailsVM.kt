@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.all_features.ui.create_future
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tminus1010.budgetvalue.all_features.all_layers.NoDescriptionEnteredException
 import com.tminus1010.budgetvalue.all_features.all_layers.extensions.*
 import com.tminus1010.budgetvalue.all_features.app.model.Category
 import com.tminus1010.budgetvalue.all_features.domain.CategoryAmountFormulas
@@ -13,7 +14,6 @@ import com.tminus1010.budgetvalue.categories.domain.CategoriesInteractor
 import com.tminus1010.budgetvalue.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue.replay_or_future.data.FuturesRepo
 import com.tminus1010.budgetvalue.replay_or_future.domain.*
-import com.tminus1010.budgetvalue.replay_or_future.presentation.NoDescriptionEnteredException
 import com.tminus1010.budgetvalue.all_features.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.budgetvalue.transactions.app.AmountFormula
 import com.tminus1010.budgetvalue.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
