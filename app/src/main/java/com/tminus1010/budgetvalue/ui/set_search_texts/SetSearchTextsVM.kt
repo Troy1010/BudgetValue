@@ -27,12 +27,12 @@ class SetSearchTextsVM @Inject constructor(
     private val lastChosenIndex = navToChooseTransaction.shareIn(viewModelScope, SharingStarted.Eagerly, 1)
 
     init {
-        chooseTransactionSharedVM.userSubmitTransaction.observe(viewModelScope) { setSearchTextsSharedVM.searchTexts.value[lastChosenIndex.value!!] = it.description }
+        chooseTransactionSharedVM.userSubmitTransaction.observe(viewModelScope) { setSearchTextsSharedVM.searchTexts[lastChosenIndex.value!!] = it.description }
     }
 
     // # State
     val recipeGrid =
-        setSearchTextsSharedVM.searchTexts.flatMapLatest { it.flow }
+        setSearchTextsSharedVM.searchTexts.flow
             .map { sourceList ->
                 listOf(
                     *sourceList.withIndex().map { (i, s) ->

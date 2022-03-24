@@ -3,28 +3,31 @@ package com.tminus1010.budgetvalue.ui.create_future
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tminus1010.budgetvalue._unrestructured.replay_or_future.app.SelectCategoriesModel
+import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.BasicFuture
+import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.TerminationStrategy
+import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.TotalFuture
+import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.TransactionsInteractor
+import com.tminus1010.budgetvalue._unrestructured.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
+import com.tminus1010.budgetvalue._unrestructured.transactions.presentation.model.SearchType
 import com.tminus1010.budgetvalue.all_layers.NoDescriptionEnteredException
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.all_layers.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
+import com.tminus1010.budgetvalue.app.CategoriesInteractor
+import com.tminus1010.budgetvalue.data.FuturesRepo
+import com.tminus1010.budgetvalue.domain.AmountFormula
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.framework.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.framework.view.Toaster
 import com.tminus1010.budgetvalue.ui.all_features.model.*
-import com.tminus1010.budgetvalue.app.CategoriesInteractor
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.app.SelectCategoriesModel
-import com.tminus1010.budgetvalue.data.FuturesRepo
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.BasicFuture
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.TerminationStrategy
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.TotalFuture
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
-import com.tminus1010.budgetvalue.domain.AmountFormula
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
-import com.tminus1010.budgetvalue._unrestructured.transactions.presentation.model.SearchType
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
 import java.math.BigDecimal
@@ -38,7 +41,13 @@ class CreateFuture2VM @Inject constructor(
     private val toaster: Toaster,
     private val categorizeAllMatchingUncategorizedTransactions: CategorizeAllMatchingUncategorizedTransactions,
     private val setSearchTextsSharedVM: SetSearchTextsSharedVM,
+    private val transactionsInteractor: TransactionsInteractor,
 ) : ViewModel() {
+    init {
+        transactionsInteractor.mostRecentUncategorizedSpend2
+            .observe(GlobalScope) { setSearchTextsSharedVM.searchTexts.adjustTo(listOfNotNull(it?.description)) }
+    }
+
     // # User Intents
     fun userTryNavToCategorySelection() {
         navToCategorySelection.easyEmit()
@@ -76,7 +85,7 @@ class CreateFuture2VM @Inject constructor(
                     SearchType.DESCRIPTION ->
                         BasicFuture(
                             name = s,
-                            searchTexts = setSearchTextsSharedVM.searchTexts.value,
+                            searchTexts = setSearchTextsSharedVM.searchTexts,
                             categoryAmountFormulas = categoryAmountFormulas.value,
                             fillCategory = fillCategory.value!!,
                             terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.WAITING_FOR_MATCH,
@@ -186,7 +195,7 @@ class CreateFuture2VM @Inject constructor(
                     listOf(
                         TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Search Texts"),
                         ButtonVMItem(
-                            title = "View Search Texts (${setSearchTextsSharedVM.searchTexts.value.size})",
+                            title = "View Search Texts",
                             onClick = { userTryNavToSetSearchTexts() },
                         ),
                     )

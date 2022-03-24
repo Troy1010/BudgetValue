@@ -2,21 +2,21 @@ package com.tminus1010.budgetvalue.ui.all_features.model
 
 import android.content.Context
 import android.widget.Button
-import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
-import com.tminus1010.tmcommonkotlin.misc.tmTableView.ViewItemRecipe3
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.misc.extensions.lifecycleOwner
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.ViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.flow.Flow
 
 data class ButtonVMItem(
     val title: String? = null,
+    // title2 does not seem to work..?
     val title2: Flow<String?>? = null,
-    val titleObservable: Observable<String>? = null,
     val isEnabled: Observable<Boolean>? = null,
     val isEnabled2: Flow<Boolean>? = null,
     val alpha: Flow<Float>? = null,
@@ -24,10 +24,8 @@ data class ButtonVMItem(
     val onClick: () -> Unit,
 ) : IHasToViewItemRecipe {
     fun bind(button: Button) = button.apply {
-        if (titleObservable != null)
-            bind(titleObservable) { text = it }
         if (title2 != null)
-            bind(title2) { text = it }
+            bind(title2) { text = it.logx("ButtonVMItem setting text"); requestLayout() }
         if (text != null)
             text = title
         if (this@ButtonVMItem.alpha != null)
