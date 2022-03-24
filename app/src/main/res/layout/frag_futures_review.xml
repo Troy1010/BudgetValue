@@ -1,24 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textview_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Futures Review"
-        android:textColor="#fff"
-        android:textSize="52sp"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <com.tminus1010.tmcommonkotlin.misc.tmTableView.TMTableView3
-        android:id="@+id/tmTableView_futures"
+        android:id="@+id/tmTableViewFutures"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/buttonsview"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvNoFutures"
+        style="@style/AppTheme.StandardTextView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="There are no futures available.\nTo see a future, create one."
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/buttonsview"
+        app:layout_constraintEnd_toEndOf="@id/tmTableViewFutures"
+        app:layout_constraintStart_toStartOf="@id/tmTableViewFutures"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <com.tminus1010.budgetvalue.framework.view.ButtonsView
+        android:id="@+id/buttonsview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_title" />
+        tools:itemCount="3"
+        tools:layoutManager="LinearLayoutManager"
+        tools:listitem="@layout/item_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

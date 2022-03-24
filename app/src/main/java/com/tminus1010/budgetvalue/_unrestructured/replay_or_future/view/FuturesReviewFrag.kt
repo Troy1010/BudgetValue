@@ -11,9 +11,11 @@ import com.tminus1010.budgetvalue._unrestructured.replay_or_future.presentation.
 import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue.databinding.FragFuturesReviewBinding
 import com.tminus1010.budgetvalue.framework.view.viewBinding
+import com.tminus1010.budgetvalue.ui.create_future.CreateFuture2Frag
 import com.tminus1010.budgetvalue.ui.create_future.ReplayOrFutureDetailsFrag
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
+import com.tminus1010.tmcommonkotlin.view.extensions.easyVisibility
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -21,7 +23,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class FuturesReviewFrag : Fragment(R.layout.frag_futures_review) {
     private val vb by viewBinding(FragFuturesReviewBinding::bind)
-    private val futuresReviewVM by viewModels<FuturesReviewVM>()
+    private val viewModel by viewModels<FuturesReviewVM>()
 
     @Inject
     lateinit var moshiWithCategoriesProvider: MoshiWithCategoriesProvider
@@ -32,9 +34,13 @@ class FuturesReviewFrag : Fragment(R.layout.frag_futures_review) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Events
-        futuresReviewVM.navToFutureDetails.observe(viewLifecycleOwner) { ReplayOrFutureDetailsFrag.navTo(nav, moshiWithCategoriesProvider, it, selectCategoriesModel) }
+        viewModel.navToFutureDetails.observe(viewLifecycleOwner) { ReplayOrFutureDetailsFrag.navTo(nav, moshiWithCategoriesProvider, it, selectCategoriesModel) }
+        viewModel.navToCreateFuture.observe(viewLifecycleOwner) { CreateFuture2Frag.navTo(nav) }
         // # State
-        vb.tmTableViewFutures.bind(futuresReviewVM.recipeGrid) {
+        vb.tvNoFutures.bind(viewModel.isNoFutureTextVisible) { easyVisibility = it }
+        vb.buttonsview.bind(viewModel.buttons) { buttons = it }
+        vb.tmTableViewFutures.bind(viewModel.isNoFutureTextVisible) { easyVisibility = !it }
+        vb.tmTableViewFutures.bind(viewModel.futuresRecipeGrid) {
             initialize(
                 recipeGrid = it.map { it.map { it.toViewItemRecipe(requireContext()) } },
                 shouldFitItemWidthsInsideTable = true,

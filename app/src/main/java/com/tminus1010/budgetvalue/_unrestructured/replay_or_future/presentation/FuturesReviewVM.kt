@@ -1,17 +1,18 @@
 package com.tminus1010.budgetvalue._unrestructured.replay_or_future.presentation
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.ui.all_features.model.MenuPresentationModel
-import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
-import com.tminus1010.budgetvalue.ui.all_features.model.TextPresentationModel
-import com.tminus1010.budgetvalue.data.FuturesRepo
+import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.BasicFuture
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.IFuture
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.TotalFuture
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
+import com.tminus1010.budgetvalue.data.FuturesRepo
+import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
+import com.tminus1010.budgetvalue.ui.all_features.model.MenuPresentationModel
+import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
+import com.tminus1010.budgetvalue.ui.all_features.model.TextPresentationModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
@@ -24,11 +25,16 @@ class FuturesReviewVM @Inject constructor(
         runBlocking { futuresRepo.delete(future) }
     }
 
+    fun userCreateFuture() {
+        runBlocking { navToCreateFuture.onNext() }
+    }
+
     // # Events
     val navToFutureDetails = MutableSharedFlow<IFuture>()
+    val navToCreateFuture = MutableSharedFlow<Unit>()
 
     // # State
-    val recipeGrid =
+    val futuresRecipeGrid =
         futuresRepo.futures
             .map {
                 listOf(
@@ -53,10 +59,22 @@ class FuturesReviewVM @Inject constructor(
                                     is TotalFuture -> it.searchTotal.toString()
                                     else -> error("Unhandled IFuture:$it")
                                 },
-                                menuPresentationModel = menuPresentationModel
+                                menuPresentationModel = menuPresentationModel,
                             ),
                         )
                     }.toTypedArray()
                 )
             }
+            .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
+    val buttons =
+        flowOf(
+            listOfNotNull(
+                ButtonVMItem(title = "Create Future", onClick = { userCreateFuture() }),
+            )
+        )
+            .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
+    val isNoFutureTextVisible =
+        futuresRepo.futures
+            .map { it.isEmpty() }
+            .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
 }
