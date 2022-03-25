@@ -2,22 +2,23 @@ package com.tminus1010.budgetvalue.ui.category_settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tminus1010.budgetvalue.all_layers.InvalidCategoryNameException
-import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
-import com.tminus1010.budgetvalue.ui.all_features.model.*
-import com.tminus1010.budgetvalue.data.CategoriesRepo
-import com.tminus1010.budgetvalue.app.CategoriesInteractor
 import com.tminus1010.budgetvalue._unrestructured.categories.domain.DeleteCategoryFromActiveDomainUC
 import com.tminus1010.budgetvalue._unrestructured.categories.domain.ReplaceCategoryGloballyUC
+import com.tminus1010.budgetvalue.all_layers.InvalidCategoryNameException
+import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
+import com.tminus1010.budgetvalue.app.CategoriesInteractor
+import com.tminus1010.budgetvalue.data.CategoriesRepo
+import com.tminus1010.budgetvalue.domain.AmountFormula
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.CategoryType
+import com.tminus1010.budgetvalue.ui.all_features.model.*
 import com.tminus1010.budgetvalue.ui.errors.Errors
-import com.tminus1010.budgetvalue.domain.AmountFormula
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -62,7 +63,7 @@ class CategorySettingsVM @Inject constructor(
     }
 
     fun userDeleteCategory() {
-        deleteCategoryFromActiveDomainUC(categoryToPush.value).subscribe()
+        runBlocking { deleteCategoryFromActiveDomainUC(categoryToPush.value) } // TODO: Spinner
         navUp.easyEmit(Unit)
     }
 
