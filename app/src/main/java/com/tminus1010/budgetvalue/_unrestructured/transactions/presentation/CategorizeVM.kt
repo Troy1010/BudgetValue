@@ -189,13 +189,6 @@ class CategorizeVM @Inject constructor(
                     else null,
                     if (!inSelectionMode)
                         ButtonVMItem(
-                            title = "Create Future",
-                            isEnabled2 = isTransactionAvailable,
-                            onClick = { userTryNavToCreateFuture2() },
-                        )
-                    else null,
-                    if (!inSelectionMode)
-                        ButtonVMItem(
                             title = "Categorize all as Unknown",
                             isEnabled2 = isTransactionAvailable,
                             onClick = { userCategorizeAllAsUnknown() },
@@ -228,6 +221,11 @@ class CategorizeVM @Inject constructor(
                             onClick = { navToNewCategory.easyEmit(Unit) }
                         )
                     else null,
+                    ButtonVMItem(
+                        title = "Create Future",
+                        isEnabled2 = isTransactionAvailable,
+                        onClick = { userTryNavToCreateFuture2() },
+                    ),
                 )
             }
 }
