@@ -26,11 +26,11 @@ class IsReconciliationFeatureEnabled @Inject constructor(
         GlobalScope.launch { app.dataStore.edit { it[key] = b } }
     }
 
-    private val isReconciliationFeatureEnabled =
-        app.dataStore.data.asObservable()
-            .map { it[key] ?: false }
-            .distinctUntilChanged()
-            .cold()
+    private val isReconciliationFeatureEnabled = Observable.just(true)
+//        app.dataStore.data.asObservable()
+//            .map { it[key] ?: false }
+//            .distinctUntilChanged()
+//            .cold()
 
     init {
         isReconciliationFeatureEnabled
