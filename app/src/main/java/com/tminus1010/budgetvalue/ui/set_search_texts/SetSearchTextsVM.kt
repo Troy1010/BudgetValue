@@ -40,7 +40,7 @@ class SetSearchTextsVM @Inject constructor(
                             EditTextVMItem(
                                 text = s,
                                 onDone = { sourceList[i] = it },
-                                menuPresentationModel = MenuVMItems(
+                                menuVMItems = MenuVMItems(
                                     MenuVMItem(
                                         title = "Delete",
                                         onClick = { sourceList.removeAt(i) }

@@ -17,7 +17,7 @@ data class TextPresentationModel(
     val text2: Flow<String?>? = null,
     val onClick: (() -> Unit)? = null,
     val onLongClick: (() -> Unit)? = null,
-    val menuPresentationModel: MenuVMItems? = null,
+    val menuVMItems: MenuVMItems? = null,
 ) : IHasToViewItemRecipe {
     enum class Style { ONE, TWO, HEADER }
 
@@ -28,7 +28,7 @@ data class TextPresentationModel(
                 if (text2 != null) vb.root.bind(text2) { text = it }
                 onClick?.also { onClick -> vb.root.setOnClickListener { onClick() } }
                 onLongClick?.also { onLongClick -> vb.root.setOnLongClickListener { onLongClick(); true } }
-                menuPresentationModel?.bind(vb.root)
+                menuVMItems?.bind(vb.root)
             }
         else
             ViewItemRecipe3(context, ItemTextViewBinding::inflate) { vb ->
@@ -40,7 +40,7 @@ data class TextPresentationModel(
                 if (text2 != null) vb.root.bind(text2) { text = it }
                 onClick?.also { onClick -> vb.root.setOnClickListener { onClick() } }
                 onLongClick?.also { onLongClick -> vb.root.setOnLongClickListener { onLongClick(); true } }
-                menuPresentationModel?.bind(vb.root)
+                menuVMItems?.bind(vb.root)
             }
     }
 }

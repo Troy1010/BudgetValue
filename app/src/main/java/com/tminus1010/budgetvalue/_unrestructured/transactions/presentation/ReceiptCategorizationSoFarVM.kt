@@ -34,7 +34,7 @@ class ReceiptCategorizationSoFarVM @Inject constructor(
                     listOf(
                         TextVMItem(
                             text1 = amount.toPlainString(),
-                            menuPresentationModel = MenuVMItems(
+                            menuVMItems = MenuVMItems(
                                 MenuVMItem(
                                     title = "Remove",
                                     onClick = { remove(category, amount) },
@@ -43,7 +43,7 @@ class ReceiptCategorizationSoFarVM @Inject constructor(
                         ),
                         TextVMItem(
                             text1 = category.name,
-                            menuPresentationModel = MenuVMItems(
+                            menuVMItems = MenuVMItems(
                                 MenuVMItem(
                                     title = "Remove",
                                     onClick = { remove(category, amount) },

@@ -18,7 +18,7 @@ class TextVMItem(
     val text2: Observable<Box<String?>>? = null,
     val text3: Flow<String?>? = null,
     val onClick: (() -> Unit)? = null,
-    val menuPresentationModel: MenuVMItems? = null,
+    val menuVMItems: MenuVMItems? = null,
     val backgroundColor: Int? = null,
     val style: Style = Style.ONE,
 ) : IHasToViewItemRecipe {
@@ -29,7 +29,7 @@ class TextVMItem(
         text2?.also { textView.bind(text2) { text = it.first } }
         text3?.also { textView.bind(text3) { text = it } }
         textView.setOnClickListener { onClick?.invoke() }
-        menuPresentationModel?.bind(textView)
+        menuVMItems?.bind(textView)
         backgroundColor?.also { textView.setBackgroundColor(textView.context.theme.getColorByAttr(backgroundColor)) }
     }
 

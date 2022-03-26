@@ -55,7 +55,7 @@ class ChooseAmountVM @Inject constructor(
 
     // # State
     val amount = receiptCategorizationInteractor.rememberedAmount.map { it.toString().toMoneyBigDecimal().toString() }
-    val amountMenuPresentationModel =
+    val amountMenuVMItem =
         MenuVMItems(
             MenuVMItem(
                 title = "Fill",

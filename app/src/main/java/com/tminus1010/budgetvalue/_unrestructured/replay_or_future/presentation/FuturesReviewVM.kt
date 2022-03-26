@@ -43,14 +43,14 @@ class FuturesReviewVM @Inject constructor(
                         TextPresentationModel(TextPresentationModel.Style.HEADER, "Search by"),
                     ),
                     *it.map {
-                        val menuPresentationModel =
+                        val menuVMItems =
                             MenuVMItems(
                                 MenuVMItem(title = "Delete", onClick = { userDeleteFuture(it) }),
                                 MenuVMItem(title = "Edit", onClick = { navToFutureDetails.onNext(it) }),
                             )
                         listOf(
-                            TextPresentationModel(TextPresentationModel.Style.TWO, it.name, menuPresentationModel = menuPresentationModel),
-                            TextPresentationModel(TextPresentationModel.Style.TWO, it.terminationStrategy.displayStr, menuPresentationModel = menuPresentationModel),
+                            TextPresentationModel(TextPresentationModel.Style.TWO, it.name, menuVMItems = menuVMItems),
+                            TextPresentationModel(TextPresentationModel.Style.TWO, it.terminationStrategy.displayStr, menuVMItems = menuVMItems),
                             TextPresentationModel(
                                 TextPresentationModel.Style.TWO,
                                 when (val matcher = it.onImportMatcher) {
@@ -58,7 +58,7 @@ class FuturesReviewVM @Inject constructor(
                                     is TransactionMatcher.ByValue -> matcher.searchTotal.toString()
                                     is TransactionMatcher.Multiple -> "Multiple"
                                 },
-                                menuPresentationModel = menuPresentationModel,
+                                menuVMItems = menuVMItems,
                             ),
                         )
                     }.toTypedArray()

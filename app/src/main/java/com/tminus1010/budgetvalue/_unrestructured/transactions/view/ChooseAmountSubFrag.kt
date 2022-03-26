@@ -25,7 +25,7 @@ class ChooseAmountSubFrag : Fragment(R.layout.subfrag_choose_amount) {
             recipeGrid = chooseAmountVM.buttons.map { it.map { it.toViewItemRecipe(requireContext()) } },
             shouldFitItemWidthsInsideTable = true,
         )
-        vb.moneyEditText.run { chooseAmountVM.amountMenuPresentationModel.bind(this) }
+        vb.moneyEditText.run { chooseAmountVM.amountMenuVMItem.bind(this) }
         // # State
         vb.moneyEditText.bind(chooseAmountVM.amount) { setText(it) }
         // # Bind User Intents

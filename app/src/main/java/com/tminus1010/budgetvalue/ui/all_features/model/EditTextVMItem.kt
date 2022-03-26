@@ -15,7 +15,7 @@ class EditTextVMItem(
     val textFlow: Flow<String?>? = null,
     val text: String? = null,
     val onDone: (String) -> Unit,
-    val menuPresentationModel: MenuVMItems? = null,
+    val menuVMItems: MenuVMItems? = null,
 ) : IHasToViewItemRecipe {
     override fun toViewItemRecipe(context: Context): IViewItemRecipe3 {
         return ViewItemRecipe3(context, ItemEditTextBinding::inflate) { vb ->
@@ -23,7 +23,7 @@ class EditTextVMItem(
             vb.edittext.easyText2 = text
             textFlow?.also { vb.edittext.bind(textFlow) { easyText2 = it } }
             vb.edittext.onDone { onDone(it) }
-            menuPresentationModel?.bind(vb.edittext)
+            menuVMItems?.bind(vb.edittext)
         }
     }
 }
