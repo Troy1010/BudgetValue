@@ -40,7 +40,7 @@ interface MiscDAO {
     @Query("DELETE FROM TransactionDTO")
     fun clearTransactions(): Completable
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun push(transactionDTO: TransactionDTO): Completable
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -72,7 +72,7 @@ interface MiscDAO {
     fun getTransaction(id: String): Single<TransactionDTO>
 
     @Query("select * from TransactionDTO WHERE id=:id")
-    suspend fun getTransaction2(id: String): TransactionDTO
+    suspend fun getTransaction2(id: String): TransactionDTO?
 
     // # Plan
 

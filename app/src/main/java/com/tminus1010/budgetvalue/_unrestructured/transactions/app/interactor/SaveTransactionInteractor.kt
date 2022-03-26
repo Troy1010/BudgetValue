@@ -27,7 +27,7 @@ class SaveTransactionInteractor @Inject constructor(
     }
 
     suspend fun saveTransactions(transactions: List<Transaction>) {
-        val oldTransactions = transactions.map { transactionsRepo.getTransaction2(it.id) } // TODO: Make sure error is throw if an old transaction can't be found, or implement its removal
+        val oldTransactions = transactions.map { transactionsRepo.getTransaction2(it.id)!! } // TODO: Make sure error is throw if an old transaction can't be found, or implement its removal
         val redoable =
             Redoable(
                 Rx.completableFromSuspend { transactions.forEach { transactionsRepo.update2(it) } },

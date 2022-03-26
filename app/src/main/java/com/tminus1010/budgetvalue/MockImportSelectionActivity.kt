@@ -9,6 +9,7 @@ import com.tminus1010.budgetvalue.databinding.ActivityMockImportSelectionBinding
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @VisibleForTesting
@@ -33,7 +34,7 @@ class MockImportSelectionActivity : AppCompatActivity() {
                     ButtonVMItem(
                         title = "Import Transaction $i",
                         onClick = {
-                            importTransactions(assets2.open(s).buffered()).subscribe()
+                            runBlocking { importTransactions(assets2.open(s).buffered()) }
                             application.easyToast(getString(R.string.import_successful))
                             finish()
                         }

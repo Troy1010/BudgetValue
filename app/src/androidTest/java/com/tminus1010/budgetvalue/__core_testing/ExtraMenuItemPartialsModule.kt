@@ -24,6 +24,7 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 import javax.inject.Singleton
 
@@ -49,18 +50,22 @@ object ExtraMenuItemPartialsModule {
                                 ?.let { it.onImportMatcher as TransactionMatcher.ByValue }
                                 ?.searchTotal
                             if (firstSearchTotal != null)
-                                transactionsInteractor.importTransactions(
-                                    listOf(
-                                        Transaction(
-                                            date = LocalDate.of(2018, 1, 1),
-                                            description = "Mock description of transaction",
-                                            amount = firstSearchTotal,
-                                            categoryAmounts = mapOf(),
-                                            categorizationDate = null,
-                                            id = generateUniqueID(),
+                                Completable.fromAction {
+                                    runBlocking {
+                                        transactionsInteractor.importTransactions(
+                                            listOf(
+                                                Transaction(
+                                                    date = LocalDate.of(2018, 1, 1),
+                                                    description = "Mock description of transaction",
+                                                    amount = firstSearchTotal,
+                                                    categoryAmounts = mapOf(),
+                                                    categorizationDate = null,
+                                                    id = generateUniqueID(),
+                                                )
+                                            )
                                         )
-                                    )
-                                )
+                                    }
+                                }
                             else
                                 Completable.fromCallable { application.easyToast("No TotalFutures found") }.subscribeOn(AndroidSchedulers.mainThread())
                         }

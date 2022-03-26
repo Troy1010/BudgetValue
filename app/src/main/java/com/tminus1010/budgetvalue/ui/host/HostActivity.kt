@@ -11,6 +11,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue._unrestructured.history.HistoryFrag
+import com.tminus1010.budgetvalue._unrestructured.reconcile.data.IsReconciliationFeatureEnabled
+import com.tminus1010.budgetvalue._unrestructured.replay_or_future.view.FuturesReviewFrag
+import com.tminus1010.budgetvalue._unrestructured.transactions.view.TransactionListFrag
 import com.tminus1010.budgetvalue.all_layers.extensions.easyAlertDialog
 import com.tminus1010.budgetvalue.all_layers.extensions.getString
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
@@ -19,22 +23,19 @@ import com.tminus1010.budgetvalue.app.ActivePlanInteractor
 import com.tminus1010.budgetvalue.app.AppInitInteractor
 import com.tminus1010.budgetvalue.app.IsPlanFeatureEnabledUC
 import com.tminus1010.budgetvalue.data.service.ImportTransactions
+import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.framework.view.SpinnerService
 import com.tminus1010.budgetvalue.framework.view.Toaster
 import com.tminus1010.budgetvalue.ui.all_features.LaunchSelectFile
 import com.tminus1010.budgetvalue.ui.errors.Errors
 import com.tminus1010.budgetvalue.ui.importZ.ImportVM
-import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
-import com.tminus1010.budgetvalue._unrestructured.history.HistoryFrag
-import com.tminus1010.budgetvalue._unrestructured.reconcile.data.IsReconciliationFeatureEnabled
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.view.FuturesReviewFrag
-import com.tminus1010.budgetvalue._unrestructured.transactions.view.TransactionListFrag
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.subjects.Subject
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -127,7 +128,7 @@ class HostActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 try {
-                    importTransactions(result.data!!.data!!).subscribe()
+                    runBlocking { importTransactions(result.data!!.data!!) }
                     toaster.toast(R.string.import_successful)
                 } catch (e: Throwable) {
                     hostFrag.handle(e)

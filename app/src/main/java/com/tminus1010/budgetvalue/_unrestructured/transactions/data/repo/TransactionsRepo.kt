@@ -58,5 +58,5 @@ class TransactionsRepo @Inject constructor(
             .map { Transaction.fromDTO(it, categoryAmountsConverter) }
 
     suspend fun getTransaction2(id: String) =
-        Transaction.fromDTO(miscDAO.getTransaction2(id), categoryAmountsConverter)
+        miscDAO.getTransaction2(id)?.let { Transaction.fromDTO(it, categoryAmountsConverter) }
 }
