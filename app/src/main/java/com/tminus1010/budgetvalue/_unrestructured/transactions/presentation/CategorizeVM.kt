@@ -7,7 +7,6 @@ import com.tminus1010.budgetvalue._unrestructured.replay_or_future.app.SelectCat
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.SaveTransactionInteractor
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.TransactionsInteractor
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
 import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
@@ -25,7 +24,6 @@ import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItems
 import com.tminus1010.budgetvalue.ui.errors.Errors
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.divertErrors
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -37,7 +35,6 @@ import javax.inject.Inject
 class CategorizeVM @Inject constructor(
     private val saveTransactionInteractor: SaveTransactionInteractor,
     private val transactionsInteractor: TransactionsInteractor,
-    categorizeAllMatchingUncategorizedTransactions: CategorizeAllMatchingUncategorizedTransactions,
     private val toaster: Toaster,
     private val categoriesInteractor: CategoriesInteractor,
     private val spinnerService: SpinnerService,
@@ -193,19 +190,6 @@ class CategorizeVM @Inject constructor(
                             isEnabled = selectCategoriesModel.selectedCategories.asObservable2().map { it.size == 1 },
                             onClick = {
                                 navToCategorySettings.easyEmit(selectCategoriesModel.selectedCategories.value.first())
-                                runBlocking { selectCategoriesModel.clearSelection() }
-                            }
-                        )
-                    else null,
-                    if (inSelectionMode)
-                        ButtonVMItem(
-                            title = "Categorize All Matching Descriptions As This Category",
-                            isEnabled2 = combine(selectCategoriesModel.selectedCategories.map { it.size == 1 }, isTransactionAvailable) { a, b -> a && b },
-                            onClick = {
-                                categorizeAllMatchingUncategorizedTransactions(
-                                    predicate = { latestUncategorizedTransactionDescription.value!!.uppercase() in it.description.uppercase() },
-                                    categorization = { it.categorize(selectCategoriesModel.selectedCategories.value.first()) }
-                                ).subscribeBy { toaster.toast("$it transactions categorized") }
                                 runBlocking { selectCategoriesModel.clearSelection() }
                             }
                         )
