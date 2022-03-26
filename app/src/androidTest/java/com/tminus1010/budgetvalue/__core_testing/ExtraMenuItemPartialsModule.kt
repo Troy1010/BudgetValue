@@ -8,11 +8,10 @@ import com.tminus1010.budgetvalue.ui.host.GetExtraMenuItemPartials
 import com.tminus1010.budgetvalue.app.AppInitInteractor
 import com.tminus1010.budgetvalue.data.AppInitRepo
 import com.tminus1010.budgetvalue.data.FuturesRepo
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.TerminationStrategy
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.TotalFuture
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.budgetvalue._unrestructured.transactions.view.TransactionBlockCompletionFrag
+import com.tminus1010.budgetvalue.domain.TransactionMatcher
 import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
@@ -46,8 +45,8 @@ object ExtraMenuItemPartialsModule {
                     futuresRepo.futures.asObservable2().toSingle()
                         .flatMapCompletable { futures ->
                             val firstSearchTotal = futures
-                                .find { it is TotalFuture && it.terminationStrategy == TerminationStrategy.WAITING_FOR_MATCH }
-                                ?.let { it as TotalFuture }
+                                .find { it.onImportMatcher is TransactionMatcher.ByValue }
+                                ?.let { it.onImportMatcher as TransactionMatcher.ByValue }
                                 ?.searchTotal
                             if (firstSearchTotal != null)
                                 transactionsInteractor.importTransactions(

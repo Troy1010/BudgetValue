@@ -59,32 +59,18 @@ object MoshiAdapters {
         when (x) {
             is TransactionMatcher.SearchText -> TransactionMatcher.SearchText.ordinal.toString() + "`" + x.searchText
             is TransactionMatcher.ByValue -> TransactionMatcher.ByValue.ordinal.toString() + "`" + x.searchTotal.toString()
-            is TransactionMatcher.Multiple ->
-                TransactionMatcher.Multiple.ordinal.toString() + "`" +
-                        x.transactionMatchers.map { toJson(it) }
-                            .let { basicMoshi.adapter<List<String>>(Types.newParameterizedType(List::class.java, String::class.java)).toJson(it)!! }
+            is TransactionMatcher.Multiple -> TransactionMatcher.Multiple.ordinal.toString() + "`" + toJson(x.transactionMatchers.map { toJson(it) })
         }
 
     @FromJson
     fun fromJson11(s: String): TransactionMatcher =
         when (s.takeWhile { it != '`' }.toInt()) {
             TransactionMatcher.SearchText.ordinal ->
-                TransactionMatcher.SearchText(
-                    s.dropWhile { it != '`' }.drop(1)
-                )
+                TransactionMatcher.SearchText(s.dropWhile { it != '`' }.drop(1))
             TransactionMatcher.ByValue.ordinal ->
-                TransactionMatcher.ByValue(
-                    fromJson1(s.dropLastWhile { it != '`' }.drop(1))
-                )
+                TransactionMatcher.ByValue(fromJson1(s.dropWhile { it != '`' }.drop(1)))
             TransactionMatcher.Multiple.ordinal ->
-                TransactionMatcher.Multiple(
-                    s.dropWhile { it != '`' }.drop(1)
-                        .let {
-                            basicMoshi.adapter<List<String>>(Types.newParameterizedType(List::class.java, String::class.java))
-                                .fromJson(it)!!
-                                .map { fromJson11(it) }
-                        }
-                )
+                TransactionMatcher.Multiple(fromJson6(s.dropWhile { it != '`' }.drop(1))!!.map { fromJson11(it) })
             else -> error("Unhandled s:$s")
         }
 
@@ -101,14 +87,30 @@ object MoshiAdapters {
     fun fromJson4(s: String): LocalDate =
         s.let { LocalDate.parse(s, dateFormatter) }
 
+    /**
+     * [AmountFormula]
+     */
     @ToJson
     fun toJson(x: AmountFormula): String =
-        x.toDTO()
+        when (x) {
+            is AmountFormula.Percentage -> "${x.percentage}:Percentage"
+            is AmountFormula.Value -> "${x.amount}:Value"
+        }
 
     @FromJson
     fun fromJson5(s: String): AmountFormula? =
-        AmountFormula.fromDTO(s)
+        s.split(":")
+            .let {
+                when (it[1]) {
+                    "Value" -> AmountFormula.Value(it[0].toBigDecimal())
+                    "Percentage" -> AmountFormula.Percentage(it[0].toBigDecimal())
+                    else -> error("Unhandled string")
+                }
+            }
 
+    /**
+     * List<String>
+     */
     @ToJson
     fun toJson(x: List<String>): String {
         val type = Types.newParameterizedType(List::class.java, String::class.java)
