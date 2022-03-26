@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.TransactionsInteractor
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
 import com.tminus1010.budgetvalue._unrestructured.transactions.presentation.model.SearchType
 import com.tminus1010.budgetvalue.all_layers.NoDescriptionEnteredException
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
@@ -13,6 +12,7 @@ import com.tminus1010.budgetvalue.all_layers.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.app.CategoriesInteractor
+import com.tminus1010.budgetvalue.app.CategorizeAllMatchingUncategorizedTransactionsInteractor
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.domain.*
 import com.tminus1010.budgetvalue.framework.source_objects.SourceHashMap
@@ -34,7 +34,7 @@ class CreateFuture2VM @Inject constructor(
     private val selectedCategoriesModel: SelectCategoriesModel,
     private val futuresRepo: FuturesRepo,
     private val toaster: Toaster,
-    private val categorizeAllMatchingUncategorizedTransactions: CategorizeAllMatchingUncategorizedTransactions,
+    private val categorizeAllMatchingUncategorizedTransactionsInteractor: CategorizeAllMatchingUncategorizedTransactionsInteractor,
     private val setSearchTextsSharedVM: SetSearchTextsSharedVM,
     private val transactionsInteractor: TransactionsInteractor,
 ) : ViewModel() {
@@ -81,14 +81,10 @@ class CreateFuture2VM @Inject constructor(
                 )
             runBlocking {
                 futuresRepo.push(futureToPush)
-                if (futureToPush.terminationStrategy == TerminationStrategy.PERMANENT) {
-                    val number =
-                        categorizeAllMatchingUncategorizedTransactions(
-                            predicate = { futureToPush.onImportMatcher.isMatch(it) },
-                            categorization = { futureToPush.categorize(it) },
-                        ).blockingGet()
-                    toaster.toast("$number transactions categorized")
-                }
+                if (futureToPush.terminationStrategy == TerminationStrategy.PERMANENT)
+                    categorizeAllMatchingUncategorizedTransactionsInteractor
+                        .categorizeAllMatchingUncategorizedTransactions(futureToPush.onImportMatcher::isMatch, futureToPush::categorize)
+                        .also { toaster.toast("$it transactions categorized") }
                 selectedCategoriesModel.clearSelection()
                 navUp.emit(Unit)
             }
