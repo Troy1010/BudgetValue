@@ -71,7 +71,7 @@ class CreateFuture2VM @Inject constructor(
                     fillCategory = fillCategory.value!!,
                     terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.ONCE,
                     terminationDate = null,
-                    isAvailableForManual = !isAutomatic.value,
+                    isAvailableForManual = true,
                     onImportMatcher = when (searchType.value) {
                         SearchType.DESCRIPTION -> TransactionMatcher.Multiple(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) })
                         SearchType.DESCRIPTION_AND_TOTAL -> TransactionMatcher.Multiple(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) }.plus(TransactionMatcher.ByValue(totalGuess.value)))
@@ -101,14 +101,9 @@ class CreateFuture2VM @Inject constructor(
         totalGuess.onNext(s.toMoneyBigDecimal())
     }
 
-    private val isPermanent = MutableStateFlow(false)
+    private val isPermanent = MutableStateFlow(true)
     fun userSetIsPermanent(b: Boolean) {
         isPermanent.onNext(b)
-    }
-
-    private val isAutomatic = MutableStateFlow(true)
-    fun userSetIsAutomatic(b: Boolean) {
-        isAutomatic.onNext(b)
     }
 
     private val searchType = MutableStateFlow(SearchType.DESCRIPTION)
@@ -189,10 +184,6 @@ class CreateFuture2VM @Inject constructor(
                 listOf(
                     TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Is Permanent"),
                     CheckboxVMItem(isPermanent.value, onCheckChanged = { userSetIsPermanent(it) }),
-                ),
-                listOf(
-                    TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Is Automatic"),
-                    CheckboxVMItem(isAutomatic.value, onCheckChanged = { userSetIsAutomatic(it) }),
                 ),
             )
         }

@@ -55,7 +55,7 @@ class ReplayOrFutureDetailsVM @Inject constructor(
                     fillCategory = fillCategory.value!!,
                     terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.ONCE,
                     terminationDate = null,
-                    isAvailableForManual = !isAutomatic.value,
+                    isAvailableForManual = true,
                     onImportMatcher = when (searchType.value) {
                         SearchType.DESCRIPTION -> TransactionMatcher.Multiple(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) })
                         SearchType.DESCRIPTION_AND_TOTAL -> TODO()
@@ -88,11 +88,6 @@ class ReplayOrFutureDetailsVM @Inject constructor(
     private val userSetIsPermanent = MutableSharedFlow<Boolean>()
     fun userSetIsPermanent(b: Boolean) {
         userSetIsPermanent.onNext(b)
-    }
-
-    private val userSetIsAutomatic = MutableSharedFlow<Boolean>()
-    fun userSetIsAutomatic(b: Boolean) {
-        userSetIsAutomatic.onNext(b)
     }
 
     private val userSetSearchType = MutableSharedFlow<SearchType>()
@@ -148,11 +143,6 @@ class ReplayOrFutureDetailsVM @Inject constructor(
             .map { it.terminationStrategy == TerminationStrategy.PERMANENT }
             .flatMapLatest { userSetIsPermanent.onStart { emit(it) } }
             .stateIn(viewModelScope, SharingStarted.Eagerly, false)
-    private val isAutomatic =
-        future
-            .map { it.isAvailableForManual }
-            .flatMapLatest { userSetIsAutomatic.onStart { emit(it) } }
-            .stateIn(viewModelScope, SharingStarted.Eagerly, true)
     private val searchType =
         future
             .map {
@@ -239,10 +229,6 @@ class ReplayOrFutureDetailsVM @Inject constructor(
                 listOf(
                     TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Is Permanent"),
                     CheckboxVMItem(isPermanent.value, onCheckChanged = { userSetIsPermanent(it) }),
-                ),
-                listOf(
-                    TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Is Automatic"),
-                    CheckboxVMItem(isAutomatic.value, onCheckChanged = { userSetIsAutomatic(it) }),
                 ),
             )
         }
