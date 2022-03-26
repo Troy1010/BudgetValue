@@ -4,16 +4,13 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.app.SelectCategoriesModel
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.*
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
 import com.tminus1010.budgetvalue._unrestructured.transactions.presentation.model.SearchType
 import com.tminus1010.budgetvalue.all_layers.NoDescriptionEnteredException
 import com.tminus1010.budgetvalue.all_layers.extensions.*
 import com.tminus1010.budgetvalue.app.CategoriesInteractor
 import com.tminus1010.budgetvalue.data.FuturesRepo
-import com.tminus1010.budgetvalue.domain.AmountFormula
-import com.tminus1010.budgetvalue.domain.Category
-import com.tminus1010.budgetvalue.domain.CategoryAmountFormulas
+import com.tminus1010.budgetvalue.domain.*
 import com.tminus1010.budgetvalue.framework.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.framework.view.Toaster
 import com.tminus1010.budgetvalue.ui.all_features.model.*
@@ -37,10 +34,10 @@ class ReplayOrFutureDetailsVM @Inject constructor(
     private val setSearchTextsSharedVM: SetSearchTextsSharedVM,
 ) : ViewModel() {
     // # Setup
-    val replayOrFuture = MutableSharedFlow<IReplayOrFuture>(1)
+    val future = MutableSharedFlow<Future>(1)
 
     init {
-        replayOrFuture.observe(GlobalScope) { setSearchTextsSharedVM.searchTexts.adjustTo((it as BasicFuture).searchTexts) }
+        future.observe(GlobalScope) { setSearchTextsSharedVM.searchTexts.adjustTo((it.onImportMatcher as? TransactionMatcher.Multiple)?.transactionMatchers?.filterIsInstance<TransactionMatcher.SearchText>()?.map { it.searchText } ?: listOf()) }
     }
 
     // # User Intents
@@ -52,34 +49,28 @@ class ReplayOrFutureDetailsVM @Inject constructor(
     fun userTrySubmit() {
         try {
             val futureToPush =
-                when (searchType.value) {
-                    SearchType.DESCRIPTION_AND_TOTAL ->
-                        TODO()
-                    SearchType.TOTAL ->
-                        TotalFuture(
-                            name = name.value ?: throw NoDescriptionEnteredException(),
-                            searchTotal = totalGuess.value,
-                            categoryAmountFormulas = categoryAmountFormulas.value,
-                            fillCategory = fillCategory.value!!,
-                            terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.WAITING_FOR_MATCH,
-                            isAutomatic = isAutomatic.value,
-                        )
-                    SearchType.DESCRIPTION ->
-                        BasicFuture(
-                            name = name.value ?: throw NoDescriptionEnteredException(),
-                            searchTexts = setSearchTextsSharedVM.searchTexts,
-                            categoryAmountFormulas = categoryAmountFormulas.value,
-                            fillCategory = fillCategory.value!!,
-                            terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.WAITING_FOR_MATCH,
-                            isAutomatic = isAutomatic.value,
-                            totalGuess = totalGuess.value,
-                        )
-                }
+                Future(
+                    name = name.value ?: throw NoDescriptionEnteredException(),
+                    categoryAmountFormulas = categoryAmountFormulas.value,
+                    fillCategory = fillCategory.value!!,
+                    terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.ONCE,
+                    terminationDate = null,
+                    isAvailableForManual = !isAutomatic.value,
+                    onImportMatcher = when (searchType.value) {
+                        SearchType.DESCRIPTION -> TransactionMatcher.Multiple(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) })
+                        SearchType.DESCRIPTION_AND_TOTAL -> TODO()
+                        SearchType.TOTAL -> TransactionMatcher.ByValue(totalGuess.value)
+                    },
+                    totalGuess = totalGuess.value,
+                )
             runBlocking {
                 futuresRepo.push(futureToPush)
-                if (futureToPush.name != replayOrFuture.value!!.name) futuresRepo.delete(replayOrFuture.value!! as IFuture)
+                if (futureToPush.name != future.value!!.name) futuresRepo.delete(future.value!!)
                 if (futureToPush.terminationStrategy == TerminationStrategy.PERMANENT) {
-                    val number = categorizeAllMatchingUncategorizedTransactions(futureToPush).blockingGet()
+                    val number = categorizeAllMatchingUncategorizedTransactions(
+                        predicate = { futureToPush.onImportMatcher.isMatch(it) },
+                        categorization = { futureToPush.categorize(it) },
+                    ).blockingGet()
                     toaster.toast("$number transactions categorized")
                 }
                 userTryNavUp()
@@ -135,12 +126,7 @@ class ReplayOrFutureDetailsVM @Inject constructor(
     }
 
     fun userDeleteFutureOrReplay() {
-        when (val x = replayOrFuture.replayCache[0]) {
-            is BasicFuture -> runBlocking { futuresRepo.delete(x) }
-            is TotalFuture,
-            -> TODO()
-            else -> error("Oh no!")
-        }
+        runBlocking { futuresRepo.delete(future.value!!) }
         userTryNavUp()
     }
 
@@ -151,63 +137,45 @@ class ReplayOrFutureDetailsVM @Inject constructor(
 
     // # Internal
     private val name =
-        replayOrFuture
-            .map {
-                when (it) {
-                    is BasicFuture -> it.name
-                    else -> error("Unhandled type:$it")
-                }
-            }
+        future
+            .map { it.name }
             .flatMapLatest { userSetName.onStart { emit(it) } }
             .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
     private val totalGuess =
-        replayOrFuture
-            .map {
-                when (it) {
-                    is BasicFuture -> it.totalGuess
-                    else -> error("Unhandled type:$it")
-                }
-            }
+        future
+            .map { it.totalGuess }
             .flatMapLatest { userSetTotalGuess.onStart { emit(it) } }
             .stateIn(viewModelScope, SharingStarted.Eagerly, BigDecimal("-10"))
     private val isPermanent =
-        replayOrFuture
-            .map {
-                when (it) {
-                    is BasicFuture -> it.terminationStrategy == TerminationStrategy.PERMANENT
-                    else -> error("Unhandled type:$it")
-                }
-            }
+        future
+            .map { it.terminationStrategy == TerminationStrategy.PERMANENT }
             .flatMapLatest { userSetIsPermanent.onStart { emit(it) } }
             .stateIn(viewModelScope, SharingStarted.Eagerly, false)
     private val isAutomatic =
-        replayOrFuture
-            .map {
-                when (it) {
-                    is BasicFuture -> it.isAutomatic
-                    else -> error("Unhandled type:$it")
-                }
-            }
+        future
+            .map { it.isAvailableForManual }
             .flatMapLatest { userSetIsAutomatic.onStart { emit(it) } }
             .stateIn(viewModelScope, SharingStarted.Eagerly, true)
     private val searchType =
-        replayOrFuture
+        future
             .map {
-                when (it) {
-                    is BasicFuture -> SearchType.DESCRIPTION
-                    else -> error("Unhandled type:$it")
+                when (it.onImportMatcher) {
+                    is TransactionMatcher.SearchText ->
+                        SearchType.DESCRIPTION
+                    is TransactionMatcher.ByValue ->
+                        SearchType.TOTAL
+                    is TransactionMatcher.Multiple ->
+                        if (it.onImportMatcher.transactionMatchers.all { it is TransactionMatcher.SearchText })
+                            SearchType.DESCRIPTION
+                        else
+                            SearchType.DESCRIPTION_AND_TOTAL
                 }
             }
             .flatMapLatest { userSetSearchType.onStart { emit(it) } }
             .stateIn(viewModelScope, SharingStarted.Eagerly, SearchType.DESCRIPTION)
     private val categoryAmountFormulas =
-        replayOrFuture
-            .map {
-                when (it) {
-                    is BasicFuture -> it.categoryAmountFormulas
-                    else -> error("Unhandled type:$it")
-                }
-            }
+        future
+            .map { it.categoryAmountFormulas }
             .flatMapLatest { oldCategoryAmountFormulas ->
                 combine(userCategoryAmountFormulas.flow, selectedCategoriesModel.selectedCategories)
                 { userCategoryAmountFormulas, selectedCategories ->
@@ -220,13 +188,8 @@ class ReplayOrFutureDetailsVM @Inject constructor(
 
     // I might want to change this requirement
     private val fillCategory =
-        replayOrFuture
-            .map {
-                when (it) {
-                    is BasicFuture -> it.fillCategory
-                    else -> error("Unhandled type:$it")
-                }
-            }
+        future
+            .map { it.fillCategory }
             .flatMapLatest {
                 selectedCategoriesModel.selectedCategories.drop(1)
                     .flatMapLatest { selectedCategories ->

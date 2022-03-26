@@ -1,48 +1,26 @@
 package com.tminus1010.budgetvalue.data
 
 import com.tminus1010.budgetvalue.data.service.MiscDAO
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.BasicFuture
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.IFuture
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.TerminationStrategy
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.TotalFuture
-import kotlinx.coroutines.GlobalScope
+import com.tminus1010.budgetvalue.domain.Future
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.shareIn
+import java.time.LocalDate
 import javax.inject.Inject
 
 class FuturesRepo @Inject constructor(
     private val miscDAO: MiscDAO,
 ) {
-    suspend fun push(future: IFuture) {
-        when (future) {
-            is BasicFuture -> miscDAO.push(future)
-            is TotalFuture -> miscDAO.push(future)
-            else -> error("unhandled IFuture")
-        }
+    suspend fun push(future: Future) {
+        miscDAO.push(future)
     }
 
-    suspend fun setTerminationStatus(future: IFuture, terminationStrategy: TerminationStrategy) {
-        when (future) {
-            is BasicFuture -> miscDAO.push(future.copy(terminationStrategy = terminationStrategy))
-            is TotalFuture -> miscDAO.push(future.copy(terminationStrategy = terminationStrategy))
-            else -> error("unhandled IFuture")
-        }
+    suspend fun setTerminationDate(future: Future, terminationDate: LocalDate) {
+        miscDAO.push(future.copy(terminationDate = terminationDate))
     }
 
-    suspend fun delete(future: IFuture) {
-        when (future) {
-            is BasicFuture -> miscDAO.deleteBasicFuture(future.name)
-            is TotalFuture -> miscDAO.deleteTotalFuture(future.name)
-            else -> error("unhandled IFuture")
-        }
+    suspend fun delete(future: Future) {
+        miscDAO.deleteFuture(future.name)
     }
 
-    val futures: Flow<List<IFuture>> =
-        combine(
-            miscDAO.fetchBasicFutures(),
-            miscDAO.fetchTotalFutures(),
-        ) { a, b -> a + b }
-            .shareIn(GlobalScope, SharingStarted.WhileSubscribed(), 1)
+    val futures: Flow<List<Future>> =
+        miscDAO.fetchFutures()
 }

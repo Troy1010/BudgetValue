@@ -6,12 +6,12 @@ import com.tminus1010.budgetvalue.data.LatestDateOfMostRecentImportRepo
 import com.tminus1010.budgetvalue.domain.DatePeriodService
 import com.tminus1010.budgetvalue.framework.Rx
 import com.tminus1010.budgetvalue.data.FuturesRepo
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.TerminationStrategy
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionBlock
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionsAggregate
 import com.tminus1010.budgetvalue._unrestructured.transactions.data.TransactionAdapter
 import com.tminus1010.budgetvalue._unrestructured.transactions.data.repo.TransactionsRepo
+import com.tminus1010.budgetvalue.domain.TerminationStrategy
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import com.tminus1010.tmcommonkotlin.rx.nonLazy
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
@@ -45,14 +45,14 @@ class TransactionsInteractor @Inject constructor(
         return futuresRepo.futures.asObservable2().toSingle().map { futures ->
             Rx.merge(
                 transactions.map { transaction ->
-                    (futures.find { it.shouldCategorizeOnImport(transaction) }
+                    (futures.find { it.onImportMatcher.isMatch(transaction) }
                         ?.let { future ->
                             transactionsRepo.push(future.categorize(transaction))
                                 .andThen(
                                     Completable.fromAction {
                                         runBlocking {
-                                            if (future.terminationStrategy == TerminationStrategy.WAITING_FOR_MATCH)
-                                                futuresRepo.setTerminationStatus(future, TerminationStrategy.TERMINATED(LocalDate.now()))
+                                            if (future.terminationStrategy == TerminationStrategy.ONCE)
+                                                futuresRepo.setTerminationDate(future, LocalDate.now())
                                         }
                                     }
                                 )

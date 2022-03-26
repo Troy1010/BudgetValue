@@ -6,9 +6,8 @@ import com.tminus1010.budgetvalue.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue.domain.accounts.Account
 import com.tminus1010.budgetvalue.domain.plan.Plan
 import com.tminus1010.budgetvalue._unrestructured.reconcile.data.model.ReconciliationDTO
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.BasicFuture
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.TotalFuture
 import com.tminus1010.budgetvalue._unrestructured.transactions.data.TransactionDTO
+import com.tminus1010.budgetvalue.domain.Future
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -120,21 +119,12 @@ interface MiscDAO {
 
     // # Futures
 
-    @Query("select * from BasicFuture")
-    fun fetchBasicFutures(): Flow<List<BasicFuture>>
+    @Query("select * from Future")
+    fun fetchFutures(): Flow<List<Future>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun push(basicFuture: BasicFuture)
+    suspend fun push(future: Future)
 
-    @Query("DELETE FROM BasicFuture WHERE name=:name")
-    suspend fun deleteBasicFuture(name: String)
-
-    @Query("select * from TotalFuture")
-    fun fetchTotalFutures(): Flow<List<TotalFuture>>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun push(totalFuture: TotalFuture)
-
-    @Query("DELETE FROM TotalFuture WHERE name=:name")
-    suspend fun deleteTotalFuture(name: String)
+    @Query("DELETE FROM Future WHERE name=:name")
+    suspend fun deleteFuture(name: String)
 }

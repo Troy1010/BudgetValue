@@ -4,9 +4,6 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.app.SelectCategoriesModel
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.BasicFuture
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.TerminationStrategy
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.TotalFuture
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.use_case.CategorizeAllMatchingUncategorizedTransactions
 import com.tminus1010.budgetvalue._unrestructured.transactions.presentation.model.SearchType
@@ -17,9 +14,7 @@ import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.app.CategoriesInteractor
 import com.tminus1010.budgetvalue.data.FuturesRepo
-import com.tminus1010.budgetvalue.domain.AmountFormula
-import com.tminus1010.budgetvalue.domain.Category
-import com.tminus1010.budgetvalue.domain.CategoryAmountFormulas
+import com.tminus1010.budgetvalue.domain.*
 import com.tminus1010.budgetvalue.framework.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.framework.view.Toaster
 import com.tminus1010.budgetvalue.ui.all_features.model.*
@@ -70,33 +65,28 @@ class CreateFuture2VM @Inject constructor(
     fun userTrySubmitWithName(s: String) {
         try {
             val futureToPush =
-                when (searchType.value) {
-                    SearchType.DESCRIPTION_AND_TOTAL ->
-                        TODO()
-                    SearchType.TOTAL ->
-                        TotalFuture(
-                            name = s,
-                            searchTotal = totalGuess.value,
-                            categoryAmountFormulas = categoryAmountFormulas.value,
-                            fillCategory = fillCategory.value!!,
-                            terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.WAITING_FOR_MATCH,
-                            isAutomatic = isAutomatic.value,
-                        )
-                    SearchType.DESCRIPTION ->
-                        BasicFuture(
-                            name = s,
-                            searchTexts = setSearchTextsSharedVM.searchTexts,
-                            categoryAmountFormulas = categoryAmountFormulas.value,
-                            fillCategory = fillCategory.value!!,
-                            terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.WAITING_FOR_MATCH,
-                            isAutomatic = isAutomatic.value,
-                            totalGuess = totalGuess.value,
-                        )
-                }
+                Future(
+                    name = s,
+                    categoryAmountFormulas = categoryAmountFormulas.value,
+                    fillCategory = fillCategory.value!!,
+                    terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.ONCE,
+                    terminationDate = null,
+                    isAvailableForManual = !isAutomatic.value,
+                    onImportMatcher = when (searchType.value) {
+                        SearchType.DESCRIPTION -> TransactionMatcher.Multiple(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) })
+                        SearchType.DESCRIPTION_AND_TOTAL -> TransactionMatcher.Multiple(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) }.plus(TransactionMatcher.ByValue(totalGuess.value)))
+                        SearchType.TOTAL -> TransactionMatcher.ByValue(totalGuess.value)
+                    },
+                    totalGuess = totalGuess.value,
+                )
             runBlocking {
                 futuresRepo.push(futureToPush)
                 if (futureToPush.terminationStrategy == TerminationStrategy.PERMANENT) {
-                    val number = categorizeAllMatchingUncategorizedTransactions(futureToPush).blockingGet()
+                    val number =
+                        categorizeAllMatchingUncategorizedTransactions(
+                            predicate = { futureToPush.onImportMatcher.isMatch(it) },
+                            categorization = { futureToPush.categorize(it) },
+                        ).blockingGet()
                     toaster.toast("$number transactions categorized")
                 }
                 selectedCategoriesModel.clearSelection()

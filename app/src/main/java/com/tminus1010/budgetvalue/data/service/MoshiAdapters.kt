@@ -5,9 +5,10 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.ToJson
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import com.tminus1010.budgetvalue.domain.CategoryType
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.TerminationStrategy
 import com.tminus1010.budgetvalue.domain.AmountFormula
+import com.tminus1010.budgetvalue.domain.CategoryType
+import com.tminus1010.budgetvalue.domain.TerminationStrategy
+import com.tminus1010.budgetvalue.domain.TransactionMatcher
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -44,25 +45,47 @@ object MoshiAdapters {
     @ToJson
     fun toJson(x: TerminationStrategy): String =
         x.ordinal.toString()
-            .plus("`")
-            .plus(
-                if (x is TerminationStrategy.TERMINATED)
-                    toJson(x.terminationDate)
-                else ""
-            )
 
     @FromJson
     fun fromJson3(s: String): TerminationStrategy =
-        when (s.takeWhile { it != '`' }.toLong()) {
-            TerminationStrategy.TERMINATED.ordinal ->
-                TerminationStrategy.TERMINATED(
-                    terminationDate = fromJson4(s.dropWhile { it != '`' }.drop(1))
+        TerminationStrategy.values()[s.toInt()]
+
+
+    /**
+     * [TransactionMatcher]
+     */
+    @ToJson
+    fun toJson(x: TransactionMatcher): String =
+        when (x) {
+            is TransactionMatcher.SearchText -> TransactionMatcher.SearchText.ordinal.toString() + "`" + x.searchText
+            is TransactionMatcher.ByValue -> TransactionMatcher.ByValue.ordinal.toString() + "`" + x.searchTotal.toString()
+            is TransactionMatcher.Multiple ->
+                TransactionMatcher.Multiple.ordinal.toString() + "`" +
+                        x.transactionMatchers.map { toJson(it) }
+                            .let { basicMoshi.adapter<List<String>>(Types.newParameterizedType(List::class.java, String::class.java)).toJson(it)!! }
+        }
+
+    @FromJson
+    fun fromJson11(s: String): TransactionMatcher =
+        when (s.takeWhile { it != '`' }.toInt()) {
+            TransactionMatcher.SearchText.ordinal ->
+                TransactionMatcher.SearchText(
+                    s.dropWhile { it != '`' }.drop(1)
                 )
-            TerminationStrategy.PERMANENT.ordinal ->
-                TerminationStrategy.PERMANENT
-            TerminationStrategy.WAITING_FOR_MATCH.ordinal ->
-                TerminationStrategy.WAITING_FOR_MATCH
-            else -> error("Unrecognized ordinal:${s.takeWhile { it != '`' }.toLong()}")
+            TransactionMatcher.ByValue.ordinal ->
+                TransactionMatcher.ByValue(
+                    fromJson1(s.dropLastWhile { it != '`' }.drop(1))
+                )
+            TransactionMatcher.Multiple.ordinal ->
+                TransactionMatcher.Multiple(
+                    s.dropWhile { it != '`' }.drop(1)
+                        .let {
+                            basicMoshi.adapter<List<String>>(Types.newParameterizedType(List::class.java, String::class.java))
+                                .fromJson(it)!!
+                                .map { fromJson11(it) }
+                        }
+                )
+            else -> error("Unhandled s:$s")
         }
 
     /**

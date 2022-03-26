@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.app.SelectCategoriesModel
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.IReplayOrFuture
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.SaveTransactionInteractor
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.TransactionsInteractor
@@ -15,6 +14,7 @@ import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.app.CategoriesInteractor
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.domain.Category
+import com.tminus1010.budgetvalue.domain.Future
 import com.tminus1010.budgetvalue.framework.view.SpinnerService
 import com.tminus1010.budgetvalue.framework.view.Toaster
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
@@ -51,9 +51,9 @@ class CategorizeVM @Inject constructor(
             .subscribe()
     }
 
-    fun userReplay(replay: IReplayOrFuture) {
+    fun userReplay(future: Future) {
         saveTransactionInteractor.saveTransaction(
-            replay.categorize(transactionsInteractor.mostRecentUncategorizedSpend2.value!!)
+            future.categorize(transactionsInteractor.mostRecentUncategorizedSpend2.value!!)
         )
             .let(spinnerService::decorate)
             .subscribe()
@@ -89,7 +89,7 @@ class CategorizeVM @Inject constructor(
     val navToSplit = MutableSharedFlow<Transaction>()
     val navToCategorySettings = MutableSharedFlow<Category>()
     val navToNewCategory = MutableSharedFlow<Unit>()
-    val navToReplayOrFutureDetails = MutableSharedFlow<IReplayOrFuture>()
+    val navToReplayOrFutureDetails = MutableSharedFlow<Future>()
     val navToReceiptCategorization = MutableSharedFlow<Transaction>()
 
     // # State
@@ -113,7 +113,7 @@ class CategorizeVM @Inject constructor(
         transactionsInteractor.uncategorizedSpends2
             .map { it.size.toString() }
     val recipeGrid =
-        combine(futuresRepo.futures.map { it.filter { !it.isAutomatic } }, categoriesInteractor.userCategories)
+        combine(futuresRepo.futures.map { it.filter { it.isAvailableForManual } }, categoriesInteractor.userCategories)
         { nonAutomaticFutures, categories ->
             listOf(
                 *categories.map { category ->

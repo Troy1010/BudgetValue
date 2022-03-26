@@ -7,15 +7,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue._unrestructured.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue.all_layers.KEY1
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider
-import com.tminus1010.budgetvalue.framework.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragCreateFutureBinding
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.app.SelectCategoriesModel
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.BasicFuture
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.IReplayOrFuture
-import com.tminus1010.tmcommonkotlin.core.tryOrNull
+import com.tminus1010.budgetvalue.domain.Future
+import com.tminus1010.budgetvalue.framework.view.viewBinding
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
@@ -34,16 +32,13 @@ class ReplayOrFutureDetailsFrag : Fragment(R.layout.frag_create_future) {
     @Inject
     lateinit var moshiWithCategoriesProvider: MoshiWithCategoriesProvider
 
-    val replayOrFuture: IReplayOrFuture
-        get() = requireArguments().getString(KEY1).let {
-            tryOrNull { moshiWithCategoriesProvider.moshi.fromJson<BasicFuture>(it)!! }
-                ?: error("Oh no!")
-        }
+    val future: Future
+        get() = moshiWithCategoriesProvider.moshi.fromJson<Future>(requireArguments().getString(KEY1)) ?: error("Oh no!")
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Setup
-        viewModel.replayOrFuture.easyEmit(replayOrFuture)
+        viewModel.future.easyEmit(future)
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) { viewModel.userTryNavUp() }
         // # Events
         viewModel.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
@@ -68,15 +63,10 @@ class ReplayOrFutureDetailsFrag : Fragment(R.layout.frag_create_future) {
     }
 
     companion object {
-        fun navTo(nav: NavController, moshiWithCategoriesProvider: MoshiWithCategoriesProvider, replayOrFuture: IReplayOrFuture, selectCategoriesModel: SelectCategoriesModel) {
-            runBlocking { selectCategoriesModel.clearSelection(); selectCategoriesModel.selectCategories(*replayOrFuture.categoryAmountFormulas.keys.toTypedArray()) }
+        fun navTo(nav: NavController, moshiWithCategoriesProvider: MoshiWithCategoriesProvider, future: Future, selectCategoriesModel: SelectCategoriesModel) {
+            runBlocking { selectCategoriesModel.clearSelection(); selectCategoriesModel.selectCategories(*future.categoryAmountFormulas.keys.toTypedArray()) }
             nav.navigate(R.id.replayOrFutureDetailsFrag, Bundle().apply {
-                putString(KEY1,
-                    when (replayOrFuture) {
-                        is BasicFuture -> moshiWithCategoriesProvider.moshi.toJson(replayOrFuture)
-                        else -> error("Unhandled type:$replayOrFuture")
-                    }
-                )
+                putString(KEY1, moshiWithCategoriesProvider.moshi.toJson(future))
             })
         }
     }

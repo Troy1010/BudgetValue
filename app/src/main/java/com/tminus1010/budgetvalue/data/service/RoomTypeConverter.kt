@@ -2,9 +2,10 @@ package com.tminus1010.budgetvalue.data.service
 
 import androidx.room.TypeConverter
 import com.tminus1010.budgetvalue.data.service.MoshiProvider.moshi
-import com.tminus1010.budgetvalue.domain.LocalDatePeriod
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.TerminationStrategy
 import com.tminus1010.budgetvalue.domain.AmountFormula
+import com.tminus1010.budgetvalue.domain.LocalDatePeriod
+import com.tminus1010.budgetvalue.domain.TerminationStrategy
+import com.tminus1010.budgetvalue.domain.TransactionMatcher
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import java.math.BigDecimal
@@ -33,6 +34,14 @@ object RoomTypeConverter {
 
     @TypeConverter
     fun fromJson(s: String): TerminationStrategy? =
+        moshi.fromJson(s)
+
+    @TypeConverter
+    fun toJson(x: TransactionMatcher): String =
+        moshi.toJson(x)
+
+    @TypeConverter
+    fun fromJson3(s: String): TransactionMatcher? =
         moshi.fromJson(s)
 
     @TypeConverter

@@ -2,11 +2,10 @@ package com.tminus1010.budgetvalue._unrestructured.replay_or_future.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.BasicFuture
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.IFuture
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.domain.TotalFuture
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.data.FuturesRepo
+import com.tminus1010.budgetvalue.domain.Future
+import com.tminus1010.budgetvalue.domain.TransactionMatcher
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuPresentationModel
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
@@ -21,7 +20,7 @@ class FuturesReviewVM @Inject constructor(
     private val futuresRepo: FuturesRepo,
 ) : ViewModel() {
     // # User Intents
-    fun userDeleteFuture(future: IFuture) {
+    fun userDeleteFuture(future: Future) {
         runBlocking { futuresRepo.delete(future) }
     }
 
@@ -30,7 +29,7 @@ class FuturesReviewVM @Inject constructor(
     }
 
     // # Events
-    val navToFutureDetails = MutableSharedFlow<IFuture>()
+    val navToFutureDetails = MutableSharedFlow<Future>()
     val navToCreateFuture = MutableSharedFlow<Unit>()
 
     // # State
@@ -54,10 +53,10 @@ class FuturesReviewVM @Inject constructor(
                             TextPresentationModel(TextPresentationModel.Style.TWO, it.terminationStrategy.displayStr, menuPresentationModel = menuPresentationModel),
                             TextPresentationModel(
                                 TextPresentationModel.Style.TWO,
-                                when (it) {
-                                    is BasicFuture -> it.searchTexts.first().take(10)
-                                    is TotalFuture -> it.searchTotal.toString()
-                                    else -> error("Unhandled IFuture:$it")
+                                when (val matcher = it.onImportMatcher) {
+                                    is TransactionMatcher.SearchText -> matcher.searchText.take(10)
+                                    is TransactionMatcher.ByValue -> matcher.searchTotal.toString()
+                                    is TransactionMatcher.Multiple -> "Multiple"
                                 },
                                 menuPresentationModel = menuPresentationModel,
                             ),
