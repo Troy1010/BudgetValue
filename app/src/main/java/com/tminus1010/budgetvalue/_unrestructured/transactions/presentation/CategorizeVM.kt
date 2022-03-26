@@ -12,6 +12,7 @@ import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.app.CategoriesInteractor
+import com.tminus1010.budgetvalue.app.FuturesInteractor
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.Future
@@ -19,6 +20,8 @@ import com.tminus1010.budgetvalue.framework.view.SpinnerService
 import com.tminus1010.budgetvalue.framework.view.Toaster
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem2
+import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
+import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItems
 import com.tminus1010.budgetvalue.ui.errors.Errors
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.divertErrors
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,6 +44,7 @@ class CategorizeVM @Inject constructor(
     selectCategoriesModel: SelectCategoriesModel,
     errors: Errors,
     futuresRepo: FuturesRepo,
+    private val futuresInteractor: FuturesInteractor,
 ) : ViewModel() {
     // # User Intents
     fun userSimpleCategorize(category: Category) {
@@ -82,6 +86,16 @@ class CategorizeVM @Inject constructor(
 
     fun userTryNavToCreateFuture2() {
         navToCreateFuture2.onNext()
+    }
+
+    fun userAddTransactionToFuture(future: Future) {
+        GlobalScope.launch(block = spinnerService.decorate {
+            futuresInteractor.addTransactionDescriptionToFuture(
+                description = transactionsInteractor.mostRecentUncategorizedSpend2.value!!.description,
+                future = future
+            )
+                .also { toaster.toast("$it transactions categorized") }
+        })
     }
 
     // # Events
@@ -147,7 +161,16 @@ class CategorizeVM @Inject constructor(
                         title = it.name,
                         backgroundColor = R.attr.colorSecondary,
                         onClick = { userReplay(it) },
-                        onLongClick = { navToReplayOrFutureDetails.onNext(it) },
+                        menuVMItems = MenuVMItems(
+                            MenuVMItem(
+                                title = "Add Current Transaction Name",
+                                onClick = { userAddTransactionToFuture(it) }
+                            ),
+                            MenuVMItem(
+                                title = "Edit",
+                                onClick = { navToReplayOrFutureDetails.onNext(it) }
+                            ),
+                        ),
                     )
                 }.toTypedArray(),
             )

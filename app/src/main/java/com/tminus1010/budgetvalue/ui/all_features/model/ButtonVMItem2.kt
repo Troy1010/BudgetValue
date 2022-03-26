@@ -18,6 +18,7 @@ data class ButtonVMItem2(
     val isEnabled2: Flow<Boolean>? = null,
     val alpha: Flow<Float>? = null,
     val backgroundColor: Int? = null,
+    val menuVMItems: MenuVMItems? = null,
     val onLongClick: (() -> Unit)? = null,
     val onClick: () -> Unit,
 ) : IHasToViewItemRecipe {
@@ -33,6 +34,7 @@ data class ButtonVMItem2(
             button.bind(alpha) { alpha = it }
         if (backgroundColor != null)
             button.setBackgroundColor(button.context.theme.getColorByAttr(backgroundColor))
+        menuVMItems?.bind(button)
         button.setOnClickListener { onClick() }
         onLongClick?.also { button.setOnLongClickListener { it(); true } }
     }
