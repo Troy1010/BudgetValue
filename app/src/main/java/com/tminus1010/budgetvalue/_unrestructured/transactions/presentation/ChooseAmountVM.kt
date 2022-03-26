@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
-import com.tminus1010.budgetvalue.ui.all_features.model.MenuPresentationModel
+import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItems
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.ReceiptCategorizationInteractor
 import com.tminus1010.budgetvalue.ui.all_features.SubFragEventProvider
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.TransactionsInteractor
@@ -56,7 +56,7 @@ class ChooseAmountVM @Inject constructor(
     // # State
     val amount = receiptCategorizationInteractor.rememberedAmount.map { it.toString().toMoneyBigDecimal().toString() }
     val amountMenuPresentationModel =
-        MenuPresentationModel(
+        MenuVMItems(
             MenuVMItem(
                 title = "Fill",
                 onClick = { userFillAmount.easyEmit(Unit) },

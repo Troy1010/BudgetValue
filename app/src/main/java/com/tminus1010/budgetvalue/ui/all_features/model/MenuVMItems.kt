@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.ui.all_features.model
 import android.view.Menu
 import android.view.View
 
-data class MenuPresentationModel(
+data class MenuVMItems(
     private val menuVMItems: List<MenuVMItem>
 ) {
     constructor(vararg menuVMItems: MenuVMItem?) : this(menuVMItems.toList().filterNotNull())

@@ -38,7 +38,7 @@ data class AmountFormulaPresentationModel1(
         vb.tvPercentage.bind(amountFormula) { easyVisibility = it is AmountFormula.Percentage }
         vb.moneyEditText.onDone { userSetValue(it) }
         vb.root.bind(amountFormula) { amountFormula ->
-            MenuPresentationModel(
+            MenuVMItems(
                 if (amountFormula is AmountFormula.Value)
                     MenuVMItem(
                         title = "Percentage",

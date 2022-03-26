@@ -18,7 +18,7 @@ class TextVMItem(
     val text2: Observable<Box<String?>>? = null,
     val text3: Flow<String?>? = null,
     val onClick: (() -> Unit)? = null,
-    val menuPresentationModel: MenuPresentationModel? = null,
+    val menuPresentationModel: MenuVMItems? = null,
     val backgroundColor: Int? = null,
     val style: Style = Style.ONE,
 ) : IHasToViewItemRecipe {

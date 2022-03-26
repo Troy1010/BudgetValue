@@ -7,7 +7,7 @@ import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_layers.extensions.value
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.EditTextVMItem
-import com.tminus1010.budgetvalue.ui.all_features.model.MenuPresentationModel
+import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItems
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
@@ -40,7 +40,7 @@ class SetSearchTextsVM @Inject constructor(
                             EditTextVMItem(
                                 text = s,
                                 onDone = { sourceList[i] = it },
-                                menuPresentationModel = MenuPresentationModel(
+                                menuPresentationModel = MenuVMItems(
                                     MenuVMItem(
                                         title = "Delete",
                                         onClick = { sourceList.removeAt(i) }

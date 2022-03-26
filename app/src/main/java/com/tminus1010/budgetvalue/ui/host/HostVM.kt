@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.ui.host
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.ui.all_features.model.MenuPresentationModel
+import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItems
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.UnformattedString
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,7 +26,7 @@ class HostVM @Inject constructor(
 
     // # State
     val topMenuVMItems =
-        MenuPresentationModel(
+        MenuVMItems(
             MenuVMItem(
                 title = "History",
                 onClick = { navToHistory.onNext(Unit); unCheckAllMenuItems.onNext(Unit) },

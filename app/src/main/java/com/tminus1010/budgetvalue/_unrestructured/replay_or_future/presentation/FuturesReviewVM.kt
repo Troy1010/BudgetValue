@@ -7,7 +7,7 @@ import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.domain.Future
 import com.tminus1010.budgetvalue.domain.TransactionMatcher
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
-import com.tminus1010.budgetvalue.ui.all_features.model.MenuPresentationModel
+import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItems
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.TextPresentationModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -44,7 +44,7 @@ class FuturesReviewVM @Inject constructor(
                     ),
                     *it.map {
                         val menuPresentationModel =
-                            MenuPresentationModel(
+                            MenuVMItems(
                                 MenuVMItem(title = "Delete", onClick = { userDeleteFuture(it) }),
                                 MenuVMItem(title = "Edit", onClick = { navToFutureDetails.onNext(it) }),
                             )

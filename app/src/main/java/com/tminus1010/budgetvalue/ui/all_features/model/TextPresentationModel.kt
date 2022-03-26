@@ -17,7 +17,7 @@ data class TextPresentationModel(
     val text2: Flow<String?>? = null,
     val onClick: (() -> Unit)? = null,
     val onLongClick: (() -> Unit)? = null,
-    val menuPresentationModel: MenuPresentationModel? = null,
+    val menuPresentationModel: MenuVMItems? = null,
 ) : IHasToViewItemRecipe {
     enum class Style { ONE, TWO, HEADER }
 

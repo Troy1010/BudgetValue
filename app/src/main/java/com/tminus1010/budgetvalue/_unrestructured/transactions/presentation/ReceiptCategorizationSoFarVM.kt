@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue._unrestructured.transactions.presentation
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.ui.all_features.model.MenuPresentationModel
+import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItems
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue._unrestructured.reconcile.presentation.model.HeaderPresentationModel
@@ -34,7 +34,7 @@ class ReceiptCategorizationSoFarVM @Inject constructor(
                     listOf(
                         TextVMItem(
                             text1 = amount.toPlainString(),
-                            menuPresentationModel = MenuPresentationModel(
+                            menuPresentationModel = MenuVMItems(
                                 MenuVMItem(
                                     title = "Remove",
                                     onClick = { remove(category, amount) },
@@ -43,7 +43,7 @@ class ReceiptCategorizationSoFarVM @Inject constructor(
                         ),
                         TextVMItem(
                             text1 = category.name,
-                            menuPresentationModel = MenuPresentationModel(
+                            menuPresentationModel = MenuVMItems(
                                 MenuVMItem(
                                     title = "Remove",
                                     onClick = { remove(category, amount) },
