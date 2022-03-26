@@ -9,11 +9,10 @@ class CategorizeAllMatchingUncategorizedTransactionsInteractor @Inject construct
     private val transactionsInteractor: TransactionsInteractor,
     private val transactionsRepo: TransactionsRepo,
 ) {
-    suspend fun categorizeAllMatchingUncategorizedTransactions(predicate: (Transaction) -> Boolean, categorization: (Transaction) -> Transaction): Int {
-        var counter = 0
-        transactionsInteractor.uncategorizedSpends2.value
-            .filter { predicate(it) }
-            .forEach { transactionsRepo.update2(categorization(it)); counter++ }
-        return counter
+    suspend fun categorizeAllMatchingUncategorizedTransactions(isMatch: (Transaction) -> Boolean, categorize: (Transaction) -> Transaction): Int {
+        return transactionsInteractor.uncategorizedSpends2.value
+            .filter(isMatch)
+            .onEach { transactionsRepo.update2(categorize(it)) }
+            .fold(0) { acc, v -> acc + 1 }
     }
 }
