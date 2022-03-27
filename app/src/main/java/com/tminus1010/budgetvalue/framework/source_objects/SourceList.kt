@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.rx3.asFlow
+import java.lang.Integer.max
 
 class SourceList<T>(iterable: Iterable<T> = emptyList()) : ArrayList<T>() {
     constructor(vararg values: T) : this(values.toList())
@@ -23,7 +24,7 @@ class SourceList<T>(iterable: Iterable<T> = emptyList()) : ArrayList<T>() {
 
     fun adjustTo(list: List<T>) {
         // If there are too many items, remove some.
-        this.take(list.size)
+        this.removeAll(this.takeLast(max(0, this.size - list.size)))
         // If any items don't match, reassign them
         list.withIndex().forEach { (i, v) ->
             if (i !in this.indices)
@@ -31,6 +32,17 @@ class SourceList<T>(iterable: Iterable<T> = emptyList()) : ArrayList<T>() {
             else if (this[i] != v)
                 this[i] = v
         }
+    }
+
+    fun takeLast(): T? {
+        val x =
+            try {
+                this.removeLast()
+            } catch (e: NoSuchElementException) {
+                null
+            }
+        behaviorSubject.onNext(this)
+        return x
     }
 
     // # ArrayList Overrides
@@ -76,17 +88,6 @@ class SourceList<T>(iterable: Iterable<T> = emptyList()) : ArrayList<T>() {
 
     override fun removeAt(index: Int): T {
         val x = super.removeAt(index)
-        behaviorSubject.onNext(this)
-        return x
-    }
-
-    fun takeLast(): T? {
-        val x =
-            try {
-                this.removeLast()
-            } catch (e: NoSuchElementException) {
-                null
-            }
         behaviorSubject.onNext(this)
         return x
     }
