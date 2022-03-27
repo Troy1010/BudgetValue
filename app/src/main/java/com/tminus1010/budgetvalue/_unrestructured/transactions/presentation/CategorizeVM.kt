@@ -5,13 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
-import com.tminus1010.budgetvalue.app.SaveTransactionInteractor
 import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
-import com.tminus1010.budgetvalue.app.CategoriesInteractor
-import com.tminus1010.budgetvalue.app.FuturesInteractor
-import com.tminus1010.budgetvalue.app.TransactionsInteractor
+import com.tminus1010.budgetvalue.app.*
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.Future
@@ -42,6 +39,7 @@ class CategorizeVM @Inject constructor(
     errors: Errors,
     futuresRepo: FuturesRepo,
     private val futuresInteractor: FuturesInteractor,
+    private val redoUndoInteractor: RedoUndoInteractor,
 ) : ViewModel() {
     // # User Intents
     fun userSimpleCategorize(category: Category) {
@@ -62,13 +60,13 @@ class CategorizeVM @Inject constructor(
 
     fun userUndo() {
         GlobalScope.launch(block = spinnerService.decorate {
-            saveTransactionInteractor.undo()
+            redoUndoInteractor.undo()
         })
     }
 
     fun userRedo() {
         GlobalScope.launch(block = spinnerService.decorate {
-            saveTransactionInteractor.redo()
+            redoUndoInteractor.redo()
         })
     }
 
@@ -104,8 +102,8 @@ class CategorizeVM @Inject constructor(
     val navToReceiptCategorization = MutableSharedFlow<Transaction>()
 
     // # State
-    val isUndoAvailable = saveTransactionInteractor.isUndoAvailable
-    val isRedoAvailable = saveTransactionInteractor.isRedoAvailable
+    val isUndoAvailable = redoUndoInteractor.isUndoAvailable
+    val isRedoAvailable = redoUndoInteractor.isRedoAvailable
     val isTransactionAvailable =
         transactionsInteractor.mostRecentUncategorizedSpend
             .map { it != null }
