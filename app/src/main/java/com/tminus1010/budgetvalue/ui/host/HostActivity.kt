@@ -138,10 +138,11 @@ class HostActivity : AppCompatActivity() {
                         val importTransactionsResult = importTransactions(result.data!!.data!!)
                         showAlertDialog(
                             NativeText.Simple(
-                                """Import Successful
-                                    ${importTransactionsResult.numberOfTransactionsIgnoredBecauseTheyWereAlreadyImported} ignored because they were already imported.
-                                    ${importTransactionsResult.numberOfTransactionsImported} imported.
-                                    ${importTransactionsResult.numberOfTransactionsCategorizedByFutures} categorized by futures.
+                                """
+                                    Import Successful
+                                    ${importTransactionsResult.numberOfTransactionsImported} imported
+                                    ${importTransactionsResult.numberOfTransactionsIgnoredBecauseTheyWereAlreadyImported} ignored because they were already imported
+                                    ${importTransactionsResult.numberOfTransactionsCategorizedByFutures} categorized by futures
                                 """.trimIndent()
                             )
                         )
