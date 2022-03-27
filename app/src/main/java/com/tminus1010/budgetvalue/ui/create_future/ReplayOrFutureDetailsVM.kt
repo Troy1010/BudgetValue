@@ -7,7 +7,7 @@ import com.tminus1010.budgetvalue._unrestructured.transactions.presentation.mode
 import com.tminus1010.budgetvalue.all_layers.NoDescriptionEnteredException
 import com.tminus1010.budgetvalue.all_layers.extensions.*
 import com.tminus1010.budgetvalue.app.CategoriesInteractor
-import com.tminus1010.budgetvalue.app.CategorizeAllMatchingUncategorizedTransactionsInteractor
+import com.tminus1010.budgetvalue.app.CategorizeMatchingUncategorizedTransactions
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.domain.*
 import com.tminus1010.budgetvalue.framework.source_objects.SourceHashMap
@@ -28,7 +28,7 @@ class ReplayOrFutureDetailsVM @Inject constructor(
     private val selectedCategoriesModel: SelectCategoriesModel,
     private val futuresRepo: FuturesRepo,
     private val toaster: Toaster,
-    private val categorizeAllMatchingUncategorizedTransactionsInteractor: CategorizeAllMatchingUncategorizedTransactionsInteractor,
+    private val categorizeMatchingUncategorizedTransactions: CategorizeMatchingUncategorizedTransactions,
     private val setSearchTextsSharedVM: SetSearchTextsSharedVM,
 ) : ViewModel() {
     // # Setup
@@ -60,7 +60,7 @@ class ReplayOrFutureDetailsVM @Inject constructor(
             runBlocking {
                 futuresRepo.push(futureToPush)
                 if (futureToPush.terminationStrategy == TerminationStrategy.PERMANENT)
-                    categorizeAllMatchingUncategorizedTransactionsInteractor(futureToPush.onImportMatcher::isMatch, futureToPush::categorize)
+                    categorizeMatchingUncategorizedTransactions(futureToPush.onImportMatcher::isMatch, futureToPush::categorize)
                         .also { toaster.toast("$it transactions categorized") }
                 if (futureToPush.name != future.value!!.name) futuresRepo.delete(future.value!!)
                 userTryNavUp()

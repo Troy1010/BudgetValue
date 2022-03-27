@@ -1,17 +1,16 @@
 package com.tminus1010.budgetvalue.ui.create_future
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
-import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._unrestructured.transactions.view.ChooseTransactionFrag
-import com.tminus1010.budgetvalue.all_layers.extensions.easyText2
+import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.databinding.FragCreateFutureBinding
+import com.tminus1010.budgetvalue.framework.view.ShowAlertDialog
 import com.tminus1010.budgetvalue.framework.view.viewBinding
 import com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesFrag
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsFrag
@@ -30,21 +29,13 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // # Setup
+        viewModel.showAlertDialog.onNext(ShowAlertDialog(requireActivity()))
         // # Events
         viewModel.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         viewModel.navToCategorySelection.observe(viewLifecycleOwner) { SelectCategoriesFrag.navTo(nav) }
         viewModel.navToChooseTransaction.observe(viewLifecycleOwner) { ChooseTransactionFrag.navTo(nav) }
         viewModel.navToSetSearchTexts.observe(viewLifecycleOwner) { SetSearchTextsFrag.navTo(nav) }
-        viewModel.saveReplayDialogBox.observe(viewLifecycleOwner) {
-            val editText = EditText(requireContext())
-            editText.easyText2 = it
-            AlertDialog.Builder(requireContext())
-                .setMessage("What would you like to name this future?")
-                .setView(editText)
-                .setPositiveButton("Submit") { _, _ -> viewModel.userTrySubmitWithName(editText.easyText2!!) }
-                .setNegativeButton("Cancel") { _, _ -> }
-                .show()
-        }
         // # State
         vb.tmTableViewOtherInput.bind(viewModel.otherInput) {
             initialize(

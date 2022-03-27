@@ -45,7 +45,7 @@ class CategorizeVM @Inject constructor(
     private val futuresInteractor: FuturesInteractor,
     private val redoUndoInteractor: RedoUndoInteractor,
     private val editStringSharedVM: EditStringSharedVM,
-    private val categorizeAllMatchingUncategorizedTransactionsInteractor: CategorizeAllMatchingUncategorizedTransactionsInteractor,
+    private val categorizeMatchingUncategorizedTransactions: CategorizeMatchingUncategorizedTransactions,
 ) : ViewModel() {
     // # User Intents
     fun userSimpleCategorize(category: Category) {
@@ -114,7 +114,7 @@ class CategorizeVM @Inject constructor(
 
     fun userUseDescription(future: Future) {
         GlobalScope.launch(block = spinnerService.decorate {
-            categorizeAllMatchingUncategorizedTransactionsInteractor(TransactionMatcher.SearchText(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)::isMatch, future::categorize)
+            categorizeMatchingUncategorizedTransactions(TransactionMatcher.SearchText(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)::isMatch, future::categorize)
                 .also { toaster.toast("$it transactions categorized") }
         })
     }
@@ -122,7 +122,7 @@ class CategorizeVM @Inject constructor(
     fun userUseDescriptionWithEdit(future: Future) {
         editStringSharedVM.userSubmitString.take(1).takeUntilSignal(editStringSharedVM.userCancel).observe(GlobalScope) { s ->
             GlobalScope.launch(block = spinnerService.decorate { // TODO: There should be a better way than launching within a launch, right?
-                categorizeAllMatchingUncategorizedTransactionsInteractor(TransactionMatcher.SearchText(s)::isMatch, future::categorize)
+                categorizeMatchingUncategorizedTransactions(TransactionMatcher.SearchText(s)::isMatch, future::categorize)
                     .also { toaster.toast("$it transactions categorized") }
             })
         }

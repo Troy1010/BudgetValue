@@ -5,23 +5,23 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue._unrestructured.transactions.presentation.model.SearchType
 import com.tminus1010.budgetvalue.all_layers.NoDescriptionEnteredException
-import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
-import com.tminus1010.budgetvalue.all_layers.extensions.flatMapSourceHashMap
-import com.tminus1010.budgetvalue.all_layers.extensions.onNext
-import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
+import com.tminus1010.budgetvalue.all_layers.extensions.*
 import com.tminus1010.budgetvalue.app.CategoriesInteractor
-import com.tminus1010.budgetvalue.app.CategorizeAllMatchingUncategorizedTransactionsInteractor
+import com.tminus1010.budgetvalue.app.CategorizeMatchingUncategorizedTransactions
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.domain.*
 import com.tminus1010.budgetvalue.framework.source_objects.SourceHashMap
+import com.tminus1010.budgetvalue.framework.view.ShowAlertDialog
 import com.tminus1010.budgetvalue.framework.view.Toaster
 import com.tminus1010.budgetvalue.ui.all_features.model.*
 import com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesModel
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -32,10 +32,13 @@ class CreateFutureVM @Inject constructor(
     private val selectedCategoriesModel: SelectCategoriesModel,
     private val futuresRepo: FuturesRepo,
     private val toaster: Toaster,
-    private val categorizeAllMatchingUncategorizedTransactionsInteractor: CategorizeAllMatchingUncategorizedTransactionsInteractor,
+    private val categorizeMatchingUncategorizedTransactions: CategorizeMatchingUncategorizedTransactions,
     private val setSearchTextsSharedVM: SetSearchTextsSharedVM,
     private val transactionsInteractor: TransactionsInteractor,
 ) : ViewModel() {
+    // # Setup
+    val showAlertDialog = MutableSharedFlow<ShowAlertDialog>(1)
+
     // # User Intents
     fun userTryNavToCategorySelection() {
         navToCategorySelection.easyEmit()
@@ -43,48 +46,50 @@ class CreateFutureVM @Inject constructor(
 
     @SuppressLint("VisibleForTests")
     fun userTrySubmit() {
-        saveReplayDialogBox.onNext(
-            categoryAmountFormulas.value
-                .map { (category, amountFormula) ->
-                    if (category != fillCategory.value)
-                        amountFormula.toDisplayStr2() + " " + category.name
-                    else
-                        category.name
+        GlobalScope.launch {
+            showAlertDialog.value!!(
+                body = "What would you like to name this future?",
+                initialText = categoryAmountFormulas.value
+                    .map { (category, amountFormula) ->
+                        if (category != fillCategory.value)
+                            amountFormula.toDisplayStr2() + " " + category.name
+                        else
+                            category.name
+                    }
+                    .joinToString(", "),
+                onYes = {
+                    try {
+                        val futureToPush =
+                            Future(
+                                name = it?.toString() ?: "",
+                                categoryAmountFormulas = categoryAmountFormulas.value,
+                                fillCategory = fillCategory.value!!,
+                                terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.ONCE,
+                                terminationDate = null,
+                                isAvailableForManual = true,
+                                onImportMatcher = when (searchType.value) {
+                                    SearchType.DESCRIPTION -> TransactionMatcher.Multi(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) })
+                                    SearchType.DESCRIPTION_AND_TOTAL -> TransactionMatcher.Multi(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) }.plus(TransactionMatcher.ByValue(totalGuess.value)))
+                                    SearchType.TOTAL -> TransactionMatcher.ByValue(totalGuess.value)
+                                },
+                                totalGuess = totalGuess.value,
+                            )
+                        runBlocking {
+                            futuresRepo.push(futureToPush)
+                            if (futureToPush.terminationStrategy == TerminationStrategy.PERMANENT)
+                                categorizeMatchingUncategorizedTransactions(futureToPush.onImportMatcher::isMatch, futureToPush::categorize)
+                                    .also { toaster.toast("$it transactions categorized") }
+                            selectedCategoriesModel.clearSelection()
+                            navUp.emit(Unit)
+                        }
+                    } catch (e: Throwable) {
+                        when (e) {
+                            is NoDescriptionEnteredException -> toaster.toast("Fill description or use another search type")
+                            else -> throw e
+                        }
+                    }
                 }
-                .joinToString(", ")
-        )
-    }
-
-    fun userTrySubmitWithName(s: String) {
-        try {
-            val futureToPush =
-                Future(
-                    name = s,
-                    categoryAmountFormulas = categoryAmountFormulas.value,
-                    fillCategory = fillCategory.value!!,
-                    terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.ONCE,
-                    terminationDate = null,
-                    isAvailableForManual = true,
-                    onImportMatcher = when (searchType.value) {
-                        SearchType.DESCRIPTION -> TransactionMatcher.Multi(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) })
-                        SearchType.DESCRIPTION_AND_TOTAL -> TransactionMatcher.Multi(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) }.plus(TransactionMatcher.ByValue(totalGuess.value)))
-                        SearchType.TOTAL -> TransactionMatcher.ByValue(totalGuess.value)
-                    },
-                    totalGuess = totalGuess.value,
-                )
-            runBlocking {
-                futuresRepo.push(futureToPush)
-                if (futureToPush.terminationStrategy == TerminationStrategy.PERMANENT)
-                    categorizeAllMatchingUncategorizedTransactionsInteractor(futureToPush.onImportMatcher::isMatch, futureToPush::categorize)
-                        .also { toaster.toast("$it transactions categorized") }
-                selectedCategoriesModel.clearSelection()
-                navUp.emit(Unit)
-            }
-        } catch (e: Throwable) {
-            when (e) {
-                is NoDescriptionEnteredException -> toaster.toast("Fill description or use another search type")
-                else -> throw e
-            }
+            )
         }
     }
 
@@ -150,7 +155,6 @@ class CreateFutureVM @Inject constructor(
     val navToCategorySelection = MutableSharedFlow<Unit>()
     val navToChooseTransaction = MutableSharedFlow<Unit>()
     val navToSetSearchTexts = MutableSharedFlow<Unit>()
-    val saveReplayDialogBox = MutableSharedFlow<String>()
 
     // # State
     val otherInput =
