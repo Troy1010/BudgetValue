@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.data.service
+package com.tminus1010.budgetvalue.app
 
 import android.app.Application
 import android.net.Uri

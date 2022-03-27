@@ -22,7 +22,7 @@ import com.tminus1010.budgetvalue.all_layers.extensions.unCheckAllMenuItems
 import com.tminus1010.budgetvalue.app.ActivePlanInteractor
 import com.tminus1010.budgetvalue.app.AppInitInteractor
 import com.tminus1010.budgetvalue.app.IsPlanFeatureEnabledUC
-import com.tminus1010.budgetvalue.data.service.ImportTransactions
+import com.tminus1010.budgetvalue.app.ImportTransactions
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.framework.view.SpinnerService
 import com.tminus1010.budgetvalue.framework.view.Toaster

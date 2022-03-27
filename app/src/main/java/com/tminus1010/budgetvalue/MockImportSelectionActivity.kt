@@ -4,7 +4,7 @@ import android.content.res.AssetManager
 import android.os.Bundle
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
-import com.tminus1010.budgetvalue.data.service.ImportTransactions
+import com.tminus1010.budgetvalue.app.ImportTransactions
 import com.tminus1010.budgetvalue.databinding.ActivityMockImportSelectionBinding
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast

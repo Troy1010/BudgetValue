@@ -53,6 +53,7 @@ class TransactionsInteractor @Inject constructor(
         // TODO: Make sure that IsReconciliationReady works with this change
         transactions.maxByOrNull { it.date }
             ?.also { mostRecentTransaction -> latestDateOfMostRecentImportRepo.set(mostRecentTransaction.date) }
+
     }
 
     suspend fun importTransactions(inputStream: InputStream) =
@@ -104,21 +105,11 @@ class TransactionsInteractor @Inject constructor(
             .map { it.spends }
             .shareIn(GlobalScope, SharingStarted.WhileSubscribed())
 
-    @Deprecated("use uncategorizedSpends2")
-    val uncategorizedSpends: Observable<List<Transaction>> =
-        spends
-            .map { it.filter { it.isUncategorized } }
     val uncategorizedSpends2 =
         spends2
             .map { it.filter { it.isUncategorized } }
             .stateIn(GlobalScope, SharingStarted.Eagerly, emptyList())
 
-    @Deprecated("use mostRecentUncategorizedSpend2")
-    val mostRecentUncategorizedSpend =
-        transactionsRepo.transactionsAggregate
-            .mapBox(TransactionsAggregate::mostRecentUncategorizedSpend)
-            .replayNonError(1)
-            .nonLazy()
     val mostRecentUncategorizedSpend2 =
         transactionsRepo.transactionsAggregate2
             .map { it.mostRecentUncategorizedSpend }
