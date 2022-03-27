@@ -4,7 +4,6 @@ import com.tminus1010.budgetvalue.all_layers.extensions.isZero
 import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.data.ActivePlanRepo
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.TransactionsInteractor
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 

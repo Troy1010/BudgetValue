@@ -10,7 +10,7 @@ import com.tminus1010.budgetvalue.data.PlansRepo
 import com.tminus1010.budgetvalue.domain.plan.Plan
 import com.tminus1010.budgetvalue._unrestructured.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue._unrestructured.reconcile.domain.ReconciliationToDo
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.TransactionsInteractor
+import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.rx.extensions.doLogx
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Observable

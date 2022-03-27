@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue._unrestructured.reconcile.data
 
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.TransactionsInteractor
+import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.app.IsPlanFeatureEnabledUC
 import com.tminus1010.budgetvalue.data.LatestDateOfMostRecentImportRepo

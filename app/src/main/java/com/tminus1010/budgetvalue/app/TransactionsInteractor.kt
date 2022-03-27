@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor
+package com.tminus1010.budgetvalue.app
 
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionBlock

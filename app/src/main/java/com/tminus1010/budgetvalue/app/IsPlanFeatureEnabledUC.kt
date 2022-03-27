@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.annotation.VisibleForTesting
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.budgetvalue.all_layers.extensions.cold
 import com.tminus1010.budgetvalue.all_layers.extensions.mapBox
 import com.tminus1010.budgetvalue.data.LatestDateOfMostRecentImportRepo

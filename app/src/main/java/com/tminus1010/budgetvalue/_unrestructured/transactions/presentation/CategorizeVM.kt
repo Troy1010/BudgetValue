@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.SaveTransactionInteractor
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.TransactionsInteractor
+import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext

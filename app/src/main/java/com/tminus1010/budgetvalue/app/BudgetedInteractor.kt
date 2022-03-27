@@ -10,7 +10,6 @@ import com.tminus1010.budgetvalue.domain.Budgeted
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.data.PlansRepo
 import com.tminus1010.budgetvalue._unrestructured.reconcile.data.ReconciliationsRepo
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import com.tminus1010.tmcommonkotlin.rx.extensions.total
 import com.tminus1010.tmcommonkotlin.rx.replayNonError

@@ -9,7 +9,7 @@ import com.tminus1010.budgetvalue.app.AppInitInteractor
 import com.tminus1010.budgetvalue.data.AppInitRepo
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.TransactionsInteractor
+import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue._unrestructured.transactions.view.TransactionBlockCompletionFrag
 import com.tminus1010.budgetvalue.domain.TransactionMatcher
 import com.tminus1010.tmcommonkotlin.misc.generateUniqueID

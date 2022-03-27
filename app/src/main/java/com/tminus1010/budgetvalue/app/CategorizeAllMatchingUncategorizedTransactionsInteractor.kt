@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue.app
 
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.budgetvalue._unrestructured.transactions.data.repo.TransactionsRepo
 import javax.inject.Inject
 

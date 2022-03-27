@@ -15,7 +15,7 @@ import com.tminus1010.budgetvalue.ui.all_features.model.BasicHeaderWithSubtitleP
 import com.tminus1010.budgetvalue.ui.all_features.model.TextPresentationModel
 import com.tminus1010.budgetvalue.data.PlansRepo
 import com.tminus1010.budgetvalue._unrestructured.reconcile.data.ReconciliationsRepo
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.TransactionsInteractor
+import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.value

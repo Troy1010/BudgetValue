@@ -10,7 +10,7 @@ import com.tminus1010.budgetvalue._unrestructured.reconcile.data.ActiveReconcili
 import com.tminus1010.budgetvalue._unrestructured.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue._unrestructured.reconcile.domain.Reconciliation
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionBlock
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.TransactionsInteractor
+import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import com.tminus1010.tmcommonkotlin.rx.nonLazy
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
