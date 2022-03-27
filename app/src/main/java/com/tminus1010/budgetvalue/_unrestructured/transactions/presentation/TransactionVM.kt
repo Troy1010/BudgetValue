@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue._unrestructured.transactions.presentation
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.SaveTransactionInteractor
+import com.tminus1010.budgetvalue.app.SaveTransactionInteractor
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.TextVMItem
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr

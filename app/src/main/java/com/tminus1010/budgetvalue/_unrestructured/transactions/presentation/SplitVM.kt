@@ -4,7 +4,7 @@ import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.presentation.CategoryAmountFormulaVMItemsBaseVM
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.SaveTransactionInteractor
+import com.tminus1010.budgetvalue.app.SaveTransactionInteractor
 import com.tminus1010.budgetvalue.all_layers.extensions.cold
 import com.tminus1010.budgetvalue.all_layers.extensions.nonLazyCache
 import com.tminus1010.budgetvalue.all_layers.extensions.unbox
@@ -16,7 +16,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
-import io.reactivex.rxjava3.subjects.Subject
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.math.BigDecimal

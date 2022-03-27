@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.domain
+package com.tminus1010.budgetvalue.app.model
 
 data class Redoable(
     val redo: suspend () -> Unit,

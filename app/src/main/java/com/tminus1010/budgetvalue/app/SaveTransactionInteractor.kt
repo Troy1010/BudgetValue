@@ -1,8 +1,8 @@
-package com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor
+package com.tminus1010.budgetvalue.app
 
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
 import com.tminus1010.budgetvalue._unrestructured.transactions.data.repo.TransactionsRepo
-import com.tminus1010.budgetvalue.domain.Redoable
+import com.tminus1010.budgetvalue.app.model.Redoable
 import com.tminus1010.budgetvalue.framework.source_objects.SourceList
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
