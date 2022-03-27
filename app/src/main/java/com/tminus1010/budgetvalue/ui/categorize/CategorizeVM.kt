@@ -50,7 +50,7 @@ class CategorizeVM @Inject constructor(
     // # User Intents
     fun userSimpleCategorize(category: Category) {
         GlobalScope.launch(block = spinnerService.decorate {
-            saveTransactionInteractor.saveTransaction(
+            saveTransactionInteractor.saveTransactions(
                 transactionsInteractor.mostRecentUncategorizedSpend.value!!.categorize(category)
             )
         })
@@ -58,7 +58,7 @@ class CategorizeVM @Inject constructor(
 
     fun userReplay(future: Future) {
         GlobalScope.launch(block = spinnerService.decorate {
-            saveTransactionInteractor.saveTransaction(
+            saveTransactionInteractor.saveTransactions(
                 future.categorize(transactionsInteractor.mostRecentUncategorizedSpend.value!!)
             )
         })

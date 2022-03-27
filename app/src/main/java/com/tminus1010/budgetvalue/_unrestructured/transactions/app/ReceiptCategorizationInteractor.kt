@@ -26,7 +26,7 @@ class ReceiptCategorizationInteractor @Inject constructor(
 
     fun submitCategorization() {
         GlobalScope.launch {
-            saveTransactionInteractor.saveTransaction(
+            saveTransactionInteractor.saveTransactions(
                 transactionsInteractor.mostRecentUncategorizedSpend.value!!
                     .copy(categoryAmounts = categoryAmountsRedefined.value)
             )

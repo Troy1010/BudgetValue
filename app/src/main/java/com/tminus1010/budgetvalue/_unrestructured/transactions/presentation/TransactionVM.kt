@@ -24,7 +24,7 @@ class TransactionVM @Inject constructor(
     // # User Intents
     fun userClearTransaction() {
         GlobalScope.launch {
-            saveTransactionInteractor.saveTransaction(transaction.value!!.categorize(emptyMap()))
+            saveTransactionInteractor.saveTransactions(transaction.value!!.categorize(emptyMap()))
             navUp.onNext(Unit)
         }
     }

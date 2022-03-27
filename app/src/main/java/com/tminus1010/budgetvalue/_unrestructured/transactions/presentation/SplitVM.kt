@@ -35,7 +35,7 @@ class SplitVM @Inject constructor(
     // TODO("Why does userSubmitCategorization not work for only 1 category?")
     fun userSubmitCategorization() {
         GlobalScope.launch {
-            saveTransactionInteractor.saveTransaction(transactionToPush.unbox)
+            saveTransactionInteractor.saveTransactions(transactionToPush.unbox)
             selectCategoriesModel.clearSelection()
             navUp.onNext(Unit)
         }
