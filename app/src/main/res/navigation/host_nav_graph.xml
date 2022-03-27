@@ -49,7 +49,7 @@
             tools:layout="@layout/frag_category_settings" />
         <fragment
             android:id="@+id/categorizeFrag"
-            android:name="com.tminus1010.budgetvalue._unrestructured.transactions.view.CategorizeFrag"
+            android:name="com.tminus1010.budgetvalue.ui.categorize.CategorizeFrag"
             android:label="CategorizeFrag"
             tools:layout="@layout/frag_categorize">
             <action

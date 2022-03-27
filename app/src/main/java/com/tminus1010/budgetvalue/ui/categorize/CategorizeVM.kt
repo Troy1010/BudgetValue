@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._unrestructured.transactions.presentation
+package com.tminus1010.budgetvalue.ui.categorize
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
