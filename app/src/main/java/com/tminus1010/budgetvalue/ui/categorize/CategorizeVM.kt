@@ -3,11 +3,11 @@ package com.tminus1010.budgetvalue.ui.categorize
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesModel
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
 import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
+import com.tminus1010.budgetvalue.all_layers.extensions.takeUntilSignal
 import com.tminus1010.budgetvalue.app.*
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.domain.Category
@@ -18,8 +18,11 @@ import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem2
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItems
+import com.tminus1010.budgetvalue.ui.edit_string.EditStringSharedVM
 import com.tminus1010.budgetvalue.ui.errors.Errors
+import com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesModel
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.divertErrors
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
@@ -40,6 +43,7 @@ class CategorizeVM @Inject constructor(
     futuresRepo: FuturesRepo,
     private val futuresInteractor: FuturesInteractor,
     private val redoUndoInteractor: RedoUndoInteractor,
+    private val editStringSharedVM: EditStringSharedVM,
 ) : ViewModel() {
     // # User Intents
     fun userSimpleCategorize(category: Category) {
@@ -87,10 +91,23 @@ class CategorizeVM @Inject constructor(
         GlobalScope.launch(block = spinnerService.decorate {
             futuresInteractor.addTransactionDescriptionToFuture(
                 description = transactionsInteractor.mostRecentUncategorizedSpend.value!!.description,
-                future = future
+                future = future,
             )
                 .also { toaster.toast("$it transactions categorized") }
         })
+    }
+
+    fun userAddTransactionToFutureWithEdit(future: Future) {
+        editStringSharedVM.userSubmitString.take(1).takeUntilSignal(editStringSharedVM.userCancel).observe(GlobalScope) { s ->
+            GlobalScope.launch(block = spinnerService.decorate { // TODO: There should be a better way than launching within a launch, right?
+                futuresInteractor.addTransactionDescriptionToFuture(
+                    description = s,
+                    future = future,
+                )
+                    .also { toaster.toast("$it transactions categorized") }
+            })
+        }
+        navToEditStringForAddTransactionToFutureWithEdit.onNext(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)
     }
 
     // # Events
@@ -100,6 +117,7 @@ class CategorizeVM @Inject constructor(
     val navToNewCategory = MutableSharedFlow<Unit>()
     val navToReplayOrFutureDetails = MutableSharedFlow<Future>()
     val navToReceiptCategorization = MutableSharedFlow<Transaction>()
+    val navToEditStringForAddTransactionToFutureWithEdit = MutableSharedFlow<String>()
 
     // # State
     val isUndoAvailable = redoUndoInteractor.isUndoAvailable
@@ -158,8 +176,12 @@ class CategorizeVM @Inject constructor(
                         onClick = { userReplay(it) },
                         menuVMItems = MenuVMItems(
                             MenuVMItem(
-                                title = "Add Current Transaction Name",
+                                title = "Add Description",
                                 onClick = { userAddTransactionToFuture(it) }
+                            ),
+                            MenuVMItem(
+                                title = "Add Description With Edit",
+                                onClick = { userAddTransactionToFutureWithEdit(it) }
                             ),
                             MenuVMItem(
                                 title = "Edit",

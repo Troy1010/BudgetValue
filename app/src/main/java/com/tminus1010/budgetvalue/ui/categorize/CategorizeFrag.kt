@@ -21,6 +21,8 @@ import com.tminus1010.budgetvalue._unrestructured.categories.CategoryAmountsConv
 import com.tminus1010.budgetvalue._unrestructured.transactions.view.ReceiptCategorizationHostFrag
 import com.tminus1010.budgetvalue._unrestructured.transactions.view.SplitFrag
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
+import com.tminus1010.budgetvalue.ui.edit_string.EditStringFrag
+import com.tminus1010.budgetvalue.ui.edit_string.EditStringSharedVM
 import com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesModel
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
@@ -48,6 +50,9 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     @Inject
     lateinit var errors: Errors
 
+    @Inject
+    lateinit var editStringSharedVM: EditStringSharedVM
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Events
@@ -58,6 +63,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         viewModel.navToCategorySettings.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, it.name, false) }
         viewModel.navToReplayOrFutureDetails.observe(viewLifecycleOwner) { ReplayOrFutureDetailsFrag.navTo(nav, moshiWithCategoriesProvider, it, selectCategoriesModel) }
         viewModel.navToReceiptCategorization.observe(viewLifecycleOwner) { ReceiptCategorizationHostFrag.navTo(nav, it, categoryAmountsConverter) }
+        viewModel.navToEditStringForAddTransactionToFutureWithEdit.observe(viewLifecycleOwner) { EditStringFrag.navTo(nav, it, editStringSharedVM) }
         // # State
         vb.textviewDate.bind(viewModel.date) { text = it }
         vb.textviewAmount.bind(viewModel.latestUncategorizedTransactionAmount) { text = it }
