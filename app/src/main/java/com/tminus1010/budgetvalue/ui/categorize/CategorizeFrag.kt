@@ -9,21 +9,22 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue._unrestructured.categories.CategoryAmountsConverter
+import com.tminus1010.budgetvalue._unrestructured.transactions.view.ReceiptCategorizationHostFrag
+import com.tminus1010.budgetvalue._unrestructured.transactions.view.SplitFrag
 import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider
+import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.framework.view.GenViewHolder2
 import com.tminus1010.budgetvalue.framework.view.LifecycleRVAdapter2
 import com.tminus1010.budgetvalue.framework.view.viewBinding
 import com.tminus1010.budgetvalue.ui.category_settings.CategorySettingsFrag
 import com.tminus1010.budgetvalue.ui.create_future.CreateFutureFrag
 import com.tminus1010.budgetvalue.ui.create_future.ReplayOrFutureDetailsFrag
-import com.tminus1010.budgetvalue.ui.errors.Errors
-import com.tminus1010.budgetvalue._unrestructured.categories.CategoryAmountsConverter
-import com.tminus1010.budgetvalue._unrestructured.transactions.view.ReceiptCategorizationHostFrag
-import com.tminus1010.budgetvalue._unrestructured.transactions.view.SplitFrag
-import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.ui.edit_string.EditStringFrag
 import com.tminus1010.budgetvalue.ui.edit_string.EditStringSharedVM
+import com.tminus1010.budgetvalue.ui.errors.Errors
 import com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesModel
+import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
@@ -53,15 +54,18 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     @Inject
     lateinit var editStringSharedVM: EditStringSharedVM
 
+    @Inject
+    lateinit var setSearchTextsSharedVM: SetSearchTextsSharedVM
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Events
         errors.observe(viewLifecycleOwner) { throw it }
-        viewModel.navToCreateFuture2.observe(viewLifecycleOwner) { CreateFutureFrag.navTo(nav) }
+        viewModel.navToCreateFuture.observe(viewLifecycleOwner) { CreateFutureFrag.navTo(nav, setSearchTextsSharedVM) }
         viewModel.navToSplit.observe(viewLifecycleOwner) { SplitFrag.navTo(nav, it) }
         viewModel.navToNewCategory.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, null, true) }
         viewModel.navToCategorySettings.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, it.name, false) }
-        viewModel.navToReplayOrFutureDetails.observe(viewLifecycleOwner) { ReplayOrFutureDetailsFrag.navTo(nav, moshiWithCategoriesProvider, it, selectCategoriesModel) }
+        viewModel.navToReplayOrFutureDetails.observe(viewLifecycleOwner) { ReplayOrFutureDetailsFrag.navTo(nav, moshiWithCategoriesProvider, it, selectCategoriesModel, setSearchTextsSharedVM) }
         viewModel.navToReceiptCategorization.observe(viewLifecycleOwner) { ReceiptCategorizationHostFrag.navTo(nav, it, categoryAmountsConverter) }
         viewModel.navToEditStringForAddTransactionToFutureWithEdit.observe(viewLifecycleOwner) { EditStringFrag.navTo(nav, it, editStringSharedVM) }
         // # State

@@ -3,8 +3,6 @@ package com.tminus1010.budgetvalue.ui.create_future
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesModel
-import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue._unrestructured.transactions.presentation.model.SearchType
 import com.tminus1010.budgetvalue.all_layers.NoDescriptionEnteredException
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
@@ -18,11 +16,10 @@ import com.tminus1010.budgetvalue.domain.*
 import com.tminus1010.budgetvalue.framework.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.framework.view.Toaster
 import com.tminus1010.budgetvalue.ui.all_features.model.*
+import com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesModel
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
-import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
 import java.math.BigDecimal
@@ -36,13 +33,7 @@ class CreateFutureVM @Inject constructor(
     private val toaster: Toaster,
     private val categorizeAllMatchingUncategorizedTransactionsInteractor: CategorizeAllMatchingUncategorizedTransactionsInteractor,
     private val setSearchTextsSharedVM: SetSearchTextsSharedVM,
-    private val transactionsInteractor: TransactionsInteractor,
 ) : ViewModel() {
-    init {
-        transactionsInteractor.mostRecentUncategorizedSpend
-            .observe(GlobalScope) { setSearchTextsSharedVM.searchTexts.adjustTo(listOfNotNull(it?.description)) }
-    }
-
     // # User Intents
     fun userTryNavToCategorySelection() {
         navToCategorySelection.easyEmit()

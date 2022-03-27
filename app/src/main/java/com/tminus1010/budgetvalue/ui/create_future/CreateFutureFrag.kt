@@ -14,6 +14,7 @@ import com.tminus1010.budgetvalue.framework.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragCreateFutureBinding
 import com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesFrag
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsFrag
+import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
@@ -61,7 +62,8 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
     }
 
     companion object {
-        fun navTo(nav: NavController) {
+        fun navTo(nav: NavController, setSearchTextsSharedVM: SetSearchTextsSharedVM) {
+            setSearchTextsSharedVM.searchTexts.clear()
             nav.navigate(R.id.createFutureFrag)
         }
     }

@@ -86,7 +86,7 @@ class CategorizeVM @Inject constructor(
     }
 
     fun userTryNavToCreateFuture2() {
-        navToCreateFuture2.onNext()
+        navToCreateFuture.onNext()
     }
 
     fun userAddTransactionToFuture(future: Future) {
@@ -130,7 +130,7 @@ class CategorizeVM @Inject constructor(
     }
 
     // # Events
-    val navToCreateFuture2 = MutableSharedFlow<Unit>()
+    val navToCreateFuture = MutableSharedFlow<Unit>()
     val navToSplit = MutableSharedFlow<Transaction>()
     val navToCategorySettings = MutableSharedFlow<Category>()
     val navToNewCategory = MutableSharedFlow<Unit>()

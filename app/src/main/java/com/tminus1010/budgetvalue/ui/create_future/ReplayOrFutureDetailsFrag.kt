@@ -13,7 +13,9 @@ import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue.databinding.FragCreateFutureBinding
 import com.tminus1010.budgetvalue.domain.Future
+import com.tminus1010.budgetvalue.domain.TransactionMatcher
 import com.tminus1010.budgetvalue.framework.view.viewBinding
+import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
@@ -63,7 +65,8 @@ class ReplayOrFutureDetailsFrag : Fragment(R.layout.frag_create_future) {
     }
 
     companion object {
-        fun navTo(nav: NavController, moshiWithCategoriesProvider: MoshiWithCategoriesProvider, future: Future, selectCategoriesModel: SelectCategoriesModel) {
+        fun navTo(nav: NavController, moshiWithCategoriesProvider: MoshiWithCategoriesProvider, future: Future, selectCategoriesModel: SelectCategoriesModel, setSearchTextsSharedVM: SetSearchTextsSharedVM) {
+            setSearchTextsSharedVM.searchTexts.adjustTo((future.onImportMatcher as? TransactionMatcher.Multi)?.transactionMatchers?.filterIsInstance<TransactionMatcher.SearchText>()?.map { it.searchText } ?: listOfNotNull((future.onImportMatcher as? TransactionMatcher.SearchText)?.searchText))
             runBlocking { selectCategoriesModel.clearSelection(); selectCategoriesModel.selectCategories(*future.categoryAmountFormulas.keys.toTypedArray()) }
             nav.navigate(R.id.replayOrFutureDetailsFrag, Bundle().apply {
                 putString(KEY1, moshiWithCategoriesProvider.moshi.toJson(future))
