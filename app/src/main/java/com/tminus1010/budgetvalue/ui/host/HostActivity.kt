@@ -128,7 +128,7 @@ class HostActivity : AppCompatActivity() {
         return super.onSupportNavigateUp()
     }
 
-    val activityResultLauncher =
+    val importTransactionsLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 try {
@@ -144,7 +144,7 @@ class HostActivity : AppCompatActivity() {
                         )
                     }
                 } catch (e: Throwable) {
-                    logz("Error duing importTransactions:", e)
+                    logz("Error during importTransactions:", e)
                     hostFrag.handle(e)
                 }
             }
