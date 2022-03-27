@@ -21,9 +21,10 @@ import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_layers.extensions.unCheckAllMenuItems
 import com.tminus1010.budgetvalue.app.ActivePlanInteractor
 import com.tminus1010.budgetvalue.app.AppInitInteractor
-import com.tminus1010.budgetvalue.app.IsPlanFeatureEnabledUC
 import com.tminus1010.budgetvalue.app.ImportTransactions
+import com.tminus1010.budgetvalue.app.IsPlanFeatureEnabledUC
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
+import com.tminus1010.budgetvalue.framework.view.ShowAlertDialog
 import com.tminus1010.budgetvalue.framework.view.SpinnerService
 import com.tminus1010.budgetvalue.framework.view.Toaster
 import com.tminus1010.budgetvalue.ui.all_features.LaunchSelectFile
@@ -55,6 +56,9 @@ class HostActivity : AppCompatActivity() {
 
     @Inject
     lateinit var toaster: Toaster
+
+    @Inject
+    lateinit var showAlertDialog: ShowAlertDialog
 
     @Inject
     lateinit var activePlanInteractor: ActivePlanInteractor
@@ -128,9 +132,19 @@ class HostActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 try {
-                    runBlocking { importTransactions(result.data!!.data!!) }
-                    toaster.toast(R.string.import_successful)
+                    runBlocking {
+                        val importTransactionsResult = importTransactions(result.data!!.data!!)
+                        showAlertDialog(
+                            activity = this@HostActivity,
+                            body = """Import Successful
+                                |Number of transactions ignored because they were already imported:${importTransactionsResult.numberOfTransactionsIgnoredBecauseTheyWereAlreadyImported}
+                                |Number of transactions imported:${importTransactionsResult.numberOfTransactionsImported}
+                                |Number of transactions categorized by futures:${importTransactionsResult.numberOfTransactionsCategorizedByFutures}
+                            """.trimMargin()
+                        )
+                    }
                 } catch (e: Throwable) {
+                    logz("Error duing importTransactions:", e)
                     hostFrag.handle(e)
                 }
             }

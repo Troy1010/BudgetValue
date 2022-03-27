@@ -3,6 +3,7 @@ package com.tminus1010.budgetvalue.ui.all_features.model
 import android.content.Context
 import androidx.appcompat.app.AlertDialog
 
+// TODO: Maybe use ShowAlertDialog instead..?
 class PopupVMItem(
     private val msg: String,
     private val onYes: () -> Unit,

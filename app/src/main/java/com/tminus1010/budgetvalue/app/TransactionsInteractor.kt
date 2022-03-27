@@ -36,26 +36,21 @@ class TransactionsInteractor @Inject constructor(
         var transactionsImportedCounter = 0
         var transactionsIgnoredBecauseTheyWereAlreadyImported = 0
         transactions
+            .filter { (transactionsRepo.getTransaction2(it.id) == null).also { if (!it) transactionsIgnoredBecauseTheyWereAlreadyImported++ } }
             .forEach { transaction ->
-                val transactionToPush =
+                val matchedFuture =
                     futuresRepo.futures.value!!
                         .find { it.onImportMatcher.isMatch(transaction) }
-                        ?.also { future ->
-                            if (future.terminationStrategy == TerminationStrategy.ONCE)
-                                futuresRepo.setTerminationDate(future, LocalDate.now())
-                        }
-                        ?.categorize(transaction)
-                        ?.also { categorizedCounter++ }
-                        ?: transaction
-                if (transactionsRepo.getTransaction2(transactionToPush.id) == null) {
-                    transactionsRepo.push(transactionToPush).blockingAwait()
-                    transactionsImportedCounter++
-                } else
-                    transactionsIgnoredBecauseTheyWereAlreadyImported++
+                val transactionToPush = matchedFuture?.categorize(transaction)?.also { categorizedCounter++ } ?: transaction
+                transactionsRepo.push(transactionToPush).blockingAwait()
+                if (matchedFuture != null && matchedFuture.terminationStrategy == TerminationStrategy.ONCE)
+                    futuresRepo.setTerminationDate(matchedFuture, LocalDate.now())
+                transactionsImportedCounter++
             }
         // TODO: Make sure that IsReconciliationReady works with this change
         transactions.maxByOrNull { it.date }
             ?.also { mostRecentTransaction -> latestDateOfMostRecentImportRepo.set(mostRecentTransaction.date) }
+        //
         return ImportTransactionsResult(
             numberOfTransactionsCategorizedByFutures = categorizedCounter,
             numberOfTransactionsImported = transactionsImportedCounter,
