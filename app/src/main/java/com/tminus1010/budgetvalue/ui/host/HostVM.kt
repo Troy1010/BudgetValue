@@ -3,9 +3,9 @@ package com.tminus1010.budgetvalue.ui.host
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItems
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
-import com.tminus1010.budgetvalue.ui.all_features.model.UnformattedString
+import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItems
+import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -41,6 +41,6 @@ class HostVM @Inject constructor(
             ),
             *getExtraMenuItemPartials(nav)
         )
-    val levelUpPlan = UnformattedString(R.string.level_up_prefix, " ", R.string.level_up_plan)
-    val levelUpReconciliation = UnformattedString(R.string.level_up_prefix, " ", R.string.level_up_reconciliation)
+    val levelUpPlan = NativeText.Multi(NativeText.Resource(R.string.level_up_prefix), NativeText.Simple(" "), NativeText.Resource(R.string.level_up_plan))
+    val levelUpReconciliation = NativeText.Multi(NativeText.Resource(R.string.level_up_prefix), NativeText.Simple(" "), NativeText.Resource(R.string.level_up_reconciliation))
 }

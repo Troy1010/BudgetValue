@@ -13,10 +13,8 @@ import androidx.navigation.ui.NavigationUI
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._unrestructured.history.HistoryFrag
 import com.tminus1010.budgetvalue._unrestructured.reconcile.data.IsReconciliationFeatureEnabled
-import com.tminus1010.budgetvalue.ui.futures_review.FuturesReviewFrag
 import com.tminus1010.budgetvalue._unrestructured.transactions.view.TransactionListFrag
 import com.tminus1010.budgetvalue.all_layers.extensions.easyAlertDialog
-import com.tminus1010.budgetvalue.all_layers.extensions.getString
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_layers.extensions.unCheckAllMenuItems
 import com.tminus1010.budgetvalue.app.ActivePlanInteractor
@@ -29,6 +27,7 @@ import com.tminus1010.budgetvalue.framework.view.SpinnerService
 import com.tminus1010.budgetvalue.framework.view.Toaster
 import com.tminus1010.budgetvalue.ui.all_features.LaunchSelectFile
 import com.tminus1010.budgetvalue.ui.errors.Errors
+import com.tminus1010.budgetvalue.ui.futures_review.FuturesReviewFrag
 import com.tminus1010.budgetvalue.ui.importZ.ImportVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -96,10 +95,10 @@ class HostActivity : AppCompatActivity() {
         importVM.navToSelectFile.observe(this) { launchSelectFile(this) }
         isPlanFeatureEnabledUC.onChangeToTrue.observe(this) {
             GlobalScope.launch { activePlanInteractor.setActivePlanFromHistory() }
-            easyAlertDialog(getString(hostVM.levelUpPlan))
+            easyAlertDialog(hostVM.levelUpPlan.toCharSequence(this))
         }
         isReconciliationFeatureEnabled.onChangeToTrue.observe(this) {
-            easyAlertDialog(getString(hostVM.levelUpReconciliation))
+            easyAlertDialog(hostVM.levelUpReconciliation.toCharSequence(this))
         }
         hostVM.navToFutures.observe(this) { FuturesReviewFrag.navTo(nav) }
         hostVM.navToTransactions.observe(this) { TransactionListFrag.navTo(nav) }
