@@ -8,9 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue._unrestructured.transactions.view.ChooseTransactionFrag
 import com.tminus1010.budgetvalue.all_layers.extensions.easyText2
 import com.tminus1010.budgetvalue.framework.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragCreateFutureBinding
+import com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesFrag
+import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsFrag
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
@@ -27,9 +30,9 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
         super.onViewCreated(view, savedInstanceState)
         // # Events
         viewModel.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
-        viewModel.navToCategorySelection.observe(viewLifecycleOwner) { nav.navigate(R.id.selectCategoriesFrag) }
-        viewModel.navToChooseTransaction.observe(viewLifecycleOwner) { nav.navigate(R.id.chooseTransactionFrag) }
-        viewModel.navToSetSearchTexts.observe(viewLifecycleOwner) { nav.navigate(R.id.setSearchTextsFrag) }
+        viewModel.navToCategorySelection.observe(viewLifecycleOwner) { SelectCategoriesFrag.navTo(nav) }
+        viewModel.navToChooseTransaction.observe(viewLifecycleOwner) { ChooseTransactionFrag.navTo(nav) }
+        viewModel.navToSetSearchTexts.observe(viewLifecycleOwner) { SetSearchTextsFrag.navTo(nav) }
         viewModel.saveReplayDialogBox.observe(viewLifecycleOwner) {
             val editText = EditText(requireContext())
             editText.easyText2 = it

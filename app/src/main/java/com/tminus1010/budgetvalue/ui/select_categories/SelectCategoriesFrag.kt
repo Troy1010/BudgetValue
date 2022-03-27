@@ -52,7 +52,7 @@ class SelectCategoriesFrag : Fragment(R.layout.frag_select_categories) {
 
     companion object {
         fun navTo(nav: NavController) {
-            nav.navigate(R.id.createFuture2Frag)
+            nav.navigate(R.id.selectCategoriesFrag)
         }
     }
 }
