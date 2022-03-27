@@ -9,7 +9,9 @@ import javax.inject.Inject
 
 @Reusable
 class ShowToast @Inject constructor(private val application: Application) {
+    operator fun invoke(body: String) = invoke(NativeText.Simple(body))
     operator fun invoke(body: NativeText) = launchOnMainThread {
         Toast.makeText(application, body.toCharSequence(application), Toast.LENGTH_SHORT).show()
     }
+
 }
