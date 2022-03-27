@@ -203,7 +203,18 @@ class ReplayOrFutureDetailsVM @Inject constructor(
                     EditTextVMItem(text = name.value!!, onDone = { userSetName(it) }),
                 ),
                 listOf(
-                    TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Total Guess"),
+                    TextPresentationModel(
+                        style = TextPresentationModel.Style.TWO,
+                        text2 = this.searchType
+                            .map {
+                                when (it) {
+                                    SearchType.DESCRIPTION -> "Total Guess"
+                                    SearchType.TOTAL,
+                                    SearchType.DESCRIPTION_AND_TOTAL,
+                                    -> "Exact Total"
+                                }
+                            }
+                    ),
                     MoneyEditVMItem(text1 = totalGuess.value.toString(), onDone = { userSetTotalGuess(it) }),
                 ),
                 listOf(
