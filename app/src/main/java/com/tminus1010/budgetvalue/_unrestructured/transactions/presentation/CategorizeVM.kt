@@ -6,12 +6,12 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.app.SelectCategoriesModel
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.SaveTransactionInteractor
-import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.app.CategoriesInteractor
 import com.tminus1010.budgetvalue.app.FuturesInteractor
+import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.Future
@@ -45,31 +45,31 @@ class CategorizeVM @Inject constructor(
 ) : ViewModel() {
     // # User Intents
     fun userSimpleCategorize(category: Category) {
-        saveTransactionInteractor.saveTransaction(
-            transactionsInteractor.mostRecentUncategorizedSpend.value!!.categorize(category)
-        )
-            .let(spinnerService::decorate)
-            .subscribe()
+        GlobalScope.launch(block = spinnerService.decorate {
+            saveTransactionInteractor.saveTransaction(
+                transactionsInteractor.mostRecentUncategorizedSpend.value!!.categorize(category)
+            )
+        })
     }
 
     fun userReplay(future: Future) {
-        saveTransactionInteractor.saveTransaction(
-            future.categorize(transactionsInteractor.mostRecentUncategorizedSpend.value!!)
-        )
-            .let(spinnerService::decorate)
-            .subscribe()
+        GlobalScope.launch(block = spinnerService.decorate {
+            saveTransactionInteractor.saveTransaction(
+                future.categorize(transactionsInteractor.mostRecentUncategorizedSpend.value!!)
+            )
+        })
     }
 
     fun userUndo() {
-        saveTransactionInteractor.undo()
-            .let(spinnerService::decorate)
-            .subscribe()
+        GlobalScope.launch(block = spinnerService.decorate {
+            saveTransactionInteractor.undo()
+        })
     }
 
     fun userRedo() {
-        saveTransactionInteractor.redo()
-            .let(spinnerService::decorate)
-            .subscribe()
+        GlobalScope.launch(block = spinnerService.decorate {
+            saveTransactionInteractor.redo()
+        })
     }
 
     fun userCategorizeAllAsUnknown() {
@@ -211,14 +211,14 @@ class CategorizeVM @Inject constructor(
                     if (!inSelectionMode)
                         ButtonVMItem(
                             title = "Redo",
-                            isEnabled = isRedoAvailable,
+                            isEnabled2 = isRedoAvailable,
                             onClick = { userRedo() },
                         )
                     else null,
                     if (!inSelectionMode)
                         ButtonVMItem(
                             title = "Undo",
-                            isEnabled = isUndoAvailable,
+                            isEnabled2 = isUndoAvailable,
                             onClick = { userUndo() },
                         )
                     else null,

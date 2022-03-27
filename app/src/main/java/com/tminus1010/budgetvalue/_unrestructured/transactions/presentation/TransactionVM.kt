@@ -1,18 +1,17 @@
 package com.tminus1010.budgetvalue._unrestructured.transactions.presentation
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
-import com.tminus1010.budgetvalue.ui.all_features.model.TextVMItem
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.SaveTransactionInteractor
+import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
+import com.tminus1010.budgetvalue.ui.all_features.model.TextVMItem
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
-import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,9 +23,10 @@ class TransactionVM @Inject constructor(
 
     // # User Intents
     fun userClearTransaction() {
-        saveTransactionInteractor.saveTransaction(transaction.value!!.categorize(emptyMap()))
-            .andThen(Completable.fromAction { navUp.onNext(Unit) })
-            .observe(disposables)
+        GlobalScope.launch {
+            saveTransactionInteractor.saveTransaction(transaction.value!!.categorize(emptyMap()))
+            navUp.onNext(Unit)
+        }
     }
 
     // # Events

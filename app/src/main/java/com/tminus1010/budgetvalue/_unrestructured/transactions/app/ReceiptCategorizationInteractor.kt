@@ -8,6 +8,7 @@ import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.Sa
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,10 +25,12 @@ class ReceiptCategorizationInteractor @Inject constructor(
     }
 
     fun submitCategorization() {
-        saveTransactionInteractor.saveTransaction(
-            transactionsInteractor.mostRecentUncategorizedSpend.value!!
-                .copy(categoryAmounts = categoryAmountsRedefined.value)
-        ).subscribe()
+        GlobalScope.launch {
+            saveTransactionInteractor.saveTransaction(
+                transactionsInteractor.mostRecentUncategorizedSpend.value!!
+                    .copy(categoryAmounts = categoryAmountsRedefined.value)
+            )
+        }
     }
 
     fun fill(transaction: Transaction) {

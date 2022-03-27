@@ -1,13 +1,13 @@
 package com.tminus1010.budgetvalue.data.service
 
 import androidx.room.*
+import com.tminus1010.budgetvalue._unrestructured.reconcile.data.model.ReconciliationDTO
+import com.tminus1010.budgetvalue._unrestructured.transactions.data.TransactionDTO
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
+import com.tminus1010.budgetvalue.domain.Future
 import com.tminus1010.budgetvalue.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue.domain.accounts.Account
 import com.tminus1010.budgetvalue.domain.plan.Plan
-import com.tminus1010.budgetvalue._unrestructured.reconcile.data.model.ReconciliationDTO
-import com.tminus1010.budgetvalue._unrestructured.transactions.data.TransactionDTO
-import com.tminus1010.budgetvalue.domain.Future
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -41,7 +41,7 @@ interface MiscDAO {
     fun clearTransactions(): Completable
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun push(transactionDTO: TransactionDTO): Completable
+    suspend fun push(transactionDTO: TransactionDTO)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun tryAdd(transactionsDTO: List<TransactionDTO>): Completable
@@ -57,6 +57,9 @@ interface MiscDAO {
 
     @Delete
     fun delete(transaction: TransactionDTO): Completable
+
+    @Query("DELETE FROM TransactionDTO WHERE id=:id")
+    suspend fun deleteTransaction(id: String)
 
     @Deprecated("Use update2")
     @Update

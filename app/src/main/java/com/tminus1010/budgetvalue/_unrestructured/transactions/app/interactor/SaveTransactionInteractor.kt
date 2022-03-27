@@ -1,12 +1,10 @@
 package com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor
 
-import com.tminus1010.budgetvalue.domain.Redoable
-import com.tminus1010.budgetvalue.framework.Rx
-import com.tminus1010.budgetvalue.framework.source_objects.SourceList
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
 import com.tminus1010.budgetvalue._unrestructured.transactions.data.repo.TransactionsRepo
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
+import com.tminus1010.budgetvalue.domain.Redoable
+import com.tminus1010.budgetvalue.framework.source_objects.SourceList
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -16,36 +14,38 @@ class SaveTransactionInteractor @Inject constructor(
     private val transactionsRepo: TransactionsRepo,
 ) {
     // # Input
-    fun saveTransaction(transaction: Transaction): Completable {
-        return transactionsRepo.getTransaction(transaction.id)
-            .flatMapCompletable { oldTransaction ->
-                Redoable(
-                    redo = transactionsRepo.update(transaction),
-                    undo = transactionsRepo.update(oldTransaction.copy(id = transaction.id))
-                ).let { it.redo.doOnComplete { undoQueue.add(it) } }
-            }
+    suspend fun saveTransaction(transaction: Transaction) {
+        val oldTransactionAndID = Pair(transactionsRepo.getTransaction2(transaction.id), transaction.id)
+        val redoable =
+            Redoable(
+                redo = { transactionsRepo.push(transaction) },
+                undo = { val (oldTransaction, id) = oldTransactionAndID; oldTransaction?.also { transactionsRepo.push(it) } ?: transactionsRepo.delete(id) },
+            )
+        redoable.redo()
+        undoQueue.add(redoable)
     }
 
     suspend fun saveTransactions(transactions: List<Transaction>) {
-        val oldTransactions = transactions.map { transactionsRepo.getTransaction2(it.id)!! } // TODO: Make sure error is throw if an old transaction can't be found, or implement its removal
+        val oldTransactionsAndIDs = transactions.map { Pair(transactionsRepo.getTransaction2(it.id), it.id) }
         val redoable =
             Redoable(
-                Rx.completableFromSuspend { transactions.forEach { transactionsRepo.update2(it) } },
-                Rx.completableFromSuspend { oldTransactions.forEach { transactionsRepo.update2(it) } }
+                redo = { transactions.forEach { transactionsRepo.push(it) } },
+                undo = { oldTransactionsAndIDs.forEach { val (oldTransaction, id) = it; oldTransaction?.also { transactionsRepo.push(it) } ?: transactionsRepo.delete(id) } },
             )
-        redoable.redo.doOnComplete { undoQueue.add(redoable) }.blockingAwait()
+        redoable.redo()
+        undoQueue.add(redoable)
     }
 
-    fun undo(): Completable {
-        return undoQueue.takeLast()
-            ?.let { it.undo.doOnComplete { redoQueue.add(it) } }
-            ?: Completable.complete()
+    suspend fun undo() {
+        undoQueue.takeLast()
+            ?.also { redoQueue.add(it) }
+            ?.also { it.undo() }
     }
 
-    fun redo(): Completable {
-        return redoQueue.takeLast()
-            ?.let { it.redo.doOnComplete { undoQueue.add(it) } }
-            ?: Completable.complete()
+    suspend fun redo() {
+        redoQueue.takeLast()
+            ?.also { undoQueue.add(it) }
+            ?.also { it.redo }
     }
 
     // # Internal
@@ -53,8 +53,6 @@ class SaveTransactionInteractor @Inject constructor(
     private val redoQueue = SourceList<Redoable>()
 
     // # Output
-    val isUndoAvailable: Observable<Boolean> = undoQueue.observable
-        .map { it.isNotEmpty() }
-    val isRedoAvailable: Observable<Boolean> = redoQueue.observable
-        .map { it.isNotEmpty() }
+    val isUndoAvailable = undoQueue.flow.map { it.isNotEmpty() }
+    val isRedoAvailable = redoQueue.flow.map { it.isNotEmpty() }
 }

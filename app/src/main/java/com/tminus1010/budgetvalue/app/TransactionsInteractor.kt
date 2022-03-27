@@ -40,7 +40,7 @@ class TransactionsInteractor @Inject constructor(
                     futuresRepo.futures.value!!
                         .find { it.onImportMatcher.isMatch(transaction) }
                 val transactionToPush = matchedFuture?.categorize(transaction)?.also { transactionsCategorizedCounter++ } ?: transaction
-                transactionsRepo.push(transactionToPush).blockingAwait()
+                transactionsRepo.push(transactionToPush)
                 if (matchedFuture != null && matchedFuture.terminationStrategy == TerminationStrategy.ONCE)
                     futuresRepo.setTerminationDate(matchedFuture, LocalDate.now())
                 transactionsImportedCounter++
