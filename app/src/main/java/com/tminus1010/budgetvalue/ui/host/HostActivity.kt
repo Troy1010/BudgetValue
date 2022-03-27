@@ -1,7 +1,9 @@
 package com.tminus1010.budgetvalue.ui.host
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.View
@@ -103,6 +105,7 @@ class HostActivity : AppCompatActivity() {
         hostVM.navToFutures.observe(this) { FuturesReviewFrag.navTo(nav) }
         hostVM.navToTransactions.observe(this) { TransactionListFrag.navTo(nav) }
         hostVM.navToHistory.observe(this) { HistoryFrag.navTo(nav) }
+        hostVM.navToAccessibility.observe(this) { startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }
         hostVM.unCheckAllMenuItems.observe(this) { vb.bottomNavigation.menu.unCheckAllMenuItems() } // TODO: Not working
         // # State
         isPlanFeatureEnabledUC.observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }

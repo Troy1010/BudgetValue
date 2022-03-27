@@ -3,12 +3,13 @@ package com.tminus1010.budgetvalue.ui.host
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItems
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import io.reactivex.rxjava3.subjects.PublishSubject
+import kotlinx.coroutines.flow.MutableSharedFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,10 +20,11 @@ class HostVM @Inject constructor(
     val nav = BehaviorSubject.create<NavController>()
 
     // # Events
-    val unCheckAllMenuItems = PublishSubject.create<Unit>()
-    val navToHistory = PublishSubject.create<Unit>()
-    val navToTransactions = PublishSubject.create<Unit>()
-    val navToFutures = PublishSubject.create<Unit>()
+    val unCheckAllMenuItems = MutableSharedFlow<Unit>()
+    val navToHistory = MutableSharedFlow<Unit>()
+    val navToTransactions = MutableSharedFlow<Unit>()
+    val navToFutures = MutableSharedFlow<Unit>()
+    val navToAccessibility = MutableSharedFlow<Unit>()
 
     // # State
     val topMenuVMItems =
@@ -37,6 +39,10 @@ class HostVM @Inject constructor(
             ),
             MenuVMItem(
                 title = "Futures",
+                onClick = { navToFutures.onNext(Unit); unCheckAllMenuItems.onNext(Unit) },
+            ),
+            MenuVMItem(
+                title = "Accessibility Settings",
                 onClick = { navToFutures.onNext(Unit); unCheckAllMenuItems.onNext(Unit) },
             ),
             *getExtraMenuItemPartials(nav)
