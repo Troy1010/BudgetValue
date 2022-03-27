@@ -8,7 +8,7 @@ class CategorizeAllMatchingUncategorizedTransactionsInteractor @Inject construct
     private val transactionsInteractor: TransactionsInteractor,
     private val transactionsRepo: TransactionsRepo,
 ) {
-    suspend fun categorizeAllMatchingUncategorizedTransactions(isMatch: (Transaction) -> Boolean, categorize: (Transaction) -> Transaction): Int {
+    suspend operator fun invoke(isMatch: (Transaction) -> Boolean, categorize: (Transaction) -> Transaction): Int {
         return transactionsInteractor.uncategorizedSpends.value
             .filter(isMatch)
             .onEach { transactionsRepo.update2(categorize(it)) }

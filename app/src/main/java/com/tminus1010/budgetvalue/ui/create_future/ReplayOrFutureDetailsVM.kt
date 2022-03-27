@@ -66,8 +66,7 @@ class ReplayOrFutureDetailsVM @Inject constructor(
             runBlocking {
                 futuresRepo.push(futureToPush)
                 if (futureToPush.terminationStrategy == TerminationStrategy.PERMANENT)
-                    categorizeAllMatchingUncategorizedTransactionsInteractor
-                        .categorizeAllMatchingUncategorizedTransactions(futureToPush.onImportMatcher::isMatch, futureToPush::categorize)
+                    categorizeAllMatchingUncategorizedTransactionsInteractor(futureToPush.onImportMatcher::isMatch, futureToPush::categorize)
                         .also { toaster.toast("$it transactions categorized") }
                 if (futureToPush.name != future.value!!.name) futuresRepo.delete(future.value!!)
                 userTryNavUp()

@@ -19,6 +19,6 @@ class FuturesInteractor @Inject constructor(
                 else -> TransactionMatcher.Multiple(future.onImportMatcher, TransactionMatcher.SearchText(description))
             }
         futuresRepo.push(future.copy(onImportMatcher = newTransactionMatcher))
-        return categorizeAllMatchingUncategorizedTransactionsInteractor.categorizeAllMatchingUncategorizedTransactions(newTransactionMatcher::isMatch, future::categorize)
+        return categorizeAllMatchingUncategorizedTransactionsInteractor(newTransactionMatcher::isMatch, future::categorize)
     }
 }
