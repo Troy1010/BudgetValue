@@ -10,7 +10,7 @@ class CategorizeAllMatchingUncategorizedTransactionsInteractor @Inject construct
     private val transactionsRepo: TransactionsRepo,
 ) {
     suspend fun categorizeAllMatchingUncategorizedTransactions(isMatch: (Transaction) -> Boolean, categorize: (Transaction) -> Transaction): Int {
-        return transactionsInteractor.uncategorizedSpends2.value
+        return transactionsInteractor.uncategorizedSpends.value
             .filter(isMatch)
             .onEach { transactionsRepo.update2(categorize(it)) }
             .fold(0) { acc, v -> acc + 1 }

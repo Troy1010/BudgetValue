@@ -39,7 +39,7 @@ class CreateFuture2VM @Inject constructor(
     private val transactionsInteractor: TransactionsInteractor,
 ) : ViewModel() {
     init {
-        transactionsInteractor.mostRecentUncategorizedSpend2
+        transactionsInteractor.mostRecentUncategorizedSpend
             .observe(GlobalScope) { setSearchTextsSharedVM.searchTexts.adjustTo(listOfNotNull(it?.description)) }
     }
 

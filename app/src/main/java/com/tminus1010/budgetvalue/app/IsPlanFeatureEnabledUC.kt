@@ -4,12 +4,12 @@ import android.app.Application
 import androidx.annotation.VisibleForTesting
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.budgetvalue.all_layers.extensions.cold
 import com.tminus1010.budgetvalue.all_layers.extensions.mapBox
+import com.tminus1010.budgetvalue.data.LatestDateOfMostRecentImportRepo
 import com.tminus1010.budgetvalue.data.service.MoshiProvider.moshi
 import com.tminus1010.budgetvalue.data.service.dataStore
-import com.tminus1010.budgetvalue.data.LatestDateOfMostRecentImportRepo
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.interactor.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import com.tminus1010.tmcommonkotlin.rx.extensions.filterNotNullBox
@@ -53,7 +53,7 @@ class IsPlanFeatureEnabledUC @Inject constructor(
         isPlanFeatureEnabled
             .toSingle()
             .flatMap {
-                transactionsInteractor.spendBlocks
+                transactionsInteractor.spendBlocks.asObservable()
                     .filter { it.size >= 3 && it.takeLast(3).all { it.isFullyCategorized } }
                     .toSingle()
             }

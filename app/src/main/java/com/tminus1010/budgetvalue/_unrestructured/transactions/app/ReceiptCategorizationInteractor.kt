@@ -25,7 +25,7 @@ class ReceiptCategorizationInteractor @Inject constructor(
 
     fun submitCategorization() {
         saveTransactionInteractor.saveTransaction(
-            transactionsInteractor.mostRecentUncategorizedSpend2.value!!
+            transactionsInteractor.mostRecentUncategorizedSpend.value!!
                 .copy(categoryAmounts = categoryAmountsRedefined.value)
         ).subscribe()
     }
@@ -41,7 +41,7 @@ class ReceiptCategorizationInteractor @Inject constructor(
     val rememberedAmount = MutableStateFlow(BigDecimal("0"))
     val amountLeftToCategorize =
         combine(
-            transactionsInteractor.mostRecentUncategorizedSpend2,
+            transactionsInteractor.mostRecentUncategorizedSpend,
             categoryAmountsRedefined
         ) { transaction, categoryAmounts ->
             categoryAmounts.defaultAmount(transaction?.amount ?: BigDecimal("0"))

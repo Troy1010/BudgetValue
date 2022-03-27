@@ -5,14 +5,11 @@ import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionBl
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionsAggregate
 import com.tminus1010.budgetvalue._unrestructured.transactions.data.TransactionAdapter
 import com.tminus1010.budgetvalue._unrestructured.transactions.data.repo.TransactionsRepo
-import com.tminus1010.budgetvalue.all_layers.extensions.mapBox
 import com.tminus1010.budgetvalue.all_layers.extensions.value
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.data.LatestDateOfMostRecentImportRepo
 import com.tminus1010.budgetvalue.domain.DatePeriodService
 import com.tminus1010.budgetvalue.domain.TerminationStrategy
-import com.tminus1010.tmcommonkotlin.rx.nonLazy
-import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
@@ -86,31 +83,18 @@ class TransactionsInteractor @Inject constructor(
     val transactionBlocks2 =
         transactionsRepo.transactionsAggregate2
             .map { getBlocksFromTransactions(it.transactions) }
-
-    @Deprecated("use spendBlocks2")
-    val spendBlocks: Observable<List<TransactionBlock>> =
-        transactionBlocks
-            .map { it.map { it.spendBlock } }
-    val spendBlocks2 =
+    val spendBlocks =
         transactionBlocks2
             .map { it.map { it.spendBlock } }
-
-    @Deprecated("use spends2")
-    private val spends: Observable<List<Transaction>> =
-        transactionsRepo.transactionsAggregate
-            .map(TransactionsAggregate::spends)
-            .replay(1).refCount()
-    private val spends2 =
+    private val spends =
         transactionsRepo.transactionsAggregate2
             .map { it.spends }
             .shareIn(GlobalScope, SharingStarted.WhileSubscribed())
-
-    val uncategorizedSpends2 =
-        spends2
+    val uncategorizedSpends =
+        spends
             .map { it.filter { it.isUncategorized } }
             .stateIn(GlobalScope, SharingStarted.Eagerly, emptyList())
-
-    val mostRecentUncategorizedSpend2 =
+    val mostRecentUncategorizedSpend =
         transactionsRepo.transactionsAggregate2
             .map { it.mostRecentUncategorizedSpend }
             .stateIn(GlobalScope, SharingStarted.Eagerly, null)

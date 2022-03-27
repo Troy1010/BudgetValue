@@ -46,7 +46,7 @@ class CategorizeVM @Inject constructor(
     // # User Intents
     fun userSimpleCategorize(category: Category) {
         saveTransactionInteractor.saveTransaction(
-            transactionsInteractor.mostRecentUncategorizedSpend2.value!!.categorize(category)
+            transactionsInteractor.mostRecentUncategorizedSpend.value!!.categorize(category)
         )
             .let(spinnerService::decorate)
             .subscribe()
@@ -54,7 +54,7 @@ class CategorizeVM @Inject constructor(
 
     fun userReplay(future: Future) {
         saveTransactionInteractor.saveTransaction(
-            future.categorize(transactionsInteractor.mostRecentUncategorizedSpend2.value!!)
+            future.categorize(transactionsInteractor.mostRecentUncategorizedSpend.value!!)
         )
             .let(spinnerService::decorate)
             .subscribe()
@@ -76,7 +76,7 @@ class CategorizeVM @Inject constructor(
         GlobalScope.launch(block = spinnerService.decorate {
             val categoryUnknown = categoriesInteractor.userCategories.take(1).first().find { it.name.equals("Unknown", ignoreCase = true) }!! // TODO: Handle this error
             saveTransactionInteractor.saveTransactions(
-                transactionsInteractor.uncategorizedSpends2.first().map { it.categorize(categoryUnknown) }
+                transactionsInteractor.uncategorizedSpends.first().map { it.categorize(categoryUnknown) }
             )
         })
     }
@@ -88,7 +88,7 @@ class CategorizeVM @Inject constructor(
     fun userAddTransactionToFuture(future: Future) {
         GlobalScope.launch(block = spinnerService.decorate {
             futuresInteractor.addTransactionDescriptionToFuture(
-                description = transactionsInteractor.mostRecentUncategorizedSpend2.value!!.description,
+                description = transactionsInteractor.mostRecentUncategorizedSpend.value!!.description,
                 future = future
             )
                 .also { toaster.toast("$it transactions categorized") }
@@ -107,21 +107,21 @@ class CategorizeVM @Inject constructor(
     val isUndoAvailable = saveTransactionInteractor.isUndoAvailable
     val isRedoAvailable = saveTransactionInteractor.isRedoAvailable
     val isTransactionAvailable =
-        transactionsInteractor.mostRecentUncategorizedSpend2
+        transactionsInteractor.mostRecentUncategorizedSpend
             .map { it != null }
             .stateIn(viewModelScope, SharingStarted.Eagerly, false)
     val date =
-        transactionsInteractor.mostRecentUncategorizedSpend2
+        transactionsInteractor.mostRecentUncategorizedSpend
             .map { it?.date?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")) ?: "" }
     val latestUncategorizedTransactionAmount =
-        transactionsInteractor.mostRecentUncategorizedSpend2
+        transactionsInteractor.mostRecentUncategorizedSpend
             .map { it?.defaultAmount?.toString() }
     val latestUncategorizedTransactionDescription =
-        transactionsInteractor.mostRecentUncategorizedSpend2
+        transactionsInteractor.mostRecentUncategorizedSpend
             .map { it?.description }
             .stateIn(viewModelScope, SharingStarted.Eagerly, null)
     val uncategorizedSpendsSize =
-        transactionsInteractor.uncategorizedSpends2
+        transactionsInteractor.uncategorizedSpends
             .map { it.size.toString() }
     val recipeGrid =
         combine(futuresRepo.futures.map { it.filter { it.isAvailableForManual } }, categoriesInteractor.userCategories)
@@ -181,7 +181,7 @@ class CategorizeVM @Inject constructor(
                         ButtonVMItem(
                             title = "Split",
                             isEnabled2 = isTransactionAvailable,
-                            onClick = { navToSplit.easyEmit(transactionsInteractor.mostRecentUncategorizedSpend2.value!!) },
+                            onClick = { navToSplit.easyEmit(transactionsInteractor.mostRecentUncategorizedSpend.value!!) },
                         )
                     else null,
                     if (inSelectionMode)
@@ -205,7 +205,7 @@ class CategorizeVM @Inject constructor(
                         ButtonVMItem(
                             title = "Do Receipt Categorization",
                             isEnabled2 = isTransactionAvailable,
-                            onClick = { navToReceiptCategorization.easyEmit(transactionsInteractor.mostRecentUncategorizedSpend2.value!!) },
+                            onClick = { navToReceiptCategorization.easyEmit(transactionsInteractor.mostRecentUncategorizedSpend.value!!) },
                         )
                     else null,
                     if (!inSelectionMode)
