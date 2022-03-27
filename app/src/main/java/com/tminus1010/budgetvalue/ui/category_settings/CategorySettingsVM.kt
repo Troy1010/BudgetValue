@@ -2,8 +2,8 @@ package com.tminus1010.budgetvalue.ui.category_settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tminus1010.budgetvalue._unrestructured.categories.domain.DeleteCategoryFromActiveDomainUC
-import com.tminus1010.budgetvalue._unrestructured.categories.domain.ReplaceCategoryGloballyUC
+import com.tminus1010.budgetvalue.app.DeleteCategoryFromActiveDomainUC
+import com.tminus1010.budgetvalue.app.ReplaceCategoryGloballyUC
 import com.tminus1010.budgetvalue.all_layers.InvalidCategoryNameException
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.app.CategoriesInteractor
@@ -74,7 +74,7 @@ class CategorySettingsVM @Inject constructor(
                 categoryToPush.value.name.equals(Category.UNRECOGNIZED.name, ignoreCase = true)
             ) throw InvalidCategoryNameException()
             if (originalCategoryName.value != "" && originalCategoryName.value != categoryToPush.value.name)
-                replaceCategoryGloballyUC.replaceCategoryGlobally(originalCategory.value!!, categoryToPush.value)
+                replaceCategoryGloballyUC(originalCategory.value!!, categoryToPush.value)
             else
                 categoriesRepo.push(categoryToPush.value)
             navUp.easyEmit(Unit)

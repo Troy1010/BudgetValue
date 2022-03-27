@@ -1,11 +1,11 @@
-package com.tminus1010.budgetvalue._unrestructured.categories.domain
+package com.tminus1010.budgetvalue.app
 
-import com.tminus1010.budgetvalue.data.CategoriesRepo
-import com.tminus1010.budgetvalue.domain.Category
-import com.tminus1010.budgetvalue.data.ActivePlanRepo
-import com.tminus1010.budgetvalue.data.PlansRepo
 import com.tminus1010.budgetvalue._unrestructured.reconcile.data.ActiveReconciliationRepo
 import com.tminus1010.budgetvalue._unrestructured.reconcile.data.ReconciliationsRepo
+import com.tminus1010.budgetvalue.data.ActivePlanRepo
+import com.tminus1010.budgetvalue.data.CategoriesRepo
+import com.tminus1010.budgetvalue.data.PlansRepo
+import com.tminus1010.budgetvalue.domain.Category
 import javax.inject.Inject
 
 class ReplaceCategoryGloballyUC @Inject constructor(
@@ -15,7 +15,7 @@ class ReplaceCategoryGloballyUC @Inject constructor(
     private val activeReconciliationRepo: ActiveReconciliationRepo,
     private val activePlanRepo: ActivePlanRepo,
 ) {
-    suspend fun replaceCategoryGlobally(originalCategory: Category, newCategory: Category) {
+    suspend operator fun invoke(originalCategory: Category, newCategory: Category) {
         categoriesRepo.push(newCategory)
         activePlanRepo.pushCategoryAmounts(activePlanRepo.activePlan.value.categoryAmounts.replaceKey(originalCategory, newCategory))
         activeReconciliationRepo.pushCategoryAmounts(activeReconciliationRepo.activeReconciliationCAs.value.replaceKey(originalCategory, newCategory))
