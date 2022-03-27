@@ -45,7 +45,7 @@ class SaveTransactionInteractor @Inject constructor(
     suspend fun redo() {
         redoQueue.takeLast()
             ?.also { undoQueue.add(it) }
-            ?.also { it.redo }
+            ?.also { it.redo() }
     }
 
     // # Internal
