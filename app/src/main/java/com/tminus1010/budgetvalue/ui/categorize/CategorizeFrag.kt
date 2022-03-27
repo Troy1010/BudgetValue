@@ -12,6 +12,7 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._unrestructured.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue._unrestructured.transactions.view.ReceiptCategorizationHostFrag
 import com.tminus1010.budgetvalue._unrestructured.transactions.view.SplitFrag
+import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.framework.view.GenViewHolder2
@@ -57,11 +58,14 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     @Inject
     lateinit var setSearchTextsSharedVM: SetSearchTextsSharedVM
 
+    @Inject
+    lateinit var transactionsInteractor: TransactionsInteractor
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Events
         errors.observe(viewLifecycleOwner) { throw it }
-        viewModel.navToCreateFuture.observe(viewLifecycleOwner) { CreateFutureFrag.navTo(nav, setSearchTextsSharedVM) }
+        viewModel.navToCreateFuture.observe(viewLifecycleOwner) { CreateFutureFrag.navTo(nav, setSearchTextsSharedVM, transactionsInteractor) }
         viewModel.navToSplit.observe(viewLifecycleOwner) { SplitFrag.navTo(nav, it) }
         viewModel.navToNewCategory.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, null, true) }
         viewModel.navToCategorySettings.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, it.name, false) }

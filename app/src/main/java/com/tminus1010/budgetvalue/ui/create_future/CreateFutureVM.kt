@@ -11,6 +11,7 @@ import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.app.CategoriesInteractor
 import com.tminus1010.budgetvalue.app.CategorizeAllMatchingUncategorizedTransactionsInteractor
+import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.domain.*
 import com.tminus1010.budgetvalue.framework.source_objects.SourceHashMap
@@ -33,6 +34,7 @@ class CreateFutureVM @Inject constructor(
     private val toaster: Toaster,
     private val categorizeAllMatchingUncategorizedTransactionsInteractor: CategorizeAllMatchingUncategorizedTransactionsInteractor,
     private val setSearchTextsSharedVM: SetSearchTextsSharedVM,
+    private val transactionsInteractor: TransactionsInteractor,
 ) : ViewModel() {
     // # User Intents
     fun userTryNavToCategorySelection() {
@@ -86,7 +88,7 @@ class CreateFutureVM @Inject constructor(
         }
     }
 
-    private val totalGuess = MutableStateFlow(BigDecimal("-10"))
+    private val totalGuess = MutableStateFlow(transactionsInteractor.mostRecentUncategorizedSpend.value?.amount ?: BigDecimal("-10"))
     fun userSetTotalGuess(s: String) {
         totalGuess.onNext(s.toMoneyBigDecimal())
     }
@@ -208,11 +210,11 @@ class CreateFutureVM @Inject constructor(
             listOfNotNull(
                 ButtonVMItem(
                     title = "Add Or Remove Categories",
-                    onClick = { userTryNavToCategorySelection() },
+                    onClick = ::userTryNavToCategorySelection,
                 ),
                 ButtonVMItem(
                     title = "Submit",
-                    onClick = { userTrySubmit() },
+                    onClick = ::userTrySubmit,
                 ),
             )
         )

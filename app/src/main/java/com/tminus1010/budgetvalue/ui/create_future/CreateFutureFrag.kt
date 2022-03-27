@@ -10,8 +10,9 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._unrestructured.transactions.view.ChooseTransactionFrag
 import com.tminus1010.budgetvalue.all_layers.extensions.easyText2
-import com.tminus1010.budgetvalue.framework.view.viewBinding
+import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.databinding.FragCreateFutureBinding
+import com.tminus1010.budgetvalue.framework.view.viewBinding
 import com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesFrag
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsFrag
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
@@ -62,8 +63,8 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
     }
 
     companion object {
-        fun navTo(nav: NavController, setSearchTextsSharedVM: SetSearchTextsSharedVM) {
-            setSearchTextsSharedVM.searchTexts.clear()
+        fun navTo(nav: NavController, setSearchTextsSharedVM: SetSearchTextsSharedVM, transactionsInteractor: TransactionsInteractor) {
+            setSearchTextsSharedVM.searchTexts.adjustTo(listOfNotNull(transactionsInteractor.mostRecentUncategorizedSpend.value?.description))
             nav.navigate(R.id.createFutureFrag)
         }
     }

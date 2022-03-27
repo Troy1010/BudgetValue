@@ -6,12 +6,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesModel
+import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue.databinding.FragFuturesReviewBinding
 import com.tminus1010.budgetvalue.framework.view.viewBinding
 import com.tminus1010.budgetvalue.ui.create_future.CreateFutureFrag
 import com.tminus1010.budgetvalue.ui.create_future.ReplayOrFutureDetailsFrag
+import com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesModel
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
@@ -34,11 +35,14 @@ class FuturesReviewFrag : Fragment(R.layout.frag_futures_review) {
     @Inject
     lateinit var setSearchTextsSharedVM: SetSearchTextsSharedVM
 
+    @Inject
+    lateinit var transactionsInteractor: TransactionsInteractor
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Events
         viewModel.navToFutureDetails.observe(viewLifecycleOwner) { ReplayOrFutureDetailsFrag.navTo(nav, moshiWithCategoriesProvider, it, selectCategoriesModel, setSearchTextsSharedVM) }
-        viewModel.navToCreateFuture.observe(viewLifecycleOwner) { CreateFutureFrag.navTo(nav, setSearchTextsSharedVM) }
+        viewModel.navToCreateFuture.observe(viewLifecycleOwner) { CreateFutureFrag.navTo(nav, setSearchTextsSharedVM, transactionsInteractor) }
         // # State
         vb.tvNoFutures.bind(viewModel.isNoFutureTextVisible) { easyVisibility = it }
         vb.buttonsview.bind(viewModel.buttons) { buttons = it }
