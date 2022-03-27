@@ -91,7 +91,7 @@ class CategorizeVM @Inject constructor(
 
     fun userAddTransactionToFuture(future: Future) {
         GlobalScope.launch(block = spinnerService.decorate {
-            futuresInteractor.addTransactionDescriptionToFuture(
+            futuresInteractor.addDescriptionToFutureAndCategorize(
                 description = transactionsInteractor.mostRecentUncategorizedSpend.value!!.description,
                 future = future,
             )
@@ -102,7 +102,7 @@ class CategorizeVM @Inject constructor(
     fun userAddTransactionToFutureWithEdit(future: Future) {
         editStringSharedVM.userSubmitString.take(1).takeUntilSignal(editStringSharedVM.userCancel).observe(GlobalScope) { s ->
             GlobalScope.launch(block = spinnerService.decorate { // TODO: There should be a better way than launching within a launch, right?
-                futuresInteractor.addTransactionDescriptionToFuture(
+                futuresInteractor.addDescriptionToFutureAndCategorize(
                     description = s,
                     future = future,
                 )

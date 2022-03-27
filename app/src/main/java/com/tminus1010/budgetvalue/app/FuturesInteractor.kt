@@ -12,7 +12,7 @@ class FuturesInteractor @Inject constructor(
     /**
      * returns how many transactions were categorized
      */
-    suspend fun addTransactionDescriptionToFuture(description: String, future: Future): Int {
+    suspend fun addDescriptionToFutureAndCategorize(description: String, future: Future): Int {
         val newTransactionMatcher =
             when (future.onImportMatcher) {
                 is TransactionMatcher.Multi -> TransactionMatcher.Multi(future.onImportMatcher.transactionMatchers.plus(TransactionMatcher.SearchText(description)))
