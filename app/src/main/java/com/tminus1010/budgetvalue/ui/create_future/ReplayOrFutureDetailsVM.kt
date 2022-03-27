@@ -37,7 +37,7 @@ class ReplayOrFutureDetailsVM @Inject constructor(
     val future = MutableSharedFlow<Future>(1)
 
     init {
-        future.observe(GlobalScope) { setSearchTextsSharedVM.searchTexts.adjustTo((it.onImportMatcher as? TransactionMatcher.Multiple)?.transactionMatchers?.filterIsInstance<TransactionMatcher.SearchText>()?.map { it.searchText } ?: listOf()) }
+        future.observe(GlobalScope) { setSearchTextsSharedVM.searchTexts.adjustTo((it.onImportMatcher as? TransactionMatcher.Multi)?.transactionMatchers?.filterIsInstance<TransactionMatcher.SearchText>()?.map { it.searchText } ?: listOf()) }
     }
 
     // # User Intents
@@ -57,7 +57,7 @@ class ReplayOrFutureDetailsVM @Inject constructor(
                     terminationDate = null,
                     isAvailableForManual = true,
                     onImportMatcher = when (searchType.value) {
-                        SearchType.DESCRIPTION -> TransactionMatcher.Multiple(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) })
+                        SearchType.DESCRIPTION -> TransactionMatcher.Multi(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) })
                         SearchType.DESCRIPTION_AND_TOTAL -> TODO()
                         SearchType.TOTAL -> TransactionMatcher.ByValue(totalGuess.value)
                     },
@@ -150,7 +150,7 @@ class ReplayOrFutureDetailsVM @Inject constructor(
                         SearchType.DESCRIPTION
                     is TransactionMatcher.ByValue ->
                         SearchType.TOTAL
-                    is TransactionMatcher.Multiple ->
+                    is TransactionMatcher.Multi ->
                         if (it.onImportMatcher.transactionMatchers.all { it is TransactionMatcher.SearchText })
                             SearchType.DESCRIPTION
                         else

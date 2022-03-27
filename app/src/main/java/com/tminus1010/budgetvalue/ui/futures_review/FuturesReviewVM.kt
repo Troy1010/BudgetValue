@@ -56,7 +56,7 @@ class FuturesReviewVM @Inject constructor(
                                 when (val matcher = it.onImportMatcher) {
                                     is TransactionMatcher.SearchText -> matcher.searchText.take(10)
                                     is TransactionMatcher.ByValue -> matcher.searchTotal.toString()
-                                    is TransactionMatcher.Multiple -> "Multiple"
+                                    is TransactionMatcher.Multi -> "Multiple"
                                 },
                                 menuVMItems = menuVMItems,
                             ),

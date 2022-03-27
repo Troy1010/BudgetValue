@@ -59,7 +59,7 @@ object MoshiAdapters {
         when (x) {
             is TransactionMatcher.SearchText -> TransactionMatcher.SearchText.ordinal.toString() + "`" + x.searchText
             is TransactionMatcher.ByValue -> TransactionMatcher.ByValue.ordinal.toString() + "`" + x.searchTotal.toString()
-            is TransactionMatcher.Multiple -> TransactionMatcher.Multiple.ordinal.toString() + "`" + toJson(x.transactionMatchers.map { toJson(it) })
+            is TransactionMatcher.Multi -> TransactionMatcher.Multi.ordinal.toString() + "`" + toJson(x.transactionMatchers.map { toJson(it) })
         }
 
     @FromJson
@@ -69,8 +69,8 @@ object MoshiAdapters {
                 TransactionMatcher.SearchText(s.dropWhile { it != '`' }.drop(1))
             TransactionMatcher.ByValue.ordinal ->
                 TransactionMatcher.ByValue(fromJson1(s.dropWhile { it != '`' }.drop(1)))
-            TransactionMatcher.Multiple.ordinal ->
-                TransactionMatcher.Multiple(fromJson6(s.dropWhile { it != '`' }.drop(1))!!.map { fromJson11(it) })
+            TransactionMatcher.Multi.ordinal ->
+                TransactionMatcher.Multi(fromJson6(s.dropWhile { it != '`' }.drop(1))!!.map { fromJson11(it) })
             else -> error("Unhandled s:$s")
         }
 

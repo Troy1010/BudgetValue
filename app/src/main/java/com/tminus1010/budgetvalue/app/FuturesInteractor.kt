@@ -15,8 +15,8 @@ class FuturesInteractor @Inject constructor(
     suspend fun addTransactionDescriptionToFuture(description: String, future: Future): Int {
         val newTransactionMatcher =
             when (future.onImportMatcher) {
-                is TransactionMatcher.Multiple -> TransactionMatcher.Multiple(future.onImportMatcher.transactionMatchers.plus(TransactionMatcher.SearchText(description)))
-                else -> TransactionMatcher.Multiple(future.onImportMatcher, TransactionMatcher.SearchText(description))
+                is TransactionMatcher.Multi -> TransactionMatcher.Multi(future.onImportMatcher.transactionMatchers.plus(TransactionMatcher.SearchText(description)))
+                else -> TransactionMatcher.Multi(future.onImportMatcher, TransactionMatcher.SearchText(description))
             }
         futuresRepo.push(future.copy(onImportMatcher = newTransactionMatcher))
         return categorizeAllMatchingUncategorizedTransactionsInteractor(newTransactionMatcher::isMatch, future::categorize)

@@ -73,8 +73,8 @@ class CreateFuture2VM @Inject constructor(
                     terminationDate = null,
                     isAvailableForManual = true,
                     onImportMatcher = when (searchType.value) {
-                        SearchType.DESCRIPTION -> TransactionMatcher.Multiple(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) })
-                        SearchType.DESCRIPTION_AND_TOTAL -> TransactionMatcher.Multiple(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) }.plus(TransactionMatcher.ByValue(totalGuess.value)))
+                        SearchType.DESCRIPTION -> TransactionMatcher.Multi(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) })
+                        SearchType.DESCRIPTION_AND_TOTAL -> TransactionMatcher.Multi(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) }.plus(TransactionMatcher.ByValue(totalGuess.value)))
                         SearchType.TOTAL -> TransactionMatcher.ByValue(totalGuess.value)
                     },
                     totalGuess = totalGuess.value,
