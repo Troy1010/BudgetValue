@@ -34,7 +34,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategorizeVM @Inject constructor(
-    private val saveTransactionInteractor: SaveTransactionInteractor,
     private val transactionsInteractor: TransactionsInteractor,
     private val toaster: Toaster,
     private val categoriesInteractor: CategoriesInteractor,
@@ -50,7 +49,7 @@ class CategorizeVM @Inject constructor(
     // # User Intents
     fun userSimpleCategorize(category: Category) {
         GlobalScope.launch(block = spinnerService.decorate {
-            saveTransactionInteractor.saveTransactions(
+            transactionsInteractor.saveTransactions(
                 transactionsInteractor.mostRecentUncategorizedSpend.value!!.categorize(category)
             )
         })
@@ -58,7 +57,7 @@ class CategorizeVM @Inject constructor(
 
     fun userReplay(future: Future) {
         GlobalScope.launch(block = spinnerService.decorate {
-            saveTransactionInteractor.saveTransactions(
+            transactionsInteractor.saveTransactions(
                 future.categorize(transactionsInteractor.mostRecentUncategorizedSpend.value!!)
             )
         })
@@ -79,7 +78,7 @@ class CategorizeVM @Inject constructor(
     fun userCategorizeAllAsUnknown() {
         GlobalScope.launch(block = spinnerService.decorate {
             val categoryUnknown = categoriesInteractor.userCategories.take(1).first().find { it.name.equals("Unknown", ignoreCase = true) }!! // TODO: Handle this error
-            saveTransactionInteractor.saveTransactions(
+            transactionsInteractor.saveTransactions(
                 transactionsInteractor.uncategorizedSpends.first().map { it.categorize(categoryUnknown) }
             )
         })

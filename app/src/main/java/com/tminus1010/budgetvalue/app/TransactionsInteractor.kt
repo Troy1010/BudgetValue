@@ -5,6 +5,7 @@ import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionBl
 import com.tminus1010.budgetvalue._unrestructured.transactions.data.repo.TransactionsRepo
 import com.tminus1010.budgetvalue.all_layers.extensions.value
 import com.tminus1010.budgetvalue.app.model.ImportTransactionsResult
+import com.tminus1010.budgetvalue.app.model.RedoUndo
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.data.LatestDateOfMostRecentImportRepo
 import com.tminus1010.budgetvalue.data.service.TransactionInputStreamAdapter
@@ -27,6 +28,7 @@ class TransactionsInteractor @Inject constructor(
     private val transactionInputStreamAdapter: TransactionInputStreamAdapter,
     private val futuresRepo: FuturesRepo,
     private val latestDateOfMostRecentImportRepo: LatestDateOfMostRecentImportRepo,
+    private val redoUndoInteractor: RedoUndoInteractor,
 ) {
     // # Input
     suspend fun importTransactions(transactions: List<Transaction>): ImportTransactionsResult {
@@ -59,6 +61,17 @@ class TransactionsInteractor @Inject constructor(
     suspend fun importTransactions(inputStream: InputStream) =
         importTransactions(transactionInputStreamAdapter.parseToTransactions(inputStream))
 
+    suspend fun saveTransactions(vararg transactions: Transaction) = saveTransactions(transactions.toList())
+    suspend fun saveTransactions(transactions: List<Transaction>) {
+        val oldTransactionsAndIDs = transactions.map { Pair(transactionsRepo.getTransaction2(it.id), it.id) }
+        redoUndoInteractor.useAndAdd(
+            RedoUndo(
+                redo = { transactions.forEach { transactionsRepo.push(it) } },
+                undo = { oldTransactionsAndIDs.forEach { val (oldTransaction, id) = it; oldTransaction?.also { transactionsRepo.push(it) } ?: transactionsRepo.delete(id) } },
+            )
+        )
+    }
+
     // # Internal
     private fun getBlocksFromTransactions(transactions: List<Transaction>): List<TransactionBlock> {
         val transactionsRedefined = transactions.sortedBy { it.date }.toMutableList()
@@ -81,16 +94,14 @@ class TransactionsInteractor @Inject constructor(
     val transactionBlocks2 =
         transactionsRepo.transactionsAggregate2
             .map { getBlocksFromTransactions(it.transactions) }
+            .shareIn(GlobalScope, SharingStarted.WhileSubscribed(), 1)
     val spendBlocks =
         transactionBlocks2
             .map { it.map { it.spendBlock } }
-    private val spends =
-        transactionsRepo.transactionsAggregate2
-            .map { it.spends }
-            .shareIn(GlobalScope, SharingStarted.WhileSubscribed())
+            .shareIn(GlobalScope, SharingStarted.WhileSubscribed(), 1)
     val uncategorizedSpends =
-        spends
-            .map { it.filter { it.isUncategorized } }
+        transactionsRepo.transactionsAggregate2
+            .map { it.spends.filter { it.isUncategorized } }
             .stateIn(GlobalScope, SharingStarted.Eagerly, emptyList())
     val mostRecentUncategorizedSpend =
         transactionsRepo.transactionsAggregate2

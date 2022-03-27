@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue._unrestructured.transactions.presentation
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
-import com.tminus1010.budgetvalue.app.SaveTransactionInteractor
+import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.TextVMItem
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TransactionVM @Inject constructor(
-    private val saveTransactionInteractor: SaveTransactionInteractor,
+    private val transactionsInteractor: TransactionsInteractor,
 ) : ViewModel() {
     // # Setup
     val transaction = BehaviorSubject.create<Transaction>()
@@ -24,7 +24,7 @@ class TransactionVM @Inject constructor(
     // # User Intents
     fun userClearTransaction() {
         GlobalScope.launch {
-            saveTransactionInteractor.saveTransactions(transaction.value!!.categorize(emptyMap()))
+            transactionsInteractor.saveTransactions(transaction.value!!.categorize(emptyMap()))
             navUp.onNext(Unit)
         }
     }

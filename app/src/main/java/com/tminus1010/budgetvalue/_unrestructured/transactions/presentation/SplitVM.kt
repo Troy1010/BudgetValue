@@ -4,11 +4,11 @@ import androidx.lifecycle.disposables
 import com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesModel
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.presentation.CategoryAmountFormulaVMItemsBaseVM
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
-import com.tminus1010.budgetvalue.app.SaveTransactionInteractor
 import com.tminus1010.budgetvalue.all_layers.extensions.cold
 import com.tminus1010.budgetvalue.all_layers.extensions.nonLazyCache
 import com.tminus1010.budgetvalue.all_layers.extensions.unbox
 import com.tminus1010.budgetvalue.app.CategoriesInteractor
+import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.framework.ColdObservable
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
 import com.tminus1010.tmcommonkotlin.tuple.Box
@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplitVM @Inject constructor(
-    private val saveTransactionInteractor: SaveTransactionInteractor,
+    private val transactionsInteractor: TransactionsInteractor,
     override val categoriesInteractor: CategoriesInteractor,
     override val selectCategoriesModel: SelectCategoriesModel,
 ) : CategoryAmountFormulaVMItemsBaseVM() {
@@ -35,7 +35,7 @@ class SplitVM @Inject constructor(
     // TODO("Why does userSubmitCategorization not work for only 1 category?")
     fun userSubmitCategorization() {
         GlobalScope.launch {
-            saveTransactionInteractor.saveTransactions(transactionToPush.unbox)
+            transactionsInteractor.saveTransactions(transactionToPush.unbox)
             selectCategoriesModel.clearSelection()
             navUp.onNext(Unit)
         }
