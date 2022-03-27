@@ -4,7 +4,7 @@ import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEquals
 import java.math.BigDecimal
 
-sealed class TransactionMatcher() {
+sealed class TransactionMatcher {
     abstract fun isMatch(transaction: Transaction): Boolean
     data class SearchText(val searchText: String) : TransactionMatcher() {
         override fun isMatch(transaction: Transaction): Boolean {
@@ -12,7 +12,7 @@ sealed class TransactionMatcher() {
         }
 
         companion object {
-            val ordinal = 0
+            const val ordinal = 0
         }
     }
 
@@ -22,7 +22,7 @@ sealed class TransactionMatcher() {
         }
 
         companion object {
-            val ordinal = 1
+            const val ordinal = 1
         }
     }
 
@@ -34,7 +34,7 @@ sealed class TransactionMatcher() {
         }
 
         companion object {
-            val ordinal = 2
+            const val ordinal = 2
         }
     }
 }
