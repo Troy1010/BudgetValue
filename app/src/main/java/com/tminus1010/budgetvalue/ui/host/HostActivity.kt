@@ -59,9 +59,6 @@ class HostActivity : AppCompatActivity() {
     lateinit var toaster: Toaster
 
     @Inject
-    lateinit var showAlertDialog: ShowAlertDialog
-
-    @Inject
     lateinit var activePlanInteractor: ActivePlanInteractor
 
     @Inject
@@ -79,6 +76,8 @@ class HostActivity : AppCompatActivity() {
     @Inject
     lateinit var errors: Errors
 
+    val showAlertDialog by lazy { ShowAlertDialog(this) }
+
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.frag_nav_host) as HostFrag }
     private val nav by lazy { findNavController(R.id.frag_nav_host) }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,6 +85,7 @@ class HostActivity : AppCompatActivity() {
         setContentView(vb.root)
         // # Mediation
         errorSubject.subscribe { errors.onNext(it) }
+        hostVM.showAlertDialog.onNext(showAlertDialog)
         // # Initialize app once per install
         GlobalScope.launch { appInitInteractor.tryInitializeApp() }
         // # Bind bottom menu to navigation.
@@ -137,8 +137,7 @@ class HostActivity : AppCompatActivity() {
                     runBlocking {
                         val importTransactionsResult = importTransactions(result.data!!.data!!)
                         showAlertDialog(
-                            activity = this@HostActivity,
-                            body = """Import Successful
+                            """Import Successful
                                 |Number of transactions ignored because they were already imported:${importTransactionsResult.numberOfTransactionsIgnoredBecauseTheyWereAlreadyImported}
                                 |Number of transactions imported:${importTransactionsResult.numberOfTransactionsImported}
                                 |Number of transactions categorized by futures:${importTransactionsResult.numberOfTransactionsCategorizedByFutures}

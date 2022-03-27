@@ -1,24 +1,41 @@
 package com.tminus1010.budgetvalue.framework.view
 
 import android.app.Activity
+import android.os.Handler
+import android.os.Looper
 import androidx.appcompat.app.AlertDialog
 import com.tminus1010.tmcommonkotlin.view.NativeText
-import dagger.Reusable
-import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
-@Reusable
-class ShowAlertDialog @Inject constructor() {
-    /**
-     * Must use [Activity] or you will see: java.lang.IllegalStateException: You need to use a Theme.AppCompat theme (or descendant) with this activity.
-     */
-    operator fun invoke(activity: Activity, body: NativeText) {
+/**
+ * Must use [Activity] or you will see: java.lang.IllegalStateException: You need to use a Theme.AppCompat theme (or descendant) with this activity.
+ */
+class ShowAlertDialog constructor(private val activity: Activity) {
+    suspend operator fun invoke(body: NativeText, onYes: (() -> Unit)? = null, onNo: (() -> Unit)? = null) = suspendCoroutine<Unit> { downstream ->
+        Handler(Looper.getMainLooper()).post {
+            AlertDialog.Builder(activity)
+                .setMessage(body.toCharSequence(activity))
+                .setPositiveButton("Yes") { _, _ -> onYes?.invoke() }
+                .setNegativeButton("No") { _, _ -> onNo?.invoke() }
+                .setOnDismissListener { downstream.resume(Unit) }
+                .show()
+        }
+    }
+
+    suspend operator fun invoke(body: String, onYes: (() -> Unit)? = null, onNo: (() -> Unit)? = null) {
+        invoke(NativeText.Simple(body), onYes, onNo)
+    }
+
+    suspend operator fun invoke(body: NativeText) = suspendCoroutine<Unit> { downstream ->
         AlertDialog.Builder(activity)
             .setMessage(body.toCharSequence(activity))
-            .setPositiveButton("Okay") { _, _ -> Unit }
+            .setPositiveButton("Okay") { _, _ -> }
+            .setOnDismissListener { downstream.resume(Unit) }
             .show()
     }
 
-    operator fun invoke(activity: Activity, body: String) {
-        invoke(activity, NativeText.Simple(body))
+    suspend operator fun invoke(body: String) {
+        invoke(NativeText.Simple(body))
     }
 }

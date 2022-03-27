@@ -4,12 +4,16 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
+import com.tminus1010.budgetvalue.all_layers.extensions.value
+import com.tminus1010.budgetvalue.framework.view.ShowAlertDialog
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItems
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,6 +22,7 @@ class HostVM @Inject constructor(
 ) : ViewModel() {
     // # Setup
     val nav = BehaviorSubject.create<NavController>()
+    val showAlertDialog = MutableSharedFlow<ShowAlertDialog>(1)
 
     // # Events
     val unCheckAllMenuItems = MutableSharedFlow<Unit>()
@@ -31,19 +36,28 @@ class HostVM @Inject constructor(
         MenuVMItems(
             MenuVMItem(
                 title = "History",
-                onClick = { navToHistory.onNext(Unit); unCheckAllMenuItems.onNext(Unit) },
+                onClick = { navToHistory.onNext(); unCheckAllMenuItems.onNext() },
             ),
             MenuVMItem(
                 title = "Transactions",
-                onClick = { navToTransactions.onNext(Unit); unCheckAllMenuItems.onNext(Unit) },
+                onClick = { navToTransactions.onNext(); unCheckAllMenuItems.onNext() },
             ),
             MenuVMItem(
                 title = "Futures",
-                onClick = { navToFutures.onNext(Unit); unCheckAllMenuItems.onNext(Unit) },
+                onClick = { navToFutures.onNext(); unCheckAllMenuItems.onNext() },
             ),
             MenuVMItem(
                 title = "Accessibility Settings",
-                onClick = { navToFutures.onNext(Unit); unCheckAllMenuItems.onNext(Unit) },
+                onClick = {
+                    GlobalScope.launch {
+                        showAlertDialog.value!!("""
+                            Accessibility settings apply to all applications, so you must edit them in your phone's settings.
+                            
+                            Would you like to go there now?
+                        """.trimIndent(),
+                            onYes = navToAccessibility::onNext)
+                    }
+                },
             ),
             *getExtraMenuItemPartials(nav)
         )
