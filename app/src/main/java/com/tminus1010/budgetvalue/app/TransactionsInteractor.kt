@@ -2,12 +2,12 @@ package com.tminus1010.budgetvalue.app
 
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionBlock
-import com.tminus1010.budgetvalue._unrestructured.transactions.data.TransactionAdapter
 import com.tminus1010.budgetvalue._unrestructured.transactions.data.repo.TransactionsRepo
 import com.tminus1010.budgetvalue.all_layers.extensions.value
 import com.tminus1010.budgetvalue.app.model.ImportTransactionsResult
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.data.LatestDateOfMostRecentImportRepo
+import com.tminus1010.budgetvalue.data.service.TransactionInputStreamAdapter
 import com.tminus1010.budgetvalue.domain.DatePeriodService
 import com.tminus1010.budgetvalue.domain.TerminationStrategy
 import kotlinx.coroutines.GlobalScope
@@ -24,7 +24,7 @@ import javax.inject.Singleton
 class TransactionsInteractor @Inject constructor(
     private val transactionsRepo: TransactionsRepo,
     private val datePeriodService: DatePeriodService,
-    private val transactionAdapter: TransactionAdapter,
+    private val transactionInputStreamAdapter: TransactionInputStreamAdapter,
     private val futuresRepo: FuturesRepo,
     private val latestDateOfMostRecentImportRepo: LatestDateOfMostRecentImportRepo,
 ) {
@@ -57,7 +57,7 @@ class TransactionsInteractor @Inject constructor(
     }
 
     suspend fun importTransactions(inputStream: InputStream) =
-        importTransactions(transactionAdapter.parseToTransactions(inputStream))
+        importTransactions(transactionInputStreamAdapter.parseToTransactions(inputStream))
 
     // # Internal
     private fun getBlocksFromTransactions(transactions: List<Transaction>): List<TransactionBlock> {

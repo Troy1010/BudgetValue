@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._unrestructured.transactions.data
+package com.tminus1010.budgetvalue.data.service
 
 import com.tminus1010.budgetvalue.all_layers.extensions.ifNull
 import com.tminus1010.budgetvalue.all_layers.extensions.isPositive
@@ -11,7 +11,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
-class TransactionAdapter @Inject constructor() {
+class TransactionInputStreamAdapter @Inject constructor() {
     fun parseToTransactions(inputStream: InputStream): List<Transaction> {
         return BufferedReader(InputStreamReader(inputStream)).lineSequence()
             .mapNotNull { line -> runCatching { parseToTransaction(line.split(",")) }.getOrElse { logz("Ignoring line:$line\nbecause:", it); null } }
