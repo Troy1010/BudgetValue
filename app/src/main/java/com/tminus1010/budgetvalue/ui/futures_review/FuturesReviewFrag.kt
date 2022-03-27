@@ -10,7 +10,7 @@ import com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesModel
 import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue.databinding.FragFuturesReviewBinding
 import com.tminus1010.budgetvalue.framework.view.viewBinding
-import com.tminus1010.budgetvalue.ui.create_future.CreateFuture2Frag
+import com.tminus1010.budgetvalue.ui.create_future.CreateFutureFrag
 import com.tminus1010.budgetvalue.ui.create_future.ReplayOrFutureDetailsFrag
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
@@ -34,7 +34,7 @@ class FuturesReviewFrag : Fragment(R.layout.frag_futures_review) {
         super.onViewCreated(view, savedInstanceState)
         // # Events
         viewModel.navToFutureDetails.observe(viewLifecycleOwner) { ReplayOrFutureDetailsFrag.navTo(nav, moshiWithCategoriesProvider, it, selectCategoriesModel) }
-        viewModel.navToCreateFuture.observe(viewLifecycleOwner) { CreateFuture2Frag.navTo(nav) }
+        viewModel.navToCreateFuture.observe(viewLifecycleOwner) { CreateFutureFrag.navTo(nav) }
         // # State
         vb.tvNoFutures.bind(viewModel.isNoFutureTextVisible) { easyVisibility = it }
         vb.buttonsview.bind(viewModel.buttons) { buttons = it }

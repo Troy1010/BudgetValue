@@ -14,7 +14,7 @@ import com.tminus1010.budgetvalue.framework.view.GenViewHolder2
 import com.tminus1010.budgetvalue.framework.view.LifecycleRVAdapter2
 import com.tminus1010.budgetvalue.framework.view.viewBinding
 import com.tminus1010.budgetvalue.ui.category_settings.CategorySettingsFrag
-import com.tminus1010.budgetvalue.ui.create_future.CreateFuture2Frag
+import com.tminus1010.budgetvalue.ui.create_future.CreateFutureFrag
 import com.tminus1010.budgetvalue.ui.create_future.ReplayOrFutureDetailsFrag
 import com.tminus1010.budgetvalue.ui.errors.Errors
 import com.tminus1010.budgetvalue._unrestructured.categories.CategoryAmountsConverter
@@ -57,7 +57,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         super.onViewCreated(view, savedInstanceState)
         // # Events
         errors.observe(viewLifecycleOwner) { throw it }
-        viewModel.navToCreateFuture2.observe(viewLifecycleOwner) { CreateFuture2Frag.navTo(nav) }
+        viewModel.navToCreateFuture2.observe(viewLifecycleOwner) { CreateFutureFrag.navTo(nav) }
         viewModel.navToSplit.observe(viewLifecycleOwner) { SplitFrag.navTo(nav, it) }
         viewModel.navToNewCategory.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, null, true) }
         viewModel.navToCategorySettings.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, it.name, false) }

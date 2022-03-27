@@ -10,7 +10,7 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_layers.extensions.easyText2
 import com.tminus1010.budgetvalue.framework.view.viewBinding
-import com.tminus1010.budgetvalue.databinding.FragCreateFuture2Binding
+import com.tminus1010.budgetvalue.databinding.FragCreateFutureBinding
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
@@ -19,9 +19,9 @@ import kotlinx.coroutines.flow.combine
 
 
 @AndroidEntryPoint
-class CreateFuture2Frag : Fragment(R.layout.frag_create_future_2) {
-    private val vb by viewBinding(FragCreateFuture2Binding::bind)
-    private val viewModel by viewModels<CreateFuture2VM>()
+class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
+    private val vb by viewBinding(FragCreateFutureBinding::bind)
+    private val viewModel by viewModels<CreateFutureVM>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -59,7 +59,7 @@ class CreateFuture2Frag : Fragment(R.layout.frag_create_future_2) {
 
     companion object {
         fun navTo(nav: NavController) {
-            nav.navigate(R.id.createFuture2Frag)
+            nav.navigate(R.id.createFutureFrag)
         }
     }
 }

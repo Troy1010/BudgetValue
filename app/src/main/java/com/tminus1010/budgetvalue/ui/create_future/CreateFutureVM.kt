@@ -29,7 +29,7 @@ import java.math.BigDecimal
 import javax.inject.Inject
 
 @HiltViewModel
-class CreateFuture2VM @Inject constructor(
+class CreateFutureVM @Inject constructor(
     private val categoriesInteractor: CategoriesInteractor,
     private val selectedCategoriesModel: SelectCategoriesModel,
     private val futuresRepo: FuturesRepo,
