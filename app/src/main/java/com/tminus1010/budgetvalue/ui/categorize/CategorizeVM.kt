@@ -130,7 +130,6 @@ class CategorizeVM @Inject constructor(
 
     // # Events
     val navToCreateFuture = MutableSharedFlow<Unit>()
-    val navToSplit = MutableSharedFlow<Transaction>()
     val navToCategorySettings = MutableSharedFlow<Category>()
     val navToNewCategory = MutableSharedFlow<Unit>()
     val navToReplayOrFutureDetails = MutableSharedFlow<Future>()
@@ -223,13 +222,6 @@ class CategorizeVM @Inject constructor(
         selectCategoriesModel.selectedCategories.map { it.isNotEmpty() }.asObservable2()
             .map { inSelectionMode ->
                 listOfNotNull(
-                    if (inSelectionMode)
-                        ButtonVMItem(
-                            title = "Split",
-                            isEnabled2 = isTransactionAvailable,
-                            onClick = { navToSplit.easyEmit(transactionsInteractor.mostRecentUncategorizedSpend.value!!) },
-                        )
-                    else null,
                     if (inSelectionMode)
                         ButtonVMItem(
                             title = "Category Settings",
