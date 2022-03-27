@@ -2,20 +2,20 @@ package com.tminus1010.budgetvalue._unrestructured.history
 
 import android.view.View
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
+import com.tminus1010.budgetvalue._unrestructured.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.all_layers.categoryComparator
+import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
+import com.tminus1010.budgetvalue.app.BudgetedInteractor
+import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.data.CurrentDatePeriodRepo
+import com.tminus1010.budgetvalue.data.PlansRepo
+import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.DatePeriodService
 import com.tminus1010.budgetvalue.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue.framework.Rx
-import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
-import com.tminus1010.budgetvalue.app.BudgetedInteractor
-import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.ui.all_features.model.BasicHeaderWithSubtitlePresentationModel
+import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.TextPresentationModel
-import com.tminus1010.budgetvalue.data.PlansRepo
-import com.tminus1010.budgetvalue._unrestructured.reconcile.data.ReconciliationsRepo
-import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
@@ -38,7 +38,7 @@ class HistoryVM @Inject constructor(
     private val reconciliationRepo: ReconciliationsRepo,
 ) : ViewModel() {
     private val activeCategories: Observable<List<Category>> =
-        Observable.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks, budgetedInteractor.budgeted)
+        Observable.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks2.asObservable2(), budgetedInteractor.budgeted)
         { reconciliations, plans, transactionBlocks, budgeted ->
             sequenceOf<Set<Category>>()
                 .plus(reconciliations.map { it.categoryAmounts.keys })
@@ -52,7 +52,7 @@ class HistoryVM @Inject constructor(
 
 
     private val historyVMItems =
-        Rx.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks, budgetedInteractor.budgeted)
+        Rx.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks2.asObservable2(), budgetedInteractor.budgeted)
             .observeOn(Schedulers.computation())
             .throttleLatest(500, TimeUnit.MILLISECONDS)
             .map { (reconciliations, plans, transactionBlocks, budgeted) ->

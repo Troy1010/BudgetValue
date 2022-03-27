@@ -1,16 +1,16 @@
 package com.tminus1010.budgetvalue._unrestructured.reconcile.app.interactor
 
-import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
-import com.tminus1010.budgetvalue.all_layers.extensions.isZero
-import com.tminus1010.budgetvalue.domain.CategoryAmounts
-import com.tminus1010.budgetvalue.domain.LocalDatePeriod
-import com.tminus1010.budgetvalue.data.AccountsRepo
-import com.tminus1010.budgetvalue.app.BudgetedInteractor
-import com.tminus1010.budgetvalue.data.PlansRepo
-import com.tminus1010.budgetvalue.domain.plan.Plan
 import com.tminus1010.budgetvalue._unrestructured.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue._unrestructured.reconcile.domain.ReconciliationToDo
+import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
+import com.tminus1010.budgetvalue.all_layers.extensions.isZero
+import com.tminus1010.budgetvalue.app.BudgetedInteractor
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
+import com.tminus1010.budgetvalue.data.AccountsRepo
+import com.tminus1010.budgetvalue.data.PlansRepo
+import com.tminus1010.budgetvalue.domain.CategoryAmounts
+import com.tminus1010.budgetvalue.domain.LocalDatePeriod
+import com.tminus1010.budgetvalue.domain.plan.Plan
 import com.tminus1010.tmcommonkotlin.rx.extensions.doLogx
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Observable
@@ -28,7 +28,7 @@ class ReconciliationsToDoInteractor @Inject constructor(
     budgetedInteractor: BudgetedInteractor,
 ) {
     private val planReconciliationsToDo =
-        Observable.combineLatest(plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks, reconciliationsRepo.reconciliations)
+        Observable.combineLatest(plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks2.asObservable2(), reconciliationsRepo.reconciliations)
         { plans, transactionBlocks, reconciliations ->
             transactionBlocks
                 .map { transactionBlock ->

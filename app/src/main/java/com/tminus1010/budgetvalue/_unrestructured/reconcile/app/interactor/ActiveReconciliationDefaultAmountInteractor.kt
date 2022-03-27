@@ -1,16 +1,16 @@
 package com.tminus1010.budgetvalue._unrestructured.reconcile.app.interactor
 
 import androidx.annotation.VisibleForTesting
-import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
-import com.tminus1010.budgetvalue.domain.CategoryAmounts
-import com.tminus1010.budgetvalue.data.AccountsRepo
-import com.tminus1010.budgetvalue.data.PlansRepo
-import com.tminus1010.budgetvalue.domain.plan.Plan
 import com.tminus1010.budgetvalue._unrestructured.reconcile.data.ActiveReconciliationRepo
 import com.tminus1010.budgetvalue._unrestructured.reconcile.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue._unrestructured.reconcile.domain.Reconciliation
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionBlock
+import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
+import com.tminus1010.budgetvalue.data.AccountsRepo
+import com.tminus1010.budgetvalue.data.PlansRepo
+import com.tminus1010.budgetvalue.domain.CategoryAmounts
+import com.tminus1010.budgetvalue.domain.plan.Plan
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import com.tminus1010.tmcommonkotlin.rx.nonLazy
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
@@ -33,7 +33,7 @@ class ActiveReconciliationDefaultAmountInteractor @Inject constructor(
         Observable.combineLatest(
             plansRepo.plans.asObservable2(),
             reconciliationsRepo.reconciliations,
-            transactionsInteractor.transactionBlocks,
+            transactionsInteractor.transactionBlocks2.asObservable2(),
             accountsRepo.accountsAggregate.map { it.total }.asObservable2(),
             activeReconciliationRepo.activeReconciliationCAs.asObservable2(),
             ::calcActiveReconciliationDefaultAmount

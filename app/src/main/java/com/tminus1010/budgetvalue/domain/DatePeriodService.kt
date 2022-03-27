@@ -16,6 +16,8 @@ class DatePeriodService @Inject constructor(
     fun isDatePeriodValid(datePeriod: LocalDatePeriod): Boolean =
         getDatePeriod(datePeriod.startDate, settingsRepo.anchorDateOffset.value, settingsRepo.blockSize.value) == datePeriod
 
+    // TODO: This needs to emit on change
+    @Deprecated("This needs to emit on change. Currently, there is no replacement")
     fun getDatePeriod(date: LocalDate): LocalDatePeriod =
         getDatePeriod(date, settingsRepo.anchorDateOffset.value, settingsRepo.blockSize.value)
 

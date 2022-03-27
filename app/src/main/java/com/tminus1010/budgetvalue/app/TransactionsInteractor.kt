@@ -2,7 +2,6 @@ package com.tminus1010.budgetvalue.app
 
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionBlock
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionsAggregate
 import com.tminus1010.budgetvalue._unrestructured.transactions.data.TransactionAdapter
 import com.tminus1010.budgetvalue._unrestructured.transactions.data.repo.TransactionsRepo
 import com.tminus1010.budgetvalue.all_layers.extensions.value
@@ -11,7 +10,6 @@ import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.data.LatestDateOfMostRecentImportRepo
 import com.tminus1010.budgetvalue.domain.DatePeriodService
 import com.tminus1010.budgetvalue.domain.TerminationStrategy
-import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -80,11 +78,6 @@ class TransactionsInteractor @Inject constructor(
     }
 
     // # Output
-    @Deprecated("use transactionBlocks2")
-    val transactionBlocks: Observable<List<TransactionBlock>> =
-        transactionsRepo.transactionsAggregate
-            .map(TransactionsAggregate::transactions)
-            .map(::getBlocksFromTransactions)
     val transactionBlocks2 =
         transactionsRepo.transactionsAggregate2
             .map { getBlocksFromTransactions(it.transactions) }
