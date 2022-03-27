@@ -30,7 +30,7 @@ class TransactionsInteractor @Inject constructor(
 ) {
     // # Input
     suspend fun importTransactions(transactions: List<Transaction>): ImportTransactionsResult {
-        var categorizedCounter = 0
+        var transactionsCategorizedCounter = 0
         var transactionsImportedCounter = 0
         var transactionsIgnoredBecauseTheyWereAlreadyImported = 0
         transactions
@@ -39,7 +39,7 @@ class TransactionsInteractor @Inject constructor(
                 val matchedFuture =
                     futuresRepo.futures.value!!
                         .find { it.onImportMatcher.isMatch(transaction) }
-                val transactionToPush = matchedFuture?.categorize(transaction)?.also { categorizedCounter++ } ?: transaction
+                val transactionToPush = matchedFuture?.categorize(transaction)?.also { transactionsCategorizedCounter++ } ?: transaction
                 transactionsRepo.push(transactionToPush).blockingAwait()
                 if (matchedFuture != null && matchedFuture.terminationStrategy == TerminationStrategy.ONCE)
                     futuresRepo.setTerminationDate(matchedFuture, LocalDate.now())
@@ -50,7 +50,7 @@ class TransactionsInteractor @Inject constructor(
             ?.also { mostRecentTransaction -> latestDateOfMostRecentImportRepo.set(mostRecentTransaction.date) }
         //
         return ImportTransactionsResult(
-            numberOfTransactionsCategorizedByFutures = categorizedCounter,
+            numberOfTransactionsCategorizedByFutures = transactionsCategorizedCounter,
             numberOfTransactionsImported = transactionsImportedCounter,
             numberOfTransactionsIgnoredBecauseTheyWereAlreadyImported = transactionsIgnoredBecauseTheyWereAlreadyImported
         )
