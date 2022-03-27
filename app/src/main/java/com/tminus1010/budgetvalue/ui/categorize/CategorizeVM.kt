@@ -236,7 +236,7 @@ class CategorizeVM @Inject constructor(
                         ButtonVMItem(
                             title = "Categorize all as Unknown",
                             isEnabled2 = isTransactionAvailable,
-                            onClick = { userCategorizeAllAsUnknown() },
+                            onClick = ::userCategorizeAllAsUnknown,
                         )
                     else null,
                     if (!inSelectionMode)
@@ -250,26 +250,26 @@ class CategorizeVM @Inject constructor(
                         ButtonVMItem(
                             title = "Redo",
                             isEnabled2 = isRedoAvailable,
-                            onClick = { userRedo() },
+                            onClick = ::userRedo,
                         )
                     else null,
                     if (!inSelectionMode)
                         ButtonVMItem(
                             title = "Undo",
                             isEnabled2 = isUndoAvailable,
-                            onClick = { userUndo() },
+                            onClick = ::userUndo,
                         )
                     else null,
                     if (!inSelectionMode)
                         ButtonVMItem(
                             title = "Create Category",
-                            onClick = { navToNewCategory.easyEmit(Unit) }
+                            onClick = navToNewCategory::onNext,
                         )
                     else null,
                     ButtonVMItem(
                         title = "Create Future",
                         isEnabled2 = isTransactionAvailable,
-                        onClick = { userTryNavToCreateFuture2() },
+                        onClick = ::userTryNavToCreateFuture2,
                     ),
                 )
             }
