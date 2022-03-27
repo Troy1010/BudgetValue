@@ -12,6 +12,7 @@ import com.tminus1010.budgetvalue.app.*
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.Future
+import com.tminus1010.budgetvalue.domain.TransactionMatcher
 import com.tminus1010.budgetvalue.framework.view.SpinnerService
 import com.tminus1010.budgetvalue.framework.view.Toaster
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
@@ -44,6 +45,7 @@ class CategorizeVM @Inject constructor(
     private val futuresInteractor: FuturesInteractor,
     private val redoUndoInteractor: RedoUndoInteractor,
     private val editStringSharedVM: EditStringSharedVM,
+    private val categorizeAllMatchingUncategorizedTransactionsInteractor: CategorizeAllMatchingUncategorizedTransactionsInteractor,
 ) : ViewModel() {
     // # User Intents
     fun userSimpleCategorize(category: Category) {
@@ -104,6 +106,23 @@ class CategorizeVM @Inject constructor(
                     description = s,
                     future = future,
                 )
+                    .also { toaster.toast("$it transactions categorized") }
+            })
+        }
+        navToEditStringForAddTransactionToFutureWithEdit.onNext(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)
+    }
+
+    fun userUseDescription(future: Future) {
+        GlobalScope.launch(block = spinnerService.decorate {
+            categorizeAllMatchingUncategorizedTransactionsInteractor(TransactionMatcher.SearchText(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)::isMatch, future::categorize)
+                .also { toaster.toast("$it transactions categorized") }
+        })
+    }
+
+    fun userUseDescriptionWithEdit(future: Future) {
+        editStringSharedVM.userSubmitString.take(1).takeUntilSignal(editStringSharedVM.userCancel).observe(GlobalScope) { s ->
+            GlobalScope.launch(block = spinnerService.decorate { // TODO: There should be a better way than launching within a launch, right?
+                categorizeAllMatchingUncategorizedTransactionsInteractor(TransactionMatcher.SearchText(s)::isMatch, future::categorize)
                     .also { toaster.toast("$it transactions categorized") }
             })
         }
@@ -182,6 +201,14 @@ class CategorizeVM @Inject constructor(
                             MenuVMItem(
                                 title = "Add Description With Edit",
                                 onClick = { userAddTransactionToFutureWithEdit(it) }
+                            ),
+                            MenuVMItem(
+                                title = "Use Description",
+                                onClick = { userUseDescription(it) }
+                            ),
+                            MenuVMItem(
+                                title = "Use Description With Edit",
+                                onClick = { userUseDescriptionWithEdit(it) }
                             ),
                             MenuVMItem(
                                 title = "Edit",
