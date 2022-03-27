@@ -6,6 +6,7 @@ import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionsA
 import com.tminus1010.budgetvalue._unrestructured.transactions.data.TransactionAdapter
 import com.tminus1010.budgetvalue._unrestructured.transactions.data.repo.TransactionsRepo
 import com.tminus1010.budgetvalue.all_layers.extensions.value
+import com.tminus1010.budgetvalue.app.model.ImportTransactionsResult
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.data.LatestDateOfMostRecentImportRepo
 import com.tminus1010.budgetvalue.domain.DatePeriodService
@@ -30,8 +31,10 @@ class TransactionsInteractor @Inject constructor(
     private val latestDateOfMostRecentImportRepo: LatestDateOfMostRecentImportRepo,
 ) {
     // # Input
-    suspend fun importTransactions(transactions: List<Transaction>) {
+    suspend fun importTransactions(transactions: List<Transaction>): ImportTransactionsResult {
         var categorizedCounter = 0
+        var transactionsImportedCounter = 0
+        var transactionsIgnoredBecauseTheyWereAlreadyImported = 0
         transactions
             .forEach { transaction ->
                 val transactionToPush =
@@ -44,13 +47,20 @@ class TransactionsInteractor @Inject constructor(
                         ?.categorize(transaction)
                         ?.also { categorizedCounter++ }
                         ?: transaction
-                if (transactionsRepo.getTransaction2(transactionToPush.id) == null)
+                if (transactionsRepo.getTransaction2(transactionToPush.id) == null) {
                     transactionsRepo.push(transactionToPush).blockingAwait()
+                    transactionsImportedCounter++
+                } else
+                    transactionsIgnoredBecauseTheyWereAlreadyImported++
             }
         // TODO: Make sure that IsReconciliationReady works with this change
         transactions.maxByOrNull { it.date }
             ?.also { mostRecentTransaction -> latestDateOfMostRecentImportRepo.set(mostRecentTransaction.date) }
-
+        return ImportTransactionsResult(
+            numberOfTransactionsCategorizedByFutures = categorizedCounter,
+            numberOfTransactionsImported = transactionsImportedCounter,
+            numberOfTransactionsIgnoredBecauseTheyWereAlreadyImported = transactionsIgnoredBecauseTheyWereAlreadyImported
+        )
     }
 
     suspend fun importTransactions(inputStream: InputStream) =
