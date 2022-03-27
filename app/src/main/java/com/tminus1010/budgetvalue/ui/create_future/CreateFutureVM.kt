@@ -18,6 +18,7 @@ import com.tminus1010.budgetvalue.ui.all_features.model.*
 import com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesModel
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
+import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
@@ -48,7 +49,7 @@ class CreateFutureVM @Inject constructor(
     fun userTrySubmit() {
         GlobalScope.launch {
             showAlertDialog.value!!(
-                body = "What would you like to name this future?",
+                body = NativeText.Simple("What would you like to name this future?"),
                 initialText = categoryAmountFormulas.value
                     .map { (category, amountFormula) ->
                         if (category != fillCategory.value)

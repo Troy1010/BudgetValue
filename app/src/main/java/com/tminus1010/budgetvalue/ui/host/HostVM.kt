@@ -50,11 +50,14 @@ class HostVM @Inject constructor(
                 title = "Accessibility Settings",
                 onClick = {
                     GlobalScope.launch {
-                        showAlertDialog.value!!("""
-                            Accessibility settings apply to all applications, so you must edit them in your phone's settings.
-                            
-                            Would you like to go there now?
-                        """.trimIndent(),
+                        showAlertDialog.value!!(
+                            NativeText.Simple(
+                                """
+                                    Accessibility settings apply to all applications, so you must edit them in your phone's settings.
+                                    
+                                    Would you like to go there now?
+                                """.trimIndent()
+                            ),
                             onYes = navToAccessibility::onNext)
                     }
                 },

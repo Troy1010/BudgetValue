@@ -33,11 +33,11 @@ import com.tminus1010.budgetvalue.ui.futures_review.FuturesReviewFrag
 import com.tminus1010.budgetvalue.ui.importZ.ImportVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
+import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.subjects.Subject
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -137,11 +137,13 @@ class HostActivity : AppCompatActivity() {
                     GlobalScope.launch {
                         val importTransactionsResult = importTransactions(result.data!!.data!!)
                         showAlertDialog(
-                            """Import Successful
-                                |${importTransactionsResult.numberOfTransactionsIgnoredBecauseTheyWereAlreadyImported} ignored because they were already imported.
-                                |${importTransactionsResult.numberOfTransactionsImported} imported.
-                                |${importTransactionsResult.numberOfTransactionsCategorizedByFutures} categorized by futures.
-                            """.trimMargin()
+                            NativeText.Simple(
+                                """Import Successful
+                                    ${importTransactionsResult.numberOfTransactionsIgnoredBecauseTheyWereAlreadyImported} ignored because they were already imported.
+                                    ${importTransactionsResult.numberOfTransactionsImported} imported.
+                                    ${importTransactionsResult.numberOfTransactionsCategorizedByFutures} categorized by futures.
+                                """.trimIndent()
+                            )
                         )
                     }
                 } catch (e: Throwable) {

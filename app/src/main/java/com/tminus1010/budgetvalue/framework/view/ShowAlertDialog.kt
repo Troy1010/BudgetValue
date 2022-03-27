@@ -16,7 +16,6 @@ class ShowAlertDialog constructor(private val activity: Activity) {
     /**
      * EditText
      */
-    suspend operator fun invoke(body: String, initialText: CharSequence? = null, onYes: ((CharSequence?) -> Unit)? = null, onNo: (() -> Unit)? = null) = invoke(NativeText.Simple(body), initialText, onYes, onNo)
     suspend operator fun invoke(body: NativeText, initialText: CharSequence? = null, onYes: ((CharSequence?) -> Unit)? = null, onNo: (() -> Unit)? = null) = suspendCoroutine<Unit> { downstream ->
         launchOnMainThread {
             val editText = EditText(activity)
@@ -35,7 +34,6 @@ class ShowAlertDialog constructor(private val activity: Activity) {
     /**
      * Yes/no
      */
-    suspend operator fun invoke(body: String, onYes: (() -> Unit)? = null, onNo: (() -> Unit)? = null) = invoke(NativeText.Simple(body), onYes, onNo)
     suspend operator fun invoke(body: NativeText, onYes: (() -> Unit)? = null, onNo: (() -> Unit)? = null) = suspendCoroutine<Unit> { downstream ->
         launchOnMainThread {
             AlertDialog.Builder(activity)
@@ -51,7 +49,6 @@ class ShowAlertDialog constructor(private val activity: Activity) {
     /**
      * Okay
      */
-    suspend operator fun invoke(body: String) = invoke(NativeText.Simple(body))
     suspend operator fun invoke(body: NativeText) = suspendCoroutine<Unit> { downstream ->
         launchOnMainThread {
             AlertDialog.Builder(activity)
