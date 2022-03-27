@@ -1,9 +1,8 @@
 package com.tminus1010.budgetvalue.framework.view
 
 import android.app.Activity
-import android.os.Handler
-import android.os.Looper
 import androidx.appcompat.app.AlertDialog
+import com.tminus1010.budgetvalue.framework.launchOnMainThread
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -13,7 +12,7 @@ import kotlin.coroutines.suspendCoroutine
  */
 class ShowAlertDialog constructor(private val activity: Activity) {
     suspend operator fun invoke(body: NativeText, onYes: (() -> Unit)? = null, onNo: (() -> Unit)? = null) = suspendCoroutine<Unit> { downstream ->
-        Handler(Looper.getMainLooper()).post {
+        launchOnMainThread {
             AlertDialog.Builder(activity)
                 .setMessage(body.toCharSequence(activity))
                 .setPositiveButton("Yes") { _, _ -> onYes?.invoke() }
@@ -28,7 +27,7 @@ class ShowAlertDialog constructor(private val activity: Activity) {
     }
 
     suspend operator fun invoke(body: NativeText) = suspendCoroutine<Unit> { downstream ->
-        Handler(Looper.getMainLooper()).post {
+        launchOnMainThread {
             AlertDialog.Builder(activity)
                 .setMessage(body.toCharSequence(activity))
                 .setPositiveButton("Okay") { _, _ -> }
