@@ -25,26 +25,14 @@ class TransactionsRepo @Inject constructor(
     suspend fun push(transaction: Transaction) =
         miscDAO.push(transaction.toDTO(categoryAmountsConverter))
 
-    fun delete(transaction: Transaction) =
-        miscDAO.delete(transaction.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
-
     suspend fun delete(id: String) =
         miscDAO.deleteTransaction(id)
 
-    @Deprecated("use update2")
-    fun update(transaction: Transaction) =
-        miscDAO.update(transaction.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
-
     suspend fun update2(transaction: Transaction) =
-        miscDAO.update2(transaction.toDTO(categoryAmountsConverter))
+        miscDAO.update(transaction.toDTO(categoryAmountsConverter))
 
     fun clear() = miscDAO.clearTransactions().subscribeOn(Schedulers.io())
 
-    @Deprecated("use getTransaction2")
-    fun getTransaction(id: String) =
-        miscDAO.getTransaction(id).subscribeOn(Schedulers.io())
-            .map { Transaction.fromDTO(it, categoryAmountsConverter) }
-
     suspend fun getTransaction2(id: String) =
-        miscDAO.getTransaction2(id)?.let { Transaction.fromDTO(it, categoryAmountsConverter) }
+        miscDAO.getTransaction(id)?.let { Transaction.fromDTO(it, categoryAmountsConverter) }
 }

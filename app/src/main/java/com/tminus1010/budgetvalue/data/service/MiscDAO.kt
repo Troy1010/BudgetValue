@@ -37,42 +37,23 @@ interface MiscDAO {
 
     // # Transactions
 
+    @Query("select * from TransactionDTO")
+    fun fetchTransactionsFlow(): Flow<List<TransactionDTO>>
+
     @Query("DELETE FROM TransactionDTO")
     fun clearTransactions(): Completable
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun push(transactionDTO: TransactionDTO)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun tryAdd(transactionsDTO: List<TransactionDTO>): Completable
-
-    @Query("select * from TransactionDTO")
-    fun fetchTransactionsFlow(): Flow<List<TransactionDTO>>
-
-    @Query("select * from TransactionDTO")
-    fun fetchTransactions(): Observable<List<TransactionDTO>>
-
-    @Query("select * from TransactionDTO WHERE description=:description")
-    fun fetchTransactions(description: String): Single<List<TransactionDTO>>
-
-    @Delete
-    fun delete(transaction: TransactionDTO): Completable
-
     @Query("DELETE FROM TransactionDTO WHERE id=:id")
     suspend fun deleteTransaction(id: String)
 
-    @Deprecated("Use update2")
     @Update
-    fun update(transaction: TransactionDTO): Completable
-
-    @Update
-    suspend fun update2(transaction: TransactionDTO)
+    suspend fun update(transaction: TransactionDTO)
 
     @Query("select * from TransactionDTO WHERE id=:id")
-    fun getTransaction(id: String): Single<TransactionDTO>
-
-    @Query("select * from TransactionDTO WHERE id=:id")
-    suspend fun getTransaction2(id: String): TransactionDTO?
+    suspend fun getTransaction(id: String): TransactionDTO?
 
     // # Plan
 
