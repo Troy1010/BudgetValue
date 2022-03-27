@@ -44,9 +44,6 @@ interface MiscDAO {
     fun push(transactionDTO: TransactionDTO): Completable
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun tryAdd(transactionDTO: TransactionDTO): Completable
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun tryAdd(transactionsDTO: List<TransactionDTO>): Completable
 
     @Query("select * from TransactionDTO")

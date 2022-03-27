@@ -28,9 +28,6 @@ class TransactionsRepo @Inject constructor(
             .map { TransactionsAggregate(it, categoryAmountsConverter) }
             .shareIn(GlobalScope, SharingStarted.WhileSubscribed(), 1)
 
-    fun tryPush(transaction: Transaction) =
-        miscDAO.tryAdd(transaction.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
-
     fun push(transaction: Transaction) =
         miscDAO.push(transaction.toDTO(categoryAmountsConverter)).subscribeOn(Schedulers.io())
 
@@ -44,14 +41,7 @@ class TransactionsRepo @Inject constructor(
     suspend fun update2(transaction: Transaction) =
         miscDAO.update2(transaction.toDTO(categoryAmountsConverter))
 
-    fun tryPush(transactions: List<Transaction>) =
-        miscDAO.tryAdd(transactions.map { it.toDTO(categoryAmountsConverter) }).subscribeOn(Schedulers.io())
-
     fun clear() = miscDAO.clearTransactions().subscribeOn(Schedulers.io())
-
-    fun findTransactionsWithDescription(description: String) =
-        miscDAO.fetchTransactions(description).subscribeOn(Schedulers.io())
-            .map { it.map { Transaction.fromDTO(it, categoryAmountsConverter) } }
 
     fun getTransaction(id: String) =
         miscDAO.getTransaction(id).subscribeOn(Schedulers.io())
