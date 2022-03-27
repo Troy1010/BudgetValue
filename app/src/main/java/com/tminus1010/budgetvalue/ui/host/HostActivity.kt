@@ -134,7 +134,7 @@ class HostActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 try {
-                    runBlocking {
+                    GlobalScope.launch {
                         val importTransactionsResult = importTransactions(result.data!!.data!!)
                         showAlertDialog(
                             """Import Successful

@@ -28,11 +28,13 @@ class ShowAlertDialog constructor(private val activity: Activity) {
     }
 
     suspend operator fun invoke(body: NativeText) = suspendCoroutine<Unit> { downstream ->
-        AlertDialog.Builder(activity)
-            .setMessage(body.toCharSequence(activity))
-            .setPositiveButton("Okay") { _, _ -> }
-            .setOnDismissListener { downstream.resume(Unit) }
-            .show()
+        Handler(Looper.getMainLooper()).post {
+            AlertDialog.Builder(activity)
+                .setMessage(body.toCharSequence(activity))
+                .setPositiveButton("Okay") { _, _ -> }
+                .setOnDismissListener { downstream.resume(Unit) }
+                .show()
+        }
     }
 
     suspend operator fun invoke(body: String) {
