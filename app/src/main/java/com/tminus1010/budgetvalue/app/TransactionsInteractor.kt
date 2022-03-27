@@ -32,29 +32,29 @@ class TransactionsInteractor @Inject constructor(
 ) {
     // # Input
     suspend fun importTransactions(transactions: List<Transaction>): ImportTransactionsResult {
+        var transactionsImportedCounter: Int
         var transactionsCategorizedCounter = 0
-        var transactionsImportedCounter = 0
-        var transactionsIgnoredBecauseTheyWereAlreadyImported = 0
+        var transactionsIgnoredBecauseTheyWereAlreadyImportedCounter = 0
         transactions
-            .filter { (transactionsRepo.getTransaction2(it.id) == null).also { if (!it) transactionsIgnoredBecauseTheyWereAlreadyImported++ } }
-            .forEach { transaction ->
+            .filter { (transactionsRepo.getTransaction2(it.id) == null).also { if (!it) transactionsIgnoredBecauseTheyWereAlreadyImportedCounter++ } }
+            .map { transaction ->
                 val matchedFuture =
                     futuresRepo.futures.value!!
                         .find { it.onImportMatcher.isMatch(transaction) }
-                val transactionToPush = matchedFuture?.categorize(transaction)?.also { transactionsCategorizedCounter++ } ?: transaction
-                transactionsRepo.push(transactionToPush)
-                if (matchedFuture != null && matchedFuture.terminationStrategy == TerminationStrategy.ONCE)
-                    futuresRepo.setTerminationDate(matchedFuture, LocalDate.now())
-                transactionsImportedCounter++
+                matchedFuture?.categorize(transaction)
+                    ?.also { if (matchedFuture.terminationStrategy == TerminationStrategy.ONCE) futuresRepo.setTerminationDate(matchedFuture, LocalDate.now()) }
+                    ?.also { transactionsCategorizedCounter++ }
+                    ?: transaction
             }
+            .also { saveTransactions(it.also { transactionsImportedCounter = it.size }) }
         // TODO: Make sure that IsReconciliationReady works with this change
         transactions.maxByOrNull { it.date }
             ?.also { mostRecentTransaction -> latestDateOfMostRecentImportRepo.set(mostRecentTransaction.date) }
         //
         return ImportTransactionsResult(
-            numberOfTransactionsCategorizedByFutures = transactionsCategorizedCounter,
             numberOfTransactionsImported = transactionsImportedCounter,
-            numberOfTransactionsIgnoredBecauseTheyWereAlreadyImported = transactionsIgnoredBecauseTheyWereAlreadyImported
+            numberOfTransactionsCategorizedByFutures = transactionsCategorizedCounter,
+            numberOfTransactionsIgnoredBecauseTheyWereAlreadyImported = transactionsIgnoredBecauseTheyWereAlreadyImportedCounter
         )
     }
 
