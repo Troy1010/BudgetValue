@@ -14,7 +14,7 @@ class ShowAlertDialog @Inject constructor() {
     operator fun invoke(activity: Activity, body: NativeText) {
         AlertDialog.Builder(activity)
             .setMessage(body.toCharSequence(activity))
-            .setNeutralButton("Okay") { _, _ -> Unit }
+            .setPositiveButton("Okay") { _, _ -> Unit }
             .show()
     }
 
