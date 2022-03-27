@@ -38,7 +38,7 @@ class CategorizeVM @Inject constructor(
     private val toaster: Toaster,
     private val categoriesInteractor: CategoriesInteractor,
     private val spinnerService: SpinnerService,
-    selectCategoriesModel: SelectCategoriesModel,
+    private val selectCategoriesModel: SelectCategoriesModel,
     errors: Errors,
     futuresRepo: FuturesRepo,
     private val futuresInteractor: FuturesInteractor,
@@ -126,6 +126,11 @@ class CategorizeVM @Inject constructor(
             })
         }
         navToEditStringForAddTransactionToFutureWithEdit.onNext(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)
+    }
+
+    fun userTryNavToCategorySettings() {
+        navToCategorySettings.easyEmit(selectCategoriesModel.selectedCategories.value.first())
+        runBlocking { selectCategoriesModel.clearSelection() }
     }
 
     // # Events
@@ -226,10 +231,7 @@ class CategorizeVM @Inject constructor(
                         ButtonVMItem(
                             title = "Category Settings",
                             isEnabled = selectCategoriesModel.selectedCategories.asObservable2().map { it.size == 1 },
-                            onClick = {
-                                navToCategorySettings.easyEmit(selectCategoriesModel.selectedCategories.value.first())
-                                runBlocking { selectCategoriesModel.clearSelection() }
-                            }
+                            onClick = ::userTryNavToCategorySettings
                         )
                     else null,
                     if (!inSelectionMode)
