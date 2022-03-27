@@ -39,7 +39,7 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
             val editText = EditText(requireContext())
             editText.easyText2 = it
             AlertDialog.Builder(requireContext())
-                .setMessage("What would you like to name this replay?")
+                .setMessage("What would you like to name this future?")
                 .setView(editText)
                 .setPositiveButton("Submit") { _, _ -> viewModel.userTrySubmitWithName(editText.easyText2!!) }
                 .setNegativeButton("Cancel") { _, _ -> }

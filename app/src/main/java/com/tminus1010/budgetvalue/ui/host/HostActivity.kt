@@ -138,9 +138,9 @@ class HostActivity : AppCompatActivity() {
                         val importTransactionsResult = importTransactions(result.data!!.data!!)
                         showAlertDialog(
                             """Import Successful
-                                |Number of transactions ignored because they were already imported:${importTransactionsResult.numberOfTransactionsIgnoredBecauseTheyWereAlreadyImported}
-                                |Number of transactions imported:${importTransactionsResult.numberOfTransactionsImported}
-                                |Number of transactions categorized by futures:${importTransactionsResult.numberOfTransactionsCategorizedByFutures}
+                                |${importTransactionsResult.numberOfTransactionsIgnoredBecauseTheyWereAlreadyImported} ignored because they were already imported.
+                                |${importTransactionsResult.numberOfTransactionsImported} imported.
+                                |${importTransactionsResult.numberOfTransactionsCategorizedByFutures} categorized by futures.
                             """.trimMargin()
                         )
                     }
