@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._unrestructured.replay_or_future.view
+package com.tminus1010.budgetvalue.ui.select_categories
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +10,6 @@ import androidx.navigation.NavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.presentation.SelectCategoriesVM
 import com.tminus1010.budgetvalue.databinding.FragSelectCategoriesBinding
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
 import com.tminus1010.budgetvalue.framework.view.GenViewHolder2
@@ -24,7 +23,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.map
 
 @AndroidEntryPoint
-@Deprecated("No longer using")
 class SelectCategoriesFrag : Fragment(R.layout.frag_select_categories) {
     private val vb by viewBinding(FragSelectCategoriesBinding::bind)
     private val selectCategoriesVM by viewModels<SelectCategoriesVM>()

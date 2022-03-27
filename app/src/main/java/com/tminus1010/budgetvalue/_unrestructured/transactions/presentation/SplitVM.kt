@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue._unrestructured.transactions.presentation
 
 import androidx.lifecycle.disposables
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.app.SelectCategoriesModel
+import com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesModel
 import com.tminus1010.budgetvalue._unrestructured.replay_or_future.presentation.CategoryAmountFormulaVMItemsBaseVM
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
 import com.tminus1010.budgetvalue.app.SaveTransactionInteractor

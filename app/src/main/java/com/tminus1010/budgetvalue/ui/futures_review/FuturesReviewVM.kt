@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._unrestructured.replay_or_future.presentation
+package com.tminus1010.budgetvalue.ui.futures_review
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

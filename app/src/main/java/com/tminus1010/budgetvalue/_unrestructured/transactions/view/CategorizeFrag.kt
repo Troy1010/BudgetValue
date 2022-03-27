@@ -19,7 +19,7 @@ import com.tminus1010.budgetvalue.ui.create_future.ReplayOrFutureDetailsFrag
 import com.tminus1010.budgetvalue.ui.errors.Errors
 import com.tminus1010.budgetvalue._unrestructured.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.app.SelectCategoriesModel
+import com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesModel
 import com.tminus1010.budgetvalue._unrestructured.transactions.presentation.CategorizeVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind

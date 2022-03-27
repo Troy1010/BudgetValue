@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._unrestructured.replay_or_future.app
+package com.tminus1010.budgetvalue.ui.select_categories
 
 import com.tminus1010.budgetvalue.framework.source_objects.SourceList
 import com.tminus1010.budgetvalue.domain.Category
@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 import javax.inject.Singleton
 
+// TODO: Where should this cache exist..? How can it best be shared..?
 @Singleton
 class SelectCategoriesModel @Inject constructor() {
     // # Input

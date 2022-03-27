@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.app.SelectCategoriesModel
+import com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesModel
 import com.tminus1010.budgetvalue.all_layers.KEY1
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider

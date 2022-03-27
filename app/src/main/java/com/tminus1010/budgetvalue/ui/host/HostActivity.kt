@@ -13,7 +13,7 @@ import androidx.navigation.ui.NavigationUI
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._unrestructured.history.HistoryFrag
 import com.tminus1010.budgetvalue._unrestructured.reconcile.data.IsReconciliationFeatureEnabled
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.view.FuturesReviewFrag
+import com.tminus1010.budgetvalue.ui.futures_review.FuturesReviewFrag
 import com.tminus1010.budgetvalue._unrestructured.transactions.view.TransactionListFrag
 import com.tminus1010.budgetvalue.all_layers.extensions.easyAlertDialog
 import com.tminus1010.budgetvalue.all_layers.extensions.getString

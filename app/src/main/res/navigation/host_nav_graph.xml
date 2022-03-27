@@ -90,7 +90,7 @@
         tools:layout="@layout/frag_transaction" />
     <fragment
         android:id="@+id/futuresReviewFrag"
-        android:name="com.tminus1010.budgetvalue._unrestructured.replay_or_future.view.FuturesReviewFrag"
+        android:name="com.tminus1010.budgetvalue.ui.futures_review.FuturesReviewFrag"
         android:label="FuturesReviewFrag"
         tools:layout="@layout/frag_futures_review">
         <action
@@ -129,7 +129,7 @@
         tools:layout="@layout/frag_create_future_2" />
     <fragment
         android:id="@+id/selectCategoriesFrag"
-        android:name="com.tminus1010.budgetvalue._unrestructured.replay_or_future.view.SelectCategoriesFrag"
+        android:name="com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesFrag"
         android:label="SelectCategoriesFrag"
         tools:layout="@layout/frag_select_categories" />
     <fragment

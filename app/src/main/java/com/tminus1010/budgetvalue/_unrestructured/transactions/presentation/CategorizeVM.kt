@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue._unrestructured.transactions.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.app.SelectCategoriesModel
+import com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesModel
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
 import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit

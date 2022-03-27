@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._unrestructured.replay_or_future.presentation
+package com.tminus1010.budgetvalue.ui.select_categories
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
@@ -6,7 +6,6 @@ import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem2
 import com.tminus1010.budgetvalue.app.CategoriesInteractor
 import com.tminus1010.budgetvalue.domain.Category
-import com.tminus1010.budgetvalue._unrestructured.replay_or_future.app.SelectCategoriesModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.flowOf
