@@ -1,9 +1,9 @@
 package com.tminus1010.budgetvalue._unrestructured.transactions.data.repo
 
-import com.tminus1010.budgetvalue.data.service.MiscDAO
 import com.tminus1010.budgetvalue._unrestructured.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionsAggregate
+import com.tminus1010.budgetvalue.data.service.MiscDAO
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
@@ -17,12 +17,6 @@ class TransactionsRepo @Inject constructor(
     private val miscDAO: MiscDAO,
     private val categoryAmountsConverter: CategoryAmountsConverter,
 ) {
-    @Deprecated("use transactionsAggregate2")
-    val transactionsAggregate =
-        miscDAO.fetchTransactions().subscribeOn(Schedulers.io())
-            .map { TransactionsAggregate(it, categoryAmountsConverter) }
-            .replay(1).refCount()
-
     val transactionsAggregate2 =
         miscDAO.fetchTransactionsFlow()
             .map { TransactionsAggregate(it, categoryAmountsConverter) }

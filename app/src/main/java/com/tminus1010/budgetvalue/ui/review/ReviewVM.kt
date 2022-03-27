@@ -7,30 +7,31 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.utils.ColorTemplate
+import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionBlock
+import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionsAggregate
+import com.tminus1010.budgetvalue._unrestructured.transactions.data.repo.TransactionsRepo
+import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.all_layers.extensions.divertErrors
-import com.tminus1010.budgetvalue.all_layers.extensions.mapBox
+import com.tminus1010.budgetvalue.all_layers.extensions.value
+import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue.ui.all_features.model.PieChartVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.SpinnerVMItem
-import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.ui.review.presentation.NoMoreDataException
 import com.tminus1010.budgetvalue.ui.review.presentation.NoMostRecentSpendException
 import com.tminus1010.budgetvalue.ui.review.presentation.TooFarBackException
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionBlock
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionsAggregate
-import com.tminus1010.budgetvalue._unrestructured.transactions.data.repo.TransactionsRepo
 import com.tminus1010.tmcommonkotlin.core.extensions.nextOrSame
 import com.tminus1010.tmcommonkotlin.core.extensions.previousOrSame
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import com.tminus1010.tmcommonkotlin.rx.extensions.pairwise
-import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
+import kotlinx.coroutines.flow.map
 import java.math.BigDecimal
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -68,8 +69,8 @@ class ReviewVM @Inject constructor(
         .plus(ColorTemplate.COLORFUL_COLORS.toList())
         .plus(ColorTemplate.PASTEL_COLORS.toList())
     private val period =
-        Observable.combineLatest(userSelectedDuration, currentPageNumber, userUsePeriodType, transactionsRepo.transactionsAggregate.mapBox { it.mostRecentSpend }.filter { it.first != null }) // TODO("Filtering for not-null seems like a duct-tape solution b/c error stops subscription")
-        { userSelectedDuration, currentPageNumber, userUsePeriodType, (mostRecentSpend) ->
+        Observable.combineLatest(userSelectedDuration, currentPageNumber, userUsePeriodType, transactionsRepo.transactionsAggregate2.map { it.mostRecentSpend }.asObservable2()) // TODO("Filtering for not-null on mostRecentSpend might be bad?")
+        { userSelectedDuration, currentPageNumber, userUsePeriodType, mostRecentSpend ->
             val mostRecentSpendDate = (mostRecentSpend?.date ?: throw NoMostRecentSpendException())
             when (userSelectedDuration) {
                 SelectableDuration.BY_WEEK ->
@@ -184,7 +185,7 @@ class ReviewVM @Inject constructor(
             .startWithItem(Box(null))
             .pairwise()
             .map { (a, b) ->
-                if (b.first != null && b.first!!.endDate < transactionsRepo.transactionsAggregate.value?.oldestSpend?.date)
+                if (b.first != null && b.first!!.endDate < transactionsRepo.transactionsAggregate2.value?.oldestSpend?.date)
                     a.also { errors.onNext(TooFarBackException()) }
                 else
                     b
@@ -194,7 +195,7 @@ class ReviewVM @Inject constructor(
 
     private val transactionBlock =
         Observable.combineLatest(
-            transactionsRepo.transactionsAggregate.map(TransactionsAggregate::spends),
+            transactionsRepo.transactionsAggregate2.asObservable2().map(TransactionsAggregate::spends),
             period,
             ::TransactionBlock,
         )
