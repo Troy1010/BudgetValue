@@ -19,16 +19,15 @@ import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem2
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItems
-import com.tminus1010.budgetvalue.ui.set_string.SetStringSharedVM
-import com.tminus1010.budgetvalue.ui.errors.Errors
 import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesSharedVM
+import com.tminus1010.budgetvalue.ui.errors.Errors
+import com.tminus1010.budgetvalue.ui.set_string.SetStringSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.divertErrors
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
@@ -128,9 +127,8 @@ class CategorizeVM @Inject constructor(
         navToEditStringForAddTransactionToFutureWithEdit.onNext(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)
     }
 
-    fun userTryNavToCategorySettings() {
-        navToCategorySettings.easyEmit(chooseCategoriesSharedVM.selectedCategories.value.first())
-        runBlocking { chooseCategoriesSharedVM.clearSelection() }
+    fun userTryNavToCategorySettings(category: Category) {
+        navToCategorySettings.easyEmit(category)
     }
 
     // # Events
@@ -183,11 +181,23 @@ class CategorizeVM @Inject constructor(
                             else
                                 userSimpleCategorize(category)
                         },
-                        onLongClick = {
-                            if (category in chooseCategoriesSharedVM.selectedCategories.value)
-                                chooseCategoriesSharedVM.unselectCategories(category)
-                            else
-                                chooseCategoriesSharedVM.selectCategories(category)
+                        menuVMItemsFlow = chooseCategoriesSharedVM.selectedCategories.map { selectedCategories ->
+                            MenuVMItems(
+                                if (category in selectedCategories)
+                                    MenuVMItem(
+                                        title = "Unselect",
+                                        onClick = { chooseCategoriesSharedVM.unselectCategories(category) },
+                                    )
+                                else
+                                    MenuVMItem(
+                                        title = "Select",
+                                        onClick = { chooseCategoriesSharedVM.selectCategories(category) },
+                                    ),
+                                MenuVMItem(
+                                    title = "Category Settings",
+                                    onClick = { userTryNavToCategorySettings(category) }
+                                )
+                            )
                         },
                     )
                 }.toTypedArray(),
@@ -227,13 +237,6 @@ class CategorizeVM @Inject constructor(
         chooseCategoriesSharedVM.selectedCategories.map { it.isNotEmpty() }.asObservable2()
             .map { inSelectionMode ->
                 listOfNotNull(
-                    if (inSelectionMode)
-                        ButtonVMItem(
-                            title = "Category Settings",
-                            isEnabled = chooseCategoriesSharedVM.selectedCategories.asObservable2().map { it.size == 1 },
-                            onClick = ::userTryNavToCategorySettings
-                        )
-                    else null,
                     if (!inSelectionMode)
                         ButtonVMItem(
                             title = "Categorize all as Unknown",

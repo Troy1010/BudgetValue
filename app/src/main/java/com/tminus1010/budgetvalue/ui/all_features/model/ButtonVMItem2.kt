@@ -3,11 +3,11 @@ package com.tminus1010.budgetvalue.ui.all_features.model
 import android.content.Context
 import android.widget.Button
 import com.tminus1010.budgetvalue.all_layers.extensions.getColorByAttr
-import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
-import com.tminus1010.tmcommonkotlin.misc.tmTableView.ViewItemRecipe3
-import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.ViewItemRecipe3
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.flow.Flow
 
@@ -19,6 +19,7 @@ data class ButtonVMItem2(
     val alpha: Flow<Float>? = null,
     val backgroundColor: Int? = null,
     val menuVMItems: MenuVMItems? = null,
+    val menuVMItemsFlow: Flow<MenuVMItems>? = null,
     val onLongClick: (() -> Unit)? = null,
     val onClick: () -> Unit,
 ) : IHasToViewItemRecipe {
@@ -35,6 +36,8 @@ data class ButtonVMItem2(
         if (backgroundColor != null)
             button.setBackgroundColor(button.context.theme.getColorByAttr(backgroundColor))
         menuVMItems?.bind(button)
+        if (menuVMItemsFlow != null)
+            button.bind(menuVMItemsFlow) { it.bind(this) }
         button.setOnClickListener { onClick() }
         onLongClick?.also { button.setOnLongClickListener { it(); true } }
     }
