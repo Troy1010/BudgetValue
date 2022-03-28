@@ -273,15 +273,15 @@ class FutureDetailsVM @Inject constructor(
             listOfNotNull(
                 ButtonVMItem(
                     title = "Delete",
-                    onClick = { userDeleteFutureOrReplay() },
+                    onClick = ::userDeleteFutureOrReplay,
                 ),
                 ButtonVMItem(
                     title = "Add Or Remove Categories",
-                    onClick = { userTryNavToCategorySelection() },
+                    onClick = ::userTryNavToCategorySelection,
                 ),
                 ButtonVMItem(
                     title = "Submit",
-                    onClick = { userTrySubmit() },
+                    onClick = ::userTrySubmit,
                 ),
             )
         )
