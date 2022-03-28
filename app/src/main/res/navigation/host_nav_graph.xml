@@ -57,17 +57,9 @@
                 app:destination="@id/categorySettingsFrag"
                 app:popUpTo="@id/categorizeFrag" />
             <action
-                android:id="@+id/action_categorizeFrag_to_splitFrag"
-                app:destination="@id/splitFrag" />
-            <action
                 android:id="@+id/action_categorizeFrag_to_receiptCategorizationFrag"
                 app:destination="@id/receiptCategorizationHostFrag" />
         </fragment>
-        <fragment
-            android:id="@+id/splitFrag"
-            android:name="com.tminus1010.budgetvalue._unrestructured.transactions.view.SplitFrag"
-            android:label="SplitFrag"
-            tools:layout="@layout/frag_categorize_advanced" />
         <fragment
             android:id="@+id/receiptCategorizationHostFrag"
             android:name="com.tminus1010.budgetvalue._unrestructured.transactions.view.ReceiptCategorizationHostFrag"
