@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.app
 
-import com.tminus1010.budgetvalue._unrestructured.reconcile.data.ActiveReconciliationRepo
+import com.tminus1010.budgetvalue.data.ActiveReconciliationRepo
 import com.tminus1010.budgetvalue.data.ActivePlanRepo
 import com.tminus1010.budgetvalue.data.CategoriesRepo
 import com.tminus1010.budgetvalue.domain.Category

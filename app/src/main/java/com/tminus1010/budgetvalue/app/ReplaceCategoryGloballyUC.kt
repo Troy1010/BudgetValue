@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.app
 
-import com.tminus1010.budgetvalue._unrestructured.reconcile.data.ActiveReconciliationRepo
-import com.tminus1010.budgetvalue._unrestructured.reconcile.data.ReconciliationsRepo
+import com.tminus1010.budgetvalue.data.ActiveReconciliationRepo
+import com.tminus1010.budgetvalue.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.all_layers.extensions.value
 import com.tminus1010.budgetvalue.data.ActivePlanRepo
 import com.tminus1010.budgetvalue.data.CategoriesRepo

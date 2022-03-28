@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue._unrestructured.history
 
 import android.view.View
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue._unrestructured.reconcile.data.ReconciliationsRepo
+import com.tminus1010.budgetvalue.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.all_layers.categoryComparator
 import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.app.BudgetedInteractor

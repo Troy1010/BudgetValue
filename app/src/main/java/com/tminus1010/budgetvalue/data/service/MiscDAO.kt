@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.data.service
 
 import androidx.room.*
-import com.tminus1010.budgetvalue._unrestructured.reconcile.domain.Reconciliation
+import com.tminus1010.budgetvalue.domain.Reconciliation
 import com.tminus1010.budgetvalue._unrestructured.transactions.data.TransactionDTO
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.domain.Future
@@ -9,8 +9,6 @@ import com.tminus1010.budgetvalue.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue.domain.accounts.Account
 import com.tminus1010.budgetvalue.domain.plan.Plan
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.flow.Flow
 import java.math.BigDecimal
 

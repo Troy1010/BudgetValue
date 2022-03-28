@@ -8,8 +8,8 @@ import com.tminus1010.budgetvalue.domain.Budgeted
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.data.PlansRepo
 import com.tminus1010.budgetvalue.domain.plan.Plan
-import com.tminus1010.budgetvalue._unrestructured.reconcile.data.ReconciliationsRepo
-import com.tminus1010.budgetvalue._unrestructured.reconcile.domain.Reconciliation
+import com.tminus1010.budgetvalue.data.ReconciliationsRepo
+import com.tminus1010.budgetvalue.domain.Reconciliation
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionBlock
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
 import com.tminus1010.tmcommonkotlin.tuple.Box

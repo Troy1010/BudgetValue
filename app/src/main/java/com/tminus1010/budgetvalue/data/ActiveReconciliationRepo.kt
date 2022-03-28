@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._unrestructured.reconcile.data
+package com.tminus1010.budgetvalue.data
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -6,8 +6,8 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.tminus1010.budgetvalue.all_layers.extensions.isZero
 import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider
-import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.domain.Category
+import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import kotlinx.coroutines.GlobalScope
@@ -31,11 +31,7 @@ class ActiveReconciliationRepo @Inject constructor(
             .map { moshiWithCategoriesProvider.moshi.fromJson<CategoryAmounts>(it[key]) }
             .filterNotNull()
             .distinctUntilChanged()
-            .stateIn(
-                GlobalScope,
-                SharingStarted.Eagerly,
-                CategoryAmounts()
-            )
+            .stateIn(GlobalScope, SharingStarted.Eagerly, CategoryAmounts())
 
     suspend fun pushCategoryAmounts(categoryAmounts: CategoryAmounts) {
         dataStore.edit { it[key] = moshiWithCategoriesProvider.moshi.toJson(categoryAmounts) }

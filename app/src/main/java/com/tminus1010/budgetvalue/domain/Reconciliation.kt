@@ -1,9 +1,8 @@
-package com.tminus1010.budgetvalue._unrestructured.reconcile.domain
+package com.tminus1010.budgetvalue.domain
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.tminus1010.budgetvalue.domain.Category
-import com.tminus1010.budgetvalue.domain.CategoryAmounts
+import com.tminus1010.budgetvalue._unrestructured.reconcile.domain.CategoryAmountsAndTotal
 import java.math.BigDecimal
 import java.time.LocalDate
 
