@@ -100,7 +100,7 @@ class CreateFutureVM @Inject constructor(
         totalGuess.onNext(s.toMoneyBigDecimal())
     }
 
-    private val userSetIsOnlyOnce = MutableStateFlow(true)
+    private val userSetIsOnlyOnce = MutableStateFlow(false)
     fun userSetIsOnlyOnce(b: Boolean) {
         userSetIsOnlyOnce.onNext(b)
     }
@@ -193,7 +193,7 @@ class CreateFutureVM @Inject constructor(
                     )
                 else null,
                 listOf(
-                    TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Is Permanent"),
+                    TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Is Only Once"),
                     CheckboxVMItem(userSetIsOnlyOnce.value, onCheckChanged = ::userSetIsOnlyOnce),
                 ),
             )
