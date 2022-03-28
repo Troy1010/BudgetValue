@@ -63,7 +63,10 @@ sealed class HistoryVMItem {
             reconciliation.defaultAmount.toString()
         override val menuVMItems =
             listOf(
-                MenuVMItem("Delete") { reconciliationsRepo.delete(reconciliation).subscribe() }
+                MenuVMItem(
+                    title = "Delete",
+                    onClick = { GlobalScope.launch { reconciliationsRepo.delete(reconciliation) } }
+                )
             )
     }
 

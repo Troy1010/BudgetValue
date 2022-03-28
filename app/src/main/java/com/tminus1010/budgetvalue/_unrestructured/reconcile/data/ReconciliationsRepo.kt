@@ -2,9 +2,9 @@ package com.tminus1010.budgetvalue._unrestructured.reconcile.data
 
 import com.tminus1010.budgetvalue._unrestructured.reconcile.domain.Reconciliation
 import com.tminus1010.budgetvalue.data.service.MiscDAO
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.shareIn
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -12,13 +12,13 @@ import javax.inject.Singleton
 class ReconciliationsRepo @Inject constructor(
     private val miscDAO: MiscDAO,
 ) {
-    fun push(reconciliation: Reconciliation): Completable =
-        miscDAO.push(reconciliation).subscribeOn(Schedulers.io())
+    suspend fun push(reconciliation: Reconciliation) =
+        miscDAO.push(reconciliation)
 
-    fun delete(reconciliation: Reconciliation): Completable =
-        miscDAO.delete(reconciliation).subscribeOn(Schedulers.io())
+    suspend fun delete(reconciliation: Reconciliation) =
+        miscDAO.delete(reconciliation)
 
-    val reconciliations: Observable<List<Reconciliation>> =
-        miscDAO.fetchReconciliations().subscribeOn(Schedulers.io())
-            .replay(1).refCount()
+    val reconciliations =
+        miscDAO.fetchReconciliations()
+            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 }

@@ -35,10 +35,10 @@ class HistoryVM @Inject constructor(
     private val datePeriodService: DatePeriodService,
     private val currentDatePeriodRepo: CurrentDatePeriodRepo,
     private val plansRepo: PlansRepo,
-    private val reconciliationRepo: ReconciliationsRepo,
+    private val reconciliationsRepo: ReconciliationsRepo,
 ) : ViewModel() {
     private val activeCategories: Observable<List<Category>> =
-        Observable.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks2.asObservable2(), budgetedInteractor.budgeted)
+        Observable.combineLatest(reconciliationsRepo.reconciliations.asObservable2(), plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks2.asObservable2(), budgetedInteractor.budgeted)
         { reconciliations, plans, transactionBlocks, budgeted ->
             sequenceOf<Set<Category>>()
                 .plus(reconciliations.map { it.categoryAmounts.keys })
@@ -52,7 +52,7 @@ class HistoryVM @Inject constructor(
 
 
     private val historyVMItems =
-        Rx.combineLatest(reconciliationRepo.reconciliations, plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks2.asObservable2(), budgetedInteractor.budgeted)
+        Rx.combineLatest(reconciliationsRepo.reconciliations.asObservable2(), plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks2.asObservable2(), budgetedInteractor.budgeted)
             .observeOn(Schedulers.computation())
             .throttleLatest(500, TimeUnit.MILLISECONDS)
             .map { (reconciliations, plans, transactionBlocks, budgeted) ->
@@ -70,7 +70,7 @@ class HistoryVM @Inject constructor(
                         transactionBlocks?.filter { it.datePeriod == blockPeriod } // TODO("sort by sortDate")
                             ?.let { it.map { HistoryVMItem.TransactionBlockVMItem(it, currentDatePeriodRepo) } },
                         reconciliations?.filter { it.localDate in blockPeriod }
-                            ?.let { it.map { HistoryVMItem.ReconciliationVMItem(it, reconciliationRepo) } },
+                            ?.let { it.map { HistoryVMItem.ReconciliationVMItem(it, reconciliationsRepo) } },
                         plans?.filter { it.localDatePeriod.startDate in blockPeriod }
                             ?.let { it.map { HistoryVMItem.PlanVMItem(it, currentDatePeriodRepo, plansRepo) } },
                     ).flatten().also { historyColumnDatas.addAll(it) }

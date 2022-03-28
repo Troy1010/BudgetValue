@@ -32,7 +32,7 @@ class ActiveReconciliationDefaultAmountInteractor @Inject constructor(
     val activeReconciliationDefaultAmount =
         Observable.combineLatest(
             plansRepo.plans.asObservable2(),
-            reconciliationsRepo.reconciliations,
+            reconciliationsRepo.reconciliations.asObservable2(),
             transactionsInteractor.transactionBlocks2.asObservable2(),
             accountsRepo.accountsAggregate.map { it.total }.asObservable2(),
             activeReconciliationRepo.activeReconciliationCAs.asObservable2(),

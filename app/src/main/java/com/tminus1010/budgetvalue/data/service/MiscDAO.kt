@@ -84,13 +84,13 @@ interface MiscDAO {
     // # Reconciliations
 
     @Query("select * from Reconciliation")
-    fun fetchReconciliations(): Observable<List<Reconciliation>>
+    fun fetchReconciliations(): Flow<List<Reconciliation>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun push(reconciliation: Reconciliation): Completable
+    suspend fun push(reconciliation: Reconciliation)
 
     @Delete
-    fun delete(reconciliation: Reconciliation): Completable
+    suspend fun delete(reconciliation: Reconciliation)
 
     // # Futures
 

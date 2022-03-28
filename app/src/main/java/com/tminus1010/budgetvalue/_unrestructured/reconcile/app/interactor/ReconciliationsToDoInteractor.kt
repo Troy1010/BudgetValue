@@ -28,7 +28,7 @@ class ReconciliationsToDoInteractor @Inject constructor(
     budgetedInteractor: BudgetedInteractor,
 ) {
     private val planReconciliationsToDo =
-        Observable.combineLatest(plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks2.asObservable2(), reconciliationsRepo.reconciliations)
+        Observable.combineLatest(plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks2.asObservable2(), reconciliationsRepo.reconciliations.asObservable2())
         { plans, transactionBlocks, reconciliations ->
             transactionBlocks
                 .map { transactionBlock ->

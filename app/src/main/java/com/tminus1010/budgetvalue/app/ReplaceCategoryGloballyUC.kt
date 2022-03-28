@@ -2,6 +2,7 @@ package com.tminus1010.budgetvalue.app
 
 import com.tminus1010.budgetvalue._unrestructured.reconcile.data.ActiveReconciliationRepo
 import com.tminus1010.budgetvalue._unrestructured.reconcile.data.ReconciliationsRepo
+import com.tminus1010.budgetvalue.all_layers.extensions.value
 import com.tminus1010.budgetvalue.data.ActivePlanRepo
 import com.tminus1010.budgetvalue.data.CategoriesRepo
 import com.tminus1010.budgetvalue.data.PlansRepo
@@ -20,8 +21,8 @@ class ReplaceCategoryGloballyUC @Inject constructor(
         activePlanRepo.pushCategoryAmounts(activePlanRepo.activePlan.value.categoryAmounts.replaceKey(originalCategory, newCategory))
         activeReconciliationRepo.pushCategoryAmounts(activeReconciliationRepo.activeReconciliationCAs.value.replaceKey(originalCategory, newCategory))
 
-        reconciliationsRepo.reconciliations.blockingFirst().forEach {
-            reconciliationsRepo.push(it.copy(categoryAmounts = it.categoryAmounts.replaceKey(originalCategory, newCategory))).blockingAwait()
+        reconciliationsRepo.reconciliations.value?.forEach {
+            reconciliationsRepo.push(it.copy(categoryAmounts = it.categoryAmounts.replaceKey(originalCategory, newCategory)))
         }
 
         plansRepo.plans.value?.forEach {
