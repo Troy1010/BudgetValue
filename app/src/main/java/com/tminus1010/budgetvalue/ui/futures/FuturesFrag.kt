@@ -8,7 +8,7 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider
-import com.tminus1010.budgetvalue.databinding.FragFuturesReviewBinding
+import com.tminus1010.budgetvalue.databinding.FragFuturesBinding
 import com.tminus1010.budgetvalue.framework.view.viewBinding
 import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesSharedVM
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
@@ -20,9 +20,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class FuturesReviewFrag : Fragment(R.layout.frag_futures_review) {
-    private val vb by viewBinding(FragFuturesReviewBinding::bind)
-    private val viewModel by viewModels<FuturesReviewVM>()
+class FuturesFrag : Fragment(R.layout.frag_futures) {
+    private val vb by viewBinding(FragFuturesBinding::bind)
+    private val viewModel by viewModels<FuturesVM>()
 
     @Inject
     lateinit var moshiWithCategoriesProvider: MoshiWithCategoriesProvider
@@ -56,7 +56,7 @@ class FuturesReviewFrag : Fragment(R.layout.frag_futures_review) {
 
     companion object {
         fun navTo(nav: NavController) {
-            nav.navigate(R.id.futuresReviewFrag)
+            nav.navigate(R.id.futuresFrag)
         }
     }
 }

@@ -16,7 +16,7 @@ import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
-class FuturesReviewVM @Inject constructor(
+class FuturesVM @Inject constructor(
     private val futuresRepo: FuturesRepo,
 ) : ViewModel() {
     // # User Intents

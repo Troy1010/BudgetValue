@@ -18,7 +18,6 @@ import com.tminus1010.budgetvalue._unrestructured.reconcile.data.IsReconciliatio
 import com.tminus1010.budgetvalue._unrestructured.transactions.view.TransactionListFrag
 import com.tminus1010.budgetvalue.all_layers.extensions.easyAlertDialog
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
-import com.tminus1010.budgetvalue.all_layers.extensions.unCheckAllMenuItems
 import com.tminus1010.budgetvalue.app.ActivePlanInteractor
 import com.tminus1010.budgetvalue.app.AppInitInteractor
 import com.tminus1010.budgetvalue.app.ImportTransactions
@@ -28,7 +27,7 @@ import com.tminus1010.budgetvalue.framework.view.ShowAlertDialog
 import com.tminus1010.budgetvalue.framework.view.SpinnerService
 import com.tminus1010.budgetvalue.framework.view.Toaster
 import com.tminus1010.budgetvalue.ui.errors.Errors
-import com.tminus1010.budgetvalue.ui.futures.FuturesReviewFrag
+import com.tminus1010.budgetvalue.ui.futures.FuturesFrag
 import com.tminus1010.budgetvalue.ui.importZ.ImportVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -101,7 +100,7 @@ class HostActivity : AppCompatActivity() {
         isReconciliationFeatureEnabled.onChangeToTrue.observe(this) {
             easyAlertDialog(hostVM.levelUpReconciliation.toCharSequence(this))
         }
-        hostVM.navToFutures.observe(this) { FuturesReviewFrag.navTo(nav) }
+        hostVM.navToFutures.observe(this) { FuturesFrag.navTo(nav) }
         hostVM.navToTransactions.observe(this) { TransactionListFrag.navTo(nav) }
         hostVM.navToHistory.observe(this) { HistoryFrag.navTo(nav) }
         hostVM.navToAccessibility.observe(this) { startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }

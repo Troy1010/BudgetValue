@@ -89,12 +89,12 @@
         android:label="TransactionFrag"
         tools:layout="@layout/frag_transaction" />
     <fragment
-        android:id="@+id/futuresReviewFrag"
-        android:name="com.tminus1010.budgetvalue.ui.futures.FuturesReviewFrag"
-        android:label="FuturesReviewFrag"
-        tools:layout="@layout/frag_futures_review">
+        android:id="@+id/futuresFrag"
+        android:name="com.tminus1010.budgetvalue.ui.futures.FuturesFrag"
+        android:label="FuturesFrag"
+        tools:layout="@layout/frag_futures">
         <action
-            android:id="@+id/action_futuresReviewFrag_to_futureDetailsFrag"
+            android:id="@+id/action_futuresFrag_to_futureDetailsFrag"
             app:destination="@id/replayOrFutureDetailsFrag" />
     </fragment>
     <fragment
