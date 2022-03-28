@@ -26,7 +26,6 @@ import com.tminus1010.budgetvalue.app.IsPlanFeatureEnabledUC
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.framework.view.ShowAlertDialog
 import com.tminus1010.budgetvalue.framework.view.SpinnerService
-import com.tminus1010.budgetvalue.framework.view.Toaster
 import com.tminus1010.budgetvalue.ui.errors.Errors
 import com.tminus1010.budgetvalue.ui.futures.FuturesFrag
 import com.tminus1010.budgetvalue.ui.importZ.ImportVM
@@ -53,9 +52,6 @@ class HostActivity : AppCompatActivity() {
 
     @Inject
     lateinit var isReconciliationFeatureEnabled: IsReconciliationFeatureEnabled
-
-    @Inject
-    lateinit var toaster: Toaster
 
     @Inject
     lateinit var activePlanInteractor: ActivePlanInteractor
