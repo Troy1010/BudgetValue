@@ -47,7 +47,7 @@ class ReplayOrFutureDetailsVM @Inject constructor(
                     name = name.value ?: throw NoDescriptionEnteredException(),
                     categoryAmountFormulas = categoryAmountFormulas.value,
                     fillCategory = fillCategory.value!!,
-                    terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.ONCE,
+                    terminationStrategy = if (isOnlyOnce.value) TerminationStrategy.ONCE else TerminationStrategy.PERMANENT,
                     terminationDate = null,
                     isAvailableForManual = true,
                     onImportMatcher = when (searchType.value) {
@@ -79,9 +79,9 @@ class ReplayOrFutureDetailsVM @Inject constructor(
         userSetTotalGuess.onNext(s.toMoneyBigDecimal())
     }
 
-    private val userSetIsPermanent = MutableSharedFlow<Boolean>()
-    fun userSetIsPermanent(b: Boolean) {
-        userSetIsPermanent.onNext(b)
+    private val userSetIsOnlyOnce = MutableSharedFlow<Boolean>()
+    fun userSetIsOnlyOnce(b: Boolean) {
+        userSetIsOnlyOnce.onNext(b)
     }
 
     private val userSetSearchType = MutableSharedFlow<SearchType>()
@@ -132,10 +132,10 @@ class ReplayOrFutureDetailsVM @Inject constructor(
             .map { it.totalGuess }
             .flatMapLatest { userSetTotalGuess.onStart { emit(it) } }
             .stateIn(viewModelScope, SharingStarted.Eagerly, BigDecimal("-10"))
-    private val isPermanent =
+    private val isOnlyOnce =
         future
             .map { it.terminationStrategy == TerminationStrategy.PERMANENT }
-            .flatMapLatest { userSetIsPermanent.onStart { emit(it) } }
+            .flatMapLatest { userSetIsOnlyOnce.onStart { emit(it) } }
             .stateIn(viewModelScope, SharingStarted.Eagerly, false)
     private val searchType =
         future
@@ -236,8 +236,8 @@ class ReplayOrFutureDetailsVM @Inject constructor(
                     )
                 else null,
                 listOf(
-                    TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Is Permanent"),
-                    CheckboxVMItem(isPermanent.value, onCheckChanged = { userSetIsPermanent(it) }),
+                    TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Is Only Once"),
+                    CheckboxVMItem(isOnlyOnce.value, onCheckChanged = ::userSetIsOnlyOnce),
                 ),
             )
         }

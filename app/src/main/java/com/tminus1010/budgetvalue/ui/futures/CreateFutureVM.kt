@@ -65,7 +65,7 @@ class CreateFutureVM @Inject constructor(
                                 name = it?.toString() ?: "",
                                 categoryAmountFormulas = categoryAmountFormulas.value,
                                 fillCategory = fillCategory.value!!,
-                                terminationStrategy = if (isPermanent.value) TerminationStrategy.PERMANENT else TerminationStrategy.ONCE,
+                                terminationStrategy = if (userSetIsOnlyOnce.value) TerminationStrategy.ONCE else TerminationStrategy.PERMANENT,
                                 terminationDate = null,
                                 isAvailableForManual = true,
                                 onImportMatcher = when (searchType.value) {
@@ -100,9 +100,9 @@ class CreateFutureVM @Inject constructor(
         totalGuess.onNext(s.toMoneyBigDecimal())
     }
 
-    private val isPermanent = MutableStateFlow(true)
-    fun userSetIsPermanent(b: Boolean) {
-        isPermanent.onNext(b)
+    private val userSetIsOnlyOnce = MutableStateFlow(true)
+    fun userSetIsOnlyOnce(b: Boolean) {
+        userSetIsOnlyOnce.onNext(b)
     }
 
     private val searchType = MutableStateFlow(SearchType.DESCRIPTION)
@@ -194,7 +194,7 @@ class CreateFutureVM @Inject constructor(
                 else null,
                 listOf(
                     TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Is Permanent"),
-                    CheckboxVMItem(isPermanent.value, onCheckChanged = { userSetIsPermanent(it) }),
+                    CheckboxVMItem(userSetIsOnlyOnce.value, onCheckChanged = ::userSetIsOnlyOnce),
                 ),
             )
         }
