@@ -11,7 +11,7 @@ import com.tminus1010.budgetvalue._unrestructured.categories.CategoryAmountsConv
 import com.tminus1010.budgetvalue.databinding.FragTransactionsBinding
 import com.tminus1010.budgetvalue._unrestructured.transactions.presentation.TransactionsVM
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
-import com.tminus1010.budgetvalue.framework.view.ShowAlertDialog
+import com.tminus1010.budgetvalue.all_layers.extensions.showAlertDialog
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
@@ -29,7 +29,7 @@ class TransactionListFrag : Fragment(R.layout.frag_transactions) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Setup
-        viewModel.showAlertDialog.onNext(ShowAlertDialog(requireActivity()))
+        viewModel.showAlertDialog.onNext(showAlertDialog)
         // # Events
         viewModel.navToTransaction.observe(viewLifecycleOwner) { TransactionFrag.navTo(nav, it, categoryAmountsConverter) }
         // # State

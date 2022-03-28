@@ -6,13 +6,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.ui.choose_transaction.ChooseTransactionFrag
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
+import com.tminus1010.budgetvalue.all_layers.extensions.showAlertDialog
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.databinding.FragCreateFutureBinding
-import com.tminus1010.budgetvalue.framework.view.ShowAlertDialog
 import com.tminus1010.budgetvalue.framework.view.viewBinding
 import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesFrag
+import com.tminus1010.budgetvalue.ui.choose_transaction.ChooseTransactionFrag
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsFrag
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
@@ -30,7 +30,7 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Setup
-        viewModel.showAlertDialog.onNext(ShowAlertDialog(requireActivity()))
+        viewModel.showAlertDialog.onNext(showAlertDialog)
         // # Events
         viewModel.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         viewModel.navToCategorySelection.observe(viewLifecycleOwner) { ChooseCategoriesFrag.navTo(nav) }

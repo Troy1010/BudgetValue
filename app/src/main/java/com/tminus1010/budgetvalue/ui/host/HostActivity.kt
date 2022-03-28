@@ -17,6 +17,7 @@ import com.tminus1010.budgetvalue._unrestructured.history.HistoryFrag
 import com.tminus1010.budgetvalue._unrestructured.reconcile.data.IsReconciliationFeatureEnabled
 import com.tminus1010.budgetvalue._unrestructured.transactions.view.TransactionListFrag
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
+import com.tminus1010.budgetvalue.all_layers.extensions.showAlertDialog
 import com.tminus1010.budgetvalue.all_layers.extensions.unCheckAllMenuItems
 import com.tminus1010.budgetvalue.app.ActivePlanInteractor
 import com.tminus1010.budgetvalue.app.AppInitInteractor
@@ -69,8 +70,6 @@ class HostActivity : AppCompatActivity() {
 
     @Inject
     lateinit var errors: Errors
-
-    val showAlertDialog by lazy { ShowAlertDialog(this) }
 
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.frag_nav_host) as HostFrag }
     private val nav by lazy { findNavController(R.id.frag_nav_host) }
