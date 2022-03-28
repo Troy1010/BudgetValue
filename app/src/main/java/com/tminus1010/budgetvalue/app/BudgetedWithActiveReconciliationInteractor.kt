@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.app
 
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEquals
-import com.tminus1010.budgetvalue._unrestructured.reconcile.domain.BudgetedWithActiveReconciliation
+import com.tminus1010.budgetvalue.domain.BudgetedWithActiveReconciliation
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
