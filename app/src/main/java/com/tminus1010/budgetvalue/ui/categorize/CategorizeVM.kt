@@ -14,7 +14,7 @@ import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.Future
 import com.tminus1010.budgetvalue.domain.TransactionMatcher
 import com.tminus1010.budgetvalue.framework.androidx.ShowToast
-import com.tminus1010.budgetvalue.ui.all_features.SpinnerService
+import com.tminus1010.budgetvalue.ui.all_features.ThrobberSharedVM
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem2
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
@@ -37,7 +37,7 @@ class CategorizeVM @Inject constructor(
     private val transactionsInteractor: TransactionsInteractor,
     private val showToast: ShowToast,
     private val categoriesInteractor: CategoriesInteractor,
-    private val spinnerService: SpinnerService,
+    private val throbberSharedVM: ThrobberSharedVM,
     private val chooseCategoriesSharedVM: ChooseCategoriesSharedVM,
     errors: Errors,
     futuresRepo: FuturesRepo,
@@ -48,7 +48,7 @@ class CategorizeVM @Inject constructor(
 ) : ViewModel() {
     // # User Intents
     fun userSimpleCategorize(category: Category) {
-        GlobalScope.launch(block = spinnerService.decorate {
+        GlobalScope.launch(block = throbberSharedVM.decorate {
             transactionsInteractor.saveTransactions(
                 transactionsInteractor.mostRecentUncategorizedSpend.value!!.categorize(category)
             )
@@ -56,7 +56,7 @@ class CategorizeVM @Inject constructor(
     }
 
     fun userReplay(future: Future) {
-        GlobalScope.launch(block = spinnerService.decorate {
+        GlobalScope.launch(block = throbberSharedVM.decorate {
             transactionsInteractor.saveTransactions(
                 future.categorize(transactionsInteractor.mostRecentUncategorizedSpend.value!!)
             )
@@ -64,19 +64,19 @@ class CategorizeVM @Inject constructor(
     }
 
     fun userUndo() {
-        GlobalScope.launch(block = spinnerService.decorate {
+        GlobalScope.launch(block = throbberSharedVM.decorate {
             redoUndoInteractor.undo()
         })
     }
 
     fun userRedo() {
-        GlobalScope.launch(block = spinnerService.decorate {
+        GlobalScope.launch(block = throbberSharedVM.decorate {
             redoUndoInteractor.redo()
         })
     }
 
     fun userCategorizeAllAsUnknown() {
-        GlobalScope.launch(block = spinnerService.decorate {
+        GlobalScope.launch(block = throbberSharedVM.decorate {
             val categoryUnknown = categoriesInteractor.userCategories.take(1).first().find { it.name.equals("Unknown", ignoreCase = true) }!! // TODO: Handle this error
             transactionsInteractor.saveTransactions(
                 transactionsInteractor.uncategorizedSpends.first().map { it.categorize(categoryUnknown) }
@@ -89,7 +89,7 @@ class CategorizeVM @Inject constructor(
     }
 
     fun userAddTransactionToFuture(future: Future) {
-        GlobalScope.launch(block = spinnerService.decorate {
+        GlobalScope.launch(block = throbberSharedVM.decorate {
             futuresInteractor.addDescriptionToFutureAndCategorize(
                 description = transactionsInteractor.mostRecentUncategorizedSpend.value!!.description,
                 future = future,
@@ -100,7 +100,7 @@ class CategorizeVM @Inject constructor(
 
     fun userAddTransactionToFutureWithEdit(future: Future) {
         setStringSharedVM.userSubmitString.take(1).takeUntilSignal(setStringSharedVM.userCancel).observe(GlobalScope) { s ->
-            GlobalScope.launch(block = spinnerService.decorate { // TODO: There should be a better way than launching within a launch, right?
+            GlobalScope.launch(block = throbberSharedVM.decorate { // TODO: There should be a better way than launching within a launch, right?
                 futuresInteractor.addDescriptionToFutureAndCategorize(
                     description = s,
                     future = future,
@@ -112,7 +112,7 @@ class CategorizeVM @Inject constructor(
     }
 
     fun userUseDescription(future: Future) {
-        GlobalScope.launch(block = spinnerService.decorate {
+        GlobalScope.launch(block = throbberSharedVM.decorate {
             categorizeMatchingUncategorizedTransactions(TransactionMatcher.SearchText(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)::isMatch, future::categorize)
                 .also { showToast(NativeText.Simple("$it transactions categorized")) }
         })
@@ -120,7 +120,7 @@ class CategorizeVM @Inject constructor(
 
     fun userUseDescriptionWithEdit(future: Future) {
         setStringSharedVM.userSubmitString.take(1).takeUntilSignal(setStringSharedVM.userCancel).observe(GlobalScope) { s ->
-            GlobalScope.launch(block = spinnerService.decorate { // TODO: There should be a better way than launching within a launch, right?
+            GlobalScope.launch(block = throbberSharedVM.decorate { // TODO: There should be a better way than launching within a launch, right?
                 categorizeMatchingUncategorizedTransactions(TransactionMatcher.SearchText(s)::isMatch, future::categorize)
                     .also { showToast(NativeText.Simple("$it transactions categorized")) }
             })
@@ -129,7 +129,7 @@ class CategorizeVM @Inject constructor(
     }
 
     fun userUseDescriptionOnCategory(category: Category) {
-        GlobalScope.launch(block = spinnerService.decorate {
+        GlobalScope.launch(block = throbberSharedVM.decorate {
             categorizeMatchingUncategorizedTransactions(TransactionMatcher.SearchText(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)::isMatch, categorize = { it.categorize(category) })
                 .also { showToast(NativeText.Simple("$it transactions categorized")) }
         })
@@ -137,7 +137,7 @@ class CategorizeVM @Inject constructor(
 
     fun userUseDescriptionWithEditOnCategory(category: Category) {
         setStringSharedVM.userSubmitString.take(1).takeUntilSignal(setStringSharedVM.userCancel).observe(GlobalScope) { s ->
-            GlobalScope.launch(block = spinnerService.decorate { // TODO: There should be a better way than launching within a launch, right?
+            GlobalScope.launch(block = throbberSharedVM.decorate { // TODO: There should be a better way than launching within a launch, right?
                 categorizeMatchingUncategorizedTransactions(TransactionMatcher.SearchText(s)::isMatch, categorize = { it.categorize(category) })
                     .also { showToast(NativeText.Simple("$it transactions categorized")) }
             })

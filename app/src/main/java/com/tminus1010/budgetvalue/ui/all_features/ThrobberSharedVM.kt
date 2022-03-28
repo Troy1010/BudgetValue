@@ -8,7 +8,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SpinnerService @Inject constructor() {
+class ThrobberSharedVM @Inject constructor() {
     // # Input
     fun <T> decorate(flow: Flow<T>) = flow.onStart { asyncTaskStarted.emit(Unit) }.onCompletion { asyncTaskEnded.emit(Unit) }
     fun decorate(completable: Completable) = completable.doOnSubscribe { runBlocking { asyncTaskStarted.emit(Unit) } }.doOnTerminate { runBlocking { asyncTaskEnded.emit(Unit) } }
@@ -31,7 +31,7 @@ class SpinnerService @Inject constructor() {
     private val asyncTaskEnded = MutableSharedFlow<Unit>()
 
     // # State
-    val isSpinnerVisible =
+    val isVisible =
         merge(asyncTaskStarted.map { 1 }, asyncTaskEnded.map { -1 })
             .scan(0) { acc, v -> acc + v }
             .map { it != 0 }

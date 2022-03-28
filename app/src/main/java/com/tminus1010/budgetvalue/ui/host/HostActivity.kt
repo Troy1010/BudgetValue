@@ -24,7 +24,7 @@ import com.tminus1010.budgetvalue.app.AppInitInteractor
 import com.tminus1010.budgetvalue.app.ImportTransactions
 import com.tminus1010.budgetvalue.app.IsPlanFeatureEnabledUC
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
-import com.tminus1010.budgetvalue.ui.all_features.SpinnerService
+import com.tminus1010.budgetvalue.ui.all_features.ThrobberSharedVM
 import com.tminus1010.budgetvalue.ui.futures.FuturesFrag
 import com.tminus1010.budgetvalue.ui.importZ.ImportVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
@@ -60,7 +60,7 @@ class HostActivity : AppCompatActivity() {
     lateinit var launchChooseFile: LaunchChooseFile
 
     @Inject
-    lateinit var spinnerService: SpinnerService
+    lateinit var throbberSharedVM: ThrobberSharedVM
 
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.frag_nav_host) as HostFrag }
     private val nav by lazy { findNavController(R.id.frag_nav_host) }
@@ -88,7 +88,7 @@ class HostActivity : AppCompatActivity() {
         // # State
         isPlanFeatureEnabledUC.observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }
         isReconciliationFeatureEnabled.observe(this) { vb.bottomNavigation.menu.findItem(R.id.reconciliationHostFrag).isVisible = it }
-        spinnerService.isSpinnerVisible.observe(this) { vb.frameProgressBar.visibility = if (it) View.VISIBLE else View.GONE }
+        throbberSharedVM.isVisible.observe(this) { vb.frameProgressBar.visibility = if (it) View.VISIBLE else View.GONE }
     }
 
     override fun onStart() {
