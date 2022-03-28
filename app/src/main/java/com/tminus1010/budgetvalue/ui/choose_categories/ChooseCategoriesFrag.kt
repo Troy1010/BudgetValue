@@ -10,7 +10,7 @@ import androidx.navigation.NavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.databinding.FragSelectCategoriesBinding
+import com.tminus1010.budgetvalue.databinding.FragChooseCategoriesBinding
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
 import com.tminus1010.budgetvalue.framework.view.GenViewHolder2
 import com.tminus1010.budgetvalue.framework.view.LifecycleRVAdapter2
@@ -23,8 +23,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.map
 
 @AndroidEntryPoint
-class ChooseCategoriesFrag : Fragment(R.layout.frag_select_categories) {
-    private val vb by viewBinding(FragSelectCategoriesBinding::bind)
+class ChooseCategoriesFrag : Fragment(R.layout.frag_choose_categories) {
+    private val vb by viewBinding(FragChooseCategoriesBinding::bind)
     private val selectCategoriesVM by viewModels<ChooseCategoriesVM>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,7 +52,7 @@ class ChooseCategoriesFrag : Fragment(R.layout.frag_select_categories) {
 
     companion object {
         fun navTo(nav: NavController) {
-            nav.navigate(R.id.selectCategoriesFrag)
+            nav.navigate(R.id.chooseCategoriesFrag)
         }
     }
 }

@@ -44,7 +44,7 @@ class ReplayOrFutureDetailsFrag : Fragment(R.layout.frag_create_future) {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) { viewModel.userTryNavUp() }
         // # Events
         viewModel.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
-        viewModel.navToCategorySelection.observe(viewLifecycleOwner) { nav.navigate(R.id.selectCategoriesFrag) }
+        viewModel.navToCategorySelection.observe(viewLifecycleOwner) { nav.navigate(R.id.chooseCategoriesFrag) }
         viewModel.navToChooseTransaction.observe(viewLifecycleOwner) { nav.navigate(R.id.chooseTransactionFrag) }
         viewModel.navToSetSearchTexts.observe(viewLifecycleOwner) { nav.navigate(R.id.setSearchTextsFrag) }
         // # State
