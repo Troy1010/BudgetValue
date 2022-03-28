@@ -35,7 +35,7 @@ class PlanReconciliationVM @Inject constructor(
 
     // # State
     val reconciliationTableView =
-        combine(categoriesInteractor.userCategories, activeReconciliationInteractor.categoryAmountsAndTotal.asFlow(), budgetedWithActiveReconciliationInteractor.categoryAmountsAndTotal.asFlow(), reconciliationToDo.asFlow())
+        combine(categoriesInteractor.userCategories, activeReconciliationInteractor.categoryAmountsAndTotal, budgetedWithActiveReconciliationInteractor.categoryAmountsAndTotal, reconciliationToDo.asFlow())
         { categories, activeReconciliation, budgetedWithActiveReconciliation, reconciliationToDo ->
             TableViewVMItem(
                 recipeGrid = listOf(

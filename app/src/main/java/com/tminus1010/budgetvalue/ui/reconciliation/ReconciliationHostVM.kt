@@ -8,9 +8,9 @@ import com.tminus1010.budgetvalue._unrestructured.reconcile.app.interactor.Recon
 import com.tminus1010.budgetvalue._unrestructured.reconcile.app.interactor.SaveActiveReconciliationInteractor
 import com.tminus1010.budgetvalue._unrestructured.reconcile.domain.ReconciliationToDo
 import com.tminus1010.budgetvalue.all_layers.extensions.isZero
+import com.tminus1010.budgetvalue.all_layers.extensions.value
 import com.tminus1010.budgetvalue.framework.android.ShowToast
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
-import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map

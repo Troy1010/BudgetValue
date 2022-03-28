@@ -1,9 +1,13 @@
 package com.tminus1010.budgetvalue._unrestructured.reconcile.app.interactor
 
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEquals
-import com.tminus1010.budgetvalue.app.BudgetedInteractor
 import com.tminus1010.budgetvalue._unrestructured.reconcile.domain.BudgetedWithActiveReconciliation
-import io.reactivex.rxjava3.core.Observable
+import com.tminus1010.budgetvalue.app.BudgetedInteractor
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.rx3.asFlow
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -12,7 +16,7 @@ class BudgetedWithActiveReconciliationInteractor @Inject constructor(
     activeReconciliationInteractor: ActiveReconciliationInteractor,
 ) {
     val categoryAmountsAndTotal =
-        Observable.combineLatest(budgetedInteractor.budgeted, activeReconciliationInteractor.categoryAmountsAndTotal)
+        combine(budgetedInteractor.budgeted.asFlow(), activeReconciliationInteractor.categoryAmountsAndTotal)
         { budgeted, activeReconciliation ->
             BudgetedWithActiveReconciliation(
                 categoryAmounts = activeReconciliation.categoryAmounts.addTogether(budgeted.categoryAmounts),
@@ -21,4 +25,5 @@ class BudgetedWithActiveReconciliationInteractor @Inject constructor(
                 defaultAmountValidation = { (it ?: BigDecimal.ZERO).easyEquals(BigDecimal.ZERO) }
             )
         }
+            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 }
