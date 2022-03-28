@@ -43,15 +43,9 @@ class FuturesFrag : Fragment(R.layout.frag_futures) {
         viewModel.navToCreateFuture.observe(viewLifecycleOwner) { CreateFutureFrag.navTo(nav, setSearchTextsSharedVM, transactionsInteractor) }
         // # State
         vb.tvNoFutures.bind(viewModel.isNoFutureTextVisible) { easyVisibility = it }
-        vb.buttonsview.bind(viewModel.buttons) { buttons = it }
         vb.tmTableViewFutures.bind(viewModel.isNoFutureTextVisible) { easyVisibility = !it }
-        vb.tmTableViewFutures.bind(viewModel.futuresRecipeGrid) {
-            initialize(
-                recipeGrid = it.map { it.map { it.toViewItemRecipe(requireContext()) } },
-                shouldFitItemWidthsInsideTable = true,
-                rowFreezeCount = 1,
-            )
-        }
+        vb.tmTableViewFutures.bind(viewModel.futuresTableView) { it.bind(this) }
+        vb.buttonsview.bind(viewModel.buttons) { buttons = it }
     }
 
     companion object {
