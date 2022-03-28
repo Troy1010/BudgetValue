@@ -90,7 +90,7 @@
         tools:layout="@layout/frag_transaction" />
     <fragment
         android:id="@+id/futuresReviewFrag"
-        android:name="com.tminus1010.budgetvalue.ui.futures_review.FuturesReviewFrag"
+        android:name="com.tminus1010.budgetvalue.ui.futures.FuturesReviewFrag"
         android:label="FuturesReviewFrag"
         tools:layout="@layout/frag_futures_review">
         <action
@@ -99,7 +99,7 @@
     </fragment>
     <fragment
         android:id="@+id/replayOrFutureDetailsFrag"
-        android:name="com.tminus1010.budgetvalue.ui.create_future.ReplayOrFutureDetailsFrag"
+        android:name="com.tminus1010.budgetvalue.ui.futures.ReplayOrFutureDetailsFrag"
         android:label="ReplayOrFutureDetailsFrag"
         tools:layout="@layout/frag_create_future" />
     <fragment
@@ -124,7 +124,7 @@
         tools:layout="@layout/frag_transaction_block_completion" />
     <fragment
         android:id="@+id/createFutureFrag"
-        android:name="com.tminus1010.budgetvalue.ui.create_future.CreateFutureFrag"
+        android:name="com.tminus1010.budgetvalue.ui.futures.CreateFutureFrag"
         android:label="CreateFuture2Frag"
         tools:layout="@layout/frag_create_future" />
     <fragment

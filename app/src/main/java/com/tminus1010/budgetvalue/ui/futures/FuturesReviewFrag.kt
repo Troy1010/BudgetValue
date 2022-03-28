@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.ui.futures_review
+package com.tminus1010.budgetvalue.ui.futures
 
 import android.os.Bundle
 import android.view.View
@@ -10,13 +10,10 @@ import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue.databinding.FragFuturesReviewBinding
 import com.tminus1010.budgetvalue.framework.view.viewBinding
-import com.tminus1010.budgetvalue.ui.create_future.CreateFutureFrag
-import com.tminus1010.budgetvalue.ui.create_future.ReplayOrFutureDetailsFrag
 import com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesModel
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
-import com.tminus1010.tmcommonkotlin.view.extensions.easyVisibility
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

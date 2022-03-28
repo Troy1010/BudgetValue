@@ -29,7 +29,7 @@ import com.tminus1010.budgetvalue.framework.view.SpinnerService
 import com.tminus1010.budgetvalue.framework.view.Toaster
 import com.tminus1010.budgetvalue.ui.all_features.LaunchSelectFile
 import com.tminus1010.budgetvalue.ui.errors.Errors
-import com.tminus1010.budgetvalue.ui.futures_review.FuturesReviewFrag
+import com.tminus1010.budgetvalue.ui.futures.FuturesReviewFrag
 import com.tminus1010.budgetvalue.ui.importZ.ImportVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe

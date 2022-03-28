@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.ui.futures_review
+package com.tminus1010.budgetvalue.ui.futures
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

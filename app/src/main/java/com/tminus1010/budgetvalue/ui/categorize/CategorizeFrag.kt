@@ -18,8 +18,8 @@ import com.tminus1010.budgetvalue.framework.view.GenViewHolder2
 import com.tminus1010.budgetvalue.framework.view.LifecycleRVAdapter2
 import com.tminus1010.budgetvalue.framework.view.viewBinding
 import com.tminus1010.budgetvalue.ui.category_settings.CategorySettingsFrag
-import com.tminus1010.budgetvalue.ui.create_future.CreateFutureFrag
-import com.tminus1010.budgetvalue.ui.create_future.ReplayOrFutureDetailsFrag
+import com.tminus1010.budgetvalue.ui.futures.CreateFutureFrag
+import com.tminus1010.budgetvalue.ui.futures.ReplayOrFutureDetailsFrag
 import com.tminus1010.budgetvalue.ui.edit_string.EditStringFrag
 import com.tminus1010.budgetvalue.ui.edit_string.EditStringSharedVM
 import com.tminus1010.budgetvalue.ui.errors.Errors
