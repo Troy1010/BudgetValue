@@ -11,7 +11,7 @@ import com.tminus1010.budgetvalue._unrestructured.reconcile.app.interactor.Activ
 import com.tminus1010.budgetvalue._unrestructured.reconcile.app.interactor.BudgetedWithActiveReconciliationInteractor
 import com.tminus1010.budgetvalue.data.ActiveReconciliationRepo
 import com.tminus1010.budgetvalue._unrestructured.reconcile.domain.ReconciliationToDo
-import com.tminus1010.budgetvalue._unrestructured.reconcile.presentation.model.HeaderPresentationModel
+import com.tminus1010.budgetvalue.ui.all_features.model.HeaderPresentationModel
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.BehaviorSubject

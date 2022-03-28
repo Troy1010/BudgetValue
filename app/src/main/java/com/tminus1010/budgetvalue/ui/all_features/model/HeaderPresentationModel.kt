@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._unrestructured.reconcile.presentation.model
+package com.tminus1010.budgetvalue.ui.all_features.model
 
 import android.content.Context
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3

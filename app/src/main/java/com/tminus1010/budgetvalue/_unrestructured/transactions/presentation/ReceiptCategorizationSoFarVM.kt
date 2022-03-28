@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItems
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
 import com.tminus1010.budgetvalue.domain.Category
-import com.tminus1010.budgetvalue._unrestructured.reconcile.presentation.model.HeaderPresentationModel
+import com.tminus1010.budgetvalue.ui.all_features.model.HeaderPresentationModel
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.ReceiptCategorizationInteractor
 import com.tminus1010.budgetvalue.ui.all_features.model.TextVMItem
 import dagger.hilt.android.lifecycle.HiltViewModel
