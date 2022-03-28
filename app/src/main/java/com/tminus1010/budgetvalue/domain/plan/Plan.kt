@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.domain.LocalDatePeriod
-import com.tminus1010.budgetvalue._unrestructured.reconcile.domain.CategoryAmountsAndTotal
+import com.tminus1010.budgetvalue.domain.CategoryAmountsAndTotal
 import java.math.BigDecimal
 
 @Entity

@@ -1,7 +1,6 @@
-package com.tminus1010.budgetvalue._unrestructured.reconcile.domain
+package com.tminus1010.budgetvalue.domain
 
 import androidx.room.Ignore
-import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import java.math.BigDecimal
 
 sealed class CategoryAmountsAndTotal {

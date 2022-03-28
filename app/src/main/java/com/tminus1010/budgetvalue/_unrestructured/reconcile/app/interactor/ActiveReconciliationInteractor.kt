@@ -4,7 +4,7 @@ import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.data.AccountsRepo
 import com.tminus1010.budgetvalue.app.BudgetedInteractor
 import com.tminus1010.budgetvalue.data.ActiveReconciliationRepo
-import com.tminus1010.budgetvalue._unrestructured.reconcile.domain.CategoryAmountsAndTotal
+import com.tminus1010.budgetvalue.domain.CategoryAmountsAndTotal
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
