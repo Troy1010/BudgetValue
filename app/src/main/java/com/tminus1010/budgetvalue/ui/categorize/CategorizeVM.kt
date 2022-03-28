@@ -298,7 +298,6 @@ class CategorizeVM @Inject constructor(
                     else null,
                     ButtonVMItem(
                         title = "Create Future",
-                        isEnabled2 = isTransactionAvailable,
                         onClick = ::userTryNavToCreateFuture2,
                     ),
                 )
