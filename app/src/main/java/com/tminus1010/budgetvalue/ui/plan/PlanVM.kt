@@ -1,16 +1,17 @@
 package com.tminus1010.budgetvalue.ui.plan
 
 import androidx.lifecycle.ViewModel
+import com.tminus1010.budgetvalue.all_layers.categoryComparator
 import com.tminus1010.budgetvalue.all_layers.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.app.ActivePlanInteractor
-import com.tminus1010.budgetvalue.domain.Category
+import com.tminus1010.budgetvalue.app.CategoriesInteractor
 import com.tminus1010.budgetvalue.data.ActivePlanRepo
+import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.DividerVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.MoneyEditVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.TextVMItem
-import com.tminus1010.budgetvalue.app.CategoriesInteractor
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -47,6 +48,7 @@ class PlanVM @Inject constructor(
         { categoryAmounts, userCategories ->
             userCategories.associateWith { BigDecimal.ZERO }
                 .plus(categoryAmounts)
+                .toSortedMap(categoryComparator)
         }
 
     // # State
