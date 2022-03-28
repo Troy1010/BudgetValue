@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesModel
+import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesSharedVM
 import com.tminus1010.budgetvalue.all_layers.KEY1
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider
@@ -65,9 +65,9 @@ class ReplayOrFutureDetailsFrag : Fragment(R.layout.frag_create_future) {
     }
 
     companion object {
-        fun navTo(nav: NavController, moshiWithCategoriesProvider: MoshiWithCategoriesProvider, future: Future, selectCategoriesModel: SelectCategoriesModel, setSearchTextsSharedVM: SetSearchTextsSharedVM) {
+        fun navTo(nav: NavController, moshiWithCategoriesProvider: MoshiWithCategoriesProvider, future: Future, chooseCategoriesSharedVM: ChooseCategoriesSharedVM, setSearchTextsSharedVM: SetSearchTextsSharedVM) {
             setSearchTextsSharedVM.searchTexts.adjustTo((future.onImportMatcher as? TransactionMatcher.Multi)?.transactionMatchers?.filterIsInstance<TransactionMatcher.SearchText>()?.map { it.searchText } ?: listOfNotNull((future.onImportMatcher as? TransactionMatcher.SearchText)?.searchText))
-            runBlocking { selectCategoriesModel.clearSelection(); selectCategoriesModel.selectCategories(*future.categoryAmountFormulas.keys.toTypedArray()) }
+            runBlocking { chooseCategoriesSharedVM.clearSelection(); chooseCategoriesSharedVM.selectCategories(*future.categoryAmountFormulas.keys.toTypedArray()) }
             nav.navigate(R.id.replayOrFutureDetailsFrag, Bundle().apply {
                 putString(KEY1, moshiWithCategoriesProvider.moshi.toJson(future))
             })

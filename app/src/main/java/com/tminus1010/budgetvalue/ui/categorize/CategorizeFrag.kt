@@ -23,7 +23,7 @@ import com.tminus1010.budgetvalue.ui.futures.ReplayOrFutureDetailsFrag
 import com.tminus1010.budgetvalue.ui.edit_string.EditStringFrag
 import com.tminus1010.budgetvalue.ui.edit_string.EditStringSharedVM
 import com.tminus1010.budgetvalue.ui.errors.Errors
-import com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesModel
+import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesSharedVM
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
@@ -46,7 +46,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     lateinit var moshiWithCategoriesProvider: MoshiWithCategoriesProvider
 
     @Inject
-    lateinit var selectCategoriesModel: SelectCategoriesModel
+    lateinit var chooseCategoriesSharedVM: ChooseCategoriesSharedVM
 
     @Inject
     lateinit var errors: Errors
@@ -67,7 +67,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         viewModel.navToCreateFuture.observe(viewLifecycleOwner) { CreateFutureFrag.navTo(nav, setSearchTextsSharedVM, transactionsInteractor) }
         viewModel.navToNewCategory.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, null, true) }
         viewModel.navToCategorySettings.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, it.name, false) }
-        viewModel.navToReplayOrFutureDetails.observe(viewLifecycleOwner) { ReplayOrFutureDetailsFrag.navTo(nav, moshiWithCategoriesProvider, it, selectCategoriesModel, setSearchTextsSharedVM) }
+        viewModel.navToReplayOrFutureDetails.observe(viewLifecycleOwner) { ReplayOrFutureDetailsFrag.navTo(nav, moshiWithCategoriesProvider, it, chooseCategoriesSharedVM, setSearchTextsSharedVM) }
         viewModel.navToReceiptCategorization.observe(viewLifecycleOwner) { ReceiptCategorizationHostFrag.navTo(nav, it, categoryAmountsConverter) }
         viewModel.navToEditStringForAddTransactionToFutureWithEdit.observe(viewLifecycleOwner) { EditStringFrag.navTo(nav, it, editStringSharedVM) }
         // # State

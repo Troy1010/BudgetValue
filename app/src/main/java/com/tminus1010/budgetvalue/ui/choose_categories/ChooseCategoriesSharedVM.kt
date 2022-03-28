@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.ui.select_categories
+package com.tminus1010.budgetvalue.ui.choose_categories
 
 import com.tminus1010.budgetvalue.framework.source_objects.SourceList
 import com.tminus1010.budgetvalue.domain.Category
@@ -11,7 +11,7 @@ import javax.inject.Singleton
 
 // TODO: Where should this cache exist..? How can it best be shared..?
 @Singleton
-class SelectCategoriesModel @Inject constructor() {
+class ChooseCategoriesSharedVM @Inject constructor() {
     // # Input
     suspend fun clearSelection() {
         _selectedCategories.clear()

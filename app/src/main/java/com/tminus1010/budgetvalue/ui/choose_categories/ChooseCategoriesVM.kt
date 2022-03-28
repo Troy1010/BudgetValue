@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.ui.select_categories
+package com.tminus1010.budgetvalue.ui.choose_categories
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
@@ -13,9 +13,9 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @HiltViewModel
-class SelectCategoriesVM @Inject constructor(
+class ChooseCategoriesVM @Inject constructor(
     private val categoriesInteractor: CategoriesInteractor,
-    private val selectCategoriesModel: SelectCategoriesModel,
+    private val chooseCategoriesSharedVM: ChooseCategoriesSharedVM,
 ) : ViewModel() {
     // # User Intents
     fun userSubmit() {
@@ -23,10 +23,10 @@ class SelectCategoriesVM @Inject constructor(
     }
 
     fun userToggleCategory(category: Category) {
-        if (category in selectCategoriesModel.selectedCategories.value)
-            selectCategoriesModel.unselectCategories(category)
+        if (category in chooseCategoriesSharedVM.selectedCategories.value)
+            chooseCategoriesSharedVM.unselectCategories(category)
         else
-            selectCategoriesModel.selectCategories(category)
+            chooseCategoriesSharedVM.selectCategories(category)
     }
 
     // # Events
@@ -39,7 +39,7 @@ class SelectCategoriesVM @Inject constructor(
                 categories.map { category ->
                     ButtonVMItem2(
                         title = category.name,
-                        alpha = selectCategoriesModel.selectedCategories.map { if (category in it) 1F else 0.5F },
+                        alpha = chooseCategoriesSharedVM.selectedCategories.map { if (category in it) 1F else 0.5F },
                         onClick = { userToggleCategory(category) }
                     )
                 }

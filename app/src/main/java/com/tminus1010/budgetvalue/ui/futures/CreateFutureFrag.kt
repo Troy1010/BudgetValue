@@ -12,7 +12,7 @@ import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.databinding.FragCreateFutureBinding
 import com.tminus1010.budgetvalue.framework.view.ShowAlertDialog
 import com.tminus1010.budgetvalue.framework.view.viewBinding
-import com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesFrag
+import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesFrag
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsFrag
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
@@ -33,7 +33,7 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
         viewModel.showAlertDialog.onNext(ShowAlertDialog(requireActivity()))
         // # Events
         viewModel.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
-        viewModel.navToCategorySelection.observe(viewLifecycleOwner) { SelectCategoriesFrag.navTo(nav) }
+        viewModel.navToCategorySelection.observe(viewLifecycleOwner) { ChooseCategoriesFrag.navTo(nav) }
         viewModel.navToChooseTransaction.observe(viewLifecycleOwner) { ChooseTransactionFrag.navTo(nav) }
         viewModel.navToSetSearchTexts.observe(viewLifecycleOwner) { SetSearchTextsFrag.navTo(nav) }
         // # State

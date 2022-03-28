@@ -15,7 +15,7 @@ import com.tminus1010.budgetvalue.framework.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.framework.view.ShowAlertDialog
 import com.tminus1010.budgetvalue.framework.view.Toaster
 import com.tminus1010.budgetvalue.ui.all_features.model.*
-import com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesModel
+import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesSharedVM
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.view.NativeText
@@ -30,7 +30,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateFutureVM @Inject constructor(
     private val categoriesInteractor: CategoriesInteractor,
-    private val selectedCategoriesModel: SelectCategoriesModel,
+    private val selectedCategoriesSharedVM: ChooseCategoriesSharedVM,
     private val futuresRepo: FuturesRepo,
     private val toaster: Toaster,
     private val categorizeMatchingUncategorizedTransactions: CategorizeMatchingUncategorizedTransactions,
@@ -80,7 +80,7 @@ class CreateFutureVM @Inject constructor(
                             if (futureToPush.terminationStrategy == TerminationStrategy.PERMANENT)
                                 categorizeMatchingUncategorizedTransactions(futureToPush.onImportMatcher::isMatch, futureToPush::categorize)
                                     .also { toaster.toast("$it transactions categorized") }
-                            selectedCategoriesModel.clearSelection()
+                            selectedCategoriesSharedVM.clearSelection()
                             navUp.emit(Unit)
                         }
                     } catch (e: Throwable) {
@@ -128,14 +128,14 @@ class CreateFutureVM @Inject constructor(
 
     // # Internal
     private val categoryAmountFormulas =
-        combine(userCategoryAmountFormulas.flow, selectedCategoriesModel.selectedCategories)
+        combine(userCategoryAmountFormulas.flow, selectedCategoriesSharedVM.selectedCategories)
         { userCategoryAmountFormulas, selectedCategories ->
             CategoryAmountFormulas(selectedCategories.associateWith { it.defaultAmountFormula })
                 .plus(userCategoryAmountFormulas.filter { it.key in selectedCategories })
         }
             .stateIn(viewModelScope, SharingStarted.Eagerly, CategoryAmountFormulas())
     private val fillCategory =
-        selectedCategoriesModel.selectedCategories
+        selectedCategoriesSharedVM.selectedCategories
             .flatMapLatest { selectedCategories ->
                 userSetFillCategory
                     .onStart { emit(selectedCategories.find { it.defaultAmountFormula.isZero() } ?: selectedCategories.getOrNull(0)) }

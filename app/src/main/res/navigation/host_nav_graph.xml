@@ -129,7 +129,7 @@
         tools:layout="@layout/frag_create_future" />
     <fragment
         android:id="@+id/selectCategoriesFrag"
-        android:name="com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesFrag"
+        android:name="com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesFrag"
         android:label="SelectCategoriesFrag"
         tools:layout="@layout/frag_select_categories" />
     <fragment

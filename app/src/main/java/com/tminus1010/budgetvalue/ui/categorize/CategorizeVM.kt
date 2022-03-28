@@ -21,7 +21,7 @@ import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItems
 import com.tminus1010.budgetvalue.ui.edit_string.EditStringSharedVM
 import com.tminus1010.budgetvalue.ui.errors.Errors
-import com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesModel
+import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.divertErrors
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,7 +38,7 @@ class CategorizeVM @Inject constructor(
     private val toaster: Toaster,
     private val categoriesInteractor: CategoriesInteractor,
     private val spinnerService: SpinnerService,
-    private val selectCategoriesModel: SelectCategoriesModel,
+    private val chooseCategoriesSharedVM: ChooseCategoriesSharedVM,
     errors: Errors,
     futuresRepo: FuturesRepo,
     private val futuresInteractor: FuturesInteractor,
@@ -129,8 +129,8 @@ class CategorizeVM @Inject constructor(
     }
 
     fun userTryNavToCategorySettings() {
-        navToCategorySettings.easyEmit(selectCategoriesModel.selectedCategories.value.first())
-        runBlocking { selectCategoriesModel.clearSelection() }
+        navToCategorySettings.easyEmit(chooseCategoriesSharedVM.selectedCategories.value.first())
+        runBlocking { chooseCategoriesSharedVM.clearSelection() }
     }
 
     // # Events
@@ -168,26 +168,26 @@ class CategorizeVM @Inject constructor(
                 *categories.map { category ->
                     ButtonVMItem2(
                         title = category.name,
-                        alpha = selectCategoriesModel.selectedCategories.map {
-                            if (selectCategoriesModel.selectedCategories.value.isEmpty() || category in selectCategoriesModel.selectedCategories.value)
+                        alpha = chooseCategoriesSharedVM.selectedCategories.map {
+                            if (chooseCategoriesSharedVM.selectedCategories.value.isEmpty() || category in chooseCategoriesSharedVM.selectedCategories.value)
                                 1F
                             else
                                 0.5F
                         },
                         onClick = {
-                            if (selectCategoriesModel.selectedCategories.value.isNotEmpty())
-                                if (category in selectCategoriesModel.selectedCategories.value)
-                                    selectCategoriesModel.unselectCategories(category)
+                            if (chooseCategoriesSharedVM.selectedCategories.value.isNotEmpty())
+                                if (category in chooseCategoriesSharedVM.selectedCategories.value)
+                                    chooseCategoriesSharedVM.unselectCategories(category)
                                 else
-                                    selectCategoriesModel.selectCategories(category)
+                                    chooseCategoriesSharedVM.selectCategories(category)
                             else
                                 userSimpleCategorize(category)
                         },
                         onLongClick = {
-                            if (category in selectCategoriesModel.selectedCategories.value)
-                                selectCategoriesModel.unselectCategories(category)
+                            if (category in chooseCategoriesSharedVM.selectedCategories.value)
+                                chooseCategoriesSharedVM.unselectCategories(category)
                             else
-                                selectCategoriesModel.selectCategories(category)
+                                chooseCategoriesSharedVM.selectCategories(category)
                         },
                     )
                 }.toTypedArray(),
@@ -224,13 +224,13 @@ class CategorizeVM @Inject constructor(
         }
             .divertErrors(errors)
     val buttons =
-        selectCategoriesModel.selectedCategories.map { it.isNotEmpty() }.asObservable2()
+        chooseCategoriesSharedVM.selectedCategories.map { it.isNotEmpty() }.asObservable2()
             .map { inSelectionMode ->
                 listOfNotNull(
                     if (inSelectionMode)
                         ButtonVMItem(
                             title = "Category Settings",
-                            isEnabled = selectCategoriesModel.selectedCategories.asObservable2().map { it.size == 1 },
+                            isEnabled = chooseCategoriesSharedVM.selectedCategories.asObservable2().map { it.size == 1 },
                             onClick = ::userTryNavToCategorySettings
                         )
                     else null,

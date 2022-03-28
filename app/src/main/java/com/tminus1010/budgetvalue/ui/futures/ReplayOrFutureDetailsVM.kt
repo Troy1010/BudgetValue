@@ -13,7 +13,7 @@ import com.tminus1010.budgetvalue.domain.*
 import com.tminus1010.budgetvalue.framework.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.framework.view.Toaster
 import com.tminus1010.budgetvalue.ui.all_features.model.*
-import com.tminus1010.budgetvalue.ui.select_categories.SelectCategoriesModel
+import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesSharedVM
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ReplayOrFutureDetailsVM @Inject constructor(
     private val categoriesInteractor: CategoriesInteractor,
-    private val selectedCategoriesModel: SelectCategoriesModel,
+    private val selectedCategoriesSharedVM: ChooseCategoriesSharedVM,
     private val futuresRepo: FuturesRepo,
     private val toaster: Toaster,
     private val categorizeMatchingUncategorizedTransactions: CategorizeMatchingUncategorizedTransactions,
@@ -116,7 +116,7 @@ class ReplayOrFutureDetailsVM @Inject constructor(
     }
 
     fun userTryNavUp() {
-        runBlocking { selectedCategoriesModel.clearSelection() }
+        runBlocking { selectedCategoriesSharedVM.clearSelection() }
         navUp.onNext()
     }
 
@@ -157,7 +157,7 @@ class ReplayOrFutureDetailsVM @Inject constructor(
         future
             .map { it.categoryAmountFormulas }
             .flatMapLatest { oldCategoryAmountFormulas ->
-                combine(userCategoryAmountFormulas.flow, selectedCategoriesModel.selectedCategories)
+                combine(userCategoryAmountFormulas.flow, selectedCategoriesSharedVM.selectedCategories)
                 { userCategoryAmountFormulas, selectedCategories ->
                     CategoryAmountFormulas(selectedCategories.associateWith { it.defaultAmountFormula })
                         .plus(oldCategoryAmountFormulas)
@@ -171,7 +171,7 @@ class ReplayOrFutureDetailsVM @Inject constructor(
         future
             .map { it.fillCategory }
             .flatMapLatest {
-                selectedCategoriesModel.selectedCategories.drop(1)
+                selectedCategoriesSharedVM.selectedCategories.drop(1)
                     .flatMapLatest { selectedCategories ->
                         userSetFillCategory
                             .onStart { emit(selectedCategories.find { it.defaultAmountFormula.isZero() } ?: selectedCategories.getOrNull(0)) }

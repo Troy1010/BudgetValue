@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.ui.select_categories
+package com.tminus1010.budgetvalue.ui.choose_categories
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -23,9 +23,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.map
 
 @AndroidEntryPoint
-class SelectCategoriesFrag : Fragment(R.layout.frag_select_categories) {
+class ChooseCategoriesFrag : Fragment(R.layout.frag_select_categories) {
     private val vb by viewBinding(FragSelectCategoriesBinding::bind)
-    private val selectCategoriesVM by viewModels<SelectCategoriesVM>()
+    private val selectCategoriesVM by viewModels<ChooseCategoriesVM>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
