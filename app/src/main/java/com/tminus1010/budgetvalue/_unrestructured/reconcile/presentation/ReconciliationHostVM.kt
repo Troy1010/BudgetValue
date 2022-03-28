@@ -49,17 +49,11 @@ class ReconciliationHostVM @Inject constructor(
                 is ReconciliationToDo.Accounts -> "Accounts Reconciliation"
                 is ReconciliationToDo.PlanZ -> "Plan Reconciliation"
                 is ReconciliationToDo.Anytime,
-                null -> "Anytime Reconciliation"
+                null,
+                -> "Anytime Reconciliation"
             }.let { NativeText.Simple(it) }
         }
-    val subTitle =
-        reconciliationsToDoUC.map {
-            when (it.size) {
-                0 -> NativeText.Resource(R.string.reconciliations_required_none)
-                1 -> NativeText.Resource(R.string.reconciliations_required_one)
-                else -> NativeText.Arguments(R.string.reconciliations_required_many, it.size.toString())
-            }
-        }
+    val subTitle = reconciliationsToDoUC.map { NativeText.Plural(R.plurals.reconciliations_required, it.size, it.size) }
     val buttons =
         listOf(
             ButtonVMItem(
