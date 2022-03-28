@@ -13,8 +13,8 @@ import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.Future
 import com.tminus1010.budgetvalue.domain.TransactionMatcher
+import com.tminus1010.budgetvalue.framework.view.ShowToast
 import com.tminus1010.budgetvalue.framework.view.SpinnerService
-import com.tminus1010.budgetvalue.framework.view.Toaster
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem2
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
@@ -24,6 +24,7 @@ import com.tminus1010.budgetvalue.ui.errors.Errors
 import com.tminus1010.budgetvalue.ui.set_string.SetStringSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.divertErrors
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
+import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
@@ -34,7 +35,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CategorizeVM @Inject constructor(
     private val transactionsInteractor: TransactionsInteractor,
-    private val toaster: Toaster,
+    private val showToast: ShowToast,
     private val categoriesInteractor: CategoriesInteractor,
     private val spinnerService: SpinnerService,
     private val chooseCategoriesSharedVM: ChooseCategoriesSharedVM,
@@ -93,7 +94,7 @@ class CategorizeVM @Inject constructor(
                 description = transactionsInteractor.mostRecentUncategorizedSpend.value!!.description,
                 future = future,
             )
-                .also { toaster.toast("$it transactions categorized") }
+                .also { showToast(NativeText.Simple("$it transactions categorized")) }
         })
     }
 
@@ -104,7 +105,7 @@ class CategorizeVM @Inject constructor(
                     description = s,
                     future = future,
                 )
-                    .also { toaster.toast("$it transactions categorized") }
+                    .also { showToast(NativeText.Simple("$it transactions categorized")) }
             })
         }
         navToEditStringForAddTransactionToFutureWithEdit.onNext(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)
@@ -113,7 +114,7 @@ class CategorizeVM @Inject constructor(
     fun userUseDescription(future: Future) {
         GlobalScope.launch(block = spinnerService.decorate {
             categorizeMatchingUncategorizedTransactions(TransactionMatcher.SearchText(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)::isMatch, future::categorize)
-                .also { toaster.toast("$it transactions categorized") }
+                .also { showToast(NativeText.Simple("$it transactions categorized")) }
         })
     }
 
@@ -121,7 +122,7 @@ class CategorizeVM @Inject constructor(
         setStringSharedVM.userSubmitString.take(1).takeUntilSignal(setStringSharedVM.userCancel).observe(GlobalScope) { s ->
             GlobalScope.launch(block = spinnerService.decorate { // TODO: There should be a better way than launching within a launch, right?
                 categorizeMatchingUncategorizedTransactions(TransactionMatcher.SearchText(s)::isMatch, future::categorize)
-                    .also { toaster.toast("$it transactions categorized") }
+                    .also { showToast(NativeText.Simple("$it transactions categorized")) }
             })
         }
         navToEditStringForAddTransactionToFutureWithEdit.onNext(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)
@@ -130,7 +131,7 @@ class CategorizeVM @Inject constructor(
     fun userUseDescriptionOnCategory(category: Category) {
         GlobalScope.launch(block = spinnerService.decorate {
             categorizeMatchingUncategorizedTransactions(TransactionMatcher.SearchText(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)::isMatch, categorize = { it.categorize(category) })
-                .also { toaster.toast("$it transactions categorized") }
+                .also { showToast(NativeText.Simple("$it transactions categorized")) }
         })
     }
 
@@ -138,7 +139,7 @@ class CategorizeVM @Inject constructor(
         setStringSharedVM.userSubmitString.take(1).takeUntilSignal(setStringSharedVM.userCancel).observe(GlobalScope) { s ->
             GlobalScope.launch(block = spinnerService.decorate { // TODO: There should be a better way than launching within a launch, right?
                 categorizeMatchingUncategorizedTransactions(TransactionMatcher.SearchText(s)::isMatch, categorize = { it.categorize(category) })
-                    .also { toaster.toast("$it transactions categorized") }
+                    .also { showToast(NativeText.Simple("$it transactions categorized")) }
             })
         }
         navToEditStringForAddTransactionToFutureWithEdit.onNext(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)

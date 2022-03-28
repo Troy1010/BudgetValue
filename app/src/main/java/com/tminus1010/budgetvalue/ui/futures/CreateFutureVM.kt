@@ -13,7 +13,7 @@ import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.domain.*
 import com.tminus1010.budgetvalue.framework.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.framework.view.ShowAlertDialog
-import com.tminus1010.budgetvalue.framework.view.Toaster
+import com.tminus1010.budgetvalue.framework.view.ShowToast
 import com.tminus1010.budgetvalue.ui.all_features.model.*
 import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesSharedVM
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
@@ -32,7 +32,7 @@ class CreateFutureVM @Inject constructor(
     private val categoriesInteractor: CategoriesInteractor,
     private val selectedCategoriesSharedVM: ChooseCategoriesSharedVM,
     private val futuresRepo: FuturesRepo,
-    private val toaster: Toaster,
+    private val showToast: ShowToast,
     private val categorizeMatchingUncategorizedTransactions: CategorizeMatchingUncategorizedTransactions,
     private val setSearchTextsSharedVM: SetSearchTextsSharedVM,
     private val transactionsInteractor: TransactionsInteractor,
@@ -80,13 +80,13 @@ class CreateFutureVM @Inject constructor(
                             futuresRepo.push(futureToPush)
                             if (futureToPush.terminationStrategy == TerminationStrategy.PERMANENT)
                                 categorizeMatchingUncategorizedTransactions({ futureToPush.onImportMatcher?.isMatch(it) ?: false }, futureToPush::categorize)
-                                    .also { toaster.toast("$it transactions categorized") }
+                                    .also { showToast(NativeText.Simple("$it transactions categorized")) }
                             selectedCategoriesSharedVM.clearSelection()
                             navUp.emit(Unit)
                         }
                     } catch (e: Throwable) {
                         when (e) {
-                            is NoDescriptionEnteredException -> toaster.toast("Fill description or use another search type")
+                            is NoDescriptionEnteredException -> showToast(NativeText.Simple("Fill description or use another search type"))
                             else -> throw e
                         }
                     }
