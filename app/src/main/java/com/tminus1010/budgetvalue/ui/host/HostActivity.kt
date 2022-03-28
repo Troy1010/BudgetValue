@@ -24,16 +24,13 @@ import com.tminus1010.budgetvalue.app.AppInitInteractor
 import com.tminus1010.budgetvalue.app.ImportTransactions
 import com.tminus1010.budgetvalue.app.IsPlanFeatureEnabledUC
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
-import com.tminus1010.budgetvalue.framework.view.ShowAlertDialog
 import com.tminus1010.budgetvalue.framework.view.SpinnerService
-import com.tminus1010.budgetvalue.ui.errors.Errors
 import com.tminus1010.budgetvalue.ui.futures.FuturesFrag
 import com.tminus1010.budgetvalue.ui.importZ.ImportVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.subjects.Subject
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -65,19 +62,12 @@ class HostActivity : AppCompatActivity() {
     @Inject
     lateinit var spinnerService: SpinnerService
 
-    @Inject
-    lateinit var errorSubject: Subject<Throwable>
-
-    @Inject
-    lateinit var errors: Errors
-
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.frag_nav_host) as HostFrag }
     private val nav by lazy { findNavController(R.id.frag_nav_host) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(vb.root)
         // # Mediation
-        errorSubject.subscribe { errors.onNext(it) }
         hostVM.showAlertDialog.onNext(showAlertDialog)
         // # Initialize app once per install
         GlobalScope.launch { appInitInteractor.tryInitializeApp() }
