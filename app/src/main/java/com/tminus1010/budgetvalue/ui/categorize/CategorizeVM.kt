@@ -196,7 +196,7 @@ class CategorizeVM @Inject constructor(
                                 else
                                     chooseCategoriesSharedVM.selectCategories(category)
                             else
-                                userSimpleCategorize(category)
+                                userUseDescriptionOnCategory(category)
                         },
                         menuVMItemsFlow = chooseCategoriesSharedVM.selectedCategories.map { selectedCategories ->
                             MenuVMItems(
@@ -215,11 +215,11 @@ class CategorizeVM @Inject constructor(
                                     onClick = { userTryNavToCategorySettings(category) }
                                 ),
                                 MenuVMItem(
-                                    title = "Use Description",
-                                    onClick = { userUseDescriptionOnCategory(category) }
+                                    title = "Use Only Once",
+                                    onClick = { userSimpleCategorize(category) }
                                 ),
                                 MenuVMItem(
-                                    title = "Use Description With Edit",
+                                    title = "Use With Edit",
                                     onClick = { userUseDescriptionWithEditOnCategory(category) }
                                 ),
                             )
@@ -230,26 +230,26 @@ class CategorizeVM @Inject constructor(
                     ButtonVMItem2(
                         title = future.name,
                         backgroundColor = R.attr.colorSecondary,
-                        onClick = { userReplay(future) },
+                        onClick = { userUseDescription(future) },
                         menuVMItems = MenuVMItems(
                             MenuVMItem(
                                 title = "Edit",
                                 onClick = { navToReplayOrFutureDetails.onNext(future) }
                             ),
                             MenuVMItem(
-                                title = "Add Description",
+                                title = "Add",
                                 onClick = { userAddTransactionToFuture(future) }
                             ),
                             MenuVMItem(
-                                title = "Add Description With Edit",
+                                title = "Add With Edit",
                                 onClick = { userAddTransactionToFutureWithEdit(future) }
                             ),
                             MenuVMItem(
-                                title = "Use Description",
-                                onClick = { userUseDescription(future) }
+                                title = "Use Only Once",
+                                onClick = { userReplay(future) }
                             ),
                             MenuVMItem(
-                                title = "Use Description With Edit",
+                                title = "Use With Edit",
                                 onClick = { userUseDescriptionWithEdit(future) }
                             ),
                         ),
