@@ -1,6 +1,5 @@
 package com.tminus1010.budgetvalue.app
 
-import com.tminus1010.budgetvalue._unrestructured.reconcile.app.interactor.ActiveReconciliationDefaultAmountInteractor
 import com.tminus1010.budgetvalue.data.ActiveReconciliationRepo
 import com.tminus1010.budgetvalue.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
@@ -10,7 +9,7 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 class SaveActiveReconciliation @Inject constructor(
-    private val activeReconciliationDefaultAmountInteractor: ActiveReconciliationDefaultAmountInteractor,
+    private val activeReconciliationInteractor: ActiveReconciliationInteractor,
     private val activeReconciliationRepo: ActiveReconciliationRepo,
     private val reconciliationsRepo: ReconciliationsRepo,
 ) {
@@ -18,7 +17,7 @@ class SaveActiveReconciliation @Inject constructor(
         reconciliationsRepo.push(
             Reconciliation(
                 LocalDate.now(),
-                activeReconciliationDefaultAmountInteractor.activeReconciliationDefaultAmount.first(),
+                activeReconciliationInteractor.defaultAmount.first(),
                 activeReconciliationRepo.activeReconciliationCAs.first(),
             )
         )

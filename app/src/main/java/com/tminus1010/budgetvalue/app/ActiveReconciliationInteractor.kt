@@ -1,39 +1,44 @@
-package com.tminus1010.budgetvalue._unrestructured.reconcile.app.interactor
+package com.tminus1010.budgetvalue.app
 
 import androidx.annotation.VisibleForTesting
-import com.tminus1010.budgetvalue.data.ActiveReconciliationRepo
-import com.tminus1010.budgetvalue.data.ReconciliationsRepo
-import com.tminus1010.budgetvalue.domain.Reconciliation
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionBlock
-import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
-import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.data.AccountsRepo
+import com.tminus1010.budgetvalue.data.ActiveReconciliationRepo
 import com.tminus1010.budgetvalue.data.PlansRepo
+import com.tminus1010.budgetvalue.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
+import com.tminus1010.budgetvalue.domain.CategoryAmountsAndTotal
+import com.tminus1010.budgetvalue.domain.Reconciliation
 import com.tminus1010.budgetvalue.domain.plan.Plan
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
-import com.tminus1010.tmcommonkotlin.rx.nonLazy
-import com.tminus1010.tmcommonkotlin.rx.replayNonError
-import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.rx3.asFlow
 import java.math.BigDecimal
 import javax.inject.Inject
-import javax.inject.Singleton
 
-
-@Singleton
-class ActiveReconciliationDefaultAmountInteractor @Inject constructor(
+class ActiveReconciliationInteractor @Inject constructor(
+    accountsRepo: AccountsRepo,
+    budgetedInteractor: BudgetedInteractor,
+    activeReconciliationRepo: ActiveReconciliationRepo,
     plansRepo: PlansRepo,
     reconciliationsRepo: ReconciliationsRepo,
-    activeReconciliationRepo: ActiveReconciliationRepo,
     transactionsInteractor: TransactionsInteractor,
-    accountsRepo: AccountsRepo,
 ) {
-    val activeReconciliationDefaultAmount =
+    val categoryAmountsAndTotal =
+        combine(activeReconciliationRepo.activeReconciliationCAs, accountsRepo.accountsAggregate, budgetedInteractor.budgeted.asFlow())
+        { activeReconciliationCAs, accountsAggregate, budgeted ->
+            CategoryAmountsAndTotal.FromTotal(
+                categoryAmounts = activeReconciliationCAs,
+                total = accountsAggregate.total - budgeted.totalAmount,
+            )
+        }
+            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
+
+    val defaultAmount =
         combine(
             plansRepo.plans,
             reconciliationsRepo.reconciliations,

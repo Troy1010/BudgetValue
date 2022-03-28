@@ -2,8 +2,8 @@ package com.tminus1010.budgetvalue.ui.reconciliation
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._unrestructured.reconcile.app.interactor.ActiveReconciliationInteractor
-import com.tminus1010.budgetvalue._unrestructured.reconcile.app.interactor.BudgetedWithActiveReconciliationInteractor
+import com.tminus1010.budgetvalue.app.ActiveReconciliationInteractor
+import com.tminus1010.budgetvalue.app.BudgetedWithActiveReconciliationInteractor
 import com.tminus1010.budgetvalue._unrestructured.reconcile.app.interactor.ReconciliationsToDoInteractor
 import com.tminus1010.budgetvalue.app.SaveActiveReconciliation
 import com.tminus1010.budgetvalue._unrestructured.reconcile.domain.ReconciliationToDo
