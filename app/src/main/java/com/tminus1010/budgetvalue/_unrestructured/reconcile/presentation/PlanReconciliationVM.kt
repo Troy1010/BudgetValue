@@ -1,23 +1,19 @@
 package com.tminus1010.budgetvalue._unrestructured.reconcile.presentation
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
-import com.tminus1010.budgetvalue.ui.all_features.model.AmountPresentationModel
-import com.tminus1010.budgetvalue.ui.all_features.model.CategoryAmountPresentationModel
-import com.tminus1010.budgetvalue.ui.all_features.model.BudgetHeaderPresentationModel
-import com.tminus1010.budgetvalue.app.CategoriesInteractor
-import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue._unrestructured.reconcile.app.interactor.ActiveReconciliationInteractor
 import com.tminus1010.budgetvalue._unrestructured.reconcile.app.interactor.BudgetedWithActiveReconciliationInteractor
-import com.tminus1010.budgetvalue.data.ActiveReconciliationRepo
 import com.tminus1010.budgetvalue._unrestructured.reconcile.domain.ReconciliationToDo
-import com.tminus1010.budgetvalue.ui.all_features.model.HeaderPresentationModel
+import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
+import com.tminus1010.budgetvalue.app.CategoriesInteractor
+import com.tminus1010.budgetvalue.data.ActiveReconciliationRepo
+import com.tminus1010.budgetvalue.domain.Category
+import com.tminus1010.budgetvalue.ui.all_features.model.*
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx3.asFlow
 import javax.inject.Inject
@@ -29,7 +25,7 @@ class PlanReconciliationVM @Inject constructor(
     activeReconciliationInteractor: ActiveReconciliationInteractor,
     budgetedWithActiveReconciliationInteractor: BudgetedWithActiveReconciliationInteractor,
 ) : ViewModel() {
-    // # View Events
+    // # Setup
     val reconciliationToDo = BehaviorSubject.create<ReconciliationToDo.PlanZ>()
 
     // # User Intents
@@ -38,11 +34,11 @@ class PlanReconciliationVM @Inject constructor(
     }
 
     // # State
-    val recipeGrid =
+    val reconciliationTableView =
         combine(categoriesInteractor.userCategories, activeReconciliationInteractor.categoryAmountsAndTotal.asFlow(), budgetedWithActiveReconciliationInteractor.categoryAmountsAndTotal.asFlow(), reconciliationToDo.asFlow())
         { categories, activeReconciliation, budgetedWithActiveReconciliation, reconciliationToDo ->
-            listOf(
-                listOf(
+            TableViewVMItem(
+                recipeGrid = listOf(
                     listOf(
                         HeaderPresentationModel("Categories"),
                         HeaderPresentationModel("Actual"),
@@ -50,28 +46,27 @@ class PlanReconciliationVM @Inject constructor(
                         BudgetHeaderPresentationModel("Budgeted", budgetedWithActiveReconciliation.total.toString()),
                     ),
                     listOf(
-                        "Default",
-                        reconciliationToDo.transactionBlock.defaultAmount.toString(),
-                        activeReconciliation.defaultAmount.toString(),
+                        TextVMItem("Default"),
+                        TextVMItem(reconciliationToDo.transactionBlock.defaultAmount.toString()),
+                        TextVMItem(activeReconciliation.defaultAmount.toString()),
                         AmountPresentationModel(budgetedWithActiveReconciliation.defaultAmount) { budgetedWithActiveReconciliation.isDefaultAmountValid },
                     ),
+                    *categories.map { category ->
+                        listOf(
+                            TextVMItem(category.name),
+                            TextVMItem(reconciliationToDo.transactionBlock.categoryAmounts[category]?.toString() ?: ""),
+                            CategoryAmountPresentationModel(category, activeReconciliation.categoryAmounts[category], ::userUpdateActiveReconciliationCategoryAmount),
+                            AmountPresentationModel(budgetedWithActiveReconciliation.categoryAmounts[category]) { budgetedWithActiveReconciliation.isValid(category) },
+                        )
+                    }.toTypedArray(),
                 ),
-                categories.map { category ->
-                    listOf(
-                        category.name,
-                        reconciliationToDo.transactionBlock.categoryAmounts[category]?.toString() ?: "",
-                        CategoryAmountPresentationModel(category, activeReconciliation.categoryAmounts[category], ::userUpdateActiveReconciliationCategoryAmount),
-                        AmountPresentationModel(budgetedWithActiveReconciliation.categoryAmounts[category]) { budgetedWithActiveReconciliation.isValid(category) },
-                    )
-                },
-            ).flatten()
-        }
-    val dividerMap =
-        categoriesInteractor.userCategories
-            .map {
-                it.withIndex()
+                dividerMap = categories.withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
                     .associate { it.index to it.value.type.name }
                     .mapKeys { it.key + 2 } // header row, default row
-            }
+                    .mapValues { DividerVMItem(it.value) },
+                shouldFitItemWidthsInsideTable = true,
+                rowFreezeCount = 1,
+            )
+        }
 }
