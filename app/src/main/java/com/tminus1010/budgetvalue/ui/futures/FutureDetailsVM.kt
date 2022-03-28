@@ -10,7 +10,7 @@ import com.tminus1010.budgetvalue.app.CategoriesInteractor
 import com.tminus1010.budgetvalue.app.CategorizeMatchingUncategorizedTransactions
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.domain.*
-import com.tminus1010.budgetvalue.framework.source_objects.SourceHashMap
+import com.tminus1010.budgetvalue.framework.observable.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.framework.view.ShowToast
 import com.tminus1010.budgetvalue.ui.all_features.model.*
 import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesSharedVM

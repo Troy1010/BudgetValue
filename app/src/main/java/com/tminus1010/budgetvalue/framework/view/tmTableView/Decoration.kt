@@ -5,7 +5,7 @@ import android.graphics.Canvas
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
-import com.tminus1010.budgetvalue.framework.Orientation
+import com.tminus1010.budgetvalue.framework.view.Orientation
 import com.tminus1010.budgetvalue.R
 
 open class Decoration(

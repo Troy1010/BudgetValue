@@ -8,8 +8,8 @@ import com.tminus1010.budgetvalue.data.PlansRepo
 import com.tminus1010.budgetvalue.domain.Budgeted
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
-import com.tminus1010.budgetvalue.framework.Rx
-import com.tminus1010.budgetvalue.framework.source_objects.SourceHashMap
+import com.tminus1010.budgetvalue.framework.observable.Rx
+import com.tminus1010.budgetvalue.framework.observable.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import com.tminus1010.tmcommonkotlin.rx.extensions.total
 import com.tminus1010.tmcommonkotlin.rx.replayNonError

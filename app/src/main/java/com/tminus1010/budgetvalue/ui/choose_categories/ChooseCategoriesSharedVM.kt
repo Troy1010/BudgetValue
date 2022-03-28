@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.ui.choose_categories
 
-import com.tminus1010.budgetvalue.framework.source_objects.SourceList
+import com.tminus1010.budgetvalue.framework.observable.source_objects.SourceList
 import com.tminus1010.budgetvalue.domain.Category
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted

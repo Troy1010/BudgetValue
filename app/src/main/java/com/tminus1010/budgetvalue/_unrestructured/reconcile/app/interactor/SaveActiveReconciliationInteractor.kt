@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue._unrestructured.reconcile.app.interactor
 
 import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
-import com.tminus1010.budgetvalue.framework.Rx
+import com.tminus1010.budgetvalue.framework.observable.Rx
 import com.tminus1010.budgetvalue._unrestructured.reconcile.app.convenience_service.ActiveReconciliationDefaultAmountUC
 import com.tminus1010.budgetvalue._unrestructured.reconcile.data.ActiveReconciliationRepo
 import com.tminus1010.budgetvalue._unrestructured.reconcile.data.ReconciliationsRepo

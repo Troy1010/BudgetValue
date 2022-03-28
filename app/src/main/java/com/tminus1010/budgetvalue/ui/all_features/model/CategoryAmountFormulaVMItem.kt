@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.ui.all_features.model
 
 import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
-import com.tminus1010.budgetvalue.framework.ColdObservable
+import com.tminus1010.budgetvalue.framework.observable.ColdObservable
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.AmountFormula
 import com.tminus1010.tmcommonkotlin.tuple.Box

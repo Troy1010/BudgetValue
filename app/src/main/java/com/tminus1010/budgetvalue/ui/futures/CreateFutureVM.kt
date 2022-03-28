@@ -11,7 +11,7 @@ import com.tminus1010.budgetvalue.app.CategorizeMatchingUncategorizedTransaction
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.domain.*
-import com.tminus1010.budgetvalue.framework.source_objects.SourceHashMap
+import com.tminus1010.budgetvalue.framework.observable.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.framework.view.ShowAlertDialog
 import com.tminus1010.budgetvalue.framework.view.ShowToast
 import com.tminus1010.budgetvalue.ui.all_features.model.*

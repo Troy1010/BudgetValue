@@ -1,5 +1,6 @@
 package com.tminus1010.budgetvalue.framework
 
+import com.tminus1010.budgetvalue.framework.observable.Rx
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.junit.Test
 

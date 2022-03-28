@@ -12,7 +12,7 @@ import com.tminus1010.budgetvalue.data.PlansRepo
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.DatePeriodService
 import com.tminus1010.budgetvalue.domain.LocalDatePeriod
-import com.tminus1010.budgetvalue.framework.Rx
+import com.tminus1010.budgetvalue.framework.observable.Rx
 import com.tminus1010.budgetvalue.ui.all_features.model.BasicHeaderWithSubtitlePresentationModel
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.TextPresentationModel

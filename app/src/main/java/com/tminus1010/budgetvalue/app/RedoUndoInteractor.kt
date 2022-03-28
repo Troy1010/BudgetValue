@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.app
 
 import com.tminus1010.budgetvalue.app.model.RedoUndo
-import com.tminus1010.budgetvalue.framework.source_objects.SourceList
+import com.tminus1010.budgetvalue.framework.observable.source_objects.SourceList
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton

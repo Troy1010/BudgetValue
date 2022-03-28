@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.framework.source_objects
+package com.tminus1010.budgetvalue.framework.observable.source_objects
 
 data class AdditionOrRemoval<K, V>(
     val type: AddRemType,

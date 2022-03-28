@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.framework
+package com.tminus1010.budgetvalue.framework.observable
 
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observer

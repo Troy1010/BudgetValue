@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue._unrestructured.transactions.app
 
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
-import com.tminus1010.budgetvalue.framework.source_objects.SourceList
+import com.tminus1010.budgetvalue.framework.observable.source_objects.SourceList
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import kotlinx.coroutines.GlobalScope

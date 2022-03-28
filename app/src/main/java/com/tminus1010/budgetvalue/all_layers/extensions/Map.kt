@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.all_layers.extensions
 
-import com.tminus1010.budgetvalue.framework.source_objects.SourceHashMap
+import com.tminus1010.budgetvalue.framework.observable.source_objects.SourceHashMap
 
 fun <K, V: Any> Map<K, V>.toSourceHashMap(exitValue: V): SourceHashMap<K, V> {
     return SourceHashMap(this, exitValue)

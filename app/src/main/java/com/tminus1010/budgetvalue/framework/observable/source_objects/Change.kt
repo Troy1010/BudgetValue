@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.framework.source_objects
+package com.tminus1010.budgetvalue.framework.observable.source_objects
 
 data class Change<K, V>(
     val type: AddRemEditType,

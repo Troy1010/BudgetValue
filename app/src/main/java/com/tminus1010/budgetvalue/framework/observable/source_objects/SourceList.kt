@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.framework.source_objects
+package com.tminus1010.budgetvalue.framework.observable.source_objects
 
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.pairwise
 import io.reactivex.rxjava3.core.Observable

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.tminus1010.budgetvalue.all_layers.extensions.widthObservable
-import com.tminus1010.budgetvalue.framework.Orientation
+import com.tminus1010.budgetvalue.framework.view.Orientation
 import com.tminus1010.budgetvalue.framework.view.tmTableView.IViewItemRecipe
 import com.tminus1010.budgetvalue.databinding.TableviewBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.children

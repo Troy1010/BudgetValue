@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.framework
+package com.tminus1010.budgetvalue.framework.observable
 
 import com.tminus1010.tmcommonkotlin.rx.extensions.boxStartNull
 import com.tminus1010.tmcommonkotlin.rx.extensions.isCold
