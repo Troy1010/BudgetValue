@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._unrestructured.transactions.view
+package com.tminus1010.budgetvalue.ui.choose_transaction
 
 import android.os.Bundle
 import android.view.View
@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._unrestructured.transactions.presentation.ChooseTransactionVM
 import com.tminus1010.budgetvalue.databinding.FragChooseTransactionBinding
 import com.tminus1010.budgetvalue.framework.view.viewBinding
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe

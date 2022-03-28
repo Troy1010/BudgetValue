@@ -8,7 +8,7 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.framework.view.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragSetSearchTextsBinding
-import com.tminus1010.budgetvalue._unrestructured.transactions.view.ChooseTransactionFrag
+import com.tminus1010.budgetvalue.ui.choose_transaction.ChooseTransactionFrag
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.nav

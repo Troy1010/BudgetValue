@@ -134,7 +134,7 @@
         tools:layout="@layout/frag_select_categories" />
     <fragment
         android:id="@+id/chooseTransactionFrag"
-        android:name="com.tminus1010.budgetvalue._unrestructured.transactions.view.ChooseTransactionFrag"
+        android:name="com.tminus1010.budgetvalue.ui.choose_transaction.ChooseTransactionFrag"
         android:label="ChooseTransactionFrag"
         tools:layout="@layout/frag_choose_transaction" />
     <fragment

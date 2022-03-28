@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._unrestructured.transactions.view.ChooseTransactionFrag
+import com.tminus1010.budgetvalue.ui.choose_transaction.ChooseTransactionFrag
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.databinding.FragCreateFutureBinding

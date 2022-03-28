@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.ui.set_search_texts
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tminus1010.budgetvalue._unrestructured.transactions.presentation.ChooseTransactionSharedVM
+import com.tminus1010.budgetvalue.ui.choose_transaction.ChooseTransactionSharedVM
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_layers.extensions.value
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
