@@ -27,7 +27,6 @@ import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.framework.view.ShowAlertDialog
 import com.tminus1010.budgetvalue.framework.view.SpinnerService
 import com.tminus1010.budgetvalue.framework.view.Toaster
-import com.tminus1010.budgetvalue.ui.all_features.LaunchSelectFile
 import com.tminus1010.budgetvalue.ui.errors.Errors
 import com.tminus1010.budgetvalue.ui.futures.FuturesReviewFrag
 import com.tminus1010.budgetvalue.ui.importZ.ImportVM
@@ -65,7 +64,7 @@ class HostActivity : AppCompatActivity() {
     lateinit var importTransactions: ImportTransactions
 
     @Inject
-    lateinit var launchSelectFile: LaunchSelectFile
+    lateinit var launchChooseFile: LaunchChooseFile
 
     @Inject
     lateinit var spinnerService: SpinnerService
@@ -94,7 +93,7 @@ class HostActivity : AppCompatActivity() {
         //
         vb.bottomNavigation.selectedItemId = R.id.reviewFrag
         // # Events
-        importVM.navToSelectFile.observe(this) { launchSelectFile(this) }
+        importVM.navToSelectFile.observe(this) { launchChooseFile(this) }
         isPlanFeatureEnabledUC.onChangeToTrue.observe(this) {
             GlobalScope.launch { activePlanInteractor.setActivePlanFromHistory() }
             easyAlertDialog(hostVM.levelUpPlan.toCharSequence(this))

@@ -20,8 +20,8 @@ import com.tminus1010.budgetvalue.framework.view.viewBinding
 import com.tminus1010.budgetvalue.ui.category_settings.CategorySettingsFrag
 import com.tminus1010.budgetvalue.ui.futures.CreateFutureFrag
 import com.tminus1010.budgetvalue.ui.futures.ReplayOrFutureDetailsFrag
-import com.tminus1010.budgetvalue.ui.edit_string.EditStringFrag
-import com.tminus1010.budgetvalue.ui.edit_string.EditStringSharedVM
+import com.tminus1010.budgetvalue.ui.set_string.SetStringFrag
+import com.tminus1010.budgetvalue.ui.set_string.SetStringSharedVM
 import com.tminus1010.budgetvalue.ui.errors.Errors
 import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesSharedVM
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
@@ -52,7 +52,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     lateinit var errors: Errors
 
     @Inject
-    lateinit var editStringSharedVM: EditStringSharedVM
+    lateinit var setStringSharedVM: SetStringSharedVM
 
     @Inject
     lateinit var setSearchTextsSharedVM: SetSearchTextsSharedVM
@@ -69,7 +69,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         viewModel.navToCategorySettings.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, it.name, false) }
         viewModel.navToReplayOrFutureDetails.observe(viewLifecycleOwner) { ReplayOrFutureDetailsFrag.navTo(nav, moshiWithCategoriesProvider, it, chooseCategoriesSharedVM, setSearchTextsSharedVM) }
         viewModel.navToReceiptCategorization.observe(viewLifecycleOwner) { ReceiptCategorizationHostFrag.navTo(nav, it, categoryAmountsConverter) }
-        viewModel.navToEditStringForAddTransactionToFutureWithEdit.observe(viewLifecycleOwner) { EditStringFrag.navTo(nav, it, editStringSharedVM) }
+        viewModel.navToEditStringForAddTransactionToFutureWithEdit.observe(viewLifecycleOwner) { SetStringFrag.navTo(nav, it, setStringSharedVM) }
         // # State
         vb.textviewDate.bind(viewModel.date) { text = it }
         vb.textviewAmount.bind(viewModel.latestUncategorizedTransactionAmount) { text = it }

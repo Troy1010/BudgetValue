@@ -1,11 +1,11 @@
-package com.tminus1010.budgetvalue.ui.edit_string
+package com.tminus1010.budgetvalue.ui.set_string
 
 import kotlinx.coroutines.flow.MutableSharedFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class EditStringSharedVM @Inject constructor() {
+class SetStringSharedVM @Inject constructor() {
     // # Setup
     lateinit var initialS: String
 

@@ -12,6 +12,6 @@ import javax.inject.Singleton
 //	Solution 4: pass a lambda into fragment?
 // .. This is the 2nd solution
 @Singleton
-class SubFragEventProvider @Inject constructor() {
+class SubFragEventSharedVM @Inject constructor() {
     val showFragment = MutableSharedFlow<Fragment>()
 }

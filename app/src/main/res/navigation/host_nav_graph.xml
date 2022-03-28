@@ -144,7 +144,7 @@
         tools:layout="@layout/frag_set_search_texts" />
     <fragment
         android:id="@+id/editStringFrag"
-        android:name="com.tminus1010.budgetvalue.ui.edit_string.EditStringFrag"
+        android:name="com.tminus1010.budgetvalue.ui.set_string.SetStringFrag"
         android:label="EditStringFrag"
-        tools:layout="@layout/frag_edit_string" />
+        tools:layout="@layout/frag_set_string" />
 </navigation>

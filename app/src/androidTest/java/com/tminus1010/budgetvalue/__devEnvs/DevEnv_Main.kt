@@ -5,7 +5,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.tminus1010.budgetvalue.MockImportSelectionActivity
 import com.tminus1010.budgetvalue.ui.host.HostActivity
-import com.tminus1010.budgetvalue.ui.all_features.LaunchSelectFile
+import com.tminus1010.budgetvalue.ui.host.LaunchChooseFile
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,7 +38,7 @@ class DevEnv_Main {
     object MockModule {
         @Provides
         @Singleton
-        fun launchImport() = object : LaunchSelectFile() {
+        fun launchImport() = object : LaunchChooseFile() {
             override fun invoke(hostActivity: HostActivity) {
                 hostActivity.startActivity(
                     Intent(hostActivity, MockImportSelectionActivity::class.java)

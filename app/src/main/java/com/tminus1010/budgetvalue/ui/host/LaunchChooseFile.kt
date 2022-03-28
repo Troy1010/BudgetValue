@@ -1,12 +1,11 @@
-package com.tminus1010.budgetvalue.ui.all_features
+package com.tminus1010.budgetvalue.ui.host
 
 import android.content.Intent
-import com.tminus1010.budgetvalue.ui.host.HostActivity
 import dagger.Reusable
 import javax.inject.Inject
 
 @Reusable
-open class LaunchSelectFile @Inject constructor() {
+open class LaunchChooseFile @Inject constructor() {
     open operator fun invoke(hostActivity: HostActivity) {
         hostActivity.importTransactionsLauncher.launch(
             Intent().apply { type = "*/*"; action = Intent.ACTION_GET_CONTENT }

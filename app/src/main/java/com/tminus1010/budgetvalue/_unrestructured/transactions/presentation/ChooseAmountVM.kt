@@ -8,7 +8,7 @@ import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItems
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.ReceiptCategorizationInteractor
-import com.tminus1010.budgetvalue.ui.all_features.SubFragEventProvider
+import com.tminus1010.budgetvalue.ui.all_features.SubFragEventSharedVM
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue._unrestructured.transactions.view.ChooseCategorySubFrag
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
@@ -21,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ChooseAmountVM @Inject constructor(
     receiptCategorizationInteractor: ReceiptCategorizationInteractor,
-    subFragEventProvider: SubFragEventProvider,
+    subFragEventSharedVM: SubFragEventSharedVM,
     private val transactionsInteractor: TransactionsInteractor,
 ) : ViewModel() {
     // # User Intents
@@ -50,7 +50,7 @@ class ChooseAmountVM @Inject constructor(
     val userSetAmount = MutableSharedFlow<String>()
         .apply { observe(viewModelScope) { receiptCategorizationInteractor.rememberedAmount.value = it.toMoneyBigDecimal() } }
     val userSubmitAmount = MutableSharedFlow<Unit>()
-        .apply { observe(viewModelScope) { subFragEventProvider.showFragment.easyEmit(ChooseCategorySubFrag()) } }
+        .apply { observe(viewModelScope) { subFragEventSharedVM.showFragment.easyEmit(ChooseCategorySubFrag()) } }
 
     // # State
     val amount = receiptCategorizationInteractor.rememberedAmount.map { it.toString().toMoneyBigDecimal().toString() }

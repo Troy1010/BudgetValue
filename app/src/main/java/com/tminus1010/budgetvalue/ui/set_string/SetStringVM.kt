@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.ui.edit_string
+package com.tminus1010.budgetvalue.ui.set_string
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
@@ -10,32 +10,32 @@ import kotlinx.coroutines.flow.merge
 import javax.inject.Inject
 
 @HiltViewModel
-class EditStringVM @Inject constructor(
-    private val editStringSharedVM: EditStringSharedVM,
+class SetStringVM @Inject constructor(
+    private val setStringSharedVM: SetStringSharedVM,
 ) : ViewModel() {
     // # User Intents
     fun userSubmit() {
-        editStringSharedVM.userSubmitString.onNext(latestS)
+        setStringSharedVM.userSubmitString.onNext(latestS)
     }
 
     fun userCancel() {
-        editStringSharedVM.userCancel.onNext()
+        setStringSharedVM.userCancel.onNext()
     }
 
     // # Internal
-    var latestS = editStringSharedVM.initialS
+    var latestS = setStringSharedVM.initialS
 
     // # Events
     val navUp =
         merge(
-            editStringSharedVM.userSubmitString,
-            editStringSharedVM.userCancel,
+            setStringSharedVM.userSubmitString,
+            setStringSharedVM.userCancel,
         )
 
     // # State
     val editTextVMItem =
         EditTextVMItem2(
-            text = editStringSharedVM.initialS,
+            text = setStringSharedVM.initialS,
             onDone = { latestS = it }
         )
     val buttons =

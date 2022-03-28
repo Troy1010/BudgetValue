@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.ReceiptCategorizationInteractor
-import com.tminus1010.budgetvalue.ui.all_features.SubFragEventProvider
+import com.tminus1010.budgetvalue.ui.all_features.SubFragEventSharedVM
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
 import com.tminus1010.budgetvalue._unrestructured.transactions.view.ChooseAmountSubFrag
 import com.tminus1010.budgetvalue._unrestructured.transactions.view.ReceiptCategorizationSoFarSubFrag
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ReceiptCategorizationHostVM @Inject constructor(
-    private val subFragEventProvider: SubFragEventProvider,
+    private val subFragEventSharedVM: SubFragEventSharedVM,
     private val receiptCategorizationInteractor: ReceiptCategorizationInteractor
 ) : ViewModel() {
     // # View Events
@@ -28,7 +28,7 @@ class ReceiptCategorizationHostVM @Inject constructor(
 
     // # User Intents
     fun userShowCategorizationSoFar() {
-        subFragEventProvider.showFragment.easyEmit(ReceiptCategorizationSoFarSubFrag())
+        subFragEventSharedVM.showFragment.easyEmit(ReceiptCategorizationSoFarSubFrag())
     }
 
     fun userSubmitCategorization() {
@@ -40,7 +40,7 @@ class ReceiptCategorizationHostVM @Inject constructor(
     val navUp = MutableSharedFlow<Unit>()
 
     // # State
-    val fragment = subFragEventProvider.showFragment.onStart { emit(ChooseAmountSubFrag()) }
+    val fragment = subFragEventSharedVM.showFragment.onStart { emit(ChooseAmountSubFrag()) }
     val amountLeft = receiptCategorizationInteractor.amountLeftToCategorize.map { it.toString().toMoneyBigDecimal().toString() }
     val description = transaction.map { it!!.description }
     val buttons =

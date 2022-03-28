@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.ui.edit_string
+package com.tminus1010.budgetvalue.ui.set_string
 
 import android.os.Bundle
 import android.view.View
@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.databinding.FragEditStringBinding
+import com.tminus1010.budgetvalue.databinding.FragSetStringBinding
 import com.tminus1010.budgetvalue.framework.view.viewBinding
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
@@ -15,9 +15,9 @@ import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class EditStringFrag : Fragment(R.layout.frag_edit_string) {
-    private val vb by viewBinding(FragEditStringBinding::bind)
-    private val viewModel: EditStringVM by activityViewModels()
+class SetStringFrag : Fragment(R.layout.frag_set_string) {
+    private val vb by viewBinding(FragSetStringBinding::bind)
+    private val viewModel: SetStringVM by activityViewModels()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Setup
@@ -30,8 +30,8 @@ class EditStringFrag : Fragment(R.layout.frag_edit_string) {
     }
 
     companion object {
-        fun navTo(nav: NavController, s: String, editStringSharedVM: EditStringSharedVM) {
-            editStringSharedVM.initialS = s
+        fun navTo(nav: NavController, s: String, setStringSharedVM: SetStringSharedVM) {
+            setStringSharedVM.initialS = s
             nav.navigate(R.id.editStringFrag)
         }
     }

@@ -19,7 +19,7 @@ import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem2
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItems
-import com.tminus1010.budgetvalue.ui.edit_string.EditStringSharedVM
+import com.tminus1010.budgetvalue.ui.set_string.SetStringSharedVM
 import com.tminus1010.budgetvalue.ui.errors.Errors
 import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.divertErrors
@@ -43,7 +43,7 @@ class CategorizeVM @Inject constructor(
     futuresRepo: FuturesRepo,
     private val futuresInteractor: FuturesInteractor,
     private val redoUndoInteractor: RedoUndoInteractor,
-    private val editStringSharedVM: EditStringSharedVM,
+    private val setStringSharedVM: SetStringSharedVM,
     private val categorizeMatchingUncategorizedTransactions: CategorizeMatchingUncategorizedTransactions,
 ) : ViewModel() {
     // # User Intents
@@ -99,7 +99,7 @@ class CategorizeVM @Inject constructor(
     }
 
     fun userAddTransactionToFutureWithEdit(future: Future) {
-        editStringSharedVM.userSubmitString.take(1).takeUntilSignal(editStringSharedVM.userCancel).observe(GlobalScope) { s ->
+        setStringSharedVM.userSubmitString.take(1).takeUntilSignal(setStringSharedVM.userCancel).observe(GlobalScope) { s ->
             GlobalScope.launch(block = spinnerService.decorate { // TODO: There should be a better way than launching within a launch, right?
                 futuresInteractor.addDescriptionToFutureAndCategorize(
                     description = s,
@@ -119,7 +119,7 @@ class CategorizeVM @Inject constructor(
     }
 
     fun userUseDescriptionWithEdit(future: Future) {
-        editStringSharedVM.userSubmitString.take(1).takeUntilSignal(editStringSharedVM.userCancel).observe(GlobalScope) { s ->
+        setStringSharedVM.userSubmitString.take(1).takeUntilSignal(setStringSharedVM.userCancel).observe(GlobalScope) { s ->
             GlobalScope.launch(block = spinnerService.decorate { // TODO: There should be a better way than launching within a launch, right?
                 categorizeMatchingUncategorizedTransactions(TransactionMatcher.SearchText(s)::isMatch, future::categorize)
                     .also { toaster.toast("$it transactions categorized") }
