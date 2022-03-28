@@ -9,11 +9,11 @@ import com.tminus1010.budgetvalue._unrestructured.reconcile.app.interactor.SaveA
 import com.tminus1010.budgetvalue._unrestructured.reconcile.domain.ReconciliationToDo
 import com.tminus1010.budgetvalue.all_layers.extensions.isZero
 import com.tminus1010.budgetvalue.all_layers.extensions.mapBox
+import com.tminus1010.budgetvalue.framework.android.ShowToast
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.subjects.PublishSubject
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,6 +22,7 @@ class ReconciliationHostVM @Inject constructor(
     private val saveActiveReconciliationInteractor: SaveActiveReconciliationInteractor,
     private val budgetedWithActiveReconciliationInteractor: BudgetedWithActiveReconciliationInteractor,
     private val activeReconciliationInteractor: ActiveReconciliationInteractor,
+    private val showToast: ShowToast,
 ) : ViewModel() {
     // # User Intents
     fun userSave() {
@@ -32,13 +33,10 @@ class ReconciliationHostVM @Inject constructor(
                             && activeReconciliationInteractor.categoryAmountsAndTotal.value!!.defaultAmount.isZero.logx("defaultAmount.isZero")
                     )
         )
-            toast.onNext("Invalid input")
+            showToast(NativeText.Simple("Invalid input"))
         else
             saveActiveReconciliationInteractor.saveActiveReconciliation.subscribe()
     }
-
-    // # Presentation Events
-    val toast = PublishSubject.create<String>()
 
     // # State
     val currentReconciliationToDo =

@@ -22,8 +22,6 @@ class ReconciliationHostFrag : Fragment(R.layout.frag_reconciliation_host) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // # Presentation Event
-        reconciliationHostVM.toast.observe(viewLifecycleOwner) { easyToast(it) }
         // # State
         vb.buttonsview.buttons = reconciliationHostVM.buttons
         vb.tvSubTitle.bind(reconciliationHostVM.subTitle) { text = it.toCharSequence(context) }
