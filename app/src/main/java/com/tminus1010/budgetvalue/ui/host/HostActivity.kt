@@ -16,7 +16,6 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._unrestructured.history.HistoryFrag
 import com.tminus1010.budgetvalue._unrestructured.reconcile.data.IsReconciliationFeatureEnabled
 import com.tminus1010.budgetvalue._unrestructured.transactions.view.TransactionListFrag
-import com.tminus1010.budgetvalue.all_layers.extensions.easyAlertDialog
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_layers.extensions.unCheckAllMenuItems
 import com.tminus1010.budgetvalue.app.ActivePlanInteractor
@@ -90,13 +89,8 @@ class HostActivity : AppCompatActivity() {
         vb.bottomNavigation.selectedItemId = R.id.reviewFrag
         // # Events
         importVM.navToSelectFile.observe(this) { launchChooseFile(this) }
-        isPlanFeatureEnabledUC.onChangeToTrue.observe(this) {
-            GlobalScope.launch { activePlanInteractor.setActivePlanFromHistory() }
-            easyAlertDialog(hostVM.levelUpPlan.toCharSequence(this))
-        }
-        isReconciliationFeatureEnabled.onChangeToTrue.observe(this) {
-            easyAlertDialog(hostVM.levelUpReconciliation.toCharSequence(this))
-        }
+        isPlanFeatureEnabledUC.onChangeToTrue.observe(this) { activePlanInteractor.setActivePlanFromHistory(); showAlertDialog(hostVM.levelUpPlan) }
+        isReconciliationFeatureEnabled.onChangeToTrue.observe(this) { showAlertDialog(hostVM.levelUpReconciliation) }
         hostVM.navToFutures.observe(this) { FuturesFrag.navTo(nav) }
         hostVM.navToTransactions.observe(this) { TransactionListFrag.navTo(nav) }
         hostVM.navToHistory.observe(this) { HistoryFrag.navTo(nav) }

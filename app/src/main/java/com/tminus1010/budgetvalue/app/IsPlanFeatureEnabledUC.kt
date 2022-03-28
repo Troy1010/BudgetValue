@@ -19,6 +19,7 @@ import io.reactivex.rxjava3.core.Observer
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx3.asFlow
 import kotlinx.coroutines.rx3.asObservable
 import java.time.LocalDate
 import javax.inject.Inject
@@ -68,7 +69,8 @@ class IsPlanFeatureEnabledUC @Inject constructor(
         isPlanFeatureEnabled
             .pairwise()
             .filter { it.second }
-            .map { Unit }!!
+            .map { Unit }
+            .asFlow()
 
     companion object {
         @VisibleForTesting
