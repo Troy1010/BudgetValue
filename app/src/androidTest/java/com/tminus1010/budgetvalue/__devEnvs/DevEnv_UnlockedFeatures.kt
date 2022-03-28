@@ -7,7 +7,7 @@ import com.tminus1010.budgetvalue.MockImportSelectionActivity
 import com.tminus1010.budgetvalue.ui.host.HostActivity
 import com.tminus1010.budgetvalue.ui.host.LaunchChooseFile
 import com.tminus1010.budgetvalue.app.IsPlanFeatureEnabledUC
-import com.tminus1010.budgetvalue._unrestructured.reconcile.data.IsReconciliationFeatureEnabled
+import com.tminus1010.budgetvalue.app.IsReconciliationFeatureEnabled
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

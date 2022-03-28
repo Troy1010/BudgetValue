@@ -10,7 +10,7 @@ fun <T : Any> Flow<T?>.asObservable2(): Observable<T> {
     return filterNotNull().asObservable()
 }
 
-fun <T> Flow<T>.takeUntilSignal(signal: Flow<Unit>): Flow<T> = flow {
+fun <T> Flow<T>.takeUntilSignal(signal: Flow<Any>): Flow<T> = flow {
     try {
         coroutineScope {
             launch {
