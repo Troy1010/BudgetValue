@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._unrestructured.reconcile.app.interactor.ActiveReconciliationInteractor
 import com.tminus1010.budgetvalue._unrestructured.reconcile.app.interactor.BudgetedWithActiveReconciliationInteractor
 import com.tminus1010.budgetvalue._unrestructured.reconcile.app.interactor.ReconciliationsToDoInteractor
-import com.tminus1010.budgetvalue._unrestructured.reconcile.app.interactor.SaveActiveReconciliationInteractor
+import com.tminus1010.budgetvalue.app.SaveActiveReconciliation
 import com.tminus1010.budgetvalue._unrestructured.reconcile.domain.ReconciliationToDo
 import com.tminus1010.budgetvalue.all_layers.extensions.isZero
 import com.tminus1010.budgetvalue.all_layers.extensions.value
@@ -13,13 +13,15 @@ import com.tminus1010.budgetvalue.framework.android.ShowToast
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ReconciliationHostVM @Inject constructor(
     reconciliationsToDoInteractor: ReconciliationsToDoInteractor,
-    private val saveActiveReconciliationInteractor: SaveActiveReconciliationInteractor,
+    private val saveActiveReconciliation: SaveActiveReconciliation,
     private val budgetedWithActiveReconciliationInteractor: BudgetedWithActiveReconciliationInteractor,
     private val activeReconciliationInteractor: ActiveReconciliationInteractor,
     private val showToast: ShowToast,
@@ -35,7 +37,7 @@ class ReconciliationHostVM @Inject constructor(
         )
             showToast(NativeText.Simple("Invalid input"))
         else
-            saveActiveReconciliationInteractor.saveActiveReconciliation.subscribe()
+            GlobalScope.launch { saveActiveReconciliation() }
     }
 
     // # State
