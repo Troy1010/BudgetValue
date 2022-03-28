@@ -2,6 +2,7 @@ package com.tminus1010.budgetvalue.ui.futures
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
@@ -30,6 +31,7 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
         super.onViewCreated(view, savedInstanceState)
         // # Setup
         viewModel.showAlertDialog.onNext(showAlertDialog)
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) { viewModel.userTryNavUp() }
         // # Events
         viewModel.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         viewModel.navToCategorySelection.observe(viewLifecycleOwner) { ChooseCategoriesFrag.navTo(nav) }

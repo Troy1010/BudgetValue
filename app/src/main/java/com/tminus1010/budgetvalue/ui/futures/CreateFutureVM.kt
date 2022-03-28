@@ -128,6 +128,11 @@ class CreateFutureVM @Inject constructor(
         navToSetSearchTexts.onNext()
     }
 
+    fun userTryNavUp() {
+        runBlocking { selectedCategoriesSharedVM.clearSelection() }
+        navUp.onNext()
+    }
+
     // # Internal
     private val categoryAmountFormulas =
         combine(userCategoryAmountFormulas.flow, selectedCategoriesSharedVM.selectedCategories)
