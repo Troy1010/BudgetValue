@@ -38,8 +38,8 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
         viewModel.navToChooseTransaction.observe(viewLifecycleOwner) { ChooseTransactionFrag.navTo(nav) }
         viewModel.navToSetSearchTexts.observe(viewLifecycleOwner) { SetSearchTextsFrag.navTo(nav) }
         // # State
-        vb.tmTableViewOtherInput.bind(viewModel.otherInput) { it.bind(this) }
-        vb.tmTableViewCategoryAmounts.bind(viewModel.categoryAmounts) { it.bind(this) }
+        vb.tmTableViewOtherInput.bind(viewModel.otherInputTableView) { it.bind(this) }
+        vb.tmTableViewCategoryAmounts.bind(viewModel.categoryAmountsTableView) { it.bind(this) }
         vb.buttonsview.bind(viewModel.buttons) { buttons = it }
     }
 

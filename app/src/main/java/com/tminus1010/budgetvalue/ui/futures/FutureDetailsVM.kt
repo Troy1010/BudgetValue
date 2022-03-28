@@ -200,7 +200,7 @@ class FutureDetailsVM @Inject constructor(
     val navToSetSearchTexts = MutableSharedFlow<Unit>()
 
     // # State
-    val otherInput =
+    val otherInputTableView =
         searchType.map { searchType ->
             TableViewVMItem(
                 recipeGrid = listOfNotNull(
@@ -246,7 +246,7 @@ class FutureDetailsVM @Inject constructor(
                 shouldFitItemWidthsInsideTable = true,
             )
         }
-    val categoryAmounts =
+    val categoryAmountsTableView =
         combine(categoryAmountFormulas.flatMapSourceHashMap { it.itemFlowMap }, fillCategory)
         { categoryAmountFormulaItemFlows, fillCategory ->
             TableViewVMItem(
