@@ -194,7 +194,7 @@ class CategorizeVM @Inject constructor(
                                         onClick = { chooseCategoriesSharedVM.selectCategories(category) },
                                     ),
                                 MenuVMItem(
-                                    title = "Category Settings",
+                                    title = "Edit",
                                     onClick = { userTryNavToCategorySettings(category) }
                                 )
                             )
