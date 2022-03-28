@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.databinding.FragSetStringBinding
@@ -17,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SetStringFrag : Fragment(R.layout.frag_set_string) {
     private val vb by viewBinding(FragSetStringBinding::bind)
-    private val viewModel: SetStringVM by activityViewModels()
+    private val viewModel by viewModels<SetStringVM>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Setup
