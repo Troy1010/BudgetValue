@@ -62,7 +62,7 @@ class CreateFutureVM @Inject constructor(
                     try {
                         val futureToPush =
                             Future(
-                                name = it?.toString() ?: "",
+                                name = it.toString(),
                                 categoryAmountFormulas = categoryAmountFormulas.value,
                                 fillCategory = fillCategory.value!!,
                                 terminationStrategy = if (userSetIsOnlyOnce.value) TerminationStrategy.ONCE else TerminationStrategy.PERMANENT,
