@@ -21,7 +21,7 @@ class SaveActiveReconciliationInteractor @Inject constructor(
 ) {
     val saveActiveReconciliation =
         Single.zip(
-            activeReconciliationDefaultAmountInteractor.activeReconciliationDefaultAmount.toSingle(),
+            activeReconciliationDefaultAmountInteractor.activeReconciliationDefaultAmount.asObservable2().toSingle(),
             activeReconciliationRepo.activeReconciliationCAs.asObservable2().toSingle(),
         )
         { activeReconciliationDefaultAmountUC, activeReconciliationCAs ->

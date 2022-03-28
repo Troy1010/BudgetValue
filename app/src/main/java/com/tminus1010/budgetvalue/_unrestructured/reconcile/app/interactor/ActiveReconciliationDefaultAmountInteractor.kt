@@ -15,7 +15,11 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import com.tminus1010.tmcommonkotlin.rx.nonLazy
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import io.reactivex.rxjava3.core.Observable
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,15 +34,15 @@ class ActiveReconciliationDefaultAmountInteractor @Inject constructor(
     accountsRepo: AccountsRepo,
 ) {
     val activeReconciliationDefaultAmount =
-        Observable.combineLatest(
-            plansRepo.plans.asObservable2(),
-            reconciliationsRepo.reconciliations.asObservable2(),
-            transactionsInteractor.transactionBlocks2.asObservable2(),
-            accountsRepo.accountsAggregate.map { it.total }.asObservable2(),
-            activeReconciliationRepo.activeReconciliationCAs.asObservable2(),
+        combine(
+            plansRepo.plans,
+            reconciliationsRepo.reconciliations,
+            transactionsInteractor.transactionBlocks2,
+            accountsRepo.accountsAggregate.map { it.total },
+            activeReconciliationRepo.activeReconciliationCAs,
             ::calcActiveReconciliationDefaultAmount
         )
-            .replayNonError(1).nonLazy()
+            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 
     /**
      * For clarification, take a look at the ManualCalculationsForTests excel sheet.

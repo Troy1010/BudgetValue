@@ -9,6 +9,7 @@ import com.tminus1010.budgetvalue.Given
 import com.tminus1010.budgetvalue.__core_testing.app
 import com.tminus1010.budgetvalue.all_layers.dependency_injection.EnvironmentModule
 import com.tminus1010.budgetvalue.all_layers.dependency_injection.IEnvironmentModule
+import com.tminus1010.budgetvalue.all_layers.extensions.value
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.domain.DatePeriodService
 import com.tminus1010.budgetvalue.data.CategoriesRepo
