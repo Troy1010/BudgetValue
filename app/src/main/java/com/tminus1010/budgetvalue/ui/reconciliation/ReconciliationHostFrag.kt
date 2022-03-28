@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._unrestructured.reconcile.view
+package com.tminus1010.budgetvalue.ui.reconciliation
 
 import android.os.Bundle
 import android.view.View
@@ -7,12 +7,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._unrestructured.reconcile.domain.ReconciliationToDo
-import com.tminus1010.budgetvalue._unrestructured.reconcile.presentation.ReconciliationHostVM
 import com.tminus1010.budgetvalue.databinding.FragReconciliationHostBinding
 import com.tminus1010.budgetvalue.framework.android.viewBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
-import com.tminus1010.tmcommonkotlin.rx.extensions.observe
-import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -1,11 +1,11 @@
-package com.tminus1010.budgetvalue._unrestructured.reconcile.view
+package com.tminus1010.budgetvalue.ui.reconciliation
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._unrestructured.reconcile.presentation.AccountsReconciliationVM
+import com.tminus1010.budgetvalue.ui.reconciliation.AccountsReconciliationVM
 import com.tminus1010.budgetvalue.databinding.ItemTmTableViewBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import dagger.hilt.android.AndroidEntryPoint

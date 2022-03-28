@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._unrestructured.reconcile.presentation
+package com.tminus1010.budgetvalue.ui.reconciliation
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.R
