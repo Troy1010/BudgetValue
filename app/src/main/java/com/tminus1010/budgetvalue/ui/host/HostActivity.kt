@@ -25,7 +25,7 @@ import com.tminus1010.budgetvalue.app.IsPlanFeatureEnabledUC
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.ui.all_features.ThrobberSharedVM
 import com.tminus1010.budgetvalue.ui.futures.FuturesFrag
-import com.tminus1010.budgetvalue.ui.importZ.ImportVM
+import com.tminus1010.budgetvalue.ui.importZ.ImportSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
@@ -39,8 +39,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class HostActivity : AppCompatActivity() {
     private val vb by lazy { ActivityHostBinding.inflate(layoutInflater) }
-    private val hostVM by viewModels<HostVM>()
-    private val importVM by viewModels<ImportVM>()
+    private val viewModel by viewModels<HostVM>()
 
     @Inject
     lateinit var appInitInteractor: AppInitInteractor
@@ -63,13 +62,16 @@ class HostActivity : AppCompatActivity() {
     @Inject
     lateinit var throbberSharedVM: ThrobberSharedVM
 
+    @Inject
+    lateinit var importSharedVM: ImportSharedVM
+
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.frag_nav_host) as HostFrag }
     private val nav by lazy { findNavController(R.id.frag_nav_host) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(vb.root)
         // # Mediation
-        hostVM.showAlertDialog.onNext(showAlertDialog)
+        viewModel.showAlertDialog.onNext(showAlertDialog)
         // # Initialize app once per install
         GlobalScope.launch { appInitInteractor.tryInitializeApp() }
         // # Bind bottom menu to navigation.
@@ -78,14 +80,14 @@ class HostActivity : AppCompatActivity() {
         //
         vb.bottomNavigation.selectedItemId = R.id.reviewFrag
         // # Events
-        importVM.navToSelectFile.observe(this) { launchChooseFile(this) }
-        isPlanFeatureEnabledUC.onChangeToTrue.observe(this) { activePlanInteractor.setActivePlanFromHistory(); showAlertDialog(hostVM.levelUpPlan) }
-        isReconciliationFeatureEnabled.onChangeToTrue.observe(this) { showAlertDialog(hostVM.levelUpReconciliation) }
-        hostVM.navToFutures.observe(this) { FuturesFrag.navTo(nav) }
-        hostVM.navToTransactions.observe(this) { TransactionListFrag.navTo(nav) }
-        hostVM.navToHistory.observe(this) { HistoryFrag.navTo(nav) }
-        hostVM.navToAccessibility.observe(this) { startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }
-        hostVM.unCheckAllMenuItems.observe(this) { vb.bottomNavigation.menu.unCheckAllMenuItems() } // TODO: Not working
+        importSharedVM.navToSelectFile.observe(this) { launchChooseFile(this) }
+        isPlanFeatureEnabledUC.onChangeToTrue.observe(this) { activePlanInteractor.setActivePlanFromHistory(); showAlertDialog(viewModel.levelUpPlan) }
+        isReconciliationFeatureEnabled.onChangeToTrue.observe(this) { showAlertDialog(viewModel.levelUpReconciliation) }
+        viewModel.navToFutures.observe(this) { FuturesFrag.navTo(nav) }
+        viewModel.navToTransactions.observe(this) { TransactionListFrag.navTo(nav) }
+        viewModel.navToHistory.observe(this) { HistoryFrag.navTo(nav) }
+        viewModel.navToAccessibility.observe(this) { startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }
+        viewModel.unCheckAllMenuItems.observe(this) { vb.bottomNavigation.menu.unCheckAllMenuItems() } // TODO: Not working
         // # State
         isPlanFeatureEnabledUC.observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }
         isReconciliationFeatureEnabled.observe(this) { vb.bottomNavigation.menu.findItem(R.id.reconciliationHostFrag).isVisible = it }
@@ -96,11 +98,11 @@ class HostActivity : AppCompatActivity() {
         super.onStart()
         nav.addOnDestinationChangedListener { _, navDestination, _ -> Log.d("budgetvalue.Nav", "${navDestination.label}") }
         // # Setup VM
-        hostVM.nav.onNext(nav)
+        viewModel.nav.onNext(nav)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        hostVM.topMenuVMItems.bind(menu)
+        viewModel.topMenuVMItems.bind(menu)
         return true
     }
 
