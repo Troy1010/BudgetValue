@@ -16,6 +16,7 @@ import com.tminus1010.budgetvalue.ui.all_features.model.*
 import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesSharedVM
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -201,73 +202,72 @@ class FutureDetailsVM @Inject constructor(
     // # State
     val otherInput =
         searchType.map { searchType ->
-            listOfNotNull(
-                listOf(
-                    TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Name"),
-                    EditTextVMItem(text = name.value!!, onDone = { userSetName(it) }),
-                ),
-                listOf(
-                    TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Search Type"),
-                    SpinnerVMItem(SearchType.values(), searchType, onNewItem = { userSetSearchType(it) }),
-                ),
-                listOf(
-                    TextPresentationModel(
-                        style = TextPresentationModel.Style.TWO,
-                        text2 = this.searchType
-                            .map {
-                                when (it) {
-                                    SearchType.NONE,
-                                    SearchType.DESCRIPTION,
-                                    -> "Total Guess"
-                                    SearchType.TOTAL,
-                                    SearchType.DESCRIPTION_AND_TOTAL,
-                                    -> "Exact Total"
-                                }
-                            }
-                    ),
-                    MoneyEditVMItem(text1 = totalGuess.value.toString(), onDone = { userSetTotalGuess(it) }),
-                ),
-                if (listOf(SearchType.DESCRIPTION_AND_TOTAL, SearchType.DESCRIPTION).any { it == searchType })
+            TableViewVMItem(
+                recipeGrid = listOfNotNull(
                     listOf(
-                        TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Search Texts"),
-                        ButtonVMItem(
-                            title = "View Search Texts",
-                            onClick = { userTryNavToSetSearchTexts() },
+                        TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Name"),
+                        EditTextVMItem(text = name.value!!, onDone = { userSetName(it) }),
+                    ),
+                    listOf(
+                        TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Search Type"),
+                        SpinnerVMItem(SearchType.values(), searchType, onNewItem = { userSetSearchType(it) }),
+                    ),
+                    listOf(
+                        TextPresentationModel(
+                            style = TextPresentationModel.Style.TWO,
+                            text2 = this.searchType
+                                .map {
+                                    when (it) {
+                                        SearchType.NONE,
+                                        SearchType.DESCRIPTION,
+                                        -> "Total Guess"
+                                        SearchType.TOTAL,
+                                        SearchType.DESCRIPTION_AND_TOTAL,
+                                        -> "Exact Total"
+                                    }
+                                }
                         ),
-                    )
-                else null,
-                listOf(
-                    TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Is Only Once"),
-                    CheckboxVMItem(isOnlyOnce.value, onCheckChanged = ::userSetIsOnlyOnce),
+                        MoneyEditVMItem(text1 = totalGuess.value.toString(), onDone = { userSetTotalGuess(it) }),
+                    ),
+                    if (listOf(SearchType.DESCRIPTION_AND_TOTAL, SearchType.DESCRIPTION).any { it == searchType })
+                        listOf(
+                            TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Search Texts"),
+                            ButtonVMItem(
+                                title = "View Search Texts",
+                                onClick = { userTryNavToSetSearchTexts() },
+                            ),
+                        )
+                    else null,
+                    listOf(
+                        TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Is Only Once"),
+                        CheckboxVMItem(isOnlyOnce.value, onCheckChanged = ::userSetIsOnlyOnce),
+                    ),
                 ),
+                shouldFitItemWidthsInsideTable = true,
             )
         }
-    val recipeGrid =
+    val categoryAmounts =
         combine(categoryAmountFormulas.flatMapSourceHashMap { it.itemFlowMap }, fillCategory)
         { categoryAmountFormulaItemFlows, fillCategory ->
-            categoryAmountFormulaItemFlows.map { (category, amountFormula) ->
-                CategoryAmountFormulaPresentationModel(category, fillCategory, if (category == fillCategory) fillAmountFormula else amountFormula, { userSetFillCategory(it.name) }, { userSetCategoryAmountFormula(category, it) }).toHasToViewItemRecipes()
-            }
-        }
-            .map {
-                listOf(
-                    listOf(
+            TableViewVMItem(
+                recipeGrid = listOf(
+                    listOf<IHasToViewItemRecipe>(
                         TextPresentationModel(TextPresentationModel.Style.HEADER, "Category"),
                         TextPresentationModel(TextPresentationModel.Style.HEADER, "Amount"),
                         TextPresentationModel(TextPresentationModel.Style.HEADER, "Fill"),
                     ),
-                    *it.toTypedArray(),
-                )
-            }
-    val dividerMap =
-        categoryAmountFormulas
-            .map {
-                it.map { it.key }.withIndex()
+                    *categoryAmountFormulaItemFlows.map { (category, amountFormula) ->
+                        CategoryAmountFormulaPresentationModel(category, fillCategory, if (category == fillCategory) fillAmountFormula else amountFormula, { userSetFillCategory(it.name) }, { userSetCategoryAmountFormula(category, it) }).toHasToViewItemRecipes()
+                    }.toTypedArray(),
+                ),
+                dividerMap = categoryAmountFormulaItemFlows.keys.withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
                     .associate { it.index to it.value.type.name }
                     .mapKeys { it.key + 1 } // header row
-                    .mapValues { DividerVMItem(it.value) }
-            }
+                    .mapValues { DividerVMItem(it.value) },
+                shouldFitItemWidthsInsideTable = true,
+            )
+        }
     val buttons =
         flowOf(
             listOfNotNull(

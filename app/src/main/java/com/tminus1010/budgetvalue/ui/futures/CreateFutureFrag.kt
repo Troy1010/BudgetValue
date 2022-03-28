@@ -19,7 +19,6 @@ import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.combine
 
 
 @AndroidEntryPoint
@@ -37,19 +36,8 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
         viewModel.navToChooseTransaction.observe(viewLifecycleOwner) { ChooseTransactionFrag.navTo(nav) }
         viewModel.navToSetSearchTexts.observe(viewLifecycleOwner) { SetSearchTextsFrag.navTo(nav) }
         // # State
-        vb.tmTableViewOtherInput.bind(viewModel.otherInput) {
-            initialize(
-                recipeGrid = it.map { it.map { it.toViewItemRecipe(requireContext()) } },
-                shouldFitItemWidthsInsideTable = true,
-            )
-        }
-        vb.tmTableViewCategoryAmounts.bind(combine(viewModel.recipeGrid, viewModel.dividerMap) { a, b -> Pair(a, b) }) { (recipeGrid, dividerMap) ->
-            initialize(
-                recipeGrid = recipeGrid.map { it.map { it.toViewItemRecipe(requireContext()) } },
-                dividerMap = dividerMap.mapValues { it.value.toViewItemRecipe(requireContext()) },
-                shouldFitItemWidthsInsideTable = true,
-            )
-        }
+        vb.tmTableViewOtherInput.bind(viewModel.otherInput) { it.bind(this) }
+        vb.tmTableViewCategoryAmounts.bind(viewModel.categoryAmounts) { it.bind(this) }
         vb.buttonsview.bind(viewModel.buttons) { buttons = it }
     }
 
