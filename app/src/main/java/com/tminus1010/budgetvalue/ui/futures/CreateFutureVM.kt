@@ -58,7 +58,7 @@ class CreateFutureVM @Inject constructor(
                             category.name
                     }
                     .joinToString(", "),
-                onYes = {
+                onSubmitText = {
                     try {
                         val futureToPush =
                             Future(
