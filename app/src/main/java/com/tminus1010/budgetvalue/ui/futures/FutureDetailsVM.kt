@@ -23,7 +23,7 @@ import java.math.BigDecimal
 import javax.inject.Inject
 
 @HiltViewModel
-class ReplayOrFutureDetailsVM @Inject constructor(
+class FutureDetailsVM @Inject constructor(
     private val categoriesInteractor: CategoriesInteractor,
     private val selectedCategoriesSharedVM: ChooseCategoriesSharedVM,
     private val futuresRepo: FuturesRepo,

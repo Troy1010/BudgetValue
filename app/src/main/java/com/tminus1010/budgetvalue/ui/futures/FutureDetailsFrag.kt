@@ -27,15 +27,15 @@ import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ReplayOrFutureDetailsFrag : Fragment(R.layout.frag_create_future) {
+class FutureDetailsFrag : Fragment(R.layout.frag_create_future) {
     private val vb by viewBinding(FragCreateFutureBinding::bind)
-    private val viewModel by viewModels<ReplayOrFutureDetailsVM>()
+    private val viewModel by viewModels<FutureDetailsVM>()
 
     @Inject
     lateinit var moshiWithCategoriesProvider: MoshiWithCategoriesProvider
 
     val future: Future
-        get() = moshiWithCategoriesProvider.moshi.fromJson<Future>(requireArguments().getString(KEY1)) ?: error("Oh no!")
+        get() = moshiWithCategoriesProvider.moshi.fromJson<Future>(requireArguments().getString(KEY1)) ?: error("Oh no!") // TODO: Could use a SharedVM instead..?
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -68,7 +68,7 @@ class ReplayOrFutureDetailsFrag : Fragment(R.layout.frag_create_future) {
         fun navTo(nav: NavController, moshiWithCategoriesProvider: MoshiWithCategoriesProvider, future: Future, chooseCategoriesSharedVM: ChooseCategoriesSharedVM, setSearchTextsSharedVM: SetSearchTextsSharedVM) {
             setSearchTextsSharedVM.searchTexts.adjustTo((future.onImportMatcher as? TransactionMatcher.Multi)?.transactionMatchers?.filterIsInstance<TransactionMatcher.SearchText>()?.map { it.searchText } ?: listOfNotNull((future.onImportMatcher as? TransactionMatcher.SearchText)?.searchText))
             runBlocking { chooseCategoriesSharedVM.clearSelection(); chooseCategoriesSharedVM.selectCategories(*future.categoryAmountFormulas.keys.toTypedArray()) }
-            nav.navigate(R.id.replayOrFutureDetailsFrag, Bundle().apply {
+            nav.navigate(R.id.futureDetailsFrag, Bundle().apply {
                 putString(KEY1, moshiWithCategoriesProvider.moshi.toJson(future))
             })
         }

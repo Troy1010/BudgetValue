@@ -19,7 +19,7 @@ import com.tminus1010.budgetvalue.framework.view.LifecycleRVAdapter2
 import com.tminus1010.budgetvalue.framework.view.viewBinding
 import com.tminus1010.budgetvalue.ui.category_settings.CategorySettingsFrag
 import com.tminus1010.budgetvalue.ui.futures.CreateFutureFrag
-import com.tminus1010.budgetvalue.ui.futures.ReplayOrFutureDetailsFrag
+import com.tminus1010.budgetvalue.ui.futures.FutureDetailsFrag
 import com.tminus1010.budgetvalue.ui.set_string.SetStringFrag
 import com.tminus1010.budgetvalue.ui.set_string.SetStringSharedVM
 import com.tminus1010.budgetvalue.ui.errors.Errors
@@ -67,7 +67,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         viewModel.navToCreateFuture.observe(viewLifecycleOwner) { CreateFutureFrag.navTo(nav, setSearchTextsSharedVM, transactionsInteractor) }
         viewModel.navToNewCategory.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, null, true) }
         viewModel.navToCategorySettings.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, it.name, false) }
-        viewModel.navToReplayOrFutureDetails.observe(viewLifecycleOwner) { ReplayOrFutureDetailsFrag.navTo(nav, moshiWithCategoriesProvider, it, chooseCategoriesSharedVM, setSearchTextsSharedVM) }
+        viewModel.navToReplayOrFutureDetails.observe(viewLifecycleOwner) { FutureDetailsFrag.navTo(nav, moshiWithCategoriesProvider, it, chooseCategoriesSharedVM, setSearchTextsSharedVM) }
         viewModel.navToReceiptCategorization.observe(viewLifecycleOwner) { ReceiptCategorizationHostFrag.navTo(nav, it, categoryAmountsConverter) }
         viewModel.navToEditStringForAddTransactionToFutureWithEdit.observe(viewLifecycleOwner) { SetStringFrag.navTo(nav, it, setStringSharedVM) }
         // # State

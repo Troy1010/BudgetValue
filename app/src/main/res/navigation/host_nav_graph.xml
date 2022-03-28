@@ -87,11 +87,11 @@
         tools:layout="@layout/frag_futures">
         <action
             android:id="@+id/action_futuresFrag_to_futureDetailsFrag"
-            app:destination="@id/replayOrFutureDetailsFrag" />
+            app:destination="@id/futureDetailsFrag" />
     </fragment>
     <fragment
-        android:id="@+id/replayOrFutureDetailsFrag"
-        android:name="com.tminus1010.budgetvalue.ui.futures.ReplayOrFutureDetailsFrag"
+        android:id="@+id/futureDetailsFrag"
+        android:name="com.tminus1010.budgetvalue.ui.futures.FutureDetailsFrag"
         android:label="ReplayOrFutureDetailsFrag"
         tools:layout="@layout/frag_create_future" />
     <fragment
