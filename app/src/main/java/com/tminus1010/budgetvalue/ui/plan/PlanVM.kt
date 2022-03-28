@@ -43,17 +43,14 @@ class PlanVM @Inject constructor(
 
     // # Internal
     val categoryAmounts =
-        combine(
-            activePlanRepo.activePlan.map { it.categoryAmounts },
-            categoriesInteractor.userCategories,
-        )
+        combine(activePlanRepo.activePlan.map { it.categoryAmounts }, categoriesInteractor.userCategories)
         { categoryAmounts, userCategories ->
             userCategories.associateWith { BigDecimal.ZERO }
                 .plus(categoryAmounts)
         }
 
     // # State
-    val recipeGrid =
+    val planRecipeGrid =
         categoryAmounts.flatMapSourceHashMap { it.itemFlowMap }
             .map { categoryAmountItemObservables ->
                 listOf(

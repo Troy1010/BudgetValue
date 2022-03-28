@@ -18,7 +18,7 @@ class PlanFrag : Fragment(R.layout.frag_plan) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # State
-        vb.tmTableView.bind(combine(viewModel.recipeGrid, viewModel.dividerMap) { a, b -> Pair(a, b) }) { (recipeGrid, dividerMap) ->
+        vb.tmTableView.bind(combine(viewModel.planRecipeGrid, viewModel.dividerMap) { a, b -> Pair(a, b) }) { (recipeGrid, dividerMap) ->
             initialize(
                 recipeGrid = recipeGrid.map { it.map { it.toViewItemRecipe(requireContext()) } },
                 dividerMap = dividerMap.mapValues { it.value.toViewItemRecipe(requireContext()) },
