@@ -40,7 +40,7 @@ class TransactionsInteractor @Inject constructor(
             .map { transaction ->
                 val matchedFuture =
                     futuresRepo.futures.value!!
-                        .find { it.onImportMatcher.isMatch(transaction) }
+                        .find { it.onImportMatcher?.isMatch(transaction) ?: false }
                 matchedFuture?.categorize(transaction)
                     ?.also { if (matchedFuture.terminationStrategy == TerminationStrategy.ONCE) futuresRepo.setTerminationDate(matchedFuture, LocalDate.now()) }
                     ?.also { transactionsCategorizedCounter++ }

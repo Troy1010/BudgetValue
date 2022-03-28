@@ -52,15 +52,16 @@ class ReplayOrFutureDetailsVM @Inject constructor(
                     isAvailableForManual = true,
                     onImportMatcher = when (searchType.value) {
                         SearchType.DESCRIPTION -> TransactionMatcher.Multi(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) })
-                        SearchType.DESCRIPTION_AND_TOTAL -> TODO()
+                        SearchType.DESCRIPTION_AND_TOTAL -> TransactionMatcher.Multi(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) }.plus(TransactionMatcher.ByValue(totalGuess.value)))
                         SearchType.TOTAL -> TransactionMatcher.ByValue(totalGuess.value)
+                        SearchType.NONE -> null
                     },
                     totalGuess = totalGuess.value,
                 )
             runBlocking {
                 futuresRepo.push(futureToPush)
                 if (futureToPush.terminationStrategy == TerminationStrategy.PERMANENT)
-                    categorizeMatchingUncategorizedTransactions(futureToPush.onImportMatcher::isMatch, futureToPush::categorize)
+                    categorizeMatchingUncategorizedTransactions({ futureToPush.onImportMatcher?.isMatch(it) ?: false }, futureToPush::categorize)
                         .also { toaster.toast("$it transactions categorized") }
                 if (futureToPush.name != future.value!!.name) futuresRepo.delete(future.value!!)
                 userTryNavUp()
@@ -140,15 +141,17 @@ class ReplayOrFutureDetailsVM @Inject constructor(
         future
             .map {
                 when (it.onImportMatcher) {
-                    is TransactionMatcher.SearchText ->
+                    is TransactionMatcher.SearchText,
+                    -> SearchType.DESCRIPTION
+                    is TransactionMatcher.ByValue,
+                    -> SearchType.TOTAL
+                    is TransactionMatcher.Multi,
+                    -> if (it.onImportMatcher.transactionMatchers.all { it is TransactionMatcher.SearchText })
                         SearchType.DESCRIPTION
-                    is TransactionMatcher.ByValue ->
-                        SearchType.TOTAL
-                    is TransactionMatcher.Multi ->
-                        if (it.onImportMatcher.transactionMatchers.all { it is TransactionMatcher.SearchText })
-                            SearchType.DESCRIPTION
-                        else
-                            SearchType.DESCRIPTION_AND_TOTAL
+                    else
+                        SearchType.DESCRIPTION_AND_TOTAL
+                    null,
+                    -> SearchType.NONE
                 }
             }
             .flatMapLatest { userSetSearchType.onStart { emit(it) } }
@@ -208,7 +211,9 @@ class ReplayOrFutureDetailsVM @Inject constructor(
                         text2 = this.searchType
                             .map {
                                 when (it) {
-                                    SearchType.DESCRIPTION -> "Total Guess"
+                                    SearchType.NONE,
+                                    SearchType.DESCRIPTION,
+                                    -> "Total Guess"
                                     SearchType.TOTAL,
                                     SearchType.DESCRIPTION_AND_TOTAL,
                                     -> "Exact Total"

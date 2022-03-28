@@ -27,7 +27,7 @@ sealed class TransactionMatcher {
     }
 
     data class Multi(val transactionMatchers: List<TransactionMatcher>) : TransactionMatcher() {
-        constructor(vararg transactionMatchers: TransactionMatcher) : this(transactionMatchers.toList())
+        constructor(vararg transactionMatchers: TransactionMatcher?) : this(transactionMatchers.toList().filterNotNull())
 
         override fun isMatch(transaction: Transaction): Boolean {
             return transactionMatchers.any { it.isMatch(transaction) }

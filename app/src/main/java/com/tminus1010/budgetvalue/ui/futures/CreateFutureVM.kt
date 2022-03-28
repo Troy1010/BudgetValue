@@ -72,13 +72,14 @@ class CreateFutureVM @Inject constructor(
                                     SearchType.DESCRIPTION -> TransactionMatcher.Multi(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) })
                                     SearchType.DESCRIPTION_AND_TOTAL -> TransactionMatcher.Multi(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) }.plus(TransactionMatcher.ByValue(totalGuess.value)))
                                     SearchType.TOTAL -> TransactionMatcher.ByValue(totalGuess.value)
+                                    SearchType.NONE -> null
                                 },
                                 totalGuess = totalGuess.value,
                             )
                         runBlocking {
                             futuresRepo.push(futureToPush)
                             if (futureToPush.terminationStrategy == TerminationStrategy.PERMANENT)
-                                categorizeMatchingUncategorizedTransactions(futureToPush.onImportMatcher::isMatch, futureToPush::categorize)
+                                categorizeMatchingUncategorizedTransactions({ futureToPush.onImportMatcher?.isMatch(it) ?: false }, futureToPush::categorize)
                                     .also { toaster.toast("$it transactions categorized") }
                             selectedCategoriesSharedVM.clearSelection()
                             navUp.emit(Unit)
@@ -167,7 +168,9 @@ class CreateFutureVM @Inject constructor(
                         text2 = this.searchType
                             .map {
                                 when (it) {
-                                    SearchType.DESCRIPTION -> "Total Guess"
+                                    SearchType.NONE,
+                                    SearchType.DESCRIPTION,
+                                    -> "Total Guess"
                                     SearchType.TOTAL,
                                     SearchType.DESCRIPTION_AND_TOTAL,
                                     -> "Exact Total"

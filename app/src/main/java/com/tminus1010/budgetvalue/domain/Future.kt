@@ -15,7 +15,7 @@ data class Future(
     val terminationStrategy: TerminationStrategy,
     val terminationDate: LocalDate?,
     val isAvailableForManual: Boolean,
-    val onImportMatcher: TransactionMatcher,
+    val onImportMatcher: TransactionMatcher?,
     val totalGuess: BigDecimal,
 ) {
     fun categorize(transaction: Transaction): Transaction =

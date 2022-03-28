@@ -57,6 +57,7 @@ class FuturesVM @Inject constructor(
                                     is TransactionMatcher.SearchText -> matcher.searchText.take(10)
                                     is TransactionMatcher.ByValue -> matcher.searchTotal.toString()
                                     is TransactionMatcher.Multi -> "Multiple"
+                                    null -> "None"
                                 },
                                 menuVMItems = menuVMItems,
                             ),

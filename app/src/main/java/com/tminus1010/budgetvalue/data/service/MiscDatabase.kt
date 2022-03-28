@@ -11,7 +11,7 @@ import com.tminus1010.budgetvalue.domain.plan.Plan
 
 @TypeConverters(RoomTypeConverter::class, RoomWithCategoriesTypeConverter::class)
 @Database(
-    version = 46,
+    version = 47,
     entities = [Future::class, TransactionDTO::class, Account::class, ReconciliationDTO::class, Plan::class],
 //    autoMigrations = [AutoMigration(from = 41, to = 42)]
 )
