@@ -1,7 +1,6 @@
 package com.tminus1010.budgetvalue._unrestructured.reconcile.app.interactor
 
 import com.tminus1010.budgetvalue._unrestructured.reconcile.domain.ReconciliationToDo
-import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.all_layers.extensions.isZero
 import com.tminus1010.budgetvalue.app.BudgetedInteractor
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
@@ -11,17 +10,12 @@ import com.tminus1010.budgetvalue.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue.domain.plan.Plan
-import com.tminus1010.tmcommonkotlin.rx.extensions.doLogx
-import com.tminus1010.tmcommonkotlin.tuple.Box
-import io.reactivex.rxjava3.core.Observable
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.doLogx
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.rx3.asFlow
 import java.math.BigDecimal
 import java.time.LocalDate
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -35,7 +29,7 @@ class ReconciliationsToDoInteractor @Inject constructor(
     budgetedInteractor: BudgetedInteractor,
 ) {
     private val planReconciliationsToDo =
-        Observable.combineLatest(plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks2.asObservable2(), reconciliationsRepo.reconciliations.asObservable2())
+        combine(plansRepo.plans, transactionsInteractor.transactionBlocks2, reconciliationsRepo.reconciliations)
         { plans, transactionBlocks, reconciliations ->
             transactionBlocks
                 .map { transactionBlock ->
@@ -45,14 +39,14 @@ class ReconciliationsToDoInteractor @Inject constructor(
                         reconciliations.find { it.localDate in transactionBlock.datePeriod!! }
                     )
                 }
-                .logx("aaa")
+                .logx("planReconciliationsToDo 111")
                 .filter { (transactionBlock, plan, reconciliation) ->
                     plan == null
                             && reconciliation == null
                             && transactionBlock.isFullyImported
                             && transactionBlock.isFullyCategorized
                 }
-                .logx("bbb")
+                .logx("planReconciliationsToDo 222")
                 .map {
                     ReconciliationToDo.PlanZ(
                         Plan(
@@ -63,30 +57,28 @@ class ReconciliationsToDoInteractor @Inject constructor(
                             BigDecimal.TEN,
                             CategoryAmounts(),
                         ),
-                        it.first
+                        it.first,
                     )
                 }
         }
-            .throttleLast(50, TimeUnit.MILLISECONDS)
-            .doLogx("www")
+            .sample(50)
+            .doLogx("planReconciliationsToDo 333")
 
     private val accountReconciliationsToDo =
-        Observable.combineLatest(accountsRepo.accountsAggregate.asObservable2(), budgetedInteractor.budgeted)
+        combine(accountsRepo.accountsAggregate, budgetedInteractor.budgeted.asFlow())
         { accountsAggregate, budgeted ->
             val difference = accountsAggregate.total - budgeted.totalAmount
-            Box(if (difference.isZero) null else ReconciliationToDo.Accounts(difference))
+            if (difference.isZero) null else ReconciliationToDo.Accounts(difference)
         }
-            .replay(1).refCount()
 
     val reconciliationsToDo =
-        Observable.combineLatest(planReconciliationsToDo, accountReconciliationsToDo)
-        { planReconciliationsToDo, (accountReconciliationsToDo) ->
+        combine(planReconciliationsToDo, accountReconciliationsToDo)
+        { planReconciliationsToDo, accountReconciliationsToDo ->
             listOf(
                 listOf(accountReconciliationsToDo),
                 planReconciliationsToDo,
             ).flatten().filterNotNull()
         }
-            .asFlow()
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 
     val currentReconciliationToDo =
