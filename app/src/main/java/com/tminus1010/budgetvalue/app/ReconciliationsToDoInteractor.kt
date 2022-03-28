@@ -1,9 +1,7 @@
-package com.tminus1010.budgetvalue._unrestructured.reconcile.app.interactor
+package com.tminus1010.budgetvalue.app
 
-import com.tminus1010.budgetvalue._unrestructured.reconcile.domain.ReconciliationToDo
+import com.tminus1010.budgetvalue.domain.ReconciliationToDo
 import com.tminus1010.budgetvalue.all_layers.extensions.isZero
-import com.tminus1010.budgetvalue.app.BudgetedInteractor
-import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.data.AccountsRepo
 import com.tminus1010.budgetvalue.data.PlansRepo
 import com.tminus1010.budgetvalue.data.ReconciliationsRepo

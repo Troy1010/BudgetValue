@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.app.ActiveReconciliationInteractor
 import com.tminus1010.budgetvalue.app.BudgetedWithActiveReconciliationInteractor
-import com.tminus1010.budgetvalue._unrestructured.reconcile.app.interactor.ReconciliationsToDoInteractor
+import com.tminus1010.budgetvalue.app.ReconciliationsToDoInteractor
 import com.tminus1010.budgetvalue.app.SaveActiveReconciliation
-import com.tminus1010.budgetvalue._unrestructured.reconcile.domain.ReconciliationToDo
+import com.tminus1010.budgetvalue.domain.ReconciliationToDo
 import com.tminus1010.budgetvalue.all_layers.extensions.isZero
 import com.tminus1010.budgetvalue.all_layers.extensions.value
 import com.tminus1010.budgetvalue.framework.android.ShowToast

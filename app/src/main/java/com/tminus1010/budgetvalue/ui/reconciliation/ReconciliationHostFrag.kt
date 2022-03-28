@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._unrestructured.reconcile.domain.ReconciliationToDo
+import com.tminus1010.budgetvalue.domain.ReconciliationToDo
 import com.tminus1010.budgetvalue.databinding.FragReconciliationHostBinding
 import com.tminus1010.budgetvalue.framework.android.viewBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
