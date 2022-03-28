@@ -233,6 +233,10 @@ class CategorizeVM @Inject constructor(
                         onClick = { userReplay(future) },
                         menuVMItems = MenuVMItems(
                             MenuVMItem(
+                                title = "Edit",
+                                onClick = { navToReplayOrFutureDetails.onNext(future) }
+                            ),
+                            MenuVMItem(
                                 title = "Add Description",
                                 onClick = { userAddTransactionToFuture(future) }
                             ),
@@ -247,10 +251,6 @@ class CategorizeVM @Inject constructor(
                             MenuVMItem(
                                 title = "Use Description With Edit",
                                 onClick = { userUseDescriptionWithEdit(future) }
-                            ),
-                            MenuVMItem(
-                                title = "Edit",
-                                onClick = { navToReplayOrFutureDetails.onNext(future) }
                             ),
                         ),
                     )
