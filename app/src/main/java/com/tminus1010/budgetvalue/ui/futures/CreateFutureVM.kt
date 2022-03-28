@@ -163,6 +163,10 @@ class CreateFutureVM @Inject constructor(
         searchType.map { searchType ->
             listOfNotNull(
                 listOf(
+                    TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Search Type"),
+                    SpinnerVMItem(SearchType.values(), searchType, onNewItem = { userSetSearchType(it) }),
+                ),
+                listOf(
                     TextPresentationModel(
                         style = TextPresentationModel.Style.TWO,
                         text2 = this.searchType
@@ -178,10 +182,6 @@ class CreateFutureVM @Inject constructor(
                             }
                     ),
                     MoneyEditVMItem(text1 = totalGuess.value.toString(), onDone = { userSetTotalGuess(it) }),
-                ),
-                listOf(
-                    TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Search Type"),
-                    SpinnerVMItem(SearchType.values(), searchType, onNewItem = { userSetSearchType(it) }),
                 ),
                 if (listOf(SearchType.DESCRIPTION_AND_TOTAL, SearchType.DESCRIPTION).any { it == searchType })
                     listOf(
