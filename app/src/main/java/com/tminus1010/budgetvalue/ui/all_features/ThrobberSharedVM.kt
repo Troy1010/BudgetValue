@@ -2,6 +2,7 @@ package com.tminus1010.budgetvalue.ui.all_features
 
 import io.reactivex.rxjava3.core.Completable
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -36,4 +37,5 @@ class ThrobberSharedVM @Inject constructor() {
             .scan(0) { acc, v -> acc + v }
             .map { it != 0 }
             .distinctUntilChanged()
+            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 }
