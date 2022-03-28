@@ -2,16 +2,16 @@ package com.tminus1010.budgetvalue._unrestructured.reconcile.presentation
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.all_layers.extensions.isZero
-import com.tminus1010.budgetvalue.all_layers.extensions.mapBox
-import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
-import com.tminus1010.budgetvalue.ui.all_features.model.UnformattedString
 import com.tminus1010.budgetvalue._unrestructured.reconcile.app.convenience_service.ReconciliationsToDoUC
 import com.tminus1010.budgetvalue._unrestructured.reconcile.app.interactor.ActiveReconciliationInteractor
 import com.tminus1010.budgetvalue._unrestructured.reconcile.app.interactor.BudgetedWithActiveReconciliationInteractor
 import com.tminus1010.budgetvalue._unrestructured.reconcile.app.interactor.SaveActiveReconciliationInteractor
 import com.tminus1010.budgetvalue._unrestructured.reconcile.domain.ReconciliationToDo
+import com.tminus1010.budgetvalue.all_layers.extensions.isZero
+import com.tminus1010.budgetvalue.all_layers.extensions.mapBox
+import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
+import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.PublishSubject
 import javax.inject.Inject
@@ -26,10 +26,10 @@ class ReconciliationHostVM @Inject constructor(
     // # User Intents
     fun userSave() {
         if (
-            !budgetedWithActiveReconciliationInteractor.categoryAmountsAndTotal.value!!.isAllValid.logx("aaa")
+            !budgetedWithActiveReconciliationInteractor.categoryAmountsAndTotal.value!!.isAllValid.logx("isAllValid")
             || (
-                    activeReconciliationInteractor.categoryAmountsAndTotal.value!!.categoryAmounts.isEmpty().logx("bbb")
-                            && activeReconciliationInteractor.categoryAmountsAndTotal.value!!.defaultAmount.isZero.logx("ccc")
+                    activeReconciliationInteractor.categoryAmountsAndTotal.value!!.categoryAmounts.isEmpty().logx("categoryAmounts.isEmpty()")
+                            && activeReconciliationInteractor.categoryAmountsAndTotal.value!!.defaultAmount.isZero.logx("defaultAmount.isZero")
                     )
         )
             toast.onNext("Invalid input")
@@ -50,14 +50,14 @@ class ReconciliationHostVM @Inject constructor(
                 is ReconciliationToDo.PlanZ -> "Plan Reconciliation"
                 is ReconciliationToDo.Anytime,
                 null -> "Anytime Reconciliation"
-            }.let { UnformattedString(it) }
+            }.let { NativeText.Simple(it) }
         }
     val subTitle =
         reconciliationsToDoUC.map {
             when (it.size) {
-                0 -> UnformattedString(R.string.reconciliations_required_none)
-                1 -> UnformattedString(R.string.reconciliations_required_one)
-                else -> UnformattedString(R.string.reconciliations_required_many, it.size.toString())
+                0 -> NativeText.Resource(R.string.reconciliations_required_none)
+                1 -> NativeText.Resource(R.string.reconciliations_required_one)
+                else -> NativeText.Arguments(R.string.reconciliations_required_many, it.size.toString())
             }
         }
     val buttons =
