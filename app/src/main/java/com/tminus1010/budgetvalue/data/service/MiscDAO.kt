@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.data.service
 
 import androidx.room.*
-import com.tminus1010.budgetvalue._unrestructured.reconcile.data.model.ReconciliationDTO
+import com.tminus1010.budgetvalue._unrestructured.reconcile.domain.Reconciliation
 import com.tminus1010.budgetvalue._unrestructured.transactions.data.TransactionDTO
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.domain.Future
@@ -83,20 +83,14 @@ interface MiscDAO {
 
     // # Reconciliations
 
-    @Query("select * from ReconciliationDTO")
-    fun fetchReconciliations(): Observable<List<ReconciliationDTO>>
+    @Query("select * from Reconciliation")
+    fun fetchReconciliations(): Observable<List<Reconciliation>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun push(reconciliationDTO: ReconciliationDTO): Completable
-
-    @Update
-    fun update(reconciliationDTO: ReconciliationDTO): Completable
+    fun push(reconciliation: Reconciliation): Completable
 
     @Delete
-    fun delete(reconciliationDTO: ReconciliationDTO): Completable
-
-    @Query("DELETE FROM ReconciliationDTO")
-    fun clearReconciliations(): Completable
+    fun delete(reconciliation: Reconciliation): Completable
 
     // # Futures
 
