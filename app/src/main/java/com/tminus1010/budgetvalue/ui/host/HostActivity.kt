@@ -18,6 +18,7 @@ import com.tminus1010.budgetvalue._unrestructured.reconcile.data.IsReconciliatio
 import com.tminus1010.budgetvalue._unrestructured.transactions.view.TransactionListFrag
 import com.tminus1010.budgetvalue.all_layers.extensions.easyAlertDialog
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
+import com.tminus1010.budgetvalue.all_layers.extensions.unCheckAllMenuItems
 import com.tminus1010.budgetvalue.app.ActivePlanInteractor
 import com.tminus1010.budgetvalue.app.AppInitInteractor
 import com.tminus1010.budgetvalue.app.ImportTransactions
