@@ -7,7 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.data.service.MoshiProvider.moshi
-import com.tminus1010.budgetvalue.framework.view.viewBinding
+import com.tminus1010.budgetvalue.framework.androidx.viewBinding
 import com.tminus1010.budgetvalue._unrestructured.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.databinding.FragTransactionBinding
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction

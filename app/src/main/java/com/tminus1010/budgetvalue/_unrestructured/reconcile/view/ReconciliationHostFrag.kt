@@ -9,7 +9,7 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._unrestructured.reconcile.domain.ReconciliationToDo
 import com.tminus1010.budgetvalue._unrestructured.reconcile.presentation.ReconciliationHostVM
 import com.tminus1010.budgetvalue.databinding.FragReconciliationHostBinding
-import com.tminus1010.budgetvalue.framework.view.viewBinding
+import com.tminus1010.budgetvalue.framework.androidx.viewBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast

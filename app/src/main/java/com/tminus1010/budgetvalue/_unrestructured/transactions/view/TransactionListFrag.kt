@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.framework.view.viewBinding
+import com.tminus1010.budgetvalue.framework.androidx.viewBinding
 import com.tminus1010.budgetvalue._unrestructured.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue.databinding.FragTransactionsBinding
 import com.tminus1010.budgetvalue._unrestructured.transactions.presentation.TransactionsVM

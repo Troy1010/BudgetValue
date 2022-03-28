@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.framework.view.viewBinding
+import com.tminus1010.budgetvalue.framework.androidx.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragSetSearchTextsBinding
 import com.tminus1010.budgetvalue.ui.choose_transaction.ChooseTransactionFrag
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe

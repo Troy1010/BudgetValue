@@ -7,7 +7,7 @@ import androidx.fragment.app.viewModels
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.all_layers.extensions.onClick
-import com.tminus1010.budgetvalue.framework.view.onDone
+import com.tminus1010.budgetvalue.framework.androidx.onDone
 import com.tminus1010.budgetvalue.databinding.SubfragChooseAmountBinding
 import com.tminus1010.budgetvalue._unrestructured.transactions.presentation.ChooseAmountVM
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind

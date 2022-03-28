@@ -8,8 +8,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_layers.extensions.show
-import com.tminus1010.budgetvalue.framework.view.recipe_factories.itemTitledDividerRB
-import com.tminus1010.budgetvalue.framework.view.viewBinding
+import com.tminus1010.budgetvalue.framework.androidx.recipe_factories.itemTitledDividerRB
+import com.tminus1010.budgetvalue.framework.androidx.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragHistoryBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe

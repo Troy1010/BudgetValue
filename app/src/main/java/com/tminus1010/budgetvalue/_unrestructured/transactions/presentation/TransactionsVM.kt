@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue._unrestructured.transactions.data.repo.Transac
 import com.tminus1010.budgetvalue._unrestructured.transactions.presentation.model.TransactionPresentationModel
 import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.all_layers.extensions.value
-import com.tminus1010.budgetvalue.framework.view.ShowAlertDialog
+import com.tminus1010.budgetvalue.framework.androidx.ShowAlertDialog
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import com.tminus1010.tmcommonkotlin.view.NativeText

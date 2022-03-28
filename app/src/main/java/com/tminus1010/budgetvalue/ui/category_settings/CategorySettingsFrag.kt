@@ -9,7 +9,7 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_layers.InvalidCategoryNameException
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
-import com.tminus1010.budgetvalue.framework.view.viewBinding
+import com.tminus1010.budgetvalue.framework.androidx.viewBinding
 import com.tminus1010.budgetvalue.ui.errors.Errors
 import com.tminus1010.budgetvalue.databinding.FragCategorySettingsBinding
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe

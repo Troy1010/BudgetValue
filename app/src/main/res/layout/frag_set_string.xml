@@ -17,7 +17,7 @@
         android:paddingVertical="10dp"
         android:textColor="@color/colorOnDark" />
 
-    <com.tminus1010.budgetvalue.framework.view.ButtonsView
+    <com.tminus1010.budgetvalue.framework.androidx.ButtonsView
         android:id="@+id/buttonsview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

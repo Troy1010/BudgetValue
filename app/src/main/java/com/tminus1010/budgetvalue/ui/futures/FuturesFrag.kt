@@ -9,7 +9,7 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue.databinding.FragFuturesBinding
-import com.tminus1010.budgetvalue.framework.view.viewBinding
+import com.tminus1010.budgetvalue.framework.androidx.viewBinding
 import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesSharedVM
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
