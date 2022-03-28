@@ -127,6 +127,16 @@ class CategorizeVM @Inject constructor(
         navToEditStringForAddTransactionToFutureWithEdit.onNext(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)
     }
 
+    fun userUseDescriptionWithEditOnCategory(category: Category) {
+        setStringSharedVM.userSubmitString.take(1).takeUntilSignal(setStringSharedVM.userCancel).observe(GlobalScope) { s ->
+            GlobalScope.launch(block = spinnerService.decorate { // TODO: There should be a better way than launching within a launch, right?
+                categorizeMatchingUncategorizedTransactions(TransactionMatcher.SearchText(s)::isMatch, categorize = { it.categorize(category) })
+                    .also { toaster.toast("$it transactions categorized") }
+            })
+        }
+        navToEditStringForAddTransactionToFutureWithEdit.onNext(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)
+    }
+
     fun userTryNavToCategorySettings(category: Category) {
         navToCategorySettings.easyEmit(category)
     }
@@ -196,36 +206,40 @@ class CategorizeVM @Inject constructor(
                                 MenuVMItem(
                                     title = "Edit",
                                     onClick = { userTryNavToCategorySettings(category) }
-                                )
+                                ),
+                                MenuVMItem(
+                                    title = "Use Description With Edit",
+                                    onClick = { userUseDescriptionWithEditOnCategory(category) }
+                                ),
                             )
                         },
                     )
                 }.toTypedArray(),
-                *nonAutomaticFutures.map {
+                *nonAutomaticFutures.map { future ->
                     ButtonVMItem2(
-                        title = it.name,
+                        title = future.name,
                         backgroundColor = R.attr.colorSecondary,
-                        onClick = { userReplay(it) },
+                        onClick = { userReplay(future) },
                         menuVMItems = MenuVMItems(
                             MenuVMItem(
                                 title = "Add Description",
-                                onClick = { userAddTransactionToFuture(it) }
+                                onClick = { userAddTransactionToFuture(future) }
                             ),
                             MenuVMItem(
                                 title = "Add Description With Edit",
-                                onClick = { userAddTransactionToFutureWithEdit(it) }
+                                onClick = { userAddTransactionToFutureWithEdit(future) }
                             ),
                             MenuVMItem(
                                 title = "Use Description",
-                                onClick = { userUseDescription(it) }
+                                onClick = { userUseDescription(future) }
                             ),
                             MenuVMItem(
                                 title = "Use Description With Edit",
-                                onClick = { userUseDescriptionWithEdit(it) }
+                                onClick = { userUseDescriptionWithEdit(future) }
                             ),
                             MenuVMItem(
                                 title = "Edit",
-                                onClick = { navToReplayOrFutureDetails.onNext(it) }
+                                onClick = { navToReplayOrFutureDetails.onNext(future) }
                             ),
                         ),
                     )
