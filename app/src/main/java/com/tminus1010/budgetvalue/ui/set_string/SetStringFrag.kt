@@ -8,7 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.databinding.FragSetStringBinding
-import com.tminus1010.budgetvalue.framework.androidx.viewBinding
+import com.tminus1010.budgetvalue.framework.android.viewBinding
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.nav

@@ -9,8 +9,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.framework.androidx.GenViewHolder2
-import com.tminus1010.budgetvalue.framework.androidx.viewBinding
+import com.tminus1010.budgetvalue.framework.android.GenViewHolder2
+import com.tminus1010.budgetvalue.framework.android.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragErrorBinding
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe

@@ -19,7 +19,7 @@
         app:layout_constraintBottom_toTopOf="@id/buttonsview"
         app:layout_constraintTop_toBottomOf="@id/tmTableView_title" />
 
-    <com.tminus1010.budgetvalue.framework.androidx.ButtonsView
+    <com.tminus1010.budgetvalue.framework.android.ButtonsView
         android:id="@+id/buttonsview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

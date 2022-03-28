@@ -5,7 +5,7 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_layers.extensions.value
-import com.tminus1010.budgetvalue.framework.androidx.ShowAlertDialog
+import com.tminus1010.budgetvalue.framework.android.ShowAlertDialog
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItems
 import com.tminus1010.tmcommonkotlin.view.NativeText

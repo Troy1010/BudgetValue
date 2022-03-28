@@ -14,9 +14,9 @@ import com.tminus1010.budgetvalue._unrestructured.transactions.view.ReceiptCateg
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
-import com.tminus1010.budgetvalue.framework.androidx.GenViewHolder2
-import com.tminus1010.budgetvalue.framework.androidx.LifecycleRVAdapter2
-import com.tminus1010.budgetvalue.framework.androidx.viewBinding
+import com.tminus1010.budgetvalue.framework.android.GenViewHolder2
+import com.tminus1010.budgetvalue.framework.android.LifecycleRVAdapter2
+import com.tminus1010.budgetvalue.framework.android.viewBinding
 import com.tminus1010.budgetvalue.ui.category_settings.CategorySettingsFrag
 import com.tminus1010.budgetvalue.ui.futures.CreateFutureFrag
 import com.tminus1010.budgetvalue.ui.futures.FutureDetailsFrag

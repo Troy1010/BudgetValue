@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.ui.all_features.model
 
 import android.content.Context
 import com.tminus1010.budgetvalue.all_layers.extensions.easyText2
-import com.tminus1010.budgetvalue.framework.androidx.onDone
+import com.tminus1010.budgetvalue.framework.android.onDone
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.ViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe

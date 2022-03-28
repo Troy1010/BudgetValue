@@ -4,7 +4,7 @@ import android.content.Context
 import android.widget.EditText
 import com.tminus1010.budgetvalue.all_layers.extensions.easyText2
 import com.tminus1010.budgetvalue.databinding.ItemEditTextBinding
-import com.tminus1010.budgetvalue.framework.androidx.onDone
+import com.tminus1010.budgetvalue.framework.android.onDone
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3

@@ -12,8 +12,8 @@ import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.domain.*
 import com.tminus1010.budgetvalue.framework.observable.source_objects.SourceHashMap
-import com.tminus1010.budgetvalue.framework.androidx.ShowAlertDialog
-import com.tminus1010.budgetvalue.framework.androidx.ShowToast
+import com.tminus1010.budgetvalue.framework.android.ShowAlertDialog
+import com.tminus1010.budgetvalue.framework.android.ShowToast
 import com.tminus1010.budgetvalue.ui.all_features.model.*
 import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesSharedVM
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM

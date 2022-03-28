@@ -11,7 +11,7 @@ import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_layers.extensions.showAlertDialog
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.databinding.FragCreateFutureBinding
-import com.tminus1010.budgetvalue.framework.androidx.viewBinding
+import com.tminus1010.budgetvalue.framework.android.viewBinding
 import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesFrag
 import com.tminus1010.budgetvalue.ui.choose_transaction.ChooseTransactionFrag
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsFrag

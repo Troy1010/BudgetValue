@@ -12,9 +12,9 @@ import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.databinding.FragChooseCategoriesBinding
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
-import com.tminus1010.budgetvalue.framework.androidx.GenViewHolder2
-import com.tminus1010.budgetvalue.framework.androidx.LifecycleRVAdapter2
-import com.tminus1010.budgetvalue.framework.androidx.viewBinding
+import com.tminus1010.budgetvalue.framework.android.GenViewHolder2
+import com.tminus1010.budgetvalue.framework.android.LifecycleRVAdapter2
+import com.tminus1010.budgetvalue.framework.android.viewBinding
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.nav

@@ -5,7 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.framework.androidx.viewBinding
+import com.tminus1010.budgetvalue.framework.android.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragPlanBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import dagger.hilt.android.AndroidEntryPoint
