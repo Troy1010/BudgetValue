@@ -127,6 +127,13 @@ class CategorizeVM @Inject constructor(
         navToEditStringForAddTransactionToFutureWithEdit.onNext(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)
     }
 
+    fun userUseDescriptionOnCategory(category: Category) {
+        GlobalScope.launch(block = spinnerService.decorate {
+            categorizeMatchingUncategorizedTransactions(TransactionMatcher.SearchText(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)::isMatch, categorize = { it.categorize(category) })
+                .also { toaster.toast("$it transactions categorized") }
+        })
+    }
+
     fun userUseDescriptionWithEditOnCategory(category: Category) {
         setStringSharedVM.userSubmitString.take(1).takeUntilSignal(setStringSharedVM.userCancel).observe(GlobalScope) { s ->
             GlobalScope.launch(block = spinnerService.decorate { // TODO: There should be a better way than launching within a launch, right?
@@ -206,6 +213,10 @@ class CategorizeVM @Inject constructor(
                                 MenuVMItem(
                                     title = "Edit",
                                     onClick = { userTryNavToCategorySettings(category) }
+                                ),
+                                MenuVMItem(
+                                    title = "Use Description",
+                                    onClick = { userUseDescriptionOnCategory(category) }
                                 ),
                                 MenuVMItem(
                                     title = "Use Description With Edit",
