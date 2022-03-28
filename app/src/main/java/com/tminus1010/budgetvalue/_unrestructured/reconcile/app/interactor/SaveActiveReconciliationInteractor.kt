@@ -1,11 +1,10 @@
 package com.tminus1010.budgetvalue._unrestructured.reconcile.app.interactor
 
-import com.tminus1010.budgetvalue._unrestructured.reconcile.app.convenience_service.ActiveReconciliationDefaultAmountUC
+import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.data.ActiveReconciliationRepo
 import com.tminus1010.budgetvalue.data.ReconciliationsRepo
-import com.tminus1010.budgetvalue.domain.Reconciliation
-import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
+import com.tminus1010.budgetvalue.domain.Reconciliation
 import com.tminus1010.budgetvalue.framework.observable.Rx
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import io.reactivex.rxjava3.core.Completable
@@ -16,13 +15,13 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 class SaveActiveReconciliationInteractor @Inject constructor(
-    activeReconciliationDefaultAmountUC: ActiveReconciliationDefaultAmountUC,
+    activeReconciliationDefaultAmountInteractor: ActiveReconciliationDefaultAmountInteractor,
     activeReconciliationRepo: ActiveReconciliationRepo,
     reconciliationsRepo: ReconciliationsRepo,
 ) {
     val saveActiveReconciliation =
         Single.zip(
-            activeReconciliationDefaultAmountUC.toSingle(),
+            activeReconciliationDefaultAmountInteractor.activeReconciliationDefaultAmount.toSingle(),
             activeReconciliationRepo.activeReconciliationCAs.asObservable2().toSingle(),
         )
         { activeReconciliationDefaultAmountUC, activeReconciliationCAs ->
