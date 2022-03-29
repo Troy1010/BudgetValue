@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.shareIn
 import java.math.BigDecimal
 import javax.inject.Inject
 
+// TODO: Atm, there are only ActivePlan and Reconciliation.. maybe this can be deleted?
 class PlansRepo @Inject constructor(
     private val miscDAO: MiscDAO,
 ) {

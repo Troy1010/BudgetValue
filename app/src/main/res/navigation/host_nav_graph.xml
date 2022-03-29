@@ -70,11 +70,7 @@
         android:id="@+id/transactionsFrag"
         android:name="com.tminus1010.budgetvalue._unrestructured.transactions.view.TransactionListFrag"
         android:label="TransactionsFrag"
-        tools:layout="@layout/frag_transactions">
-        <action
-            android:id="@+id/action_transactionsFrag_to_transactionFrag"
-            app:destination="@id/transactionFrag" />
-    </fragment>
+        tools:layout="@layout/frag_transactions" />
     <fragment
         android:id="@+id/transactionFrag"
         android:name="com.tminus1010.budgetvalue._unrestructured.transactions.view.TransactionFrag"

@@ -1,7 +1,5 @@
 package com.tminus1010.budgetvalue.domain
 
-import com.tminus1010.budgetvalue.domain.CategoryAmounts
-import com.tminus1010.budgetvalue.domain.CategoryAmountsAndTotal
 import java.math.BigDecimal
 
 data class ActivePlan(
