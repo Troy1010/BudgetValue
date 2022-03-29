@@ -37,19 +37,9 @@ class TransactionFrag : Fragment(R.layout.frag_transaction) {
         // # Events
         viewModel.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         // # State
-        vb.buttonsview.buttons = viewModel.buttons
-        vb.tmTableViewTitle.bind(viewModel.upperRecipeGrid) {
-            initialize(
-                recipeGrid = it.map { it.map { it.toViewItemRecipe(requireContext()) } },
-                shouldFitItemWidthsInsideTable = true,
-            )
-        }
-        vb.tmTableView.bind(viewModel.lowerRecipeGrid) {
-            initialize(
-                recipeGrid = it.map { it.map { it.toViewItemRecipe(requireContext()) } },
-                shouldFitItemWidthsInsideTable = true,
-            )
-        }
+        vb.buttonsview.bind(viewModel.buttons) { buttons = it }
+        vb.tmTableViewTitle.bind(viewModel.transactionInfoTableView) { it.bind(this) }
+        vb.tmTableView.bind(viewModel.transactionCategoryAmountsTableView) { it.bind(this) }
     }
 
     companion object {

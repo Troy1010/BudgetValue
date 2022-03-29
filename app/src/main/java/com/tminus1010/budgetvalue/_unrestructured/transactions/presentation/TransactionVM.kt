@@ -10,6 +10,7 @@ import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.domain.Transaction
 import com.tminus1010.budgetvalue.framework.android.ShowToast
 import com.tminus1010.budgetvalue.ui.all_features.view_model_item.ButtonVMItem
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.TableViewVMItem
 import com.tminus1010.budgetvalue.ui.all_features.view_model_item.TextVMItem
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
@@ -18,6 +19,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -46,36 +48,44 @@ class TransactionVM @Inject constructor(
     }
 
     // # State
-    val upperRecipeGrid =
+    val transactionInfoTableView =
         transaction.map {
-            listOf(
-                listOf(
-                    TextVMItem(it.date.toDisplayStr(), backgroundColor = if (it.isCategorized) null else R.attr.colorSecondary),
-                    TextVMItem(it.defaultAmount.toString(), backgroundColor = if (it.isCategorized) null else R.attr.colorSecondary),
-                    TextVMItem(it.description.take(30), backgroundColor = if (it.isCategorized) null else R.attr.colorSecondary),
-                )
+            TableViewVMItem(
+                recipeGrid = listOf(
+                    listOf(
+                        TextVMItem(it.date.toDisplayStr(), backgroundColor = if (it.isCategorized) null else R.attr.colorSecondary),
+                        TextVMItem(it.defaultAmount.toString(), backgroundColor = if (it.isCategorized) null else R.attr.colorSecondary),
+                        TextVMItem(it.description.take(30), backgroundColor = if (it.isCategorized) null else R.attr.colorSecondary),
+                    )
+                ),
+                shouldFitItemWidthsInsideTable = true,
             )
         }
-    val lowerRecipeGrid =
+    val transactionCategoryAmountsTableView =
         transaction.map {
-            listOf(
-                listOf(
-                    TextVMItem("Default"),
-                    TextVMItem(it.defaultAmount.toString()),
-                ),
-                *it.categoryAmounts.map {
+            TableViewVMItem(
+                recipeGrid = listOf(
                     listOf(
-                        TextVMItem(it.key.name),
-                        TextVMItem(it.value.toString()),
-                    )
-                }.toTypedArray()
+                        TextVMItem("Default"),
+                        TextVMItem(it.defaultAmount.toString()),
+                    ),
+                    *it.categoryAmounts.map {
+                        listOf(
+                            TextVMItem(it.key.name),
+                            TextVMItem(it.value.toString()),
+                        )
+                    }.toTypedArray()
+                ),
+                shouldFitItemWidthsInsideTable = true,
             )
         }
     val buttons =
-        listOf(
-            ButtonVMItem(
-                title = "Clear",
-                onClick = ::userClearTransaction
+        flowOf(
+            listOf(
+                ButtonVMItem(
+                    title = "Clear",
+                    onClick = ::userClearTransaction
+                )
             )
         )
 }
