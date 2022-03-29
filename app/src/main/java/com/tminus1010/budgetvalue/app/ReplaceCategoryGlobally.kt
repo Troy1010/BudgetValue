@@ -9,7 +9,7 @@ import com.tminus1010.budgetvalue.data.PlansRepo
 import com.tminus1010.budgetvalue.domain.Category
 import javax.inject.Inject
 
-class ReplaceCategoryGloballyUC @Inject constructor(
+class ReplaceCategoryGlobally @Inject constructor(
     private val categoriesRepo: CategoriesRepo,
     private val reconciliationsRepo: ReconciliationsRepo,
     private val plansRepo: PlansRepo,

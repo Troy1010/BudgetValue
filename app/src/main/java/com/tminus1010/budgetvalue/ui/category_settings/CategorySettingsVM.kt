@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue.all_layers.InvalidCategoryNameException
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.app.CategoriesInteractor
 import com.tminus1010.budgetvalue.app.DeleteCategoryFromActiveDomainUC
-import com.tminus1010.budgetvalue.app.ReplaceCategoryGloballyUC
+import com.tminus1010.budgetvalue.app.ReplaceCategoryGlobally
 import com.tminus1010.budgetvalue.data.CategoriesRepo
 import com.tminus1010.budgetvalue.domain.AmountFormula
 import com.tminus1010.budgetvalue.domain.Category
@@ -26,7 +26,7 @@ class CategorySettingsVM @Inject constructor(
     private val deleteCategoryFromActiveDomainUC: DeleteCategoryFromActiveDomainUC,
     private val categoriesRepo: CategoriesRepo,
     private val categoriesInteractor: CategoriesInteractor,
-    private val replaceCategoryGloballyUC: ReplaceCategoryGloballyUC,
+    private val replaceCategoryGlobally: ReplaceCategoryGlobally,
     private val errors: Errors,
 ) : ViewModel() {
     // # View Events
@@ -74,7 +74,7 @@ class CategorySettingsVM @Inject constructor(
                 categoryToPush.value.name.equals(Category.UNRECOGNIZED.name, ignoreCase = true)
             ) throw InvalidCategoryNameException()
             if (originalCategoryName.value != "" && originalCategoryName.value != categoryToPush.value.name)
-                replaceCategoryGloballyUC(originalCategory.value!!, categoryToPush.value)
+                replaceCategoryGlobally(originalCategory.value!!, categoryToPush.value)
             else
                 categoriesRepo.push(categoryToPush.value)
             navUp.easyEmit(Unit)
