@@ -6,7 +6,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import com.tminus1010.budgetvalue.app.ImportTransactions
 import com.tminus1010.budgetvalue.databinding.ActivityMockImportSelectionBinding
-import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.ButtonVMItem
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking

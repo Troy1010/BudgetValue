@@ -5,8 +5,8 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.domain.Transaction
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
-import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
-import com.tminus1010.budgetvalue.ui.all_features.model.TextVMItem
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.ButtonVMItem
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.TextVMItem
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.BehaviorSubject

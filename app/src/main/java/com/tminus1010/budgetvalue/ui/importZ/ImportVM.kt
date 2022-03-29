@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue.data.AccountsRepo
 import com.tminus1010.budgetvalue.domain.accounts.Account
-import com.tminus1010.budgetvalue.ui.all_features.model.AccountsPresentationModel
-import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.AccountsPresentationModel
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.ButtonVMItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted

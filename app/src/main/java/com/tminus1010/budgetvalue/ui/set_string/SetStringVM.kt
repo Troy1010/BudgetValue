@@ -2,8 +2,8 @@ package com.tminus1010.budgetvalue.ui.set_string
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
-import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
-import com.tminus1010.budgetvalue.ui.all_features.model.EditTextVMItem2
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.ButtonVMItem
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.EditTextVMItem2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.merge

@@ -15,10 +15,10 @@ import com.tminus1010.budgetvalue.domain.Future
 import com.tminus1010.budgetvalue.domain.TransactionMatcher
 import com.tminus1010.budgetvalue.framework.android.ShowToast
 import com.tminus1010.budgetvalue.ui.all_features.ThrobberSharedVM
-import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
-import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem2
-import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
-import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItems
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.ButtonVMItem
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.ButtonVMItem2
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.MenuVMItem
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.MenuVMItems
 import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesSharedVM
 import com.tminus1010.budgetvalue.ui.errors.Errors
 import com.tminus1010.budgetvalue.ui.set_string.SetStringSharedVM

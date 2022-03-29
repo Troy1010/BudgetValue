@@ -1,35 +1,30 @@
-package com.tminus1010.budgetvalue.ui.all_features.model
+package com.tminus1010.budgetvalue.ui.all_features.view_model_item
 
 import android.content.Context
-import android.widget.EditText
 import com.tminus1010.budgetvalue.all_layers.extensions.easyText2
-import com.tminus1010.budgetvalue.databinding.ItemEditTextBinding
 import com.tminus1010.budgetvalue.framework.android.onDone
-import com.tminus1010.tmcommonkotlin.misc.extensions.bind
-import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.ViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
+import com.tminus1010.budgetvalue.databinding.ItemEditTextBinding
+import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import kotlinx.coroutines.flow.Flow
 
-// TODO: Untested
-class EditTextVMItem2(
+@Deprecated("use EditTextVMItem2, b/c it checks current text before setting it.")
+class EditTextVMItem(
     val hint: String? = null,
     val textFlow: Flow<String?>? = null,
     val text: String? = null,
     val onDone: (String) -> Unit,
     val menuVMItems: MenuVMItems? = null,
 ) : IHasToViewItemRecipe {
-    fun bind(editText: EditText) {
-        editText.hint = hint
-        editText.easyText2 = text
-        textFlow?.also { editText.bind(textFlow) { if (text.toString() != it) setText(it) } }
-        editText.onDone { onDone(it) }
-        menuVMItems?.bind(editText)
-    }
-
     override fun toViewItemRecipe(context: Context): IViewItemRecipe3 {
         return ViewItemRecipe3(context, ItemEditTextBinding::inflate) { vb ->
-            bind(vb.edittext)
+            vb.edittext.hint = hint
+            vb.edittext.easyText2 = text
+            textFlow?.also { vb.edittext.bind(textFlow) { easyText2 = it } }
+            vb.edittext.onDone { onDone(it) }
+            menuVMItems?.bind(vb.edittext)
         }
     }
 }

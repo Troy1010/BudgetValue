@@ -13,9 +13,9 @@ import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.DatePeriodService
 import com.tminus1010.budgetvalue.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue.framework.observable.Rx
-import com.tminus1010.budgetvalue.ui.all_features.model.BasicHeaderWithSubtitlePresentationModel
-import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
-import com.tminus1010.budgetvalue.ui.all_features.model.TextPresentationModel
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.BasicHeaderWithSubtitlePresentationModel
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.MenuVMItem
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.TextPresentationModel
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.rx.extensions.value

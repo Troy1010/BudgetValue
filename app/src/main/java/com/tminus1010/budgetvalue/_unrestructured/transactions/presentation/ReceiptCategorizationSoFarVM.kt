@@ -1,12 +1,12 @@
 package com.tminus1010.budgetvalue._unrestructured.transactions.presentation
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItems
-import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.MenuVMItems
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.budgetvalue.domain.Category
-import com.tminus1010.budgetvalue.ui.all_features.model.HeaderPresentationModel
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.HeaderPresentationModel
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.ReceiptCategorizationInteractor
-import com.tminus1010.budgetvalue.ui.all_features.model.TextVMItem
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.TextVMItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
 import java.math.BigDecimal

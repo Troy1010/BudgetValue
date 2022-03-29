@@ -14,7 +14,7 @@ import com.tminus1010.budgetvalue.domain.*
 import com.tminus1010.budgetvalue.framework.observable.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.framework.android.ShowAlertDialog
 import com.tminus1010.budgetvalue.framework.android.ShowToast
-import com.tminus1010.budgetvalue.ui.all_features.model.*
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.*
 import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesSharedVM
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith

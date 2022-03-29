@@ -7,7 +7,7 @@ import com.tminus1010.budgetvalue.all_layers.extensions.easyText2
 import com.tminus1010.budgetvalue.framework.android.onDone
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.ViewItemRecipe3
-import com.tminus1010.budgetvalue.ui.all_features.model.CategoryAmountPresentationModel
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.CategoryAmountPresentationModel
 import com.tminus1010.budgetvalue.databinding.ItemMoneyEditTextBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import io.reactivex.rxjava3.core.Observable

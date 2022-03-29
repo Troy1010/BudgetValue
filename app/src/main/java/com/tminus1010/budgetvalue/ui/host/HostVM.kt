@@ -6,8 +6,8 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_layers.extensions.value
 import com.tminus1010.budgetvalue.framework.android.ShowAlertDialog
-import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
-import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItems
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.MenuVMItem
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.MenuVMItems
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.BehaviorSubject

@@ -7,7 +7,7 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_layers.ImportFailedException
 import com.tminus1010.budgetvalue.all_layers.TestException
 import com.tminus1010.budgetvalue.all_layers.extensions.getBackStack
-import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.ButtonVMItem
 import com.tminus1010.budgetvalue.ui.errors.ErrorVM
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import com.tminus1010.tmcommonkotlin.view.extensions.nav

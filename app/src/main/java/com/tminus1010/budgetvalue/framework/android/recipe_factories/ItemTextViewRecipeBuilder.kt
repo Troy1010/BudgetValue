@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_layers.extensions.getColorByAttr
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
-import com.tminus1010.budgetvalue.ui.all_features.model.AmountPresentationModel
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.AmountPresentationModel
 import com.tminus1010.budgetvalue.databinding.ItemTextViewBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.ViewItemRecipe3

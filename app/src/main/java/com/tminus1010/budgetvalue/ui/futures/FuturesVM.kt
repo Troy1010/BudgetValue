@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.domain.Future
 import com.tminus1010.budgetvalue.domain.TransactionMatcher
-import com.tminus1010.budgetvalue.ui.all_features.model.*
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking

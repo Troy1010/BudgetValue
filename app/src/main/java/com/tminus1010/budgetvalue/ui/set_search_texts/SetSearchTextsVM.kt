@@ -5,10 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue.ui.choose_transaction.ChooseTransactionSharedVM
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_layers.extensions.value
-import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
-import com.tminus1010.budgetvalue.ui.all_features.model.EditTextVMItem
-import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItems
-import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.ButtonVMItem
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.EditTextVMItem
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.MenuVMItems
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
 import dagger.hilt.android.lifecycle.HiltViewModel

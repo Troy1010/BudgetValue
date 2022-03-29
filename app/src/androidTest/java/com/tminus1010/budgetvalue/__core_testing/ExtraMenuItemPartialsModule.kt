@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.__core_testing
 import android.app.Application
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
-import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.budgetvalue.ui.host.GetExtraMenuItemPartials
 import com.tminus1010.budgetvalue.app.TryInitApp
 import com.tminus1010.budgetvalue.data.AppInitRepo

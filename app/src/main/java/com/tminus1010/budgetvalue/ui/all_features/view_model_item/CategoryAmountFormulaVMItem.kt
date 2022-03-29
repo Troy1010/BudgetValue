@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.ui.all_features.model
+package com.tminus1010.budgetvalue.ui.all_features.view_model_item
 
 import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.framework.observable.ColdObservable

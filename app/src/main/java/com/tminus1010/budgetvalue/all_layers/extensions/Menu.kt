@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.all_layers.extensions
 
 import android.view.Menu
 import androidx.core.view.iterator
-import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.MenuVMItem
 
 fun Menu.add(vararg menuVMItems: MenuVMItem) {
     menuVMItems.forEach { menuItemPartial -> add(menuItemPartial.title).setOnMenuItemClickListener { menuItemPartial.onClick(); true } }

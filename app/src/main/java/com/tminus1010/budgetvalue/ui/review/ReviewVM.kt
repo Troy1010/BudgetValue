@@ -16,8 +16,8 @@ import com.tminus1010.budgetvalue.all_layers.extensions.value
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.domain.LocalDatePeriod
-import com.tminus1010.budgetvalue.ui.all_features.model.PieChartVMItem
-import com.tminus1010.budgetvalue.ui.all_features.model.SpinnerVMItem
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.PieChartVMItem
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.SpinnerVMItem
 import com.tminus1010.budgetvalue.ui.review.presentation.NoMoreDataException
 import com.tminus1010.budgetvalue.ui.review.presentation.NoMostRecentSpendException
 import com.tminus1010.budgetvalue.ui.review.presentation.TooFarBackException

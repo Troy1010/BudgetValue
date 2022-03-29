@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.ui.all_features.model
+package com.tminus1010.budgetvalue.ui.all_features.view_model_item
 
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.TMTableView3

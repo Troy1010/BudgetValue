@@ -1,8 +1,8 @@
 package com.tminus1010.budgetvalue._unrestructured.transactions.presentation.model
 
 import com.tminus1010.budgetvalue.data.CurrentDatePeriodRepo
-import com.tminus1010.budgetvalue.ui.all_features.model.TextPresentationModel
-import com.tminus1010.budgetvalue.ui.all_features.model.TextVMItem
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.TextPresentationModel
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.TextVMItem
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
 import com.tminus1010.budgetvalue._unrestructured.history.HistoryVMItem
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionBlock
