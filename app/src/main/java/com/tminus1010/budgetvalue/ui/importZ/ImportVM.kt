@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.ui.importZ
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue.data.AccountsRepo
-import com.tminus1010.budgetvalue.domain.accounts.Account
+import com.tminus1010.budgetvalue.domain.Account
 import com.tminus1010.budgetvalue.ui.all_features.view_model_item.AccountsPresentationModel
 import com.tminus1010.budgetvalue.ui.all_features.view_model_item.ButtonVMItem
 import dagger.hilt.android.lifecycle.HiltViewModel

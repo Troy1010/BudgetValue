@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.domain.accounts
+package com.tminus1010.budgetvalue.domain
 
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 

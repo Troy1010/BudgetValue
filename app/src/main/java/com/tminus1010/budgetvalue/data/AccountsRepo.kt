@@ -1,8 +1,8 @@
 package com.tminus1010.budgetvalue.data
 
 import com.tminus1010.budgetvalue.data.service.MiscDAO
-import com.tminus1010.budgetvalue.domain.accounts.Account
-import com.tminus1010.budgetvalue.domain.accounts.AccountsAggregate
+import com.tminus1010.budgetvalue.domain.Account
+import com.tminus1010.budgetvalue.domain.AccountsAggregate
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map

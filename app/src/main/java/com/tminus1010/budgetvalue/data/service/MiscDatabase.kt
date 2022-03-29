@@ -6,8 +6,8 @@ import androidx.room.TypeConverters
 import com.tminus1010.budgetvalue.domain.Transaction
 import com.tminus1010.budgetvalue.domain.Future
 import com.tminus1010.budgetvalue.domain.Reconciliation
-import com.tminus1010.budgetvalue.domain.accounts.Account
-import com.tminus1010.budgetvalue.domain.plan.Plan
+import com.tminus1010.budgetvalue.domain.Account
+import com.tminus1010.budgetvalue.domain.Plan
 
 @TypeConverters(RoomTypeConverter::class, RoomWithCategoriesTypeConverter::class)
 @Database(

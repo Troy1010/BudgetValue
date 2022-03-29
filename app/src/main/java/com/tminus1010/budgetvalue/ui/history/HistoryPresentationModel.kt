@@ -7,7 +7,7 @@ import com.tminus1010.budgetvalue.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.budgetvalue.domain.Budgeted
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.data.PlansRepo
-import com.tminus1010.budgetvalue.domain.plan.Plan
+import com.tminus1010.budgetvalue.domain.Plan
 import com.tminus1010.budgetvalue.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.domain.Reconciliation
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionBlock

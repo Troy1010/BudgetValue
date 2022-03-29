@@ -17,7 +17,7 @@ import com.tminus1010.budgetvalue.data.ActivePlanRepo
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.domain.DatePeriodService
 import com.tminus1010.budgetvalue.data.CategoriesRepo
-import com.tminus1010.budgetvalue.domain.plan.ActivePlan
+import com.tminus1010.budgetvalue.domain.ActivePlan
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

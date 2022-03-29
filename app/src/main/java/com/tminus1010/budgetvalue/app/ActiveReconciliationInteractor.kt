@@ -9,7 +9,7 @@ import com.tminus1010.budgetvalue.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.domain.CategoryAmountsAndTotal
 import com.tminus1010.budgetvalue.domain.Reconciliation
-import com.tminus1010.budgetvalue.domain.plan.Plan
+import com.tminus1010.budgetvalue.domain.Plan
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
