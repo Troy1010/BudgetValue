@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._unrestructured.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue._unrestructured.transactions.view.ReceiptCategorizationHostFrag
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider
@@ -18,13 +17,13 @@ import com.tminus1010.budgetvalue.framework.android.GenViewHolder2
 import com.tminus1010.budgetvalue.framework.android.LifecycleRVAdapter2
 import com.tminus1010.budgetvalue.framework.android.viewBinding
 import com.tminus1010.budgetvalue.ui.category_settings.CategorySettingsFrag
+import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesSharedVM
+import com.tminus1010.budgetvalue.ui.errors.Errors
 import com.tminus1010.budgetvalue.ui.futures.CreateFutureFrag
 import com.tminus1010.budgetvalue.ui.futures.FutureDetailsFrag
+import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.budgetvalue.ui.set_string.SetStringFrag
 import com.tminus1010.budgetvalue.ui.set_string.SetStringSharedVM
-import com.tminus1010.budgetvalue.ui.errors.Errors
-import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesSharedVM
-import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
@@ -38,9 +37,6 @@ import javax.inject.Inject
 class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     private val vb by viewBinding(FragCategorizeBinding::bind)
     private val viewModel by activityViewModels<CategorizeVM>()
-
-    @Inject
-    lateinit var categoryAmountsConverter: CategoryAmountsConverter
 
     @Inject
     lateinit var moshiWithCategoriesProvider: MoshiWithCategoriesProvider
