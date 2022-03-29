@@ -1,14 +1,12 @@
 package com.tminus1010.budgetvalue.app
 
 import android.app.Application
-import com.tminus1010.budgetvalue.data.LatestDateOfMostRecentImportRepo
 import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
 class IsPlanFeatureEnabled @Inject constructor(
     private val app: Application,
     transactionsInteractor: TransactionsInteractor,
-    latestDateOfMostRecentImportRepo: LatestDateOfMostRecentImportRepo,
 ) {
     val flow = flowOf(true)
     // TODO()

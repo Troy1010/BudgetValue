@@ -1,14 +1,12 @@
 package com.tminus1010.budgetvalue.app
 
 import android.app.Application
-import com.tminus1010.budgetvalue.data.LatestDateOfMostRecentImportRepo
 import com.tminus1010.budgetvalue.data.ReconciliationsRepo
 import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
 class IsReconciliationFeatureEnabled @Inject constructor(
     private val app: Application,
-    latestDateOfMostRecentImportRepo: LatestDateOfMostRecentImportRepo,
     reconciliationsRepo: ReconciliationsRepo,
     transactionsInteractor: TransactionsInteractor,
     isPlanFeatureEnabled: IsPlanFeatureEnabled,

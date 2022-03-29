@@ -7,7 +7,6 @@ import com.tminus1010.budgetvalue.all_layers.extensions.value
 import com.tminus1010.budgetvalue.app.model.ImportTransactionsResult
 import com.tminus1010.budgetvalue.app.model.RedoUndo
 import com.tminus1010.budgetvalue.data.FuturesRepo
-import com.tminus1010.budgetvalue.data.LatestDateOfMostRecentImportRepo
 import com.tminus1010.budgetvalue.data.service.TransactionInputStreamAdapter
 import com.tminus1010.budgetvalue.domain.DatePeriodService
 import com.tminus1010.budgetvalue.domain.TerminationStrategy
@@ -27,11 +26,11 @@ class TransactionsInteractor @Inject constructor(
     private val datePeriodService: DatePeriodService,
     private val transactionInputStreamAdapter: TransactionInputStreamAdapter,
     private val futuresRepo: FuturesRepo,
-    private val latestDateOfMostRecentImportRepo: LatestDateOfMostRecentImportRepo,
     private val redoUndoInteractor: RedoUndoInteractor,
 ) {
     // # Input
-    suspend fun importTransactions(transactions: List<Transaction>): ImportTransactionsResult {
+    suspend fun importTransactions(inputStream: InputStream) = importTransactions(transactionInputStreamAdapter.parseToTransactions(inputStream))
+    suspend fun importTransactions(transactions: Iterable<Transaction>): ImportTransactionsResult {
         var transactionsImportedCounter: Int
         var transactionsCategorizedCounter = 0
         var transactionsIgnoredBecauseTheyWereAlreadyImportedCounter = 0
@@ -47,10 +46,6 @@ class TransactionsInteractor @Inject constructor(
                     ?: transaction
             }
             .also { saveTransactions(it.also { transactionsImportedCounter = it.size }) }
-        // TODO: Make sure that IsReconciliationReady works with this change
-        transactions.maxByOrNull { it.date }
-            ?.also { mostRecentTransaction -> latestDateOfMostRecentImportRepo.set(mostRecentTransaction.date) }
-        //
         return ImportTransactionsResult(
             numberOfTransactionsImported = transactionsImportedCounter,
             numberOfTransactionsCategorizedByFutures = transactionsCategorizedCounter,
@@ -58,8 +53,6 @@ class TransactionsInteractor @Inject constructor(
         )
     }
 
-    suspend fun importTransactions(inputStream: InputStream) =
-        importTransactions(transactionInputStreamAdapter.parseToTransactions(inputStream))
 
     suspend fun saveTransactions(vararg transactions: Transaction) = saveTransactions(transactions.toList())
     suspend fun saveTransactions(transactions: List<Transaction>) {
