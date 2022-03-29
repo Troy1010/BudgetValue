@@ -2,11 +2,11 @@ package com.tminus1010.budgetvalue.ui.category_settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tminus1010.budgetvalue.app.DeleteCategoryFromActiveDomainUC
-import com.tminus1010.budgetvalue.app.ReplaceCategoryGloballyUC
 import com.tminus1010.budgetvalue.all_layers.InvalidCategoryNameException
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.app.CategoriesInteractor
+import com.tminus1010.budgetvalue.app.DeleteCategoryFromActiveDomainUC
+import com.tminus1010.budgetvalue.app.ReplaceCategoryGloballyUC
 import com.tminus1010.budgetvalue.data.CategoriesRepo
 import com.tminus1010.budgetvalue.domain.AmountFormula
 import com.tminus1010.budgetvalue.domain.Category
@@ -96,7 +96,7 @@ class CategorySettingsVM @Inject constructor(
                     TextVMItem("Type"),
                 ),
                 listOfNotNull(
-                    EditTextVMItem(
+                    EditTextVMItem2(
                         text = categoryToPush.name,
                         onDone = { userSetCategoryName(it) },
                     ),
@@ -124,7 +124,7 @@ class CategorySettingsVM @Inject constructor(
                     ),
                 ButtonVMItem(
                     title = "Done",
-                    onClick = { userSubmit() }
+                    onClick = ::userSubmit
                 ),
             )
         }
