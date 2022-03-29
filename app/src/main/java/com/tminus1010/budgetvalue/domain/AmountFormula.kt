@@ -16,10 +16,6 @@ sealed class AmountFormula {
         override fun isZero() = amount.compareTo(BigDecimal.ZERO) == 0
         override fun toDisplayStr() = amount.toString()
         override fun toDisplayStr2() = "$${amount}"
-
-        companion object {
-            val ZERO = Value(BigDecimal.ZERO)
-        }
     }
 
     data class Percentage(val percentage: BigDecimal) : AmountFormula() {

@@ -3,7 +3,6 @@ package com.tminus1010.budgetvalue.ui.futures
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tminus1010.budgetvalue.ui.all_features.model.SearchType
 import com.tminus1010.budgetvalue.all_layers.NoDescriptionEnteredException
 import com.tminus1010.budgetvalue.all_layers.extensions.*
 import com.tminus1010.budgetvalue.app.CategoriesInteractor
@@ -11,9 +10,10 @@ import com.tminus1010.budgetvalue.app.CategorizeMatchingUncategorizedTransaction
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.domain.*
-import com.tminus1010.budgetvalue.framework.observable.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.framework.android.ShowAlertDialog
 import com.tminus1010.budgetvalue.framework.android.ShowToast
+import com.tminus1010.budgetvalue.framework.observable.source_objects.SourceHashMap
+import com.tminus1010.budgetvalue.ui.all_features.model.SearchType
 import com.tminus1010.budgetvalue.ui.all_features.view_model_item.*
 import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesSharedVM
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
@@ -155,7 +155,7 @@ class CreateFutureVM @Inject constructor(
                 ?.let { categoryAmountFormulas.fillIntoCategory(fillCategory, total)[fillCategory] }
                 ?: AmountFormula.Value(BigDecimal.ZERO)
         }
-            .stateIn(viewModelScope, SharingStarted.Eagerly, AmountFormula.Value.ZERO)
+            .stateIn(viewModelScope, SharingStarted.Eagerly, AmountFormula.Value(BigDecimal.ZERO))
 
 
     // # Events

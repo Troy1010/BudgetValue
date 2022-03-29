@@ -20,7 +20,7 @@ data class CategoryAmountFormulas constructor(private val map: Map<Category, Amo
             this
         else
             this
-                .run { if (fillCategory in this.keys) this else this.plus(fillCategory to AmountFormula.Value.ZERO) }
+                .run { if (fillCategory in this.keys) this else this.plus(fillCategory to AmountFormula.Value(BigDecimal.ZERO)) }
                 .mapValues { getAmountFormula(it.key, it.value, fillCategory, totalAmount) }
                 .let { CategoryAmountFormulas(it) }
     }
