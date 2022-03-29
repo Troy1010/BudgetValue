@@ -17,9 +17,9 @@ interface IEnvironmentModule {
             .fallbackToDestructiveMigration()
             .build()
 
-    fun providesMiscDatabase(application: Application, roomWithCategoriesTypeConverter: RoomWithCategoriesTypeConverter): MiscDatabase =
+    fun providesMiscDatabase(application: Application, roomWithCategoriesTypeConverter: RoomWithCategoriesTypeConverter, migrations: Migrations): MiscDatabase =
         Room.databaseBuilder(application, MiscDatabase::class.java, "MiscDatabase")
-            .addMigrations(Migrations.z43_44(MoshiProvider.moshi))
+            .addMigrations(migrations.z43_44)
             .addTypeConverter(roomWithCategoriesTypeConverter)
             .fallbackToDestructiveMigration()
             .build()

@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.tminus1010.budgetvalue.data.service.CategoryDatabase
+import com.tminus1010.budgetvalue.data.service.Migrations
 import com.tminus1010.budgetvalue.data.service.MiscDatabase
 import com.tminus1010.budgetvalue.data.service.RoomWithCategoriesTypeConverter
 import dagger.Module
@@ -28,8 +29,8 @@ object EnvironmentModule : IEnvironmentModule {
 
     @Provides
     @Reusable
-    override fun providesMiscDatabase(application: Application, roomWithCategoriesTypeConverter: RoomWithCategoriesTypeConverter): MiscDatabase =
-        super.providesMiscDatabase(application, roomWithCategoriesTypeConverter)
+    override fun providesMiscDatabase(application: Application, roomWithCategoriesTypeConverter: RoomWithCategoriesTypeConverter, migrations: Migrations): MiscDatabase =
+        super.providesMiscDatabase(application, roomWithCategoriesTypeConverter, migrations)
 
     @Provides
     @Reusable

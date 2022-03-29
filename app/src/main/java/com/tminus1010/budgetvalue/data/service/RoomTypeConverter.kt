@@ -1,7 +1,8 @@
 package com.tminus1010.budgetvalue.data.service
 
 import androidx.room.TypeConverter
-import com.tminus1010.budgetvalue.data.service.MoshiProvider.moshi
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.tminus1010.budgetvalue.domain.AmountFormula
 import com.tminus1010.budgetvalue.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue.domain.TerminationStrategy
@@ -12,6 +13,12 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 object RoomTypeConverter {
+    val moshi =
+        Moshi.Builder()
+            .add(MoshiAdapters)
+            .addLast(KotlinJsonAdapterFactory())
+            .build()
+
     @TypeConverter
     fun fromBigDecimalToString(x: BigDecimal): String =
         moshi.toJson(x)

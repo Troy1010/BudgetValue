@@ -3,11 +3,11 @@ package com.tminus1010.budgetvalue.data.service
 import android.annotation.SuppressLint
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import javax.inject.Inject
 
 
-object Migrations {
+class Migrations @Inject constructor(moshiProvider: MoshiProvider) {
 //    fun MIGRATION_40_41(moshi: Moshi) = object : Migration(40, 41) {
 //        override fun migrate(database: SupportSQLiteDatabase) {
 //            database.execSQL("CREATE TABLE BasicReplayDTO_new (name TEXT, searchText TEXT, categoryAmountFormulasStr TEXT, autoFillCategory TEXT, PRIMARY KEY(name))")
@@ -46,7 +46,7 @@ object Migrations {
 //        val autoFillCategoryName: String,
 //        val terminationStatus: TerminationStatus,
 
-    fun z43_44(moshi: Moshi) =
+    val z43_44 =
         object : Migration(43, 44) {
             @SuppressLint("Range")
             override fun migrate(database: SupportSQLiteDatabase) {
@@ -59,7 +59,7 @@ object Migrations {
                     val columnName = cursor.run { getString(getColumnIndex("name")) }
                     val searchText = cursor.run { getString(getColumnIndex("searchText")) }
                     val type = Types.newParameterizedType(List::class.java, String::class.java)
-                    database.query("UPDATE BasicFutureDTO_new SET searchTexts = ${moshi.adapter<List<String>>(type).toJson(listOf(columnName))} WHERE name = $searchText")
+                    database.query("UPDATE BasicFutureDTO_new SET searchTexts = ${moshiProvider.moshi.adapter<List<String>>(type).toJson(listOf(columnName))} WHERE name = $searchText")
                 }
                 cursor.close()
                 database.execSQL("DROP TABLE BasicFutureDTO")
