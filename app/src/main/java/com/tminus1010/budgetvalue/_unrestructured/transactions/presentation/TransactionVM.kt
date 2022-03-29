@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
+import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
 import com.tminus1010.budgetvalue.ui.all_features.model.TextVMItem
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
@@ -24,7 +25,7 @@ class TransactionVM @Inject constructor(
     // # User Intents
     fun userClearTransaction() {
         GlobalScope.launch {
-            transactionsInteractor.saveTransactions(transaction.value!!.categorize(emptyMap()))
+            transactionsInteractor.saveTransactions(transaction.value!!.categorize(CategoryAmounts()))
             navUp.onNext(Unit)
         }
     }

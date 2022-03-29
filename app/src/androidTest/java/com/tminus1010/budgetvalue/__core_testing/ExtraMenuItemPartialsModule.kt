@@ -11,6 +11,7 @@ import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue._unrestructured.transactions.view.TransactionBlockCompletionFrag
+import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.domain.TransactionMatcher
 import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
@@ -39,7 +40,7 @@ object ExtraMenuItemPartialsModule {
                 MenuVMItem("Redo App Init") {
                     GlobalScope.launch {
                         appInitRepo.pushAppInitBool2(false)
-                        tryInitApp.tryInitializeApp()
+                        tryInitApp()
                     }
                 },
                 MenuVMItem("Import Transaction for Future") {
@@ -58,7 +59,7 @@ object ExtraMenuItemPartialsModule {
                                                     date = LocalDate.of(2018, 1, 1),
                                                     description = "Mock description of transaction",
                                                     amount = firstSearchTotal,
-                                                    categoryAmounts = mapOf(),
+                                                    categoryAmounts = CategoryAmounts(),
                                                     categorizationDate = null,
                                                     id = generateUniqueID(),
                                                 )

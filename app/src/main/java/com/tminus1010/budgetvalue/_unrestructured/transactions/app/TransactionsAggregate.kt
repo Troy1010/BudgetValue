@@ -1,17 +1,9 @@
 package com.tminus1010.budgetvalue._unrestructured.transactions.app
 
-import com.tminus1010.budgetvalue._unrestructured.categories.CategoryAmountsConverter
-import com.tminus1010.budgetvalue._unrestructured.transactions.data.TransactionDTO
-
-// TODO: Domain model depending on data model seems weird.. maybe should refactor.
 class TransactionsAggregate(
-    transactionsDTO: List<TransactionDTO>,
-    categoryAmountsConverter: CategoryAmountsConverter
+    transactions: List<Transaction>,
 ) {
-    val transactions =
-        transactionsDTO
-            .map { Transaction.fromDTO(it, categoryAmountsConverter) }
-            .sortedByDescending(Transaction::date)
+    val transactions = transactions.sortedByDescending(Transaction::date)
     val spends by lazy { transactions.filter(Transaction::isSpend) }
     val mostRecentSpend by lazy { spends.firstOrNull() }
     val oldestSpend by lazy { spends.lastOrNull() }

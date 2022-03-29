@@ -39,4 +39,8 @@ data class CategoryAmountFormulas constructor(private val map: Map<Category, Amo
     fun defaultAmount(totalAmount: BigDecimal): BigDecimal {
         return totalAmount - this.map { it.value.calcAmount(totalAmount) }.sum().toString().toMoneyBigDecimal()
     }
+
+    fun toCategoryAmounts(totalAmount: BigDecimal): CategoryAmounts {
+        return CategoryAmounts(this.mapValues { it.value.calcAmount(totalAmount) })
+    }
 }

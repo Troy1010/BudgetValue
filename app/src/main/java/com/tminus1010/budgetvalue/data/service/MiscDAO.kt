@@ -1,11 +1,11 @@
 package com.tminus1010.budgetvalue.data.service
 
 import androidx.room.*
-import com.tminus1010.budgetvalue.domain.Reconciliation
-import com.tminus1010.budgetvalue._unrestructured.transactions.data.TransactionDTO
+import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.domain.Future
 import com.tminus1010.budgetvalue.domain.LocalDatePeriod
+import com.tminus1010.budgetvalue.domain.Reconciliation
 import com.tminus1010.budgetvalue.domain.accounts.Account
 import com.tminus1010.budgetvalue.domain.plan.Plan
 import io.reactivex.rxjava3.core.Completable
@@ -35,23 +35,23 @@ interface MiscDAO {
 
     // # Transactions
 
-    @Query("select * from TransactionDTO")
-    fun fetchTransactionsFlow(): Flow<List<TransactionDTO>>
+    @Query("select * from `Transaction`")
+    fun fetchTransactionsFlow(): Flow<List<Transaction>>
 
-    @Query("DELETE FROM TransactionDTO")
-    fun clearTransactions(): Completable
+    @Query("DELETE FROM `Transaction`")
+    suspend fun clearTransactions()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun push(transactionDTO: TransactionDTO)
+    suspend fun push(transaction: Transaction)
 
-    @Query("DELETE FROM TransactionDTO WHERE id=:id")
+    @Query("DELETE FROM `Transaction` WHERE id=:id")
     suspend fun deleteTransaction(id: String)
 
     @Update
-    suspend fun update(transaction: TransactionDTO)
+    suspend fun update(transaction: Transaction)
 
-    @Query("select * from TransactionDTO WHERE id=:id")
-    suspend fun getTransaction(id: String): TransactionDTO?
+    @Query("select * from `Transaction` WHERE id=:id")
+    suspend fun getTransaction(id: String): Transaction?
 
     // # Plan
 
@@ -69,9 +69,6 @@ interface MiscDAO {
 
     @Delete
     suspend fun delete(plan: Plan)
-
-    @Query("DELETE FROM `Plan`")
-    suspend fun clearPlans2()
 
     @Query("UPDATE `Plan` SET categoryAmounts=:categoryAmounts WHERE localDatePeriod=:localDatePeriod")
     suspend fun updatePlanCategoryAmounts(localDatePeriod: LocalDatePeriod, categoryAmounts: CategoryAmounts)

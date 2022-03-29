@@ -15,6 +15,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,7 +30,7 @@ class TransactionsVM @Inject constructor(
         GlobalScope.launch {
             showAlertDialog.value!!(
                 body = NativeText.Simple("Are you sure you want to clear the transaction history?"),
-                onYes = { transactionsRepo.clear().subscribe() }
+                onYes = { runBlocking { transactionsRepo.clear() } }
             )
         }
     }

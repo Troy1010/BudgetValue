@@ -1,6 +1,5 @@
 package com.tminus1010.budgetvalue._unrestructured.transactions.data.repo
 
-import com.tminus1010.budgetvalue._unrestructured.categories.CategoryAmountsConverter
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionsAggregate
 import com.tminus1010.budgetvalue.data.service.MiscDAO
@@ -15,24 +14,24 @@ import javax.inject.Singleton
 @Singleton
 class TransactionsRepo @Inject constructor(
     private val miscDAO: MiscDAO,
-    private val categoryAmountsConverter: CategoryAmountsConverter,
 ) {
     val transactionsAggregate2 =
         miscDAO.fetchTransactionsFlow()
-            .map { TransactionsAggregate(it, categoryAmountsConverter) }
+            .map { TransactionsAggregate(it) }
             .shareIn(GlobalScope, SharingStarted.WhileSubscribed(), 1)
 
     suspend fun push(transaction: Transaction) =
-        miscDAO.push(transaction.toDTO(categoryAmountsConverter))
+        miscDAO.push(transaction)
 
     suspend fun delete(id: String) =
         miscDAO.deleteTransaction(id)
 
     suspend fun update2(transaction: Transaction) =
-        miscDAO.update(transaction.toDTO(categoryAmountsConverter))
+        miscDAO.update(transaction)
 
-    fun clear() = miscDAO.clearTransactions().subscribeOn(Schedulers.io())
+    suspend fun clear() =
+        miscDAO.clearTransactions()
 
     suspend fun getTransaction2(id: String) =
-        miscDAO.getTransaction(id)?.let { Transaction.fromDTO(it, categoryAmountsConverter) }
+        miscDAO.getTransaction(id)
 }

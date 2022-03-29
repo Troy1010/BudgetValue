@@ -22,6 +22,6 @@ data class Future(
         transaction.categorize(
             categoryAmountFormulas
                 .fillIntoCategory(fillCategory, transaction.amount)
-                .mapValues { it.value.calcAmount(transaction.amount) }
+                .toCategoryAmounts(transaction.amount)
         )
 }
