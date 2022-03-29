@@ -39,7 +39,7 @@ class HostActivity : AppCompatActivity() {
     private val viewModel by viewModels<HostVM>()
 
     @Inject
-    lateinit var appInitInteractor: AppInitInteractor
+    lateinit var tryInitApp: TryInitApp
 
     @Inject
     lateinit var isPlanFeatureEnabled: IsPlanFeatureEnabled
@@ -70,7 +70,7 @@ class HostActivity : AppCompatActivity() {
         // # Mediation
         viewModel.showAlertDialog.onNext(showAlertDialog)
         // # Initialize app once per install
-        GlobalScope.launch { appInitInteractor.tryInitializeApp() }
+        GlobalScope.launch { tryInitApp() }
         // # Bind bottom menu to navigation.
         // In order for NavigationUI.setupWithNavController to work, the ids in R.menu.* must exactly match R.navigation.*
         NavigationUI.setupWithNavController(vb.bottomNavigation, hostFrag.navController)

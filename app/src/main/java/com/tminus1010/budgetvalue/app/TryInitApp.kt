@@ -2,17 +2,17 @@ package com.tminus1010.budgetvalue.app
 
 import com.tminus1010.budgetvalue.data.AppInitRepo
 import com.tminus1010.budgetvalue.data.CategoriesRepo
+import com.tminus1010.budgetvalue.domain.AmountFormula
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.CategoryType
-import com.tminus1010.budgetvalue.domain.AmountFormula
 import java.math.BigDecimal
 import javax.inject.Inject
 
-class AppInitInteractor @Inject constructor(
+class TryInitApp @Inject constructor(
     private val appInitRepo: AppInitRepo,
     private val categoriesRepo: CategoriesRepo,
 ) {
-    suspend fun tryInitializeApp() {
+    suspend operator fun invoke() {
         if (!appInitRepo.isAppInitialized()) {
             initCategories.forEach { categoriesRepo.push(it) }
             appInitRepo.pushAppInitBool2(true)

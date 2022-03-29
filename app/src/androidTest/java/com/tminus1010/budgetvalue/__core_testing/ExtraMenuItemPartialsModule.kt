@@ -5,7 +5,7 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.ui.all_features.model.MenuVMItem
 import com.tminus1010.budgetvalue.ui.host.GetExtraMenuItemPartials
-import com.tminus1010.budgetvalue.app.AppInitInteractor
+import com.tminus1010.budgetvalue.app.TryInitApp
 import com.tminus1010.budgetvalue.data.AppInitRepo
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
@@ -33,13 +33,13 @@ import javax.inject.Singleton
 object ExtraMenuItemPartialsModule {
     @Provides
     @Singleton
-    fun getExtraMenuItemPartials(appInitRepo: AppInitRepo, appInitInteractor: AppInitInteractor, transactionsInteractor: TransactionsInteractor, futuresRepo: FuturesRepo, application: Application) = object : GetExtraMenuItemPartials() {
+    fun getExtraMenuItemPartials(appInitRepo: AppInitRepo, tryInitApp: TryInitApp, transactionsInteractor: TransactionsInteractor, futuresRepo: FuturesRepo, application: Application) = object : GetExtraMenuItemPartials() {
         override fun invoke(nav: BehaviorSubject<NavController>): Array<MenuVMItem> {
             return arrayOf(
                 MenuVMItem("Redo App Init") {
                     GlobalScope.launch {
                         appInitRepo.pushAppInitBool2(false)
-                        appInitInteractor.tryInitializeApp()
+                        tryInitApp.tryInitializeApp()
                     }
                 },
                 MenuVMItem("Import Transaction for Future") {
