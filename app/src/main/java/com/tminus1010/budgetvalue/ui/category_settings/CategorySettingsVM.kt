@@ -13,7 +13,6 @@ import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.CategoryType
 import com.tminus1010.budgetvalue.ui.all_features.view_model_item.*
 import com.tminus1010.budgetvalue.ui.errors.Errors
-import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.*
@@ -90,27 +89,29 @@ class CategorySettingsVM @Inject constructor(
     val optionsRecipeGrid =
         categoryToPush.map { categoryToPush ->
             listOf(
-                listOfNotNull(
+                listOf(
                     TextVMItem("Name"),
-                    TextVMItem("Default Amount"),
-                    TextVMItem("Type"),
-                ),
-                listOfNotNull(
                     EditTextVMItem2(
                         text = categoryToPush.name,
                         onDone = { userSetCategoryName(it) },
                     ),
+                ),
+                listOf(
+                    TextVMItem("Default Amount"),
                     AmountFormulaPresentationModel1(
                         amountFormula = this.categoryToPush.map { it.defaultAmountFormula }.stateIn(viewModelScope),
                         onNewAmountFormula = { userSetCategoryDefaultAmountFormula(it) }
                     ),
+                ),
+                listOf(
+                    TextVMItem("Type"),
                     SpinnerVMItem(
                         values = CategoryType.getPickableValues().toTypedArray(),
                         initialValue = categoryToPush.type,
                         onNewItem = { userSetCategoryType(it) }
                     ),
                 ),
-            ).reflectXY()
+            )
         }
     val buttons =
         isForNewCategory.map { isForNewCategory ->
