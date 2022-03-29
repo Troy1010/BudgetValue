@@ -11,19 +11,16 @@ import javax.inject.Inject
 class FuturesRepo @Inject constructor(
     private val miscDAO: MiscDAO,
 ) {
-    suspend fun push(future: Future) {
-        miscDAO.push(future)
-    }
-
-    suspend fun setTerminationDate(future: Future, terminationDate: LocalDate) {
-        miscDAO.push(future.copy(terminationDate = terminationDate))
-    }
-
-    suspend fun delete(future: Future) {
-        miscDAO.deleteFuture(future.name)
-    }
-
     val futures =
         miscDAO.fetchFutures()
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
+
+    suspend fun push(future: Future) =
+        miscDAO.push(future)
+
+    suspend fun setTerminationDate(future: Future, terminationDate: LocalDate) =
+        miscDAO.push(future.copy(terminationDate = terminationDate))
+
+    suspend fun delete(future: Future) =
+        miscDAO.deleteFuture(future.name)
 }
