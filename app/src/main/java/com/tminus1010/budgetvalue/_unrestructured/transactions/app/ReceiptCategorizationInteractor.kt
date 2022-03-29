@@ -1,11 +1,11 @@
 package com.tminus1010.budgetvalue._unrestructured.transactions.app
 
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
-import com.tminus1010.budgetvalue.domain.CategoryAmounts
-import com.tminus1010.budgetvalue.framework.observable.source_objects.SourceList
-import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
+import com.tminus1010.budgetvalue.domain.Category
+import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.domain.Transaction
+import com.tminus1010.budgetvalue.framework.observable.source_objects.SourceList
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -16,7 +16,7 @@ import javax.inject.Singleton
 // TODO: Can I make this more similar to the other SharedVMs?
 @Singleton
 class ReceiptCategorizationInteractor @Inject constructor(
-    private val transactionsInteractor: TransactionsInteractor
+    private val transactionsInteractor: TransactionsInteractor,
 ) {
     // # Model Action
     fun submitPartialCategorization(category: Category) {
@@ -26,7 +26,7 @@ class ReceiptCategorizationInteractor @Inject constructor(
 
     fun submitCategorization() {
         GlobalScope.launch {
-            transactionsInteractor.saveTransactions(
+            transactionsInteractor.push(
                 transactionsInteractor.mostRecentUncategorizedSpend.value!!
                     .copy(categoryAmounts = categoryAmountsRedefined.value)
             )

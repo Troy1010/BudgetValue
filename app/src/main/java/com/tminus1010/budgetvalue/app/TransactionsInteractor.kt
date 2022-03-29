@@ -45,7 +45,7 @@ class TransactionsInteractor @Inject constructor(
                     ?.also { transactionsCategorizedCounter++ }
                     ?: transaction
             }
-            .also { saveTransactions(it.also { transactionsImportedCounter = it.size }) }
+            .also { push(it.also { transactionsImportedCounter = it.size }) }
         return ImportTransactionsResult(
             numberOfTransactionsImported = transactionsImportedCounter,
             numberOfTransactionsCategorizedByFutures = transactionsCategorizedCounter,
@@ -54,8 +54,8 @@ class TransactionsInteractor @Inject constructor(
     }
 
 
-    suspend fun saveTransactions(vararg transactions: Transaction) = saveTransactions(transactions.toList())
-    suspend fun saveTransactions(transactions: List<Transaction>) {
+    suspend fun push(vararg transactions: Transaction) = push(transactions.toList())
+    suspend fun push(transactions: List<Transaction>) {
         val oldTransactionsAndIDs = transactions.map { Pair(transactionsRepo.getTransaction2(it.id), it.id) }
         redoUndoInteractor.useAndAdd(
             RedoUndo(

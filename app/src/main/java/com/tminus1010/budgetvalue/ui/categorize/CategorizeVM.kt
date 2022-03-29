@@ -49,7 +49,7 @@ class CategorizeVM @Inject constructor(
     // # User Intents
     fun userSimpleCategorize(category: Category) {
         GlobalScope.launch(block = throbberSharedVM.decorate {
-            transactionsInteractor.saveTransactions(
+            transactionsInteractor.push(
                 transactionsInteractor.mostRecentUncategorizedSpend.value!!.categorize(category)
             )
         })
@@ -57,7 +57,7 @@ class CategorizeVM @Inject constructor(
 
     fun userReplay(future: Future) {
         GlobalScope.launch(block = throbberSharedVM.decorate {
-            transactionsInteractor.saveTransactions(
+            transactionsInteractor.push(
                 future.categorize(transactionsInteractor.mostRecentUncategorizedSpend.value!!)
             )
         })
@@ -78,7 +78,7 @@ class CategorizeVM @Inject constructor(
     fun userCategorizeAllAsUnknown() {
         GlobalScope.launch(block = throbberSharedVM.decorate {
             val categoryUnknown = categoriesInteractor.userCategories.take(1).first().find { it.name.equals("Unknown", ignoreCase = true) }!! // TODO: Handle this error
-            transactionsInteractor.saveTransactions(
+            transactionsInteractor.push(
                 transactionsInteractor.uncategorizedSpends.first().map { it.categorize(categoryUnknown) }
             )
         })
