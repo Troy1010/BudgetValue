@@ -69,7 +69,7 @@ class ReviewVM @Inject constructor(
         .plus(ColorTemplate.COLORFUL_COLORS.toList())
         .plus(ColorTemplate.PASTEL_COLORS.toList())
     private val period =
-        Observable.combineLatest(userSelectedDuration, currentPageNumber, userUsePeriodType, transactionsRepo.transactionsAggregate2.map { it.mostRecentSpend }.asObservable2()) // TODO("Filtering for not-null on mostRecentSpend might be bad?")
+        Observable.combineLatest(userSelectedDuration, currentPageNumber, userUsePeriodType, transactionsRepo.transactionsAggregate.map { it.mostRecentSpend }.asObservable2()) // TODO("Filtering for not-null on mostRecentSpend might be bad?")
         { userSelectedDuration, currentPageNumber, userUsePeriodType, mostRecentSpend ->
             val mostRecentSpendDate = (mostRecentSpend?.date ?: throw NoMostRecentSpendException())
             when (userSelectedDuration) {
@@ -185,7 +185,7 @@ class ReviewVM @Inject constructor(
             .startWithItem(Box(null))
             .pairwise()
             .map { (a, b) ->
-                if (b.first != null && b.first!!.endDate < transactionsRepo.transactionsAggregate2.value?.oldestSpend?.date)
+                if (b.first != null && b.first!!.endDate < transactionsRepo.transactionsAggregate.value?.oldestSpend?.date)
                     a.also { errors.onNext(TooFarBackException()) }
                 else
                     b
@@ -195,7 +195,7 @@ class ReviewVM @Inject constructor(
 
     private val transactionBlock =
         Observable.combineLatest(
-            transactionsRepo.transactionsAggregate2.asObservable2().map(TransactionsAggregate::spends),
+            transactionsRepo.transactionsAggregate.asObservable2().map(TransactionsAggregate::spends),
             period,
             ::TransactionBlock,
         )

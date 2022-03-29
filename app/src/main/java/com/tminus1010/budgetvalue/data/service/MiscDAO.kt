@@ -10,7 +10,9 @@ import java.math.BigDecimal
 
 @Dao
 interface MiscDAO {
-    // # Accounts
+    /**
+     * [Account]
+     */
     @Query("DELETE FROM Account")
     suspend fun clearAccounts()
 
@@ -29,10 +31,11 @@ interface MiscDAO {
     @Update
     suspend fun update(account: Account)
 
-    // # Transactions
-
+    /**
+     * [Transaction]
+     */
     @Query("select * from `Transaction`")
-    fun fetchTransactionsFlow(): Flow<List<Transaction>>
+    fun fetchTransactions(): Flow<List<Transaction>>
 
     @Query("DELETE FROM `Transaction`")
     suspend fun clearTransactions()
@@ -46,10 +49,11 @@ interface MiscDAO {
     @Query("select * from `Transaction` WHERE id=:id")
     suspend fun getTransaction(id: String): Transaction?
 
-    // # Plan
-
+    /**
+     * [Plan]
+     */
     @Query("select * from `Plan`")
-    fun getPlans(): Flow<List<Plan>>
+    fun fetchPlans(): Flow<List<Plan>>
 
     @Query("select * from `Plan` WHERE localDatePeriod=:localDatePeriod")
     suspend fun getPlan(localDatePeriod: LocalDatePeriod): Plan?
@@ -69,8 +73,9 @@ interface MiscDAO {
     @Query("UPDATE `Plan` SET total=:total WHERE localDatePeriod=:localDatePeriod")
     suspend fun updatePlanAmount(localDatePeriod: LocalDatePeriod, total: BigDecimal)
 
-    // # Reconciliations
-
+    /**
+     * [Reconciliation]
+     */
     @Query("select * from Reconciliation")
     fun fetchReconciliations(): Flow<List<Reconciliation>>
 
@@ -80,8 +85,9 @@ interface MiscDAO {
     @Delete
     suspend fun delete(reconciliation: Reconciliation)
 
-    // # Futures
-
+    /**
+     * [Future]
+     */
     @Query("select * from Future")
     fun fetchFutures(): Flow<List<Future>>
 

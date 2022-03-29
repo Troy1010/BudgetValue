@@ -85,7 +85,7 @@ class TransactionsInteractor @Inject constructor(
 
     // # Output
     val transactionBlocks2 =
-        transactionsRepo.transactionsAggregate2
+        transactionsRepo.transactionsAggregate
             .map { getBlocksFromTransactions(it.transactions) }
             .shareIn(GlobalScope, SharingStarted.WhileSubscribed(), 1)
     val spendBlocks =
@@ -93,11 +93,11 @@ class TransactionsInteractor @Inject constructor(
             .map { it.map { it.spendBlock } }
             .shareIn(GlobalScope, SharingStarted.WhileSubscribed(), 1)
     val uncategorizedSpends =
-        transactionsRepo.transactionsAggregate2
+        transactionsRepo.transactionsAggregate
             .map { it.spends.filter { it.isUncategorized } }
             .stateIn(GlobalScope, SharingStarted.Eagerly, emptyList())
     val mostRecentUncategorizedSpend =
-        transactionsRepo.transactionsAggregate2
+        transactionsRepo.transactionsAggregate
             .map { it.mostRecentUncategorizedSpend }
             .stateIn(GlobalScope, SharingStarted.Eagerly, null)
 }

@@ -37,7 +37,7 @@ class TransactionsVM @Inject constructor(
 
     // # State
     val transactionVMItems =
-        transactionsRepo.transactionsAggregate2
+        transactionsRepo.transactionsAggregate
             .map { it.transactions.map(::TransactionPresentationModel) }
             .asObservable2()
             .replayNonError(1)

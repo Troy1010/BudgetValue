@@ -1,8 +1,8 @@
 package com.tminus1010.budgetvalue.data
 
+import com.tminus1010.budgetvalue.data.service.MiscDAO
 import com.tminus1010.budgetvalue.domain.Transaction
 import com.tminus1010.budgetvalue.domain.TransactionsAggregate
-import com.tminus1010.budgetvalue.data.service.MiscDAO
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -14,9 +14,9 @@ import javax.inject.Singleton
 class TransactionsRepo @Inject constructor(
     private val miscDAO: MiscDAO,
 ) {
-    val transactionsAggregate2 =
-        miscDAO.fetchTransactionsFlow()
-            .map { TransactionsAggregate(it) }
+    val transactionsAggregate =
+        miscDAO.fetchTransactions()
+            .map(::TransactionsAggregate)
             .shareIn(GlobalScope, SharingStarted.WhileSubscribed(), 1)
 
     suspend fun push(transaction: Transaction) =

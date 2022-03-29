@@ -20,11 +20,11 @@ class ChooseTransactionVM @Inject constructor(
 
     // # State
     val isNoItemsMsgVisible =
-        transactionsRepo.transactionsAggregate2
+        transactionsRepo.transactionsAggregate
             .map { it.transactions.isEmpty() }
             .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
     val recipeGrid =
-        transactionsRepo.transactionsAggregate2
+        transactionsRepo.transactionsAggregate
             .map { transactionsAggregate ->
                 transactionsAggregate.transactions
                     .let { if (transactionsAggregate.mostRecentUncategorizedSpend == null) it else listOf(transactionsAggregate.mostRecentUncategorizedSpend!!) + it }
