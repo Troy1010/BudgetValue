@@ -13,6 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,6 +24,7 @@ class HostVM @Inject constructor(
     // # Setup
     val nav = BehaviorSubject.create<NavController>()
     val showAlertDialog = MutableSharedFlow<ShowAlertDialog>(1)
+    val bottomMenuItemSelected = MutableStateFlow(R.id.reviewFrag)
 
     // # Events
     val unCheckAllMenuItems = MutableSharedFlow<Unit>()

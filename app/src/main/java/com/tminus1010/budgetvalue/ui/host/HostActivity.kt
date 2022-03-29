@@ -75,7 +75,12 @@ class HostActivity : AppCompatActivity() {
         // In order for NavigationUI.setupWithNavController to work, the ids in R.menu.* must exactly match R.navigation.*
         NavigationUI.setupWithNavController(vb.bottomNavigation, hostFrag.navController)
         //
-        vb.bottomNavigation.selectedItemId = R.id.reviewFrag
+        // # Setup
+        vb.bottomNavigation.setOnItemSelectedListener {
+            viewModel.bottomMenuItemSelected.onNext(it.itemId)
+            NavigationUI.onNavDestinationSelected(it, hostFrag.navController) // setOnItemSelectedListener overrides setupWithNavController's behavior, so that behavior is restored here.
+            true
+        }
         // # Events
         importSharedVM.navToSelectFile.observe(this) { launchChooseFile(this) }
         isPlanFeatureEnabled.flow.pairwise().filter { !it.first && it.second }.observe(this) { activePlanInteractor.setActivePlanFromHistory(); showAlertDialog(viewModel.levelUpPlan) }
@@ -86,6 +91,7 @@ class HostActivity : AppCompatActivity() {
         viewModel.navToAccessibility.observe(this) { startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }
         viewModel.unCheckAllMenuItems.observe(this) { vb.bottomNavigation.menu.unCheckAllMenuItems() } // TODO: Not working
         // # State
+        vb.bottomNavigation.selectedItemId = viewModel.bottomMenuItemSelected.value
         isPlanFeatureEnabled.flow.observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }
         isReconciliationFeatureEnabled.flow.observe(this) { vb.bottomNavigation.menu.findItem(R.id.reconciliationHostFrag).isVisible = it }
         vb.frameProgressBar.bind(throbberSharedVM.isVisible) { easyVisibility = it }
