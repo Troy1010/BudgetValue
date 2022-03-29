@@ -30,7 +30,9 @@ import com.tminus1010.tmcommonkotlin.view.extensions.easyVisibility
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -77,7 +79,7 @@ class HostActivity : AppCompatActivity() {
         //
         // # Setup
         vb.bottomNavigation.setOnItemSelectedListener {
-            viewModel.bottomMenuItemSelected.onNext(it.itemId)
+            viewModel.selectMenuItem(it.itemId)
             NavigationUI.onNavDestinationSelected(it, hostFrag.navController) // setOnItemSelectedListener overrides setupWithNavController's behavior, so that behavior is restored here.
             true
         }
@@ -91,7 +93,7 @@ class HostActivity : AppCompatActivity() {
         viewModel.navToAccessibility.observe(this) { startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }
         viewModel.unCheckAllMenuItems.observe(this) { vb.bottomNavigation.menu.unCheckAllMenuItems() } // TODO: Not working
         // # State
-        vb.bottomNavigation.selectedItemId = viewModel.bottomMenuItemSelected.value
+        vb.bottomNavigation.selectedItemId = runBlocking { viewModel.selectedPageRedefined.first() }
         isPlanFeatureEnabled.flow.observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }
         isReconciliationFeatureEnabled.flow.observe(this) { vb.bottomNavigation.menu.findItem(R.id.reconciliationHostFrag).isVisible = it }
         vb.frameProgressBar.bind(throbberSharedVM.isVisible) { easyVisibility = it }

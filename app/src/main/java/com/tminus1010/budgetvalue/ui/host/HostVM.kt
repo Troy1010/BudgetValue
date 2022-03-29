@@ -5,6 +5,7 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_layers.extensions.value
+import com.tminus1010.budgetvalue.data.SelectedPage
 import com.tminus1010.budgetvalue.framework.android.ShowAlertDialog
 import com.tminus1010.budgetvalue.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.budgetvalue.ui.all_features.view_model_item.MenuVMItems
@@ -13,18 +14,22 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HostVM @Inject constructor(
     getExtraMenuItemPartials: GetExtraMenuItemPartials,
+    private val selectedPage: SelectedPage,
 ) : ViewModel() {
     // # Setup
     val nav = BehaviorSubject.create<NavController>()
     val showAlertDialog = MutableSharedFlow<ShowAlertDialog>(1)
-    val bottomMenuItemSelected = MutableStateFlow(R.id.reviewFrag)
+
+    // # User Intents
+    fun selectMenuItem(int: Int) {
+        selectedPage.set(int)
+    }
 
     // # Events
     val unCheckAllMenuItems = MutableSharedFlow<Unit>()
@@ -34,6 +39,7 @@ class HostVM @Inject constructor(
     val navToAccessibility = MutableSharedFlow<Unit>()
 
     // # State
+    val selectedPageRedefined = selectedPage.flow
     val topMenuVMItems =
         MenuVMItems(
             MenuVMItem(
