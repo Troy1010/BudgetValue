@@ -25,7 +25,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class TransactionFrag : Fragment(R.layout.frag_transaction) {
     private val vb by viewBinding(FragTransactionBinding::bind)
-    private val transactionVM by viewModels<TransactionVM>()
+    private val viewModel by viewModels<TransactionVM>()
 
     @Inject
     lateinit var moshiWithCategoriesProvider: MoshiWithCategoriesProvider
@@ -33,18 +33,18 @@ class TransactionFrag : Fragment(R.layout.frag_transaction) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Setup
-        transactionVM.transaction.onNext(transaction)
+        viewModel.transaction.onNext(transaction)
         // # Events
-        transactionVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
+        viewModel.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         // # State
-        vb.buttonsview.buttons = transactionVM.buttons
-        vb.tmTableViewTitle.bind(transactionVM.upperRecipeGrid) {
+        vb.buttonsview.buttons = viewModel.buttons
+        vb.tmTableViewTitle.bind(viewModel.upperRecipeGrid) {
             initialize(
                 recipeGrid = it.map { it.map { it.toViewItemRecipe(requireContext()) } },
                 shouldFitItemWidthsInsideTable = true,
             )
         }
-        vb.tmTableView.bind(transactionVM.lowerRecipeGrid) {
+        vb.tmTableView.bind(viewModel.lowerRecipeGrid) {
             initialize(
                 recipeGrid = it.map { it.map { it.toViewItemRecipe(requireContext()) } },
                 shouldFitItemWidthsInsideTable = true,
