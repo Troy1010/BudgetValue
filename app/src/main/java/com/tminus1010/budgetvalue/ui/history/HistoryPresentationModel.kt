@@ -1,20 +1,17 @@
 package com.tminus1010.budgetvalue.ui.history
 
-import com.tminus1010.budgetvalue.all_layers.extensions.mapBox
-import com.tminus1010.budgetvalue.data.CurrentDatePeriod
-import com.tminus1010.budgetvalue.domain.CategoryAmounts
-import com.tminus1010.budgetvalue.ui.all_features.view_model_item.MenuVMItem
-import com.tminus1010.budgetvalue.domain.Budgeted
-import com.tminus1010.budgetvalue.domain.Category
-import com.tminus1010.budgetvalue.data.PlansRepo
-import com.tminus1010.budgetvalue.domain.Plan
-import com.tminus1010.budgetvalue.data.ReconciliationsRepo
-import com.tminus1010.budgetvalue.domain.Reconciliation
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionBlock
+import com.tminus1010.budgetvalue.data.CurrentDatePeriod
+import com.tminus1010.budgetvalue.data.PlansRepo
+import com.tminus1010.budgetvalue.data.ReconciliationsRepo
+import com.tminus1010.budgetvalue.domain.*
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
-import com.tminus1010.tmcommonkotlin.tuple.Box
-import io.reactivex.rxjava3.core.Observable
+import com.tminus1010.tmcommonkotlin.view.NativeText
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 
@@ -23,7 +20,7 @@ import java.math.BigDecimal
  */
 sealed class HistoryPresentationModel {
     abstract val title: String
-    abstract val subTitle: Observable<Box<String?>>
+    abstract val subTitle: Flow<NativeText?>
     abstract val defaultAmount: String
     protected abstract val categoryAmounts: Map<Category, BigDecimal>
     fun amountStrings(activeCategories: List<Category>) =
@@ -34,13 +31,13 @@ sealed class HistoryPresentationModel {
 
     class PlanPresentationModel(plan: Plan, currentDatePeriod: CurrentDatePeriod, plansRepo: PlansRepo) : HistoryPresentationModel() {
         override val title: String = "Plan"
-        override val subTitle: Observable<Box<String?>> =
-            currentDatePeriod.currentDatePeriod
-                .mapBox {
+        override val subTitle: Flow<NativeText?> =
+            currentDatePeriod.flow
+                .map {
                     if (it == plan.localDatePeriod)
-                        "Current"
+                        NativeText.Simple("Current")
                     else
-                        plan.localDatePeriod.startDate.toDisplayStr()
+                        NativeText.Simple(plan.localDatePeriod.startDate.toDisplayStr())
                 }
         override val categoryAmounts =
             plan.categoryAmounts
@@ -54,9 +51,8 @@ sealed class HistoryPresentationModel {
 
     class ReconciliationPresentationModel(reconciliation: Reconciliation, reconciliationsRepo: ReconciliationsRepo) : HistoryPresentationModel() {
         override val title: String = "Reconciliation"
-        override val subTitle: Observable<Box<String?>> =
-            reconciliation.localDate.toDisplayStr()
-                .let { Observable.just(Box(it)) }
+        override val subTitle: Flow<NativeText?> =
+            flowOf(NativeText.Simple(reconciliation.localDate.toDisplayStr()))
         override val categoryAmounts =
             reconciliation.categoryAmounts
         override val defaultAmount =
@@ -72,13 +68,13 @@ sealed class HistoryPresentationModel {
 
     class TransactionBlockPresentationModel(transactionBlock: TransactionBlock, currentDatePeriod: CurrentDatePeriod) : HistoryPresentationModel() {
         override val title: String = "Actual"
-        override val subTitle: Observable<Box<String?>> =
-            currentDatePeriod.currentDatePeriod
-                .mapBox {
+        override val subTitle: Flow<NativeText?> =
+            currentDatePeriod.flow
+                .map {
                     if (it == transactionBlock.datePeriod)
-                        "Current"
+                        NativeText.Simple("Current")
                     else
-                        transactionBlock.datePeriod!!.startDate.toDisplayStr()
+                        NativeText.Simple(transactionBlock.datePeriod!!.startDate.toDisplayStr())
                 }
         override val categoryAmounts =
             transactionBlock.categoryAmounts
@@ -88,8 +84,8 @@ sealed class HistoryPresentationModel {
 
     class BudgetedPresentationModel(budgeted: Budgeted) : HistoryPresentationModel() {
         override val title: String = "Budgeted"
-        override val subTitle: Observable<Box<String?>> =
-            Observable.just(Box(budgeted.totalAmount.toString()))
+        override val subTitle: Flow<NativeText?> =
+            flowOf(NativeText.Simple(budgeted.totalAmount.toString()))
         override val categoryAmounts =
             budgeted.categoryAmounts
         override val defaultAmount =
@@ -98,8 +94,8 @@ sealed class HistoryPresentationModel {
 
     class ActiveReconciliationPresentationModel(override val categoryAmounts: CategoryAmounts, defaultAmount: BigDecimal) : HistoryPresentationModel() {
         override val title: String = "Reconciliation"
-        override val subTitle: Observable<Box<String?>> =
-            Observable.just(Box("Current"))
+        override val subTitle: Flow<NativeText?> =
+            flowOf(NativeText.Simple("Current"))
         override val defaultAmount =
             defaultAmount.toString()
     }

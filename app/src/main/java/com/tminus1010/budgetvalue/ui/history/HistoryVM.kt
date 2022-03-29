@@ -2,13 +2,13 @@ package com.tminus1010.budgetvalue.ui.history
 
 import android.view.View
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.all_layers.categoryComparator
 import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.app.BudgetedInteractor
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.data.CurrentDatePeriod
 import com.tminus1010.budgetvalue.data.PlansRepo
+import com.tminus1010.budgetvalue.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.DatePeriodService
 import com.tminus1010.budgetvalue.domain.LocalDatePeriod
@@ -18,13 +18,14 @@ import com.tminus1010.budgetvalue.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.budgetvalue.ui.all_features.view_model_item.TextPresentationModel
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
-import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.rx.nonLazy
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -100,7 +101,7 @@ class HistoryVM @Inject constructor(
                 ),
                 *historyVMItems.map { historyVMItem ->
                     listOf(
-                        BasicHeaderWithSubtitlePresentationModel(historyVMItem.title, historyVMItem.subTitle.value?.first ?: "") { showPopupMenu.onNext(Pair(it, historyVMItem.menuVMItems)) }, // TODO("Duct-tape solution to non-resizing frozen row")
+                        BasicHeaderWithSubtitlePresentationModel(historyVMItem.title, runBlocking { historyVMItem.subTitle.first() }) { showPopupMenu.onNext(Pair(it, historyVMItem.menuVMItems)) }, // TODO("Duct-tape solution to non-resizing frozen row")
                         TextPresentationModel(text1 = historyVMItem.defaultAmount),
                         *historyVMItem.amountStrings(activeCategories).map {
                             TextPresentationModel(text1 = it)

@@ -1,6 +1,9 @@
 package com.tminus1010.budgetvalue.domain
 
 import com.tminus1010.budgetvalue.data.SettingsRepo
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOf
 import java.time.LocalDate
 import java.time.Month
 import java.time.temporal.ChronoUnit
@@ -16,10 +19,12 @@ class DatePeriodService @Inject constructor(
     fun isDatePeriodValid(datePeriod: LocalDatePeriod): Boolean =
         getDatePeriod(datePeriod.startDate, settingsRepo.anchorDateOffset.value, settingsRepo.blockSize.value) == datePeriod
 
-    // TODO: This needs to emit on change
-    @Deprecated("This needs to emit on change. Currently, there is no replacement")
+    @Deprecated("use getDatePeriod2, which emits on change")
     fun getDatePeriod(date: LocalDate): LocalDatePeriod =
         getDatePeriod(date, settingsRepo.anchorDateOffset.value, settingsRepo.blockSize.value)
+
+    fun getDatePeriod2(date: LocalDate): Flow<LocalDatePeriod> =
+        combine(flowOf(date), settingsRepo.anchorDateOffset, settingsRepo.blockSize, ::getDatePeriod)
 
     private fun getDatePeriod(date: LocalDate, anchorDateOffset: Long, blockSize: Long): LocalDatePeriod {
         val startDate = ChronoUnit.DAYS.between(anchorDay.plusDays(anchorDateOffset), date)
