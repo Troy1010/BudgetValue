@@ -7,7 +7,7 @@ import com.tminus1010.budgetvalue.all_layers.categoryComparator
 import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.app.BudgetedInteractor
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
-import com.tminus1010.budgetvalue.data.CurrentDatePeriodRepo
+import com.tminus1010.budgetvalue.data.CurrentDatePeriod
 import com.tminus1010.budgetvalue.data.PlansRepo
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.DatePeriodService
@@ -33,7 +33,7 @@ class HistoryVM @Inject constructor(
     transactionsInteractor: TransactionsInteractor,
     budgetedInteractor: BudgetedInteractor,
     private val datePeriodService: DatePeriodService,
-    private val currentDatePeriodRepo: CurrentDatePeriodRepo,
+    private val currentDatePeriod: CurrentDatePeriod,
     private val plansRepo: PlansRepo,
     private val reconciliationsRepo: ReconciliationsRepo,
 ) : ViewModel() {
@@ -68,11 +68,11 @@ class HistoryVM @Inject constructor(
                 for (blockPeriod in blockPeriods) {
                     listOfNotNull(
                         transactionBlocks?.filter { it.datePeriod == blockPeriod } // TODO("sort by sortDate")
-                            ?.let { it.map { HistoryPresentationModel.TransactionBlockPresentationModel(it, currentDatePeriodRepo) } },
+                            ?.let { it.map { HistoryPresentationModel.TransactionBlockPresentationModel(it, currentDatePeriod) } },
                         reconciliations?.filter { it.localDate in blockPeriod }
                             ?.let { it.map { HistoryPresentationModel.ReconciliationPresentationModel(it, reconciliationsRepo) } },
                         plans?.filter { it.localDatePeriod.startDate in blockPeriod }
-                            ?.let { it.map { HistoryPresentationModel.PlanPresentationModel(it, currentDatePeriodRepo, plansRepo) } },
+                            ?.let { it.map { HistoryPresentationModel.PlanPresentationModel(it, currentDatePeriod, plansRepo) } },
                     ).flatten().also { historyColumnDatas.addAll(it) }
                 }
                 // ## Add Budgeted

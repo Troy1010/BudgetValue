@@ -5,16 +5,18 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import com.tminus1010.budgetvalue.all_layers.extensions.cold
-import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import io.reactivex.rxjava3.core.Observable
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.rx3.asFlow
 import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
 
 // TODO("This is untested")
 @Singleton
-class CurrentDateRepo @Inject constructor(app: Application) {
+class CurrentDate @Inject constructor(app: Application) {
     private val currentDate =
         Observable.create<LocalDate> { downstream ->
             val broadcastReceiver =
@@ -33,10 +35,8 @@ class CurrentDateRepo @Inject constructor(app: Application) {
             )
             downstream.setCancellable { app.unregisterReceiver(broadcastReceiver) }
         }
-            .distinctUntilChanged()
-            .startWithItem(LocalDate.now())
-            .replayNonError(1)
-            .cold()
+            .asFlow()
+            .stateIn(GlobalScope, SharingStarted.WhileSubscribed(1000), LocalDate.now())
 
-    operator fun invoke() = currentDate
+    val flow = currentDate
 }
