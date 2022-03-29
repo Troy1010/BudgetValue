@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._unrestructured.history
+package com.tminus1010.budgetvalue.ui.history
 
 import android.os.Bundle
 import android.view.View

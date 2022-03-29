@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._unrestructured.history
+package com.tminus1010.budgetvalue.ui.history
 
 import com.tminus1010.budgetvalue.all_layers.extensions.mapBox
 import com.tminus1010.budgetvalue.data.CurrentDatePeriodRepo
@@ -21,7 +21,7 @@ import java.math.BigDecimal
 /**
  * Represents a column of data in HistoryFrag
  */
-sealed class HistoryVMItem {
+sealed class HistoryPresentationModel {
     abstract val title: String
     abstract val subTitle: Observable<Box<String?>>
     abstract val defaultAmount: String
@@ -32,7 +32,7 @@ sealed class HistoryVMItem {
 
     open val menuVMItems: List<MenuVMItem> = listOf()
 
-    class PlanVMItem(plan: Plan, currentDatePeriodRepo: CurrentDatePeriodRepo, plansRepo: PlansRepo) : HistoryVMItem() {
+    class PlanPresentationModel(plan: Plan, currentDatePeriodRepo: CurrentDatePeriodRepo, plansRepo: PlansRepo) : HistoryPresentationModel() {
         override val title: String = "Plan"
         override val subTitle: Observable<Box<String?>> =
             currentDatePeriodRepo.currentDatePeriod
@@ -52,7 +52,7 @@ sealed class HistoryVMItem {
             )
     }
 
-    class ReconciliationVMItem(reconciliation: Reconciliation, reconciliationsRepo: ReconciliationsRepo) : HistoryVMItem() {
+    class ReconciliationPresentationModel(reconciliation: Reconciliation, reconciliationsRepo: ReconciliationsRepo) : HistoryPresentationModel() {
         override val title: String = "Reconciliation"
         override val subTitle: Observable<Box<String?>> =
             reconciliation.localDate.toDisplayStr()
@@ -70,7 +70,7 @@ sealed class HistoryVMItem {
             )
     }
 
-    class TransactionBlockVMItem(transactionBlock: TransactionBlock, currentDatePeriodRepo: CurrentDatePeriodRepo) : HistoryVMItem() {
+    class TransactionBlockPresentationModel(transactionBlock: TransactionBlock, currentDatePeriodRepo: CurrentDatePeriodRepo) : HistoryPresentationModel() {
         override val title: String = "Actual"
         override val subTitle: Observable<Box<String?>> =
             currentDatePeriodRepo.currentDatePeriod
@@ -86,7 +86,7 @@ sealed class HistoryVMItem {
             transactionBlock.defaultAmount.toString()
     }
 
-    class BudgetedVMItem(budgeted: Budgeted) : HistoryVMItem() {
+    class BudgetedPresentationModel(budgeted: Budgeted) : HistoryPresentationModel() {
         override val title: String = "Budgeted"
         override val subTitle: Observable<Box<String?>> =
             Observable.just(Box(budgeted.totalAmount.toString()))
@@ -96,7 +96,7 @@ sealed class HistoryVMItem {
             budgeted.defaultAmount.toString()
     }
 
-    class ActiveReconciliationVMItem(override val categoryAmounts: CategoryAmounts, defaultAmount: BigDecimal) : HistoryVMItem() {
+    class ActiveReconciliationPresentationModel(override val categoryAmounts: CategoryAmounts, defaultAmount: BigDecimal) : HistoryPresentationModel() {
         override val title: String = "Reconciliation"
         override val subTitle: Observable<Box<String?>> =
             Observable.just(Box("Current"))

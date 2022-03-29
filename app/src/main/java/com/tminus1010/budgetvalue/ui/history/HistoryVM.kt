@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._unrestructured.history
+package com.tminus1010.budgetvalue.ui.history
 
 import android.view.View
 import androidx.lifecycle.ViewModel
@@ -63,20 +63,20 @@ class HistoryVM @Inject constructor(
                 reconciliations?.forEach { blockPeriods.add(datePeriodService.getDatePeriod(it.localDate)) }
                 plans?.forEach { blockPeriods.add(it.localDatePeriod) }
                 // # Define historyColumnDatas
-                val historyColumnDatas = arrayListOf<HistoryVMItem>()
+                val historyColumnDatas = arrayListOf<HistoryPresentationModel>()
                 // ## Add TransactionBlocks, Reconciliations, Plans
                 for (blockPeriod in blockPeriods) {
                     listOfNotNull(
                         transactionBlocks?.filter { it.datePeriod == blockPeriod } // TODO("sort by sortDate")
-                            ?.let { it.map { HistoryVMItem.TransactionBlockVMItem(it, currentDatePeriodRepo) } },
+                            ?.let { it.map { HistoryPresentationModel.TransactionBlockPresentationModel(it, currentDatePeriodRepo) } },
                         reconciliations?.filter { it.localDate in blockPeriod }
-                            ?.let { it.map { HistoryVMItem.ReconciliationVMItem(it, reconciliationsRepo) } },
+                            ?.let { it.map { HistoryPresentationModel.ReconciliationPresentationModel(it, reconciliationsRepo) } },
                         plans?.filter { it.localDatePeriod.startDate in blockPeriod }
-                            ?.let { it.map { HistoryVMItem.PlanVMItem(it, currentDatePeriodRepo, plansRepo) } },
+                            ?.let { it.map { HistoryPresentationModel.PlanPresentationModel(it, currentDatePeriodRepo, plansRepo) } },
                     ).flatten().also { historyColumnDatas.addAll(it) }
                 }
                 // ## Add Budgeted
-                if (budgeted != null) historyColumnDatas.add(HistoryVMItem.BudgetedVMItem(budgeted))
+                if (budgeted != null) historyColumnDatas.add(HistoryPresentationModel.BudgetedPresentationModel(budgeted))
                 //
                 historyColumnDatas
             }
