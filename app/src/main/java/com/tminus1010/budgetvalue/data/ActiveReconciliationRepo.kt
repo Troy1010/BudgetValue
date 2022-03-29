@@ -30,7 +30,6 @@ class ActiveReconciliationRepo @Inject constructor(
         dataStore.data
             .map { moshiWithCategoriesProvider.moshi.fromJson<CategoryAmounts>(it[key]) }
             .filterNotNull()
-            .distinctUntilChanged()
             .stateIn(GlobalScope, SharingStarted.Eagerly, CategoryAmounts())
 
     suspend fun pushCategoryAmounts(categoryAmounts: CategoryAmounts) {
