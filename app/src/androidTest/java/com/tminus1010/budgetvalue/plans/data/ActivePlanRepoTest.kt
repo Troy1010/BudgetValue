@@ -15,7 +15,7 @@ import com.tminus1010.budgetvalue.data.service.MiscDatabase
 import com.tminus1010.budgetvalue.data.service.RoomWithCategoriesTypeConverter
 import com.tminus1010.budgetvalue.data.ActivePlanRepo
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
-import com.tminus1010.budgetvalue.domain.DatePeriodService
+import com.tminus1010.budgetvalue.app.DatePeriodService
 import com.tminus1010.budgetvalue.data.CategoriesRepo
 import com.tminus1010.budgetvalue.domain.ActivePlan
 import dagger.Module

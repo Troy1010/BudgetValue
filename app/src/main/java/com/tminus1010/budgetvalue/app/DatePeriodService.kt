@@ -1,6 +1,7 @@
-package com.tminus1010.budgetvalue.domain
+package com.tminus1010.budgetvalue.app
 
 import com.tminus1010.budgetvalue.data.SettingsRepo
+import com.tminus1010.budgetvalue.domain.LocalDatePeriod
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOf

@@ -11,7 +11,7 @@ import com.tminus1010.budgetvalue.all_layers.dependency_injection.EnvironmentMod
 import com.tminus1010.budgetvalue.all_layers.dependency_injection.IEnvironmentModule
 import com.tminus1010.budgetvalue.all_layers.extensions.value
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
-import com.tminus1010.budgetvalue.domain.DatePeriodService
+import com.tminus1010.budgetvalue.app.DatePeriodService
 import com.tminus1010.budgetvalue.data.CategoriesRepo
 import com.tminus1010.budgetvalue.data.PlansRepo
 import com.tminus1010.budgetvalue.data.service.CategoryDatabase

@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.data
 
-import com.tminus1010.budgetvalue.domain.DatePeriodService
+import com.tminus1010.budgetvalue.app.DatePeriodService
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first

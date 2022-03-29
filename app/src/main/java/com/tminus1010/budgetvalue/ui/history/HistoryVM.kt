@@ -10,7 +10,7 @@ import com.tminus1010.budgetvalue.data.CurrentDatePeriod
 import com.tminus1010.budgetvalue.data.PlansRepo
 import com.tminus1010.budgetvalue.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.domain.Category
-import com.tminus1010.budgetvalue.domain.DatePeriodService
+import com.tminus1010.budgetvalue.app.DatePeriodService
 import com.tminus1010.budgetvalue.domain.LocalDatePeriod
 import com.tminus1010.budgetvalue.framework.observable.Rx
 import com.tminus1010.budgetvalue.ui.all_features.view_model_item.BasicHeaderWithSubtitlePresentationModel
