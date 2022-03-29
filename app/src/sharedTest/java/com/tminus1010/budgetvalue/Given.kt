@@ -1,10 +1,13 @@
 package com.tminus1010.budgetvalue
 
 import com.tminus1010.budgetvalue.app.TryInitApp
+import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.domain.Reconciliation
+import com.tminus1010.budgetvalue.domain.Transaction
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import java.math.BigDecimal
 import java.time.LocalDate
 
 object Given {
@@ -22,6 +25,14 @@ object Given {
 //            givenCategories.value[1] to 31.toBigDecimal(),
 //            givenCategories.value[2] to 26.toBigDecimal()))
 //    val givenPlans = listOf(givenPlan1, givenPlan2).toObservable()
+    val transaction1 = Transaction(
+        date = LocalDate.of(2020, 1, 2),
+        description = "Jimmy Johns",
+        amount = BigDecimal("-12.61"),
+        categoryAmounts = CategoryAmounts(),
+        categorizationDate = null,
+        id = "eriuhtyuirethgyuidrthu"
+    )
     val reconciliation1 = Reconciliation(
         localDate = LocalDate.of(2020, 1, 2),
         defaultAmount = 33.toBigDecimal(),
