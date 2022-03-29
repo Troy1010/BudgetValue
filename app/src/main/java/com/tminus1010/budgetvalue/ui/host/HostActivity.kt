@@ -13,15 +13,11 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._unrestructured.history.HistoryFrag
-import com.tminus1010.budgetvalue.app.IsReconciliationFeatureEnabled
 import com.tminus1010.budgetvalue._unrestructured.transactions.view.TransactionListFrag
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_layers.extensions.showAlertDialog
 import com.tminus1010.budgetvalue.all_layers.extensions.unCheckAllMenuItems
-import com.tminus1010.budgetvalue.app.ActivePlanInteractor
-import com.tminus1010.budgetvalue.app.AppInitInteractor
-import com.tminus1010.budgetvalue.app.ImportTransactions
-import com.tminus1010.budgetvalue.app.IsPlanFeatureEnabledUC
+import com.tminus1010.budgetvalue.app.*
 import com.tminus1010.budgetvalue.databinding.ActivityHostBinding
 import com.tminus1010.budgetvalue.ui.all_features.ThrobberSharedVM
 import com.tminus1010.budgetvalue.ui.futures.FuturesFrag
@@ -29,7 +25,6 @@ import com.tminus1010.budgetvalue.ui.importZ.ImportSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.pairwise
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
-import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import com.tminus1010.tmcommonkotlin.view.extensions.easyVisibility
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,7 +42,7 @@ class HostActivity : AppCompatActivity() {
     lateinit var appInitInteractor: AppInitInteractor
 
     @Inject
-    lateinit var isPlanFeatureEnabledUC: IsPlanFeatureEnabledUC
+    lateinit var isPlanFeatureEnabled: IsPlanFeatureEnabled
 
     @Inject
     lateinit var isReconciliationFeatureEnabled: IsReconciliationFeatureEnabled
@@ -83,7 +78,7 @@ class HostActivity : AppCompatActivity() {
         vb.bottomNavigation.selectedItemId = R.id.reviewFrag
         // # Events
         importSharedVM.navToSelectFile.observe(this) { launchChooseFile(this) }
-        isPlanFeatureEnabledUC.onChangeToTrue.observe(this) { activePlanInteractor.setActivePlanFromHistory(); showAlertDialog(viewModel.levelUpPlan) }
+        isPlanFeatureEnabled.flow.pairwise().filter { !it.first && it.second }.observe(this) { activePlanInteractor.setActivePlanFromHistory(); showAlertDialog(viewModel.levelUpPlan) }
         isReconciliationFeatureEnabled.flow.pairwise().filter { !it.first && it.second }.observe(this) { showAlertDialog(viewModel.levelUpReconciliation) }
         viewModel.navToFutures.observe(this) { FuturesFrag.navTo(nav) }
         viewModel.navToTransactions.observe(this) { TransactionListFrag.navTo(nav) }
@@ -91,7 +86,7 @@ class HostActivity : AppCompatActivity() {
         viewModel.navToAccessibility.observe(this) { startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }
         viewModel.unCheckAllMenuItems.observe(this) { vb.bottomNavigation.menu.unCheckAllMenuItems() } // TODO: Not working
         // # State
-        isPlanFeatureEnabledUC.observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }
+        isPlanFeatureEnabled.flow.observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }
         isReconciliationFeatureEnabled.flow.observe(this) { vb.bottomNavigation.menu.findItem(R.id.reconciliationHostFrag).isVisible = it }
         vb.frameProgressBar.bind(throbberSharedVM.isVisible) { easyVisibility = it }
     }

@@ -1,9 +1,6 @@
 package com.tminus1010.budgetvalue.app
 
 import android.app.Application
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import com.tminus1010.budgetvalue.app.IsPlanFeatureEnabledUC
-import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.data.LatestDateOfMostRecentImportRepo
 import com.tminus1010.budgetvalue.data.ReconciliationsRepo
 import kotlinx.coroutines.flow.flowOf
@@ -14,11 +11,11 @@ class IsReconciliationFeatureEnabled @Inject constructor(
     latestDateOfMostRecentImportRepo: LatestDateOfMostRecentImportRepo,
     reconciliationsRepo: ReconciliationsRepo,
     transactionsInteractor: TransactionsInteractor,
-    isPlanFeatureEnabledUC: IsPlanFeatureEnabledUC,
+    isPlanFeatureEnabled: IsPlanFeatureEnabled,
 ) {
-    private val key = booleanPreferencesKey("isReconciliationFeatureEnabled")
     val flow = flowOf(true)
     // TODO()
+//    private val key = booleanPreferencesKey("isReconciliationFeatureEnabled")
 //    fun setTrue() {
 //        GlobalScope.launch { app.dataStore.edit { it[key] = true } }
 //    }
