@@ -25,9 +25,6 @@ class TransactionsRepo @Inject constructor(
     suspend fun delete(id: String) =
         miscDAO.deleteTransaction(id)
 
-    suspend fun update2(transaction: Transaction) =
-        miscDAO.update(transaction)
-
     suspend fun clear() =
         miscDAO.clearTransactions()
 

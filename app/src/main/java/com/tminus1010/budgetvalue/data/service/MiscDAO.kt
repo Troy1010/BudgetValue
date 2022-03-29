@@ -1,11 +1,8 @@
 package com.tminus1010.budgetvalue.data.service
 
 import androidx.room.*
+import com.tminus1010.budgetvalue.domain.*
 import com.tminus1010.budgetvalue.domain.Transaction
-import com.tminus1010.budgetvalue.domain.CategoryAmounts
-import com.tminus1010.budgetvalue.domain.Future
-import com.tminus1010.budgetvalue.domain.LocalDatePeriod
-import com.tminus1010.budgetvalue.domain.Reconciliation
 import com.tminus1010.budgetvalue.domain.accounts.Account
 import com.tminus1010.budgetvalue.domain.plan.Plan
 import kotlinx.coroutines.flow.Flow
@@ -45,9 +42,6 @@ interface MiscDAO {
 
     @Query("DELETE FROM `Transaction` WHERE id=:id")
     suspend fun deleteTransaction(id: String)
-
-    @Update
-    suspend fun update(transaction: Transaction)
 
     @Query("select * from `Transaction` WHERE id=:id")
     suspend fun getTransaction(id: String): Transaction?
