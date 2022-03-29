@@ -9,7 +9,6 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue._unrestructured.transactions.presentation.TransactionVM
 import com.tminus1010.budgetvalue.all_layers.KEY1
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
-import com.tminus1010.budgetvalue.data.service.MoshiProvider.moshi
 import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue.databinding.FragTransactionBinding
 import com.tminus1010.budgetvalue.domain.Transaction
@@ -29,7 +28,7 @@ class TransactionFrag : Fragment(R.layout.frag_transaction) {
 
     @Inject
     lateinit var moshiWithCategoriesProvider: MoshiWithCategoriesProvider
-    private val transaction by lazy { moshi.fromJson<Transaction>(requireArguments().getString(KEY1))!! }
+    private val transaction by lazy { moshiWithCategoriesProvider.moshi.fromJson<Transaction>(requireArguments().getString(KEY1))!! }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Setup

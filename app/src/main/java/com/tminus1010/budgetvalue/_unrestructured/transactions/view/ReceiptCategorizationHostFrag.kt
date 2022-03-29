@@ -6,13 +6,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.domain.Transaction
 import com.tminus1010.budgetvalue._unrestructured.transactions.presentation.ReceiptCategorizationHostVM
 import com.tminus1010.budgetvalue.all_layers.KEY1
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
-import com.tminus1010.budgetvalue.data.service.MoshiProvider.moshi
 import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue.databinding.FragReceiptCategorizationBinding
+import com.tminus1010.budgetvalue.domain.Transaction
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
@@ -28,7 +27,7 @@ class ReceiptCategorizationHostFrag : Fragment(R.layout.frag_receipt_categorizat
 
     @Inject
     lateinit var moshiWithCategoriesProvider: MoshiWithCategoriesProvider
-    private val transaction by lazy { moshi.fromJson<Transaction>(requireArguments().getString(KEY1))!! }
+    private val transaction by lazy { moshiWithCategoriesProvider.moshi.fromJson<Transaction>(requireArguments().getString(KEY1))!! }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = FragReceiptCategorizationBinding.bind(view)
