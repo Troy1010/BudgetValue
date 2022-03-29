@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue._unrestructured.transactions.presentation
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.data.TransactionsRepo
-import com.tminus1010.budgetvalue._unrestructured.transactions.presentation.model.TransactionPresentationModel
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.TransactionPresentationModel
 import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.all_layers.extensions.value
 import com.tminus1010.budgetvalue.framework.android.ShowAlertDialog

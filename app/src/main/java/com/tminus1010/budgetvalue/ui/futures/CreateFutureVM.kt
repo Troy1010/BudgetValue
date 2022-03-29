@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.ui.futures
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tminus1010.budgetvalue._unrestructured.transactions.presentation.model.SearchType
+import com.tminus1010.budgetvalue.ui.all_features.model.SearchType
 import com.tminus1010.budgetvalue.all_layers.NoDescriptionEnteredException
 import com.tminus1010.budgetvalue.all_layers.extensions.*
 import com.tminus1010.budgetvalue.app.CategoriesInteractor
