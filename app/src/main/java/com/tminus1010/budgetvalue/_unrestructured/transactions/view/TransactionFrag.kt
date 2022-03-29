@@ -6,18 +6,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.domain.Transaction
 import com.tminus1010.budgetvalue._unrestructured.transactions.presentation.TransactionVM
 import com.tminus1010.budgetvalue.all_layers.KEY1
+import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.data.service.MoshiProvider.moshi
 import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue.databinding.FragTransactionBinding
+import com.tminus1010.budgetvalue.domain.Transaction
 import com.tminus1010.budgetvalue.framework.android.viewBinding
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
-import com.tminus1010.tmcommonkotlin.rx.extensions.observe
-import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -36,7 +36,6 @@ class TransactionFrag : Fragment(R.layout.frag_transaction) {
         transactionVM.transaction.onNext(transaction)
         // # Events
         transactionVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
-        transactionVM.toast.observe(viewLifecycleOwner) { easyToast(it) }
         // # State
         vb.buttonsview.buttons = transactionVM.buttons
         vb.tmTableViewTitle.bind(transactionVM.upperRecipeGrid) {
