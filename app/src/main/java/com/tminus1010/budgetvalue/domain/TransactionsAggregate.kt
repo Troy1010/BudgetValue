@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._unrestructured.transactions.app
+package com.tminus1010.budgetvalue.domain
 
 class TransactionsAggregate(
     transactions: List<Transaction>,

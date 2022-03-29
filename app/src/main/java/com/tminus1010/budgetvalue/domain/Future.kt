@@ -2,7 +2,6 @@ package com.tminus1010.budgetvalue.domain
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
 import java.math.BigDecimal
 import java.time.LocalDate
 

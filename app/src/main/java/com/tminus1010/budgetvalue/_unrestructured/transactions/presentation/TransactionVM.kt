@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue._unrestructured.transactions.presentation
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
+import com.tminus1010.budgetvalue.domain.Transaction
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem

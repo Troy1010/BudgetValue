@@ -8,8 +8,8 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionBlock
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionsAggregate
-import com.tminus1010.budgetvalue._unrestructured.transactions.data.repo.TransactionsRepo
+import com.tminus1010.budgetvalue.domain.TransactionsAggregate
+import com.tminus1010.budgetvalue.data.TransactionsRepo
 import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.all_layers.extensions.divertErrors
 import com.tminus1010.budgetvalue.all_layers.extensions.value

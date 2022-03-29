@@ -1,8 +1,8 @@
 package com.tminus1010.budgetvalue.app
 
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
+import com.tminus1010.budgetvalue.domain.Transaction
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionBlock
-import com.tminus1010.budgetvalue._unrestructured.transactions.data.repo.TransactionsRepo
+import com.tminus1010.budgetvalue.data.TransactionsRepo
 import com.tminus1010.budgetvalue.all_layers.extensions.value
 import com.tminus1010.budgetvalue.app.model.ImportTransactionsResult
 import com.tminus1010.budgetvalue.app.model.RedoUndo

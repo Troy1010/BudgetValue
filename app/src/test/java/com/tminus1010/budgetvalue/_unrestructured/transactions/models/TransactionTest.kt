@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue._unrestructured.transactions.models
 
 import com.tminus1010.budgetvalue.Given
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
+import com.tminus1010.budgetvalue.domain.Transaction
 import io.mockk.mockk
 import junit.framework.TestCase
 import java.math.BigDecimal

@@ -1,6 +1,5 @@
 package com.tminus1010.budgetvalue.domain
 
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEquals
 import java.math.BigDecimal
 

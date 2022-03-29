@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.data.service
 import com.tminus1010.budgetvalue.all_layers.extensions.ifNull
 import com.tminus1010.budgetvalue.all_layers.extensions.isPositive
 import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
+import com.tminus1010.budgetvalue.domain.Transaction
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import java.io.BufferedReader
 import java.io.InputStream

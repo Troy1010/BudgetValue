@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.ui.choose_transaction
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tminus1010.budgetvalue._unrestructured.transactions.data.repo.TransactionsRepo
+import com.tminus1010.budgetvalue.data.TransactionsRepo
 import com.tminus1010.budgetvalue.ui.all_features.model.TextVMItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted

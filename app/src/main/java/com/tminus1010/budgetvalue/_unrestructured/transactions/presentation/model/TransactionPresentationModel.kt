@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue._unrestructured.transactions.presentation.mod
 import android.content.Context
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.ui.all_features.model.TextVMItem
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
+import com.tminus1010.budgetvalue.domain.Transaction
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
 import io.reactivex.rxjava3.subjects.PublishSubject

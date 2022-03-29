@@ -7,7 +7,7 @@ import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.ui.all_features.model.ButtonVMItem
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.ReceiptCategorizationInteractor
 import com.tminus1010.budgetvalue.ui.all_features.SubFragEventSharedVM
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
+import com.tminus1010.budgetvalue.domain.Transaction
 import com.tminus1010.budgetvalue._unrestructured.transactions.view.ChooseAmountSubFrag
 import com.tminus1010.budgetvalue._unrestructured.transactions.view.ReceiptCategorizationSoFarSubFrag
 import dagger.hilt.android.lifecycle.HiltViewModel

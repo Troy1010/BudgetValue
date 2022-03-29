@@ -1,9 +1,8 @@
-package com.tminus1010.budgetvalue._unrestructured.transactions.data.repo
+package com.tminus1010.budgetvalue.data
 
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.Transaction
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionsAggregate
+import com.tminus1010.budgetvalue.domain.Transaction
+import com.tminus1010.budgetvalue.domain.TransactionsAggregate
 import com.tminus1010.budgetvalue.data.service.MiscDAO
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
