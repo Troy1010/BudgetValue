@@ -14,11 +14,11 @@ class FuturesInteractor @Inject constructor(
      */
     suspend fun addDescriptionToFutureAndCategorize(description: String, future: Future): Int {
         val newTransactionMatcher =
-            when (future.onImportMatcher) {
-                is TransactionMatcher.Multi -> TransactionMatcher.Multi(future.onImportMatcher.transactionMatchers.plus(TransactionMatcher.SearchText(description)))
-                else -> TransactionMatcher.Multi(future.onImportMatcher, TransactionMatcher.SearchText(description))
+            when (future.onImportTransactionMatcher) {
+                is TransactionMatcher.Multi -> TransactionMatcher.Multi(future.onImportTransactionMatcher.transactionMatchers.plus(TransactionMatcher.SearchText(description)))
+                else -> TransactionMatcher.Multi(future.onImportTransactionMatcher, TransactionMatcher.SearchText(description))
             }
-        futuresRepo.push(future.copy(onImportMatcher = newTransactionMatcher))
+        futuresRepo.push(future.copy(onImportTransactionMatcher = newTransactionMatcher))
         return categorizeMatchingUncategorizedTransactions(newTransactionMatcher::isMatch, future::categorize)
     }
 }

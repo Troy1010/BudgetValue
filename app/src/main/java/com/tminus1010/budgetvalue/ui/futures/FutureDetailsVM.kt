@@ -52,7 +52,7 @@ class FutureDetailsVM @Inject constructor(
                     terminationStrategy = if (isOnlyOnce.value) TerminationStrategy.ONCE else TerminationStrategy.PERMANENT,
                     terminationDate = null,
                     isAvailableForManual = true,
-                    onImportMatcher = when (searchType.value) {
+                    onImportTransactionMatcher = when (searchType.value) {
                         SearchType.DESCRIPTION -> TransactionMatcher.Multi(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) })
                         SearchType.DESCRIPTION_AND_TOTAL -> TransactionMatcher.Multi(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) }.plus(TransactionMatcher.ByValue(totalGuess.value)))
                         SearchType.TOTAL -> TransactionMatcher.ByValue(totalGuess.value)
@@ -63,7 +63,7 @@ class FutureDetailsVM @Inject constructor(
             runBlocking {
                 futuresRepo.push(futureToPush)
                 if (futureToPush.terminationStrategy == TerminationStrategy.PERMANENT)
-                    categorizeMatchingUncategorizedTransactions({ futureToPush.onImportMatcher?.isMatch(it) ?: false }, futureToPush::categorize)
+                    categorizeMatchingUncategorizedTransactions({ futureToPush.onImportTransactionMatcher?.isMatch(it) ?: false }, futureToPush::categorize)
                         .also { showToast(NativeText.Simple("$it transactions categorized")) }
                 if (futureToPush.name != future.value!!.name) futuresRepo.delete(future.value!!)
                 userTryNavUp()
@@ -142,13 +142,13 @@ class FutureDetailsVM @Inject constructor(
     private val searchType =
         future
             .map {
-                when (it.onImportMatcher) {
+                when (it.onImportTransactionMatcher) {
                     is TransactionMatcher.SearchText,
                     -> SearchType.DESCRIPTION
                     is TransactionMatcher.ByValue,
                     -> SearchType.TOTAL
                     is TransactionMatcher.Multi,
-                    -> if (it.onImportMatcher.transactionMatchers.all { it is TransactionMatcher.SearchText })
+                    -> if (it.onImportTransactionMatcher.transactionMatchers.all { it is TransactionMatcher.SearchText })
                         SearchType.DESCRIPTION
                     else
                         SearchType.DESCRIPTION_AND_TOTAL

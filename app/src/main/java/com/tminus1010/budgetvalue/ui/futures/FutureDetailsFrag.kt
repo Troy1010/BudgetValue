@@ -54,7 +54,7 @@ class FutureDetailsFrag : Fragment(R.layout.frag_create_future) {
 
     companion object {
         fun navTo(nav: NavController, moshiWithCategoriesProvider: MoshiWithCategoriesProvider, future: Future, chooseCategoriesSharedVM: ChooseCategoriesSharedVM, setSearchTextsSharedVM: SetSearchTextsSharedVM) {
-            setSearchTextsSharedVM.searchTexts.adjustTo((future.onImportMatcher as? TransactionMatcher.Multi)?.transactionMatchers?.filterIsInstance<TransactionMatcher.SearchText>()?.map { it.searchText } ?: listOfNotNull((future.onImportMatcher as? TransactionMatcher.SearchText)?.searchText))
+            setSearchTextsSharedVM.searchTexts.adjustTo((future.onImportTransactionMatcher as? TransactionMatcher.Multi)?.transactionMatchers?.filterIsInstance<TransactionMatcher.SearchText>()?.map { it.searchText } ?: listOfNotNull((future.onImportTransactionMatcher as? TransactionMatcher.SearchText)?.searchText))
             runBlocking { chooseCategoriesSharedVM.clearSelection(); chooseCategoriesSharedVM.selectCategories(*future.categoryAmountFormulas.keys.toTypedArray()) }
             nav.navigate(R.id.futureDetailsFrag, Bundle().apply {
                 putString(KEY1, moshiWithCategoriesProvider.moshi.toJson(future))

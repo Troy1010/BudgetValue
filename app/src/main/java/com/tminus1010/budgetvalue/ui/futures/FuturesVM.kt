@@ -51,7 +51,7 @@ class FuturesVM @Inject constructor(
                                 TextPresentationModel(TextPresentationModel.Style.TWO, it.terminationStrategy.displayStr, menuVMItems = menuVMItems),
                                 TextPresentationModel(
                                     TextPresentationModel.Style.TWO,
-                                    when (val matcher = it.onImportMatcher) {
+                                    when (val matcher = it.onImportTransactionMatcher) {
                                         is TransactionMatcher.SearchText -> matcher.searchText.take(10)
                                         is TransactionMatcher.ByValue -> matcher.searchTotal.toString()
                                         is TransactionMatcher.Multi -> "Multiple"

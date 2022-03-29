@@ -69,7 +69,7 @@ class CreateFutureVM @Inject constructor(
                                 terminationStrategy = if (userSetIsOnlyOnce.value) TerminationStrategy.ONCE else TerminationStrategy.PERMANENT,
                                 terminationDate = null,
                                 isAvailableForManual = true,
-                                onImportMatcher = when (searchType.value) {
+                                onImportTransactionMatcher = when (searchType.value) {
                                     SearchType.DESCRIPTION -> TransactionMatcher.Multi(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) })
                                     SearchType.DESCRIPTION_AND_TOTAL -> TransactionMatcher.Multi(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) }.plus(TransactionMatcher.ByValue(totalGuess.value)))
                                     SearchType.TOTAL -> TransactionMatcher.ByValue(totalGuess.value)
@@ -80,7 +80,7 @@ class CreateFutureVM @Inject constructor(
                         runBlocking {
                             futuresRepo.push(futureToPush)
                             if (futureToPush.terminationStrategy == TerminationStrategy.PERMANENT)
-                                categorizeMatchingUncategorizedTransactions({ futureToPush.onImportMatcher?.isMatch(it) ?: false }, futureToPush::categorize)
+                                categorizeMatchingUncategorizedTransactions({ futureToPush.onImportTransactionMatcher?.isMatch(it) ?: false }, futureToPush::categorize)
                                     .also { showToast(NativeText.Simple("$it transactions categorized")) }
                             selectedCategoriesSharedVM.clearSelection()
                             navUp.emit(Unit)

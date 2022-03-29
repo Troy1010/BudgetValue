@@ -47,8 +47,8 @@ object ExtraMenuItemPartialsModule {
                     futuresRepo.futures.asObservable2().toSingle()
                         .flatMapCompletable { futures ->
                             val firstSearchTotal = futures
-                                .find { it.onImportMatcher is TransactionMatcher.ByValue }
-                                ?.let { it.onImportMatcher as TransactionMatcher.ByValue }
+                                .find { it.onImportTransactionMatcher is TransactionMatcher.ByValue }
+                                ?.let { it.onImportTransactionMatcher as TransactionMatcher.ByValue }
                                 ?.searchTotal
                             if (firstSearchTotal != null)
                                 Completable.fromAction {
