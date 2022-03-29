@@ -1,12 +1,9 @@
 package com.tminus1010.budgetvalue._unrestructured.transactions.presentation
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.budgetvalue.ui.all_features.view_model_item.MenuVMItems
-import com.tminus1010.budgetvalue.ui.all_features.view_model_item.MenuVMItem
-import com.tminus1010.budgetvalue.domain.Category
-import com.tminus1010.budgetvalue.ui.all_features.view_model_item.HeaderPresentationModel
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.ReceiptCategorizationInteractor
-import com.tminus1010.budgetvalue.ui.all_features.view_model_item.TextVMItem
+import com.tminus1010.budgetvalue.domain.Category
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
 import java.math.BigDecimal
@@ -21,37 +18,41 @@ class ReceiptCategorizationSoFarVM @Inject constructor(
     }
 
     // # State
-    val recipeGrid =
+    val categoryAmountsTableView =
         receiptCategorizationInteractor.categoryAmounts.flow.map {
-            listOf(
-                listOf(
+            TableViewVMItem(
+                recipeGrid = listOf(
                     listOf(
-                        HeaderPresentationModel("Amount"),
-                        HeaderPresentationModel("Category"),
+                        listOf(
+                            HeaderPresentationModel("Amount"),
+                            HeaderPresentationModel("Category"),
+                        ),
                     ),
-                ),
-                it.map { (category, amount) ->
-                    listOf(
-                        TextVMItem(
-                            text1 = amount.toPlainString(),
-                            menuVMItems = MenuVMItems(
-                                MenuVMItem(
-                                    title = "Remove",
-                                    onClick = { remove(category, amount) },
+                    it.map { (category, amount) ->
+                        listOf(
+                            TextVMItem(
+                                text1 = amount.toPlainString(),
+                                menuVMItems = MenuVMItems(
+                                    MenuVMItem(
+                                        title = "Remove",
+                                        onClick = { remove(category, amount) },
+                                    )
                                 )
-                            )
-                        ),
-                        TextVMItem(
-                            text1 = category.name,
-                            menuVMItems = MenuVMItems(
-                                MenuVMItem(
-                                    title = "Remove",
-                                    onClick = { remove(category, amount) },
+                            ),
+                            TextVMItem(
+                                text1 = category.name,
+                                menuVMItems = MenuVMItems(
+                                    MenuVMItem(
+                                        title = "Remove",
+                                        onClick = { remove(category, amount) },
+                                    )
                                 )
-                            )
-                        ),
-                    )
-                },
-            ).flatten()
+                            ),
+                        )
+                    },
+                ).flatten(),
+                shouldFitItemWidthsInsideTable = true,
+                rowFreezeCount = 1,
+            )
         }
 }
