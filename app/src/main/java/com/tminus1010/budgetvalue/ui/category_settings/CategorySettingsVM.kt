@@ -11,13 +11,14 @@ import com.tminus1010.budgetvalue.data.CategoriesRepo
 import com.tminus1010.budgetvalue.domain.AmountFormula
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.CategoryType
+import com.tminus1010.budgetvalue.ui.all_features.ThrobberSharedVM
 import com.tminus1010.budgetvalue.ui.all_features.view_model_item.*
 import com.tminus1010.budgetvalue.ui.errors.Errors
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,6 +28,7 @@ class CategorySettingsVM @Inject constructor(
     private val categoriesInteractor: CategoriesInteractor,
     private val replaceCategoryGlobally: ReplaceCategoryGlobally,
     private val errors: Errors,
+    private val throbberSharedVM: ThrobberSharedVM,
 ) : ViewModel() {
     // # View Events
     val originalCategoryName = MutableStateFlow("")
@@ -62,7 +64,9 @@ class CategorySettingsVM @Inject constructor(
     }
 
     fun userDeleteCategory() {
-        runBlocking { deleteCategoryFromActiveDomainUC(categoryToPush.value) } // TODO: Spinner
+        GlobalScope.launch(block = throbberSharedVM.decorate {
+            deleteCategoryFromActiveDomainUC(categoryToPush.value)
+        })
         navUp.easyEmit(Unit)
     }
 
