@@ -74,7 +74,8 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         val spanSize = if (requireContext().resources.configuration.fontScale <= 1.0) 3 else 2
         vb.recyclerviewCategories.addItemDecoration(LayoutMarginDecoration(spanSize, 8.toPX(requireContext())))
         vb.recyclerviewCategories.layoutManager = GridLayoutManager(requireActivity(), spanSize, GridLayoutManager.VERTICAL, false)
-        vb.recyclerviewCategories.bind(viewModel.recipeGrid.map { it.map { it.toViewItemRecipe(requireContext()) } }) { viewItemRecipes ->
+        vb.recyclerviewCategories.bind(viewModel.items) {
+            val viewItemRecipes = it.map { it.toViewItemRecipe(requireContext()) }
             adapter = object : LifecycleRVAdapter2<GenViewHolder2<ViewBinding>>() {
                 override fun onCreateViewHolder(parent: ViewGroup, i: Int): GenViewHolder2<ViewBinding> =
                     GenViewHolder2(viewItemRecipes[i].createVB(parent))

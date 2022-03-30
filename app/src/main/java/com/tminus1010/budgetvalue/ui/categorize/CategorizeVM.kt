@@ -174,7 +174,7 @@ class CategorizeVM @Inject constructor(
     val uncategorizedSpendsSize =
         transactionsInteractor.uncategorizedSpends
             .map { it.size.toString() }
-    val recipeGrid =
+    val items =
         combine(futuresRepo.futures.map { it.filter { it.isAvailableForManual } }, categoriesInteractor.userCategories)
         { nonAutomaticFutures, categories ->
             listOf(
