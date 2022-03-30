@@ -4,11 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_layers.extensions.*
-import com.tminus1010.budgetvalue.domain.Transaction
 import com.tminus1010.budgetvalue.app.*
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.Future
+import com.tminus1010.budgetvalue.domain.Transaction
 import com.tminus1010.budgetvalue.domain.TransactionMatcher
 import com.tminus1010.budgetvalue.framework.android.ShowToast
 import com.tminus1010.budgetvalue.ui.all_features.ThrobberSharedVM
@@ -146,6 +146,10 @@ class CategorizeVM @Inject constructor(
         navToCategoryDetails.easyEmit(category)
     }
 
+    fun userTryNavToReceiptCategorization() {
+        navToReceiptCategorization.easyEmit(transactionsInteractor.mostRecentUncategorizedSpend.value!!)
+    }
+
     // # Events
     val navToCreateFuture = MutableSharedFlow<Unit>()
     val navToCategoryDetails = MutableSharedFlow<Category>()
@@ -271,7 +275,7 @@ class CategorizeVM @Inject constructor(
                         ButtonVMItem(
                             title = "Do Receipt Categorization",
                             isEnabled2 = isTransactionAvailable,
-                            onClick = { navToReceiptCategorization.easyEmit(transactionsInteractor.mostRecentUncategorizedSpend.value!!) },
+                            onClick = ::userTryNavToReceiptCategorization,
                         )
                     else null,
                     if (!inSelectionMode)
