@@ -6,7 +6,7 @@ import com.tminus1010.budgetvalue.all_layers.InvalidCategoryNameException
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
-import com.tminus1010.budgetvalue.app.CategoriesInteractor
+import com.tminus1010.budgetvalue.all_layers.extensions.value
 import com.tminus1010.budgetvalue.app.DeleteCategoryFromActiveDomainUC
 import com.tminus1010.budgetvalue.app.ReplaceCategoryGlobally
 import com.tminus1010.budgetvalue.data.CategoriesRepo
@@ -32,7 +32,6 @@ import javax.inject.Inject
 class CategoryDetailsVM @Inject constructor(
     private val deleteCategoryFromActiveDomainUC: DeleteCategoryFromActiveDomainUC,
     private val categoriesRepo: CategoriesRepo,
-    private val categoriesInteractor: CategoriesInteractor,
     private val replaceCategoryGlobally: ReplaceCategoryGlobally,
     private val errors: Errors,
     private val throbberSharedVM: ThrobberSharedVM,
@@ -40,21 +39,13 @@ class CategoryDetailsVM @Inject constructor(
     private val transactionMatcherPresentationFactory: TransactionMatcherPresentationFactory,
 ) : ViewModel() {
     // # View Events
-    val originalCategoryName = MutableStateFlow("")
-    val isForNewCategory = MutableStateFlow(true)
+    val originalCategory = MutableSharedFlow<Category?>(1)
 
     // # Internal
-    private val originalCategory = originalCategoryName.map { if (it == "") null else categoriesInteractor.parseCategory(it) }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
     private val newCategoryToPush = MutableSharedFlow<Category>()
     private val categoryToPush =
         merge(
-            combine(isForNewCategory, originalCategoryName)
-            { isForNewCategory, originalCategoryName ->
-                if (isForNewCategory)
-                    Category("")
-                else
-                    categoriesInteractor.parseCategory(originalCategoryName)
-            },
+            originalCategory.map { it ?: Category("") },
             newCategoryToPush,
         )
             .stateIn(viewModelScope, SharingStarted.Eagerly, Category(""))
@@ -85,7 +76,7 @@ class CategoryDetailsVM @Inject constructor(
                 categoryToPush.value.name.equals(Category.DEFAULT.name, ignoreCase = true) ||
                 categoryToPush.value.name.equals(Category.UNRECOGNIZED.name, ignoreCase = true)
             ) throw InvalidCategoryNameException()
-            if (originalCategoryName.value != "" && originalCategoryName.value != categoryToPush.value.name)
+            if (originalCategory.value != null && originalCategory.value != categoryToPush.value)
                 replaceCategoryGlobally(originalCategory.value!!, categoryToPush.value)
             else
                 categoriesRepo.push(categoryToPush.value)
@@ -119,7 +110,9 @@ class CategoryDetailsVM @Inject constructor(
     val navToSetSearchTexts = MutableSharedFlow<Unit>()
 
     // # State
-    val title = isForNewCategory.flatMapConcat { if (it) flowOf("Create a new Category") else categoryToPush.map { "Settings (${it.name})" } }
+    val title =
+        originalCategory.flatMapConcat { if (it == null) flowOf("Create a new Category") else categoryToPush.map { "Settings (${it.name})" } }
+            .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
     val optionsTableView =
         categoryToPush.map { categoryToPush ->
             TableViewVMItem(
@@ -165,15 +158,16 @@ class CategoryDetailsVM @Inject constructor(
                 shouldFitItemWidthsInsideTable = true,
             )
         }
+            .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
     val buttons =
-        isForNewCategory.map { isForNewCategory ->
+        originalCategory.map { originalCategory ->
             listOfNotNull(
-                if (isForNewCategory)
+                if (originalCategory == null)
                     null
                 else
                     ButtonVMItem(
                         title = "Delete",
-                        onClick = { showDeleteConfirmationPopup.easyEmit(originalCategoryName.value) }
+                        onClick = { showDeleteConfirmationPopup.easyEmit(originalCategory.name) }
                     ),
                 ButtonVMItem(
                     title = "Done",
@@ -181,4 +175,5 @@ class CategoryDetailsVM @Inject constructor(
                 ),
             )
         }
+            .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
 }
