@@ -7,7 +7,7 @@ import com.tminus1010.budgetvalue.domain.Category
 
 @TypeConverters(RoomTypeConverter::class)
 @Database(
-    version = 1,
+    version = 2,
     entities = [Category::class],
 )
 abstract class CategoryDatabase : RoomDatabase() {

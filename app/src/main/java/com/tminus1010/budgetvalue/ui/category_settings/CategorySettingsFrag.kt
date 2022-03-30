@@ -12,6 +12,7 @@ import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.framework.android.viewBinding
 import com.tminus1010.budgetvalue.ui.errors.Errors
 import com.tminus1010.budgetvalue.databinding.FragCategorySettingsBinding
+import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsFrag
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
@@ -47,15 +48,11 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
                 .setNegativeButton("No") { _, _ -> }
                 .show()
         }
+        categorySettingsVM.navToSetSearchTexts.observe(viewLifecycleOwner) { SetSearchTextsFrag.navTo(nav) }
         // # State
         vb.tvTitle.bind(categorySettingsVM.title) { text = it }
         vb.buttonsview.bind(categorySettingsVM.buttons) { buttons = it }
-        vb.tmTableView.bind(categorySettingsVM.optionsRecipeGrid) {
-            initialize(
-                recipeGrid = it.map { it.map { it.toViewItemRecipe(requireContext()) } },
-                shouldFitItemWidthsInsideTable = true,
-            )
-        }
+        vb.tmTableView.bind(categorySettingsVM.optionsTableView) { it.bind(this) }
     }
 
     companion object {
