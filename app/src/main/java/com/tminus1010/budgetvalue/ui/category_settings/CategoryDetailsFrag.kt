@@ -23,7 +23,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class CategoryDetailsFrag : Fragment(R.layout.frag_category_details) {
     private val vb by viewBinding(FragCategoryDetailsBinding::bind)
-    private val categorySettingsVM by viewModels<CategoryDetailsVM>()
+    private val viewModel by viewModels<CategoryDetailsVM>()
 
     @Inject
     lateinit var errors: Errors
@@ -31,8 +31,8 @@ class CategoryDetailsFrag : Fragment(R.layout.frag_category_details) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Setup
-        categorySettingsVM.originalCategoryName.easyEmit(requireArguments().getString(KEY_CATEGORY_NAME, ""))
-        categorySettingsVM.isForNewCategory.easyEmit(requireArguments().getBoolean(KEY_IS_FOR_NEW_CATEGORY))
+        viewModel.originalCategoryName.easyEmit(requireArguments().getString(KEY_CATEGORY_NAME, ""))
+        viewModel.isForNewCategory.easyEmit(requireArguments().getBoolean(KEY_IS_FOR_NEW_CATEGORY))
         // # Events
         errors.observe(viewLifecycleOwner) {
             when (it) {
@@ -40,19 +40,19 @@ class CategoryDetailsFrag : Fragment(R.layout.frag_category_details) {
                 else -> throw it
             }
         }
-        categorySettingsVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
-        categorySettingsVM.showDeleteConfirmationPopup.observe(viewLifecycleOwner) {
+        viewModel.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
+        viewModel.showDeleteConfirmationPopup.observe(viewLifecycleOwner) {
             AlertDialog.Builder(requireContext())
                 .setMessage("Are you sure you want to delete these categories?\n\t${it}")
-                .setPositiveButton("Yes") { _, _ -> categorySettingsVM.userDeleteCategory() }
+                .setPositiveButton("Yes") { _, _ -> viewModel.userDeleteCategory() }
                 .setNegativeButton("No") { _, _ -> }
                 .show()
         }
-        categorySettingsVM.navToSetSearchTexts.observe(viewLifecycleOwner) { SetSearchTextsFrag.navTo(nav) }
+        viewModel.navToSetSearchTexts.observe(viewLifecycleOwner) { SetSearchTextsFrag.navTo(nav) }
         // # State
-        vb.tvTitle.bind(categorySettingsVM.title) { text = it }
-        vb.buttonsview.bind(categorySettingsVM.buttons) { buttons = it }
-        vb.tmTableView.bind(categorySettingsVM.optionsTableView) { it.bind(this) }
+        vb.tvTitle.bind(viewModel.title) { text = it }
+        vb.buttonsview.bind(viewModel.buttons) { buttons = it }
+        vb.tmTableView.bind(viewModel.optionsTableView) { it.bind(this) }
     }
 
     companion object {
