@@ -8,7 +8,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
-import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -49,20 +48,20 @@ class TransactionsInteractor @Inject constructor(
     }
 
     // # Output
-    val transactionBlocks2 =
+    val transactionBlocks =
         transactionsRepo.transactionsAggregate
             .map { getBlocksFromTransactions(it.transactions) }
             .shareIn(GlobalScope, SharingStarted.WhileSubscribed(), 1)
     val spendBlocks =
-        transactionBlocks2
+        transactionBlocks
             .map { it.map { it.spendBlock } }
             .shareIn(GlobalScope, SharingStarted.WhileSubscribed(), 1)
     val uncategorizedSpends =
         transactionsRepo.transactionsAggregate
             .map { it.spends.filter { it.isUncategorized } }
-            .stateIn(GlobalScope, SharingStarted.Eagerly, emptyList())
+            .shareIn(GlobalScope, SharingStarted.WhileSubscribed(), 1)
     val mostRecentUncategorizedSpend =
         transactionsRepo.transactionsAggregate
             .map { it.mostRecentUncategorizedSpend }
-            .stateIn(GlobalScope, SharingStarted.Eagerly, null)
+            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 }

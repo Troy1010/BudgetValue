@@ -27,7 +27,7 @@ class ReconciliationsToDoInteractor @Inject constructor(
     budgetedInteractor: BudgetedInteractor,
 ) {
     private val planReconciliationsToDo =
-        combine(plansRepo.plans, transactionsInteractor.transactionBlocks2, reconciliationsRepo.reconciliations)
+        combine(plansRepo.plans, transactionsInteractor.transactionBlocks, reconciliationsRepo.reconciliations)
         { plans, transactionBlocks, reconciliations ->
             transactionBlocks
                 .map { transactionBlock ->

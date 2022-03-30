@@ -9,6 +9,7 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_layers.extensions.showAlertDialog
+import com.tminus1010.budgetvalue.all_layers.extensions.value
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.databinding.FragCreateFutureBinding
 import com.tminus1010.budgetvalue.framework.android.viewBinding

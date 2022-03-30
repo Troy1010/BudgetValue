@@ -20,7 +20,7 @@ class TransactionBlockCompletionVM @Inject constructor(
 ) : ViewModel() {
     // # State
     val transactionVMItems =
-        transactionsInteractor.transactionBlocks2
+        transactionsInteractor.transactionBlocks
             .map {
                 listOf(
                     listOf(

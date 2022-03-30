@@ -27,7 +27,7 @@ class BudgetedInteractor @Inject constructor(
     accountsRepo: AccountsRepo,
 ) {
     val categoryAmounts =
-        Rx.combineLatest(reconciliationsRepo.reconciliations.asObservable2(), plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks2.asObservable2())
+        Rx.combineLatest(reconciliationsRepo.reconciliations.asObservable2(), plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks.asObservable2())
             .throttleLatest(1, TimeUnit.SECONDS)
             .map { (reconciliations, plans, transactionBlocks) ->
                 sequenceOf<Map<Category, BigDecimal>>()
@@ -41,7 +41,7 @@ class BudgetedInteractor @Inject constructor(
         categoryAmounts
             .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO)) { it.itemObservableMap }
     val totalAmount =
-        Observable.combineLatest(reconciliationsRepo.reconciliations.asObservable2(), plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks2.asObservable2())
+        Observable.combineLatest(reconciliationsRepo.reconciliations.asObservable2(), plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks.asObservable2())
         { reconciliations, plans, actuals ->
             reconciliations.map { it.total }.sum() +
                     plans.map { it.total }.sum() +

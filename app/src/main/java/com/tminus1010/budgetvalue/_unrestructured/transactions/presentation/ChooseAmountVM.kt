@@ -2,15 +2,16 @@ package com.tminus1010.budgetvalue._unrestructured.transactions.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tminus1010.budgetvalue._unrestructured.transactions.app.ReceiptCategorizationInteractor
+import com.tminus1010.budgetvalue._unrestructured.transactions.view.ChooseCategorySubFrag
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
+import com.tminus1010.budgetvalue.all_layers.extensions.value
+import com.tminus1010.budgetvalue.app.TransactionsInteractor
+import com.tminus1010.budgetvalue.ui.all_features.SubFragEventSharedVM
 import com.tminus1010.budgetvalue.ui.all_features.view_model_item.ButtonVMItem
 import com.tminus1010.budgetvalue.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.budgetvalue.ui.all_features.view_model_item.MenuVMItems
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.ReceiptCategorizationInteractor
-import com.tminus1010.budgetvalue.ui.all_features.SubFragEventSharedVM
-import com.tminus1010.budgetvalue.app.TransactionsInteractor
-import com.tminus1010.budgetvalue._unrestructured.transactions.view.ChooseCategorySubFrag
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow

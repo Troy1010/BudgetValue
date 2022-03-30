@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue._unrestructured.transactions.app
 
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
+import com.tminus1010.budgetvalue.all_layers.extensions.value
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.CategoryAmounts

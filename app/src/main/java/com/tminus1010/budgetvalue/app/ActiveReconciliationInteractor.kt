@@ -42,7 +42,7 @@ class ActiveReconciliationInteractor @Inject constructor(
         combine(
             plansRepo.plans,
             reconciliationsRepo.reconciliations,
-            transactionsInteractor.transactionBlocks2,
+            transactionsInteractor.transactionBlocks,
             accountsRepo.accountsAggregate.map { it.total },
             activeReconciliationRepo.activeReconciliationCAs,
             ::calcActiveReconciliationDefaultAmount
