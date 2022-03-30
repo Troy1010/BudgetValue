@@ -10,7 +10,8 @@ class CategorizeMatchingUncategorizedTransactions @Inject constructor(
     suspend operator fun invoke(isMatch: (Transaction) -> Boolean, categorize: (Transaction) -> Transaction): Int {
         return transactionsInteractor.uncategorizedSpends.first()
             .filter(isMatch)
-            .onEach { transactionsInteractor.push(categorize(it)) }
-            .fold(0) { acc, v -> acc + 1 }
+            .map { categorize(it) }
+            .also { transactionsInteractor.push(it) }
+            .size
     }
 }
