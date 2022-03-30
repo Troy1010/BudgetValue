@@ -29,7 +29,7 @@ import java.math.BigDecimal
 import javax.inject.Inject
 
 @HiltViewModel
-class CategorySettingsVM @Inject constructor(
+class CategoryDetailsVM @Inject constructor(
     private val deleteCategoryFromActiveDomainUC: DeleteCategoryFromActiveDomainUC,
     private val categoriesRepo: CategoriesRepo,
     private val categoriesInteractor: CategoriesInteractor,

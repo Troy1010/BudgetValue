@@ -16,7 +16,7 @@ import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.framework.android.GenViewHolder2
 import com.tminus1010.budgetvalue.framework.android.LifecycleRVAdapter2
 import com.tminus1010.budgetvalue.framework.android.viewBinding
-import com.tminus1010.budgetvalue.ui.category_settings.CategorySettingsFrag
+import com.tminus1010.budgetvalue.ui.category_settings.CategoryDetailsFrag
 import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesSharedVM
 import com.tminus1010.budgetvalue.ui.errors.Errors
 import com.tminus1010.budgetvalue.ui.futures.CreateFutureFrag
@@ -29,7 +29,6 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import com.tminus1010.tmcommonkotlin.view.extensions.toPX
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 
@@ -61,8 +60,8 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         // # Events
         errors.observe(viewLifecycleOwner) { throw it }
         viewModel.navToCreateFuture.observe(viewLifecycleOwner) { CreateFutureFrag.navTo(nav, setSearchTextsSharedVM, transactionsInteractor) }
-        viewModel.navToNewCategory.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, null, true) }
-        viewModel.navToCategorySettings.observe(viewLifecycleOwner) { CategorySettingsFrag.navTo(nav, it.name, false) }
+        viewModel.navToNewCategory.observe(viewLifecycleOwner) { CategoryDetailsFrag.navTo(nav, null, true) }
+        viewModel.navToCategorySettings.observe(viewLifecycleOwner) { CategoryDetailsFrag.navTo(nav, it.name, false) }
         viewModel.navToReplayOrFutureDetails.observe(viewLifecycleOwner) { FutureDetailsFrag.navTo(nav, moshiWithCategoriesProvider, it, chooseCategoriesSharedVM, setSearchTextsSharedVM) }
         viewModel.navToReceiptCategorization.observe(viewLifecycleOwner) { ReceiptCategorizationHostFrag.navTo(nav, it, moshiWithCategoriesProvider) }
         viewModel.navToEditStringForAddTransactionToFutureWithEdit.observe(viewLifecycleOwner) { SetStringFrag.navTo(nav, it, setStringSharedVM) }

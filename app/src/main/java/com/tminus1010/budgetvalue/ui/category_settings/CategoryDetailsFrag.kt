@@ -9,9 +9,9 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_layers.InvalidCategoryNameException
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
+import com.tminus1010.budgetvalue.databinding.FragCategoryDetailsBinding
 import com.tminus1010.budgetvalue.framework.android.viewBinding
 import com.tminus1010.budgetvalue.ui.errors.Errors
-import com.tminus1010.budgetvalue.databinding.FragCategorySettingsBinding
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsFrag
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
@@ -21,9 +21,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
-    private val vb by viewBinding(FragCategorySettingsBinding::bind)
-    private val categorySettingsVM by viewModels<CategorySettingsVM>()
+class CategoryDetailsFrag : Fragment(R.layout.frag_category_details) {
+    private val vb by viewBinding(FragCategoryDetailsBinding::bind)
+    private val categorySettingsVM by viewModels<CategoryDetailsVM>()
 
     @Inject
     lateinit var errors: Errors
@@ -60,7 +60,7 @@ class CategorySettingsFrag : Fragment(R.layout.frag_category_settings) {
         const val KEY_CATEGORY_NAME = "KEY_CATEGORY_NAME"
         fun navTo(nav: NavController, categoryName: String?, isForNewCategory: Boolean) {
             nav.navigate(
-                R.id.categorySettingsFrag,
+                R.id.categoryDetailsFrag,
                 Bundle().apply {
                     putBoolean(KEY_IS_FOR_NEW_CATEGORY, isForNewCategory)
                     putString(KEY_CATEGORY_NAME, categoryName)

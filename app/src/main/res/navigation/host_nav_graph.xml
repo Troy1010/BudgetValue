@@ -43,10 +43,10 @@
         android:id="@+id/categorizeNestedGraph"
         app:startDestination="@id/categorizeFrag">
         <fragment
-            android:id="@+id/categorySettingsFrag"
-            android:name="com.tminus1010.budgetvalue.ui.category_settings.CategorySettingsFrag"
-            android:label="CategorySettingsFrag"
-            tools:layout="@layout/frag_category_settings" />
+            android:id="@+id/categoryDetailsFrag"
+            android:name="com.tminus1010.budgetvalue.ui.category_settings.CategoryDetailsFrag"
+            android:label="CategoryDetailsFrag"
+            tools:layout="@layout/frag_category_details" />
         <fragment
             android:id="@+id/categorizeFrag"
             android:name="com.tminus1010.budgetvalue.ui.categorize.CategorizeFrag"
@@ -54,7 +54,7 @@
             tools:layout="@layout/frag_categorize">
             <action
                 android:id="@+id/action_categorizeFrag_to_categorySettingsFrag"
-                app:destination="@id/categorySettingsFrag"
+                app:destination="@id/categoryDetailsFrag"
                 app:popUpTo="@id/categorizeFrag" />
             <action
                 android:id="@+id/action_categorizeFrag_to_receiptCategorizationFrag"
