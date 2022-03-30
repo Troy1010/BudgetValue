@@ -12,7 +12,11 @@ data class Category(
     val defaultAmountFormula: AmountFormula = AmountFormula.Value(BigDecimal.ZERO),
     val isRequired: Boolean = false,
     val onImportTransactionMatcher: TransactionMatcher? = null,
-) {
+) : ICategorizer {
+    override fun categorize(transaction: Transaction): Transaction {
+        return transaction.categorize(this)
+    }
+
     override fun toString() = name // for logs
 
     companion object {

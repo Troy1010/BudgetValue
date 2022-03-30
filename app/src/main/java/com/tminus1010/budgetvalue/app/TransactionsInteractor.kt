@@ -1,14 +1,14 @@
 package com.tminus1010.budgetvalue.app
 
-import com.tminus1010.budgetvalue.domain.Transaction
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionBlock
-import com.tminus1010.budgetvalue.data.TransactionsRepo
 import com.tminus1010.budgetvalue.all_layers.extensions.value
 import com.tminus1010.budgetvalue.app.model.ImportTransactionsResult
 import com.tminus1010.budgetvalue.app.model.RedoUndo
 import com.tminus1010.budgetvalue.data.FuturesRepo
+import com.tminus1010.budgetvalue.data.TransactionsRepo
 import com.tminus1010.budgetvalue.data.service.TransactionInputStreamAdapter
 import com.tminus1010.budgetvalue.domain.TerminationStrategy
+import com.tminus1010.budgetvalue.domain.Transaction
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -26,6 +26,7 @@ class TransactionsInteractor @Inject constructor(
     private val transactionInputStreamAdapter: TransactionInputStreamAdapter,
     private val futuresRepo: FuturesRepo,
     private val redoUndoInteractor: RedoUndoInteractor,
+    private val categoriesInteractor: CategoriesInteractor,
 ) {
     // # Input
     suspend fun importTransactions(inputStream: InputStream) = importTransactions(transactionInputStreamAdapter.parseToTransactions(inputStream))
@@ -36,11 +37,13 @@ class TransactionsInteractor @Inject constructor(
         transactions
             .filter { (transactionsRepo.getTransaction2(it.id) == null).also { if (!it) transactionsIgnoredBecauseTheyWereAlreadyImportedCounter++ } }
             .map { transaction ->
-                val matchedFuture =
-                    futuresRepo.futures.value!!
+                val matchedCategorization =
+                    categoriesInteractor.userCategories.value!!
                         .find { it.onImportTransactionMatcher?.isMatch(transaction) ?: false }
-                matchedFuture?.categorize(transaction)
-                    ?.also { if (matchedFuture.terminationStrategy == TerminationStrategy.ONCE) futuresRepo.setTerminationDate(matchedFuture, LocalDate.now()) }
+                        ?: futuresRepo.futures.value!!
+                            .find { it.onImportTransactionMatcher?.isMatch(transaction) ?: false }
+                            ?.also { if (it.terminationStrategy == TerminationStrategy.ONCE) futuresRepo.setTerminationDate(it, LocalDate.now()) }
+                matchedCategorization?.categorize(transaction)
                     ?.also { transactionsCategorizedCounter++ }
                     ?: transaction
             }

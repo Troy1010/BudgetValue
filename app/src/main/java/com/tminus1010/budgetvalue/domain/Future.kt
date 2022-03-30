@@ -16,8 +16,8 @@ data class Future(
     val isAvailableForManual: Boolean,
     val onImportTransactionMatcher: TransactionMatcher?,
     val totalGuess: BigDecimal,
-) {
-    fun categorize(transaction: Transaction): Transaction =
+) : ICategorizer {
+    override fun categorize(transaction: Transaction): Transaction =
         transaction.categorize(
             categoryAmountFormulas
                 .fillIntoCategory(fillCategory, transaction.amount)
