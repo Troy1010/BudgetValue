@@ -4,7 +4,6 @@ import android.app.Application
 import android.net.Uri
 import com.tminus1010.budgetvalue.all_layers.extensions.value
 import com.tminus1010.budgetvalue.app.model.ImportTransactionsResult
-import com.tminus1010.budgetvalue.app.model.RedoUndo
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.data.TransactionsRepo
 import com.tminus1010.budgetvalue.data.service.TransactionInputStreamAdapter
@@ -20,7 +19,7 @@ class ImportTransactions @Inject constructor(
     private val app: Application,
     private val transactionInputStreamAdapter: TransactionInputStreamAdapter,
     private val futuresRepo: FuturesRepo,
-    private val categoriesInteractor: CategoriesInteractor,
+    private val categoryParser: CategoryParser,
     private val transactionsRepo: TransactionsRepo,
     private val transactionsInteractor: TransactionsInteractor
 ) {
@@ -43,7 +42,7 @@ class ImportTransactions @Inject constructor(
             .filter { (transactionsRepo.getTransaction2(it.id) == null).also { if (!it) transactionsIgnoredBecauseTheyWereAlreadyImportedCounter++ } }
             .map { transaction ->
                 val matchedCategorization =
-                    categoriesInteractor.userCategories.value!!
+                    categoryParser.userCategories.value!!
                         .find { it.onImportTransactionMatcher?.isMatch(transaction) ?: false }
                         ?: futuresRepo.futures.value!!
                             .find { it.onImportTransactionMatcher?.isMatch(transaction) ?: false }

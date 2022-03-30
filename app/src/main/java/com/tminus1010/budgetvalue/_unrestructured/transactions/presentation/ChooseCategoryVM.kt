@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.all_layers.extensions.isZero
 import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.ui.all_features.view_model_item.ButtonVMItem
-import com.tminus1010.budgetvalue.app.CategoriesInteractor
+import com.tminus1010.budgetvalue.app.CategoryParser
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.ReceiptCategorizationInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChooseCategoryVM @Inject constructor(
-    categoriesInteractor: CategoriesInteractor,
+    categoryParser: CategoryParser,
     private val receiptCategorizationInteractor: ReceiptCategorizationInteractor,
 ) : ViewModel() {
     // # UserIntents
@@ -27,7 +27,7 @@ class ChooseCategoryVM @Inject constructor(
     // # State
     val partialAmountToCategorize = receiptCategorizationInteractor.rememberedAmount.map { if (it.isZero) null else it.toString().toMoneyBigDecimal().toString() }
     val categoryButtonVMItems =
-        categoriesInteractor.userCategories
+        categoryParser.userCategories
             .map {
                 it.map { category ->
                     ButtonVMItem(

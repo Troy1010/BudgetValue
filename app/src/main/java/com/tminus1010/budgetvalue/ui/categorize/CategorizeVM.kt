@@ -33,7 +33,7 @@ import javax.inject.Inject
 class CategorizeVM @Inject constructor(
     private val transactionsInteractor: TransactionsInteractor,
     private val showToast: ShowToast,
-    private val categoriesInteractor: CategoriesInteractor,
+    private val categoryParser: CategoryParser,
     private val throbberSharedVM: ThrobberSharedVM,
     private val chooseCategoriesSharedVM: ChooseCategoriesSharedVM,
     errors: Errors,
@@ -42,6 +42,7 @@ class CategorizeVM @Inject constructor(
     private val redoUndoInteractor: RedoUndoInteractor,
     private val setStringSharedVM: SetStringSharedVM,
     private val categorizeMatchingTransactions: CategorizeMatchingTransactions,
+    private val categoriesInteractor: CategoriesInteractor,
 ) : ViewModel() {
     // # User Intents
     fun userSimpleCategorize(category: Category) {
@@ -74,7 +75,7 @@ class CategorizeVM @Inject constructor(
 
     fun userCategorizeAllAsUnknown() {
         GlobalScope.launch(block = throbberSharedVM.decorate {
-            val categoryUnknown = categoriesInteractor.userCategories.take(1).first().find { it.name.equals("Unknown", ignoreCase = true) }!! // TODO: Handle this error
+            val categoryUnknown = categoryParser.userCategories.take(1).first().find { it.name.equals("Unknown", ignoreCase = true) }!! // TODO: Handle this error
             transactionsInteractor.push(
                 transactionsInteractor.uncategorizedSpends.first().map { it.categorize(categoryUnknown) }
             )
@@ -105,7 +106,7 @@ class CategorizeVM @Inject constructor(
                     .also { showToast(NativeText.Simple("$it transactions categorized")) }
             })
         }
-        navToEditStringForAddTransactionToFutureWithEdit.onNext(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)
+        navToSetString.onNext(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)
     }
 
     fun userUseDescription(future: Future) {
@@ -122,7 +123,7 @@ class CategorizeVM @Inject constructor(
                     .also { showToast(NativeText.Simple("$it transactions categorized")) }
             })
         }
-        navToEditStringForAddTransactionToFutureWithEdit.onNext(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)
+        navToSetString.onNext(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)
     }
 
     fun userUseDescriptionOnCategory(category: Category) {
@@ -139,7 +140,30 @@ class CategorizeVM @Inject constructor(
                     .also { showToast(NativeText.Simple("$it transactions categorized")) }
             })
         }
-        navToEditStringForAddTransactionToFutureWithEdit.onNext(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)
+        navToSetString.onNext(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)
+    }
+
+    fun userUseAndRememberDescriptionOnCategory(category: Category) {
+        GlobalScope.launch(block = throbberSharedVM.decorate {
+            categoriesInteractor.addDescriptionAndCategorize(
+                category = category,
+                description = transactionsInteractor.mostRecentUncategorizedSpend.value!!.description,
+            )
+                .also { showToast(NativeText.Simple("$it transactions categorized")) }
+        })
+    }
+
+    fun userUseAndRememberDescriptionWithEditOnCategory(category: Category) {
+        setStringSharedVM.userSubmitString.take(1).takeUntilSignal(setStringSharedVM.userCancel).observe(GlobalScope) { s ->
+            GlobalScope.launch(block = throbberSharedVM.decorate { // TODO: There should be a better way than launching within a launch, right?
+                categoriesInteractor.addDescriptionAndCategorize(
+                    category = category,
+                    description = s,
+                )
+                    .also { showToast(NativeText.Simple("$it transactions categorized")) }
+            })
+        }
+        navToSetString.onNext(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)
     }
 
     fun userTryNavToCategorySettings(category: Category) {
@@ -156,7 +180,7 @@ class CategorizeVM @Inject constructor(
     val navToNewCategory = MutableSharedFlow<Unit>()
     val navToReplayOrFutureDetails = MutableSharedFlow<Future>()
     val navToReceiptCategorization = MutableSharedFlow<Transaction>()
-    val navToEditStringForAddTransactionToFutureWithEdit = MutableSharedFlow<String>()
+    val navToSetString = MutableSharedFlow<String>()
 
     // # State
     val isUndoAvailable = redoUndoInteractor.isUndoAvailable
@@ -179,7 +203,7 @@ class CategorizeVM @Inject constructor(
         transactionsInteractor.uncategorizedSpends
             .map { it.size.toString() }
     val items =
-        combine(futuresRepo.futures.map { it.filter { it.isAvailableForManual } }, categoriesInteractor.userCategories)
+        combine(futuresRepo.futures.map { it.filter { it.isAvailableForManual } }, categoryParser.userCategories)
         { nonAutomaticFutures, categories ->
             listOf(
                 *categories.map { category ->
@@ -223,6 +247,14 @@ class CategorizeVM @Inject constructor(
                                 MenuVMItem(
                                     title = "Use With Edit",
                                     onClick = { userUseDescriptionWithEditOnCategory(category) }
+                                ),
+                                MenuVMItem(
+                                    title = "Use and Remember",
+                                    onClick = { userUseAndRememberDescriptionOnCategory(category) }
+                                ),
+                                MenuVMItem(
+                                    title = "Use and Remember with Edit",
+                                    onClick = { userUseAndRememberDescriptionWithEditOnCategory(category) }
                                 ),
                             )
                         },

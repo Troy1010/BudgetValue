@@ -37,3 +37,10 @@ sealed class TransactionMatcher {
         }
     }
 }
+
+fun TransactionMatcher?.withSearchText(searchText: String) =
+    when (this) {
+        null -> TransactionMatcher.SearchText(searchText)
+        is TransactionMatcher.Multi -> TransactionMatcher.Multi(this.transactionMatchers.plus(TransactionMatcher.SearchText(searchText)))
+        else -> TransactionMatcher.Multi(this, TransactionMatcher.SearchText(searchText))
+    }

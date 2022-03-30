@@ -68,7 +68,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         viewModel.navToCategoryDetails.observe(viewLifecycleOwner) { CategoryDetailsFrag.navTo(nav, moshiProvider, it, setSearchTextsSharedVM) }
         viewModel.navToReplayOrFutureDetails.observe(viewLifecycleOwner) { FutureDetailsFrag.navTo(nav, moshiWithCategoriesProvider, it, chooseCategoriesSharedVM, setSearchTextsSharedVM) }
         viewModel.navToReceiptCategorization.observe(viewLifecycleOwner) { ReceiptCategorizationHostFrag.navTo(nav, it, moshiWithCategoriesProvider) }
-        viewModel.navToEditStringForAddTransactionToFutureWithEdit.observe(viewLifecycleOwner) { SetStringFrag.navTo(nav, it, setStringSharedVM) }
+        viewModel.navToSetString.observe(viewLifecycleOwner) { SetStringFrag.navTo(nav, it, setStringSharedVM) }
         // # State
         vb.textviewDate.bind(viewModel.date) { text = it }
         vb.textviewAmount.bind(viewModel.latestUncategorizedTransactionAmount) { text = it }

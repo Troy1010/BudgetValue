@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue.all_layers.NoDescriptionEnteredException
 import com.tminus1010.budgetvalue.all_layers.extensions.*
-import com.tminus1010.budgetvalue.app.CategoriesInteractor
+import com.tminus1010.budgetvalue.app.CategoryParser
 import com.tminus1010.budgetvalue.app.CategorizeMatchingTransactions
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.domain.*
@@ -26,7 +26,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FutureDetailsVM @Inject constructor(
-    private val categoriesInteractor: CategoriesInteractor,
+    private val categoryParser: CategoryParser,
     private val selectedCategoriesSharedVM: ChooseCategoriesSharedVM,
     private val futuresRepo: FuturesRepo,
     private val showToast: ShowToast,
@@ -101,7 +101,7 @@ class FutureDetailsVM @Inject constructor(
 
     private val userSetFillCategory = MutableSharedFlow<Category?>()
     fun userSetFillCategory(categoryName: String) {
-        userSetFillCategory.onNext(categoriesInteractor.parseCategory(categoryName))
+        userSetFillCategory.onNext(categoryParser.parseCategory(categoryName))
     }
 
     private val userSetName = MutableSharedFlow<String>()
