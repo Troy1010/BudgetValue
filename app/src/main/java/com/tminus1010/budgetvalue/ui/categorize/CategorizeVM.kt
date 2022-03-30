@@ -143,12 +143,12 @@ class CategorizeVM @Inject constructor(
     }
 
     fun userTryNavToCategorySettings(category: Category) {
-        navToCategorySettings.easyEmit(category)
+        navToCategoryDetails.easyEmit(category)
     }
 
     // # Events
     val navToCreateFuture = MutableSharedFlow<Unit>()
-    val navToCategorySettings = MutableSharedFlow<Category>()
+    val navToCategoryDetails = MutableSharedFlow<Category>()
     val navToNewCategory = MutableSharedFlow<Unit>()
     val navToReplayOrFutureDetails = MutableSharedFlow<Future>()
     val navToReceiptCategorization = MutableSharedFlow<Transaction>()
