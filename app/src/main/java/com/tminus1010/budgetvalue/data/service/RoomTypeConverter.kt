@@ -44,11 +44,11 @@ object RoomTypeConverter {
         moshi.fromJson(s)
 
     @TypeConverter
-    fun toJson(x: TransactionMatcher): String =
+    fun toJson(x: TransactionMatcher?): String? =
         moshi.toJson(x)
 
     @TypeConverter
-    fun fromJson3(s: String): TransactionMatcher? =
+    fun fromJson3(s: String?): TransactionMatcher? =
         moshi.fromJson(s)
 
     @TypeConverter
