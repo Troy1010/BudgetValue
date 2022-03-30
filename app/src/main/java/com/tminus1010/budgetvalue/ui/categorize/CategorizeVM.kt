@@ -41,7 +41,7 @@ class CategorizeVM @Inject constructor(
     private val futuresInteractor: FuturesInteractor,
     private val redoUndoInteractor: RedoUndoInteractor,
     private val setStringSharedVM: SetStringSharedVM,
-    private val categorizeMatchingUncategorizedTransactions: CategorizeMatchingUncategorizedTransactions,
+    private val categorizeMatchingTransactions: CategorizeMatchingTransactions,
 ) : ViewModel() {
     // # User Intents
     fun userSimpleCategorize(category: Category) {
@@ -110,7 +110,7 @@ class CategorizeVM @Inject constructor(
 
     fun userUseDescription(future: Future) {
         GlobalScope.launch(block = throbberSharedVM.decorate {
-            categorizeMatchingUncategorizedTransactions(TransactionMatcher.SearchText(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)::isMatch, future::categorize)
+            categorizeMatchingTransactions(TransactionMatcher.SearchText(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)::isMatch, future::categorize)
                 .also { showToast(NativeText.Simple("$it transactions categorized")) }
         })
     }
@@ -118,7 +118,7 @@ class CategorizeVM @Inject constructor(
     fun userUseDescriptionWithEdit(future: Future) {
         setStringSharedVM.userSubmitString.take(1).takeUntilSignal(setStringSharedVM.userCancel).observe(GlobalScope) { s ->
             GlobalScope.launch(block = throbberSharedVM.decorate { // TODO: There should be a better way than launching within a launch, right?
-                categorizeMatchingUncategorizedTransactions(TransactionMatcher.SearchText(s)::isMatch, future::categorize)
+                categorizeMatchingTransactions(TransactionMatcher.SearchText(s)::isMatch, future::categorize)
                     .also { showToast(NativeText.Simple("$it transactions categorized")) }
             })
         }
@@ -127,7 +127,7 @@ class CategorizeVM @Inject constructor(
 
     fun userUseDescriptionOnCategory(category: Category) {
         GlobalScope.launch(block = throbberSharedVM.decorate {
-            categorizeMatchingUncategorizedTransactions(TransactionMatcher.SearchText(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)::isMatch, categorize = { it.categorize(category) })
+            categorizeMatchingTransactions(TransactionMatcher.SearchText(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)::isMatch, categorize = { it.categorize(category) })
                 .also { showToast(NativeText.Simple("$it transactions categorized")) }
         })
     }
@@ -135,7 +135,7 @@ class CategorizeVM @Inject constructor(
     fun userUseDescriptionWithEditOnCategory(category: Category) {
         setStringSharedVM.userSubmitString.take(1).takeUntilSignal(setStringSharedVM.userCancel).observe(GlobalScope) { s ->
             GlobalScope.launch(block = throbberSharedVM.decorate { // TODO: There should be a better way than launching within a launch, right?
-                categorizeMatchingUncategorizedTransactions(TransactionMatcher.SearchText(s)::isMatch, categorize = { it.categorize(category) })
+                categorizeMatchingTransactions(TransactionMatcher.SearchText(s)::isMatch, categorize = { it.categorize(category) })
                     .also { showToast(NativeText.Simple("$it transactions categorized")) }
             })
         }

@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class FuturesInteractor @Inject constructor(
     private val futuresRepo: FuturesRepo,
-    private val categorizeMatchingUncategorizedTransactions: CategorizeMatchingUncategorizedTransactions,
+    private val categorizeMatchingTransactions: CategorizeMatchingTransactions,
 ) {
     /**
      * returns how many transactions were categorized
@@ -19,6 +19,6 @@ class FuturesInteractor @Inject constructor(
                 else -> TransactionMatcher.Multi(future.onImportTransactionMatcher, TransactionMatcher.SearchText(description))
             }
         futuresRepo.push(future.copy(onImportTransactionMatcher = newTransactionMatcher))
-        return categorizeMatchingUncategorizedTransactions(newTransactionMatcher::isMatch, future::categorize)
+        return categorizeMatchingTransactions(newTransactionMatcher::isMatch, future::categorize)
     }
 }
