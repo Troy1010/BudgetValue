@@ -2,17 +2,17 @@ package com.tminus1010.budgetvalue.__core_testing
 
 import android.app.Application
 import androidx.navigation.NavController
+import com.tminus1010.budgetvalue._unrestructured.transactions.view.TransactionBlockCompletionFrag
 import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
-import com.tminus1010.budgetvalue.ui.all_features.view_model_item.MenuVMItem
-import com.tminus1010.budgetvalue.ui.host.GetExtraMenuItemPartials
+import com.tminus1010.budgetvalue.app.ImportTransactions
 import com.tminus1010.budgetvalue.app.TryInitApp
 import com.tminus1010.budgetvalue.data.AppInitRepo
 import com.tminus1010.budgetvalue.data.FuturesRepo
-import com.tminus1010.budgetvalue.domain.Transaction
-import com.tminus1010.budgetvalue.app.TransactionsInteractor
-import com.tminus1010.budgetvalue._unrestructured.transactions.view.TransactionBlockCompletionFrag
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
+import com.tminus1010.budgetvalue.domain.Transaction
 import com.tminus1010.budgetvalue.domain.TransactionMatcher
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.MenuVMItem
+import com.tminus1010.budgetvalue.ui.host.GetExtraMenuItemPartials
 import com.tminus1010.tmcommonkotlin.misc.generateUniqueID
 import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
@@ -34,7 +34,7 @@ import javax.inject.Singleton
 object ExtraMenuItemPartialsModule {
     @Provides
     @Singleton
-    fun getExtraMenuItemPartials(appInitRepo: AppInitRepo, tryInitApp: TryInitApp, transactionsInteractor: TransactionsInteractor, futuresRepo: FuturesRepo, application: Application) = object : GetExtraMenuItemPartials() {
+    fun getExtraMenuItemPartials(appInitRepo: AppInitRepo, tryInitApp: TryInitApp, importTransactions: ImportTransactions, futuresRepo: FuturesRepo, application: Application) = object : GetExtraMenuItemPartials() {
         override fun invoke(nav: BehaviorSubject<NavController>): Array<MenuVMItem> {
             return arrayOf(
                 MenuVMItem("Redo App Init") {
@@ -53,7 +53,7 @@ object ExtraMenuItemPartialsModule {
                             if (firstSearchTotal != null)
                                 Completable.fromAction {
                                     runBlocking {
-                                        transactionsInteractor.importTransactions(
+                                        importTransactions(
                                             listOf(
                                                 Transaction(
                                                     date = LocalDate.of(2018, 1, 1),

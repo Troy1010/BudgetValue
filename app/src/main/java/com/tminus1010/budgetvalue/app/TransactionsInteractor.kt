@@ -1,21 +1,14 @@
 package com.tminus1010.budgetvalue.app
 
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionBlock
-import com.tminus1010.budgetvalue.all_layers.extensions.value
-import com.tminus1010.budgetvalue.app.model.ImportTransactionsResult
 import com.tminus1010.budgetvalue.app.model.RedoUndo
-import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.data.TransactionsRepo
-import com.tminus1010.budgetvalue.data.service.TransactionInputStreamAdapter
-import com.tminus1010.budgetvalue.domain.TerminationStrategy
 import com.tminus1010.budgetvalue.domain.Transaction
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
-import java.io.InputStream
-import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -23,39 +16,9 @@ import javax.inject.Singleton
 class TransactionsInteractor @Inject constructor(
     private val transactionsRepo: TransactionsRepo,
     private val datePeriodService: DatePeriodService,
-    private val transactionInputStreamAdapter: TransactionInputStreamAdapter,
-    private val futuresRepo: FuturesRepo,
     private val redoUndoInteractor: RedoUndoInteractor,
-    private val categoriesInteractor: CategoriesInteractor,
 ) {
     // # Input
-    suspend fun importTransactions(inputStream: InputStream) = importTransactions(transactionInputStreamAdapter.parseToTransactions(inputStream))
-    suspend fun importTransactions(transactions: Iterable<Transaction>): ImportTransactionsResult {
-        var transactionsImportedCounter: Int
-        var transactionsCategorizedCounter = 0
-        var transactionsIgnoredBecauseTheyWereAlreadyImportedCounter = 0
-        transactions
-            .filter { (transactionsRepo.getTransaction2(it.id) == null).also { if (!it) transactionsIgnoredBecauseTheyWereAlreadyImportedCounter++ } }
-            .map { transaction ->
-                val matchedCategorization =
-                    categoriesInteractor.userCategories.value!!
-                        .find { it.onImportTransactionMatcher?.isMatch(transaction) ?: false }
-                        ?: futuresRepo.futures.value!!
-                            .find { it.onImportTransactionMatcher?.isMatch(transaction) ?: false }
-                            ?.also { if (it.terminationStrategy == TerminationStrategy.ONCE) futuresRepo.setTerminationDate(it, LocalDate.now()) }
-                matchedCategorization?.categorize(transaction)
-                    ?.also { transactionsCategorizedCounter++ }
-                    ?: transaction
-            }
-            .also { push(it.also { transactionsImportedCounter = it.size }) }
-        return ImportTransactionsResult(
-            numberOfTransactionsImported = transactionsImportedCounter,
-            numberOfTransactionsCategorizedByFutures = transactionsCategorizedCounter,
-            numberOfTransactionsIgnoredBecauseTheyWereAlreadyImported = transactionsIgnoredBecauseTheyWereAlreadyImportedCounter
-        )
-    }
-
-
     suspend fun push(vararg transactions: Transaction) = push(transactions.toList())
     suspend fun push(transactions: List<Transaction>) {
         val oldTransactionsAndIDs = transactions.map { Pair(transactionsRepo.getTransaction2(it.id), it.id) }
