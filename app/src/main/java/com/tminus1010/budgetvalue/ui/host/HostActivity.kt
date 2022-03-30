@@ -69,6 +69,8 @@ class HostActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(vb.root)
+        // # Logs
+        hostFrag.navController.addOnDestinationChangedListener { _, navDestination, _ -> Log.d("budgetvalue.Nav", "${navDestination.label}") }
         // # Mediation
         viewModel.showAlertDialog.onNext(showAlertDialog)
         // # Initialize app once per install
@@ -101,7 +103,6 @@ class HostActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        nav.addOnDestinationChangedListener { _, navDestination, _ -> Log.d("budgetvalue.Nav", "${navDestination.label}") }
         // # Setup VM
         viewModel.nav.onNext(nav)
     }
