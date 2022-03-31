@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._unrestructured.transactions.view.TransactionListFrag
+import com.tminus1010.budgetvalue.ui.transactions.TransactionListFrag
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_layers.extensions.showAlertDialog
 import com.tminus1010.budgetvalue.all_layers.extensions.unCheckAllMenuItems

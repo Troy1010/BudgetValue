@@ -17,7 +17,7 @@ data class TransactionBlock(
     constructor(_transactionSet: List<Transaction>, datePeriodBox: Box<LocalDatePeriod?>) : this(_transactionSet, datePeriodBox.first)
 
     val transactions = if (datePeriod == null) _transactionSet else _transactionSet.filter { it.date in datePeriod }
-    val amount = transactions.map { it.amount }.sum()!!
+    val amount = transactions.map { it.amount }.sum()
     val size = transactions.size
     val defaultAmount get() = amount - categoryAmounts.values.sum()
     val categoryAmounts =

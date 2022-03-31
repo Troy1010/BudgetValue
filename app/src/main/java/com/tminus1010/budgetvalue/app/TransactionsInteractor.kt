@@ -1,11 +1,13 @@
 package com.tminus1010.budgetvalue.app
 
 import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionBlock
+import com.tminus1010.budgetvalue.all_layers.extensions.value
 import com.tminus1010.budgetvalue.app.model.RedoUndo
 import com.tminus1010.budgetvalue.data.TransactionsRepo
 import com.tminus1010.budgetvalue.domain.Transaction
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import javax.inject.Inject
@@ -24,6 +26,16 @@ class TransactionsInteractor @Inject constructor(
         redoUndoInteractor.useAndAdd(
             RedoUndo(
                 redo = { transactions.forEach { transactionsRepo.push(it) } },
+                undo = { oldTransactionsAndIDs.forEach { val (oldTransaction, id) = it; oldTransaction?.also { transactionsRepo.push(it) } ?: transactionsRepo.delete(id) } },
+            )
+        )
+    }
+
+    suspend fun clear() {
+        val oldTransactionsAndIDs = transactionsRepo.transactionsAggregate.first().transactions.map { Pair(transactionsRepo.getTransaction2(it.id), it.id) }
+        redoUndoInteractor.useAndAdd(
+            RedoUndo(
+                redo = { transactionsRepo.clear() },
                 undo = { oldTransactionsAndIDs.forEach { val (oldTransaction, id) = it; oldTransaction?.also { transactionsRepo.push(it) } ?: transactionsRepo.delete(id) } },
             )
         )

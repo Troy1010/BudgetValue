@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._unrestructured.transactions.view
+package com.tminus1010.budgetvalue.ui.transactions
 
 import android.os.Bundle
 import android.view.View
@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._unrestructured.transactions.presentation.TransactionVM
 import com.tminus1010.budgetvalue.all_layers.KEY1
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider
@@ -22,9 +21,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class TransactionFrag : Fragment(R.layout.frag_transaction) {
+class TransactionDetailsFrag : Fragment(R.layout.frag_transaction) {
     private val vb by viewBinding(FragTransactionBinding::bind)
-    private val viewModel by viewModels<TransactionVM>()
+    private val viewModel by viewModels<TransactionDetailsVM>()
 
     @Inject
     lateinit var moshiWithCategoriesProvider: MoshiWithCategoriesProvider

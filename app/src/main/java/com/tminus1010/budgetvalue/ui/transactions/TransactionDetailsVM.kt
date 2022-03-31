@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._unrestructured.transactions.presentation
+package com.tminus1010.budgetvalue.ui.transactions
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TransactionVM @Inject constructor(
+class TransactionDetailsVM @Inject constructor(
     private val transactionsInteractor: TransactionsInteractor,
     private val showToast: ShowToast,
 ) : ViewModel() {
@@ -44,7 +44,7 @@ class TransactionVM @Inject constructor(
     val navUp = MutableSharedFlow<Unit>()
 
     init {
-        transaction.filter { it.categoryAmounts.isEmpty() }.observe(viewModelScope) { showToast(NativeText.Simple("This transaction is empty")) }
+        transaction.filter { it.categoryAmounts.isEmpty() }.observe(viewModelScope) { showToast(NativeText.Simple("This transaction has not been categorized")) }
     }
 
     // # State

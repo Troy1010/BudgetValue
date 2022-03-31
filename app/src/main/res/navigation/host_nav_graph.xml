@@ -68,12 +68,12 @@
     </navigation>
     <fragment
         android:id="@+id/transactionsFrag"
-        android:name="com.tminus1010.budgetvalue._unrestructured.transactions.view.TransactionListFrag"
+        android:name="com.tminus1010.budgetvalue.ui.transactions.TransactionListFrag"
         android:label="TransactionsFrag"
         tools:layout="@layout/frag_transactions" />
     <fragment
         android:id="@+id/transactionFrag"
-        android:name="com.tminus1010.budgetvalue._unrestructured.transactions.view.TransactionFrag"
+        android:name="com.tminus1010.budgetvalue.ui.transactions.TransactionDetailsFrag"
         android:label="TransactionFrag"
         tools:layout="@layout/frag_transaction" />
     <fragment
