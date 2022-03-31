@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._unrestructured.transactions.app
+package com.tminus1010.budgetvalue.ui.receipt_categorization
 
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.all_layers.extensions.value
@@ -16,7 +16,7 @@ import javax.inject.Singleton
 
 // TODO: Can I make this more similar to the other SharedVMs?
 @Singleton
-class ReceiptCategorizationInteractor @Inject constructor(
+class ReceiptCategorizationSharedVM @Inject constructor(
     private val transactionsInteractor: TransactionsInteractor,
 ) {
     // # Model Action

@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue._unrestructured.transactions.view
+package com.tminus1010.budgetvalue.ui.receipt_categorization
 
 import android.os.Bundle
 import android.view.View
@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue._unrestructured.transactions.presentation.ReceiptCategorizationHostVM
 import com.tminus1010.budgetvalue.all_layers.KEY1
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider
@@ -22,35 +21,35 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ReceiptCategorizationHostFrag : Fragment(R.layout.frag_receipt_categorization) {
-    val receiptCategorizationVM by viewModels<ReceiptCategorizationHostVM>()
     lateinit var vb: FragReceiptCategorizationBinding
+    val viewModel by viewModels<ReceiptCategorizationHostVM>()
 
     @Inject
     lateinit var moshiWithCategoriesProvider: MoshiWithCategoriesProvider
-    private val transaction by lazy { moshiWithCategoriesProvider.moshi.fromJson<Transaction>(requireArguments().getString(KEY1))!! }
+    private val transaction get() = moshiWithCategoriesProvider.moshi.fromJson<Transaction>(requireArguments().getString(KEY1))!!
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = FragReceiptCategorizationBinding.bind(view)
         // # Setup VM
-        receiptCategorizationVM.transaction.value = transaction
+        viewModel.transaction.value = transaction
         childFragmentManager.addOnBackStackChangedListener {
             //Notify VM of "currentFrag" view event
-            receiptCategorizationVM.currentFrag.easyEmit(childFragmentManager.fragments.lastOrNull())
+            viewModel.currentFrag.easyEmit(childFragmentManager.fragments.lastOrNull())
             //If we ever start to show an empty child fragment (b/c user pressed back button), navigate up.
             if (childFragmentManager.backStackEntryCount == 0) parentFragmentManager.popBackStack()
         }
         // # Events
-        receiptCategorizationVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
+        viewModel.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         // # State
-        vb.framelayout.bind(receiptCategorizationVM.fragment) {
+        vb.framelayout.bind(viewModel.fragment) {
             childFragmentManager.beginTransaction()
                 .replace(id, it)
                 .addToBackStack(null)
                 .commit()
         }
-        vb.textviewAmountToCategorize.bind(receiptCategorizationVM.amountLeft) { text = it }
-        vb.textviewDescription.bind(receiptCategorizationVM.description) { text = it }
-        vb.buttonsview.bind(receiptCategorizationVM.buttons) { buttons = it }
+        vb.textviewAmountToCategorize.bind(viewModel.amountLeft) { text = it }
+        vb.textviewDescription.bind(viewModel.description) { text = it }
+        vb.buttonsview.bind(viewModel.buttons) { buttons = it }
     }
 
     companion object {

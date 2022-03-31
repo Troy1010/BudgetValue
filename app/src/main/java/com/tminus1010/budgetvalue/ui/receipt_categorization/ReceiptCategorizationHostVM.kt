@@ -1,26 +1,21 @@
-package com.tminus1010.budgetvalue._unrestructured.transactions.presentation
+package com.tminus1010.budgetvalue.ui.receipt_categorization
 
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
-import com.tminus1010.budgetvalue.ui.all_features.view_model_item.ButtonVMItem
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.ReceiptCategorizationInteractor
-import com.tminus1010.budgetvalue.ui.all_features.SubFragEventSharedVM
 import com.tminus1010.budgetvalue.domain.Transaction
-import com.tminus1010.budgetvalue._unrestructured.transactions.view.ChooseAmountSubFrag
-import com.tminus1010.budgetvalue._unrestructured.transactions.view.ReceiptCategorizationSoFarSubFrag
+import com.tminus1010.budgetvalue.ui.all_features.SubFragEventSharedVM
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.ButtonVMItem
+import com.tminus1010.budgetvalue.ui.choose_amount.ChooseAmountSubFrag
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
 class ReceiptCategorizationHostVM @Inject constructor(
     private val subFragEventSharedVM: SubFragEventSharedVM,
-    private val receiptCategorizationInteractor: ReceiptCategorizationInteractor
+    private val receiptCategorizationSharedVM: ReceiptCategorizationSharedVM,
 ) : ViewModel() {
     // # View Events
     val transaction = MutableStateFlow<Transaction?>(null)
@@ -32,7 +27,7 @@ class ReceiptCategorizationHostVM @Inject constructor(
     }
 
     fun userSubmitCategorization() {
-        receiptCategorizationInteractor.submitCategorization()
+        receiptCategorizationSharedVM.submitCategorization()
         navUp.easyEmit(Unit)
     }
 
@@ -41,10 +36,10 @@ class ReceiptCategorizationHostVM @Inject constructor(
 
     // # State
     val fragment = subFragEventSharedVM.showFragment.onStart { emit(ChooseAmountSubFrag()) }
-    val amountLeft = receiptCategorizationInteractor.amountLeftToCategorize.map { it.toString().toMoneyBigDecimal().toString() }
+    val amountLeft = receiptCategorizationSharedVM.amountLeftToCategorize.map { it.toString().toMoneyBigDecimal().toString() }
     val description = transaction.map { it!!.description }
     val buttons =
-        MutableStateFlow(
+        flowOf(
             listOf(
                 ButtonVMItem(
                     isEnabled2 = currentFrag.map { it !is ReceiptCategorizationSoFarSubFrag },

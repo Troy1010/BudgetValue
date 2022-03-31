@@ -62,7 +62,7 @@
         </fragment>
         <fragment
             android:id="@+id/receiptCategorizationHostFrag"
-            android:name="com.tminus1010.budgetvalue._unrestructured.transactions.view.ReceiptCategorizationHostFrag"
+            android:name="com.tminus1010.budgetvalue.ui.receipt_categorization.ReceiptCategorizationHostFrag"
             android:label="ReceiptCategorizationHostFrag"
             tools:layout="@layout/frag_receipt_categorization" />
     </navigation>
