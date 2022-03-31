@@ -1,17 +1,14 @@
 package com.tminus1010.budgetvalue.app
 
-import com.tminus1010.budgetvalue.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
-import com.tminus1010.budgetvalue.all_layers.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue.data.AccountsRepo
 import com.tminus1010.budgetvalue.data.PlansRepo
+import com.tminus1010.budgetvalue.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.domain.Budgeted
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.framework.observable.Rx
-import com.tminus1010.budgetvalue.framework.observable.source_objects.SourceHashMap
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
-import com.tminus1010.tmcommonkotlin.rx.extensions.total
 import com.tminus1010.tmcommonkotlin.rx.replayNonError
 import io.reactivex.rxjava3.core.Observable
 import java.math.BigDecimal
@@ -37,9 +34,6 @@ class BudgetedInteractor @Inject constructor(
                     .fold(CategoryAmounts()) { acc, map -> acc.addTogether(map) }
             }
             .replayNonError(1)
-    val categoryAmountsObservableMap =
-        categoryAmounts
-            .flatMapSourceHashMap(SourceHashMap(exitValue = BigDecimal.ZERO)) { it.itemObservableMap }
     val totalAmount =
         Observable.combineLatest(reconciliationsRepo.reconciliations.asObservable2(), plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks.asObservable2())
         { reconciliations, plans, actuals ->
@@ -48,12 +42,6 @@ class BudgetedInteractor @Inject constructor(
                     actuals.map { it.total }.sum()
         }
             .throttleLast(50, TimeUnit.MILLISECONDS)
-            .replayNonError(1)
-
-    @Deprecated("use budgeted.defaultAmount")
-    val defaultAmount =
-        Observable.combineLatest(totalAmount, categoryAmountsObservableMap.switchMap { it.values.total() })
-        { totalAmount, caTotal -> totalAmount - caTotal }
             .replayNonError(1)
     val budgeted =
         Observable.combineLatest(categoryAmounts, totalAmount, ::Budgeted)
