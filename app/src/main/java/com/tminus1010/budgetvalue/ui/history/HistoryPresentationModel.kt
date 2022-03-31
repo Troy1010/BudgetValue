@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.ui.history
 
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionBlock
+import com.tminus1010.budgetvalue.domain.TransactionBlock
 import com.tminus1010.budgetvalue.data.CurrentDatePeriod
 import com.tminus1010.budgetvalue.data.PlansRepo
 import com.tminus1010.budgetvalue.data.ReconciliationsRepo

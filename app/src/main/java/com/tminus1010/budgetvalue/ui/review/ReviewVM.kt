@@ -7,7 +7,7 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.utils.ColorTemplate
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionBlock
+import com.tminus1010.budgetvalue.domain.TransactionBlock
 import com.tminus1010.budgetvalue.domain.TransactionsAggregate
 import com.tminus1010.budgetvalue.data.TransactionsRepo
 import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
@@ -209,9 +209,9 @@ class ReviewVM @Inject constructor(
             val categoryAmountsRedefined =
                 CategoryAmounts(transactionBlock.categoryAmounts.plus(Category("Uncategorized") to transactionBlock.defaultAmount))
             listOfNotNull(
-                *categoryAmountsRedefined.filter { it.value.abs() >= transactionBlock.amount.abs() * BigDecimal(0.03) }
+                *categoryAmountsRedefined.filter { it.value.abs() >= transactionBlock.total.abs() * BigDecimal(0.03) }
                     .map { it.value.abs() to PieEntry(it.value.abs().toFloat(), it.key.name) }.toTypedArray(),
-                categoryAmountsRedefined.filter { it.value.abs() < transactionBlock.amount.abs() * BigDecimal(0.03) }
+                categoryAmountsRedefined.filter { it.value.abs() < transactionBlock.total.abs() * BigDecimal(0.03) }
                     .let { if (it.isEmpty()) null else it.values.sum().abs() to PieEntry(it.values.sum().abs().toFloat(), "Other") },
             )
                 .sortedBy { it.first }

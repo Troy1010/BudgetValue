@@ -43,9 +43,9 @@ class BudgetedInteractor @Inject constructor(
     val totalAmount =
         Observable.combineLatest(reconciliationsRepo.reconciliations.asObservable2(), plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks.asObservable2())
         { reconciliations, plans, actuals ->
-            reconciliations.map { it.total }.sum() +
+            reconciliations.map { it.total }.sum() + // TODO: Duplication of ActiveReconciliationInteractor
                     plans.map { it.total }.sum() +
-                    actuals.map { it.amount }.sum()
+                    actuals.map { it.total }.sum()
         }
             .throttleLast(50, TimeUnit.MILLISECONDS)
             .replayNonError(1)

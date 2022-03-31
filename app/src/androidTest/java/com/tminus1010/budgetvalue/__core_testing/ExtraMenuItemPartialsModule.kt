@@ -72,9 +72,10 @@ object ExtraMenuItemPartialsModule {
                         }
                         .subscribe()
                 },
-                MenuVMItem("View TransactionBlock completion") {
-                    TransactionBlockCompletionFrag.navTo(nav.value!!)
-                },
+                MenuVMItem(
+                    title = "TransactionBlocks",
+                    onClick = { TransactionBlockCompletionFrag.navTo(nav.value!!) },
+                )
             )
         }
     }

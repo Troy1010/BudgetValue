@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.app
 
 import androidx.annotation.VisibleForTesting
-import com.tminus1010.budgetvalue._unrestructured.transactions.app.TransactionBlock
+import com.tminus1010.budgetvalue.domain.TransactionBlock
 import com.tminus1010.budgetvalue.data.AccountsRepo
 import com.tminus1010.budgetvalue.data.ActiveReconciliationRepo
 import com.tminus1010.budgetvalue.data.PlansRepo
@@ -54,7 +54,7 @@ class ActiveReconciliationInteractor @Inject constructor(
      */
     @VisibleForTesting
     fun calcActiveReconciliationDefaultAmount(plans: List<Plan>, reconciliations: List<Reconciliation>, transactionBlocks: List<TransactionBlock>, accountsTotal: BigDecimal, activeReconciliationCAs: CategoryAmounts): BigDecimal {
-        val historyTotalAmounts = plans.map { it.total } + reconciliations.map { it.total } + transactionBlocks.map { it.amount }
+        val historyTotalAmounts = plans.map { it.total } + reconciliations.map { it.total } + transactionBlocks.map { it.total } // TODO: Duplication of BudgetedInteractor
         return activeReconciliationCAs.defaultAmount(accountsTotal - historyTotalAmounts.sum())
     }
 }
