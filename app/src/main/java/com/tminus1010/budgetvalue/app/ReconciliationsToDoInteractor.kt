@@ -63,7 +63,7 @@ class ReconciliationsToDoInteractor @Inject constructor(
             .doLogx("planReconciliationsToDo 333")
 
     private val accountReconciliationsToDo =
-        combine(accountsRepo.accountsAggregate, budgetedInteractor.budgeted.asFlow())
+        combine(accountsRepo.accountsAggregate, budgetedInteractor.budgeted)
         { accountsAggregate, budgeted ->
             val difference = accountsAggregate.total - budgeted.totalAmount
             if (difference.isZero) null else ReconciliationToDo.Accounts(difference)

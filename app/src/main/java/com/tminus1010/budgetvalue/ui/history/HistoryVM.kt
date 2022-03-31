@@ -39,7 +39,7 @@ class HistoryVM @Inject constructor(
     private val reconciliationsRepo: ReconciliationsRepo,
 ) : ViewModel() {
     private val activeCategories: Observable<List<Category>> =
-        Observable.combineLatest(reconciliationsRepo.reconciliations.asObservable2(), plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks.asObservable2(), budgetedInteractor.budgeted)
+        Observable.combineLatest(reconciliationsRepo.reconciliations.asObservable2(), plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks.asObservable2(), budgetedInteractor.budgeted.asObservable2())
         { reconciliations, plans, transactionBlocks, budgeted ->
             sequenceOf<Set<Category>>()
                 .plus(reconciliations.map { it.categoryAmounts.keys })
@@ -53,7 +53,7 @@ class HistoryVM @Inject constructor(
 
 
     private val historyVMItems =
-        Rx.combineLatest(reconciliationsRepo.reconciliations.asObservable2(), plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks.asObservable2(), budgetedInteractor.budgeted)
+        Rx.combineLatest(reconciliationsRepo.reconciliations.asObservable2(), plansRepo.plans.asObservable2(), transactionsInteractor.transactionBlocks.asObservable2(), budgetedInteractor.budgeted.asObservable2())
             .observeOn(Schedulers.computation())
             .throttleLatest(500, TimeUnit.MILLISECONDS)
             .map { (reconciliations, plans, transactionBlocks, budgeted) ->

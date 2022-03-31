@@ -15,7 +15,7 @@ class BudgetedWithActiveReconciliationInteractor @Inject constructor(
     activeReconciliationInteractor: ActiveReconciliationInteractor,
 ) {
     val categoryAmountsAndTotal =
-        combine(budgetedInteractor.budgeted.asFlow(), activeReconciliationInteractor.categoryAmountsAndTotal)
+        combine(budgetedInteractor.budgeted, activeReconciliationInteractor.categoryAmountsAndTotal)
         { budgeted, activeReconciliation ->
             BudgetedWithActiveReconciliation(
                 categoryAmounts = activeReconciliation.categoryAmounts.addTogether(budgeted.categoryAmounts),
