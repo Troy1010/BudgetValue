@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.__core_testing
 
 import android.app.Application
 import androidx.navigation.NavController
-import com.tminus1010.budgetvalue._unrestructured.transactions.view.TransactionBlockCompletionFrag
+import com.tminus1010.budgetvalue.ui.transactions.TransactionBlocksFrag
 import com.tminus1010.budgetvalue.all_layers.extensions.asObservable2
 import com.tminus1010.budgetvalue.app.ImportTransactions
 import com.tminus1010.budgetvalue.app.TryInitApp
@@ -74,7 +74,7 @@ object ExtraMenuItemPartialsModule {
                 },
                 MenuVMItem(
                     title = "TransactionBlocks",
-                    onClick = { TransactionBlockCompletionFrag.navTo(nav.value!!) },
+                    onClick = { TransactionBlocksFrag.navTo(nav.value!!) },
                 )
             )
         }

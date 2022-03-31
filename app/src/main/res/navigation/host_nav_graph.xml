@@ -106,10 +106,10 @@
         android:label="AccountsReconciliationSubFrag"
         tools:layout="@layout/item_tm_table_view" />
     <fragment
-        android:id="@+id/transactionBlockCompletionFrag"
-        android:name="com.tminus1010.budgetvalue._unrestructured.transactions.view.TransactionBlockCompletionFrag"
-        android:label="TransactionBlockCompletionFrag"
-        tools:layout="@layout/frag_transaction_block_completion" />
+        android:id="@+id/transactionBlocksFrag"
+        android:name="com.tminus1010.budgetvalue.ui.transactions.TransactionBlocksFrag"
+        android:label="TransactionBlocksFrag"
+        tools:layout="@layout/frag_transaction_blocks" />
     <fragment
         android:id="@+id/createFutureFrag"
         android:name="com.tminus1010.budgetvalue.ui.futures.CreateFutureFrag"
