@@ -8,32 +8,23 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_layers.extensions.show
-import com.tminus1010.budgetvalue.framework.android.recipe_factories.itemTitledDividerRB
-import com.tminus1010.budgetvalue.framework.android.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragHistoryBinding
+import com.tminus1010.budgetvalue.framework.android.viewBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.kotlin.Observables
 
 @AndroidEntryPoint
 class HistoryFrag : Fragment(R.layout.frag_history) {
     private val historyVM by activityViewModels<HistoryVM>()
     private val vb by viewBinding(FragHistoryBinding::bind)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // # Presentation Events
+        // # Events
         historyVM.showPopupMenu.observe(viewLifecycleOwner) { (view, menuItems) -> PopupMenu(requireActivity(), view).show(menuItems) }
         // # State
-        vb.tmTableViewHistory.bind(Observables.combineLatest(historyVM.recipeGrid, historyVM.dividerMap)) { (recipeGrid, dividerMap) ->
-            initialize(
-                recipeGrid.map { it.map { it.toViewItemRecipe(context) } },
-                shouldFitItemWidthsInsideTable = false,
-                dividerMap = dividerMap.mapValues { itemTitledDividerRB().create(it.value) },
-                colFreezeCount = 1,
-                rowFreezeCount = 1,
-            )
-        }
+        vb.tmTableViewHistory.bind(historyVM.historyTableView) { it.bind(this) }
     }
 
     companion object {
