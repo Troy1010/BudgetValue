@@ -12,13 +12,18 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
+/**
+ * [MockImportSelectionActivity] helps choosing one of the example transaction.cvs files during testing.
+ *
+ * It would be nice if I could define this in the androidTest/ source set, but I could not find a way.
+ */
 @VisibleForTesting
 @AndroidEntryPoint
 class MockImportSelectionActivity : AppCompatActivity() {
     val vb by lazy { ActivityMockImportSelectionBinding.inflate(layoutInflater) }
 
     @Inject
-    lateinit var assets2: AssetManager
+    lateinit var androidTestAssetsProvider: AndroidTestAssetsProvider
 
     @Inject
     lateinit var importTransactions: ImportTransactions
@@ -27,18 +32,22 @@ class MockImportSelectionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(vb.root)
         vb.buttonsview.buttons =
-            (assets2.list("transactions")
+            (androidTestAssetsProvider.get().list("transactions")
                 ?.map { "transactions/$it" }
                 ?: emptyList())
                 .withIndex().map { (i, s) ->
                     ButtonVMItem(
                         title = "Import Transaction $i",
                         onClick = {
-                            runBlocking { importTransactions(assets2.open(s).buffered()) }
+                            runBlocking { importTransactions(androidTestAssetsProvider.get().open(s).buffered()) }
                             application.easyToast(getString(R.string.import_successful))
                             finish()
                         }
                     )
                 }
+    }
+
+    open class AndroidTestAssetsProvider @Inject constructor() {
+        open fun get(): AssetManager = TODO()
     }
 }
