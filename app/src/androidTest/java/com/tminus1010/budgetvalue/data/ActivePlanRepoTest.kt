@@ -1,6 +1,5 @@
-package com.tminus1010.budgetvalue._unrestructured.reconcile.data
+package com.tminus1010.budgetvalue.data
 
-import android.app.Application
 import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -9,16 +8,16 @@ import com.tminus1010.budgetvalue.FakeDataStore
 import com.tminus1010.budgetvalue.Given
 import com.tminus1010.budgetvalue.__core_testing.app
 import com.tminus1010.budgetvalue.all_layers.dependency_injection.EnvironmentModule
-import com.tminus1010.budgetvalue.all_layers.dependency_injection.IEnvironmentModule
-import com.tminus1010.budgetvalue.data.ActiveReconciliationRepo
+import com.tminus1010.budgetvalue.app.DatePeriodService
 import com.tminus1010.budgetvalue.data.service.CategoryDatabase
 import com.tminus1010.budgetvalue.data.service.MiscDatabase
 import com.tminus1010.budgetvalue.data.service.RoomWithCategoriesTypeConverter
+import com.tminus1010.budgetvalue.domain.ActivePlan
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
-import com.tminus1010.budgetvalue.data.CategoriesRepo
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -34,46 +33,73 @@ import javax.inject.Singleton
 
 @UninstallModules(EnvironmentModule::class)
 @HiltAndroidTest
-class ActiveReconciliationRepoTest {
+class ActivePlanRepoTest {
     @Test
     fun default() = runBlocking {
         // # Given
-        Given.categories.forEach { categoriesRepo.push(it) }
         // # When
         // # Then
         assertEquals(
-            CategoryAmounts(),
-            activeReconciliationRepo.activeReconciliationCAs.value
+            ActivePlan(
+                BigDecimal("0"),
+                CategoryAmounts(),
+            ),
+            activePlanRepo.activePlan.value
         )
         Thread.sleep(500) // Why is this necessary..?
     }
 
     @Test
-    fun push() = runBlocking {
+    fun clearCategoryAmounts() = runBlocking {
         // # Given
         Given.categories.forEach { categoriesRepo.push(it) }
+        activePlanRepo.updateCategoryAmount(Given.categories[0], BigDecimal("9"))
+        Thread.sleep(500) // Why is this necessary..?
         // # When
-        activeReconciliationRepo.pushCategoryAmounts(CategoryAmounts(Given.categories[0] to BigDecimal("7")))
+        activePlanRepo.clearCategoryAmounts()
         Thread.sleep(500) // Why is this necessary..?
         // # Then
         assertEquals(
-            CategoryAmounts(Given.categories[0] to BigDecimal("7")),
-            activeReconciliationRepo.activeReconciliationCAs.value,
+            ActivePlan(
+                BigDecimal("0"),
+                CategoryAmounts(),
+            ),
+            activePlanRepo.activePlan.value,
         )
         Thread.sleep(500) // Why is this necessary..?
     }
 
     @Test
-    fun pushCategoryAmount() = runBlocking {
+    fun updateCategoryAmount() = runBlocking {
         // # Given
         Given.categories.forEach { categoriesRepo.push(it) }
         // # When
-        activeReconciliationRepo.pushCategoryAmount(Given.categories[0], BigDecimal("7"))
+        activePlanRepo.updateCategoryAmount(Given.categories[0], BigDecimal("22"))
         Thread.sleep(500) // Why is this necessary..?
         // # Then
         assertEquals(
-            CategoryAmounts(Given.categories[0] to BigDecimal("7")),
-            activeReconciliationRepo.activeReconciliationCAs.value,
+            ActivePlan(
+                BigDecimal("0"),
+                CategoryAmounts(Given.categories[0] to BigDecimal("22")),
+            ),
+            activePlanRepo.activePlan.value.logx("valueOfTest"),
+        )
+        Thread.sleep(500) // Why is this necessary..?
+    }
+
+    @Test
+    fun updateTotal() = runBlocking {
+        // # Given
+        // # When
+        activePlanRepo.updateTotal(BigDecimal("98"))
+        Thread.sleep(500) // Why is this necessary..?
+        // # Then
+        assertEquals(
+            ActivePlan(
+                BigDecimal("98"),
+                CategoryAmounts(),
+            ),
+            activePlanRepo.activePlan.value,
         )
         Thread.sleep(500) // Why is this necessary..?
     }
@@ -82,7 +108,10 @@ class ActiveReconciliationRepoTest {
     var hiltAndroidRule = HiltAndroidRule(this)
 
     @Inject
-    lateinit var activeReconciliationRepo: ActiveReconciliationRepo
+    lateinit var datePeriodService: DatePeriodService
+
+    @Inject
+    lateinit var activePlanRepo: ActivePlanRepo
 
     @Inject
     lateinit var categoriesRepo: CategoriesRepo
@@ -92,21 +121,18 @@ class ActiveReconciliationRepoTest {
         hiltAndroidRule.inject()
     }
 
+    @BindValue
+    val fakeDataStore: DataStore<Preferences> = FakeDataStore()
+
+    @BindValue
+    val realSharedPreferences: SharedPreferences = EnvironmentModule.providesSharedPreferences(app)
+
+    @BindValue
+    val categoryDatabase: CategoryDatabase = Room.inMemoryDatabaseBuilder(app, CategoryDatabase::class.java).build()
+
     @InstallIn(SingletonComponent::class)
     @Module
-    object MockModule : IEnvironmentModule {
-        @Provides
-        @Singleton
-        override fun providesSharedPreferences(application: Application): SharedPreferences {
-            return super.providesSharedPreferences(application)
-        }
-
-        @Provides
-        @Singleton
-        fun categoryDatabase(): CategoryDatabase {
-            return Room.inMemoryDatabaseBuilder(app, CategoryDatabase::class.java).build()
-        }
-
+    object MockModule {
         @Provides
         @Singleton
         fun miscDatabase(roomWithCategoriesTypeConverter: RoomWithCategoriesTypeConverter): MiscDatabase {
@@ -114,12 +140,6 @@ class ActiveReconciliationRepoTest {
                 .addTypeConverter(roomWithCategoriesTypeConverter)
                 .fallbackToDestructiveMigration()
                 .build()
-        }
-
-        @Provides
-        @Singleton
-        fun dataStore(): DataStore<Preferences> {
-            return FakeDataStore()
         }
     }
 }

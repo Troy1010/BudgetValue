@@ -1,6 +1,5 @@
-package com.tminus1010.budgetvalue.data.repo
+package com.tminus1010.budgetvalue.data
 
-import android.app.Application
 import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -8,9 +7,6 @@ import androidx.room.Room
 import com.tminus1010.budgetvalue.FakeDataStore
 import com.tminus1010.budgetvalue.__core_testing.app
 import com.tminus1010.budgetvalue.all_layers.dependency_injection.EnvironmentModule
-import com.tminus1010.budgetvalue.all_layers.dependency_injection.IEnvironmentModule
-import com.tminus1010.budgetvalue.data.CategoriesRepo
-import com.tminus1010.budgetvalue.data.SettingsRepo
 import com.tminus1010.budgetvalue.data.service.CategoryDatabase
 import com.tminus1010.budgetvalue.data.service.MiscDatabase
 import com.tminus1010.budgetvalue.data.service.RoomWithCategoriesTypeConverter
@@ -72,21 +68,15 @@ class SettingsRepoTest {
     @BindValue
     val fakeDataStore: DataStore<Preferences> = FakeDataStore()
 
+    @BindValue
+    val realSharedPreferences: SharedPreferences = EnvironmentModule.providesSharedPreferences(app)
+
+    @BindValue
+    val categoryDatabase: CategoryDatabase = Room.inMemoryDatabaseBuilder(app, CategoryDatabase::class.java).build()
+
     @InstallIn(SingletonComponent::class)
     @Module
-    object MockModule : IEnvironmentModule {
-        @Provides
-        @Singleton
-        override fun providesSharedPreferences(application: Application): SharedPreferences {
-            return super.providesSharedPreferences(application)
-        }
-
-        @Provides
-        @Singleton
-        fun categoryDatabase(): CategoryDatabase {
-            return Room.inMemoryDatabaseBuilder(app, CategoryDatabase::class.java).build()
-        }
-
+    object MockModule {
         @Provides
         @Singleton
         fun miscDatabase(roomWithCategoriesTypeConverter: RoomWithCategoriesTypeConverter): MiscDatabase {

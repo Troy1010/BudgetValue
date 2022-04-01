@@ -1,13 +1,12 @@
 package com.tminus1010.budgetvalue.all_layers.dependency_injection
 
 import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.tminus1010.budgetvalue.data.service.CategoryDatabase
-import com.tminus1010.budgetvalue.data.service.Migrations
-import com.tminus1010.budgetvalue.data.service.MiscDatabase
-import com.tminus1010.budgetvalue.data.service.RoomWithCategoriesTypeConverter
+import androidx.room.Room
+import com.tminus1010.budgetvalue.data.service.*
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
@@ -16,24 +15,33 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-object EnvironmentModule : IEnvironmentModule {
+object EnvironmentModule {
     @Provides
     @Reusable
-    override fun provideDataStore(application: Application): DataStore<Preferences> =
-        super.provideDataStore(application)
+    fun provideDataStore(application: Application): DataStore<Preferences> =
+        application.dataStore
 
     @Provides
     @Reusable
-    override fun providesCategoryDatabase(application: Application): CategoryDatabase =
-        super.providesCategoryDatabase(application)
+    fun providesCategoryDatabase(application: Application): CategoryDatabase =
+        Room.databaseBuilder(application, CategoryDatabase::class.java, "CategoryDatabase")
+            .fallbackToDestructiveMigration()
+            .build()
 
     @Provides
     @Reusable
-    override fun providesMiscDatabase(application: Application, roomWithCategoriesTypeConverter: RoomWithCategoriesTypeConverter, migrations: Migrations): MiscDatabase =
-        super.providesMiscDatabase(application, roomWithCategoriesTypeConverter, migrations)
+    fun providesMiscDatabase(application: Application, roomWithCategoriesTypeConverter: RoomWithCategoriesTypeConverter, migrations: Migrations): MiscDatabase =
+        Room.databaseBuilder(application, MiscDatabase::class.java, "MiscDatabase")
+            .addMigrations(migrations.z43_44)
+            .addTypeConverter(roomWithCategoriesTypeConverter)
+            .fallbackToDestructiveMigration()
+            .build()
 
     @Provides
     @Reusable
-    override fun providesSharedPreferences(application: Application): SharedPreferences =
-        super.providesSharedPreferences(application)
+    fun providesSharedPreferences(application: Application): SharedPreferences =
+        application.getSharedPreferences(
+            "SharedPref",
+            Context.MODE_PRIVATE
+        )
 }

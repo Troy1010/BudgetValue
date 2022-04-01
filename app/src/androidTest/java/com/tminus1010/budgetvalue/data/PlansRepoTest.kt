@@ -1,26 +1,24 @@
-package com.tminus1010.budgetvalue.plans.data
+package com.tminus1010.budgetvalue.data
 
-import android.app.Application
 import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.room.Room
+import com.tminus1010.budgetvalue.FakeDataStore
 import com.tminus1010.budgetvalue.Given
 import com.tminus1010.budgetvalue.__core_testing.app
 import com.tminus1010.budgetvalue.all_layers.dependency_injection.EnvironmentModule
-import com.tminus1010.budgetvalue.all_layers.dependency_injection.IEnvironmentModule
 import com.tminus1010.budgetvalue.all_layers.extensions.value
-import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.app.DatePeriodService
-import com.tminus1010.budgetvalue.data.CategoriesRepo
-import com.tminus1010.budgetvalue.data.PlansRepo
 import com.tminus1010.budgetvalue.data.service.CategoryDatabase
 import com.tminus1010.budgetvalue.data.service.MiscDatabase
 import com.tminus1010.budgetvalue.data.service.RoomWithCategoriesTypeConverter
+import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.domain.Plan
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -182,27 +180,18 @@ class PlansRepoTest {
         hiltAndroidRule.inject()
     }
 
+    @BindValue
+    val fakeDataStore: DataStore<Preferences> = FakeDataStore()
+
+    @BindValue
+    val realSharedPreferences: SharedPreferences = EnvironmentModule.providesSharedPreferences(app)
+
+    @BindValue
+    val categoryDatabase: CategoryDatabase = Room.inMemoryDatabaseBuilder(app, CategoryDatabase::class.java).build()
+
     @InstallIn(SingletonComponent::class)
     @Module
-    object MockModule : IEnvironmentModule {
-        @Provides
-        @Singleton
-        override fun providesSharedPreferences(application: Application): SharedPreferences {
-            return super.providesSharedPreferences(application)
-        }
-
-        @Provides
-        @Singleton
-        override fun provideDataStore(application: Application): DataStore<Preferences> {
-            return super.provideDataStore(application)
-        }
-
-        @Provides
-        @Singleton
-        fun categoryDatabase(): CategoryDatabase {
-            return Room.inMemoryDatabaseBuilder(app, CategoryDatabase::class.java).build()
-        }
-
+    object MockModule {
         @Provides
         @Singleton
         fun miscDatabase(roomWithCategoriesTypeConverter: RoomWithCategoriesTypeConverter): MiscDatabase {

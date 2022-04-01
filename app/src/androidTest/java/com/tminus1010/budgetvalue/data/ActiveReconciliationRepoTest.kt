@@ -1,6 +1,5 @@
-package com.tminus1010.budgetvalue.plans.data
+package com.tminus1010.budgetvalue.data
 
-import android.app.Application
 import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -9,18 +8,14 @@ import com.tminus1010.budgetvalue.FakeDataStore
 import com.tminus1010.budgetvalue.Given
 import com.tminus1010.budgetvalue.__core_testing.app
 import com.tminus1010.budgetvalue.all_layers.dependency_injection.EnvironmentModule
-import com.tminus1010.budgetvalue.all_layers.dependency_injection.IEnvironmentModule
 import com.tminus1010.budgetvalue.data.service.CategoryDatabase
 import com.tminus1010.budgetvalue.data.service.MiscDatabase
 import com.tminus1010.budgetvalue.data.service.RoomWithCategoriesTypeConverter
-import com.tminus1010.budgetvalue.data.ActivePlanRepo
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
-import com.tminus1010.budgetvalue.app.DatePeriodService
-import com.tminus1010.budgetvalue.data.CategoriesRepo
-import com.tminus1010.budgetvalue.domain.ActivePlan
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -36,73 +31,46 @@ import javax.inject.Singleton
 
 @UninstallModules(EnvironmentModule::class)
 @HiltAndroidTest
-class ActivePlanRepoTest {
+class ActiveReconciliationRepoTest {
     @Test
     fun default() = runBlocking {
         // # Given
-        // # When
-        // # Then
-        assertEquals(
-            ActivePlan(
-                BigDecimal("0"),
-                CategoryAmounts(),
-            ),
-            activePlanRepo.activePlan.value
-        )
-        Thread.sleep(500) // Why is this necessary..?
-    }
-
-    @Test
-    fun clearCategoryAmounts() = runBlocking {
-        // # Given
         Given.categories.forEach { categoriesRepo.push(it) }
-        activePlanRepo.updateCategoryAmount(Given.categories[0], BigDecimal("9"))
-        Thread.sleep(500) // Why is this necessary..?
         // # When
-        activePlanRepo.clearCategoryAmounts()
-        Thread.sleep(500) // Why is this necessary..?
         // # Then
         assertEquals(
-            ActivePlan(
-                BigDecimal("0"),
-                CategoryAmounts(),
-            ),
-            activePlanRepo.activePlan.value,
+            CategoryAmounts(),
+            activeReconciliationRepo.activeReconciliationCAs.value
         )
         Thread.sleep(500) // Why is this necessary..?
     }
 
     @Test
-    fun updateCategoryAmount() = runBlocking {
+    fun push() = runBlocking {
         // # Given
         Given.categories.forEach { categoriesRepo.push(it) }
         // # When
-        activePlanRepo.updateCategoryAmount(Given.categories[0], BigDecimal("22"))
+        activeReconciliationRepo.pushCategoryAmounts(CategoryAmounts(Given.categories[0] to BigDecimal("7")))
         Thread.sleep(500) // Why is this necessary..?
         // # Then
         assertEquals(
-            ActivePlan(
-                BigDecimal("0"),
-                CategoryAmounts(Given.categories[0] to BigDecimal("22")),
-            ),
-            activePlanRepo.activePlan.value.logx("valueOfTest"),
+            CategoryAmounts(Given.categories[0] to BigDecimal("7")),
+            activeReconciliationRepo.activeReconciliationCAs.value,
         )
         Thread.sleep(500) // Why is this necessary..?
     }
 
     @Test
-    fun updateTotal() = runBlocking {
+    fun pushCategoryAmount() = runBlocking {
         // # Given
+        Given.categories.forEach { categoriesRepo.push(it) }
         // # When
-        activePlanRepo.updateTotal(BigDecimal("98"))
+        activeReconciliationRepo.pushCategoryAmount(Given.categories[0], BigDecimal("7"))
         Thread.sleep(500) // Why is this necessary..?
         // # Then
         assertEquals(
-            ActivePlan(
-                BigDecimal("98"),
-                CategoryAmounts(),
-            ),
-            activePlanRepo.activePlan.value,
+            CategoryAmounts(Given.categories[0] to BigDecimal("7")),
+            activeReconciliationRepo.activeReconciliationCAs.value,
         )
         Thread.sleep(500) // Why is this necessary..?
     }
@@ -111,10 +79,7 @@ class ActivePlanRepoTest {
     var hiltAndroidRule = HiltAndroidRule(this)
 
     @Inject
-    lateinit var datePeriodService: DatePeriodService
-
-    @Inject
-    lateinit var activePlanRepo: ActivePlanRepo
+    lateinit var activeReconciliationRepo: ActiveReconciliationRepo
 
     @Inject
     lateinit var categoriesRepo: CategoriesRepo
@@ -124,21 +89,18 @@ class ActivePlanRepoTest {
         hiltAndroidRule.inject()
     }
 
+    @BindValue
+    val fakeDataStore: DataStore<Preferences> = FakeDataStore()
+
+    @BindValue
+    val realSharedPreferences: SharedPreferences = EnvironmentModule.providesSharedPreferences(app)
+
+    @BindValue
+    val categoryDatabase: CategoryDatabase = Room.inMemoryDatabaseBuilder(app, CategoryDatabase::class.java).build()
+
     @InstallIn(SingletonComponent::class)
     @Module
-    object MockModule : IEnvironmentModule {
-        @Provides
-        @Singleton
-        override fun providesSharedPreferences(application: Application): SharedPreferences {
-            return super.providesSharedPreferences(application)
-        }
-
-        @Provides
-        @Singleton
-        fun categoryDatabase(): CategoryDatabase {
-            return Room.inMemoryDatabaseBuilder(app, CategoryDatabase::class.java).build()
-        }
-
+    object MockModule {
         @Provides
         @Singleton
         fun miscDatabase(roomWithCategoriesTypeConverter: RoomWithCategoriesTypeConverter): MiscDatabase {
@@ -146,12 +108,6 @@ class ActivePlanRepoTest {
                 .addTypeConverter(roomWithCategoriesTypeConverter)
                 .fallbackToDestructiveMigration()
                 .build()
-        }
-
-        @Provides
-        @Singleton
-        fun dataStore(): DataStore<Preferences> {
-            return FakeDataStore()
         }
     }
 }
