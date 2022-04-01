@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_layers.extensions.onClick
-import com.tminus1010.budgetvalue.all.presentation.extensions.bind
+import com.tminus1010.budgetvalue.all_layers.extensions.bind
 import com.tminus1010.budgetvalue.databinding.FragReviewBinding
 import com.tminus1010.budgetvalue.ui.review.presentation.NoMoreDataException
 import com.tminus1010.budgetvalue.ui.review.presentation.NoMostRecentSpendException
