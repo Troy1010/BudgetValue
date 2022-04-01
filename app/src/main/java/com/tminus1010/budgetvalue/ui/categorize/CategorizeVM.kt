@@ -293,7 +293,7 @@ class CategorizeVM @Inject constructor(
         }
             .divertErrors(errors)
     val buttons =
-        chooseCategoriesSharedVM.selectedCategories.map { it.isNotEmpty() }.asObservable2()
+        chooseCategoriesSharedVM.selectedCategories.map { it.isNotEmpty() }
             .map { inSelectionMode ->
                 listOfNotNull(
                     if (!inSelectionMode)
