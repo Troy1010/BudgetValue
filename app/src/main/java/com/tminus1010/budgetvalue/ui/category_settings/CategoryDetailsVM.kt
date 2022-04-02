@@ -1,15 +1,17 @@
 package com.tminus1010.budgetvalue.ui.category_settings
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue.all_layers.InvalidCategoryNameException
+import com.tminus1010.budgetvalue.all_layers.KEY1
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
-import com.tminus1010.budgetvalue.all_layers.extensions.value
 import com.tminus1010.budgetvalue.app.DeleteCategoryFromActiveDomainUC
 import com.tminus1010.budgetvalue.app.ReplaceCategoryGlobally
 import com.tminus1010.budgetvalue.data.CategoriesRepo
+import com.tminus1010.budgetvalue.data.service.MoshiProvider
 import com.tminus1010.budgetvalue.domain.AmountFormula
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.CategoryType
@@ -20,6 +22,7 @@ import com.tminus1010.budgetvalue.ui.all_features.model.SearchType
 import com.tminus1010.budgetvalue.ui.all_features.view_model_item.*
 import com.tminus1010.budgetvalue.ui.errors.Errors
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
+import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.GlobalScope
@@ -30,6 +33,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoryDetailsVM @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    moshiProvider: MoshiProvider,
     private val deleteCategoryFromActiveDomainUC: DeleteCategoryFromActiveDomainUC,
     private val categoriesRepo: CategoriesRepo,
     private val replaceCategoryGlobally: ReplaceCategoryGlobally,
@@ -38,29 +43,21 @@ class CategoryDetailsVM @Inject constructor(
     private val setSearchTextsSharedVM: SetSearchTextsSharedVM,
     private val transactionMatcherPresentationFactory: TransactionMatcherPresentationFactory,
 ) : ViewModel() {
-    // # View Events
-    val originalCategory = MutableSharedFlow<Category?>(1)
-
     // # Internal
-    private val newCategoryToPush = MutableSharedFlow<Category>()
-    private val categoryToPush =
-        merge(
-            originalCategory.map { it ?: Category("") },
-            newCategoryToPush,
-        )
-            .stateIn(viewModelScope, SharingStarted.Eagerly, Category(""))
+    private val originalCategory = moshiProvider.moshi.fromJson<Category>(savedStateHandle.get<String>(KEY1))
+    private val categoryToPush = MutableStateFlow(originalCategory ?: Category(""))
 
     // # User Intents
     fun userSetCategoryName(s: String) {
-        newCategoryToPush.easyEmit(categoryToPush.value.copy(name = s))
+        categoryToPush.easyEmit(categoryToPush.value.copy(name = s))
     }
 
     fun userSetCategoryDefaultAmountFormula(amountFormula: AmountFormula) {
-        newCategoryToPush.easyEmit(categoryToPush.value.copy(defaultAmountFormula = amountFormula))
+        categoryToPush.easyEmit(categoryToPush.value.copy(defaultAmountFormula = amountFormula))
     }
 
     fun userSetCategoryType(categoryType: CategoryType) {
-        newCategoryToPush.easyEmit(categoryToPush.value.copy(type = categoryType))
+        categoryToPush.easyEmit(categoryToPush.value.copy(type = categoryType))
     }
 
     fun userDeleteCategory() {
@@ -76,8 +73,8 @@ class CategoryDetailsVM @Inject constructor(
                 categoryToPush.value.name.equals(Category.DEFAULT.name, ignoreCase = true) ||
                 categoryToPush.value.name.equals(Category.UNRECOGNIZED.name, ignoreCase = true)
             ) throw InvalidCategoryNameException()
-            if (originalCategory.value != null && originalCategory.value != categoryToPush.value)
-                replaceCategoryGlobally(originalCategory.value!!, categoryToPush.value)
+            if (originalCategory != null && originalCategory != categoryToPush.value)
+                replaceCategoryGlobally(originalCategory, categoryToPush.value)
             else
                 categoriesRepo.push(categoryToPush.value)
             navUp.easyEmit(Unit)
@@ -92,7 +89,7 @@ class CategoryDetailsVM @Inject constructor(
                 SearchType.TOTAL -> TransactionMatcher.ByValue(totalGuess.value)
                 SearchType.NONE -> null
             }
-        newCategoryToPush.easyEmit(categoryToPush.value.copy(onImportTransactionMatcher = onImportTransactionMatcher))
+        categoryToPush.easyEmit(categoryToPush.value.copy(onImportTransactionMatcher = onImportTransactionMatcher))
     }
 
     private val totalGuess = MutableStateFlow(BigDecimal("-10"))
@@ -111,7 +108,7 @@ class CategoryDetailsVM @Inject constructor(
 
     // # State
     val title =
-        originalCategory.flatMapConcat { if (it == null) flowOf("Create a new Category") else categoryToPush.map { "Settings (${it.name})" } }
+        if (originalCategory == null) flowOf("Create a new Category") else categoryToPush.map { "Settings (${it.name})" }
             .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
     val optionsTableView =
         categoryToPush.map { categoryToPush ->
@@ -160,7 +157,7 @@ class CategoryDetailsVM @Inject constructor(
         }
             .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
     val buttons =
-        originalCategory.map { originalCategory ->
+        flowOf(
             listOfNotNull(
                 if (originalCategory == null)
                     null
@@ -174,6 +171,6 @@ class CategoryDetailsVM @Inject constructor(
                     onClick = ::userSubmit
                 ),
             )
-        }
+        )
             .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
 }

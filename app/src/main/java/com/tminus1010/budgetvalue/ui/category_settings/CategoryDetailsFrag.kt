@@ -9,7 +9,6 @@ import androidx.navigation.NavController
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_layers.InvalidCategoryNameException
 import com.tminus1010.budgetvalue.all_layers.KEY1
-import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.data.service.MoshiProvider
 import com.tminus1010.budgetvalue.databinding.FragCategoryDetailsBinding
 import com.tminus1010.budgetvalue.domain.Category
@@ -20,7 +19,6 @@ import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsFrag
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
-import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
@@ -35,13 +33,8 @@ class CategoryDetailsFrag : Fragment(R.layout.frag_category_details) {
     @Inject
     lateinit var errors: Errors
 
-    @Inject
-    lateinit var moshiProvider: MoshiProvider
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // # Setup
-        viewModel.originalCategory.onNext(moshiProvider.moshi.fromJson(requireArguments().getString(KEY1, "").ifEmpty { null }))
         // # Events
         errors.observe(viewLifecycleOwner) {
             when (it) {
@@ -67,12 +60,9 @@ class CategoryDetailsFrag : Fragment(R.layout.frag_category_details) {
     companion object {
         fun navTo(nav: NavController, moshiProvider: MoshiProvider, category: Category?, setSearchTextsSharedVM: SetSearchTextsSharedVM) {
             setSearchTextsSharedVM.searchTexts.adjustTo((category?.onImportTransactionMatcher as? TransactionMatcher.Multi)?.transactionMatchers?.filterIsInstance<TransactionMatcher.SearchText>()?.map { it.searchText } ?: listOfNotNull((category?.onImportTransactionMatcher as? TransactionMatcher.SearchText)?.searchText))
-            nav.navigate(
-                R.id.categoryDetailsFrag,
-                Bundle().apply {
-                    putString(KEY1, moshiProvider.moshi.toJson(category))
-                },
-            )
+            nav.navigate(R.id.categoryDetailsFrag, Bundle().apply {
+                putString(KEY1, moshiProvider.moshi.toJson(category))
+            })
         }
     }
 }
