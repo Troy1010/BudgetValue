@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue.all_layers.NoDescriptionEnteredException
 import com.tminus1010.budgetvalue.all_layers.extensions.*
-import com.tminus1010.budgetvalue.app.CategoryParser
 import com.tminus1010.budgetvalue.app.CategorizeMatchingTransactions
+import com.tminus1010.budgetvalue.app.CategoryParser
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.domain.*
@@ -143,10 +143,7 @@ class CreateFutureVM @Inject constructor(
             .stateIn(viewModelScope, SharingStarted.Eagerly, CategoryAmountFormulas())
     private val fillCategory =
         selectedCategoriesSharedVM.selectedCategories
-            .flatMapLatest { selectedCategories ->
-                userSetFillCategory
-                    .onStart { emit(selectedCategories.find { it.defaultAmountFormula.isZero() } ?: selectedCategories.getOrNull(0)) }
-            }
+            .flatMapLatest { userSetFillCategory.onStart { emit(it.find { it.defaultAmountFormula.isZero() } ?: it.getOrNull(0)) } }
             .stateIn(viewModelScope, SharingStarted.Eagerly, null)
     private val fillAmountFormula =
         combine(categoryAmountFormulas, fillCategory, totalGuess)
