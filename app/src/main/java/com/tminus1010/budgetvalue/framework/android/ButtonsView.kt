@@ -28,7 +28,7 @@ class ButtonsView @JvmOverloads constructor(
 
     init {
         layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
-//        addItemDecoration(LayoutMarginDecoration(8.toPX(context)))
+        addItemDecoration(MarginDecoration(7))
         adapter = object : LifecycleRVAdapter2<GenViewHolder2<ItemButtonBinding>>() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
                 GenViewHolder2(ItemButtonBinding.inflate(LayoutInflater.from(context), parent, false))

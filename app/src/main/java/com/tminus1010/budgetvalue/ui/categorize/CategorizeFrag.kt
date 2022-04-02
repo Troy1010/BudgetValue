@@ -12,9 +12,7 @@ import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.data.service.MoshiProvider
 import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
-import com.tminus1010.budgetvalue.framework.android.GenViewHolder2
-import com.tminus1010.budgetvalue.framework.android.LifecycleRVAdapter2
-import com.tminus1010.budgetvalue.framework.android.viewBinding
+import com.tminus1010.budgetvalue.framework.android.*
 import com.tminus1010.budgetvalue.ui.category_settings.CategoryDetailsFrag
 import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesSharedVM
 import com.tminus1010.budgetvalue.ui.errors.Errors
@@ -73,7 +71,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         vb.textviewDescription.bind(viewModel.latestUncategorizedTransactionDescription) { text = it }
         vb.textviewAmountLeft.bind(viewModel.uncategorizedSpendsSize) { text = it }
         val spanSize = if (requireContext().resources.configuration.fontScale <= 1.0) 3 else 2
-//        vb.recyclerviewCategories.addItemDecoration(LayoutMarginDecoration(spanSize, 8.toPX(requireContext())))
+        vb.recyclerviewCategories.addItemDecoration(GridMarginDecoration(spanSize, 7, false))
         vb.recyclerviewCategories.layoutManager = GridLayoutManager(requireActivity(), spanSize, GridLayoutManager.VERTICAL, false)
         vb.recyclerviewCategories.bind(viewModel.items) {
             val viewItemRecipes = it.map { it.toViewItemRecipe(requireContext()) }
