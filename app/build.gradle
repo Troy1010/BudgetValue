@@ -200,10 +200,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.1"
 
-    // # RecyclerMargin
-    // for LayoutMarginDecoration
-    implementation "com.github.thekhaeng:recycler-margin:1.2.1"
-
     // # DataStore
     implementation "androidx.datastore:datastore-preferences:1.0.0"
 

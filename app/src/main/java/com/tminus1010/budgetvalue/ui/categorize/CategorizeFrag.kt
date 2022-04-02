@@ -7,9 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewbinding.ViewBinding
-import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.ui.receipt_categorization.ReceiptCategorizationHostFrag
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.data.service.MoshiProvider
 import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider
@@ -22,13 +20,13 @@ import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesSharedVM
 import com.tminus1010.budgetvalue.ui.errors.Errors
 import com.tminus1010.budgetvalue.ui.futures.CreateFutureFrag
 import com.tminus1010.budgetvalue.ui.futures.FutureDetailsFrag
+import com.tminus1010.budgetvalue.ui.receipt_categorization.ReceiptCategorizationHostFrag
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.budgetvalue.ui.set_string.SetStringFrag
 import com.tminus1010.budgetvalue.ui.set_string.SetStringSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
-import com.tminus1010.tmcommonkotlin.view.extensions.toPX
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -75,7 +73,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         vb.textviewDescription.bind(viewModel.latestUncategorizedTransactionDescription) { text = it }
         vb.textviewAmountLeft.bind(viewModel.uncategorizedSpendsSize) { text = it }
         val spanSize = if (requireContext().resources.configuration.fontScale <= 1.0) 3 else 2
-        vb.recyclerviewCategories.addItemDecoration(LayoutMarginDecoration(spanSize, 8.toPX(requireContext())))
+//        vb.recyclerviewCategories.addItemDecoration(LayoutMarginDecoration(spanSize, 8.toPX(requireContext())))
         vb.recyclerviewCategories.layoutManager = GridLayoutManager(requireActivity(), spanSize, GridLayoutManager.VERTICAL, false)
         vb.recyclerviewCategories.bind(viewModel.items) {
             val viewItemRecipes = it.map { it.toViewItemRecipe(requireContext()) }

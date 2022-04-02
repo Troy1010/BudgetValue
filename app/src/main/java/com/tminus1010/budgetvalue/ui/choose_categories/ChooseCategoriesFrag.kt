@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.databinding.FragChooseCategoriesBinding
 import com.tminus1010.budgetvalue.databinding.ItemCategoryBtnBinding
@@ -18,7 +17,6 @@ import com.tminus1010.budgetvalue.framework.android.viewBinding
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
-import com.tminus1010.tmcommonkotlin.view.extensions.toPX
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.map
 
@@ -34,7 +32,7 @@ class ChooseCategoriesFrag : Fragment(R.layout.frag_choose_categories) {
         // # State
         vb.buttonsview.bind(selectCategoriesVM.buttons) { buttons = it }
         val spanSize = if (requireContext().resources.configuration.fontScale <= 1.0) 3 else 2
-        vb.recyclerviewCategories.addItemDecoration(LayoutMarginDecoration(spanSize, 8.toPX(requireContext())))
+//        vb.recyclerviewCategories.addItemDecoration(LayoutMarginDecoration(spanSize, 8.toPX(requireContext())))
         vb.recyclerviewCategories.layoutManager =
             GridLayoutManager(requireActivity(), spanSize, GridLayoutManager.VERTICAL, false)
         vb.recyclerviewCategories.bind(selectCategoriesVM.categoryButtonVMItems.map { it.map { it.toViewItemRecipe(requireContext()) } }) { viewItemRecipes ->

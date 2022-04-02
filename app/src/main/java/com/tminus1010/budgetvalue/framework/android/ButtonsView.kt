@@ -7,9 +7,8 @@ import android.view.ViewGroup
 import androidx.appcompat.R
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.thekhaeng.recyclerviewmargin.LayoutMarginDecoration
-import com.tminus1010.budgetvalue.ui.all_features.view_model_item.ButtonVMItem
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
+import com.tminus1010.budgetvalue.ui.all_features.view_model_item.ButtonVMItem
 import com.tminus1010.tmcommonkotlin.misc.extensions.easySetHeight
 import com.tminus1010.tmcommonkotlin.view.extensions.toPX
 
@@ -29,7 +28,7 @@ class ButtonsView @JvmOverloads constructor(
 
     init {
         layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
-        addItemDecoration(LayoutMarginDecoration(8.toPX(context)))
+//        addItemDecoration(LayoutMarginDecoration(8.toPX(context)))
         adapter = object : LifecycleRVAdapter2<GenViewHolder2<ItemButtonBinding>>() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
                 GenViewHolder2(ItemButtonBinding.inflate(LayoutInflater.from(context), parent, false))
