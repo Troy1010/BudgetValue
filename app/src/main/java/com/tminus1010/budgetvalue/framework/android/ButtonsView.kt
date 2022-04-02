@@ -9,8 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
 import com.tminus1010.budgetvalue.ui.all_features.view_model_item.ButtonVMItem
-import com.tminus1010.tmcommonkotlin.misc.extensions.easySetHeight
-import com.tminus1010.tmcommonkotlin.view.extensions.toPX
 
 class ButtonsView @JvmOverloads constructor(
     context: Context,
@@ -21,10 +19,6 @@ class ButtonsView @JvmOverloads constructor(
         set(value) {
             field = value; adapter?.notifyDataSetChanged()
         }
-    var shouldFitVertical = false
-        set(value) {
-            field = value; adapter?.notifyDataSetChanged()
-        }
 
     init {
         layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
@@ -32,8 +26,6 @@ class ButtonsView @JvmOverloads constructor(
         adapter = object : LifecycleRVAdapter2<GenViewHolder2<ItemButtonBinding>>() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
                 GenViewHolder2(ItemButtonBinding.inflate(LayoutInflater.from(context), parent, false))
-                    // TODO("This is a duct-tape solution b/c it is difficult to get a RV's items to fit vertically")
-                    .also { if (shouldFitVertical) it.vb.root.easySetHeight((parent.height - 8.toPX(context) * (itemCount + 1) - 10.toPX(context)) / itemCount) }
 
             override fun getItemCount() = buttons.size
             override fun onLifecycleAttached(holder: GenViewHolder2<ItemButtonBinding>) {
