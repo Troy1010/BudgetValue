@@ -1,5 +1,5 @@
 // # BuildSrc
-ext["kotlin_version"] = "1.5.0"
+ext["kotlin_version"] = "1.6.10"
 
 plugins {
     `kotlin-dsl`
