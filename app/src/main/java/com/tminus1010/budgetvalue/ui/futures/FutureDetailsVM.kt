@@ -1,21 +1,26 @@
 package com.tminus1010.budgetvalue.ui.futures
 
 import android.annotation.SuppressLint
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tminus1010.budgetvalue.all_layers.KEY1
 import com.tminus1010.budgetvalue.all_layers.NoDescriptionEnteredException
 import com.tminus1010.budgetvalue.all_layers.extensions.*
-import com.tminus1010.budgetvalue.app.CategoryParser
 import com.tminus1010.budgetvalue.app.CategorizeMatchingTransactions
+import com.tminus1010.budgetvalue.app.CategoryParser
 import com.tminus1010.budgetvalue.data.FuturesRepo
+import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue.domain.*
 import com.tminus1010.budgetvalue.framework.android.ShowToast
 import com.tminus1010.budgetvalue.framework.observable.source_objects.SourceHashMap
+import com.tminus1010.budgetvalue.ui.all_features.TransactionMatcherPresentationFactory
 import com.tminus1010.budgetvalue.ui.all_features.model.SearchType
 import com.tminus1010.budgetvalue.ui.all_features.view_model_item.*
 import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesSharedVM
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
+import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,16 +31,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FutureDetailsVM @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    moshiWithCategoriesProvider: MoshiWithCategoriesProvider,
     private val categoryParser: CategoryParser,
     private val selectedCategoriesSharedVM: ChooseCategoriesSharedVM,
     private val futuresRepo: FuturesRepo,
     private val showToast: ShowToast,
     private val categorizeMatchingTransactions: CategorizeMatchingTransactions,
     private val setSearchTextsSharedVM: SetSearchTextsSharedVM,
+    private val transactionMatcherPresentationFactory: TransactionMatcherPresentationFactory,
 ) : ViewModel() {
-    // # Setup
-    val future = MutableSharedFlow<Future>(1)
-
     // # User Intents
     fun userTryNavToCategorySelection() {
         navToCategorySelection.easyEmit()
@@ -65,7 +70,7 @@ class FutureDetailsVM @Inject constructor(
                 if (futureToPush.terminationStrategy == TerminationStrategy.PERMANENT)
                     categorizeMatchingTransactions({ futureToPush.onImportTransactionMatcher?.isMatch(it) ?: false }, futureToPush::categorize)
                         .also { showToast(NativeText.Simple("$it transactions categorized")) }
-                if (futureToPush.name != future.value!!.name) futuresRepo.delete(future.value!!)
+                if (futureToPush.name != future.name) futuresRepo.delete(future)
                 userTryNavUp()
             }
         } catch (e: Throwable) {
@@ -114,7 +119,7 @@ class FutureDetailsVM @Inject constructor(
     }
 
     fun userDeleteFutureOrReplay() {
-        runBlocking { futuresRepo.delete(future.value!!) }
+        runBlocking { futuresRepo.delete(future) }
         userTryNavUp()
     }
 
@@ -124,65 +129,31 @@ class FutureDetailsVM @Inject constructor(
     }
 
     // # Internal
+    val future = moshiWithCategoriesProvider.moshi.fromJson<Future>(savedStateHandle.get<String>(KEY1))!!
     private val name =
-        future
-            .map { it.name }
-            .flatMapLatest { userSetName.onStart { emit(it) } }
+        userSetName.onStart { emit(future.name) }
             .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
     private val totalGuess =
-        future
-            .map { it.totalGuess }
-            .flatMapLatest { userSetTotalGuess.onStart { emit(it) } }
+        userSetTotalGuess.onStart { emit(future.totalGuess) }
             .stateIn(viewModelScope, SharingStarted.Eagerly, BigDecimal("-10"))
     private val isOnlyOnce =
-        future
-            .map { it.terminationStrategy == TerminationStrategy.PERMANENT }
-            .flatMapLatest { userSetIsOnlyOnce.onStart { emit(it) } }
+        userSetIsOnlyOnce.onStart { emit(future.terminationStrategy == TerminationStrategy.PERMANENT) }
             .stateIn(viewModelScope, SharingStarted.Eagerly, false)
     private val searchType =
-        future
-            .map {
-                when (it.onImportTransactionMatcher) {
-                    is TransactionMatcher.SearchText,
-                    -> SearchType.DESCRIPTION
-                    is TransactionMatcher.ByValue,
-                    -> SearchType.TOTAL
-                    is TransactionMatcher.Multi,
-                    -> if (it.onImportTransactionMatcher.transactionMatchers.all { it is TransactionMatcher.SearchText })
-                        SearchType.DESCRIPTION
-                    else
-                        SearchType.DESCRIPTION_AND_TOTAL
-                    null,
-                    -> SearchType.NONE
-                }
-            }
-            .flatMapLatest { userSetSearchType.onStart { emit(it) } }
+        userSetSearchType.onStart { emit(transactionMatcherPresentationFactory.searchType(future.onImportTransactionMatcher)) }
             .stateIn(viewModelScope, SharingStarted.Eagerly, SearchType.DESCRIPTION)
     private val categoryAmountFormulas =
-        future
-            .map { it.categoryAmountFormulas }
-            .flatMapLatest { oldCategoryAmountFormulas ->
-                combine(userCategoryAmountFormulas.flow, selectedCategoriesSharedVM.selectedCategories)
-                { userCategoryAmountFormulas, selectedCategories ->
-                    CategoryAmountFormulas(selectedCategories.associateWith { it.defaultAmountFormula })
-                        .plus(oldCategoryAmountFormulas)
-                        .plus(userCategoryAmountFormulas.filter { it.key in selectedCategories })
-                }
-            }
+        combine(userCategoryAmountFormulas.flow, selectedCategoriesSharedVM.selectedCategories)
+        { userCategoryAmountFormulas, selectedCategories ->
+            CategoryAmountFormulas(selectedCategories.associateWith { it.defaultAmountFormula })
+                .plus(future.categoryAmountFormulas)
+                .plus(userCategoryAmountFormulas.filter { it.key in selectedCategories })
+        }
             .stateIn(viewModelScope, SharingStarted.Eagerly, CategoryAmountFormulas())
-
-    // I might want to change this requirement
     private val fillCategory =
-        future
-            .map { it.fillCategory }
-            .flatMapLatest {
-                selectedCategoriesSharedVM.selectedCategories.drop(1)
-                    .flatMapLatest { selectedCategories ->
-                        userSetFillCategory
-                            .onStart { emit(selectedCategories.find { it.defaultAmountFormula.isZero() } ?: selectedCategories.getOrNull(0)) }
-                    }
-                    .onStart { emit(it) }
-            }
+        selectedCategoriesSharedVM.selectedCategories.drop(1)
+            .flatMapLatest { userSetFillCategory.onStart { emit(it.find { it.defaultAmountFormula.isZero() } ?: it.getOrNull(0)) } }
+            .onStart { emit(future.fillCategory) }
             .stateIn(viewModelScope, SharingStarted.Eagerly, null)
     private val fillAmountFormula =
         combine(categoryAmountFormulas, fillCategory, totalGuess)
@@ -206,11 +177,11 @@ class FutureDetailsVM @Inject constructor(
                 recipeGrid = listOfNotNull(
                     listOf(
                         TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Name"),
-                        EditTextVMItem(text = name.value!!, onDone = { userSetName(it) }),
+                        EditTextVMItem2(text = name.value!!, onDone = ::userSetName),
                     ),
                     listOf(
                         TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Search Type"),
-                        SpinnerVMItem(SearchType.values(), searchType, onNewItem = { userSetSearchType(it) }),
+                        SpinnerVMItem(SearchType.values(), searchType, onNewItem = ::userSetSearchType),
                     ),
                     listOf(
                         TextPresentationModel(
@@ -227,14 +198,14 @@ class FutureDetailsVM @Inject constructor(
                                     }
                                 }
                         ),
-                        MoneyEditVMItem(text1 = totalGuess.value.toString(), onDone = { userSetTotalGuess(it) }),
+                        MoneyEditVMItem(text1 = totalGuess.value.toString(), onDone = ::userSetTotalGuess),
                     ),
                     if (listOf(SearchType.DESCRIPTION_AND_TOTAL, SearchType.DESCRIPTION).any { it == searchType })
                         listOf(
                             TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Search Texts"),
                             ButtonVMItem(
                                 title = "View Search Texts",
-                                onClick = { userTryNavToSetSearchTexts() },
+                                onClick = ::userTryNavToSetSearchTexts,
                             ),
                         )
                     else null,
