@@ -9,7 +9,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-open class DeleteCategoryFromActiveDomainUC @Inject constructor(
+open class DeleteCategoryFromActiveDomain @Inject constructor(
     private val categoriesRepo: CategoriesRepo,
     private val activeReconciliationRepo: ActiveReconciliationRepo,
     private val activePlanRepo: ActivePlanRepo,

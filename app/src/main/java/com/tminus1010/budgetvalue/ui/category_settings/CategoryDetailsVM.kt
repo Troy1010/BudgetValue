@@ -8,7 +8,7 @@ import com.tminus1010.budgetvalue.all_layers.KEY1
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
-import com.tminus1010.budgetvalue.app.DeleteCategoryFromActiveDomainUC
+import com.tminus1010.budgetvalue.app.DeleteCategoryFromActiveDomain
 import com.tminus1010.budgetvalue.app.ReplaceCategoryGlobally
 import com.tminus1010.budgetvalue.data.CategoriesRepo
 import com.tminus1010.budgetvalue.data.service.MoshiProvider
@@ -35,7 +35,7 @@ import javax.inject.Inject
 class CategoryDetailsVM @Inject constructor(
     savedStateHandle: SavedStateHandle,
     moshiProvider: MoshiProvider,
-    private val deleteCategoryFromActiveDomainUC: DeleteCategoryFromActiveDomainUC,
+    private val deleteCategoryFromActiveDomain: DeleteCategoryFromActiveDomain,
     private val categoriesRepo: CategoriesRepo,
     private val replaceCategoryGlobally: ReplaceCategoryGlobally,
     private val errors: Errors,
@@ -62,7 +62,7 @@ class CategoryDetailsVM @Inject constructor(
 
     fun userDeleteCategory() {
         GlobalScope.launch(block = throbberSharedVM.decorate {
-            deleteCategoryFromActiveDomainUC(categoryToPush.value)
+            deleteCategoryFromActiveDomain(categoryToPush.value)
         })
         navUp.easyEmit(Unit)
     }
