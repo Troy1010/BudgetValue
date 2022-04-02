@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.__core_testing
+package com.tminus1010.budgetvalue.core_testing
 
 import android.content.res.AssetManager
 import androidx.test.platform.app.InstrumentationRegistry

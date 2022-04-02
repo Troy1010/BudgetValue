@@ -6,7 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.room.Room
 import com.tminus1010.budgetvalue.FakeDataStore
 import com.tminus1010.budgetvalue.Given
-import com.tminus1010.budgetvalue.__core_testing.app
+import com.tminus1010.budgetvalue.core_testing.app
 import com.tminus1010.budgetvalue.all_layers.dependency_injection.EnvironmentModule
 import com.tminus1010.budgetvalue.app.DatePeriodService
 import com.tminus1010.budgetvalue.data.service.CategoryDatabase

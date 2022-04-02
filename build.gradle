@@ -7,14 +7,14 @@ buildscript {
     }
     dependencies {
         // # Gradle + Android
-        classpath "com.android.tools.build:gradle:4.2.2"
+        classpath 'com.android.tools.build:gradle:7.1.2'
         // # Gradle + Kotlin
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // # TMCommonKotlinDSL
         //noinspection GradleDynamicVersion
         classpath "com.tminus1010.tmcommonkotlin:tmcommonkotlin-dsl:+"
         // # Hilt
-        classpath "com.google.dagger:hilt-android-gradle-plugin:2.37"
+        classpath "com.google.dagger:hilt-android-gradle-plugin:2.41"
     }
 }
 

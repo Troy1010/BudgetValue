@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.__devEnvs
+package com.tminus1010.budgetvalue.devEnvs
 
 import android.content.Intent
 import androidx.test.ext.junit.rules.ActivityScenarioRule
