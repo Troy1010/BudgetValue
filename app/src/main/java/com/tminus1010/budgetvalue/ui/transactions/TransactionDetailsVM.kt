@@ -1,11 +1,15 @@
 package com.tminus1010.budgetvalue.ui.transactions
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue.R
+import com.tminus1010.budgetvalue.all_layers.KEY1
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_layers.extensions.value
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
+import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.domain.Transaction
 import com.tminus1010.budgetvalue.framework.android.ShowToast
@@ -14,24 +18,21 @@ import com.tminus1010.budgetvalue.ui.all_features.view_model_item.TableViewVMIte
 import com.tminus1010.budgetvalue.ui.all_features.view_model_item.TextVMItem
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
+import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TransactionDetailsVM @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val transactionsInteractor: TransactionsInteractor,
     private val showToast: ShowToast,
+    private val moshiWithCategoriesProvider: MoshiWithCategoriesProvider,
 ) : ViewModel() {
-    // # Setup
-    val transaction = MutableSharedFlow<Transaction>(1)
-
     // # User Intents
     fun userClearTransaction() {
         GlobalScope.launch {
@@ -39,6 +40,11 @@ class TransactionDetailsVM @Inject constructor(
             navUp.onNext()
         }
     }
+
+    // # Internal
+    val transaction =
+        savedStateHandle.getLiveData<String>(KEY1).asFlow().map { moshiWithCategoriesProvider.moshi.fromJson<Transaction>(it) }
+            .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
 
     // # Events
     val navUp = MutableSharedFlow<Unit>()
