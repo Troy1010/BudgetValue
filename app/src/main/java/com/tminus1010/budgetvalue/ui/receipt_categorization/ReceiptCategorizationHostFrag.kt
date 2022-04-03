@@ -13,25 +13,18 @@ import com.tminus1010.budgetvalue.databinding.FragReceiptCategorizationBinding
 import com.tminus1010.budgetvalue.domain.Transaction
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
-import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class ReceiptCategorizationHostFrag : Fragment(R.layout.frag_receipt_categorization) {
     lateinit var vb: FragReceiptCategorizationBinding
     val viewModel by viewModels<ReceiptCategorizationHostVM>()
-
-    @Inject
-    lateinit var moshiWithCategoriesProvider: MoshiWithCategoriesProvider
-    private val transaction get() = moshiWithCategoriesProvider.moshi.fromJson<Transaction>(requireArguments().getString(KEY1))!!
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = FragReceiptCategorizationBinding.bind(view)
         // # Setup VM
-        viewModel.transaction.value = transaction
         childFragmentManager.addOnBackStackChangedListener {
             //Notify VM of "currentFrag" view event
             viewModel.currentFrag.easyEmit(childFragmentManager.fragments.lastOrNull())
