@@ -70,7 +70,7 @@ class FutureDetailsVM @Inject constructor(
                 if (futureToPush.terminationStrategy == TerminationStrategy.PERMANENT)
                     categorizeTransactions({ futureToPush.onImportTransactionMatcher?.isMatch(it) ?: false }, futureToPush::categorize)
                         .also { showToast(NativeText.Simple("$it transactions categorized")) }
-                if (futureToPush.name != future.name) futuresRepo.delete(future)
+                if (futureToPush.name != originalFuture.name) futuresRepo.delete(originalFuture)
                 userTryNavUp()
             }
         } catch (e: Throwable) {
@@ -119,7 +119,7 @@ class FutureDetailsVM @Inject constructor(
     }
 
     fun userDeleteFutureOrReplay() {
-        runBlocking { futuresRepo.delete(future) }
+        runBlocking { futuresRepo.delete(originalFuture) }
         userTryNavUp()
     }
 
@@ -129,31 +129,31 @@ class FutureDetailsVM @Inject constructor(
     }
 
     // # Internal
-    val future = moshiWithCategoriesProvider.moshi.fromJson<Future>(savedStateHandle.get<String>(KEY1))!!
+    private val originalFuture = moshiWithCategoriesProvider.moshi.fromJson<Future>(savedStateHandle.get<String>(KEY1))!!
     private val name =
-        userSetName.onStart { emit(future.name) }
+        userSetName.onStart { emit(originalFuture.name) }
             .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
     private val totalGuess =
-        userSetTotalGuess.onStart { emit(future.totalGuess) }
+        userSetTotalGuess.onStart { emit(originalFuture.totalGuess) }
             .stateIn(viewModelScope, SharingStarted.Eagerly, BigDecimal("-10"))
     private val isOnlyOnce =
-        userSetIsOnlyOnce.onStart { emit(future.terminationStrategy == TerminationStrategy.PERMANENT) }
+        userSetIsOnlyOnce.onStart { emit(originalFuture.terminationStrategy == TerminationStrategy.PERMANENT) }
             .stateIn(viewModelScope, SharingStarted.Eagerly, false)
     private val searchType =
-        userSetSearchType.onStart { emit(transactionMatcherPresentationFactory.searchType(future.onImportTransactionMatcher)) }
+        userSetSearchType.onStart { emit(transactionMatcherPresentationFactory.searchType(originalFuture.onImportTransactionMatcher)) }
             .stateIn(viewModelScope, SharingStarted.Eagerly, SearchType.DESCRIPTION)
     private val categoryAmountFormulas =
         combine(userCategoryAmountFormulas.flow, selectedCategoriesSharedVM.selectedCategories)
         { userCategoryAmountFormulas, selectedCategories ->
             CategoryAmountFormulas(selectedCategories.associateWith { it.defaultAmountFormula })
-                .plus(future.categoryAmountFormulas)
+                .plus(originalFuture.categoryAmountFormulas)
                 .plus(userCategoryAmountFormulas.filter { it.key in selectedCategories })
         }
             .stateIn(viewModelScope, SharingStarted.Eagerly, CategoryAmountFormulas())
     private val fillCategory =
         selectedCategoriesSharedVM.selectedCategories.drop(1)
             .flatMapLatest { userSetFillCategory.onStart { emit(it.find { it.defaultAmountFormula.isZero() } ?: it.getOrNull(0)) } }
-            .onStart { emit(future.fillCategory) }
+            .onStart { emit(originalFuture.fillCategory) }
             .stateIn(viewModelScope, SharingStarted.Eagerly, null)
     private val fillAmountFormula =
         combine(categoryAmountFormulas, fillCategory, totalGuess)
