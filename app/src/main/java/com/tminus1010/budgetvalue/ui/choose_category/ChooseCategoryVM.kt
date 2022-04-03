@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.all_layers.extensions.isZero
 import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
-import com.tminus1010.budgetvalue.app.CategoryParser
+import com.tminus1010.budgetvalue.app.UserCategories
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.ui.all_features.view_model_item.ButtonVMItem
 import com.tminus1010.budgetvalue.ui.receipt_categorization.ReceiptCategorizationSharedVM
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChooseCategoryVM @Inject constructor(
-    categoryParser: CategoryParser,
+    userCategories: UserCategories,
     private val receiptCategorizationSharedVM: ReceiptCategorizationSharedVM,
 ) : ViewModel() {
     // # UserIntents
@@ -30,7 +30,7 @@ class ChooseCategoryVM @Inject constructor(
     // # State
     val partialAmountToCategorize = receiptCategorizationSharedVM.rememberedAmount.map { if (it.isZero) null else it.toString().toMoneyBigDecimal().toString() }
     val categoryButtonVMItems =
-        categoryParser.userCategories
+        userCategories.flow
             .map {
                 it.map { category ->
                     ButtonVMItem(

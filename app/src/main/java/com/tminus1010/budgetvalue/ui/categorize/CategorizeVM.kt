@@ -3,7 +3,10 @@ package com.tminus1010.budgetvalue.ui.categorize
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.all_layers.extensions.*
+import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
+import com.tminus1010.budgetvalue.all_layers.extensions.onNext
+import com.tminus1010.budgetvalue.all_layers.extensions.takeUntilSignal
+import com.tminus1010.budgetvalue.all_layers.extensions.value
 import com.tminus1010.budgetvalue.app.*
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.domain.Category
@@ -33,7 +36,7 @@ import javax.inject.Inject
 class CategorizeVM @Inject constructor(
     private val transactionsInteractor: TransactionsInteractor,
     private val showToast: ShowToast,
-    private val categoryParser: CategoryParser,
+    private val userCategories: UserCategories,
     private val throbberSharedVM: ThrobberSharedVM,
     private val chooseCategoriesSharedVM: ChooseCategoriesSharedVM,
     errors: Errors,
@@ -75,7 +78,7 @@ class CategorizeVM @Inject constructor(
 
     fun userCategorizeAllAsUnknown() {
         GlobalScope.launch(block = throbberSharedVM.decorate {
-            val categoryUnknown = categoryParser.userCategories.take(1).first().find { it.name.equals("Unknown", ignoreCase = true) }!! // TODO: Handle this error
+            val categoryUnknown = userCategories.flow.first().find { it.name.equals("Unknown", ignoreCase = true) }!! // TODO: Handle this error
             transactionsInteractor.push(
                 transactionsInteractor.uncategorizedSpends.first().map { it.categorize(categoryUnknown) }
             )
@@ -203,7 +206,7 @@ class CategorizeVM @Inject constructor(
         transactionsInteractor.uncategorizedSpends
             .map { it.size.toString() }
     val items =
-        combine(futuresRepo.futures.map { it.filter { it.isAvailableForManual } }, categoryParser.userCategories)
+        combine(futuresRepo.futures.map { it.filter { it.isAvailableForManual } }, userCategories.flow)
         { nonAutomaticFutures, categories ->
             listOf(
                 *categories.map { category ->

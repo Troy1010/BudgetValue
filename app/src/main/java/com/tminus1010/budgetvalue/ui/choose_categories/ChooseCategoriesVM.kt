@@ -4,7 +4,8 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
 import com.tminus1010.budgetvalue.ui.all_features.view_model_item.ButtonVMItem
 import com.tminus1010.budgetvalue.ui.all_features.view_model_item.ButtonVMItem2
-import com.tminus1010.budgetvalue.app.CategoryParser
+import com.tminus1010.budgetvalue.app.CategoryAdapter
+import com.tminus1010.budgetvalue.app.UserCategories
 import com.tminus1010.budgetvalue.domain.Category
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -14,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChooseCategoriesVM @Inject constructor(
-    private val categoryParser: CategoryParser,
+    private val userCategories: UserCategories,
     private val chooseCategoriesSharedVM: ChooseCategoriesSharedVM,
 ) : ViewModel() {
     // # User Intents
@@ -34,7 +35,7 @@ class ChooseCategoriesVM @Inject constructor(
 
     // # State
     val categoryButtonVMItems =
-        categoryParser.userCategories
+        userCategories.flow
             .map { categories ->
                 categories.map { category ->
                     ButtonVMItem2(

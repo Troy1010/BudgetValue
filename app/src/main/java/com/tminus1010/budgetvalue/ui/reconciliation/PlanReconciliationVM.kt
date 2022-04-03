@@ -1,13 +1,13 @@
 package com.tminus1010.budgetvalue.ui.reconciliation
 
 import androidx.lifecycle.ViewModel
+import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.app.ActiveReconciliationInteractor
 import com.tminus1010.budgetvalue.app.BudgetedWithActiveReconciliationInteractor
-import com.tminus1010.budgetvalue.domain.ReconciliationToDo
-import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
-import com.tminus1010.budgetvalue.app.CategoryParser
+import com.tminus1010.budgetvalue.app.UserCategories
 import com.tminus1010.budgetvalue.data.ActiveReconciliationRepo
 import com.tminus1010.budgetvalue.domain.Category
+import com.tminus1010.budgetvalue.domain.ReconciliationToDo
 import com.tminus1010.budgetvalue.ui.all_features.view_model_item.*
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PlanReconciliationVM @Inject constructor(
     private val activeReconciliationRepo: ActiveReconciliationRepo,
-    categoryParser: CategoryParser,
+    userCategories: UserCategories,
     activeReconciliationInteractor: ActiveReconciliationInteractor,
     budgetedWithActiveReconciliationInteractor: BudgetedWithActiveReconciliationInteractor,
 ) : ViewModel() {
@@ -35,7 +35,7 @@ class PlanReconciliationVM @Inject constructor(
 
     // # State
     val reconciliationTableView =
-        combine(categoryParser.userCategories, activeReconciliationInteractor.categoryAmountsAndTotal, budgetedWithActiveReconciliationInteractor.categoryAmountsAndTotal, reconciliationToDo.asFlow())
+        combine(userCategories.flow, activeReconciliationInteractor.categoryAmountsAndTotal, budgetedWithActiveReconciliationInteractor.categoryAmountsAndTotal, reconciliationToDo.asFlow())
         { categories, activeReconciliation, budgetedWithActiveReconciliation, reconciliationToDo ->
             TableViewVMItem(
                 recipeGrid = listOf(

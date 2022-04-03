@@ -19,7 +19,7 @@ class ImportTransactions @Inject constructor(
     private val app: Application,
     private val transactionInputStreamAdapter: TransactionInputStreamAdapter,
     private val futuresRepo: FuturesRepo,
-    private val categoryParser: CategoryParser,
+    private val userCategories: UserCategories,
     private val transactionsRepo: TransactionsRepo,
     private val transactionsInteractor: TransactionsInteractor
 ) {
@@ -42,7 +42,7 @@ class ImportTransactions @Inject constructor(
             .filter { (transactionsRepo.getTransaction2(it.id) == null).also { if (!it) transactionsIgnoredBecauseTheyWereAlreadyImportedCounter++ } }
             .map { transaction ->
                 val matchedCategorization =
-                    categoryParser.userCategories.value!!
+                    userCategories.flow.value!!
                         .find { it.onImportTransactionMatcher?.isMatch(transaction) ?: false }
                         ?: futuresRepo.futures.value!!
                             .find { it.onImportTransactionMatcher?.isMatch(transaction) ?: false }

@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue.all_layers.NoDescriptionEnteredException
 import com.tminus1010.budgetvalue.all_layers.extensions.*
 import com.tminus1010.budgetvalue.app.CategorizeTransactions
-import com.tminus1010.budgetvalue.app.CategoryParser
+import com.tminus1010.budgetvalue.app.CategoryAdapter
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.domain.*
@@ -30,7 +30,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateFutureVM @Inject constructor(
-    private val categoryParser: CategoryParser,
+    private val categoryAdapter: CategoryAdapter,
     private val selectedCategoriesSharedVM: ChooseCategoriesSharedVM,
     private val futuresRepo: FuturesRepo,
     private val showToast: ShowToast,
@@ -122,7 +122,7 @@ class CreateFutureVM @Inject constructor(
 
     private val userSetFillCategory = MutableSharedFlow<Category?>()
     fun userSetFillCategory(categoryName: String) {
-        userSetFillCategory.onNext(categoryParser.parseCategory(categoryName))
+        userSetFillCategory.onNext(categoryAdapter.parseCategory(categoryName))
     }
 
     fun userTryNavToSetSearchTexts() {

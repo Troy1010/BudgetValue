@@ -1,10 +1,10 @@
 package com.tminus1010.budgetvalue.ui.reconciliation
 
 import androidx.lifecycle.ViewModel
+import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.app.ActiveReconciliationInteractor
 import com.tminus1010.budgetvalue.app.BudgetedWithActiveReconciliationInteractor
-import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
-import com.tminus1010.budgetvalue.app.CategoryParser
+import com.tminus1010.budgetvalue.app.UserCategories
 import com.tminus1010.budgetvalue.data.ActiveReconciliationRepo
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.ui.all_features.view_model_item.*
@@ -17,10 +17,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountsReconciliationVM @Inject constructor(
-    categoryParser: CategoryParser,
     budgetedWithActiveReconciliationInteractor: BudgetedWithActiveReconciliationInteractor,
     activeReconciliationInteractor: ActiveReconciliationInteractor,
     private val activeReconciliationRepo: ActiveReconciliationRepo,
+    userCategories: UserCategories,
 ) : ViewModel() {
     // # User Intents
     fun userSetCategoryAmount(category: Category, s: String) {
@@ -29,7 +29,7 @@ class AccountsReconciliationVM @Inject constructor(
 
     // # State
     val reconciliationTableView =
-        combine(categoryParser.userCategories, activeReconciliationInteractor.categoryAmountsAndTotal, budgetedWithActiveReconciliationInteractor.categoryAmountsAndTotal)
+        combine(userCategories.flow, activeReconciliationInteractor.categoryAmountsAndTotal, budgetedWithActiveReconciliationInteractor.categoryAmountsAndTotal)
         { categories, activeReconciliation, budgetedWithActiveReconciliation ->
             TableViewVMItem(
                 recipeGrid = listOf(

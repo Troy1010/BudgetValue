@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.data.service
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 import com.squareup.moshi.Types
-import com.tminus1010.budgetvalue.app.CategoryParser
+import com.tminus1010.budgetvalue.app.CategoryAdapter
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 
 class MoshiWithCategoriesAdapters @Inject constructor(
-    private val categoryParser: CategoryParser,
+    private val categoryAdapter: CategoryAdapter,
     private val moshiProvider: MoshiProvider,
 ) {
     /**
@@ -27,7 +27,7 @@ class MoshiWithCategoriesAdapters @Inject constructor(
 
     @FromJson
     fun fromJson1(s: String): Category =
-        categoryParser.parseCategory(s)
+        categoryAdapter.parseCategory(s)
 
     /**
      * [CategoryAmounts]

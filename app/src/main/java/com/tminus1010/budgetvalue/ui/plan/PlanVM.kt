@@ -5,7 +5,7 @@ import com.tminus1010.budgetvalue.all_layers.categoryComparator
 import com.tminus1010.budgetvalue.all_layers.extensions.flatMapSourceHashMap
 import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.app.ActivePlanInteractor
-import com.tminus1010.budgetvalue.app.CategoryParser
+import com.tminus1010.budgetvalue.app.UserCategories
 import com.tminus1010.budgetvalue.data.ActivePlanRepo
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.ui.all_features.view_model_item.ButtonVMItem
@@ -27,7 +27,7 @@ import javax.inject.Inject
 class PlanVM @Inject constructor(
     private val activePlanRepo: ActivePlanRepo,
     private val activePlanInteractor: ActivePlanInteractor,
-    private val categoryParser: CategoryParser,
+    private val userCategories: UserCategories,
 ) : ViewModel() {
     // # User Intents
     fun userSaveExpectedIncome(s: String) {
@@ -44,7 +44,7 @@ class PlanVM @Inject constructor(
 
     // # Internal
     val categoryAmounts =
-        combine(activePlanRepo.activePlan.map { it.categoryAmounts }, categoryParser.userCategories)
+        combine(activePlanRepo.activePlan.map { it.categoryAmounts }, userCategories.flow)
         { categoryAmounts, userCategories ->
             userCategories.associateWith { BigDecimal.ZERO }
                 .plus(categoryAmounts)
