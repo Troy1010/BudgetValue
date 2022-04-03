@@ -242,7 +242,7 @@ class CreateFutureVM @Inject constructor(
                 ),
                 ButtonVMItem(
                     title = "Receipt Categorization",
-                    onClick = ::userTryNavToCategorySelection,
+                    onClick = ::userTryNavToReceiptCategorization,
                 ),
                 ButtonVMItem(
                     title = "Submit",
