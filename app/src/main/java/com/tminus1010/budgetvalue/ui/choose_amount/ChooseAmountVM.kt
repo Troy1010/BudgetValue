@@ -49,7 +49,7 @@ class ChooseAmountVM @Inject constructor(
     val userMinus001 = MutableSharedFlow<Unit>()
         .apply { observe(viewModelScope) { receiptCategorizationSharedVM.rememberedAmount.value = receiptCategorizationSharedVM.rememberedAmount.value - BigDecimal("0.01") } }
     val userFillAmount = MutableSharedFlow<Unit>()
-        .apply { observe(viewModelScope) { receiptCategorizationSharedVM.fill(transactionsInteractor.mostRecentUncategorizedSpend.value!!) } }
+        .apply { observe(viewModelScope) { receiptCategorizationSharedVM.fill() } }
     val userSetAmount = MutableSharedFlow<String>()
         .apply { observe(viewModelScope) { receiptCategorizationSharedVM.rememberedAmount.value = it.toMoneyBigDecimal() } }
     val userSubmitAmount = MutableSharedFlow<Unit>()

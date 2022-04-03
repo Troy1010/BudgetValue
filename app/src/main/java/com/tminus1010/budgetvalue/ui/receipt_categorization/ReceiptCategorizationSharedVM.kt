@@ -5,7 +5,6 @@ import com.tminus1010.budgetvalue.all_layers.extensions.value
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
-import com.tminus1010.budgetvalue.domain.Transaction
 import com.tminus1010.budgetvalue.framework.observable.source_objects.SourceList
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
@@ -34,8 +33,8 @@ class ReceiptCategorizationSharedVM @Inject constructor(
         }
     }
 
-    fun fill(transaction: Transaction) {
-        rememberedAmount.easyEmit(categoryAmountsRedefined.value.defaultAmount(transaction.amount))
+    fun fill() {
+        rememberedAmount.easyEmit(amountLeftToCategorize.value)
     }
 
     val categoryAmounts = SourceList<Pair<Category, BigDecimal>>()
@@ -44,10 +43,9 @@ class ReceiptCategorizationSharedVM @Inject constructor(
     // # Model State
     val rememberedAmount = MutableStateFlow(BigDecimal("0"))
     val amountLeftToCategorize =
-        combine(
-            transactionsInteractor.mostRecentUncategorizedSpend,
-            categoryAmountsRedefined
-        ) { transaction, categoryAmounts ->
+        combine(transactionsInteractor.mostRecentUncategorizedSpend, categoryAmountsRedefined)
+        { transaction, categoryAmounts ->
             categoryAmounts.defaultAmount(transaction?.amount ?: BigDecimal("0"))
         }
+            .stateIn(GlobalScope, SharingStarted.Eagerly, BigDecimal("0"))
 }
