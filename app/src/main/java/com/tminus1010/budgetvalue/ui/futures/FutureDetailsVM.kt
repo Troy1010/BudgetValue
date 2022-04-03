@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue.all_layers.KEY1
 import com.tminus1010.budgetvalue.all_layers.NoDescriptionEnteredException
 import com.tminus1010.budgetvalue.all_layers.extensions.*
-import com.tminus1010.budgetvalue.app.CategorizeMatchingTransactions
+import com.tminus1010.budgetvalue.app.CategorizeTransactions
 import com.tminus1010.budgetvalue.app.CategoryParser
 import com.tminus1010.budgetvalue.data.FuturesRepo
 import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider
@@ -37,7 +37,7 @@ class FutureDetailsVM @Inject constructor(
     private val selectedCategoriesSharedVM: ChooseCategoriesSharedVM,
     private val futuresRepo: FuturesRepo,
     private val showToast: ShowToast,
-    private val categorizeMatchingTransactions: CategorizeMatchingTransactions,
+    private val categorizeTransactions: CategorizeTransactions,
     private val setSearchTextsSharedVM: SetSearchTextsSharedVM,
     private val transactionMatcherPresentationFactory: TransactionMatcherPresentationFactory,
 ) : ViewModel() {
@@ -68,7 +68,7 @@ class FutureDetailsVM @Inject constructor(
             runBlocking {
                 futuresRepo.push(futureToPush)
                 if (futureToPush.terminationStrategy == TerminationStrategy.PERMANENT)
-                    categorizeMatchingTransactions({ futureToPush.onImportTransactionMatcher?.isMatch(it) ?: false }, futureToPush::categorize)
+                    categorizeTransactions({ futureToPush.onImportTransactionMatcher?.isMatch(it) ?: false }, futureToPush::categorize)
                         .also { showToast(NativeText.Simple("$it transactions categorized")) }
                 if (futureToPush.name != future.name) futuresRepo.delete(future)
                 userTryNavUp()
