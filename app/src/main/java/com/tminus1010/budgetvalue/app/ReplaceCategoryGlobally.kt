@@ -1,11 +1,7 @@
 package com.tminus1010.budgetvalue.app
 
-import com.tminus1010.budgetvalue.data.ActiveReconciliationRepo
-import com.tminus1010.budgetvalue.data.ReconciliationsRepo
 import com.tminus1010.budgetvalue.all_layers.extensions.value
-import com.tminus1010.budgetvalue.data.ActivePlanRepo
-import com.tminus1010.budgetvalue.data.CategoriesRepo
-import com.tminus1010.budgetvalue.data.PlansRepo
+import com.tminus1010.budgetvalue.data.*
 import com.tminus1010.budgetvalue.domain.Category
 import javax.inject.Inject
 
@@ -15,6 +11,8 @@ class ReplaceCategoryGlobally @Inject constructor(
     private val plansRepo: PlansRepo,
     private val activeReconciliationRepo: ActiveReconciliationRepo,
     private val activePlanRepo: ActivePlanRepo,
+    private val transactionsRepo: TransactionsRepo,
+    private val transactionsInteractor: TransactionsInteractor,
 ) {
     suspend operator fun invoke(originalCategory: Category, newCategory: Category) {
         categoriesRepo.push(newCategory)
@@ -28,6 +26,10 @@ class ReplaceCategoryGlobally @Inject constructor(
         plansRepo.plans.value?.forEach {
             plansRepo.push(it.copy(categoryAmounts = it.categoryAmounts.replaceKey(originalCategory, newCategory)))
         }
+
+        transactionsInteractor.push(
+            transactionsRepo.transactionsAggregate.value?.transactions?.map { it.copy(categoryAmounts = it.categoryAmounts.replaceKey(originalCategory, newCategory)) } ?: emptyList()
+        )
 
         categoriesRepo.delete(originalCategory)
     }
