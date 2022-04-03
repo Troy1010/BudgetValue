@@ -107,7 +107,7 @@ class HistoryVM @Inject constructor(
                 dividerMap = activeCategories.withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
                     .associate { it.index to it.value.type.name }
-                    .mapKeys { it.key + 1 } // header row
+                    .mapKeys { it.key + 2 } // header row, default row
                     .mapValues { DividerVMItem(it.value) },
                 shouldFitItemWidthsInsideTable = false,
                 colFreezeCount = 1,
