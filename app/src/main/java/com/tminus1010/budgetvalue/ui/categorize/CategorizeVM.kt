@@ -207,9 +207,9 @@ class CategorizeVM @Inject constructor(
             .map { it.size.toString() }
     val items =
         combine(futuresRepo.futures.map { it.filter { it.isAvailableForManual } }, userCategories.flow)
-        { nonAutomaticFutures, categories ->
+        { nonAutomaticFutures, userCategories ->
             listOf(
-                *categories.map { category ->
+                *userCategories.map { category ->
                     ButtonVMItem2(
                         title = category.name,
                         alpha = chooseCategoriesSharedVM.selectedCategories.map {
