@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.tminus1010.budgetvalue.all_layers.KEY1
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
+import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue.domain.Transaction
@@ -32,12 +33,13 @@ class ReceiptCategorizationHostVM @Inject constructor(
     }
 
     fun userSubmitCategorization() {
-        receiptCategorizationSharedVM.submitCategorization()
+        receiptCategorizationSharedVM.submitCategorization(transaction)
         navUp.easyEmit(Unit)
     }
 
     // # Internal
     private val transaction = moshiWithCategoriesProvider.moshi.fromJson<Transaction>(savedStateHandle[KEY1])!!
+        .also { receiptCategorizationSharedVM.total.onNext(it.amount) }
 
     // # Events
     val navUp = MutableSharedFlow<Unit>()
