@@ -117,7 +117,7 @@ class FutureDetailsVM @Inject constructor(
         userSetName.onNext(s)
     }
 
-    fun userDeleteFutureOrReplay() {
+    fun userDeleteFuture() {
         runBlocking { futuresRepo.delete(originalFuture) }
         userTryNavUp()
     }
@@ -243,7 +243,7 @@ class FutureDetailsVM @Inject constructor(
             listOfNotNull(
                 ButtonVMItem(
                     title = "Delete",
-                    onClick = ::userDeleteFutureOrReplay,
+                    onClick = ::userDeleteFuture,
                 ),
                 ButtonVMItem(
                     title = "Add Or Remove Categories",
