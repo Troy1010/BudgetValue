@@ -45,6 +45,10 @@ class CreateFutureVM @Inject constructor(
         navToCategorySelection.easyEmit()
     }
 
+    fun userTryNavToReceiptCategorization() {
+        navToReceiptCategorization.easyEmit()
+    }
+
     @SuppressLint("VisibleForTests")
     fun userTrySubmit() {
         GlobalScope.launch {
@@ -162,6 +166,7 @@ class CreateFutureVM @Inject constructor(
     val navToCategorySelection = MutableSharedFlow<Unit>()
     val navToChooseTransaction = MutableSharedFlow<Unit>()
     val navToSetSearchTexts = MutableSharedFlow<Unit>()
+    val navToReceiptCategorization = MutableSharedFlow<Unit>()
 
     // # State
     val otherInputTableView =
@@ -233,6 +238,10 @@ class CreateFutureVM @Inject constructor(
             listOfNotNull(
                 ButtonVMItem(
                     title = "Add Or Remove Categories",
+                    onClick = ::userTryNavToCategorySelection,
+                ),
+                ButtonVMItem(
+                    title = "Receipt Categorization",
                     onClick = ::userTryNavToCategorySelection,
                 ),
                 ButtonVMItem(

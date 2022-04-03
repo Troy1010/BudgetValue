@@ -37,6 +37,7 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
         viewModel.navToCategorySelection.observe(viewLifecycleOwner) { ChooseCategoriesFrag.navTo(nav) }
         viewModel.navToChooseTransaction.observe(viewLifecycleOwner) { ChooseTransactionFrag.navTo(nav) }
         viewModel.navToSetSearchTexts.observe(viewLifecycleOwner) { SetSearchTextsFrag.navTo(nav) }
+        viewModel.navToReceiptCategorization.observe(viewLifecycleOwner) { TODO() }//ReceiptCategorizationHostFrag.navTo(nav) }
         // # State
         vb.tmTableViewOtherInput.bind(viewModel.otherInputTableView) { it.bind(this) }
         vb.tmTableViewCategoryAmounts.bind(viewModel.categoryAmountsTableView) { it.bind(this) }
