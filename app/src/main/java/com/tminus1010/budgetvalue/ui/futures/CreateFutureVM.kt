@@ -96,6 +96,7 @@ class CreateFutureVM @Inject constructor(
         }
     }
 
+    // TODO: Simplify by having futureToPush instead of each individual thing
     private val totalGuess = MutableStateFlow(transactionsInteractor.mostRecentUncategorizedSpend.value?.amount ?: BigDecimal("-10"))
     fun userSetTotalGuess(s: String) {
         totalGuess.onNext(s.toMoneyBigDecimal())
