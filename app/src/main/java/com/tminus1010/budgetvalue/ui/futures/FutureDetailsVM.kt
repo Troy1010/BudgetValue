@@ -5,7 +5,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue.all_layers.KEY1
-import com.tminus1010.budgetvalue.all_layers.extensions.*
+import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
+import com.tminus1010.budgetvalue.all_layers.extensions.flatMapSourceHashMap
+import com.tminus1010.budgetvalue.all_layers.extensions.onNext
+import com.tminus1010.budgetvalue.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.budgetvalue.app.CategorizeTransactions
 import com.tminus1010.budgetvalue.app.CategoryAdapter
 import com.tminus1010.budgetvalue.data.FuturesRepo
@@ -18,6 +21,7 @@ import com.tminus1010.budgetvalue.ui.all_features.model.SearchType
 import com.tminus1010.budgetvalue.ui.all_features.view_model_item.*
 import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesSharedVM
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
@@ -49,54 +53,59 @@ class FutureDetailsVM @Inject constructor(
         navToSetSearchTexts.onNext()
     }
 
+    fun userTryNavUp() {
+        runBlocking { selectedCategoriesSharedVM.clearSelection() }
+        navUp.onNext()
+    }
+
+    fun userDeleteFuture() {
+        runBlocking { futuresRepo.delete(originalFuture) }
+        userTryNavUp()
+    }
+
     @SuppressLint("VisibleForTests")
     fun userTrySubmit() {
         try {
-            val futureToPush =
-                Future(
-                    name = name.value ?: throw NoDescriptionEnteredException(),
-                    categoryAmountFormulas = categoryAmountFormulas.value,
-                    fillCategory = fillCategory.value!!,
-                    terminationStrategy = if (isOnlyOnce.value) TerminationStrategy.ONCE else TerminationStrategy.PERMANENT,
-                    terminationDate = null,
-                    isAvailableForManual = true,
-                    onImportTransactionMatcher = when (searchType.value) {
-                        SearchType.DESCRIPTION -> TransactionMatcher.Multi(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) })
-                        SearchType.DESCRIPTION_AND_TOTAL -> TransactionMatcher.Multi(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) }.plus(TransactionMatcher.ByValue(totalGuess.value)))
-                        SearchType.TOTAL -> TransactionMatcher.ByValue(totalGuess.value)
-                        SearchType.NONE -> null
-                    },
-                    totalGuess = totalGuess.value,
-                )
+            if (futureToPush.value.name == "") throw InvalidNameException()
+            if (futureToPush.value.fillCategory == Category.UNRECOGNIZED) throw InvalidFillCategoryException()
             runBlocking {
-                futuresRepo.push(futureToPush)
-                if (futureToPush.terminationStrategy == TerminationStrategy.PERMANENT)
-                    categorizeTransactions({ futureToPush.onImportTransactionMatcher?.isMatch(it) ?: false }, futureToPush::categorize)
+                futuresRepo.push(futureToPush.value)
+                if (futureToPush.value.terminationStrategy == TerminationStrategy.PERMANENT)
+                    categorizeTransactions({ futureToPush.value.onImportTransactionMatcher?.isMatch(it) ?: false }, futureToPush.value::categorize)
                         .also { showToast(NativeText.Simple("$it transactions categorized")) }
-                if (futureToPush.name != originalFuture.name) futuresRepo.delete(originalFuture)
+                if (futureToPush.value.name != originalFuture.name) futuresRepo.delete(originalFuture)
                 userTryNavUp()
             }
         } catch (e: Throwable) {
             when (e) {
-                is NoDescriptionEnteredException -> showToast(NativeText.Simple("Fill description or use another search type"))
+                is InvalidFillCategoryException -> showToast(NativeText.Simple("Invalid fill category"))
+                is InvalidNameException -> showToast(NativeText.Simple("Invalid name"))
                 else -> throw e
             }
         }
     }
 
-    private val userSetTotalGuess = MutableSharedFlow<BigDecimal>()
     fun userSetTotalGuess(s: String) {
-        userSetTotalGuess.onNext(s.toMoneyBigDecimal())
+        futureToPush.onNext(futureToPush.value.copy(totalGuess = s.toMoneyBigDecimal()))
     }
 
-    private val userSetIsOnlyOnce = MutableSharedFlow<Boolean>()
     fun userSetIsOnlyOnce(b: Boolean) {
-        userSetIsOnlyOnce.onNext(b)
+        futureToPush.onNext(futureToPush.value.copy(terminationStrategy = if (b) TerminationStrategy.ONCE else TerminationStrategy.PERMANENT))
     }
 
-    private val userSetSearchType = MutableSharedFlow<SearchType>()
     fun userSetSearchType(searchType: SearchType) {
-        userSetSearchType.onNext(searchType)
+        futureToPush.onNext(futureToPush.value.copy(
+            onImportTransactionMatcher = when (searchType) {
+                SearchType.DESCRIPTION -> TransactionMatcher.Multi(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) })
+                SearchType.DESCRIPTION_AND_TOTAL -> TransactionMatcher.Multi(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) }.plus(TransactionMatcher.ByValue(futureToPush.value.totalGuess)))
+                SearchType.TOTAL -> TransactionMatcher.ByValue(futureToPush.value.totalGuess)
+                SearchType.NONE -> null
+            }
+        ))
+    }
+
+    fun userSetName(s: String) {
+        futureToPush.onNext(futureToPush.value.copy(name = s))
     }
 
     private val userCategoryAmountFormulas = SourceHashMap<Category, AmountFormula>()
@@ -107,40 +116,14 @@ class FutureDetailsVM @Inject constructor(
             userCategoryAmountFormulas[category] = amountFormula
     }
 
-    private val userSetFillCategory = MutableSharedFlow<Category?>()
+    private val userSetFillCategory = MutableSharedFlow<Category>()
     fun userSetFillCategory(categoryName: String) {
         userSetFillCategory.onNext(categoryAdapter.parseCategory(categoryName))
     }
 
-    private val userSetName = MutableSharedFlow<String>()
-    fun userSetName(s: String) {
-        userSetName.onNext(s)
-    }
-
-    fun userDeleteFuture() {
-        runBlocking { futuresRepo.delete(originalFuture) }
-        userTryNavUp()
-    }
-
-    fun userTryNavUp() {
-        runBlocking { selectedCategoriesSharedVM.clearSelection() }
-        navUp.onNext()
-    }
-
     // # Internal
     private val originalFuture = moshiWithCategoriesProvider.moshi.fromJson<Future>(savedStateHandle.get<String>(KEY1))!!
-    private val name =
-        userSetName.onStart { emit(originalFuture.name) }
-            .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
-    private val totalGuess =
-        userSetTotalGuess.onStart { emit(originalFuture.totalGuess) }
-            .stateIn(viewModelScope, SharingStarted.Eagerly, BigDecimal("-10"))
-    private val isOnlyOnce =
-        userSetIsOnlyOnce.onStart { emit(originalFuture.terminationStrategy == TerminationStrategy.PERMANENT) }
-            .stateIn(viewModelScope, SharingStarted.Eagerly, false)
-    private val searchType =
-        userSetSearchType.onStart { emit(transactionMatcherPresentationFactory.searchType(originalFuture.onImportTransactionMatcher)) }
-            .stateIn(viewModelScope, SharingStarted.Eagerly, SearchType.DESCRIPTION)
+    private val futureToPush = MutableStateFlow(originalFuture)
     private val categoryAmountFormulas =
         combine(userCategoryAmountFormulas.flow, selectedCategoriesSharedVM.selectedCategories)
         { userCategoryAmountFormulas, selectedCategories ->
@@ -149,16 +132,24 @@ class FutureDetailsVM @Inject constructor(
                 .plus(userCategoryAmountFormulas.filter { it.key in selectedCategories })
         }
             .stateIn(viewModelScope, SharingStarted.Eagerly, CategoryAmountFormulas())
+
+    init {
+        categoryAmountFormulas.observe(viewModelScope) { futureToPush.onNext(futureToPush.value.copy(categoryAmountFormulas = it)) }
+    }
+
     private val fillCategory =
-        selectedCategoriesSharedVM.selectedCategories.drop(1)
-            .flatMapLatest { userSetFillCategory.onStart { emit(it.find { it.defaultAmountFormula.isZero() } ?: it.getOrNull(0)) } }
-            .onStart { emit(originalFuture.fillCategory) }
-            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+        selectedCategoriesSharedVM.selectedCategories
+            .flatMapLatest { userSetFillCategory.onStart { emit(it.find { it.defaultAmountFormula.isZero() } ?: it.getOrNull(0) ?: Category.UNRECOGNIZED) } }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, Category.UNRECOGNIZED)
+
+    init {
+        fillCategory.observe(viewModelScope) { futureToPush.onNext(futureToPush.value.copy(fillCategory = it)) }
+    }
+
     private val fillAmountFormula =
-        combine(categoryAmountFormulas, fillCategory, totalGuess)
+        combine(categoryAmountFormulas, fillCategory, futureToPush.map { it.totalGuess })
         { categoryAmountFormulas, fillCategory, total ->
-            fillCategory
-                ?.let { categoryAmountFormulas.fillIntoCategory(fillCategory, total)[fillCategory] }
+            categoryAmountFormulas.fillIntoCategory(fillCategory, total)[fillCategory]
                 ?: AmountFormula.Value(BigDecimal.ZERO)
         }
             .stateIn(viewModelScope, SharingStarted.Eagerly, AmountFormula.Value(BigDecimal.ZERO))
@@ -171,12 +162,12 @@ class FutureDetailsVM @Inject constructor(
 
     // # State
     val otherInputTableView =
-        searchType.map { searchType ->
+        futureToPush.map { transactionMatcherPresentationFactory.searchType(it.onImportTransactionMatcher) }.distinctUntilChanged().map { searchType ->
             TableViewVMItem(
                 recipeGrid = listOfNotNull(
                     listOf(
                         TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Name"),
-                        EditTextVMItem2(text = name.value!!, onDone = ::userSetName),
+                        EditTextVMItem2(textFlow = futureToPush.map { it.name }, onDone = ::userSetName),
                     ),
                     listOf(
                         TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Search Type"),
@@ -185,19 +176,16 @@ class FutureDetailsVM @Inject constructor(
                     listOf(
                         TextPresentationModel(
                             style = TextPresentationModel.Style.TWO,
-                            text2 = this.searchType
-                                .map {
-                                    when (it) {
-                                        SearchType.NONE,
-                                        SearchType.DESCRIPTION,
-                                        -> "Total Guess"
-                                        SearchType.TOTAL,
-                                        SearchType.DESCRIPTION_AND_TOTAL,
-                                        -> "Exact Total"
-                                    }
-                                }
+                            text1 = when (searchType) {
+                                SearchType.NONE,
+                                SearchType.DESCRIPTION,
+                                -> "Total Guess"
+                                SearchType.TOTAL,
+                                SearchType.DESCRIPTION_AND_TOTAL,
+                                -> "Exact Total"
+                            }
                         ),
-                        MoneyEditVMItem(text1 = totalGuess.value.toString(), onDone = ::userSetTotalGuess),
+                        MoneyEditVMItem(text2 = futureToPush.map { it.totalGuess.toString() }.distinctUntilChanged(), onDone = ::userSetTotalGuess),
                     ),
                     if (listOf(SearchType.DESCRIPTION_AND_TOTAL, SearchType.DESCRIPTION).any { it == searchType })
                         listOf(
@@ -210,7 +198,7 @@ class FutureDetailsVM @Inject constructor(
                     else null,
                     listOf(
                         TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Is Only Once"),
-                        CheckboxVMItem(isOnlyOnce.value, onCheckChanged = ::userSetIsOnlyOnce),
+                        CheckboxVMItem(futureToPush.value.terminationStrategy == TerminationStrategy.ONCE, onCheckChanged = ::userSetIsOnlyOnce),
                     ),
                 ),
                 shouldFitItemWidthsInsideTable = true,
