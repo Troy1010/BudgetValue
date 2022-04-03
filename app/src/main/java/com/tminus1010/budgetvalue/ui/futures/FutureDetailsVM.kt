@@ -132,20 +132,12 @@ class FutureDetailsVM @Inject constructor(
                 .plus(userCategoryAmountFormulas.filter { it.key in selectedCategories })
         }
             .stateIn(viewModelScope, SharingStarted.Eagerly, CategoryAmountFormulas())
-
-    init {
-        categoryAmountFormulas.observe(viewModelScope) { futureToPush.onNext(futureToPush.value.copy(categoryAmountFormulas = it)) }
-    }
-
+            .apply { observe(viewModelScope) { futureToPush.onNext(futureToPush.value.copy(categoryAmountFormulas = it)) } }
     private val fillCategory =
         selectedCategoriesSharedVM.selectedCategories
             .flatMapLatest { userSetFillCategory.onStart { emit(it.find { it.defaultAmountFormula.isZero() } ?: it.getOrNull(0) ?: Category.UNRECOGNIZED) } }
             .stateIn(viewModelScope, SharingStarted.Eagerly, Category.UNRECOGNIZED)
-
-    init {
-        fillCategory.observe(viewModelScope) { futureToPush.onNext(futureToPush.value.copy(fillCategory = it)) }
-    }
-
+            .apply { observe(viewModelScope) { futureToPush.onNext(futureToPush.value.copy(fillCategory = it)) } }
     private val fillAmountFormula =
         combine(categoryAmountFormulas, fillCategory, futureToPush.map { it.totalGuess })
         { categoryAmountFormulas, fillCategory, total ->
