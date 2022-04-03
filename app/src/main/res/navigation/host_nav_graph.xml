@@ -44,7 +44,7 @@
         app:startDestination="@id/categorizeFrag">
         <fragment
             android:id="@+id/categoryDetailsFrag"
-            android:name="com.tminus1010.budgetvalue.ui.category_settings.CategoryDetailsFrag"
+            android:name="com.tminus1010.budgetvalue.ui.category_details.CategoryDetailsFrag"
             android:label="CategoryDetailsFrag"
             tools:layout="@layout/frag_category_details" />
         <fragment

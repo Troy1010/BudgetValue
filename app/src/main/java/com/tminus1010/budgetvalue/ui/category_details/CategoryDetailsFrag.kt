@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.ui.category_settings
+package com.tminus1010.budgetvalue.ui.category_details
 
 import android.os.Bundle
 import android.view.View

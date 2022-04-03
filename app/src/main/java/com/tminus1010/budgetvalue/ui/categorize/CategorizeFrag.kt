@@ -13,7 +13,7 @@ import com.tminus1010.budgetvalue.data.service.MoshiProvider
 import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider
 import com.tminus1010.budgetvalue.databinding.FragCategorizeBinding
 import com.tminus1010.budgetvalue.framework.android.*
-import com.tminus1010.budgetvalue.ui.category_settings.CategoryDetailsFrag
+import com.tminus1010.budgetvalue.ui.category_details.CategoryDetailsFrag
 import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesSharedVM
 import com.tminus1010.budgetvalue.ui.errors.Errors
 import com.tminus1010.budgetvalue.ui.futures.CreateFutureFrag
