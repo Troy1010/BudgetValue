@@ -76,7 +76,6 @@ class HistoryVM @Inject constructor(
                 //
                 historyColumnDatas
             }
-            .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
 
     // # Events
     val showPopupMenu = PublishSubject.create<Pair<View, List<MenuVMItem>>>()
@@ -114,4 +113,5 @@ class HistoryVM @Inject constructor(
                 rowFreezeCount = 1,
             )
         }
+            .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
 }
