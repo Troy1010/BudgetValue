@@ -42,8 +42,12 @@ class FutureDetailsVM @Inject constructor(
     private val transactionMatcherPresentationFactory: TransactionMatcherPresentationFactory,
 ) : ViewModel() {
     // # User Intents
-    fun userTryNavToCategorySelection() {
-        navToCategorySelection.easyEmit()
+    fun userTryNavToChooseCategories() {
+        navToChooseCategories.easyEmit()
+    }
+
+    fun userTryNavToSetSearchTexts() {
+        navToSetSearchTexts.onNext()
     }
 
     @SuppressLint("VisibleForTests")
@@ -114,10 +118,6 @@ class FutureDetailsVM @Inject constructor(
         userSetName.onNext(s)
     }
 
-    fun userTryNavToSetSearchTexts() {
-        navToSetSearchTexts.onNext()
-    }
-
     fun userDeleteFutureOrReplay() {
         runBlocking { futuresRepo.delete(originalFuture) }
         userTryNavUp()
@@ -166,7 +166,7 @@ class FutureDetailsVM @Inject constructor(
 
     // # Events
     val navUp = MutableSharedFlow<Unit>()
-    val navToCategorySelection = MutableSharedFlow<Unit>()
+    val navToChooseCategories = MutableSharedFlow<Unit>()
     val navToChooseTransaction = MutableSharedFlow<Unit>()
     val navToSetSearchTexts = MutableSharedFlow<Unit>()
 
@@ -248,7 +248,7 @@ class FutureDetailsVM @Inject constructor(
                 ),
                 ButtonVMItem(
                     title = "Add Or Remove Categories",
-                    onClick = ::userTryNavToCategorySelection,
+                    onClick = ::userTryNavToChooseCategories,
                 ),
                 ButtonVMItem(
                     title = "Submit",
