@@ -24,7 +24,6 @@ class ReceiptCategorizationHostVM @Inject constructor(
     private val receiptCategorizationSharedVM: ReceiptCategorizationSharedVM,
 ) : ViewModel() {
     // # View Events
-    val transaction = moshiWithCategoriesProvider.moshi.fromJson<Transaction>(savedStateHandle[KEY1])!!
     val currentFrag = MutableStateFlow<Fragment?>(null)
 
     // # User Intents
@@ -37,7 +36,10 @@ class ReceiptCategorizationHostVM @Inject constructor(
         navUp.easyEmit(Unit)
     }
 
-    // # Presentation Events
+    // # Internal
+    private val transaction = moshiWithCategoriesProvider.moshi.fromJson<Transaction>(savedStateHandle[KEY1])!!
+
+    // # Events
     val navUp = MutableSharedFlow<Unit>()
 
     // # State
