@@ -28,25 +28,16 @@ class ReceiptCategorizationSoFarVM @Inject constructor(
                         ),
                     ),
                     it.map { (category, amount) ->
+                        val menuVMItems =
+                            MenuVMItems(
+                                MenuVMItem(
+                                    title = "Remove",
+                                    onClick = { remove(category, amount) },
+                                )
+                            )
                         listOf(
-                            TextVMItem(
-                                text1 = amount.toPlainString(),
-                                menuVMItems = MenuVMItems(
-                                    MenuVMItem(
-                                        title = "Remove",
-                                        onClick = { remove(category, amount) },
-                                    )
-                                )
-                            ),
-                            TextVMItem(
-                                text1 = category.name,
-                                menuVMItems = MenuVMItems(
-                                    MenuVMItem(
-                                        title = "Remove",
-                                        onClick = { remove(category, amount) },
-                                    )
-                                )
-                            ),
+                            TextVMItem(text1 = category.name, menuVMItems = menuVMItems),
+                            TextVMItem(text1 = amount.toPlainString(), menuVMItems = menuVMItems),
                         )
                     },
                 ).flatten(),
