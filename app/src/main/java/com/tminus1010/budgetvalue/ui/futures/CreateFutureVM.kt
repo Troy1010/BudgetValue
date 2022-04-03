@@ -3,7 +3,6 @@ package com.tminus1010.budgetvalue.ui.futures
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tminus1010.budgetvalue.all_layers.NoDescriptionEnteredException
 import com.tminus1010.budgetvalue.all_layers.extensions.*
 import com.tminus1010.budgetvalue.app.CategorizeTransactions
 import com.tminus1010.budgetvalue.app.CategoryAdapter
@@ -63,15 +62,15 @@ class CreateFutureVM @Inject constructor(
                     try {
                         val futureToPush =
                             Future(
-                                name = it.toString(),
+                                name = it.toString().ifEmpty { throw InvalidNameException() },
                                 categoryAmountFormulas = categoryAmountFormulas.value,
-                                fillCategory = fillCategory.value!!,
+                                fillCategory = fillCategory.value ?: throw InvalidFillCategoryException(),
                                 terminationStrategy = if (userSetIsOnlyOnce.value) TerminationStrategy.ONCE else TerminationStrategy.PERMANENT,
                                 terminationDate = null,
                                 isAvailableForManual = true,
                                 onImportTransactionMatcher = when (searchType.value) {
-                                    SearchType.DESCRIPTION -> TransactionMatcher.Multi(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) })
-                                    SearchType.DESCRIPTION_AND_TOTAL -> TransactionMatcher.Multi(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) }.plus(TransactionMatcher.ByValue(totalGuess.value)))
+                                    SearchType.DESCRIPTION -> TransactionMatcher.Multi(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) }.also { if (it.isEmpty()) throw NoDescriptionEnteredException() })
+                                    SearchType.DESCRIPTION_AND_TOTAL -> TransactionMatcher.Multi(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) }.also { if (it.isEmpty()) throw NoDescriptionEnteredException() }.plus(TransactionMatcher.ByValue(totalGuess.value)))
                                     SearchType.TOTAL -> TransactionMatcher.ByValue(totalGuess.value)
                                     SearchType.NONE -> null
                                 },
@@ -88,6 +87,8 @@ class CreateFutureVM @Inject constructor(
                     } catch (e: Throwable) {
                         when (e) {
                             is NoDescriptionEnteredException -> showToast(NativeText.Simple("Fill description or use another search type"))
+                            is InvalidFillCategoryException -> showToast(NativeText.Simple("Invalid fill category"))
+                            is InvalidNameException -> showToast(NativeText.Simple("Invalid name"))
                             else -> throw e
                         }
                     }

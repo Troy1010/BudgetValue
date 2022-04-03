@@ -5,7 +5,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.budgetvalue.all_layers.KEY1
-import com.tminus1010.budgetvalue.all_layers.NoDescriptionEnteredException
 import com.tminus1010.budgetvalue.all_layers.extensions.*
 import com.tminus1010.budgetvalue.app.CategorizeTransactions
 import com.tminus1010.budgetvalue.app.CategoryAdapter
