@@ -5,25 +5,29 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
+import com.squareup.moshi.Types
 import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_layers.KEY1
+import com.tminus1010.budgetvalue.all_layers.KEY2
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
+import com.tminus1010.budgetvalue.data.service.MoshiProvider
 import com.tminus1010.budgetvalue.data.service.MoshiWithCategoriesProvider
-import com.tminus1010.budgetvalue.databinding.FragReceiptCategorizationBinding
+import com.tminus1010.budgetvalue.databinding.FragReceiptCategorizationHostBinding
 import com.tminus1010.budgetvalue.domain.Transaction
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
+import java.math.BigDecimal
 
 @AndroidEntryPoint
-class ReceiptCategorizationHostFrag : Fragment(R.layout.frag_receipt_categorization) {
-    lateinit var vb: FragReceiptCategorizationBinding
+class ReceiptCategorizationHostFrag : Fragment(R.layout.frag_receipt_categorization_host) {
+    lateinit var vb: FragReceiptCategorizationHostBinding
     val viewModel by viewModels<ReceiptCategorizationHostVM>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        vb = FragReceiptCategorizationBinding.bind(view)
+        vb = FragReceiptCategorizationHostBinding.bind(view)
         // # Setup VM
         childFragmentManager.addOnBackStackChangedListener {
             //Notify VM of "currentFrag" view event
@@ -51,6 +55,15 @@ class ReceiptCategorizationHostFrag : Fragment(R.layout.frag_receipt_categorizat
                 R.id.receiptCategorizationHostFrag,
                 Bundle().apply {
                     putString(KEY1, moshiWithCategoriesProvider.moshi.toJson(transaction))
+                },
+            )
+        }
+
+        fun navTo(nav: NavController, descriptionAndTotal: Pair<String, BigDecimal>, moshiProvider: MoshiProvider) {
+            nav.navigate(
+                R.id.receiptCategorizationHostFrag,
+                Bundle().apply {
+                    putString(KEY2, moshiProvider.moshi.adapter<Pair<String, BigDecimal>>(Types.newParameterizedType(Pair::class.java, String::class.java, BigDecimal::class.java)).toJson(descriptionAndTotal))
                 },
             )
         }

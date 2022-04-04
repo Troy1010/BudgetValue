@@ -15,7 +15,9 @@ import com.tminus1010.budgetvalue.framework.observable.source_objects.SourceHash
 import com.tminus1010.budgetvalue.ui.all_features.model.SearchType
 import com.tminus1010.budgetvalue.ui.all_features.view_model_item.*
 import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesSharedVM
+import com.tminus1010.budgetvalue.ui.receipt_categorization.ReceiptCategorizationSharedVM
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
 import com.tminus1010.tmcommonkotlin.view.NativeText
@@ -36,6 +38,7 @@ class CreateFutureVM @Inject constructor(
     private val categorizeTransactions: CategorizeTransactions,
     private val setSearchTextsSharedVM: SetSearchTextsSharedVM,
     private val transactionsInteractor: TransactionsInteractor,
+    private val receiptCategorizationSharedVM: ReceiptCategorizationSharedVM,
 ) : ViewModel() {
     // # Setup
     val showAlertDialog = MutableSharedFlow<ShowAlertDialog>(1)
@@ -46,7 +49,7 @@ class CreateFutureVM @Inject constructor(
     }
 
     fun userTryNavToReceiptCategorization() {
-        navToReceiptCategorization.easyEmit()
+        navToReceiptCategorization.easyEmit(Pair("New Future", totalGuess.value))
     }
 
     @SuppressLint("VisibleForTests")
@@ -140,6 +143,13 @@ class CreateFutureVM @Inject constructor(
     }
 
     // # Internal
+    init {
+        receiptCategorizationSharedVM.userSubmitCategorization.observe(viewModelScope) {
+            selectedCategoriesSharedVM.selectCategories(*it.keys.toTypedArray())
+            userCategoryAmountFormulas.adjustTo(it.mapValues { AmountFormula.Value(it.value) })
+        }
+    }
+
     private val categoryAmountFormulas =
         combine(userCategoryAmountFormulas.flow, selectedCategoriesSharedVM.selectedCategories)
         { userCategoryAmountFormulas, selectedCategories ->
@@ -166,7 +176,7 @@ class CreateFutureVM @Inject constructor(
     val navToCategorySelection = MutableSharedFlow<Unit>()
     val navToChooseTransaction = MutableSharedFlow<Unit>()
     val navToSetSearchTexts = MutableSharedFlow<Unit>()
-    val navToReceiptCategorization = MutableSharedFlow<Unit>()
+    val navToReceiptCategorization = MutableSharedFlow<Pair<String, BigDecimal>>()
 
     // # State
     val otherInputTableView =

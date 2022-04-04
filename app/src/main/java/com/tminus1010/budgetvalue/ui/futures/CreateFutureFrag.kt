@@ -11,22 +11,28 @@ import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_layers.extensions.showAlertDialog
 import com.tminus1010.budgetvalue.all_layers.extensions.value
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
+import com.tminus1010.budgetvalue.data.service.MoshiProvider
 import com.tminus1010.budgetvalue.databinding.FragCreateFutureBinding
 import com.tminus1010.budgetvalue.framework.android.viewBinding
 import com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesFrag
 import com.tminus1010.budgetvalue.ui.choose_transaction.ChooseTransactionFrag
+import com.tminus1010.budgetvalue.ui.receipt_categorization.ReceiptCategorizationHostFrag
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsFrag
 import com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
     private val vb by viewBinding(FragCreateFutureBinding::bind)
     private val viewModel by viewModels<CreateFutureVM>()
+
+    @Inject
+    lateinit var moshiProvider: MoshiProvider
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Setup
@@ -37,7 +43,7 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
         viewModel.navToCategorySelection.observe(viewLifecycleOwner) { ChooseCategoriesFrag.navTo(nav) }
         viewModel.navToChooseTransaction.observe(viewLifecycleOwner) { ChooseTransactionFrag.navTo(nav) }
         viewModel.navToSetSearchTexts.observe(viewLifecycleOwner) { SetSearchTextsFrag.navTo(nav) }
-        viewModel.navToReceiptCategorization.observe(viewLifecycleOwner) { TODO() }//ReceiptCategorizationHostFrag.navTo(nav) }
+        viewModel.navToReceiptCategorization.observe(viewLifecycleOwner) { ReceiptCategorizationHostFrag.navTo(nav, it, moshiProvider) }
         // # State
         vb.tmTableViewOtherInput.bind(viewModel.otherInputTableView) { it.bind(this) }
         vb.tmTableViewCategoryAmounts.bind(viewModel.categoryAmountsTableView) { it.bind(this) }

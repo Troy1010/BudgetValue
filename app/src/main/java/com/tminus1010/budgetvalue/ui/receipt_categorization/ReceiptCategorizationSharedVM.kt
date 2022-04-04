@@ -1,6 +1,7 @@
 package com.tminus1010.budgetvalue.ui.receipt_categorization
 
 import com.tminus1010.budgetvalue.all_layers.extensions.easyEmit
+import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.app.TransactionsInteractor
 import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
@@ -8,12 +9,11 @@ import com.tminus1010.budgetvalue.domain.Transaction
 import com.tminus1010.budgetvalue.framework.observable.source_objects.SourceList
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
 
-// TODO: Can I make this more similar to the other SharedVMs?
 @Singleton
 class ReceiptCategorizationSharedVM @Inject constructor(
     private val transactionsInteractor: TransactionsInteractor,
@@ -24,14 +24,17 @@ class ReceiptCategorizationSharedVM @Inject constructor(
         rememberedAmount.easyEmit(BigDecimal("0"))
     }
 
-    fun submitCategorization(transaction: Transaction) {
-        GlobalScope.launch {
-            transactionsInteractor.push(transaction.copy(categoryAmounts = categoryAmountsRedefined.value))
-        }
-    }
-
     fun fill() {
         rememberedAmount.easyEmit(amountLeftToCategorize.value)
+    }
+
+    fun submitCategorization(transaction: Transaction) = runBlocking {
+        transactionsInteractor.push(transaction.copy(categoryAmounts = categoryAmountsRedefined.value))
+    }
+
+    val userSubmitCategorization = MutableSharedFlow<CategoryAmounts>()
+    fun userSubmitCategorization() {
+        userSubmitCategorization.onNext(categoryAmountsRedefined.value)
     }
 
     val categoryAmounts = SourceList<Pair<Category, BigDecimal>>()

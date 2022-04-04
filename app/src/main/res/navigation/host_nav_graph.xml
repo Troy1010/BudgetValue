@@ -60,12 +60,12 @@
                 android:id="@+id/action_categorizeFrag_to_receiptCategorizationFrag"
                 app:destination="@id/receiptCategorizationHostFrag" />
         </fragment>
-        <fragment
-            android:id="@+id/receiptCategorizationHostFrag"
-            android:name="com.tminus1010.budgetvalue.ui.receipt_categorization.ReceiptCategorizationHostFrag"
-            android:label="ReceiptCategorizationHostFrag"
-            tools:layout="@layout/frag_receipt_categorization" />
     </navigation>
+    <fragment
+        android:id="@+id/receiptCategorizationHostFrag"
+        android:name="com.tminus1010.budgetvalue.ui.receipt_categorization.ReceiptCategorizationHostFrag"
+        android:label="ReceiptCategorizationHostFrag"
+        tools:layout="@layout/frag_receipt_categorization_host" />
     <fragment
         android:id="@+id/transactionsFrag"
         android:name="com.tminus1010.budgetvalue.ui.transactions.TransactionListFrag"

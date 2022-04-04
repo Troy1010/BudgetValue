@@ -109,7 +109,7 @@ object MoshiAdapters {
             }
 
     /**
-     * List<String>
+     * List<[String]>
      */
     @ToJson
     fun toJson(x: List<String>): String {
@@ -121,5 +121,18 @@ object MoshiAdapters {
     fun fromJson6(s: String): List<String>? {
         val type = Types.newParameterizedType(List::class.java, String::class.java)
         return basicMoshi.adapter<List<String>>(type).fromJson(s)
+    }
+
+    /**
+     * Pair<[String], [BigDecimal]>
+     */
+    @ToJson
+    fun toJson(x: @JvmSuppressWildcards Pair<String, BigDecimal>): String {
+        return "${x.first}`${x.second}"
+    }
+
+    @FromJson
+    fun fromJson7(s: String): @JvmSuppressWildcards Pair<String, BigDecimal> {
+        return Pair(s.split("`")[0], BigDecimal(s.split("`")[1]))
     }
 }
