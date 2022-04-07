@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue
 
-import com.tminus1010.budgetvalue.app.TryInitApp
+import com.tminus1010.budgetvalue.app.InitApp
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.domain.Reconciliation
 import com.tminus1010.budgetvalue.domain.Transaction
@@ -11,8 +11,8 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 object Given {
-    val givenCategories = Observable.just(TryInitApp.initCategories)
-    val categories = TryInitApp.initCategories
+    val givenCategories = Observable.just(InitApp.initCategories)
+    val categories = InitApp.initCategories
 
     //    val givenPlan1 = Plan(
 //        localDatePeriod = Observable.just(LocalDatePeriod(LocalDate.now(), Period.ofWeeks(2))),

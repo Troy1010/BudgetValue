@@ -4,10 +4,10 @@ import com.tminus1010.budgetvalue.data.service.SharedPrefWrapper
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
-class AppInitRepo @Inject constructor(
+class HasAppBeenInitializedRepo @Inject constructor(
     private val sharedPrefWrapper: SharedPrefWrapper
 ) {
-    fun isAppInitialized(): Boolean =
+    fun wasAppInitialized(): Boolean =
         sharedPrefWrapper.isAppInitialized()
 
     suspend fun pushAppInitBool2(appInitBool: Boolean) {

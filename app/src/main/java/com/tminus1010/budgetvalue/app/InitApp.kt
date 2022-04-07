@@ -1,6 +1,6 @@
 package com.tminus1010.budgetvalue.app
 
-import com.tminus1010.budgetvalue.data.AppInitRepo
+import com.tminus1010.budgetvalue.data.HasAppBeenInitializedRepo
 import com.tminus1010.budgetvalue.data.CategoriesRepo
 import com.tminus1010.budgetvalue.domain.AmountFormula
 import com.tminus1010.budgetvalue.domain.Category
@@ -8,14 +8,14 @@ import com.tminus1010.budgetvalue.domain.CategoryType
 import java.math.BigDecimal
 import javax.inject.Inject
 
-class TryInitApp @Inject constructor(
-    private val appInitRepo: AppInitRepo,
+class InitApp @Inject constructor(
+    private val hasAppBeenInitializedRepo: HasAppBeenInitializedRepo,
     private val categoriesRepo: CategoriesRepo,
 ) {
     suspend operator fun invoke() {
-        if (!appInitRepo.isAppInitialized()) {
+        if (!hasAppBeenInitializedRepo.wasAppInitialized()) {
             initCategories.forEach { categoriesRepo.push(it) }
-            appInitRepo.pushAppInitBool2(true)
+            hasAppBeenInitializedRepo.pushAppInitBool2(true)
         }
     }
 
