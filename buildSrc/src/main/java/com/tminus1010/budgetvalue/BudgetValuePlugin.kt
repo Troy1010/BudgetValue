@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
-open class BudgetValuePlugin : Plugin<Project> {
+open class BuvaPlugin : Plugin<Project> {
     open class Settings {
         var adbAbsolutePath: String = ""
             get() {

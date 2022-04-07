@@ -23,9 +23,9 @@ dependencies {
 
 gradlePlugin {
     plugins {
-        create("BudgetValuePlugin") {
-            id = "BudgetValuePlugin"
-            implementationClass = "com.tminus1010.budgetvalue.BudgetValuePlugin"
+        create("BuvaPlugin") {
+            id = "BuvaPlugin"
+            implementationClass = "com.tminus1010.budgetvalue.BuvaPlugin"
         }
     }
 }
