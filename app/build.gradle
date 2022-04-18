@@ -113,9 +113,6 @@ dependencies {
     // # JUnit & Android
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
 
-    // # Robolectric
-    testImplementation "org.robolectric:robolectric:4.5.1"
-
     // # TMCommonKotlin
     //noinspection GradleDynamicVersion
     implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-core:1.3.+'
