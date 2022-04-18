@@ -1,5 +1,6 @@
 package com.tminus1010.budgetvalue.ui.all_features
 
+import com.tminus1010.tmcommonkotlin.coroutines.ICoroutineScopeLambdaDecorator
 import io.reactivex.rxjava3.core.Completable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
@@ -9,11 +10,11 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ThrobberSharedVM @Inject constructor() {
+class ThrobberSharedVM @Inject constructor() : ICoroutineScopeLambdaDecorator {
     // # Input
     fun <T> decorate(flow: Flow<T>) = flow.onStart { asyncTaskStarted.emit(Unit) }.onCompletion { asyncTaskEnded.emit(Unit) }
     fun decorate(completable: Completable) = completable.doOnSubscribe { runBlocking { asyncTaskStarted.emit(Unit) } }.doOnTerminate { runBlocking { asyncTaskEnded.emit(Unit) } }
-    fun decorate(lambda: suspend CoroutineScope.() -> Unit): suspend CoroutineScope.() -> Unit = {
+    override fun decorate(lambda: suspend CoroutineScope.() -> Unit): suspend CoroutineScope.() -> Unit = {
         asyncTaskStarted.emit(Unit)
         lambda(this)
         asyncTaskEnded.emit(Unit)

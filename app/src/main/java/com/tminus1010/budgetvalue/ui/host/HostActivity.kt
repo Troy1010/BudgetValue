@@ -22,6 +22,7 @@ import com.tminus1010.budgetvalue.ui.futures.FuturesFrag
 import com.tminus1010.budgetvalue.ui.history.HistoryFrag
 import com.tminus1010.budgetvalue.ui.importZ.ImportSharedVM
 import com.tminus1010.budgetvalue.ui.transactions.TransactionListFrag
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.launchWithDecorator
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.pairwise
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
@@ -74,7 +75,7 @@ class HostActivity : AppCompatActivity() {
         // # Mediation
         viewModel.showAlertDialog.onNext(showAlertDialog)
         // # Initialize app once per install
-        GlobalScope.launch { initApp() }
+        GlobalScope.launchWithDecorator(throbberSharedVM) { initApp() }
         // # Bind bottom menu to navigation.
         // In order for NavigationUI.setupWithNavController to work, the ids in R.menu.* must exactly match R.navigation.*
         NavigationUI.setupWithNavController(vb.bottomNavigation, hostFrag.navController)
