@@ -7,7 +7,7 @@ import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.framework.observable.ColdObservable
 import com.tminus1010.budgetvalue.framework.observable.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.framework.observable.source_objects.SourceList
-import com.tminus1010.tmcommonkotlin.rx.extensions.value
+import com.tminus1010.tmcommonkotlin.rx3.extensions.value
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable

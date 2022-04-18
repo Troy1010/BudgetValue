@@ -17,7 +17,7 @@ import com.tminus1010.budgetvalue.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.budgetvalue.ui.host.GetExtraMenuItemPartials
 import com.tminus1010.budgetvalue.ui.transactions.TransactionBlocksFrag
 import com.tminus1010.tmcommonkotlin.core.generateUniqueID
-import com.tminus1010.tmcommonkotlin.rx.extensions.toSingle
+import com.tminus1010.tmcommonkotlin.rx3.extensions.toSingle
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import dagger.Module
 import dagger.Provides

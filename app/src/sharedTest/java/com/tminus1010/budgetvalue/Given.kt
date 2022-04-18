@@ -4,7 +4,7 @@ import com.tminus1010.budgetvalue.app.InitApp
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.domain.Reconciliation
 import com.tminus1010.budgetvalue.domain.Transaction
-import com.tminus1010.tmcommonkotlin.rx.extensions.value
+import com.tminus1010.tmcommonkotlin.rx3.extensions.value
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal

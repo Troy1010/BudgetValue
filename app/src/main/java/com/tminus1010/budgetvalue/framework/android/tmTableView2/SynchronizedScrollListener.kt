@@ -3,7 +3,7 @@ package com.tminus1010.budgetvalue.framework.android.tmTableView2
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.budgetvalue.framework.android.Orientation
-import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
+import com.tminus1010.tmcommonkotlin.rx3.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
 class SynchronizedScrollListener(

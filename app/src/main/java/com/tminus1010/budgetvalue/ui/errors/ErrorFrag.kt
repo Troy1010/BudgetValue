@@ -13,7 +13,7 @@ import com.tminus1010.budgetvalue.framework.android.GenViewHolder2
 import com.tminus1010.budgetvalue.framework.android.viewBinding
 import com.tminus1010.budgetvalue.databinding.FragErrorBinding
 import com.tminus1010.budgetvalue.databinding.ItemButtonBinding
-import com.tminus1010.tmcommonkotlin.rx.extensions.observe
+import com.tminus1010.tmcommonkotlin.rx3.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -2,7 +2,7 @@ package com.tminus1010.budgetvalue.framework.observable.source_objects
 
 import com.tminus1010.budgetvalue.all_layers.extensions.copy
 import com.tminus1010.tmcommonkotlin.core.extensions.removeIf
-import com.tminus1010.tmcommonkotlin.rx.extensions.toBehaviorSubject
+import com.tminus1010.tmcommonkotlin.rx3.extensions.toBehaviorSubject
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject

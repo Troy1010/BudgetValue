@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.framework.observable
 
-import com.tminus1010.tmcommonkotlin.rx.extensions.boxStartNull
-import com.tminus1010.tmcommonkotlin.rx.extensions.isCold
+import com.tminus1010.tmcommonkotlin.rx3.extensions.boxStartNull
+import com.tminus1010.tmcommonkotlin.rx3.extensions.isCold
 import com.tminus1010.tmcommonkotlin.tuple.Quadruple
 import com.tminus1010.tmcommonkotlin.tuple.Quintuple
 import com.tminus1010.tmcommonkotlin.tuple.Septuple

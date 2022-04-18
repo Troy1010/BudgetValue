@@ -21,8 +21,8 @@ import com.tminus1010.budgetvalue.ui.all_features.view_model_item.SpinnerVMItem
 import com.tminus1010.tmcommonkotlin.core.extensions.nextOrSame
 import com.tminus1010.tmcommonkotlin.core.extensions.previousOrSame
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
-import com.tminus1010.tmcommonkotlin.rx.extensions.pairwise
-import com.tminus1010.tmcommonkotlin.rx.replayNonError
+import com.tminus1010.tmcommonkotlin.rx3.extensions.pairwise
+import com.tminus1010.tmcommonkotlin.rx3.replayNonError
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable

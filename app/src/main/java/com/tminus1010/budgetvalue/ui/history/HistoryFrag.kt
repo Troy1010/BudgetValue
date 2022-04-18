@@ -11,7 +11,7 @@ import com.tminus1010.budgetvalue.all_layers.extensions.show
 import com.tminus1010.budgetvalue.databinding.FragHistoryBinding
 import com.tminus1010.budgetvalue.framework.android.viewBinding
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
-import com.tminus1010.tmcommonkotlin.rx.extensions.observe
+import com.tminus1010.tmcommonkotlin.rx3.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
