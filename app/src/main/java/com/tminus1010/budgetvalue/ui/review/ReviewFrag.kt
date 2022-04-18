@@ -8,9 +8,6 @@ import com.tminus1010.budgetvalue.R
 import com.tminus1010.budgetvalue.all_layers.extensions.onClick
 import com.tminus1010.budgetvalue.all_layers.extensions.bind
 import com.tminus1010.budgetvalue.databinding.FragReviewBinding
-import com.tminus1010.budgetvalue.ui.review.presentation.NoMoreDataException
-import com.tminus1010.budgetvalue.ui.review.presentation.NoMostRecentSpendException
-import com.tminus1010.budgetvalue.ui.review.presentation.TooFarBackException
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast

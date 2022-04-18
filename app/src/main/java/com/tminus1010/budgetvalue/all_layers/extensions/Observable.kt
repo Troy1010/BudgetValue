@@ -1,12 +1,12 @@
 package com.tminus1010.budgetvalue.all_layers.extensions
 
+import com.tminus1010.budgetvalue.domain.AmountFormula
+import com.tminus1010.budgetvalue.domain.Category
 import com.tminus1010.budgetvalue.domain.CategoryAmountFormulas
 import com.tminus1010.budgetvalue.domain.CategoryAmounts
 import com.tminus1010.budgetvalue.framework.observable.ColdObservable
 import com.tminus1010.budgetvalue.framework.observable.source_objects.SourceHashMap
 import com.tminus1010.budgetvalue.framework.observable.source_objects.SourceList
-import com.tminus1010.budgetvalue.domain.Category
-import com.tminus1010.budgetvalue.domain.AmountFormula
 import com.tminus1010.tmcommonkotlin.rx.extensions.value
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Observable
@@ -16,7 +16,6 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.Subject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx3.asFlow
 import kotlinx.coroutines.rx3.asObservable
@@ -26,14 +25,14 @@ import java.util.concurrent.Semaphore
 import kotlin.coroutines.EmptyCoroutineContext
 
 @JvmName("flatMapSourceHashMap2")
-fun <T> Observable<CategoryAmounts>.flatMapSourceHashMap(sourceHashMap: SourceHashMap<Category, BigDecimal> = SourceHashMap(), outputChooser: (SourceHashMap<Category, BigDecimal>) -> Observable<T>): Observable<T> =
+fun <T : Any> Observable<CategoryAmounts>.flatMapSourceHashMap(sourceHashMap: SourceHashMap<Category, BigDecimal> = SourceHashMap(), outputChooser: (SourceHashMap<Category, BigDecimal>) -> Observable<T>): Observable<T> =
     map { it.toMap() }.flatMapSourceHashMap(sourceHashMap, outputChooser)
 
 @JvmName("flatMapSourceHashMap3")
-fun <T> Observable<CategoryAmountFormulas>.flatMapSourceHashMap(sourceHashMap: SourceHashMap<Category, AmountFormula> = SourceHashMap(), outputChooser: (SourceHashMap<Category, AmountFormula>) -> Observable<T>): Observable<T> =
+fun <T : Any> Observable<CategoryAmountFormulas>.flatMapSourceHashMap(sourceHashMap: SourceHashMap<Category, AmountFormula> = SourceHashMap(), outputChooser: (SourceHashMap<Category, AmountFormula>) -> Observable<T>): Observable<T> =
     map { it.toMap() }.flatMapSourceHashMap(sourceHashMap, outputChooser)
 
-fun <K, V : Any, T> Observable<Map<K, V>>.flatMapSourceHashMap(sourceHashMap: SourceHashMap<K, V> = SourceHashMap(), outputChooser: (SourceHashMap<K, V>) -> Observable<T>): Observable<T> =
+fun <K, V : Any, T : Any> Observable<Map<K, V>>.flatMapSourceHashMap(sourceHashMap: SourceHashMap<K, V> = SourceHashMap(), outputChooser: (SourceHashMap<K, V>) -> Observable<T>): Observable<T> =
     compose { upstream ->
         Observable.create<T> { downstream ->
             CompositeDisposable(
@@ -73,10 +72,10 @@ fun <K, V : Any> Observable<Map<K, V>>.toSourceHashMap(disposables: CompositeDis
         .also { disposables += it }
         .let { sourceHashMap }
 
-fun <T> Observable<T>.divertErrors(errorSubject: Subject<Throwable>): Observable<T> =
+fun <T : Any> Observable<T>.divertErrors(errorSubject: Subject<Throwable>): Observable<T> =
     Observable.defer { onErrorResumeNext { errorSubject.onNext(it); Observable.empty() } }
 
-private class NonLazyCacheHelper<T>(source: Observable<T>, compositeDisposable: CompositeDisposable) {
+private class NonLazyCacheHelper<T : Any>(source: Observable<T>, compositeDisposable: CompositeDisposable) {
     private val semaphore = Semaphore(1)
     private var cache: Observable<T>? = null
     val cacheOrSource: Observable<T> =
@@ -91,7 +90,7 @@ private class NonLazyCacheHelper<T>(source: Observable<T>, compositeDisposable: 
             .also { compositeDisposable += it.subscribe({}, {}) }
 }
 
-fun <T> Observable<T>.nonLazyCache(compositeDisposable: CompositeDisposable): Observable<T> =
+fun <T : Any> Observable<T>.nonLazyCache(compositeDisposable: CompositeDisposable): Observable<T> =
     NonLazyCacheHelper(this, compositeDisposable).cacheOrSource
 
 val <T : Any> Observable<Box<T?>>.unbox: T

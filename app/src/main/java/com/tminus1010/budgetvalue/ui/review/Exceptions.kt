@@ -1,4 +1,4 @@
-package com.tminus1010.budgetvalue.ui.review.presentation
+package com.tminus1010.budgetvalue.ui.review
 
 class TooFarBackException: Exception()
 class NoMostRecentSpendException: Exception("")
