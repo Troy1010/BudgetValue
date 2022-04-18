@@ -1,7 +1,7 @@
 package com.tminus1010.budgetvalue.all_layers.extensions
 
 import android.widget.TextView
-import com.tminus1010.tmcommonkotlin.misc.extensions.easyGetLayoutParams
+import com.tminus1010.tmcommonkotlin.androidx.extensions.easyGetLayoutParams
 
 
 var TextView.easyText: String

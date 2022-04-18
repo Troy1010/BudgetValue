@@ -2,8 +2,8 @@ package com.tminus1010.budgetvalue.framework.android.tmTableView2
 
 import android.view.View
 import com.tminus1010.budgetvalue.framework.android.tmTableView.IViewItemRecipe
-import com.tminus1010.tmcommonkotlin.misc.extensions.easySetHeight
-import com.tminus1010.tmcommonkotlin.misc.extensions.easySetWidth
+import com.tminus1010.tmcommonkotlin.androidx.extensions.easySetHeight
+import com.tminus1010.tmcommonkotlin.androidx.extensions.easySetWidth
 import com.tminus1010.tmcommonkotlin.misc.extensions.pairwise
 
 /**

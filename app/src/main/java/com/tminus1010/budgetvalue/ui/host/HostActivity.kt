@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.tminus1010.budgetvalue.R
-import com.tminus1010.budgetvalue.ui.transactions.TransactionListFrag
 import com.tminus1010.budgetvalue.all_layers.extensions.onNext
 import com.tminus1010.budgetvalue.all_layers.extensions.showAlertDialog
 import com.tminus1010.budgetvalue.all_layers.extensions.unCheckAllMenuItems
@@ -22,6 +21,7 @@ import com.tminus1010.budgetvalue.ui.all_features.ThrobberSharedVM
 import com.tminus1010.budgetvalue.ui.futures.FuturesFrag
 import com.tminus1010.budgetvalue.ui.history.HistoryFrag
 import com.tminus1010.budgetvalue.ui.importZ.ImportSharedVM
+import com.tminus1010.budgetvalue.ui.transactions.TransactionListFrag
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.pairwise
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind

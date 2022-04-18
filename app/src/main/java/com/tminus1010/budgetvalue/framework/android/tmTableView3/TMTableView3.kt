@@ -15,8 +15,8 @@ import com.tminus1010.budgetvalue.all_layers.extensions.widthObservable
 import com.tminus1010.budgetvalue.framework.android.Orientation
 import com.tminus1010.budgetvalue.framework.android.tmTableView2.SynchronizedScrollListener
 import com.tminus1010.budgetvalue.databinding.TableviewBinding
-import com.tminus1010.tmcommonkotlin.misc.extensions.children
-import com.tminus1010.tmcommonkotlin.misc.extensions.clearItemDecorations
+import com.tminus1010.tmcommonkotlin.androidx.extensions.children
+import com.tminus1010.tmcommonkotlin.androidx.extensions.clearItemDecorations
 import com.tminus1010.tmcommonkotlin.rx.extensions.observe
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.Disposable
