@@ -79,7 +79,7 @@
         tools:listitem="@layout/item_category_btn"
         tools:spanCount="3" />
 
-    <com.tminus1010.budgetvalue.framework.android.ButtonsView
+    <com.tminus1010.buva.framework.android.ButtonsView
         android:id="@+id/buttonsview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

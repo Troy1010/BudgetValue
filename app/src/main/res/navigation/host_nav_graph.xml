@@ -12,27 +12,27 @@
         app:popUpToInclusive="true" />
     <fragment
         android:id="@+id/importFrag"
-        android:name="com.tminus1010.budgetvalue.ui.importZ.ImportFrag"
+        android:name="com.tminus1010.buva.ui.importZ.ImportFrag"
         android:label="Import"
         tools:layout="@layout/frag_import" />
     <fragment
         android:id="@+id/reconcileFrag"
-        android:name="com.tminus1010.budgetvalue.ui.reconciliation.ReconciliationHostFrag"
+        android:name="com.tminus1010.buva.ui.reconciliation.ReconciliationHostFrag"
         android:label="Reconcile"
         tools:layout="@layout/frag_reconcile" />
     <fragment
         android:id="@+id/planFrag"
-        android:name="com.tminus1010.budgetvalue.ui.plan.PlanFrag"
+        android:name="com.tminus1010.buva.ui.plan.PlanFrag"
         android:label="Plan"
         tools:layout="@layout/frag_plan" />
     <fragment
         android:id="@+id/historyFrag"
-        android:name="com.tminus1010.budgetvalue.ui.history.HistoryFrag"
+        android:name="com.tminus1010.buva.ui.history.HistoryFrag"
         android:label="History"
         tools:layout="@layout/frag_history" />
     <fragment
         android:id="@+id/errorFrag"
-        android:name="com.tminus1010.budgetvalue.ui.errors.ErrorFrag"
+        android:name="com.tminus1010.buva.ui.errors.ErrorFrag"
         android:label="ErrorFrag"
         tools:layout="@layout/frag_error">
         <action
@@ -44,12 +44,12 @@
         app:startDestination="@id/categorizeFrag">
         <fragment
             android:id="@+id/categoryDetailsFrag"
-            android:name="com.tminus1010.budgetvalue.ui.category_details.CategoryDetailsFrag"
+            android:name="com.tminus1010.buva.ui.category_details.CategoryDetailsFrag"
             android:label="CategoryDetailsFrag"
             tools:layout="@layout/frag_category_details" />
         <fragment
             android:id="@+id/categorizeFrag"
-            android:name="com.tminus1010.budgetvalue.ui.categorize.CategorizeFrag"
+            android:name="com.tminus1010.buva.ui.categorize.CategorizeFrag"
             android:label="CategorizeFrag"
             tools:layout="@layout/frag_categorize">
             <action
@@ -63,22 +63,22 @@
     </navigation>
     <fragment
         android:id="@+id/receiptCategorizationHostFrag"
-        android:name="com.tminus1010.budgetvalue.ui.receipt_categorization.ReceiptCategorizationHostFrag"
+        android:name="com.tminus1010.buva.ui.receipt_categorization.ReceiptCategorizationHostFrag"
         android:label="ReceiptCategorizationHostFrag"
         tools:layout="@layout/frag_receipt_categorization_host" />
     <fragment
         android:id="@+id/transactionsFrag"
-        android:name="com.tminus1010.budgetvalue.ui.transactions.TransactionListFrag"
+        android:name="com.tminus1010.buva.ui.transactions.TransactionListFrag"
         android:label="TransactionsFrag"
         tools:layout="@layout/frag_transactions" />
     <fragment
         android:id="@+id/transactionFrag"
-        android:name="com.tminus1010.budgetvalue.ui.transactions.TransactionDetailsFrag"
+        android:name="com.tminus1010.buva.ui.transactions.TransactionDetailsFrag"
         android:label="TransactionFrag"
         tools:layout="@layout/frag_transaction" />
     <fragment
         android:id="@+id/futuresFrag"
-        android:name="com.tminus1010.budgetvalue.ui.futures.FuturesFrag"
+        android:name="com.tminus1010.buva.ui.futures.FuturesFrag"
         android:label="FuturesFrag"
         tools:layout="@layout/frag_futures">
         <action
@@ -87,52 +87,52 @@
     </fragment>
     <fragment
         android:id="@+id/futureDetailsFrag"
-        android:name="com.tminus1010.budgetvalue.ui.futures.FutureDetailsFrag"
+        android:name="com.tminus1010.buva.ui.futures.FutureDetailsFrag"
         android:label="ReplayOrFutureDetailsFrag"
         tools:layout="@layout/frag_create_future" />
     <fragment
         android:id="@+id/reconciliationHostFrag"
-        android:name="com.tminus1010.budgetvalue.ui.reconciliation.ReconciliationHostFrag"
+        android:name="com.tminus1010.buva.ui.reconciliation.ReconciliationHostFrag"
         android:label="ReconciliationHostFrag"
         tools:layout="@layout/frag_reconciliation_host" />
     <fragment
         android:id="@+id/reviewFrag"
-        android:name="com.tminus1010.budgetvalue.ui.review.ReviewFrag"
+        android:name="com.tminus1010.buva.ui.review.ReviewFrag"
         android:label="ReviewFrag"
         tools:layout="@layout/frag_review" />
     <fragment
         android:id="@+id/accountsReconciliationSubFrag"
-        android:name="com.tminus1010.budgetvalue.ui.reconciliation.AccountsReconciliationSubFrag"
+        android:name="com.tminus1010.buva.ui.reconciliation.AccountsReconciliationSubFrag"
         android:label="AccountsReconciliationSubFrag"
         tools:layout="@layout/item_tm_table_view" />
     <fragment
         android:id="@+id/transactionBlocksFrag"
-        android:name="com.tminus1010.budgetvalue.ui.transactions.TransactionBlocksFrag"
+        android:name="com.tminus1010.buva.ui.transactions.TransactionBlocksFrag"
         android:label="TransactionBlocksFrag"
         tools:layout="@layout/frag_transaction_blocks" />
     <fragment
         android:id="@+id/createFutureFrag"
-        android:name="com.tminus1010.budgetvalue.ui.futures.CreateFutureFrag"
+        android:name="com.tminus1010.buva.ui.futures.CreateFutureFrag"
         android:label="CreateFuture2Frag"
         tools:layout="@layout/frag_create_future" />
     <fragment
         android:id="@+id/chooseCategoriesFrag"
-        android:name="com.tminus1010.budgetvalue.ui.choose_categories.ChooseCategoriesFrag"
+        android:name="com.tminus1010.buva.ui.choose_categories.ChooseCategoriesFrag"
         android:label="ChooseCategoriesFrag"
         tools:layout="@layout/frag_choose_categories" />
     <fragment
         android:id="@+id/chooseTransactionFrag"
-        android:name="com.tminus1010.budgetvalue.ui.choose_transaction.ChooseTransactionFrag"
+        android:name="com.tminus1010.buva.ui.choose_transaction.ChooseTransactionFrag"
         android:label="ChooseTransactionFrag"
         tools:layout="@layout/frag_choose_transaction" />
     <fragment
         android:id="@+id/setSearchTextsFrag"
-        android:name="com.tminus1010.budgetvalue.ui.set_search_texts.SetSearchTextsFrag"
+        android:name="com.tminus1010.buva.ui.set_search_texts.SetSearchTextsFrag"
         android:label="SetSearchTextsFrag"
         tools:layout="@layout/frag_set_search_texts" />
     <fragment
         android:id="@+id/editStringFrag"
-        android:name="com.tminus1010.budgetvalue.ui.set_string.SetStringFrag"
+        android:name="com.tminus1010.buva.ui.set_string.SetStringFrag"
         android:label="EditStringFrag"
         tools:layout="@layout/frag_set_string" />
 </navigation>

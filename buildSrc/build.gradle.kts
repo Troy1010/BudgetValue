@@ -25,7 +25,7 @@ gradlePlugin {
     plugins {
         create("BuvaPlugin") {
             id = "BuvaPlugin"
-            implementationClass = "com.tminus1010.budgetvalue.BuvaPlugin"
+            implementationClass = "com.tminus1010.buva.BuvaPlugin"
         }
     }
 }

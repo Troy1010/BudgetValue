@@ -17,11 +17,11 @@
 
 *.log
 
-app/schemas/com.tminus1010.budgetvalue.layers.data_layer.BudgetValueDB/9.json
+app/schemas/com.tminus1010.buva.layers.data_layer.BudgetValueDB/9.json
 
-app/schemas/com.tminus1010.budgetvalue.layer_data.BudgetValueDB/9.json
+app/schemas/com.tminus1010.buva.layer_data.BudgetValueDB/9.json
 
-app/schemas/com.tminus1010.budgetvalue.layer_data.BudgetValueDB/
+app/schemas/com.tminus1010.buva.layer_data.BudgetValueDB/
 
 *.csv#
 

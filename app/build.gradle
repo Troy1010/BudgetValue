@@ -18,13 +18,13 @@ android {
     kotlinOptions.useIR = true
 
     defaultConfig {
-        applicationId "com.tminus1010.budgetvalue"
+        applicationId "com.tminus1010.buva"
         minSdkVersion 26
         targetSdkVersion 31
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "com.tminus1010.budgetvalue.core_testing.CustomTestRunner"
+        testInstrumentationRunner "com.tminus1010.buva.core_testing.CustomTestRunner"
 
         multiDexEnabled true
 

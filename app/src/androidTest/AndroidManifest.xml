@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.tminus1010.budgetvalue">
+    package="com.tminus1010.buva">
 
     <!-- mockk() does not work in instrumentation tests without android:extractNativeLibs="true" -->
     <application
-        android:name="com.tminus1010.budgetvalue.all_layers.App"
+        android:name="com.tminus1010.buva.all_layers.App"
         android:extractNativeLibs="true"
         tools:replace="android:name" />
 </manifest>
