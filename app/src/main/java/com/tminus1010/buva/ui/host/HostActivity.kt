@@ -22,6 +22,7 @@ import com.tminus1010.buva.ui.history.HistoryFrag
 import com.tminus1010.buva.ui.importZ.ImportSharedVM
 import com.tminus1010.buva.ui.transactions.TransactionListFrag
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
+import com.tminus1010.tmcommonkotlin.androidx.launchOnMainThread
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.launchWithDecorator
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.pairwise
@@ -29,6 +30,7 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import com.tminus1010.tmcommonkotlin.view.extensions.easyVisibility
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
@@ -118,27 +120,27 @@ class HostActivity : AppCompatActivity() {
         return super.onSupportNavigateUp()
     }
 
+    val coroutineExceptionHandler =
+        CoroutineExceptionHandler { _, e ->
+            logz("Error during importTransactions:", e)
+            hostFrag.handle(e)
+        }
+
     val importTransactionsLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                try {
-                    GlobalScope.launch {
-                        val importTransactionsResult = importTransactions(result.data!!.data!!)
-                        ShowAlertDialog(this@HostActivity)(
-                            NativeText.Simple(
-                                """
-                                    Import Successful
-                                    ${importTransactionsResult.numberOfTransactionsImported} imported
-                                    ${importTransactionsResult.numberOfTransactionsIgnoredBecauseTheyWereAlreadyImported} ignored because they were already imported
-                                    ${importTransactionsResult.numberOfTransactionsCategorizedByFutures} categorized by futures
-                                """.trimIndent()
-                            )
+            if (result.resultCode == Activity.RESULT_OK)
+                GlobalScope.launch(coroutineExceptionHandler) {
+                    val importTransactionsResult = importTransactions(result.data!!.data!!)
+                    ShowAlertDialog(this@HostActivity)(
+                        NativeText.Simple(
+                            """
+                                Import Successful
+                                ${importTransactionsResult.numberOfTransactionsImported} imported
+                                ${importTransactionsResult.numberOfTransactionsIgnoredBecauseTheyWereAlreadyImported} ignored because they were already imported
+                                ${importTransactionsResult.numberOfTransactionsCategorizedByFutures} categorized by futures
+                            """.trimIndent()
                         )
-                    }
-                } catch (e: Throwable) {
-                    logz("Error during importTransactions:", e)
-                    hostFrag.handle(e)
+                    )
                 }
-            }
         }
 }

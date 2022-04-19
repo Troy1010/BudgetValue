@@ -1,6 +1,5 @@
 package com.tminus1010.buva.ui.host
 
-import android.app.Application
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.NavHostFragment
 import com.tminus1010.buva.R
@@ -9,7 +8,9 @@ import com.tminus1010.buva.all_layers.TestException
 import com.tminus1010.buva.all_layers.extensions.getBackStack
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
 import com.tminus1010.buva.ui.errors.ErrorVM
-import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
+import com.tminus1010.tmcommonkotlin.androidx.ShowToast
+import com.tminus1010.tmcommonkotlin.androidx.launchOnMainThread
+import com.tminus1010.tmcommonkotlin.view.NativeText
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -17,7 +18,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class HostFrag : NavHostFragment() {
     @Inject
-    lateinit var app: Application
+    lateinit var showToast: ShowToast
     val errorVM by activityViewModels<ErrorVM>()
     fun handle(e: Throwable, vararg buttonVMItems: ButtonVMItem) {
         val buttonPartialsRedef =
@@ -25,18 +26,20 @@ class HostFrag : NavHostFragment() {
                 ButtonVMItem("OK") { nav.navigateUp() }
             ) + buttonVMItems.toList()
         logz(e)
-        when (e) {
-            is ImportFailedException -> app.easyToast("Import failed")
-            is TestException -> {
-                errorVM.message.onNext("Test Exception")
-                errorVM.buttons.onNext(buttonPartialsRedef.toList())
-                logz("backstack1:${childFragmentManager.getBackStack()}")
-                nav.navigate(R.id.errorFrag_clear_backstack)
-                logz("backstack2:${childFragmentManager.getBackStack()}")
-            }
-            else -> {
-                app.easyToast("An error occurred")
-                nav.navigate(R.id.importFrag) // TODO("Clear backstack")
+        launchOnMainThread {
+            when (e) {
+                is ImportFailedException -> showToast(NativeText.Simple("Import failed"))
+                is TestException -> {
+                    errorVM.message.onNext("Test Exception")
+                    errorVM.buttons.onNext(buttonPartialsRedef.toList())
+                    logz("backstack1:${childFragmentManager.getBackStack()}")
+                    nav.navigate(R.id.errorFrag_clear_backstack)
+                    logz("backstack2:${childFragmentManager.getBackStack()}")
+                }
+                else -> {
+                    showToast(NativeText.Simple("An error occurred"))
+                    nav.navigate(R.id.importFrag) // TODO("Clear backstack")
+                }
             }
         }
     }
