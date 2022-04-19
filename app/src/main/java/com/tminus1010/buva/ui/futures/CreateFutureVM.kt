@@ -9,14 +9,14 @@ import com.tminus1010.buva.app.CategoryAdapter
 import com.tminus1010.buva.app.TransactionsInteractor
 import com.tminus1010.buva.data.FuturesRepo
 import com.tminus1010.buva.domain.*
-import com.tminus1010.buva.framework.android.ShowAlertDialog
-import com.tminus1010.buva.framework.android.ShowToast
 import com.tminus1010.buva.framework.observable.source_objects.SourceHashMap
 import com.tminus1010.buva.ui.all_features.model.SearchType
 import com.tminus1010.buva.ui.all_features.view_model_item.*
 import com.tminus1010.buva.ui.choose_categories.ChooseCategoriesSharedVM
 import com.tminus1010.buva.ui.receipt_categorization.ReceiptCategorizationSharedVM
 import com.tminus1010.buva.ui.set_search_texts.SetSearchTextsSharedVM
+import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
+import com.tminus1010.tmcommonkotlin.androidx.ShowToast
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
