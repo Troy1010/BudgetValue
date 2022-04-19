@@ -13,7 +13,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.extensions.onNext
-import com.tminus1010.buva.all_layers.extensions.unCheckAllMenuItems
+import com.tminus1010.buva.all_layers.extensions.unCheckAllItems
 import com.tminus1010.buva.app.*
 import com.tminus1010.buva.databinding.ActivityHostBinding
 import com.tminus1010.buva.ui.all_features.ShowImportResultAlertDialog
@@ -96,7 +96,7 @@ class HostActivity : AppCompatActivity() {
         viewModel.navToTransactions.observe(this) { TransactionListFrag.navTo(nav) }
         viewModel.navToHistory.observe(this) { HistoryFrag.navTo(nav) }
         viewModel.navToAccessibility.observe(this) { startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }
-        viewModel.unCheckAllMenuItems.observe(this) { vb.bottomNavigation.menu.unCheckAllMenuItems() } // TODO: Not working
+        viewModel.unCheckAllMenuItems.observe(this) { vb.bottomNavigation.unCheckAllItems() } // TODO: Not working
         // # State
         vb.bottomNavigation.selectedItemId = runBlocking { viewModel.selectedPageRedefined.first() }
         isPlanFeatureEnabled.flow.observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }
