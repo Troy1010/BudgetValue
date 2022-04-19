@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.extensions.easyEmit
 import com.tminus1010.buva.all_layers.extensions.onNext
-import com.tminus1010.buva.all_layers.extensions.takeUntilSignal
 import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.app.*
 import com.tminus1010.buva.data.FuturesRepo
@@ -24,6 +23,7 @@ import com.tminus1010.buva.ui.set_string.SetStringSharedVM
 import com.tminus1010.tmcommonkotlin.androidx.ShowToast
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.divertErrors
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.takeUntilSignal
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope

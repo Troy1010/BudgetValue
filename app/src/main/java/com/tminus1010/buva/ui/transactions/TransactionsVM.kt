@@ -5,11 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.app.TransactionsInteractor
 import com.tminus1010.buva.data.TransactionsRepo
-import com.tminus1010.buva.framework.android.ShowAlertDialog
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.TableViewVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.TransactionPresentationModel
+import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
