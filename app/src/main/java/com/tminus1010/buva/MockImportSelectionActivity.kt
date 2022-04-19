@@ -6,10 +6,12 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import com.tminus1010.buva.app.ImportTransactions
 import com.tminus1010.buva.databinding.ActivityMockImportSelectionBinding
+import com.tminus1010.buva.ui.all_features.ShowImportResultAlertDialog
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
-import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
+import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -20,14 +22,14 @@ import javax.inject.Inject
 @VisibleForTesting
 @AndroidEntryPoint
 class MockImportSelectionActivity : AppCompatActivity() {
-    val vb by lazy { ActivityMockImportSelectionBinding.inflate(layoutInflater) }
+    private val vb by lazy { ActivityMockImportSelectionBinding.inflate(layoutInflater) }
 
     @Inject
     lateinit var androidTestAssetsProvider: AndroidTestAssetsProvider
 
     @Inject
     lateinit var importTransactions: ImportTransactions
-
+    private val showImportResultAlertDialog by lazy { ShowImportResultAlertDialog(ShowAlertDialog(this)) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(vb.root)
@@ -39,10 +41,11 @@ class MockImportSelectionActivity : AppCompatActivity() {
                     ButtonVMItem(
                         title = "Import Transaction $i",
                         onClick = {
-                            runBlocking { importTransactions(androidTestAssetsProvider.get().open(s).buffered()) }
-                            application.easyToast(getString(R.string.import_successful))
-                            finish()
-                        }
+                            GlobalScope.launch {
+                                showImportResultAlertDialog(importTransactions(androidTestAssetsProvider.get().open(s).buffered()))
+                                finish()
+                            }
+                        },
                     )
                 }
     }
