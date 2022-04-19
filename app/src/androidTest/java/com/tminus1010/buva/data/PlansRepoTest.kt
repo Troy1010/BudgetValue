@@ -23,6 +23,7 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -52,7 +53,7 @@ class PlansRepoTest {
         Given.categories.forEach { categoriesRepo.push(it) }
         val givenPlan =
             Plan(
-                datePeriodService.getDatePeriod(LocalDate.now()),
+                datePeriodService.getDatePeriod2(LocalDate.now()).first(),
                 BigDecimal("11"),
                 CategoryAmounts(Given.categories[0] to BigDecimal("9"))
             )
@@ -69,7 +70,7 @@ class PlansRepoTest {
         Given.categories.forEach { categoriesRepo.push(it) }
         val givenPlan =
             Plan(
-                datePeriodService.getDatePeriod(LocalDate.now()),
+                datePeriodService.getDatePeriod2(LocalDate.now()).first(),
                 BigDecimal("11"),
                 CategoryAmounts(Given.categories[0] to BigDecimal("9"))
             )
@@ -82,7 +83,7 @@ class PlansRepoTest {
         assertEquals(
             listOf(
                 Plan(
-                    datePeriodService.getDatePeriod(LocalDate.now()),
+                    datePeriodService.getDatePeriod2(LocalDate.now()).first(),
                     BigDecimal("11"),
                     CategoryAmounts(Given.categories[0] to BigDecimal("35"))
                 )
@@ -97,7 +98,7 @@ class PlansRepoTest {
         Given.categories.forEach { categoriesRepo.push(it) }
         val givenPlan =
             Plan(
-                datePeriodService.getDatePeriod(LocalDate.now()),
+                datePeriodService.getDatePeriod2(LocalDate.now()).first(),
                 BigDecimal("11"),
                 CategoryAmounts(Given.categories[0] to BigDecimal("9"))
             )
@@ -110,7 +111,7 @@ class PlansRepoTest {
         assertEquals(
             listOf(
                 Plan(
-                    datePeriodService.getDatePeriod(LocalDate.now()),
+                    datePeriodService.getDatePeriod2(LocalDate.now()).first(),
                     BigDecimal("77"),
                     CategoryAmounts(Given.categories[0] to BigDecimal("9"))
                 )
@@ -125,7 +126,7 @@ class PlansRepoTest {
         Given.categories.forEach { categoriesRepo.push(it) }
         val givenPlan =
             Plan(
-                datePeriodService.getDatePeriod(LocalDate.now()),
+                datePeriodService.getDatePeriod2(LocalDate.now()).first(),
                 BigDecimal("11"),
                 CategoryAmounts(Given.categories[0] to BigDecimal("9"))
             )
@@ -133,7 +134,7 @@ class PlansRepoTest {
         Thread.sleep(1000)
         val givenPlan2 =
             Plan(
-                datePeriodService.getDatePeriod(LocalDate.now()),
+                datePeriodService.getDatePeriod2(LocalDate.now()).first(),
                 BigDecimal("11"),
                 CategoryAmounts(Given.categories[0] to BigDecimal("9"))
             )
@@ -150,7 +151,7 @@ class PlansRepoTest {
         Given.categories.forEach { categoriesRepo.push(it) }
         val givenPlan =
             Plan(
-                datePeriodService.getDatePeriod(LocalDate.now()),
+                datePeriodService.getDatePeriod2(LocalDate.now()).first(),
                 BigDecimal("11"),
                 CategoryAmounts(Given.categories[0] to BigDecimal("9"))
             )
