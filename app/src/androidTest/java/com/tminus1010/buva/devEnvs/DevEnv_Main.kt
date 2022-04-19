@@ -40,7 +40,7 @@ class DevEnv_Main {
         @Singleton
         fun launchImport() = object : LaunchChooseFile() {
             override fun invoke(hostActivity: HostActivity) {
-                hostActivity.startActivity(
+                hostActivity.importTransactionsLauncher.launch(
                     Intent(hostActivity, MockImportSelectionActivity::class.java)
                 )
             }

@@ -16,18 +16,17 @@ import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.all_layers.extensions.unCheckAllMenuItems
 import com.tminus1010.buva.app.*
 import com.tminus1010.buva.databinding.ActivityHostBinding
+import com.tminus1010.buva.ui.all_features.ShowImportResultAlertDialog
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.futures.FuturesFrag
 import com.tminus1010.buva.ui.history.HistoryFrag
 import com.tminus1010.buva.ui.importZ.ImportSharedVM
 import com.tminus1010.buva.ui.transactions.TransactionListFrag
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
-import com.tminus1010.tmcommonkotlin.androidx.launchOnMainThread
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.launchWithDecorator
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.pairwise
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
-import com.tminus1010.tmcommonkotlin.view.NativeText
 import com.tminus1010.tmcommonkotlin.view.extensions.easyVisibility
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -69,6 +68,7 @@ class HostActivity : AppCompatActivity() {
 
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.frag_nav_host) as HostFrag }
     private val nav by lazy { findNavController(R.id.frag_nav_host) }
+    private val showImportResultAlertDialog by lazy { ShowImportResultAlertDialog(ShowAlertDialog(this)) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(vb.root)
@@ -129,18 +129,8 @@ class HostActivity : AppCompatActivity() {
     val importTransactionsLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK)
-                GlobalScope.launch(coroutineExceptionHandler) {
-                    val importTransactionsResult = importTransactions(result.data!!.data!!)
-                    ShowAlertDialog(this@HostActivity)(
-                        NativeText.Simple(
-                            """
-                                Import Successful
-                                ${importTransactionsResult.numberOfTransactionsImported} imported
-                                ${importTransactionsResult.numberOfTransactionsIgnoredBecauseTheyWereAlreadyImported} ignored because they were already imported
-                                ${importTransactionsResult.numberOfTransactionsCategorizedByFutures} categorized by futures
-                            """.trimIndent()
-                        )
-                    )
-                }
+                GlobalScope.launch(coroutineExceptionHandler, block = throbberSharedVM.decorate {
+                    showImportResultAlertDialog(importTransactions(result.data!!.data!!))
+                })
         }
 }
