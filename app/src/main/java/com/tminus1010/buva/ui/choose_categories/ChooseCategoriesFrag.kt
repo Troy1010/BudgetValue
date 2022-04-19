@@ -13,6 +13,7 @@ import com.tminus1010.buva.databinding.FragChooseCategoriesBinding
 import com.tminus1010.buva.databinding.ItemCategoryBtnBinding
 import com.tminus1010.buva.framework.android.*
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
+import com.tminus1010.tmcommonkotlin.misc.GenViewHolder
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,12 +35,12 @@ class ChooseCategoriesFrag : Fragment(R.layout.frag_choose_categories) {
         vb.recyclerviewCategories.layoutManager =
             GridLayoutManager(requireActivity(), spanSize, GridLayoutManager.VERTICAL, false)
         vb.recyclerviewCategories.bind(selectCategoriesVM.categoryButtonVMItems.map { it.map { it.toViewItemRecipe(requireContext()) } }) { viewItemRecipes ->
-            adapter = object : LifecycleRVAdapter2<GenViewHolder2<ItemCategoryBtnBinding>>() {
+            adapter = object : LifecycleRVAdapter2<GenViewHolder<ItemCategoryBtnBinding>>() {
                 override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-                    GenViewHolder2(ItemCategoryBtnBinding.inflate(LayoutInflater.from(requireContext()), parent, false))
+                    GenViewHolder(ItemCategoryBtnBinding.inflate(LayoutInflater.from(requireContext()), parent, false))
 
                 override fun getItemCount() = viewItemRecipes.size
-                override fun onLifecycleAttached(holder: GenViewHolder2<ItemCategoryBtnBinding>) {
+                override fun onLifecycleAttached(holder: GenViewHolder<ItemCategoryBtnBinding>) {
                     viewItemRecipes[holder.adapterPosition].bind(holder.vb)
                 }
             }

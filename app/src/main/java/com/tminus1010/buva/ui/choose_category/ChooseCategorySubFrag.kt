@@ -10,10 +10,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.tminus1010.buva.R
 import com.tminus1010.buva.databinding.ItemCategoryBtnBinding
 import com.tminus1010.buva.databinding.SubfragChooseCategoryBinding
-import com.tminus1010.buva.framework.android.GenViewHolder2
 import com.tminus1010.buva.framework.android.GridMarginDecoration
 import com.tminus1010.buva.framework.android.LifecycleRVAdapter2
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
+import com.tminus1010.tmcommonkotlin.misc.GenViewHolder
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,12 +33,12 @@ class ChooseCategorySubFrag : Fragment(R.layout.subfrag_choose_category) {
         vb.recyclerviewCategories.layoutManager =
             GridLayoutManager(requireActivity(), spanSize, GridLayoutManager.VERTICAL, false)
         vb.recyclerviewCategories.bind(viewModel.categoryButtonVMItems) { buttonVMItems ->
-            adapter = object : LifecycleRVAdapter2<GenViewHolder2<ItemCategoryBtnBinding>>() {
+            adapter = object : LifecycleRVAdapter2<GenViewHolder<ItemCategoryBtnBinding>>() {
                 override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-                    GenViewHolder2(ItemCategoryBtnBinding.inflate(LayoutInflater.from(requireContext()), parent, false))
+                    GenViewHolder(ItemCategoryBtnBinding.inflate(LayoutInflater.from(requireContext()), parent, false))
 
                 override fun getItemCount() = buttonVMItems.size
-                override fun onLifecycleAttached(holder: GenViewHolder2<ItemCategoryBtnBinding>) {
+                override fun onLifecycleAttached(holder: GenViewHolder<ItemCategoryBtnBinding>) {
                     buttonVMItems[holder.adapterPosition].bind(holder.vb.btnCategory)
                 }
             }
