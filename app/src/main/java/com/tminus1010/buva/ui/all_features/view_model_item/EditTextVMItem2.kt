@@ -11,7 +11,6 @@ import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.misc.tmTableView.ViewItemRecipe3
 import kotlinx.coroutines.flow.Flow
 
-// TODO: Untested
 class EditTextVMItem2(
     val hint: String? = null,
     val textFlow: Flow<String?>? = null,
