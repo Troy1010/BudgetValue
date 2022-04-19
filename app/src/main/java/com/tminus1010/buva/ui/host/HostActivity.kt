@@ -23,9 +23,9 @@ import com.tminus1010.buva.ui.history.HistoryFrag
 import com.tminus1010.buva.ui.importZ.ImportSharedVM
 import com.tminus1010.buva.ui.transactions.TransactionListFrag
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
-import com.tminus1010.tmcommonkotlin.coroutines.extensions.launchWithDecorator
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.pairwise
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.easyVisibility
 import dagger.hilt.android.AndroidEntryPoint
@@ -77,7 +77,7 @@ class HostActivity : AppCompatActivity() {
         // # Mediation
         viewModel.showAlertDialog.onNext(ShowAlertDialog(this))
         // # Initialize app once per install
-        GlobalScope.launchWithDecorator(throbberSharedVM) { initApp() }
+        GlobalScope.launch { initApp() }.use(throbberSharedVM)
         // # Bind bottom menu to navigation.
         // In order for NavigationUI.setupWithNavController to work, the ids in R.menu.* must exactly match R.navigation.*
         NavigationUI.setupWithNavController(vb.bottomNavigation, hostFrag.navController)
@@ -129,8 +129,8 @@ class HostActivity : AppCompatActivity() {
     val importTransactionsLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK)
-                GlobalScope.launch(coroutineExceptionHandler, block = throbberSharedVM.decorate {
+                GlobalScope.launch(coroutineExceptionHandler) {
                     showImportResultAlertDialog(importTransactions(result.data!!.data!!))
-                })
+                }.use(throbberSharedVM)
         }
 }

@@ -1,6 +1,6 @@
 package com.tminus1010.buva.ui.all_features
 
-import com.tminus1010.tmcommonkotlin.coroutines.ICoroutineScopeLambdaDecorator
+import com.tminus1010.tmcommonkotlin.coroutines.IJobEvents
 import io.reactivex.rxjava3.core.Completable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
@@ -10,11 +10,11 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ThrobberSharedVM @Inject constructor() : ICoroutineScopeLambdaDecorator {
+class ThrobberSharedVM @Inject constructor(): IJobEvents {
     // # Input
     fun <T> decorate(flow: Flow<T>) = flow.onStart { asyncTaskStarted.emit(Unit) }.onCompletion { asyncTaskEnded.emit(Unit) }
     fun decorate(completable: Completable) = completable.doOnSubscribe { runBlocking { asyncTaskStarted.emit(Unit) } }.doOnTerminate { runBlocking { asyncTaskEnded.emit(Unit) } }
-    override fun decorate(lambda: suspend CoroutineScope.() -> Unit): suspend CoroutineScope.() -> Unit = {
+    fun decorate(lambda: suspend CoroutineScope.() -> Unit): suspend CoroutineScope.() -> Unit = {
         asyncTaskStarted.emit(Unit)
         lambda(this)
         asyncTaskEnded.emit(Unit)
@@ -26,6 +26,14 @@ class ThrobberSharedVM @Inject constructor() : ICoroutineScopeLambdaDecorator {
 
     suspend fun asyncTaskEnded() {
         asyncTaskEnded.emit(Unit)
+    }
+
+    override fun onStart() {
+        runBlocking { asyncTaskStarted.emit(Unit) }
+    }
+
+    override fun onComplete() {
+        runBlocking { asyncTaskEnded.emit(Unit) }
     }
 
     // # Internal
