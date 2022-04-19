@@ -12,8 +12,8 @@ import com.tminus1010.buva.databinding.ItemCategoryBtnBinding
 import com.tminus1010.buva.databinding.SubfragChooseCategoryBinding
 import com.tminus1010.buva.framework.android.GridMarginDecoration
 import com.tminus1010.buva.framework.android.LifecycleRVAdapter2
+import com.tminus1010.tmcommonkotlin.androidx.GenViewHolder
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
-import com.tminus1010.tmcommonkotlin.misc.GenViewHolder
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import dagger.hilt.android.AndroidEntryPoint
 

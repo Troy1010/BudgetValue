@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.buva.databinding.ItemButtonBinding
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
-import com.tminus1010.tmcommonkotlin.misc.GenViewHolder
+import com.tminus1010.tmcommonkotlin.androidx.GenViewHolder
 
 class ButtonsView @JvmOverloads constructor(
     context: Context,

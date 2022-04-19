@@ -12,8 +12,8 @@ import com.tminus1010.buva.R
 import com.tminus1010.buva.databinding.FragChooseCategoriesBinding
 import com.tminus1010.buva.databinding.ItemCategoryBtnBinding
 import com.tminus1010.buva.framework.android.*
+import com.tminus1010.tmcommonkotlin.androidx.GenViewHolder
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
-import com.tminus1010.tmcommonkotlin.misc.GenViewHolder
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint

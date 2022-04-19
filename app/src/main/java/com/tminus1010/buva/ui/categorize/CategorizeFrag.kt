@@ -22,8 +22,8 @@ import com.tminus1010.buva.ui.receipt_categorization.ReceiptCategorizationHostFr
 import com.tminus1010.buva.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.buva.ui.set_string.SetStringFrag
 import com.tminus1010.buva.ui.set_string.SetStringSharedVM
+import com.tminus1010.tmcommonkotlin.androidx.GenViewHolder
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
-import com.tminus1010.tmcommonkotlin.misc.GenViewHolder
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint

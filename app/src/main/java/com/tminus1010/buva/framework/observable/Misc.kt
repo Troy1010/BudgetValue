@@ -97,7 +97,7 @@ fun <A, B, C, D> mergeCombineWithIndex(
         .skip(1)
 }
 
-fun <A, B> combineLatestImpatient(
+fun <A : Any, B : Any> combineLatestImpatient(
     a: Observable<A>,
     b: Observable<B>,
 ): Observable<Pair<A?, B?>> {
@@ -115,7 +115,7 @@ fun <A, B> combineLatestImpatient(
         .map { Pair(it.first.first, it.second.first) }
 }
 
-fun <A, B, C> combineLatestImpatient(
+fun <A : Any, B : Any, C : Any> combineLatestImpatient(
     a: Observable<A>,
     b: Observable<B>,
     c: Observable<C>,
@@ -134,7 +134,7 @@ fun <A, B, C> combineLatestImpatient(
         .map { Triple(it.first.first, it.second.first, it.third.first) }
 }
 
-fun <A, B, C, D> combineLatestImpatient(
+fun <A : Any, B : Any, C : Any, D : Any> combineLatestImpatient(
     a: Observable<A>,
     b: Observable<B>,
     c: Observable<C>,
@@ -159,7 +159,7 @@ fun <A, B, C, D> combineLatestImpatient(
         .map { Quadruple(it.first.first, it.second.first, it.third.first, it.fourth.first) }
 }
 
-fun <A, B, C, D, E> combineLatestImpatient(
+fun <A : Any, B : Any, C : Any, D : Any, E : Any> combineLatestImpatient(
     a: Observable<A>,
     b: Observable<B>,
     c: Observable<C>,
@@ -186,7 +186,7 @@ fun <A, B, C, D, E> combineLatestImpatient(
         .map { Quintuple(it.first.first, it.second.first, it.third.first, it.fourth.first, it.fifth.first) }
 }
 
-fun <A, B, C, D, E, F> combineLatestImpatient(
+fun <A : Any, B : Any, C : Any, D : Any, E : Any, F : Any> combineLatestImpatient(
     a: Observable<A>,
     b: Observable<B>,
     c: Observable<C>,
@@ -215,7 +215,7 @@ fun <A, B, C, D, E, F> combineLatestImpatient(
         .map { Sextuple(it.first.first, it.second.first, it.third.first, it.fourth.first, it.fifth.first, it.sixth.first) }
 }
 
-fun <A, B, C, D, E, F, G> combineLatestImpatient(
+fun <A : Any, B : Any, C : Any, D : Any, E : Any, F : Any, G : Any> combineLatestImpatient(
     a: Observable<A>,
     b: Observable<B>,
     c: Observable<C>,

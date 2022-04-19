@@ -11,10 +11,9 @@ import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.extensions.easyText2
 import com.tminus1010.buva.databinding.FragImportBinding
 import com.tminus1010.buva.databinding.ItemAccountBinding
-import com.tminus1010.buva.framework.android.GenViewHolder
 import com.tminus1010.buva.framework.android.onDone
 import com.tminus1010.buva.framework.android.viewBinding
-import com.tminus1010.tmcommonkotlin.misc.GenViewHolder
+import com.tminus1010.tmcommonkotlin.androidx.GenViewHolder
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import dagger.hilt.android.AndroidEntryPoint
 
