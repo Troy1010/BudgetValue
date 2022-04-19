@@ -3,7 +3,7 @@ package com.tminus1010.buva.ui.set_string
 import androidx.lifecycle.ViewModel
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
-import com.tminus1010.buva.ui.all_features.view_model_item.EditTextVMItem2
+import com.tminus1010.buva.ui.all_features.view_model_item.EditTextVMItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.merge
@@ -34,7 +34,7 @@ class SetStringVM @Inject constructor(
 
     // # State
     val editTextVMItem =
-        EditTextVMItem2(
+        EditTextVMItem(
             text = setStringSharedVM.initialS,
             onDone = { latestS = it }
         )

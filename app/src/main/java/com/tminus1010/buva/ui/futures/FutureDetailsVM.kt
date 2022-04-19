@@ -159,7 +159,7 @@ class FutureDetailsVM @Inject constructor(
                 recipeGrid = listOfNotNull(
                     listOf(
                         TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Name"),
-                        EditTextVMItem2(textFlow = futureToPush.map { it.name }, onDone = ::userSetName),
+                        EditTextVMItem(textFlow = futureToPush.map { it.name }, onDone = ::userSetName),
                     ),
                     listOf(
                         TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Search Type"),

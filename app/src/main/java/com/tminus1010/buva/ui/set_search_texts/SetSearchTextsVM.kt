@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
-import com.tminus1010.buva.ui.all_features.view_model_item.EditTextVMItem2
+import com.tminus1010.buva.ui.all_features.view_model_item.EditTextVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItems
 import com.tminus1010.buva.ui.choose_transaction.ChooseTransactionSharedVM
@@ -40,7 +40,7 @@ class SetSearchTextsVM @Inject constructor(
                 listOf(
                     *sourceList.withIndex().map { (i, s) ->
                         listOf<IHasToViewItemRecipe>(
-                            EditTextVMItem2(
+                            EditTextVMItem(
                                 text = s,
                                 onDone = { sourceList[i] = it },
                                 menuVMItems = MenuVMItems(

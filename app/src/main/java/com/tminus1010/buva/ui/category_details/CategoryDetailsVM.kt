@@ -116,7 +116,7 @@ class CategoryDetailsVM @Inject constructor(
                 recipeGrid = listOfNotNull(
                     listOf(
                         TextVMItem("Name"),
-                        EditTextVMItem2(text = categoryToPush.name, onDone = ::userSetCategoryName),
+                        EditTextVMItem(text = categoryToPush.name, onDone = ::userSetCategoryName),
                     ),
                     listOf(
                         TextVMItem("Default Amount"),
