@@ -12,8 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.tminus1010.buva.R
-import com.tminus1010.buva.all_layers.extensions.onNext
-import com.tminus1010.buva.all_layers.extensions.showAlertDialog
 import com.tminus1010.buva.all_layers.extensions.unCheckAllMenuItems
 import com.tminus1010.buva.app.*
 import com.tminus1010.buva.databinding.ActivityHostBinding
@@ -22,6 +20,7 @@ import com.tminus1010.buva.ui.futures.FuturesFrag
 import com.tminus1010.buva.ui.history.HistoryFrag
 import com.tminus1010.buva.ui.importZ.ImportSharedVM
 import com.tminus1010.buva.ui.transactions.TransactionListFrag
+import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.launchWithDecorator
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.pairwise
@@ -73,7 +72,7 @@ class HostActivity : AppCompatActivity() {
         // # Logs
         hostFrag.navController.addOnDestinationChangedListener { _, navDestination, _ -> Log.d("budgetvalue.Nav", "${navDestination.label}") }
         // # Mediation
-        viewModel.showAlertDialog.onNext(showAlertDialog)
+        viewModel.showAlertDialog.onNext(ShowAlertDialog(this))
         // # Initialize app once per install
         GlobalScope.launchWithDecorator(throbberSharedVM) { initApp() }
         // # Bind bottom menu to navigation.
@@ -88,8 +87,8 @@ class HostActivity : AppCompatActivity() {
         }
         // # Events
         importSharedVM.navToSelectFile.observe(this) { launchChooseFile(this) }
-        isPlanFeatureEnabled.flow.pairwise().filter { !it.first && it.second }.observe(this) { activePlanInteractor.setActivePlanFromHistory(); showAlertDialog(viewModel.levelUpPlan) }
-        isReconciliationFeatureEnabled.flow.pairwise().filter { !it.first && it.second }.observe(this) { showAlertDialog(viewModel.levelUpReconciliation) }
+        isPlanFeatureEnabled.flow.pairwise().filter { !it.first && it.second }.observe(this) { activePlanInteractor.setActivePlanFromHistory(); ShowAlertDialog(this)(viewModel.levelUpPlan) }
+        isReconciliationFeatureEnabled.flow.pairwise().filter { !it.first && it.second }.observe(this) { ShowAlertDialog(this)(viewModel.levelUpReconciliation) }
         viewModel.navToFutures.observe(this) { FuturesFrag.navTo(nav) }
         viewModel.navToTransactions.observe(this) { TransactionListFrag.navTo(nav) }
         viewModel.navToHistory.observe(this) { HistoryFrag.navTo(nav) }
@@ -124,7 +123,7 @@ class HostActivity : AppCompatActivity() {
                 try {
                     GlobalScope.launch {
                         val importTransactionsResult = importTransactions(result.data!!.data!!)
-                        showAlertDialog(
+                        ShowAlertDialog(this@HostActivity)(
                             NativeText.Simple(
                                 """
                                     Import Successful
