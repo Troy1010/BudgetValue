@@ -19,6 +19,7 @@ import com.tminus1010.buva.ui.errors.Errors
 import com.tminus1010.buva.ui.futures.CreateFutureFrag
 import com.tminus1010.buva.ui.futures.FutureDetailsFrag
 import com.tminus1010.buva.ui.receipt_categorization.ReceiptCategorizationHostFrag
+import com.tminus1010.buva.ui.receipt_categorization_imagetotext.ReceiptCategorizationImageToTextFrag
 import com.tminus1010.buva.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.buva.ui.set_string.SetStringFrag
 import com.tminus1010.buva.ui.set_string.SetStringSharedVM
@@ -65,6 +66,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         viewModel.navToCategoryDetails.observe(viewLifecycleOwner) { CategoryDetailsFrag.navTo(nav, moshiProvider, it, setSearchTextsSharedVM) }
         viewModel.navToReplayOrFutureDetails.observe(viewLifecycleOwner) { FutureDetailsFrag.navTo(nav, moshiWithCategoriesProvider, it, chooseCategoriesSharedVM, setSearchTextsSharedVM) }
         viewModel.navToReceiptCategorization.observe(viewLifecycleOwner) { ReceiptCategorizationHostFrag.navTo(nav, it, moshiWithCategoriesProvider) }
+        viewModel.navToReceiptCategorizationImageToText.observe(viewLifecycleOwner) { ReceiptCategorizationImageToTextFrag.navTo(nav, it, moshiWithCategoriesProvider) }
         viewModel.navToSetString.observe(viewLifecycleOwner) { SetStringFrag.navTo(nav, it, setStringSharedVM) }
         // # State
         vb.textviewDate.bind(viewModel.date) { text = it }

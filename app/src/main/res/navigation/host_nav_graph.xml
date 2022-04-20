@@ -135,4 +135,9 @@
         android:name="com.tminus1010.buva.ui.set_string.SetStringFrag"
         android:label="EditStringFrag"
         tools:layout="@layout/frag_set_string" />
+    <fragment
+        android:id="@+id/receiptCategorizationImageToTextFrag"
+        android:name="com.tminus1010.buva.ui.receipt_categorization_imagetotext.ReceiptCategorizationImageToTextFrag"
+        android:label="ReceiptCategorizationImageToTextFrag"
+        tools:layout="@layout/frag_receipt_categorization_imagetotext" />
 </navigation>

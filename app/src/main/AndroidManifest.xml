@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.tminus1010.buva">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:name="com.tminus1010.buva.all_layers.App"
         android:allowBackup="false"
@@ -25,6 +29,15 @@
         </activity>
         <activity android:name=".MockImportSelectionActivity" />
         <activity android:name=".PlaygroundActivity" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.tminus1010.buva.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

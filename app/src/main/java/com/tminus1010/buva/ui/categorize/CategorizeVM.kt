@@ -177,12 +177,17 @@ class CategorizeVM @Inject constructor(
         navToReceiptCategorization.easyEmit(transactionsInteractor.mostRecentUncategorizedSpend.value!!)
     }
 
+    fun userTryNavToReceiptCategorizationImageToText() {
+        navToReceiptCategorizationImageToText.easyEmit(transactionsInteractor.mostRecentUncategorizedSpend.value!!)
+    }
+
     // # Events
     val navToCreateFuture = MutableSharedFlow<Unit>()
     val navToCategoryDetails = MutableSharedFlow<Category>()
     val navToNewCategory = MutableSharedFlow<Unit>()
     val navToReplayOrFutureDetails = MutableSharedFlow<Future>()
     val navToReceiptCategorization = MutableSharedFlow<Transaction>()
+    val navToReceiptCategorizationImageToText = MutableSharedFlow<Transaction>()
     val navToSetString = MutableSharedFlow<String>()
 
     // # State
@@ -304,6 +309,13 @@ class CategorizeVM @Inject constructor(
                             title = "Categorize all as Unknown",
                             isEnabled2 = isTransactionAvailable,
                             onClick = ::userCategorizeAllAsUnknown,
+                        )
+                    else null,
+                    if (!inSelectionMode)
+                        ButtonVMItem(
+                            title = "Do Receipt Categorization ImageToText",
+                            isEnabled2 = isTransactionAvailable,
+                            onClick = ::userTryNavToReceiptCategorizationImageToText,
                         )
                     else null,
                     if (!inSelectionMode)
