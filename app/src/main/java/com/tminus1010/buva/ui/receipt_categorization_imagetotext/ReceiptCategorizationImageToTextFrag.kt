@@ -3,6 +3,7 @@ package com.tminus1010.buva.ui.receipt_categorization_imagetotext
 import android.Manifest
 import android.net.Uri
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
@@ -40,7 +41,11 @@ class ReceiptCategorizationImageToTextFrag : Fragment(R.layout.frag_receipt_cate
         // # Events
         viewModel.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         // # State
-        vb.imageviewPartOfReceipt.setImageResource(R.drawable.camera)
+        if (latestImageUri != null)
+            vb.imageviewPartOfReceipt.setImageURI(latestImageUri)
+        else
+            vb.imageviewPartOfReceipt.setImageResource(R.drawable.camera)
+        vb.textviewReceipt.movementMethod = ScrollingMovementMethod()
         vb.textviewReceipt.bind(viewModel.receiptText) { text = it }
         vb.buttonsview.bind(viewModel.buttons) { buttons = it }
     }
@@ -55,17 +60,19 @@ class ReceiptCategorizationImageToTextFrag : Fragment(R.layout.frag_receipt_cate
 
     private val takeImageLauncher = registerForActivityResult(ActivityResultContracts.TakePicture())
     {
-        if (it)
+        if (it) {
             vb.imageviewPartOfReceipt.setImageURI(latestImageUri)
+            viewModel.newImage(latestImageFile!!)
+        }
     }
 
-    var latestImageUri: Uri? = null
-    var latestImageFile: File? = null
     private fun uriFromFile(file: File): Uri {
         return FileProvider.getUriForFile(requireContext(), "com.tminus1010.buva.provider", file)
     }
 
     companion object {
+        private var latestImageUri: Uri? = null
+        private var latestImageFile: File? = null
         fun navTo(nav: NavController, transaction: Transaction, moshiWithCategoriesProvider: MoshiWithCategoriesProvider) {
             nav.navigate(
                 R.id.receiptCategorizationImageToTextFrag,

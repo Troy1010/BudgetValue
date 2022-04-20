@@ -17,6 +17,7 @@
         style="@style/AppTheme.StandardTextView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:scrollbars="vertical"
         app:layout_constraintBottom_toTopOf="@id/buttonsview"
         app:layout_constraintTop_toBottomOf="@id/imageviewPartOfReceipt"
         tools:text="Something" />
