@@ -3,7 +3,7 @@ package com.tminus1010.buva.ui.receipt_categorization_imagetotext
 import android.Manifest
 import android.net.Uri
 import android.os.Bundle
-import android.text.method.ScrollingMovementMethod
+import android.text.method.LinkMovementMethod
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
@@ -45,8 +45,8 @@ class ReceiptCategorizationImageToTextFrag : Fragment(R.layout.frag_receipt_cate
             vb.imageviewPartOfReceipt.setImageURI(latestImageUri)
         else
             vb.imageviewPartOfReceipt.setImageResource(R.drawable.camera)
-        vb.textviewReceipt.movementMethod = ScrollingMovementMethod()
-        vb.textviewReceipt.bind(viewModel.receiptText) { text = it }
+        vb.textviewReceipt.movementMethod = LinkMovementMethod.getInstance()
+        vb.textviewReceipt.bind(viewModel.receiptText) { text = it; invalidate() } // TODO: invalidate() might not be necessary
         vb.buttonsview.bind(viewModel.buttons) { buttons = it }
     }
 

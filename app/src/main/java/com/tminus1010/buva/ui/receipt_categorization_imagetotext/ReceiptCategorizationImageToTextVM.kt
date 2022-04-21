@@ -1,5 +1,12 @@
 package com.tminus1010.buva.ui.receipt_categorization_imagetotext
 
+import android.graphics.Color
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ClickableSpan
+import android.text.style.ForegroundColorSpan
+import android.view.View
+import androidx.core.text.toSpannable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -34,7 +41,7 @@ class ReceiptCategorizationImageToTextVM @Inject constructor(
 ) : ViewModel() {
     // # View Events
     fun newImage(file: File) {
-        viewModelScope.launch { receiptText.emit(imageToText(file.waitForBitmapAndSetUpright())) }.use(throbberSharedVM)
+        viewModelScope.launch { receiptText.emit(createSpannableStringAndFormat(imageToText(file.waitForBitmapAndSetUpright()))) }.use(throbberSharedVM)
     }
 
     // # User Intents
@@ -49,14 +56,42 @@ class ReceiptCategorizationImageToTextVM @Inject constructor(
     val navUp = MutableSharedFlow<Unit>()
 
     // # State
-    val receiptText = MutableStateFlow<String?>(null)
+    val receiptText = MutableStateFlow<SpannableString?>(null)
     val buttons =
         flowOf(
             listOf(
                 ButtonVMItem(
                     title = "Submit Categorization",
-                    onClick = { logz("asdf") },
+                    onClick = { logz("Submit Categorization clicked") },
                 ),
             )
         )
+
+    companion object {
+        private fun createSpannableStringAndFormat(s: String?): SpannableString {
+            return s
+                ?.replace("\n\n", "\n")
+                .let { SpannableString(it) }
+                .apply {
+                    Regex("""(.+?)\s?([0-9]+\.[0-9]{1,2})""").findAll(this).forEach {
+                        setSpan(
+                            object : ClickableSpan() {
+                                override fun onClick(v: View) {
+                                    logz("clicked:${Pair(it.groupValues[1], it.groupValues[2])}")
+                                }
+                            },
+                            it.groups[1]!!.range.first,
+                            it.groups[1]!!.range.last + 1,
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE,
+                        )
+                        setSpan(
+                            ForegroundColorSpan(Color.rgb(192, 0, 0)),
+                            it.groups[2]!!.range.first,
+                            it.groups[2]!!.range.last + 1,
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE,
+                        )
+                    }
+                }
+        }
+    }
 }
