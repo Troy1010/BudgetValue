@@ -9,11 +9,11 @@
         android:id="@+id/imageviewPartOfReceipt"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/textviewReceipt"
+        app:layout_constraintBottom_toTopOf="@+id/textviewReadout"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textviewReceipt"
+        android:id="@+id/textviewReadout"
         style="@style/AppTheme.StandardTextView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
