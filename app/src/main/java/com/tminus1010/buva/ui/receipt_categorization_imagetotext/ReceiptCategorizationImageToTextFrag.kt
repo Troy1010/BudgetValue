@@ -15,11 +15,13 @@ import com.squareup.moshi.Types
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.all_layers.KEY2
+import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.data.service.MoshiProvider
 import com.tminus1010.buva.data.service.MoshiWithCategoriesProvider
 import com.tminus1010.buva.databinding.FragReceiptCategorizationImagetotextBinding
 import com.tminus1010.buva.domain.Transaction
 import com.tminus1010.tmcommonkotlin.androidx.CreateImageFile
+import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
@@ -37,6 +39,7 @@ class ReceiptCategorizationImageToTextFrag : Fragment(R.layout.frag_receipt_cate
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = FragReceiptCategorizationImagetotextBinding.bind(view)
+        viewModel.showAlertDialog.onNext(ShowAlertDialog(requireActivity()))
         // # User Intents
         vb.imageviewPartOfReceipt.setOnClickListener { askCameraPermissionLauncher.launch(Manifest.permission.CAMERA) }
         // # Events
@@ -48,8 +51,8 @@ class ReceiptCategorizationImageToTextFrag : Fragment(R.layout.frag_receipt_cate
             vb.imageviewPartOfReceipt.setImageResource(R.drawable.camera)
         vb.textviewReadout.movementMethod = LinkMovementMethod.getInstance()
         vb.textviewReadout.bind(viewModel.readoutText) { text = it; invalidate() } // TODO: invalidate() might not be necessary
-        vb.textviewReceipt.movementMethod = ScrollingMovementMethod()
-        vb.textviewReceipt.bind(viewModel.receiptText) { text = it }
+        vb.textviewReceipt.movementMethod = LinkMovementMethod.getInstance()
+        vb.textviewReceipt.bind(viewModel.receiptText) { text = it; invalidate() } // TODO: invalidate() might not be necessary
         vb.buttonsview.bind(viewModel.buttons) { buttons = it }
     }
 

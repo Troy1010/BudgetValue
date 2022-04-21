@@ -13,15 +13,18 @@ import com.squareup.moshi.Types
 import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.all_layers.KEY2
 import com.tminus1010.buva.all_layers.extensions.onNext
+import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.data.service.MoshiProvider
 import com.tminus1010.buva.data.service.MoshiWithCategoriesProvider
 import com.tminus1010.buva.domain.Transaction
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
+import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
 import com.tminus1010.tmcommonkotlin.androidx.extensions.waitForBitmapAndSetUpright
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.imagetotext.ImageToText
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
+import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,13 +43,14 @@ class ReceiptCategorizationImageToTextVM @Inject constructor(
     private val throbberSharedVM: ThrobberSharedVM,
 ) : ViewModel() {
     // # View Events
+    val showAlertDialog = MutableSharedFlow<ShowAlertDialog>(1)
     fun newImage(file: File) {
         viewModelScope.launch { readoutText.emit(createSpannableStringAndFormatForReadout(imageToText(file.waitForBitmapAndSetUpright()))) }.use(throbberSharedVM)
     }
 
     // # User Intents
     fun userAddLine(s: String) {
-        receiptText.onNext("${receiptText.value}\n$s")
+        receiptText.onNext(createSpannableStringAndFormatForReceipt(receiptText.value?.let { "${it}\n$s" } ?: ""))
     }
 
     // # Internal
@@ -79,6 +83,50 @@ class ReceiptCategorizationImageToTextVM @Inject constructor(
             }
     }
 
+    private fun createSpannableStringAndFormatForReceipt(s: CharSequence?): SpannableString {
+        return s
+            .let { SpannableString(it) }
+            .apply {
+                /**
+                 * Only match last number of: CHZ IT HOT 12.42 13.99
+                 */
+                Regex("""(.+?)\s?([0-9]+\.[0-9]{2})(?!.*[0-9]+\.[0-9]{2})""").findAll(this).forEach { matchResult ->
+                    setSpan(
+                        object : ClickableSpan() {
+                            override fun onClick(v: View) {
+                                viewModelScope.launch {
+                                    showAlertDialog.value!!.invoke(
+                                        body = NativeText.Simple("Edit Receipt Chunk"),
+                                        initialText = matchResult.groupValues[1],
+                                        onSubmitText = { receiptText.onNext(createSpannableStringAndFormatForReceipt(receiptText.value?.replaceRange(matchResult.groups[1]!!.range, it ?: ""))) },
+                                    )
+                                }
+                            }
+                        },
+                        matchResult.groups[1]!!.range.first,
+                        matchResult.groups[1]!!.range.last + 1,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE,
+                    )
+                    setSpan(
+                        object : ClickableSpan() {
+                            override fun onClick(v: View) {
+                                viewModelScope.launch {
+                                    showAlertDialog.value!!.invoke(
+                                        body = NativeText.Simple("Edit Receipt Chunk"),
+                                        initialText = matchResult.groupValues[2],
+                                        onSubmitText = { receiptText.onNext(createSpannableStringAndFormatForReceipt(receiptText.value?.replaceRange(matchResult.groups[2]!!.range, it ?: ""))) },
+                                    )
+                                }
+                            }
+                        },
+                        matchResult.groups[2]!!.range.first,
+                        matchResult.groups[2]!!.range.last + 1,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE,
+                    )
+                }
+            }
+    }
+
     private val transaction = moshiWithCategoriesProvider.moshi.fromJson<Transaction>(savedStateHandle[KEY1])
         .also { logz("transaction:$it") }
     private val descriptionAndTotal = savedStateHandle.get<String?>(KEY2)?.let { moshiProvider.moshi.adapter<Pair<String, BigDecimal>>(Types.newParameterizedType(Pair::class.java, String::class.java, BigDecimal::class.java)).fromJson(it) }
@@ -89,7 +137,7 @@ class ReceiptCategorizationImageToTextVM @Inject constructor(
 
     // # State
     val readoutText = MutableStateFlow<SpannableString?>(null)
-    val receiptText = MutableStateFlow("")
+    val receiptText = MutableStateFlow<SpannableString?>(null)
     val buttons =
         flowOf(
             listOf(
