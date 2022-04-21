@@ -6,7 +6,6 @@ import android.text.Spanned
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.view.View
-import androidx.core.text.toSpannable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -41,7 +40,7 @@ class ReceiptCategorizationImageToTextVM @Inject constructor(
 ) : ViewModel() {
     // # View Events
     fun newImage(file: File) {
-        viewModelScope.launch { receiptText.emit(createSpannableStringAndFormat(imageToText(file.waitForBitmapAndSetUpright()))) }.use(throbberSharedVM)
+        viewModelScope.launch { readoutText.emit(createSpannableStringAndFormat(imageToText(file.waitForBitmapAndSetUpright()))) }.use(throbberSharedVM)
     }
 
     // # User Intents
@@ -56,7 +55,7 @@ class ReceiptCategorizationImageToTextVM @Inject constructor(
     val navUp = MutableSharedFlow<Unit>()
 
     // # State
-    val receiptText = MutableStateFlow<SpannableString?>(null)
+    val readoutText = MutableStateFlow<SpannableString?>(null)
     val buttons =
         flowOf(
             listOf(

@@ -46,7 +46,7 @@ class ReceiptCategorizationImageToTextFrag : Fragment(R.layout.frag_receipt_cate
         else
             vb.imageviewPartOfReceipt.setImageResource(R.drawable.camera)
         vb.textviewReadout.movementMethod = LinkMovementMethod.getInstance()
-        vb.textviewReadout.bind(viewModel.receiptText) { text = it; invalidate() } // TODO: invalidate() might not be necessary
+        vb.textviewReadout.bind(viewModel.readoutText) { text = it; invalidate() } // TODO: invalidate() might not be necessary
         vb.buttonsview.bind(viewModel.buttons) { buttons = it }
     }
 
