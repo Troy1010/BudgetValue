@@ -4,6 +4,7 @@ import android.Manifest
 import android.net.Uri
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
+import android.text.method.ScrollingMovementMethod
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
@@ -47,6 +48,8 @@ class ReceiptCategorizationImageToTextFrag : Fragment(R.layout.frag_receipt_cate
             vb.imageviewPartOfReceipt.setImageResource(R.drawable.camera)
         vb.textviewReadout.movementMethod = LinkMovementMethod.getInstance()
         vb.textviewReadout.bind(viewModel.readoutText) { text = it; invalidate() } // TODO: invalidate() might not be necessary
+        vb.textviewReceipt.movementMethod = ScrollingMovementMethod()
+        vb.textviewReceipt.bind(viewModel.receiptText) { text = it }
         vb.buttonsview.bind(viewModel.buttons) { buttons = it }
     }
 

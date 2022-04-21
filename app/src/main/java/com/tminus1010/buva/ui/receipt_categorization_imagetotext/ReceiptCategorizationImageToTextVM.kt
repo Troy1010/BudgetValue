@@ -12,6 +12,7 @@ import androidx.lifecycle.viewModelScope
 import com.squareup.moshi.Types
 import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.all_layers.KEY2
+import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.data.service.MoshiProvider
 import com.tminus1010.buva.data.service.MoshiWithCategoriesProvider
 import com.tminus1010.buva.domain.Transaction
@@ -40,12 +41,44 @@ class ReceiptCategorizationImageToTextVM @Inject constructor(
 ) : ViewModel() {
     // # View Events
     fun newImage(file: File) {
-        viewModelScope.launch { readoutText.emit(createSpannableStringAndFormat(imageToText(file.waitForBitmapAndSetUpright()))) }.use(throbberSharedVM)
+        viewModelScope.launch { readoutText.emit(createSpannableStringAndFormatForReadout(imageToText(file.waitForBitmapAndSetUpright()))) }.use(throbberSharedVM)
     }
 
     // # User Intents
+    fun userAddLine(s: String) {
+        receiptText.onNext("${receiptText.value}\n$s")
+    }
 
     // # Internal
+    private fun createSpannableStringAndFormatForReadout(s: String?): SpannableString {
+        return s
+            ?.replace("\n\n", "\n")
+            .let { SpannableString(it) }
+            .apply {
+                /**
+                 * Only match last number of: CHZ IT HOT 12.42 13.99
+                 */
+                Regex("""(.+?)\s?([0-9]+\.[0-9]{2})(?!.*[0-9]+\.[0-9]{2})""").findAll(this).forEach {
+                    setSpan(
+                        object : ClickableSpan() {
+                            override fun onClick(v: View) {
+                                userAddLine("${it.groupValues[1]} ${it.groupValues[2]}")
+                            }
+                        },
+                        it.groups[1]!!.range.first,
+                        it.groups[1]!!.range.last + 1,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE,
+                    )
+                    setSpan(
+                        ForegroundColorSpan(Color.rgb(192, 0, 0)),
+                        it.groups[2]!!.range.first,
+                        it.groups[2]!!.range.last + 1,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE,
+                    )
+                }
+            }
+    }
+
     private val transaction = moshiWithCategoriesProvider.moshi.fromJson<Transaction>(savedStateHandle[KEY1])
         .also { logz("transaction:$it") }
     private val descriptionAndTotal = savedStateHandle.get<String?>(KEY2)?.let { moshiProvider.moshi.adapter<Pair<String, BigDecimal>>(Types.newParameterizedType(Pair::class.java, String::class.java, BigDecimal::class.java)).fromJson(it) }
@@ -56,6 +89,7 @@ class ReceiptCategorizationImageToTextVM @Inject constructor(
 
     // # State
     val readoutText = MutableStateFlow<SpannableString?>(null)
+    val receiptText = MutableStateFlow("")
     val buttons =
         flowOf(
             listOf(
@@ -65,32 +99,4 @@ class ReceiptCategorizationImageToTextVM @Inject constructor(
                 ),
             )
         )
-
-    companion object {
-        private fun createSpannableStringAndFormat(s: String?): SpannableString {
-            return s
-                ?.replace("\n\n", "\n")
-                .let { SpannableString(it) }
-                .apply {
-                    Regex("""(.+?)\s?([0-9]+\.[0-9]{1,2})""").findAll(this).forEach {
-                        setSpan(
-                            object : ClickableSpan() {
-                                override fun onClick(v: View) {
-                                    logz("clicked:${Pair(it.groupValues[1], it.groupValues[2])}")
-                                }
-                            },
-                            it.groups[1]!!.range.first,
-                            it.groups[1]!!.range.last + 1,
-                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE,
-                        )
-                        setSpan(
-                            ForegroundColorSpan(Color.rgb(192, 0, 0)),
-                            it.groups[2]!!.range.first,
-                            it.groups[2]!!.range.last + 1,
-                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE,
-                        )
-                    }
-                }
-        }
-    }
 }
