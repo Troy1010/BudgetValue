@@ -20,6 +20,7 @@ import com.tminus1010.buva.domain.Transaction
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
+import com.tminus1010.tmcommonkotlin.androidx.ShowToast
 import com.tminus1010.tmcommonkotlin.androidx.extensions.waitForBitmapAndSetUpright
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.imagetotext.ImageToText
@@ -41,6 +42,7 @@ class ReceiptCategorizationImageToTextVM @Inject constructor(
     moshiProvider: MoshiProvider,
     private val imageToText: ImageToText,
     private val throbberSharedVM: ThrobberSharedVM,
+    private val showToast: ShowToast,
 ) : ViewModel() {
     // # View Events
     val showAlertDialog = MutableSharedFlow<ShowAlertDialog>(1)
@@ -114,7 +116,13 @@ class ReceiptCategorizationImageToTextVM @Inject constructor(
                                     showAlertDialog.value!!.invoke(
                                         body = NativeText.Simple("Edit Receipt Chunk"),
                                         initialText = matchResult.groupValues[2],
-                                        onSubmitText = { receiptText.onNext(createSpannableStringAndFormatForReceipt(receiptText.value?.replaceRange(matchResult.groups[2]!!.range, it ?: ""))) },
+                                        onSubmitText = {
+                                            val x = Regex("""[0-9]+\.[0-9]{2}""").find(it ?: "")
+                                            if (x != null)
+                                                receiptText.onNext(createSpannableStringAndFormatForReceipt(receiptText.value?.replaceRange(matchResult.groups[2]!!.range, x.value)))
+                                            else
+                                                showToast("Invalid")
+                                        },
                                     )
                                 }
                             }
