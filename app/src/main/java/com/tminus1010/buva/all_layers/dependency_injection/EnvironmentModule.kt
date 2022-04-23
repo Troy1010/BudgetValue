@@ -40,8 +40,5 @@ object EnvironmentModule {
     @Provides
     @Reusable
     fun providesSharedPreferences(application: Application): SharedPreferences =
-        application.getSharedPreferences(
-            "SharedPref",
-            Context.MODE_PRIVATE
-        )
+        application.getSharedPreferences("SharedPref", Context.MODE_PRIVATE)
 }
