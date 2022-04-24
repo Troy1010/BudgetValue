@@ -7,8 +7,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.buva.R
 import com.tminus1010.buva.databinding.FragTransactionBlocksBinding
-import com.tminus1010.tmcommonkotlin.misc.extensions.bind
-import com.tminus1010.tmcommonkotlin.misc.extensions.lifecycleOwner
+import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
+import com.tminus1010.tmcommonkotlin.androidx.extensions.lifecycleOwner
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

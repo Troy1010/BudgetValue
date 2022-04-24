@@ -14,7 +14,7 @@ import com.tminus1010.buva.databinding.ItemAccountBinding
 import com.tminus1010.buva.framework.android.onDone
 import com.tminus1010.buva.framework.android.viewBinding
 import com.tminus1010.tmcommonkotlin.androidx.GenViewHolder
-import com.tminus1010.tmcommonkotlin.misc.extensions.bind
+import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

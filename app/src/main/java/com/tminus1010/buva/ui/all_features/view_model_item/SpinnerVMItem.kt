@@ -6,9 +6,9 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import com.tminus1010.buva.R
-import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
-import com.tminus1010.tmcommonkotlin.misc.tmTableView.ViewItemRecipe3
-import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
+import com.tminus1010.tmcommonkotlin.customviews.IViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
 import com.tminus1010.buva.databinding.ItemSpinnerBinding
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.util.concurrent.atomic.AtomicBoolean

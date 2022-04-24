@@ -9,7 +9,7 @@ import com.tminus1010.buva.R
 import com.tminus1010.buva.domain.ReconciliationToDo
 import com.tminus1010.buva.databinding.FragReconciliationHostBinding
 import com.tminus1010.buva.framework.android.viewBinding
-import com.tminus1010.tmcommonkotlin.misc.extensions.bind
+import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

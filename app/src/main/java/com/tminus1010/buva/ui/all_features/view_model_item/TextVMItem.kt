@@ -5,10 +5,10 @@ import android.widget.TextView
 import com.tminus1010.buva.all_layers.extensions.getColorByAttr
 import com.tminus1010.buva.databinding.ItemHeaderBinding
 import com.tminus1010.buva.databinding.ItemTextViewBinding
-import com.tminus1010.tmcommonkotlin.misc.extensions.bind
-import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
-import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
-import com.tminus1010.tmcommonkotlin.misc.tmTableView.ViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
+import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
+import com.tminus1010.tmcommonkotlin.customviews.IViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import io.reactivex.rxjava3.core.Observable

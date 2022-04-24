@@ -7,7 +7,7 @@ import androidx.fragment.app.viewModels
 import com.tminus1010.buva.R
 import com.tminus1010.buva.domain.ReconciliationToDo
 import com.tminus1010.buva.databinding.ItemTmTableViewBinding
-import com.tminus1010.tmcommonkotlin.misc.extensions.bind
+import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

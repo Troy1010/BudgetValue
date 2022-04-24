@@ -4,10 +4,10 @@ import android.content.Context
 import android.widget.Button
 import com.tminus1010.buva.all_layers.extensions.getColorByAttr
 import com.tminus1010.buva.databinding.ItemCategoryBtnBinding
-import com.tminus1010.tmcommonkotlin.misc.extensions.bind
-import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
-import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
-import com.tminus1010.tmcommonkotlin.misc.tmTableView.ViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
+import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
+import com.tminus1010.tmcommonkotlin.customviews.IViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipe3
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.flow.Flow
 

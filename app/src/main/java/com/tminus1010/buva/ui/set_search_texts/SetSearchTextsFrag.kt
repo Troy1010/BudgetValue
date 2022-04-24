@@ -10,7 +10,7 @@ import com.tminus1010.buva.framework.android.viewBinding
 import com.tminus1010.buva.databinding.FragSetSearchTextsBinding
 import com.tminus1010.buva.ui.choose_transaction.ChooseTransactionFrag
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
-import com.tminus1010.tmcommonkotlin.misc.extensions.bind
+import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
 

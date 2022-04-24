@@ -2,7 +2,7 @@ package com.tminus1010.buva.framework.android
 
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.tmcommonkotlin.androidx.ExposedLifecycleOwner
-import com.tminus1010.tmcommonkotlin.misc.extensions.lifecycleOwner
+import com.tminus1010.tmcommonkotlin.androidx.extensions.lifecycleOwner
 
 abstract class LifecycleRVAdapter2<VH : RecyclerView.ViewHolder> : RecyclerView.Adapter<VH>() {
     abstract fun onLifecycleAttached(holder: VH)

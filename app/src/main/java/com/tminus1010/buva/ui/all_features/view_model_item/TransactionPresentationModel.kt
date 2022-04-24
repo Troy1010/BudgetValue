@@ -4,7 +4,7 @@ import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.domain.Transaction
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
-import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
+import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
 import kotlinx.coroutines.flow.MutableSharedFlow
 
 class TransactionPresentationModel(private val transaction: Transaction) {

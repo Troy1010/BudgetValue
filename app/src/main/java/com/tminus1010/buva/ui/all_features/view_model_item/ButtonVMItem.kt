@@ -4,11 +4,11 @@ import android.content.Context
 import android.widget.Button
 import com.tminus1010.buva.databinding.ItemButtonBinding
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
-import com.tminus1010.tmcommonkotlin.misc.extensions.bind
-import com.tminus1010.tmcommonkotlin.misc.extensions.lifecycleOwner
-import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
-import com.tminus1010.tmcommonkotlin.misc.tmTableView.IViewItemRecipe3
-import com.tminus1010.tmcommonkotlin.misc.tmTableView.ViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
+import com.tminus1010.tmcommonkotlin.androidx.extensions.lifecycleOwner
+import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
+import com.tminus1010.tmcommonkotlin.customviews.IViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.rx3.extensions.observe
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.flow.Flow

@@ -8,7 +8,7 @@ import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.extensions.onClick
 import com.tminus1010.buva.all_layers.extensions.bind
 import com.tminus1010.buva.databinding.FragReviewBinding
-import com.tminus1010.tmcommonkotlin.misc.extensions.bind
+import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import com.tminus1010.tmcommonkotlin.rx3.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import com.tminus1010.tmcommonkotlin.view.extensions.easyVisibility

@@ -1,6 +1,6 @@
 package com.tminus1010.buva.ui.all_features.view_model_item
 
-import com.tminus1010.tmcommonkotlin.misc.tmTableView.IHasToViewItemRecipe
+import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.AmountFormula
 import kotlinx.coroutines.flow.StateFlow
