@@ -4,7 +4,6 @@ import android.Manifest
 import android.net.Uri
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
-import android.text.method.ScrollingMovementMethod
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
@@ -20,16 +19,20 @@ import com.tminus1010.buva.data.service.MoshiProvider
 import com.tminus1010.buva.data.service.MoshiWithCategoriesProvider
 import com.tminus1010.buva.databinding.FragReceiptCategorizationImagetotextBinding
 import com.tminus1010.buva.domain.Transaction
+import com.tminus1010.buva.framework.android.onDone
 import com.tminus1010.tmcommonkotlin.androidx.CreateImageFile
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.bind
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
+import com.tminus1010.tmcommonkotlin.rx3.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.core.Observable
 import java.io.File
 import java.math.BigDecimal
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class ReceiptCategorizationImageToTextFrag : Fragment(R.layout.frag_receipt_categorization_imagetotext) {
@@ -51,8 +54,14 @@ class ReceiptCategorizationImageToTextFrag : Fragment(R.layout.frag_receipt_cate
             vb.imageviewPartOfReceipt.setImageResource(R.drawable.camera)
         vb.textviewReadout.movementMethod = LinkMovementMethod.getInstance()
         vb.textviewReadout.bind(viewModel.readoutText) { text = it; invalidate() } // TODO: invalidate() might not be necessary
-        vb.textviewReceipt.movementMethod = LinkMovementMethod.getInstance()
-        vb.textviewReceipt.bind(viewModel.receiptText) { text = it; invalidate() } // TODO: invalidate() might not be necessary
+        vb.edittextReceipt.bind(viewModel.receiptText) {
+            setText(it)
+            invalidate()
+            Observable.interval(50, TimeUnit.MILLISECONDS)
+                .take(10)
+                .observe(viewLifecycleOwner) { scrollTo(0, ((lineCount - 1) * lineHeight).logx("scrollTo")) }
+        } // TODO: invalidate() might not be necessary
+        vb.edittextReceipt.onDone { logz("edittextReceipt.onDone"); viewModel.newReceiptText(it) }
         vb.buttonsview.bind(viewModel.buttons) { buttons = it }
     }
 

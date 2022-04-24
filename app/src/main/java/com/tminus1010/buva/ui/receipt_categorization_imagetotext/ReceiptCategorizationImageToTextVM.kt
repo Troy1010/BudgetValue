@@ -13,7 +13,6 @@ import com.squareup.moshi.Types
 import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.all_layers.KEY2
 import com.tminus1010.buva.all_layers.extensions.onNext
-import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.data.service.MoshiProvider
 import com.tminus1010.buva.data.service.MoshiWithCategoriesProvider
 import com.tminus1010.buva.domain.Transaction
@@ -25,7 +24,6 @@ import com.tminus1010.tmcommonkotlin.androidx.extensions.waitForBitmapAndSetUpri
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.imagetotext.ImageToText
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
-import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -48,6 +46,10 @@ class ReceiptCategorizationImageToTextVM @Inject constructor(
     val showAlertDialog = MutableSharedFlow<ShowAlertDialog>(1)
     fun newImage(file: File) {
         viewModelScope.launch { readoutText.emit(createSpannableStringAndFormatForReadout(imageToText(file.waitForBitmapAndSetUpright()))) }.use(throbberSharedVM)
+    }
+
+    fun newReceiptText(s: CharSequence) {
+        receiptText.onNext(s)
     }
 
     // # User Intents
@@ -86,54 +88,8 @@ class ReceiptCategorizationImageToTextVM @Inject constructor(
             }
     }
 
-    private fun createSpannableStringAndFormatForReceipt(s: CharSequence?): SpannableString {
+    private fun createSpannableStringAndFormatForReceipt(s: CharSequence?): CharSequence? {
         return s
-            .let { SpannableString(it) }
-            .apply {
-                /**
-                 * Only match last number of: CHZ IT HOT 12.42 13.99
-                 */
-                Regex("""(.+?)\s?([0-9]+\.[0-9]{2})(?!.*[0-9]+\.[0-9]{2})""").findAll(this).forEach { matchResult ->
-                    setSpan(
-                        object : ClickableSpan() {
-                            override fun onClick(v: View) {
-                                viewModelScope.launch {
-                                    showAlertDialog.value!!.invoke(
-                                        body = NativeText.Simple("Edit Receipt Chunk"),
-                                        initialText = matchResult.groupValues[1],
-                                        onSubmitText = { receiptText.onNext(createSpannableStringAndFormatForReceipt(receiptText.value?.replaceRange(matchResult.groups[1]!!.range, it ?: ""))) },
-                                    )
-                                }
-                            }
-                        },
-                        matchResult.groups[1]!!.range.first,
-                        matchResult.groups[1]!!.range.last + 1,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE,
-                    )
-                    setSpan(
-                        object : ClickableSpan() {
-                            override fun onClick(v: View) {
-                                viewModelScope.launch {
-                                    showAlertDialog.value!!.invoke(
-                                        body = NativeText.Simple("Edit Receipt Chunk"),
-                                        initialText = matchResult.groupValues[2],
-                                        onSubmitText = {
-                                            val x = Regex("""[0-9]+\.[0-9]{2}""").find(it ?: "")
-                                            if (x != null)
-                                                receiptText.onNext(createSpannableStringAndFormatForReceipt(receiptText.value?.replaceRange(matchResult.groups[2]!!.range, x.value)))
-                                            else
-                                                showToast("Invalid")
-                                        },
-                                    )
-                                }
-                            }
-                        },
-                        matchResult.groups[2]!!.range.first,
-                        matchResult.groups[2]!!.range.last + 1,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE,
-                    )
-                }
-            }
     }
 
     private val transaction = moshiWithCategoriesProvider.moshi.fromJson<Transaction>(savedStateHandle[KEY1])
@@ -146,7 +102,7 @@ class ReceiptCategorizationImageToTextVM @Inject constructor(
 
     // # State
     val readoutText = MutableStateFlow<SpannableString?>(null)
-    val receiptText = MutableStateFlow<SpannableString?>(null)
+    val receiptText = MutableStateFlow<CharSequence?>(null)
     val buttons =
         flowOf(
             listOf(

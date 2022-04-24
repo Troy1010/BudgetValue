@@ -18,16 +18,16 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:scrollbars="vertical"
-        app:layout_constraintBottom_toTopOf="@id/textviewReceipt"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/edittextReceipt"
         app:layout_constraintTop_toBottomOf="@id/imageviewPartOfReceipt"
         tools:text="Readout" />
 
-    <TextView
-        android:id="@+id/textviewReceipt"
-        style="@style/AppTheme.StandardTextView"
+    <EditText
+        android:id="@+id/edittextReceipt"
+        style="@style/AppTheme.StandardEditText"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:scrollbars="vertical"
         app:layout_constraintBottom_toTopOf="@id/buttonsview"
         app:layout_constraintTop_toBottomOf="@id/textviewReadout"
         tools:text="Receipt" />
