@@ -19,7 +19,7 @@ class ChooseCategoryVM @Inject constructor(
     private val receiptCategorizationSharedVM: ReceiptCategorizationSharedVM,
 ) : ViewModel() {
     // # UserIntents
-    fun userSubmitPartialCategorization(category: Category) {
+    fun userSubmitCategory(category: Category) {
         receiptCategorizationSharedVM.submitPartialCategorization(category)
         navUp.easyEmit(Unit)
     }
@@ -35,7 +35,7 @@ class ChooseCategoryVM @Inject constructor(
                 it.map { category ->
                     ButtonVMItem(
                         title = category.name,
-                        onClick = { userSubmitPartialCategorization(category) },
+                        onClick = { userSubmitCategory(category) },
                     )
                 }
             }
