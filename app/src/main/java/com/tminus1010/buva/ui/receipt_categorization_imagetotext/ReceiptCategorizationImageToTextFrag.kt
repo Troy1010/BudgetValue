@@ -59,7 +59,7 @@ class ReceiptCategorizationImageToTextFrag : Fragment(R.layout.frag_receipt_cate
             invalidate()
             Observable.interval(50, TimeUnit.MILLISECONDS)
                 .take(10)
-                .observe(viewLifecycleOwner) { scrollTo(0, ((lineCount - 1) * lineHeight).logx("scrollTo")) }
+                .observe(viewLifecycleOwner) { scrollTo(0, ((lineCount - 1) * lineHeight)) }
         } // TODO: invalidate() might not be necessary
         vb.edittextReceipt.onDone { logz("edittextReceipt.onDone"); viewModel.newReceiptText(it) }
         vb.buttonsview.bind(viewModel.buttons) { buttons = it }
