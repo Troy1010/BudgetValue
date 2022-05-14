@@ -33,7 +33,6 @@ import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.pairwise
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
-import com.tminus1010.tmcommonkotlin.view.extensions.easyVisibility
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.GlobalScope
@@ -108,7 +107,7 @@ class HostActivity : AppCompatActivity() {
         vb.bottomNavigation.selectedItemId = runBlocking { viewModel.selectedPageRedefined.first() }
         isPlanFeatureEnabled.flow.observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }
         isReconciliationFeatureEnabled.flow.observe(this) { vb.bottomNavigation.menu.findItem(R.id.reconciliationHostFrag).isVisible = it }
-        vb.frameProgressBar.bind(throbberSharedVM.isVisible) { easyVisibility = it }
+        vb.frameProgressBar.bind(throbberSharedVM.visibility) { visibility = it }
     }
 
     override fun onStart() {

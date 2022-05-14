@@ -46,7 +46,7 @@ class CategorizeVM @Inject constructor(
     private val setStringSharedVM: SetStringSharedVM,
     private val categorizeTransactions: CategorizeTransactions,
     private val categoriesInteractor: CategoriesInteractor,
-    private val configRepo: ConfigRepo,
+    private val configInteractor: ConfigInteractor,
 ) : ViewModel() {
     // # User Intents
     fun userSimpleCategorize(category: Category) {
@@ -302,7 +302,7 @@ class CategorizeVM @Inject constructor(
         }
             .divertErrors(errors)
     val buttons =
-        combine(chooseCategoriesSharedVM.selectedCategories.map { it.isNotEmpty() }, configRepo.config)
+        combine(chooseCategoriesSharedVM.selectedCategories.map { it.isNotEmpty() }, configInteractor.config)
         { inSelectionMode, config ->
             listOfNotNull(
                 if (!inSelectionMode)

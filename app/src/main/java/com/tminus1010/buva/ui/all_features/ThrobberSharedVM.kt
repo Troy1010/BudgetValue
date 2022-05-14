@@ -1,5 +1,6 @@
 package com.tminus1010.buva.ui.all_features
 
+import android.view.View
 import com.tminus1010.tmcommonkotlin.coroutines.IJobEvents
 import io.reactivex.rxjava3.core.Completable
 import kotlinx.coroutines.CoroutineScope
@@ -10,7 +11,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ThrobberSharedVM @Inject constructor(): IJobEvents {
+class ThrobberSharedVM @Inject constructor() : IJobEvents {
     // # Input
     fun <T> decorate(flow: Flow<T>) = flow.onStart { asyncTaskStarted.emit(Unit) }.onCompletion { asyncTaskEnded.emit(Unit) }
     fun decorate(completable: Completable) = completable.doOnSubscribe { runBlocking { asyncTaskStarted.emit(Unit) } }.doOnTerminate { runBlocking { asyncTaskEnded.emit(Unit) } }
@@ -41,10 +42,9 @@ class ThrobberSharedVM @Inject constructor(): IJobEvents {
     private val asyncTaskEnded = MutableSharedFlow<Unit>()
 
     // # State
-    val isVisible =
+    val visibility =
         merge(asyncTaskStarted.map { 1 }, asyncTaskEnded.map { -1 })
             .scan(0) { acc, v -> acc + v }
-            .map { it != 0 }
-            .distinctUntilChanged()
-            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
+            .map { if (it == 0) View.GONE else View.VISIBLE }
+            .stateIn(GlobalScope, SharingStarted.Eagerly, View.GONE)
 }
