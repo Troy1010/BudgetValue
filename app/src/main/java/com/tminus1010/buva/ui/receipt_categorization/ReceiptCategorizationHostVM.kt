@@ -24,7 +24,6 @@ import javax.inject.Inject
 @HiltViewModel
 class ReceiptCategorizationHostVM @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    moshiWithCategoriesProvider: MoshiWithCategoriesProvider,
     moshiProvider: MoshiProvider,
     private val subFragEventSharedVM: SubFragEventSharedVM,
     private val receiptCategorizationSharedVM: ReceiptCategorizationSharedVM,
@@ -38,14 +37,14 @@ class ReceiptCategorizationHostVM @Inject constructor(
     }
 
     fun userSubmitCategorization() {
-        if (transaction != null) receiptCategorizationSharedVM.submitCategorization(transaction)
+        transaction.value?.also { receiptCategorizationSharedVM.submitCategorization(it) }
         if (descriptionAndTotal != null) receiptCategorizationSharedVM.userSubmitCategorization()
         navUp.easyEmit(Unit)
     }
 
     // # Internal
-    private val transaction = moshiWithCategoriesProvider.moshi.fromJson<Transaction>(savedStateHandle[KEY1])
-        ?.also { receiptCategorizationSharedVM.total.onNext(it.amount) }
+    private val transaction = savedStateHandle.getLiveData<Transaction>(KEY1)
+        .also { it.value?.also { receiptCategorizationSharedVM.total.onNext(it.amount) } }
     private val descriptionAndTotal = savedStateHandle.get<String?>(KEY2)?.let { moshiProvider.moshi.adapter<Pair<String, BigDecimal>>(Types.newParameterizedType(Pair::class.java, String::class.java, BigDecimal::class.java)).fromJson(it) }
         ?.also { receiptCategorizationSharedVM.total.onNext(it.second) }
 
@@ -55,7 +54,7 @@ class ReceiptCategorizationHostVM @Inject constructor(
     // # State
     val fragment = subFragEventSharedVM.showFragment.onStart { emit(ChooseAmountSubFrag()) }
     val amountLeft = receiptCategorizationSharedVM.amountLeftToCategorize.map { it.toString().toMoneyBigDecimal().toString() }
-    val description = flowOf(transaction?.description ?: descriptionAndTotal?.first)
+    val description = flowOf(transaction.value?.description ?: descriptionAndTotal?.first)
     val buttons =
         flowOf(
             listOf(

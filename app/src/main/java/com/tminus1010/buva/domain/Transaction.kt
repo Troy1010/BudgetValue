@@ -1,10 +1,12 @@
 package com.tminus1010.buva.domain
 
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.tminus1010.buva.all_layers.extensions.copy
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
+import kotlinx.parcelize.Parcelize
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.LocalDate
@@ -12,6 +14,7 @@ import java.time.LocalDate
 /**
  * the [id] is the entire row of information for that transaction
  */
+@Parcelize
 @Entity
 data class Transaction(
     val date: LocalDate,
@@ -21,7 +24,7 @@ data class Transaction(
     val categorizationDate: LocalDate?,
     @PrimaryKey
     val id: String,
-) {
+) : Parcelable {
     val isUncategorized get() = categoryAmounts.isNullOrEmpty()
     val isCategorized get() = !isUncategorized
     val isSpend get() = amount < BigDecimal.ZERO

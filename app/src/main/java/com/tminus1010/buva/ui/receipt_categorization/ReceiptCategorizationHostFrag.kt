@@ -50,11 +50,11 @@ class ReceiptCategorizationHostFrag : Fragment(R.layout.frag_receipt_categorizat
     }
 
     companion object {
-        fun navTo(nav: NavController, transaction: Transaction, moshiWithCategoriesProvider: MoshiWithCategoriesProvider) {
+        fun navTo(nav: NavController, transaction: Transaction) {
             nav.navigate(
                 R.id.receiptCategorizationHostFrag,
                 Bundle().apply {
-                    putString(KEY1, moshiWithCategoriesProvider.moshi.toJson(transaction))
+                    putParcelable(KEY1, transaction)
                 },
             )
         }

@@ -65,7 +65,7 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         viewModel.navToNewCategory.observe(viewLifecycleOwner) { CategoryDetailsFrag.navTo(nav, moshiProvider, null, setSearchTextsSharedVM) }
         viewModel.navToCategoryDetails.observe(viewLifecycleOwner) { CategoryDetailsFrag.navTo(nav, moshiProvider, it, setSearchTextsSharedVM) }
         viewModel.navToReplayOrFutureDetails.observe(viewLifecycleOwner) { FutureDetailsFrag.navTo(nav, moshiWithCategoriesProvider, it, chooseCategoriesSharedVM, setSearchTextsSharedVM) }
-        viewModel.navToReceiptCategorization.observe(viewLifecycleOwner) { ReceiptCategorizationHostFrag.navTo(nav, it, moshiWithCategoriesProvider) }
+        viewModel.navToReceiptCategorization.observe(viewLifecycleOwner) { ReceiptCategorizationHostFrag.navTo(nav, it) }
         viewModel.navToReceiptCategorizationImageToText.observe(viewLifecycleOwner) { ReceiptCategorizationImageToTextFrag.navTo(nav, it, moshiWithCategoriesProvider) }
         viewModel.navToSetString.observe(viewLifecycleOwner) { SetStringFrag.navTo(nav, it, setStringSharedVM) }
         // # State
