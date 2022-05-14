@@ -46,6 +46,7 @@ class CategorizeVM @Inject constructor(
     private val setStringSharedVM: SetStringSharedVM,
     private val categorizeTransactions: CategorizeTransactions,
     private val categoriesInteractor: CategoriesInteractor,
+    private val configRepo: ConfigRepo,
 ) : ViewModel() {
     // # User Intents
     fun userSimpleCategorize(category: Category) {
@@ -301,54 +302,54 @@ class CategorizeVM @Inject constructor(
         }
             .divertErrors(errors)
     val buttons =
-        chooseCategoriesSharedVM.selectedCategories.map { it.isNotEmpty() }
-            .map { inSelectionMode ->
-                listOfNotNull(
-                    if (!inSelectionMode)
-                        ButtonVMItem(
-                            title = "Categorize all as Unknown",
-                            isEnabled2 = isTransactionAvailable,
-                            onClick = ::userCategorizeAllAsUnknown,
-                        )
-                    else null,
-                    if (!inSelectionMode)
-                        ButtonVMItem(
-                            title = "Do Receipt Categorization ImageToText",
-                            isEnabled2 = isTransactionAvailable,
-                            onClick = ::userTryNavToReceiptCategorizationImageToText,
-                        )
-                    else null,
-                    if (!inSelectionMode)
-                        ButtonVMItem(
-                            title = "Do Receipt Categorization",
-                            isEnabled2 = isTransactionAvailable,
-                            onClick = ::userTryNavToReceiptCategorization,
-                        )
-                    else null,
-                    if (!inSelectionMode)
-                        ButtonVMItem(
-                            title = "Redo",
-                            isEnabled2 = isRedoAvailable,
-                            onClick = ::userRedo,
-                        )
-                    else null,
-                    if (!inSelectionMode)
-                        ButtonVMItem(
-                            title = "Undo",
-                            isEnabled2 = isUndoAvailable,
-                            onClick = ::userUndo,
-                        )
-                    else null,
-                    if (!inSelectionMode)
-                        ButtonVMItem(
-                            title = "Create Category",
-                            onClick = navToNewCategory::onNext,
-                        )
-                    else null,
+        combine(chooseCategoriesSharedVM.selectedCategories.map { it.isNotEmpty() }, configRepo.config)
+        { inSelectionMode, config ->
+            listOfNotNull(
+                if (!inSelectionMode)
                     ButtonVMItem(
-                        title = "Create Future",
-                        onClick = ::userTryNavToCreateFuture2,
-                    ),
-                )
-            }
+                        title = "Categorize all as Unknown",
+                        isEnabled2 = isTransactionAvailable,
+                        onClick = ::userCategorizeAllAsUnknown,
+                    )
+                else null,
+                if (!inSelectionMode && config.isImageToTextEnabled)
+                    ButtonVMItem(
+                        title = "Do Receipt Categorization ImageToText",
+                        isEnabled2 = isTransactionAvailable,
+                        onClick = ::userTryNavToReceiptCategorizationImageToText,
+                    )
+                else null,
+                if (!inSelectionMode)
+                    ButtonVMItem(
+                        title = "Do Receipt Categorization",
+                        isEnabled2 = isTransactionAvailable,
+                        onClick = ::userTryNavToReceiptCategorization,
+                    )
+                else null,
+                if (!inSelectionMode)
+                    ButtonVMItem(
+                        title = "Redo",
+                        isEnabled2 = isRedoAvailable,
+                        onClick = ::userRedo,
+                    )
+                else null,
+                if (!inSelectionMode)
+                    ButtonVMItem(
+                        title = "Undo",
+                        isEnabled2 = isUndoAvailable,
+                        onClick = ::userUndo,
+                    )
+                else null,
+                if (!inSelectionMode)
+                    ButtonVMItem(
+                        title = "Create Category",
+                        onClick = navToNewCategory::onNext,
+                    )
+                else null,
+                ButtonVMItem(
+                    title = "Create Future",
+                    onClick = ::userTryNavToCreateFuture2,
+                ),
+            )
+        }
 }
