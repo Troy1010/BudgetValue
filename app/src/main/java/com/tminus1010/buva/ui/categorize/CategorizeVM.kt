@@ -45,7 +45,7 @@ class CategorizeVM @Inject constructor(
     private val redoUndoInteractor: RedoUndoInteractor,
     private val setStringSharedVM: SetStringSharedVM,
     private val categorizeTransactions: CategorizeTransactions,
-    private val categoriesInteractor: CategoriesInteractor,
+    private val categoryInteractor: CategoryInteractor,
     private val configInteractor: ConfigInteractor,
 ) : ViewModel() {
     // # User Intents
@@ -149,7 +149,7 @@ class CategorizeVM @Inject constructor(
 
     fun userUseAndRememberDescriptionOnCategory(category: Category) {
         GlobalScope.launch(block = throbberSharedVM.decorate {
-            categoriesInteractor.addDescriptionAndCategorize(
+            categoryInteractor.addDescriptionAndCategorize(
                 category = category,
                 description = transactionsInteractor.mostRecentUncategorizedSpend.value!!.description,
             )
@@ -160,7 +160,7 @@ class CategorizeVM @Inject constructor(
     fun userUseAndRememberDescriptionWithEditOnCategory(category: Category) {
         setStringSharedVM.userSubmitString.take(1).takeUntilSignal(setStringSharedVM.userCancel).observe(GlobalScope) { s ->
             GlobalScope.launch(block = throbberSharedVM.decorate { // TODO: There should be a better way than launching within a launch, right?
-                categoriesInteractor.addDescriptionAndCategorize(
+                categoryInteractor.addDescriptionAndCategorize(
                     category = category,
                     description = s,
                 )

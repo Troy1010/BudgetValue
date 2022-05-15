@@ -7,7 +7,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CategoriesInteractor @Inject constructor(
+class CategoryInteractor @Inject constructor(
     private val categoriesRepo: CategoriesRepo,
     private val categorizeTransactions: CategorizeTransactions,
 ) {
