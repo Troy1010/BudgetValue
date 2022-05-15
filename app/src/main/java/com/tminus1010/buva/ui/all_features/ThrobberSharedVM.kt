@@ -16,6 +16,7 @@ class ThrobberSharedVM @Inject constructor() : IJobEvents {
     // # Input
     fun <T> decorate(flow: Flow<T>) = flow.onStart { asyncTaskStarted.emit(Unit) }.onCompletion { asyncTaskEnded.emit(Unit) }
     fun decorate(completable: Completable) = completable.doOnSubscribe { runBlocking { asyncTaskStarted.emit(Unit) } }.doOnTerminate { runBlocking { asyncTaskEnded.emit(Unit) } }
+    @Deprecated("This does not handle errors correctly. Use .use() instead.")
     fun decorate(lambda: suspend CoroutineScope.() -> Unit): suspend CoroutineScope.() -> Unit = {
         asyncTaskStarted.emit(Unit)
         lambda(this)

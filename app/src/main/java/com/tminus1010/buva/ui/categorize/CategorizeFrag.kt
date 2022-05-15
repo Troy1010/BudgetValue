@@ -20,12 +20,14 @@ import com.tminus1010.buva.ui.futures.CreateFutureFrag
 import com.tminus1010.buva.ui.futures.FutureDetailsFrag
 import com.tminus1010.buva.ui.receipt_categorization.ReceiptCategorizationHostFrag
 import com.tminus1010.buva.ui.receipt_categorization_imagetotext.ReceiptCategorizationImageToTextFrag
+import com.tminus1010.buva.ui.review.NoMostRecentSpendException
 import com.tminus1010.buva.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.buva.ui.set_string.SetStringFrag
 import com.tminus1010.buva.ui.set_string.SetStringSharedVM
 import com.tminus1010.tmcommonkotlin.androidx.GenViewHolder
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
+import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -60,7 +62,12 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Events
-        errors.observe(viewLifecycleOwner) { throw it }
+        errors.observe(viewLifecycleOwner) {
+            when(it) {
+                is NoMostRecentSpendException -> easyToast("No transaction available")
+                else -> throw it
+            }
+        }
         viewModel.navToCreateFuture.observe(viewLifecycleOwner) { CreateFutureFrag.navTo(nav, setSearchTextsSharedVM, transactionsInteractor) }
         viewModel.navToNewCategory.observe(viewLifecycleOwner) { CategoryDetailsFrag.navTo(nav, null, setSearchTextsSharedVM) }
         viewModel.navToCategoryDetails.observe(viewLifecycleOwner) { CategoryDetailsFrag.navTo(nav, it, setSearchTextsSharedVM) }

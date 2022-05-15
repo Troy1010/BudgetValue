@@ -19,6 +19,7 @@ import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItems
 import com.tminus1010.buva.ui.choose_categories.ChooseCategoriesSharedVM
 import com.tminus1010.buva.ui.errors.Errors
+import com.tminus1010.buva.ui.review.NoMostRecentSpendException
 import com.tminus1010.buva.ui.set_string.SetStringSharedVM
 import com.tminus1010.tmcommonkotlin.androidx.ShowToast
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.divertErrors
@@ -27,7 +28,6 @@ import com.tminus1010.tmcommonkotlin.coroutines.extensions.takeUntilSignal
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
@@ -40,7 +40,7 @@ class CategorizeVM @Inject constructor(
     private val userCategories: UserCategories,
     private val throbberSharedVM: ThrobberSharedVM,
     private val chooseCategoriesSharedVM: ChooseCategoriesSharedVM,
-    errors: Errors,
+    private val errors: Errors,
     futuresRepo: FuturesRepo,
     private val futuresInteractor: FuturesInteractor,
     private val redoUndoInteractor: RedoUndoInteractor,
@@ -52,40 +52,40 @@ class CategorizeVM @Inject constructor(
 ) : ViewModel() {
     // # User Intents
     fun userSimpleCategorize(category: Category) {
-        GlobalScope.launch(block = throbberSharedVM.decorate {
+        errors.globalScope.launch {
             transactionsInteractor.push(
-                transactionsInteractor.mostRecentUncategorizedSpend.value!!.categorize(category)
+                (transactionsInteractor.mostRecentUncategorizedSpend.value ?: throw NoMostRecentSpendException()).categorize(category)
             )
-        })
+        }.use(throbberSharedVM)
     }
 
     fun userReplay(future: Future) {
-        GlobalScope.launch(block = throbberSharedVM.decorate {
+        errors.globalScope.launch {
             transactionsInteractor.push(
-                future.categorize(transactionsInteractor.mostRecentUncategorizedSpend.value!!)
+                future.categorize((transactionsInteractor.mostRecentUncategorizedSpend.value ?: throw NoMostRecentSpendException()))
             )
-        })
+        }.use(throbberSharedVM)
     }
 
     fun userUndo() {
-        GlobalScope.launch(block = throbberSharedVM.decorate {
+        errors.globalScope.launch {
             redoUndoInteractor.undo()
-        })
+        }.use(throbberSharedVM)
     }
 
     fun userRedo() {
-        GlobalScope.launch(block = throbberSharedVM.decorate {
+        errors.globalScope.launch {
             redoUndoInteractor.redo()
-        })
+        }.use(throbberSharedVM)
     }
 
     fun userCategorizeAllAsUnknown() {
-        GlobalScope.launch(block = throbberSharedVM.decorate {
+        errors.globalScope.launch {
             val categoryUnknown = userCategories.flow.first().find { it.name.equals("Unknown", ignoreCase = true) }!! // TODO: Handle this error
             transactionsInteractor.push(
                 transactionsInteractor.uncategorizedSpends.first().map { it.categorize(categoryUnknown) }
             )
-        })
+        }.use(throbberSharedVM)
     }
 
     fun userTryNavToCreateFuture2() {
@@ -93,87 +93,103 @@ class CategorizeVM @Inject constructor(
     }
 
     fun userAddTransactionToFuture(future: Future) {
-        GlobalScope.launch(block = throbberSharedVM.decorate {
+        errors.globalScope.launch {
             futuresInteractor.addDescriptionToFutureAndCategorize(
-                description = transactionsInteractor.mostRecentUncategorizedSpend.value!!.description,
+                description = (transactionsInteractor.mostRecentUncategorizedSpend.value ?: throw NoMostRecentSpendException()).description,
                 future = future,
             )
                 .also { showToast(NativeText.Simple("$it transactions categorized")) }
-        })
+        }.use(throbberSharedVM)
     }
 
     fun userAddTransactionToFutureWithEdit(future: Future) {
-        setStringSharedVM.userSubmitString.take(1).takeUntilSignal(setStringSharedVM.userCancel).observe(GlobalScope) { s ->
-            GlobalScope.launch(block = throbberSharedVM.decorate { // TODO: There should be a better way than launching within a launch, right?
+        setStringSharedVM.userSubmitString.take(1).takeUntilSignal(setStringSharedVM.userCancel).observe(errors.globalScope) { s ->
+            errors.globalScope.launch { // TODO: There should be a better way than launching within a launch, right?
                 futuresInteractor.addDescriptionToFutureAndCategorize(
                     description = s,
                     future = future,
                 )
                     .also { showToast(NativeText.Simple("$it transactions categorized")) }
-            })
+            }.use(throbberSharedVM)
         }
-        navToSetString.onNext(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)
+        try {
+            navToSetString.onNext((transactionsInteractor.mostRecentUncategorizedSpend.value ?: throw NoMostRecentSpendException()).description)
+        } catch (e: Throwable) {
+            errors.onNext(e)
+        }
     }
 
     fun userUseDescription(future: Future) {
-        GlobalScope.launch(block = throbberSharedVM.decorate {
-            categorizeTransactions(TransactionMatcher.SearchText(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)::isMatch, future::categorize)
+        errors.globalScope.launch {
+            categorizeTransactions(TransactionMatcher.SearchText((transactionsInteractor.mostRecentUncategorizedSpend.value ?: throw NoMostRecentSpendException()).description)::isMatch, future::categorize)
                 .also { showToast(NativeText.Simple("$it transactions categorized")) }
-        })
+        }.use(throbberSharedVM)
     }
 
     fun userUseDescriptionWithEdit(future: Future) {
-        setStringSharedVM.userSubmitString.take(1).takeUntilSignal(setStringSharedVM.userCancel).observe(GlobalScope) { s ->
-            GlobalScope.launch(block = throbberSharedVM.decorate { // TODO: There should be a better way than launching within a launch, right?
+        setStringSharedVM.userSubmitString.take(1).takeUntilSignal(setStringSharedVM.userCancel).observe(errors.globalScope) { s ->
+            errors.globalScope.launch { // TODO: There should be a better way than launching within a launch, right?
                 categorizeTransactions(TransactionMatcher.SearchText(s)::isMatch, future::categorize)
                     .also { showToast(NativeText.Simple("$it transactions categorized")) }
-            })
+            }.use(throbberSharedVM)
         }
-        navToSetString.onNext(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)
+        try {
+            navToSetString.onNext((transactionsInteractor.mostRecentUncategorizedSpend.value ?: throw NoMostRecentSpendException()).description)
+        } catch (e: Throwable) {
+            errors.onNext(e)
+        }
     }
 
     fun userUseDescriptionOnCategory(category: Category) {
-        GlobalScope.launch(block = throbberSharedVM.decorate {
-            categorizeTransactions(TransactionMatcher.SearchText(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)::isMatch, categorize = { it.categorize(category) })
+        errors.globalScope.launch {
+            categorizeTransactions(TransactionMatcher.SearchText((transactionsInteractor.mostRecentUncategorizedSpend.value ?: throw NoMostRecentSpendException()).description)::isMatch, categorize = { it.categorize(category) })
                 .also { showToast(NativeText.Simple("$it transactions categorized")) }
-        })
+        }.use(throbberSharedVM)
     }
 
     fun userUseDescriptionWithEditOnCategory(category: Category) {
-        setStringSharedVM.userSubmitString.take(1).takeUntilSignal(setStringSharedVM.userCancel).observe(GlobalScope) { s ->
-            GlobalScope.launch(block = throbberSharedVM.decorate { // TODO: There should be a better way than launching within a launch, right?
+        setStringSharedVM.userSubmitString.take(1).takeUntilSignal(setStringSharedVM.userCancel).observe(errors.globalScope) { s ->
+            errors.globalScope.launch { // TODO: There should be a better way than launching within a launch, right?
                 categorizeTransactions(TransactionMatcher.SearchText(s)::isMatch, categorize = { it.categorize(category) })
                     .also { showToast(NativeText.Simple("$it transactions categorized")) }
-            })
+            }.use(throbberSharedVM)
         }
-        navToSetString.onNext(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)
+        try {
+            navToSetString.onNext((transactionsInteractor.mostRecentUncategorizedSpend.value ?: throw NoMostRecentSpendException()).description)
+        } catch (e: Throwable) {
+            errors.onNext(e)
+        }
     }
 
     fun userUseAndRememberDescriptionOnCategory(category: Category) {
-        GlobalScope.launch(block = throbberSharedVM.decorate {
+        errors.globalScope.launch {
             categoryInteractor.addDescriptionAndCategorize(
                 category = category,
-                description = transactionsInteractor.mostRecentUncategorizedSpend.value!!.description,
+                description = (transactionsInteractor.mostRecentUncategorizedSpend.value ?: throw NoMostRecentSpendException()).description,
             )
                 .also { showToast(NativeText.Simple("$it transactions categorized")) }
-        })
+        }.use(throbberSharedVM)
     }
 
     fun userUseAndRememberDescriptionWithEditOnCategory(category: Category) {
-        setStringSharedVM.userSubmitString.take(1).takeUntilSignal(setStringSharedVM.userCancel).observe(GlobalScope) { s ->
-            GlobalScope.launch(block = throbberSharedVM.decorate { // TODO: There should be a better way than launching within a launch, right?
+        setStringSharedVM.userSubmitString.take(1).takeUntilSignal(setStringSharedVM.userCancel).observe(errors.globalScope) { s ->
+            errors.globalScope.launch { // TODO: There should be a better way than launching within a launch, right?
                 categoryInteractor.addDescriptionAndCategorize(
                     category = category,
                     description = s,
                 )
                     .also { showToast(NativeText.Simple("$it transactions categorized")) }
-            })
+            }.use(throbberSharedVM)
         }
-        navToSetString.onNext(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)
+        try {
+            navToSetString.onNext((transactionsInteractor.mostRecentUncategorizedSpend.value ?: throw NoMostRecentSpendException()).description)
+        } catch (e: Throwable) {
+            errors.onNext(e)
+        }
     }
 
     fun userDeleteCategory(category: Category) {
-        GlobalScope.launch {
+        errors.globalScope.launch {
             deleteCategoryFromActiveDomain(category)
         }.use(throbberSharedVM)
     }
@@ -183,11 +199,19 @@ class CategorizeVM @Inject constructor(
     }
 
     fun userTryNavToReceiptCategorization() {
-        navToReceiptCategorization.easyEmit(transactionsInteractor.mostRecentUncategorizedSpend.value!!)
+        try {
+            navToReceiptCategorization.easyEmit(transactionsInteractor.mostRecentUncategorizedSpend.value ?: throw NoMostRecentSpendException())
+        } catch (e: Throwable) {
+            errors.onNext(e)
+        }
     }
 
     fun userTryNavToReceiptCategorizationImageToText() {
-        navToReceiptCategorizationImageToText.easyEmit(transactionsInteractor.mostRecentUncategorizedSpend.value!!)
+        try {
+            navToReceiptCategorizationImageToText.easyEmit(transactionsInteractor.mostRecentUncategorizedSpend.value ?: throw NoMostRecentSpendException())
+        } catch (e: Throwable) {
+            errors.onNext(e)
+        }
     }
 
     // # Events
