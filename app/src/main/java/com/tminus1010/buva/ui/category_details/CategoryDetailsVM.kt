@@ -23,8 +23,6 @@ import com.tminus1010.buva.ui.errors.Errors
 import com.tminus1010.buva.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
@@ -99,6 +97,10 @@ class CategoryDetailsVM @Inject constructor(
         navToSetSearchTexts.onNext()
     }
 
+    fun userSetIsRememberedByDefault(b: Boolean) {
+        categoryToPush.easyEmit(categoryToPush.value.copy(isRememberedByDefault = b))
+    }
+
     // # Events
     val navUp = MutableSharedFlow<Unit>()
     val showDeleteConfirmationPopup = MutableSharedFlow<String>()
@@ -152,6 +154,10 @@ class CategoryDetailsVM @Inject constructor(
                             ButtonVMItem(title = "View Search Texts", onClick = ::userTryNavToSetSearchTexts),
                         )
                     else null,
+                    listOf(
+                        TextPresentationModel(style = TextPresentationModel.Style.TWO, text1 = "Is Remembered By Default"),
+                        CheckboxVMItem(initialValue = categoryToPush.isRememberedByDefault, onCheckChanged = ::userSetIsRememberedByDefault),
+                    )
                 ),
                 shouldFitItemWidthsInsideTable = true,
             )

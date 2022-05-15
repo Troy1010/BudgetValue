@@ -262,8 +262,10 @@ class CategorizeVM @Inject constructor(
                                     chooseCategoriesSharedVM.unselectCategories(category)
                                 else
                                     chooseCategoriesSharedVM.selectCategories(category)
-                            else
+                            else if (category.isRememberedByDefault)
                                 userUseAndRememberDescriptionOnCategory(category)
+                            else
+                                userUseDescriptionOnCategory(category)
                         },
                         menuVMItemsFlow = chooseCategoriesSharedVM.selectedCategories.map { selectedCategories ->
                             MenuVMItems(
@@ -279,27 +281,33 @@ class CategorizeVM @Inject constructor(
                                     ),
                                 MenuVMItem(
                                     title = "Edit",
-                                    onClick = { userTryNavToCategorySettings(category) }
+                                    onClick = { userTryNavToCategorySettings(category) },
                                 ),
+                                if (category.isRememberedByDefault)
+                                    MenuVMItem(
+                                        title = "Use",
+                                        onClick = { userUseDescriptionOnCategory(category) },
+                                    )
+                                else
+                                    MenuVMItem(
+                                        title = "Use and Remember",
+                                        onClick = { userUseAndRememberDescriptionOnCategory(category) },
+                                    ),
                                 MenuVMItem(
-                                    title = "Use",
-                                    onClick = { userUseDescriptionOnCategory(category) }
+                                    title = "Use and Remember with Edit",
+                                    onClick = { userUseAndRememberDescriptionWithEditOnCategory(category) },
                                 ),
                                 MenuVMItem(
                                     title = "Use Only Once",
-                                    onClick = { userSimpleCategorize(category) }
+                                    onClick = { userSimpleCategorize(category) },
                                 ),
                                 MenuVMItem(
                                     title = "Use With Edit",
-                                    onClick = { userUseDescriptionWithEditOnCategory(category) }
-                                ),
-                                MenuVMItem(
-                                    title = "Use and Remember with Edit",
-                                    onClick = { userUseAndRememberDescriptionWithEditOnCategory(category) }
+                                    onClick = { userUseDescriptionWithEditOnCategory(category) },
                                 ),
                                 MenuVMItem(
                                     title = "Delete",
-                                    onClick = { userDeleteCategory(category) }
+                                    onClick = { userDeleteCategory(category) },
                                 ),
                             )
                         },

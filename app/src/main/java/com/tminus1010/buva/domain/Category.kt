@@ -15,6 +15,7 @@ data class Category(
     val defaultAmountFormula: AmountFormula = AmountFormula.Value(BigDecimal.ZERO),
     val isRequired: Boolean = false,
     val onImportTransactionMatcher: TransactionMatcher? = null,
+    val isRememberedByDefault: Boolean = true,
 ) : ICategorizer, Parcelable {
     override fun categorize(transaction: Transaction): Transaction {
         return transaction.categorize(this)
