@@ -21,6 +21,7 @@ import com.tminus1010.buva.ui.all_features.model.SearchType
 import com.tminus1010.buva.ui.all_features.view_model_item.*
 import com.tminus1010.buva.ui.errors.Errors
 import com.tminus1010.buva.ui.set_search_texts.SetSearchTextsSharedVM
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.GlobalScope
@@ -58,14 +59,14 @@ class CategoryDetailsVM @Inject constructor(
     }
 
     fun userDeleteCategory() {
-        GlobalScope.launch(block = throbberSharedVM.decorate {
+        errors.globalScope.launch {
             deleteCategoryFromActiveDomain(categoryToPush.value)
-        })
+        }.use(throbberSharedVM)
         navUp.easyEmit(Unit)
     }
 
     fun userSubmit() {
-        viewModelScope.launch(CoroutineExceptionHandler { _, e -> errors.easyEmit(e) }) {
+        viewModelScope.launch(errors) {
             if (categoryToPush.value.name == "" ||
                 categoryToPush.value.name.equals(Category.DEFAULT.name, ignoreCase = true) ||
                 categoryToPush.value.name.equals(Category.UNRECOGNIZED.name, ignoreCase = true)
