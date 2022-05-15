@@ -64,6 +64,7 @@ android {
     lint {
         error 'VisibleForTests'
     }
+    namespace 'com.tminus1010.buva'
 }
 
 budgetValuePluginSettings {
