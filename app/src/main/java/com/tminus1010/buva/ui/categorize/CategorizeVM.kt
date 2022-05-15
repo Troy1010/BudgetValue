@@ -48,7 +48,7 @@ class CategorizeVM @Inject constructor(
     private val categorizeTransactions: CategorizeTransactions,
     private val categoryInteractor: CategoryInteractor,
     private val configInteractor: ConfigInteractor,
-    private val deleteCategoryFromActiveDomain: DeleteCategoryFromActiveDomain
+    private val deleteCategoryFromActiveDomain: DeleteCategoryFromActiveDomain,
 ) : ViewModel() {
     // # User Intents
     fun userSimpleCategorize(category: Category) {
@@ -239,7 +239,7 @@ class CategorizeVM @Inject constructor(
                                 else
                                     chooseCategoriesSharedVM.selectCategories(category)
                             else
-                                userUseDescriptionOnCategory(category)
+                                userUseAndRememberDescriptionOnCategory(category)
                         },
                         menuVMItemsFlow = chooseCategoriesSharedVM.selectedCategories.map { selectedCategories ->
                             MenuVMItems(
@@ -258,16 +258,16 @@ class CategorizeVM @Inject constructor(
                                     onClick = { userTryNavToCategorySettings(category) }
                                 ),
                                 MenuVMItem(
+                                    title = "Use",
+                                    onClick = { userUseDescriptionOnCategory(category) }
+                                ),
+                                MenuVMItem(
                                     title = "Use Only Once",
                                     onClick = { userSimpleCategorize(category) }
                                 ),
                                 MenuVMItem(
                                     title = "Use With Edit",
                                     onClick = { userUseDescriptionWithEditOnCategory(category) }
-                                ),
-                                MenuVMItem(
-                                    title = "Use and Remember",
-                                    onClick = { userUseAndRememberDescriptionOnCategory(category) }
                                 ),
                                 MenuVMItem(
                                     title = "Use and Remember with Edit",
