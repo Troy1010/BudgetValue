@@ -24,6 +24,7 @@ import com.tminus1010.tmcommonkotlin.androidx.ShowToast
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.divertErrors
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.takeUntilSignal
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
@@ -47,6 +48,7 @@ class CategorizeVM @Inject constructor(
     private val categorizeTransactions: CategorizeTransactions,
     private val categoryInteractor: CategoryInteractor,
     private val configInteractor: ConfigInteractor,
+    private val deleteCategoryFromActiveDomain: DeleteCategoryFromActiveDomain
 ) : ViewModel() {
     // # User Intents
     fun userSimpleCategorize(category: Category) {
@@ -170,6 +172,12 @@ class CategorizeVM @Inject constructor(
         navToSetString.onNext(transactionsInteractor.mostRecentUncategorizedSpend.value!!.description)
     }
 
+    fun userDeleteCategory(category: Category) {
+        GlobalScope.launch {
+            deleteCategoryFromActiveDomain(category)
+        }.use(throbberSharedVM)
+    }
+
     fun userTryNavToCategorySettings(category: Category) {
         navToCategoryDetails.easyEmit(category)
     }
@@ -264,6 +272,10 @@ class CategorizeVM @Inject constructor(
                                 MenuVMItem(
                                     title = "Use and Remember with Edit",
                                     onClick = { userUseAndRememberDescriptionWithEditOnCategory(category) }
+                                ),
+                                MenuVMItem(
+                                    title = "Delete",
+                                    onClick = { userDeleteCategory(category) }
                                 ),
                             )
                         },
