@@ -15,7 +15,6 @@ import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.forEach
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.tminus1010.buva.R
@@ -90,16 +89,15 @@ class HostActivity : AppCompatActivity() {
         // In order for NavigationUI.setupWithNavController to work, the ids in R.menu.* must exactly match R.navigation.*
         NavigationUI.setupWithNavController(vb.bottomNavigation, hostFrag.navController)
         //
-        vb.bottomNavigation.menu.forEach {
-            it.setOnMenuItemClickListener {
-                // Requirement: When menu item clicked Then forget backstack.
-                tryOrNull { findNavController(R.id.frag_nav_host) }?.clearBackStack(it.itemId)
-                false
-            }
-        }
         vb.bottomNavigation.setOnItemSelectedListener {
             // Requirement: When config change Then do not forget current menu item.
             viewModel.selectMenuItem(it.itemId)
+            // Requirement: When menu item clicked Then forget backstack.
+            // This will be null When config change.
+            val nav = tryOrNull { findNavController(R.id.frag_nav_host) }
+            // clearBackStack might not be necessary.
+            nav?.clearBackStack(it.itemId)
+            nav?.navigate(it.itemId)
             // setOnItemSelectedListener overrides setupWithNavController's behavior, so that behavior is restored here.
             NavigationUI.onNavDestinationSelected(it, hostFrag.navController)
         }
