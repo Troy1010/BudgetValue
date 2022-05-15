@@ -20,6 +20,7 @@ import androidx.navigation.ui.NavigationUI
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.all_layers.extensions.unCheckAllItems
+import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.app.*
 import com.tminus1010.buva.databinding.ActivityHostBinding
 import com.tminus1010.buva.ui.all_features.ShowImportResultAlertDialog
@@ -94,6 +95,7 @@ class HostActivity : AppCompatActivity() {
             NavigationUI.onNavDestinationSelected(it, hostFrag.navController) // setOnItemSelectedListener overrides setupWithNavController's behavior, so that behavior is restored here.
             true
         }
+        viewModel.selectedPageRedefined.value?.also { vb.bottomNavigation.selectedItemId = it }
         // # Events
         importSharedVM.navToSelectFile.observe(this) { launchChooseFile(this) }
         isPlanFeatureEnabled.flow.pairwise().filter { !it.first && it.second }.observe(this) { activePlanInteractor.setActivePlanFromHistory(); ShowAlertDialog(this)(viewModel.levelUpPlan) }
@@ -104,7 +106,6 @@ class HostActivity : AppCompatActivity() {
         viewModel.navToAccessibility.observe(this) { startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }
         viewModel.unCheckAllMenuItems.observe(this) { vb.bottomNavigation.unCheckAllItems() } // TODO: Not working
         // # State
-        vb.bottomNavigation.selectedItemId = runBlocking { viewModel.selectedPageRedefined.first() }
         isPlanFeatureEnabled.flow.observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }
         isReconciliationFeatureEnabled.flow.observe(this) { vb.bottomNavigation.menu.findItem(R.id.reconciliationHostFrag).isVisible = it }
         vb.frameProgressBar.bind(throbberSharedVM.visibility) { visibility = it }
