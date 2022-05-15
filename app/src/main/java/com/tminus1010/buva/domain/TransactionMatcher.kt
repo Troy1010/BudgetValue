@@ -1,10 +1,14 @@
 package com.tminus1010.buva.domain
 
+import android.os.Parcelable
 import com.tminus1010.buva.all_layers.extensions.easyEquals
+import kotlinx.parcelize.Parcelize
 import java.math.BigDecimal
 
-sealed class TransactionMatcher {
+sealed class TransactionMatcher : Parcelable {
     abstract fun isMatch(transaction: Transaction): Boolean
+
+    @Parcelize
     data class SearchText(val searchText: String) : TransactionMatcher() {
         override fun isMatch(transaction: Transaction): Boolean {
             return searchText.uppercase() in transaction.description.uppercase()
@@ -15,6 +19,7 @@ sealed class TransactionMatcher {
         }
     }
 
+    @Parcelize
     data class ByValue(val searchTotal: BigDecimal) : TransactionMatcher() {
         override fun isMatch(transaction: Transaction): Boolean {
             return searchTotal.easyEquals(transaction.amount)
@@ -25,6 +30,7 @@ sealed class TransactionMatcher {
         }
     }
 
+    @Parcelize
     data class Multi(val transactionMatchers: List<TransactionMatcher>) : TransactionMatcher() {
         constructor(vararg transactionMatchers: TransactionMatcher?) : this(transactionMatchers.toList().filterNotNull())
 

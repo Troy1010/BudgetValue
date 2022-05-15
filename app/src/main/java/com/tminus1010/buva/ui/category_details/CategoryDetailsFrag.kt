@@ -9,7 +9,6 @@ import androidx.navigation.NavController
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.InvalidCategoryNameException
 import com.tminus1010.buva.all_layers.KEY1
-import com.tminus1010.buva.data.service.MoshiProvider
 import com.tminus1010.buva.databinding.FragCategoryDetailsBinding
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.TransactionMatcher
@@ -19,7 +18,6 @@ import com.tminus1010.buva.ui.set_search_texts.SetSearchTextsFrag
 import com.tminus1010.buva.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
-import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
@@ -58,10 +56,10 @@ class CategoryDetailsFrag : Fragment(R.layout.frag_category_details) {
     }
 
     companion object {
-        fun navTo(nav: NavController, moshiProvider: MoshiProvider, category: Category?, setSearchTextsSharedVM: SetSearchTextsSharedVM) {
+        fun navTo(nav: NavController, category: Category?, setSearchTextsSharedVM: SetSearchTextsSharedVM) {
             setSearchTextsSharedVM.searchTexts.adjustTo((category?.onImportTransactionMatcher as? TransactionMatcher.Multi)?.transactionMatchers?.filterIsInstance<TransactionMatcher.SearchText>()?.map { it.searchText } ?: listOfNotNull((category?.onImportTransactionMatcher as? TransactionMatcher.SearchText)?.searchText))
             nav.navigate(R.id.categoryDetailsFrag, Bundle().apply {
-                putString(KEY1, moshiProvider.moshi.toJson(category))
+                putParcelable(KEY1, category)
             })
         }
     }

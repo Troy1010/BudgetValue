@@ -11,7 +11,6 @@ import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.buva.app.DeleteCategoryFromActiveDomain
 import com.tminus1010.buva.app.ReplaceCategoryGlobally
 import com.tminus1010.buva.data.CategoriesRepo
-import com.tminus1010.buva.data.service.MoshiProvider
 import com.tminus1010.buva.domain.AmountFormula
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.CategoryType
@@ -22,7 +21,6 @@ import com.tminus1010.buva.ui.all_features.model.SearchType
 import com.tminus1010.buva.ui.all_features.view_model_item.*
 import com.tminus1010.buva.ui.errors.Errors
 import com.tminus1010.buva.ui.set_search_texts.SetSearchTextsSharedVM
-import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.GlobalScope
@@ -34,7 +32,6 @@ import javax.inject.Inject
 @HiltViewModel
 class CategoryDetailsVM @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    moshiProvider: MoshiProvider,
     private val deleteCategoryFromActiveDomain: DeleteCategoryFromActiveDomain,
     private val categoriesRepo: CategoriesRepo,
     private val replaceCategoryGlobally: ReplaceCategoryGlobally,
@@ -44,7 +41,7 @@ class CategoryDetailsVM @Inject constructor(
     private val transactionMatcherPresentationFactory: TransactionMatcherPresentationFactory,
 ) : ViewModel() {
     // # Internal
-    private val originalCategory = moshiProvider.moshi.fromJson<Category>(savedStateHandle.get<String>(KEY1))
+    private val originalCategory = savedStateHandle.get<Category?>(KEY1)
     private val categoryToPush = MutableStateFlow(originalCategory ?: Category(""))
 
     // # User Intents

@@ -1,9 +1,12 @@
 package com.tminus1010.buva.domain
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 import java.math.BigDecimal
 
+@Parcelize
 @Entity
 data class Category(
     @PrimaryKey
@@ -12,7 +15,7 @@ data class Category(
     val defaultAmountFormula: AmountFormula = AmountFormula.Value(BigDecimal.ZERO),
     val isRequired: Boolean = false,
     val onImportTransactionMatcher: TransactionMatcher? = null,
-) : ICategorizer {
+) : ICategorizer, Parcelable {
     override fun categorize(transaction: Transaction): Transaction {
         return transaction.categorize(this)
     }
