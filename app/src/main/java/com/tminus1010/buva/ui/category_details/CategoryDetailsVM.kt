@@ -105,7 +105,10 @@ class CategoryDetailsVM @Inject constructor(
 
     // # State
     val title =
-        if (originalCategory == null) flowOf("Create a new Category") else categoryToPush.map { "Settings (${it.name})" }
+        when {
+            originalCategory == null -> flowOf("Create a new Category")
+            else -> flowOf("Edit Category")
+        }
             .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
     val optionsTableView =
         categoryToPush.map { categoryToPush ->
