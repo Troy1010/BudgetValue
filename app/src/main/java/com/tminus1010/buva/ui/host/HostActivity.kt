@@ -15,6 +15,7 @@ import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.forEach
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.tminus1010.buva.R
@@ -30,6 +31,7 @@ import com.tminus1010.buva.ui.history.HistoryFrag
 import com.tminus1010.buva.ui.importZ.ImportSharedVM
 import com.tminus1010.buva.ui.transactions.TransactionListFrag
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
+import com.tminus1010.tmcommonkotlin.core.tryOrNull
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.pairwise
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
@@ -38,9 +40,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 
@@ -79,21 +79,29 @@ class HostActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(vb.root)
-        // # Logs
+        // # Setup
+        // ## Logs
         hostFrag.navController.addOnDestinationChangedListener { _, navDestination, _ -> Log.d("budgetvalue.Nav", "${navDestination.label}") }
-        // # Mediation
+        // ## Mediation
         viewModel.showAlertDialog.onNext(ShowAlertDialog(this))
-        // # Initialize app once per install
+        // ## Initialize app once per install
         GlobalScope.launch { initApp() }.use(throbberSharedVM)
-        // # Bind bottom menu to navigation.
+        // ## Bind bottom menu to navigation.
         // In order for NavigationUI.setupWithNavController to work, the ids in R.menu.* must exactly match R.navigation.*
         NavigationUI.setupWithNavController(vb.bottomNavigation, hostFrag.navController)
         //
-        // # Setup
+        vb.bottomNavigation.menu.forEach {
+            it.setOnMenuItemClickListener {
+                // Requirement: When menu item clicked Then forget backstack.
+                tryOrNull { findNavController(R.id.frag_nav_host) }?.clearBackStack(it.itemId)
+                false
+            }
+        }
         vb.bottomNavigation.setOnItemSelectedListener {
+            // Requirement: When config change Then do not forget current menu item.
             viewModel.selectMenuItem(it.itemId)
-            NavigationUI.onNavDestinationSelected(it, hostFrag.navController) // setOnItemSelectedListener overrides setupWithNavController's behavior, so that behavior is restored here.
-            true
+            // setOnItemSelectedListener overrides setupWithNavController's behavior, so that behavior is restored here.
+            NavigationUI.onNavDestinationSelected(it, hostFrag.navController)
         }
         viewModel.selectedPageRedefined.value?.also { vb.bottomNavigation.selectedItemId = it }
         // # Events
