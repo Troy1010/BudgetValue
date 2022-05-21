@@ -6,9 +6,7 @@ import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.buva.all_layers.InvalidCategoryNameException
 import com.tminus1010.buva.all_layers.KEY1
-import com.tminus1010.buva.all_layers.extensions.easyEmit
-import com.tminus1010.buva.all_layers.extensions.onNext
-import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
+import com.tminus1010.buva.all_layers.extensions.*
 import com.tminus1010.buva.app.DeleteCategoryFromActiveDomain
 import com.tminus1010.buva.app.ReplaceCategoryGlobally
 import com.tminus1010.buva.data.CategoriesRepo
@@ -98,6 +96,14 @@ class CategoryDetailsVM @Inject constructor(
         category.value = category.value!!.copy(onImportTransactionMatcher = category.value!!.onImportTransactionMatcher.withSearchText(""))
     }
 
+    fun userUpdateSearchText(transactionMatcher: TransactionMatcher.SearchText, searchText: String) {
+        category.value = category.value!!.copy(onImportTransactionMatcher = TransactionMatcher.Multi(category.value!!.onImportTransactionMatcher.flattened().replaceFirst({ it == transactionMatcher}, TransactionMatcher.SearchText(searchText))))
+    }
+
+    fun userRemoveTransactionMatcher(transactionMatcher: TransactionMatcher) {
+        category.value = category.value!!.copy(onImportTransactionMatcher = TransactionMatcher.Multi(category.value!!.onImportTransactionMatcher.flattened().remove { it == transactionMatcher } ))
+    }
+
     // # Events
     val navUp = MutableSharedFlow<Unit>()
     val showDeleteConfirmationPopup = MutableSharedFlow<String>()
@@ -143,35 +149,32 @@ class CategoryDetailsVM @Inject constructor(
                         TextPresentationModel(style = TextPresentationModel.Style.TWO, text1 = "Is Remembered By Default"),
                         CheckboxVMItem(initialValue = category.isRememberedByDefault, onCheckChanged = ::userSetIsRememberedByDefault),
                     ),
-                    *category.onImportTransactionMatcher.flattened().map {
-                        when (it) {
+                    *category.onImportTransactionMatcher.flattened().map { transactionMatcher ->
+                        when (transactionMatcher) {
                             is TransactionMatcher.ByValue ->
                                 listOf(
                                     TextVMItem("Search Total"),
                                     TextVMItem( // TODO: Make editable
-                                        text1 = it.searchTotal.toString()
+                                        text1 = transactionMatcher.searchTotal.toString()
                                     )
                                 )
                             is TransactionMatcher.SearchText ->
-                                listOf<IHasToViewItemRecipe>(
+                                listOf(
                                     TextVMItem("Search Text"),
-                                    TextVMItem(
-                                        text1 = it.toString()
+                                    EditTextVMItem(
+                                        text = transactionMatcher.searchText,
+                                        onDone = { userUpdateSearchText(transactionMatcher, it) },
+                                        menuVMItems = MenuVMItems(
+                                            MenuVMItem(
+                                                title = "Delete",
+                                                onClick = { userRemoveTransactionMatcher(transactionMatcher) }
+                                            ),
+                                            MenuVMItem(
+                                                title = "Copy from Transactions",
+                                                onClick = { TODO() }
+                                            ),
+                                        )
                                     )
-//                                EditTextVMItem(
-//                                    text = s,
-//                                    onDone = { sourceList[i] = it },
-//                                    menuVMItems = MenuVMItems(
-//                                        MenuVMItem(
-//                                            title = "Delete",
-//                                            onClick = { sourceList.removeAt(i) }
-//                                        ),
-//                                        MenuVMItem(
-//                                            title = "Copy from Transactions",
-//                                            onClick = { navToChooseTransaction.onNext(i) }
-//                                        ),
-//                                    )
-//                                )
                                 )
                             else -> error("Unhandled type")
                         }
