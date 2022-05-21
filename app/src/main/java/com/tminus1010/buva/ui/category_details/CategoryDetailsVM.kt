@@ -1,8 +1,6 @@
 package com.tminus1010.buva.ui.category_details
 
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.tminus1010.buva.all_layers.InvalidCategoryNameException
 import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.all_layers.extensions.easyEmit
@@ -24,6 +22,7 @@ import com.tminus1010.buva.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -40,39 +39,39 @@ class CategoryDetailsVM @Inject constructor(
     private val transactionMatcherPresentationFactory: TransactionMatcherPresentationFactory,
 ) : ViewModel() {
     // # Internal
-    private val originalCategory = savedStateHandle.get<Category?>(KEY1)
-    private val categoryToPush = MutableStateFlow(originalCategory ?: Category(""))
+    private val originalCategory = savedStateHandle.get<Category>(KEY1)
+    private val category = savedStateHandle.getLiveData<Category>(KEY1)
 
     // # User Intents
     fun userSetCategoryName(s: String) {
-        categoryToPush.easyEmit(categoryToPush.value.copy(name = s))
+        category.value = category.value!!.copy(name = s)
     }
 
     fun userSetCategoryDefaultAmountFormula(amountFormula: AmountFormula) {
-        categoryToPush.easyEmit(categoryToPush.value.copy(defaultAmountFormula = amountFormula))
+        category.value = category.value!!.copy(defaultAmountFormula = amountFormula)
     }
 
     fun userSetCategoryType(categoryType: CategoryType) {
-        categoryToPush.easyEmit(categoryToPush.value.copy(type = categoryType))
+        category.value = category.value!!.copy(type = categoryType)
     }
 
     fun userDeleteCategory() {
         errors.globalScope.launch {
-            deleteCategoryFromActiveDomain(categoryToPush.value)
+            deleteCategoryFromActiveDomain(category.value!!)
         }.use(throbberSharedVM)
         navUp.easyEmit(Unit)
     }
 
     fun userSubmit() {
         viewModelScope.launch(errors) {
-            if (categoryToPush.value.name == "" ||
-                categoryToPush.value.name.equals(Category.DEFAULT.name, ignoreCase = true) ||
-                categoryToPush.value.name.equals(Category.UNRECOGNIZED.name, ignoreCase = true)
+            if (category.value!!.name == "" || category.value!!.name == "<NAME>"
+                || category.value!!.name.equals(Category.DEFAULT.name, ignoreCase = true)
+                || category.value!!.name.equals(Category.UNRECOGNIZED.name, ignoreCase = true)
             ) throw InvalidCategoryNameException()
-            if (originalCategory != null && originalCategory != categoryToPush.value)
-                replaceCategoryGlobally(originalCategory, categoryToPush.value)
+            if (originalCategory != null && originalCategory != category.value)
+                replaceCategoryGlobally(originalCategory, category.value!!)
             else
-                categoriesRepo.push(categoryToPush.value)
+                categoriesRepo.push(category.value!!)
             navUp.easyEmit(Unit)
         }
     }
@@ -85,7 +84,7 @@ class CategoryDetailsVM @Inject constructor(
                 SearchType.TOTAL -> TransactionMatcher.ByValue(totalGuess.value)
                 SearchType.NONE -> null
             }
-        categoryToPush.easyEmit(categoryToPush.value.copy(onImportTransactionMatcher = onImportTransactionMatcher))
+        category.value = category.value!!.copy(onImportTransactionMatcher = onImportTransactionMatcher)
     }
 
     private val totalGuess = MutableStateFlow(BigDecimal("-10"))
@@ -98,7 +97,7 @@ class CategoryDetailsVM @Inject constructor(
     }
 
     fun userSetIsRememberedByDefault(b: Boolean) {
-        categoryToPush.easyEmit(categoryToPush.value.copy(isRememberedByDefault = b))
+        category.value = category.value!!.copy(isRememberedByDefault = b)
     }
 
     // # Events
@@ -107,48 +106,43 @@ class CategoryDetailsVM @Inject constructor(
     val navToSetSearchTexts = MutableSharedFlow<Unit>()
 
     // # State
-    val title =
-        when {
-            originalCategory == null -> flowOf("Create a new Category")
-            else -> flowOf("Edit Category")
-        }
-            .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
+    val title = flowOf("Category").shareIn(viewModelScope, SharingStarted.Eagerly, 1)
     val optionsTableView =
-        categoryToPush.map { categoryToPush ->
+        category.map { category ->
             TableViewVMItem(
                 recipeGrid = listOfNotNull(
                     listOf(
                         TextVMItem("Name"),
-                        EditTextVMItem(text = categoryToPush.name, onDone = ::userSetCategoryName),
+                        EditTextVMItem(text = category.name, onDone = ::userSetCategoryName),
                     ),
                     listOf(
                         TextVMItem("Default Amount"),
                         AmountFormulaPresentationModel1(
-                            amountFormula = this.categoryToPush.map { it.defaultAmountFormula }.stateIn(viewModelScope),
+                            amountFormula = this.category.map { it.defaultAmountFormula },
                             onNewAmountFormula = ::userSetCategoryDefaultAmountFormula
                         ),
                     ),
                     listOf(
                         TextVMItem("Type"),
-                        SpinnerVMItem(values = CategoryType.getPickableValues().toTypedArray(), initialValue = categoryToPush.type, onNewItem = ::userSetCategoryType),
+                        SpinnerVMItem(values = CategoryType.getPickableValues().toTypedArray(), initialValue = category.type, onNewItem = ::userSetCategoryType),
                     ),
                     listOf(
                         TextPresentationModel(TextPresentationModel.Style.TWO, text1 = "Search Type"),
                         SpinnerVMItem(
                             values = SearchType.values(),
-                            initialValue = transactionMatcherPresentationFactory.searchType(categoryToPush.onImportTransactionMatcher),
+                            initialValue = transactionMatcherPresentationFactory.searchType(category.onImportTransactionMatcher),
                             onNewItem = ::userSetSearchType,
                         ),
                     ),
-                    if (sequenceOf(SearchType.TOTAL, SearchType.DESCRIPTION_AND_TOTAL).any { it == transactionMatcherPresentationFactory.searchType(categoryToPush.onImportTransactionMatcher) })
+                    if (sequenceOf(SearchType.TOTAL, SearchType.DESCRIPTION_AND_TOTAL).any { it == transactionMatcherPresentationFactory.searchType(category.onImportTransactionMatcher) })
                         listOf(
                             TextPresentationModel(
                                 style = TextPresentationModel.Style.TWO,
-                                text1 = transactionMatcherPresentationFactory.totalTitle(categoryToPush.onImportTransactionMatcher)
+                                text1 = transactionMatcherPresentationFactory.totalTitle(category.onImportTransactionMatcher)
                             ),
                             MoneyEditVMItem(text1 = totalGuess.value.toString(), onDone = ::userSetTotalGuess),
                         ) else null,
-                    if (transactionMatcherPresentationFactory.hasSearchTexts(categoryToPush.onImportTransactionMatcher))
+                    if (transactionMatcherPresentationFactory.hasSearchTexts(category.onImportTransactionMatcher))
                         listOf(
                             TextPresentationModel(style = TextPresentationModel.Style.TWO, text1 = "Search Texts"),
                             ButtonVMItem(title = "View Search Texts", onClick = ::userTryNavToSetSearchTexts),
@@ -156,23 +150,20 @@ class CategoryDetailsVM @Inject constructor(
                     else null,
                     listOf(
                         TextPresentationModel(style = TextPresentationModel.Style.TWO, text1 = "Is Remembered By Default"),
-                        CheckboxVMItem(initialValue = categoryToPush.isRememberedByDefault, onCheckChanged = ::userSetIsRememberedByDefault),
+                        CheckboxVMItem(initialValue = category.isRememberedByDefault, onCheckChanged = ::userSetIsRememberedByDefault),
                     )
                 ),
                 shouldFitItemWidthsInsideTable = true,
             )
         }
-            .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
+//            .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
     val buttons =
         flowOf(
             listOfNotNull(
-                if (originalCategory == null)
-                    null
-                else
-                    ButtonVMItem(
-                        title = "Delete",
-                        onClick = { showDeleteConfirmationPopup.easyEmit(originalCategory.name) }
-                    ),
+                ButtonVMItem(
+                    title = "Delete",
+                    onClick = { showDeleteConfirmationPopup.easyEmit(category.value!!.name) }
+                ),
                 ButtonVMItem(
                     title = "Done",
                     onClick = ::userSubmit

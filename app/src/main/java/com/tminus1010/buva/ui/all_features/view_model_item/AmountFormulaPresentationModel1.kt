@@ -1,20 +1,20 @@
 package com.tminus1010.buva.ui.all_features.view_model_item
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import com.tminus1010.buva.all_layers.extensions.easyText2
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
-import com.tminus1010.buva.framework.android.onDone
 import com.tminus1010.buva.databinding.ItemAmountFormulaBinding
 import com.tminus1010.buva.domain.AmountFormula
+import com.tminus1010.buva.framework.android.onDone
 import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
 import com.tminus1010.tmcommonkotlin.customviews.IViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.easyVisibility
-import kotlinx.coroutines.flow.StateFlow
 
 data class AmountFormulaPresentationModel1(
-    private val amountFormula: StateFlow<AmountFormula>,
+    private val amountFormula: LiveData<AmountFormula>,
     private val onNewAmountFormula: (AmountFormula) -> Unit,
 ) : IHasToViewItemRecipe {
     fun userToggleIsPercentage() {
@@ -29,6 +29,7 @@ data class AmountFormulaPresentationModel1(
             when (amountFormula.value) {
                 is AmountFormula.Percentage -> AmountFormula.Percentage(s.toBigDecimal())
                 is AmountFormula.Value -> AmountFormula.Value(s.toMoneyBigDecimal())
+                else -> error("Unhandled")
             }
         if (newAmountFormula != amountFormula) onNewAmountFormula(newAmountFormula)
     }

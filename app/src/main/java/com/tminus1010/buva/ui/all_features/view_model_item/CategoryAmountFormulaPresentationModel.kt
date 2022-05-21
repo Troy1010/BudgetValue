@@ -1,5 +1,6 @@
 package com.tminus1010.buva.ui.all_features.view_model_item
 
+import androidx.lifecycle.asLiveData
 import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.AmountFormula
@@ -16,7 +17,7 @@ data class CategoryAmountFormulaPresentationModel(
     fun toHasToViewItemRecipes(): List<IHasToViewItemRecipe> {
         return listOf(
             TextVMItem(category.name),
-            if (fillCategory == category) AmountFormulaPresentationModel2(amountFormula) else AmountFormulaPresentationModel1(amountFormula, onNewAmountFormula),
+            if (fillCategory == category) AmountFormulaPresentationModel2(amountFormula) else AmountFormulaPresentationModel1(amountFormula.asLiveData(), onNewAmountFormula),
             CheckboxVMItem2(initialValue = fillCategory == category, onChecked = { userSetFillCategory(category) }),
         )
     }
