@@ -1,6 +1,9 @@
 package com.tminus1010.buva.ui.category_details
 
-import androidx.lifecycle.*
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
+import androidx.lifecycle.viewModelScope
 import com.tminus1010.buva.all_layers.InvalidCategoryNameException
 import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.all_layers.extensions.easyEmit
@@ -9,20 +12,16 @@ import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.buva.app.DeleteCategoryFromActiveDomain
 import com.tminus1010.buva.app.ReplaceCategoryGlobally
 import com.tminus1010.buva.data.CategoriesRepo
-import com.tminus1010.buva.domain.AmountFormula
-import com.tminus1010.buva.domain.Category
-import com.tminus1010.buva.domain.CategoryType
-import com.tminus1010.buva.domain.TransactionMatcher
+import com.tminus1010.buva.domain.*
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.TransactionMatcherPresentationFactory
 import com.tminus1010.buva.ui.all_features.model.SearchType
 import com.tminus1010.buva.ui.all_features.view_model_item.*
 import com.tminus1010.buva.ui.errors.Errors
-import com.tminus1010.buva.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
+import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -35,7 +34,6 @@ class CategoryDetailsVM @Inject constructor(
     private val replaceCategoryGlobally: ReplaceCategoryGlobally,
     private val errors: Errors,
     private val throbberSharedVM: ThrobberSharedVM,
-    private val setSearchTextsSharedVM: SetSearchTextsSharedVM,
     private val transactionMatcherPresentationFactory: TransactionMatcherPresentationFactory,
 ) : ViewModel() {
     // # Internal
@@ -79,8 +77,8 @@ class CategoryDetailsVM @Inject constructor(
     fun userSetSearchType(searchType: SearchType) {
         val onImportTransactionMatcher =
             when (searchType) {
-                SearchType.DESCRIPTION -> TransactionMatcher.Multi(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) })
-                SearchType.DESCRIPTION_AND_TOTAL -> TransactionMatcher.Multi(setSearchTextsSharedVM.searchTexts.map { TransactionMatcher.SearchText(it) }.plus(TransactionMatcher.ByValue(totalGuess.value)))
+                SearchType.DESCRIPTION -> TransactionMatcher.Multi()
+                SearchType.DESCRIPTION_AND_TOTAL -> TransactionMatcher.Multi()
                 SearchType.TOTAL -> TransactionMatcher.ByValue(totalGuess.value)
                 SearchType.NONE -> null
             }
@@ -92,18 +90,17 @@ class CategoryDetailsVM @Inject constructor(
         totalGuess.onNext(s.toMoneyBigDecimal())
     }
 
-    fun userTryNavToSetSearchTexts() {
-        navToSetSearchTexts.onNext()
-    }
-
     fun userSetIsRememberedByDefault(b: Boolean) {
         category.value = category.value!!.copy(isRememberedByDefault = b)
+    }
+
+    fun userAddSearchText() {
+        category.value = category.value!!.copy(onImportTransactionMatcher = category.value!!.onImportTransactionMatcher.withSearchText(""))
     }
 
     // # Events
     val navUp = MutableSharedFlow<Unit>()
     val showDeleteConfirmationPopup = MutableSharedFlow<String>()
-    val navToSetSearchTexts = MutableSharedFlow<Unit>()
 
     // # State
     val title = flowOf("Category").shareIn(viewModelScope, SharingStarted.Eagerly, 1)
@@ -142,21 +139,77 @@ class CategoryDetailsVM @Inject constructor(
                             ),
                             MoneyEditVMItem(text1 = totalGuess.value.toString(), onDone = ::userSetTotalGuess),
                         ) else null,
-                    if (transactionMatcherPresentationFactory.hasSearchTexts(category.onImportTransactionMatcher))
-                        listOf(
-                            TextPresentationModel(style = TextPresentationModel.Style.TWO, text1 = "Search Texts"),
-                            ButtonVMItem(title = "View Search Texts", onClick = ::userTryNavToSetSearchTexts),
-                        )
-                    else null,
                     listOf(
                         TextPresentationModel(style = TextPresentationModel.Style.TWO, text1 = "Is Remembered By Default"),
                         CheckboxVMItem(initialValue = category.isRememberedByDefault, onCheckChanged = ::userSetIsRememberedByDefault),
-                    )
+                    ),
+                    *when (category.onImportTransactionMatcher) {
+                        is TransactionMatcher.ByValue ->
+                            listOf(
+                                listOf(
+                                    TextVMItem("Search Total"),
+                                    TextVMItem(
+                                        text1 = category.onImportTransactionMatcher.searchTotal.toString()
+                                    )
+                                )
+                            )
+                        is TransactionMatcher.SearchText ->
+                            listOf(
+                                listOf(
+                                    TextVMItem("Search Text"),
+                                    TextVMItem(
+                                        text1 = category.onImportTransactionMatcher.searchText
+                                    )
+                                )
+                            )
+                        is TransactionMatcher.Multi ->
+                            category.onImportTransactionMatcher.transactionMatchers.map {
+                                listOf<IHasToViewItemRecipe>(
+                                    TextVMItem("Search Text"),
+                                    TextVMItem(
+                                        text1 = it.toString()
+                                    )
+                                )
+                            }
+                                .plus(
+                                    listOf(
+                                        listOf(
+                                            TextVMItem(""),
+                                            ButtonVMItem(
+                                                title = "Add Another Search Text",
+                                                onClick = { userAddSearchText() },
+                                            ),
+                                        )
+                                    )
+                                )
+                        else ->
+                            listOf(listOf())
+                    }.toTypedArray()
+//                        category.onImportTransactionMatcher.
+//                        *sourceList.withIndex().map { (i, s) ->
+//                            listOf<IHasToViewItemRecipe>(
+//                                EditTextVMItem(
+//                                    text = s,
+//                                    onDone = { sourceList[i] = it },
+//                                    menuVMItems = MenuVMItems(
+//                                        MenuVMItem(
+//                                            title = "Delete",
+//                                            onClick = { sourceList.removeAt(i) }
+//                                        ),
+//                                        MenuVMItem(
+//                                            title = "Copy from Transactions",
+//                                            onClick = { navToChooseTransaction.onNext(i) }
+//                                        ),
+//                                    )
+//                                )
+//                            )
+//                        }.toTypedArray(),
                 ),
                 shouldFitItemWidthsInsideTable = true,
             )
         }
-//            .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
+
+    //            .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
     val buttons =
         flowOf(
             listOfNotNull(

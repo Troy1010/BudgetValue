@@ -14,7 +14,6 @@ import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.TransactionMatcher
 import com.tminus1010.buva.framework.android.viewBinding
 import com.tminus1010.buva.ui.errors.Errors
-import com.tminus1010.buva.ui.set_search_texts.SetSearchTextsFrag
 import com.tminus1010.buva.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
@@ -48,7 +47,6 @@ class CategoryDetailsFrag : Fragment(R.layout.frag_category_details) {
                 .setNegativeButton("No") { _, _ -> }
                 .show()
         }
-        categoryDetailsVM.navToSetSearchTexts.observe(viewLifecycleOwner) { SetSearchTextsFrag.navTo(nav) }
         // # State
         vb.tvTitle.bind(categoryDetailsVM.title) { text = it }
         vb.buttonsview.bind(categoryDetailsVM.buttons) { buttons = it }
@@ -59,7 +57,7 @@ class CategoryDetailsFrag : Fragment(R.layout.frag_category_details) {
         fun navTo(nav: NavController, category: Category?, setSearchTextsSharedVM: SetSearchTextsSharedVM) {
             setSearchTextsSharedVM.searchTexts.adjustTo((category?.onImportTransactionMatcher as? TransactionMatcher.Multi)?.transactionMatchers?.filterIsInstance<TransactionMatcher.SearchText>()?.map { it.searchText } ?: listOfNotNull((category?.onImportTransactionMatcher as? TransactionMatcher.SearchText)?.searchText))
             nav.navigate(R.id.categoryDetailsFrag, Bundle().apply {
-                putParcelable(KEY1, category?: Category("<NAME>"))
+                putParcelable(KEY1, category ?: Category("<NAME>"))
             })
         }
     }
