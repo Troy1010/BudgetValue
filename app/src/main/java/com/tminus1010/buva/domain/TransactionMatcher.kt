@@ -50,3 +50,14 @@ fun TransactionMatcher?.withSearchText(searchText: String) =
         is TransactionMatcher.Multi -> TransactionMatcher.Multi(this.transactionMatchers.plus(TransactionMatcher.SearchText(searchText)))
         else -> TransactionMatcher.Multi(this, TransactionMatcher.SearchText(searchText))
     }
+
+fun TransactionMatcher?.flattened() =
+    when (this) {
+        is TransactionMatcher.SearchText,
+        is TransactionMatcher.ByValue ->
+            listOf(this)
+        is TransactionMatcher.Multi ->
+            this.transactionMatchers
+        null ->
+            listOf()
+    }

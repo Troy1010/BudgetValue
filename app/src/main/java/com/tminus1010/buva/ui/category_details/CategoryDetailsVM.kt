@@ -143,51 +143,21 @@ class CategoryDetailsVM @Inject constructor(
                         TextPresentationModel(style = TextPresentationModel.Style.TWO, text1 = "Is Remembered By Default"),
                         CheckboxVMItem(initialValue = category.isRememberedByDefault, onCheckChanged = ::userSetIsRememberedByDefault),
                     ),
-                    *when (category.onImportTransactionMatcher) {
-                        is TransactionMatcher.ByValue ->
-                            listOf(
+                    *category.onImportTransactionMatcher.flattened().map {
+                        when (it) {
+                            is TransactionMatcher.ByValue ->
                                 listOf(
                                     TextVMItem("Search Total"),
-                                    TextVMItem(
-                                        text1 = category.onImportTransactionMatcher.searchTotal.toString()
+                                    TextVMItem( // TODO: Make editable
+                                        text1 = it.searchTotal.toString()
                                     )
                                 )
-                            )
-                        is TransactionMatcher.SearchText ->
-                            listOf(
-                                listOf(
-                                    TextVMItem("Search Text"),
-                                    TextVMItem(
-                                        text1 = category.onImportTransactionMatcher.searchText
-                                    )
-                                )
-                            )
-                        is TransactionMatcher.Multi ->
-                            category.onImportTransactionMatcher.transactionMatchers.map {
+                            is TransactionMatcher.SearchText ->
                                 listOf<IHasToViewItemRecipe>(
                                     TextVMItem("Search Text"),
                                     TextVMItem(
                                         text1 = it.toString()
                                     )
-                                )
-                            }
-                                .plus(
-                                    listOf(
-                                        listOf(
-                                            TextVMItem(""),
-                                            ButtonVMItem(
-                                                title = "Add Another Search Text",
-                                                onClick = { userAddSearchText() },
-                                            ),
-                                        )
-                                    )
-                                )
-                        else ->
-                            listOf(listOf())
-                    }.toTypedArray()
-//                        category.onImportTransactionMatcher.
-//                        *sourceList.withIndex().map { (i, s) ->
-//                            listOf<IHasToViewItemRecipe>(
 //                                EditTextVMItem(
 //                                    text = s,
 //                                    onDone = { sourceList[i] = it },
@@ -202,8 +172,20 @@ class CategoryDetailsVM @Inject constructor(
 //                                        ),
 //                                    )
 //                                )
-//                            )
-//                        }.toTypedArray(),
+                                )
+                            else -> error("Unhandled type")
+                        }
+                    }.plus(
+                        listOf(
+                            listOf(
+                                TextVMItem(""),
+                                ButtonVMItem(
+                                    title = "Add Another Search Text",
+                                    onClick = { userAddSearchText() },
+                                ),
+                            )
+                        )
+                    ).toTypedArray()
                 ),
                 shouldFitItemWidthsInsideTable = true,
             )
