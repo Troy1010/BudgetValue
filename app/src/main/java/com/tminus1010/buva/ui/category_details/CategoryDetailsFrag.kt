@@ -26,7 +26,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class CategoryDetailsFrag : Fragment(R.layout.frag_category_details) {
     private val vb by viewBinding(FragCategoryDetailsBinding::bind)
-    private val viewModel by viewModels<CategoryDetailsVM>()
+    private val categoryDetailsVM by viewModels<CategoryDetailsVM>()
 
     @Inject
     lateinit var errors: Errors
@@ -40,19 +40,19 @@ class CategoryDetailsFrag : Fragment(R.layout.frag_category_details) {
                 else -> throw it
             }
         }
-        viewModel.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
-        viewModel.showDeleteConfirmationPopup.observe(viewLifecycleOwner) {
+        categoryDetailsVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
+        categoryDetailsVM.showDeleteConfirmationPopup.observe(viewLifecycleOwner) {
             AlertDialog.Builder(requireContext())
                 .setMessage("Are you sure you want to delete these categories?\n\t${it}")
-                .setPositiveButton("Yes") { _, _ -> viewModel.userDeleteCategory() }
+                .setPositiveButton("Yes") { _, _ -> categoryDetailsVM.userDeleteCategory() }
                 .setNegativeButton("No") { _, _ -> }
                 .show()
         }
-        viewModel.navToSetSearchTexts.observe(viewLifecycleOwner) { SetSearchTextsFrag.navTo(nav) }
+        categoryDetailsVM.navToSetSearchTexts.observe(viewLifecycleOwner) { SetSearchTextsFrag.navTo(nav) }
         // # State
-        vb.tvTitle.bind(viewModel.title) { text = it }
-        vb.buttonsview.bind(viewModel.buttons) { buttons = it }
-        vb.tmTableView.bind(viewModel.optionsTableView) { it.bind(this) }
+        vb.tvTitle.bind(categoryDetailsVM.title) { text = it }
+        vb.buttonsview.bind(categoryDetailsVM.buttons) { buttons = it }
+        vb.tmTableView.bind(categoryDetailsVM.optionsTableView) { it.bind(this) }
     }
 
     companion object {
