@@ -1,9 +1,6 @@
 package com.tminus1010.buva.ui.category_details
 
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.map
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.tminus1010.buva.all_layers.InvalidCategoryNameException
 import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.all_layers.extensions.*
@@ -12,19 +9,19 @@ import com.tminus1010.buva.app.ReplaceCategoryGlobally
 import com.tminus1010.buva.data.CategoriesRepo
 import com.tminus1010.buva.domain.*
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
+import com.tminus1010.buva.ui.all_features.TransactionMatcherPresentationFactory
 import com.tminus1010.buva.ui.all_features.view_model_item.*
 import com.tminus1010.buva.ui.choose_transaction.ChooseTransactionSharedVM
 import com.tminus1010.buva.ui.errors.Errors
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
 @HiltViewModel
 class CategoryDetailsVM @Inject constructor(
@@ -35,6 +32,7 @@ class CategoryDetailsVM @Inject constructor(
     private val errors: Errors,
     private val throbberSharedVM: ThrobberSharedVM,
     private val chooseTransactionSharedVM: ChooseTransactionSharedVM,
+    private val transactionMatcherPresentationFactory: TransactionMatcherPresentationFactory,
 ) : ViewModel() {
     // # User Intents
     fun userSetCategoryName(s: String) {
@@ -78,18 +76,6 @@ class CategoryDetailsVM @Inject constructor(
         category.value = category.value!!.copy(onImportTransactionMatcher = category.value!!.onImportTransactionMatcher.withSearchText(""))
     }
 
-    fun userUpdateSearchText(transactionMatcher: TransactionMatcher.SearchText, searchText: String) {
-        category.value = category.value!!.copy(onImportTransactionMatcher = TransactionMatcher.Multi(category.value!!.onImportTransactionMatcher.flattened().replaceFirst({ it == transactionMatcher }, TransactionMatcher.SearchText(searchText))))
-    }
-
-    fun userUpdateSearchTotal(transactionMatcher: TransactionMatcher.ByValue, searchTotal: String) {
-        category.value = category.value!!.copy(onImportTransactionMatcher = TransactionMatcher.Multi(category.value!!.onImportTransactionMatcher.flattened().replaceFirst({ it == transactionMatcher }, TransactionMatcher.ByValue(searchTotal.toMoneyBigDecimal()))))
-    }
-
-    fun userRemoveTransactionMatcher(transactionMatcher: TransactionMatcher) {
-        category.value = category.value!!.copy(onImportTransactionMatcher = TransactionMatcher.Multi(category.value!!.onImportTransactionMatcher.flattened().remove { it == transactionMatcher }))
-    }
-
     fun userAddSearchTotal() {
         category.value = category.value!!.copy(onImportTransactionMatcher = category.value!!.onImportTransactionMatcher.withSearchTotal(BigDecimal.ZERO))
     }
@@ -124,7 +110,8 @@ class CategoryDetailsVM @Inject constructor(
     // # State
     val title = flowOf("Category").shareIn(viewModelScope, SharingStarted.Eagerly, 1)
     val optionsTableView =
-        category.map { category ->
+        combine(category.asFlow(), transactionMatcherPresentationFactory.viewModelItems(category.map { it.onImportTransactionMatcher }, { category.value = category.value?.copy(onImportTransactionMatcher = it) }, ::userNavToChooseTransactionForTransactionMatcher).asFlow(), )
+        { category, transactionMatcherVMItems ->
             TableViewVMItem(
                 recipeGrid = listOfNotNull(
                     listOf(
@@ -146,51 +133,12 @@ class CategoryDetailsVM @Inject constructor(
                         TextPresentationModel(style = TextPresentationModel.Style.TWO, text1 = "Is Remembered By Default"),
                         CheckboxVMItem(initialValue = category.isRememberedByDefault, onCheckChanged = ::userSetIsRememberedByDefault),
                     ),
-                    *category.onImportTransactionMatcher.flattened().map { transactionMatcher -> // TODO: Share this presentation logic between Category and Future
-                        when (transactionMatcher) {
-                            is TransactionMatcher.ByValue ->
-                                listOf(
-                                    TextVMItem("Search Total"),
-                                    EditTextVMItem(
-                                        text = transactionMatcher.searchTotal.toString(),
-                                        onDone = { userUpdateSearchTotal(transactionMatcher, it) },
-                                        menuVMItems = MenuVMItems(
-                                            MenuVMItem(
-                                                title = "Delete",
-                                                onClick = { userRemoveTransactionMatcher(transactionMatcher) }
-                                            ),
-                                            MenuVMItem(
-                                                title = "Copy from Transactions",
-                                                onClick = { userNavToChooseTransactionForTransactionMatcher(transactionMatcher) }
-                                            ),
-                                        )
-                                    )
-                                )
-                            is TransactionMatcher.SearchText ->
-                                listOf(
-                                    TextVMItem("Search Text"),
-                                    EditTextVMItem(
-                                        text = transactionMatcher.searchText,
-                                        onDone = { userUpdateSearchText(transactionMatcher, it) },
-                                        menuVMItems = MenuVMItems(
-                                            MenuVMItem(
-                                                title = "Delete",
-                                                onClick = { userRemoveTransactionMatcher(transactionMatcher) }
-                                            ),
-                                            MenuVMItem(
-                                                title = "Copy from Transactions",
-                                                onClick = { userNavToChooseTransactionForTransactionMatcher(transactionMatcher) }
-                                            ),
-                                        )
-                                    )
-                                )
-                            else -> error("Unhandled type")
-                        }
-                    }.toTypedArray()
+                    *transactionMatcherVMItems.toTypedArray()
                 ),
                 shouldFitItemWidthsInsideTable = true,
             )
         }
+            .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
     val buttons =
         flowOf(
             listOfNotNull(
