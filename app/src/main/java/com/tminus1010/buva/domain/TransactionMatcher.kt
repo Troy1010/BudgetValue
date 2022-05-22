@@ -51,10 +51,18 @@ fun TransactionMatcher?.withSearchText(searchText: String) =
         else -> TransactionMatcher.Multi(this, TransactionMatcher.SearchText(searchText))
     }
 
+fun TransactionMatcher?.withSearchTotal(searchTotal: BigDecimal) =
+    when (this) {
+        null -> TransactionMatcher.ByValue(searchTotal)
+        is TransactionMatcher.Multi -> TransactionMatcher.Multi(this.transactionMatchers.plus(TransactionMatcher.ByValue(searchTotal)))
+        else -> TransactionMatcher.Multi(this, TransactionMatcher.ByValue(searchTotal))
+    }
+
 fun TransactionMatcher?.flattened() =
     when (this) {
         is TransactionMatcher.SearchText,
-        is TransactionMatcher.ByValue ->
+        is TransactionMatcher.ByValue,
+        ->
             listOf(this)
         is TransactionMatcher.Multi ->
             this.transactionMatchers

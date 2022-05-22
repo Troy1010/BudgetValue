@@ -13,6 +13,7 @@ import com.tminus1010.buva.databinding.FragCategoryDetailsBinding
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.TransactionMatcher
 import com.tminus1010.buva.framework.android.viewBinding
+import com.tminus1010.buva.ui.choose_transaction.ChooseTransactionFrag
 import com.tminus1010.buva.ui.errors.Errors
 import com.tminus1010.buva.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
@@ -40,6 +41,7 @@ class CategoryDetailsFrag : Fragment(R.layout.frag_category_details) {
             }
         }
         categoryDetailsVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
+        categoryDetailsVM.navToChooseTransaction.observe(viewLifecycleOwner) { ChooseTransactionFrag.navTo(nav) }
         categoryDetailsVM.showDeleteConfirmationPopup.observe(viewLifecycleOwner) {
             AlertDialog.Builder(requireContext())
                 .setMessage("Are you sure you want to delete these categories?\n\t${it}")
@@ -57,7 +59,7 @@ class CategoryDetailsFrag : Fragment(R.layout.frag_category_details) {
         fun navTo(nav: NavController, category: Category?, setSearchTextsSharedVM: SetSearchTextsSharedVM) {
             setSearchTextsSharedVM.searchTexts.adjustTo((category?.onImportTransactionMatcher as? TransactionMatcher.Multi)?.transactionMatchers?.filterIsInstance<TransactionMatcher.SearchText>()?.map { it.searchText } ?: listOfNotNull((category?.onImportTransactionMatcher as? TransactionMatcher.SearchText)?.searchText))
             nav.navigate(R.id.categoryDetailsFrag, Bundle().apply {
-                putParcelable(KEY1, category ?: Category("<NAME>"))
+                putParcelable(KEY1, category ?: Category(""))
             })
         }
     }
