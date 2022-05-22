@@ -56,8 +56,7 @@ class CategoryDetailsFrag : Fragment(R.layout.frag_category_details) {
     }
 
     companion object {
-        fun navTo(nav: NavController, category: Category?, setSearchTextsSharedVM: SetSearchTextsSharedVM) {
-            setSearchTextsSharedVM.searchTexts.adjustTo((category?.onImportTransactionMatcher as? TransactionMatcher.Multi)?.transactionMatchers?.filterIsInstance<TransactionMatcher.SearchText>()?.map { it.searchText } ?: listOfNotNull((category?.onImportTransactionMatcher as? TransactionMatcher.SearchText)?.searchText))
+        fun navTo(nav: NavController, category: Category?) {
             nav.navigate(R.id.categoryDetailsFrag, Bundle().apply {
                 putParcelable(KEY1, category ?: Category(""))
             })
