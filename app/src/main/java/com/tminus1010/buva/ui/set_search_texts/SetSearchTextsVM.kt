@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import javax.inject.Inject
 
+@Deprecated("Use savedStateHandle")
 @HiltViewModel
 class SetSearchTextsVM @Inject constructor(
     setSearchTextsSharedVM: SetSearchTextsSharedVM,

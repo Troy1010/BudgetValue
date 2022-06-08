@@ -14,7 +14,6 @@ import com.tminus1010.buva.framework.android.viewBinding
 import com.tminus1010.buva.ui.choose_categories.ChooseCategoriesFrag
 import com.tminus1010.buva.ui.choose_transaction.ChooseTransactionFrag
 import com.tminus1010.buva.ui.receipt_categorization.ReceiptCategorizationHostFrag
-import com.tminus1010.buva.ui.set_search_texts.SetSearchTextsFrag
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
@@ -39,10 +38,9 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
         viewModel.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         viewModel.navToCategorySelection.observe(viewLifecycleOwner) { ChooseCategoriesFrag.navTo(nav) }
         viewModel.navToChooseTransaction.observe(viewLifecycleOwner) { ChooseTransactionFrag.navTo(nav) }
-        viewModel.navToSetSearchTexts.observe(viewLifecycleOwner) { SetSearchTextsFrag.navTo(nav) }
         viewModel.navToReceiptCategorization.observe(viewLifecycleOwner) { ReceiptCategorizationHostFrag.navTo(nav, it, moshiProvider) }
         // # State
-        vb.tmTableViewOtherInput.bind(viewModel.otherInputTableView) { it.bind(this) }
+        vb.tmTableViewOtherInput.bind(viewModel.optionsTableView) { it.bind(this) }
         vb.tmTableViewCategoryAmounts.bind(viewModel.categoryAmountsTableView) { it.bind(this) }
         vb.buttonsview.bind(viewModel.buttons) { buttons = it }
     }

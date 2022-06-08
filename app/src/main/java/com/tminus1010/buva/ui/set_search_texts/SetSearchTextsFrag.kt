@@ -15,6 +15,7 @@ import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
 
 
+@Deprecated("Use savedStateHandle")
 @AndroidEntryPoint
 class SetSearchTextsFrag : Fragment(R.layout.frag_set_search_texts) {
     private val vb by viewBinding(FragSetSearchTextsBinding::bind)
@@ -34,6 +35,7 @@ class SetSearchTextsFrag : Fragment(R.layout.frag_set_search_texts) {
     }
 
     companion object {
+        @Deprecated("Use savedStateHandle")
         fun navTo(nav: NavController) {
             nav.navigate(R.id.setSearchTextsFrag)
         }

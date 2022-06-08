@@ -159,12 +159,12 @@ class FutureDetailsVM @Inject constructor(
     // # State
     val optionsTableView =
         combine(future.asFlow(), transactionMatcherPresentationFactory.viewModelItems(future.map { it.onImportTransactionMatcher }, { future.value = future.value?.copy(onImportTransactionMatcher = it) }, ::userNavToChooseTransactionForTransactionMatcher).asFlow())
-        { category, transactionMatcherVMItems ->
+        { future, transactionMatcherVMItems ->
             TableViewVMItem(
                 recipeGrid = listOfNotNull(
                     listOf(
                         TextVMItem("Name"),
-                        EditTextVMItem(text = category.name, onDone = ::userSetName),
+                        EditTextVMItem(text = future.name, onDone = ::userSetName),
                     ),
                     listOf(
                         TextVMItem("Default Amount"),
@@ -172,7 +172,7 @@ class FutureDetailsVM @Inject constructor(
                     ),
                     listOf(
                         TextVMItem("Is Only Once"),
-                        CheckboxVMItem(initialValue = future.value!!.terminationStrategy == TerminationStrategy.ONCE, onCheckChanged = ::userSetIsOnlyOnce)
+                        CheckboxVMItem(initialValue = future.terminationStrategy == TerminationStrategy.ONCE, onCheckChanged = ::userSetIsOnlyOnce)
                     ),
                     *transactionMatcherVMItems.toTypedArray()
                 ),
