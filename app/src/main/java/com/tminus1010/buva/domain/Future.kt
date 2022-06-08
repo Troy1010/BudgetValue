@@ -1,10 +1,13 @@
 package com.tminus1010.buva.domain
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 import java.math.BigDecimal
 import java.time.LocalDate
 
+@Parcelize
 @Entity
 data class Future(
     @PrimaryKey
@@ -16,7 +19,7 @@ data class Future(
     val isAvailableForManual: Boolean,
     val onImportTransactionMatcher: TransactionMatcher?,
     val totalGuess: BigDecimal,
-) : ICategorizer {
+) : ICategorizer, Parcelable {
     override fun categorize(transaction: Transaction): Transaction =
         transaction.categorize(
             categoryAmountFormulas

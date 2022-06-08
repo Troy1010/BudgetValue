@@ -1,10 +1,13 @@
 package com.tminus1010.buva.domain
 
+import android.os.Parcelable
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
+import kotlinx.parcelize.Parcelize
 import java.math.BigDecimal
 
-data class CategoryAmountFormulas constructor(private val map: Map<Category, AmountFormula> = emptyMap()) : Map<Category, AmountFormula> by map {
+@Parcelize
+data class CategoryAmountFormulas constructor(private val map: Map<Category, AmountFormula> = emptyMap()) : Map<Category, AmountFormula> by map, Parcelable {
     constructor(vararg categoryAmountFormulas: Pair<Category, AmountFormula>) : this(categoryAmountFormulas.associate { it.first to it.second })
 
     init {
