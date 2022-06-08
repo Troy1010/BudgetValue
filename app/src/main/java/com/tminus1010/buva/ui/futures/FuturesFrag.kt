@@ -6,12 +6,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.buva.R
-import com.tminus1010.buva.app.TransactionsInteractor
-import com.tminus1010.buva.data.service.MoshiWithCategoriesProvider
 import com.tminus1010.buva.databinding.FragFuturesBinding
 import com.tminus1010.buva.framework.android.viewBinding
 import com.tminus1010.buva.ui.choose_categories.ChooseCategoriesSharedVM
-import com.tminus1010.buva.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.easyVisibility
@@ -25,22 +22,13 @@ class FuturesFrag : Fragment(R.layout.frag_futures) {
     private val viewModel by viewModels<FuturesVM>()
 
     @Inject
-    lateinit var moshiWithCategoriesProvider: MoshiWithCategoriesProvider
-
-    @Inject
     lateinit var chooseCategoriesSharedVM: ChooseCategoriesSharedVM
-
-    @Inject
-    lateinit var setSearchTextsSharedVM: SetSearchTextsSharedVM
-
-    @Inject
-    lateinit var transactionsInteractor: TransactionsInteractor
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Events
-        viewModel.navToFutureDetails.observe(viewLifecycleOwner) { FutureDetailsFrag.navTo(nav, moshiWithCategoriesProvider, it, chooseCategoriesSharedVM, setSearchTextsSharedVM) }
-        viewModel.navToCreateFuture.observe(viewLifecycleOwner) { CreateFutureFrag.navTo(nav, setSearchTextsSharedVM, transactionsInteractor) }
+        viewModel.navToFutureDetails.observe(viewLifecycleOwner) { FutureDetailsFrag.navTo(nav, it, chooseCategoriesSharedVM) }
+        viewModel.navToCreateFuture.observe(viewLifecycleOwner) { CreateFutureFrag.navTo(nav) }
         // # State
         vb.tvNoFutures.bind(viewModel.isNoFutureTextVisible) { easyVisibility = it }
         vb.tmTableViewFutures.bind(viewModel.isNoFutureTextVisible) { easyVisibility = !it }

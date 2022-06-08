@@ -8,8 +8,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.extensions.onNext
-import com.tminus1010.buva.all_layers.extensions.value
-import com.tminus1010.buva.app.TransactionsInteractor
 import com.tminus1010.buva.data.service.MoshiProvider
 import com.tminus1010.buva.databinding.FragCreateFutureBinding
 import com.tminus1010.buva.framework.android.viewBinding
@@ -17,7 +15,6 @@ import com.tminus1010.buva.ui.choose_categories.ChooseCategoriesFrag
 import com.tminus1010.buva.ui.choose_transaction.ChooseTransactionFrag
 import com.tminus1010.buva.ui.receipt_categorization.ReceiptCategorizationHostFrag
 import com.tminus1010.buva.ui.set_search_texts.SetSearchTextsFrag
-import com.tminus1010.buva.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
@@ -51,8 +48,7 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
     }
 
     companion object {
-        fun navTo(nav: NavController, setSearchTextsSharedVM: SetSearchTextsSharedVM, transactionsInteractor: TransactionsInteractor) {
-            setSearchTextsSharedVM.searchTexts.adjustTo(listOfNotNull(transactionsInteractor.mostRecentUncategorizedSpend.value?.description))
+        fun navTo(nav: NavController) {
             nav.navigate(R.id.createFutureFrag)
         }
     }
