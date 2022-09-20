@@ -9,7 +9,7 @@ import org.junit.jupiter.params.provider.MethodSource
 class SourceListTest {
     @ParameterizedTest
     @MethodSource("getData")
-    fun adjustTo(givenSourceList: SourceList<Int>, givenList: List<Int>) = runBlocking {
+    fun adjustTo(givenSourceList: SourceList<Int>, givenList: List<Int>) = runBlocking<Unit> {
         // # When
         givenSourceList.adjustTo(givenList)
         // # Then

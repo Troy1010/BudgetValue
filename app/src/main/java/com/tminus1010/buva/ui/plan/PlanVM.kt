@@ -39,7 +39,7 @@ class PlanVM @Inject constructor(
     }
 
     fun userSetActivePlanFromHistory() {
-        GlobalScope.launch { activePlanInteractor.setActivePlanFromHistory() }
+        GlobalScope.launch { activePlanInteractor.estimateActivePlanFromHistory() }
     }
 
     // # Internal
@@ -83,7 +83,7 @@ class PlanVM @Inject constructor(
         flowOf(
             listOf(
                 ButtonVMItem(
-                    "Set from history",
+                    "Estimate from history",
                     onClick = { userSetActivePlanFromHistory() },
                 )
             )

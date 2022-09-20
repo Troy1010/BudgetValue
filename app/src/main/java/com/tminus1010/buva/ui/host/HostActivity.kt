@@ -104,7 +104,7 @@ class HostActivity : AppCompatActivity() {
         viewModel.selectedPageRedefined.value?.also { vb.bottomNavigation.selectedItemId = it }
         // # Events
         importSharedVM.navToSelectFile.observe(this) { launchChooseFile(this) }
-        isPlanFeatureEnabled.flow.pairwise().filter { !it.first && it.second }.observe(this) { activePlanInteractor.setActivePlanFromHistory(); ShowAlertDialog(this)(viewModel.levelUpPlan) }
+        isPlanFeatureEnabled.flow.pairwise().filter { !it.first && it.second }.observe(this) { activePlanInteractor.estimateActivePlanFromHistory(); ShowAlertDialog(this)(viewModel.levelUpPlan) }
         isReconciliationFeatureEnabled.flow.pairwise().filter { !it.first && it.second }.observe(this) { ShowAlertDialog(this)(viewModel.levelUpReconciliation) }
         viewModel.navToFutures.observe(this) { FuturesFrag.navTo(nav) }
         viewModel.navToTransactions.observe(this) { TransactionListFrag.navTo(nav) }

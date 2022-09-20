@@ -19,6 +19,7 @@ data class TransactionBlock(
     val transactions = if (datePeriod == null) unsortedTransactions else unsortedTransactions.filter { it.date in datePeriod }
     val size = transactions.size
     val spendBlock get() = TransactionBlock(transactions.filter { it.isSpend }, datePeriod)
+    val incomeBlock get() = TransactionBlock(transactions.filter { it.isIncome }, datePeriod)
     val percentageOfCategorizedTransactions = unsortedTransactions.filter { it.isCategorized }.count().toFloat() / unsortedTransactions.count()
     val isFullyCategorized get() = defaultAmount.isZero
     val isFullyImported: Boolean get() = true // TODO()

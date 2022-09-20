@@ -1,9 +1,9 @@
 package com.tminus1010.buva.app
 
-import com.tminus1010.buva.domain.TransactionBlock
 import com.tminus1010.buva.app.model.RedoUndo
 import com.tminus1010.buva.data.TransactionsRepo
 import com.tminus1010.buva.domain.Transaction
+import com.tminus1010.buva.domain.TransactionBlock
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
@@ -62,6 +62,10 @@ class TransactionsInteractor @Inject constructor(
     val transactionBlocks =
         transactionsRepo.transactionsAggregate
             .map { getBlocksFromTransactions(it.transactions) }
+            .shareIn(GlobalScope, SharingStarted.WhileSubscribed(), 1)
+    val incomeBlocks =
+        transactionBlocks
+            .map { it.map { it.incomeBlock } }
             .shareIn(GlobalScope, SharingStarted.WhileSubscribed(), 1)
     val spendBlocks =
         transactionBlocks

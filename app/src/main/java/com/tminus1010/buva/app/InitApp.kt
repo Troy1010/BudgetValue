@@ -22,20 +22,13 @@ class InitApp @Inject constructor(
     companion object {
         val initCategories
             get() = listOf(
-                Category("Food", CategoryType.Always, AmountFormula.Value(BigDecimal.ZERO)),
-                Category("Vanity Food", CategoryType.Reservoir, AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Rent", CategoryType.Always, AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Improvements", CategoryType.Always, AmountFormula.Value(BigDecimal.ZERO)),
-                Category("Dentist", CategoryType.Always, AmountFormula.Value(BigDecimal.ZERO)),
-                Category("Medical Supplies", CategoryType.Always, AmountFormula.Value(BigDecimal.ZERO)),
+                Category("Medical", CategoryType.Always, AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Misc", CategoryType.Always, AmountFormula.Value(BigDecimal.ZERO)),
-                Category("Commute", CategoryType.Always, AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Emergency", CategoryType.Reservoir, AmountFormula.Value(BigDecimal.ZERO)),
-                Category("Charity", CategoryType.Reservoir, AmountFormula.Value(BigDecimal.ZERO)),
-                Category("Trips", CategoryType.Reservoir, AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Gifts", CategoryType.Reservoir, AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Activities", CategoryType.Reservoir, AmountFormula.Value(BigDecimal.ZERO)),
-                Category("Haircuts", CategoryType.Reservoir, AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Unknown", CategoryType.Always, AmountFormula.Value(BigDecimal.ZERO), isRememberedByDefault = false),
             )
     }
