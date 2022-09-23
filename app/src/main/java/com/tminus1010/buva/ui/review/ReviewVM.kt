@@ -7,19 +7,19 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.utils.ColorTemplate
-import com.tminus1010.buva.domain.TransactionBlock
-import com.tminus1010.buva.domain.TransactionsAggregate
-import com.tminus1010.buva.data.TransactionsRepo
 import com.tminus1010.buva.all_layers.extensions.asObservable2
 import com.tminus1010.buva.all_layers.extensions.divertErrors
 import com.tminus1010.buva.all_layers.extensions.value
+import com.tminus1010.buva.data.TransactionsRepo
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.CategoryAmounts
 import com.tminus1010.buva.domain.LocalDatePeriod
+import com.tminus1010.buva.domain.TransactionBlock
 import com.tminus1010.buva.ui.all_features.view_model_item.PieChartVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.SpinnerVMItem
 import com.tminus1010.tmcommonkotlin.core.extensions.nextOrSame
 import com.tminus1010.tmcommonkotlin.core.extensions.previousOrSame
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.divertErrors
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import com.tminus1010.tmcommonkotlin.rx3.extensions.pairwise
 import com.tminus1010.tmcommonkotlin.rx3.replayNonError
@@ -28,12 +28,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.rx3.asFlow
 import java.math.BigDecimal
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.Month
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
@@ -43,6 +45,7 @@ class ReviewVM @Inject constructor(
 ) : ViewModel() {
     // # Events
     val errors = PublishSubject.create<Throwable>()
+    val errorsFlow = MutableSharedFlow<Throwable>()
 
     // # UserIntents
     val userSelectedDuration = BehaviorSubject.createDefault(SelectableDuration.BY_MONTH)
@@ -191,12 +194,8 @@ class ReviewVM @Inject constructor(
             .replayNonError(1)
 
     private val transactionBlock =
-        Observable.combineLatest(
-            transactionsRepo.transactionsAggregate.asObservable2().map(TransactionsAggregate::spends),
-            period,
-            ::TransactionBlock,
-        )
-            .throttleLatest(50, TimeUnit.MILLISECONDS)
+        combine(transactionsRepo.transactionsAggregate.map { it.spends }, period.asFlow().map { it.first })
+        { spends, period -> TransactionBlock.create(spends, period) }
 
     /**
      * A [PieEntry] represents 1 chunk of the pie, but without everything it needs, like color.
@@ -240,7 +239,7 @@ class ReviewVM @Inject constructor(
      */
     val pieChartVMItem =
         PieChartVMItem(
-            pieData = pieData.divertErrors(errors),
+            pieData = pieData.divertErrors(errorsFlow),
         )
 
     val selectableDurationSpinnerVMItem =

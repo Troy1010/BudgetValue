@@ -5,10 +5,10 @@ import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.data.PieData
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
-import io.reactivex.rxjava3.core.Observable
+import kotlinx.coroutines.flow.Flow
 
 class PieChartVMItem(
-    private val pieData: Observable<PieData>,
+    private val pieData: Flow<PieData>,
     private val holeRadius: Float = 35f,
     private val transparentCircleRadius: Float = 40f,
     private val description: Description? = null,

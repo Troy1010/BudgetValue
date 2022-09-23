@@ -5,9 +5,10 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.tminus1010.buva.R
-import com.tminus1010.buva.all_layers.extensions.onClick
 import com.tminus1010.buva.all_layers.extensions.bind
+import com.tminus1010.buva.all_layers.extensions.onClick
 import com.tminus1010.buva.databinding.FragReviewBinding
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import com.tminus1010.tmcommonkotlin.rx3.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
@@ -23,14 +24,16 @@ class ReviewFrag : Fragment(R.layout.frag_review) {
         super.onViewCreated(view, savedInstanceState)
         vb = FragReviewBinding.bind(view)
         // # Events
-        reviewVM.errors.observe(viewLifecycleOwner) {
-            when (it) {
-                is NoMostRecentSpendException -> logz("Swallowing error:${it.javaClass.simpleName}")
+        fun handleError(e: Throwable) {
+            when (e) {
+                is NoMostRecentSpendException -> logz("Swallowing error:${e.javaClass.simpleName}")
                 is NoMoreDataException -> easyToast("No more data. Import more transactions")
                 is TooFarBackException -> easyToast("No more data")
-                else -> easyToast("An error occurred").run { logz("error:", it) }
+                else -> easyToast("An error occurred").run { logz("error:", e) }
             }
         }
+        reviewVM.errorsFlow.observe(viewLifecycleOwner) { handleError(it) }
+        reviewVM.errors.observe(viewLifecycleOwner) { handleError(it) }
         // # State
         vb.pieChart1.bind(reviewVM.pieChartVMItem)
         reviewVM.selectableDurationSpinnerVMItem.bind(vb.spinnerDuration)
