@@ -8,10 +8,8 @@ import com.tminus1010.buva.app.ActivePlanInteractor
 import com.tminus1010.buva.app.UserCategories
 import com.tminus1010.buva.data.ActivePlanRepo
 import com.tminus1010.buva.domain.Category
-import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
-import com.tminus1010.buva.ui.all_features.view_model_item.DividerVMItem
-import com.tminus1010.buva.ui.all_features.view_model_item.MoneyEditVMItem
-import com.tminus1010.buva.ui.all_features.view_model_item.TextVMItem
+import com.tminus1010.buva.ui.all_features.Navigator
+import com.tminus1010.buva.ui.all_features.view_model_item.*
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,6 +26,7 @@ class PlanVM @Inject constructor(
     private val activePlanRepo: ActivePlanRepo,
     private val activePlanInteractor: ActivePlanInteractor,
     private val userCategories: UserCategories,
+    private val navigator: Navigator,
 ) : ViewModel() {
     // # User Intents
     fun userSaveExpectedIncome(s: String) {
@@ -40,6 +39,14 @@ class PlanVM @Inject constructor(
 
     fun userSetActivePlanFromHistory() {
         GlobalScope.launch { activePlanInteractor.estimateActivePlanFromHistory() }
+    }
+
+    fun userCreateCategory() {
+        navigator.navToCreateCategory()
+    }
+
+    fun userEditCategory(category: Category) {
+        navigator.navToEditCategory(category)
     }
 
     // # Internal
@@ -60,7 +67,7 @@ class PlanVM @Inject constructor(
                         TextVMItem("Category", style = TextVMItem.Style.HEADER),
                         TextVMItem("Expected Income"),
                         TextVMItem("Default"),
-                        *categoryAmountItemObservables.keys.map { TextVMItem(it.name) }.toTypedArray()
+                        *categoryAmountItemObservables.keys.map { TextVMItem(it.name, menuVMItems = MenuVMItems(MenuVMItem(title = "Edit", onClick = { userEditCategory(it) }), MenuVMItem(title = "Create Category", onClick = { userCreateCategory() }))) }.toTypedArray()
                     ),
                     listOf(
                         TextVMItem("Plan", style = TextVMItem.Style.HEADER),

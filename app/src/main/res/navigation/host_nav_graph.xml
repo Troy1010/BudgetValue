@@ -39,14 +39,14 @@
             android:id="@+id/action_errorFrag_to_importFrag"
             app:destination="@id/importFrag" />
     </fragment>
+    <fragment
+        android:id="@+id/categoryDetailsFrag"
+        android:name="com.tminus1010.buva.ui.category_details.CategoryDetailsFrag"
+        android:label="CategoryDetailsFrag"
+        tools:layout="@layout/frag_category_details" />
     <navigation
         android:id="@+id/categorizeNestedGraph"
         app:startDestination="@id/categorizeFrag">
-        <fragment
-            android:id="@+id/categoryDetailsFrag"
-            android:name="com.tminus1010.buva.ui.category_details.CategoryDetailsFrag"
-            android:label="CategoryDetailsFrag"
-            tools:layout="@layout/frag_category_details" />
         <fragment
             android:id="@+id/categorizeFrag"
             android:name="com.tminus1010.buva.ui.categorize.CategorizeFrag"
