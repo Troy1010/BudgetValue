@@ -3,9 +3,8 @@ package com.tminus1010.buva.app
 import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.domain.Category
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -23,4 +22,9 @@ class CategoryAdapter @Inject constructor(
         userCategories.flow
             .map { it.associate { it.name to it } }
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
+
+    init {
+        // TODO: Without this, userCategoryMap.value!! causes NPE. However, using .first() causes a feedback loop.
+        runBlocking { userCategoryMap.take(1).collect() }
+    }
 }

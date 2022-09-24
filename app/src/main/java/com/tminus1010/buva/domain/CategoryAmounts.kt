@@ -29,6 +29,10 @@ data class CategoryAmounts constructor(private val map: @RawValue Map<Category, 
             .let { CategoryAmounts(it) }
     }
 
+    fun subtractTogether(other: Map<Category, BigDecimal>): CategoryAmounts {
+        return addTogether(other.mapValues { -it.value })
+    }
+
     fun replaceKey(originalCategory: Category, newCategory: Category): CategoryAmounts {
         val categoryAmounts = this.toMutableMap()
         categoryAmounts[originalCategory]?.also { categoryAmounts[newCategory] = it }

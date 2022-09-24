@@ -26,6 +26,7 @@ class InitApp @Inject constructor(
                 Category("Improvements", CategoryType.Always, AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Medical", CategoryType.Always, AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Misc", CategoryType.Always, AmountFormula.Value(BigDecimal.ZERO)),
+                Category("Savings", CategoryType.Always, AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Emergency", CategoryType.Reservoir, AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Gifts", CategoryType.Reservoir, AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Activities", CategoryType.Reservoir, AmountFormula.Value(BigDecimal.ZERO)),
