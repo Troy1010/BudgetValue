@@ -57,11 +57,10 @@ class ReviewVM @Inject constructor(
     private val currentPageNumber =
         userSelectedDuration.switchMap {
             Observable.merge(userPrevious.map { 1 }, userNext.map { -1 }, errors.filter { it is TooFarBackException }.map { -1 })
-                .scan(0) { acc, v ->
+                .scan(0L) { acc, v ->
                     if (acc + v < 0) errors.onNext(NoMoreDataException())
                     (acc + v).coerceAtLeast(0)
                 }
-                .map(Int::toLong)
         }
     private val _colors = listOf<Int>()
         .plus(ColorTemplate.VORDIPLOM_COLORS.toList())
@@ -194,8 +193,7 @@ class ReviewVM @Inject constructor(
             .replayNonError(1)
 
     private val transactionBlock =
-        combine(transactionsRepo.transactionsAggregate.map { it.spends }, period.asFlow().map { it.first })
-        { spends, period -> TransactionBlock.create(spends, period) }
+        combine(transactionsRepo.transactionsAggregate.map { it.spends }, period.asFlow().map { it.first }, ::TransactionBlock)
 
     /**
      * A [PieEntry] represents 1 chunk of the pie, but without everything it needs, like color.

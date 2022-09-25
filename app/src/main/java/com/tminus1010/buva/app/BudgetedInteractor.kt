@@ -19,7 +19,7 @@ class BudgetedInteractor @Inject constructor(
     reconciliationsRepo: ReconciliationsRepo,
 ) {
     private val categoryAmounts =
-        combine(reconciliationsRepo.reconciliations, plansRepo.plans, transactionsInteractor.transactionBlocks, ::Triple)
+        combine(reconciliationsRepo.reconciliations, plansRepo.plans, transactionsInteractor.spendBlocks, ::Triple)
             .sample(1000)
             .map { (reconciliations, plans, transactionBlocks) ->
                 sequenceOf<Map<Category, BigDecimal>>()
@@ -30,9 +30,9 @@ class BudgetedInteractor @Inject constructor(
             }
             .shareIn(GlobalScope, SharingStarted.WhileSubscribed(), 1)
     private val totalAmount =
-        combine(reconciliationsRepo.reconciliations, plansRepo.plans, transactionsInteractor.transactionBlocks)
+        combine(reconciliationsRepo.reconciliations, plansRepo.plans, transactionsInteractor.spendBlocks)
         { reconciliations, plans, actuals ->
-            reconciliations.map { it.total }.sum() + // TODO: Duplication of ActiveReconciliationInteractor
+            reconciliations.map { it.total }.sum() +
                     plans.map { it.total }.sum() +
                     actuals.map { it.total }.sum()
         }

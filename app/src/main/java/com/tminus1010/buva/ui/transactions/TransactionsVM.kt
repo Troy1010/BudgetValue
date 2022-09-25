@@ -10,11 +10,12 @@ import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.TableViewVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.TransactionPresentationModel
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,16 +29,17 @@ class TransactionsVM @Inject constructor(
 
     // # User Intents
     fun userTryClearTransactionHistory() {
-        GlobalScope.launch {
+        suspend {
             showAlertDialog.value!!(
                 body = NativeText.Simple("Are you sure you want to clear the transaction history?"),
                 onYes = {
-                    GlobalScope.launch(block = throbberSharedVM.decorate {
-                        transactionsInteractor.clear()
-                    })
+                    suspend { transactionsInteractor.clear() }
+                        .observe(GlobalScope)
+                        .use(throbberSharedVM)
                 }
             )
         }
+            .observe(GlobalScope)
     }
 
     // # Internal

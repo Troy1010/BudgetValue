@@ -1,41 +1,53 @@
 package com.tminus1010.buva.ui.reconciliation
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
+import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.buva.app.ActiveReconciliationInteractor
+import com.tminus1010.buva.app.ActiveReconciliationInteractor2
 import com.tminus1010.buva.app.BudgetedWithActiveReconciliationInteractor
 import com.tminus1010.buva.app.UserCategories
 import com.tminus1010.buva.data.ActiveReconciliationRepo
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.ReconciliationToDo
 import com.tminus1010.buva.ui.all_features.view_model_item.*
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.rx3.asFlow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @HiltViewModel
 class PlanReconciliationVM @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val activeReconciliationRepo: ActiveReconciliationRepo,
     userCategories: UserCategories,
     activeReconciliationInteractor: ActiveReconciliationInteractor,
     budgetedWithActiveReconciliationInteractor: BudgetedWithActiveReconciliationInteractor,
+    private val activeReconciliationInteractor2: ActiveReconciliationInteractor2,
 ) : ViewModel() {
-    // # Setup
-    val reconciliationToDo = BehaviorSubject.create<ReconciliationToDo.PlanZ>()
-
     // # User Intents
     fun userUpdateActiveReconciliationCategoryAmount(category: Category, s: String) {
-        GlobalScope.launch { activeReconciliationRepo.pushCategoryAmount(category, s.toMoneyBigDecimal()) }
+        suspend { activeReconciliationRepo.pushCategoryAmount(category, s.toMoneyBigDecimal()) }
+            .observe(GlobalScope)
     }
 
+    fun userDumpIntoCategory(category: Category) {
+        suspend { activeReconciliationInteractor2.dumpIntoCategory(category) }
+            .observe(GlobalScope)
+    }
+
+    // # Internal
+    private val reconciliationToDo = savedStateHandle.getLiveData<ReconciliationToDo.PlanZ>(KEY1).asFlow()
+
     // # State
+    val subTitle = reconciliationToDo.map { it.plan.localDatePeriod.toDisplayStr() }
     val reconciliationTableView =
-        combine(userCategories.flow, activeReconciliationInteractor.categoryAmountsAndTotal, budgetedWithActiveReconciliationInteractor.categoryAmountsAndTotal, reconciliationToDo.asFlow())
+        combine(userCategories.flow, activeReconciliationInteractor.categoryAmountsAndTotal, budgetedWithActiveReconciliationInteractor.categoryAmountsAndTotal, reconciliationToDo)
         { categories, activeReconciliation, budgetedWithActiveReconciliation, reconciliationToDo ->
             TableViewVMItem(
                 recipeGrid = listOf(
@@ -55,7 +67,7 @@ class PlanReconciliationVM @Inject constructor(
                         listOf(
                             TextVMItem(category.name),
                             TextVMItem(reconciliationToDo.transactionBlock.categoryAmounts[category]?.toString() ?: ""),
-                            CategoryAmountPresentationModel(category, activeReconciliation.categoryAmounts[category], ::userUpdateActiveReconciliationCategoryAmount),
+                            CategoryAmountPresentationModel(category, activeReconciliation.categoryAmounts[category], ::userUpdateActiveReconciliationCategoryAmount, menuVMItems = MenuVMItems(MenuVMItem("Dump into category", onClick = { userDumpIntoCategory(category) }))),
                             AmountPresentationModel(budgetedWithActiveReconciliation.categoryAmounts[category]) { budgetedWithActiveReconciliation.isValid(category) },
                         )
                     }.toTypedArray(),

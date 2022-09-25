@@ -5,30 +5,31 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.tminus1010.buva.R
+import com.tminus1010.buva.all_layers.KEY1
+import com.tminus1010.buva.databinding.SubfragPlanReconciliationBinding
 import com.tminus1010.buva.domain.ReconciliationToDo
-import com.tminus1010.buva.databinding.ItemTmTableViewBinding
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class PlanReconciliationSubFrag : Fragment(R.layout.item_tm_table_view) {
-    lateinit var vb: ItemTmTableViewBinding
+class PlanReconciliationSubFrag : Fragment(R.layout.subfrag_plan_reconciliation) {
+    lateinit var vb: SubfragPlanReconciliationBinding
     val viewModel by viewModels<PlanReconciliationVM>()
-    val reconciliationToDo = Companion.reconciliationToDo ?: error("reconciliationToDo was null, restart required.")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        vb = ItemTmTableViewBinding.bind(view)
-        // # Setup
-        viewModel.reconciliationToDo.onNext(reconciliationToDo)
+        vb = SubfragPlanReconciliationBinding.bind(view)
         // # State
         vb.tmTableView.bind(viewModel.reconciliationTableView) { it.bind(this) }
+        vb.tvSubtitle.bind(viewModel.subTitle) { text = it }
     }
 
     companion object {
-        private var reconciliationToDo: ReconciliationToDo.PlanZ? = null
         operator fun invoke(reconciliationToDo: ReconciliationToDo.PlanZ): PlanReconciliationSubFrag {
-            Companion.reconciliationToDo = reconciliationToDo
-            return PlanReconciliationSubFrag()
+            return PlanReconciliationSubFrag().apply {
+                arguments = Bundle().apply {
+                    putParcelable(KEY1, reconciliationToDo)
+                }
+            }
         }
     }
 }

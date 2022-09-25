@@ -3,7 +3,6 @@ package com.tminus1010.buva.ui.all_features
 import android.view.View
 import com.tminus1010.tmcommonkotlin.coroutines.IJobEvents
 import io.reactivex.rxjava3.core.Completable
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
@@ -16,12 +15,6 @@ class ThrobberSharedVM @Inject constructor() : IJobEvents {
     // # Input
     fun <T> decorate(flow: Flow<T>) = flow.onStart { asyncTaskStarted.emit(Unit) }.onCompletion { asyncTaskEnded.emit(Unit) }
     fun decorate(completable: Completable) = completable.doOnSubscribe { runBlocking { asyncTaskStarted.emit(Unit) } }.doOnTerminate { runBlocking { asyncTaskEnded.emit(Unit) } }
-    @Deprecated("This does not handle errors correctly. Use .use() instead.")
-    fun decorate(lambda: suspend CoroutineScope.() -> Unit): suspend CoroutineScope.() -> Unit = {
-        asyncTaskStarted.emit(Unit)
-        lambda(this)
-        asyncTaskEnded.emit(Unit)
-    }
 
     suspend fun asyncTaskStarted() {
         asyncTaskStarted.emit(Unit)

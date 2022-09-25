@@ -4,7 +4,7 @@ import java.math.BigDecimal
 
 class Budgeted(
     val categoryAmounts: Map<Category, BigDecimal>,
-    val totalAmount: BigDecimal,
+    val total: BigDecimal,
 ) {
-    val defaultAmount: BigDecimal = CategoryAmounts(categoryAmounts).defaultAmount(totalAmount)
+    val defaultAmount: BigDecimal = CategoryAmounts(categoryAmounts).defaultAmount(total)
 }

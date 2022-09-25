@@ -2,6 +2,9 @@ package com.tminus1010.buva.framework.android
 
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import com.tminus1010.tmcommonkotlin.androidx.extensions.addOnFocusChangeListenerDecoration
+import com.tminus1010.tmcommonkotlin.androidx.extensions.isRemovingViews
+import com.tminus1010.tmcommonkotlin.androidx.extensions.parents
 
 
 fun EditText.onDone(onDone: (String) -> Unit) {
@@ -17,12 +20,7 @@ fun EditText.onDone(onDone: (String) -> Unit) {
                 false
             } else true
         }
-    if (this is IOnFocusChangedOwner)
-        onFocusChanged.subscribe { (_, hasFocus) -> // disposable is unhandled
-            if (!hasFocus) onDone(text.toString())
-        }
-    else
-        setOnFocusChangeListener { _, hasFocus ->
-            if (!hasFocus) onDone(text.toString())
-        }
+    addOnFocusChangeListenerDecoration { _, hasFocus ->
+        if (!hasFocus && parents.none { it.isRemovingViews }) onDone(text.toString())
+    }
 }

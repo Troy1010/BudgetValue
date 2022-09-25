@@ -85,7 +85,7 @@ sealed class HistoryPresentationModel {
     class BudgetedPresentationModel(budgeted: Budgeted) : HistoryPresentationModel() {
         override val title: String = "Budgeted"
         override val subTitle: Flow<NativeText?> =
-            flowOf(NativeText.Simple(budgeted.totalAmount.toString()))
+            flowOf(NativeText.Simple(budgeted.total.toString()))
         override val categoryAmounts =
             budgeted.categoryAmounts
         override val defaultAmount =

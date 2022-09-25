@@ -1,6 +1,5 @@
 package com.tminus1010.buva.app
 
-import androidx.annotation.VisibleForTesting
 import com.tminus1010.buva.data.AccountsRepo
 import com.tminus1010.buva.data.ActiveReconciliationRepo
 import com.tminus1010.buva.domain.AccountsAggregate
@@ -25,7 +24,7 @@ class ActiveReconciliationInteractor @Inject constructor(
         { activeReconciliationCAs, accountsAggregate, budgeted ->
             CategoryAmountsAndTotal.FromTotal(
                 categoryAmounts = activeReconciliationCAs,
-                total = accountsAggregate.total - budgeted.totalAmount,
+                total = accountsAggregate.total - budgeted.total,
             )
         }
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
@@ -42,9 +41,7 @@ class ActiveReconciliationInteractor @Inject constructor(
     /**
      * For clarification, take a look at the ManualCalculationsForTests excel sheet.
      */
-    @VisibleForTesting
-    // TODO: Test
-    fun calcActiveReconciliationDefaultAmount(activeReconciliationCAs: CategoryAmounts, accountsAggregate: AccountsAggregate, budgeted: Budgeted): BigDecimal {
+    private fun calcActiveReconciliationDefaultAmount(activeReconciliationCAs: CategoryAmounts, accountsAggregate: AccountsAggregate, budgeted: Budgeted): BigDecimal {
         return activeReconciliationCAs.defaultAmount(accountsAggregate.total - budgeted.categoryAmounts.values.sum())
     }
 }

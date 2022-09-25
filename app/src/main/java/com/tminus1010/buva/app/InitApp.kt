@@ -1,7 +1,7 @@
 package com.tminus1010.buva.app
 
-import com.tminus1010.buva.data.HasAppBeenInitializedRepo
 import com.tminus1010.buva.data.CategoriesRepo
+import com.tminus1010.buva.data.HasAppBeenInitializedRepo
 import com.tminus1010.buva.domain.AmountFormula
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.CategoryType

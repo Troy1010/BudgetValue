@@ -5,7 +5,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.KeyEvent
-import android.view.View
 import android.widget.TextView
 import androidx.appcompat.R
 import androidx.appcompat.widget.AppCompatEditText
@@ -18,9 +17,7 @@ class MoneyEditText @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.editTextStyle,
-) : AppCompatEditText(context, attrs, defStyleAttr), IOnFocusChangedOwner, IOnEditorActionListener {
-    private val _onFocusChanged = PublishSubject.create<Pair<View, Boolean>>()
-    override val onFocusChanged: Observable<Pair<View, Boolean>> = _onFocusChanged
+) : AppCompatEditText(context, attrs, defStyleAttr), IOnEditorActionListener {
     private val _onEditorActionListener = PublishSubject.create<Triple<TextView, Int, KeyEvent>>()
     override val onEditorActionListener: Observable<Triple<TextView, Int, KeyEvent>> = _onEditorActionListener
 
@@ -40,7 +37,6 @@ class MoneyEditText @JvmOverloads constructor(
                 if (textRedef?.getOrNull(0) == '0')
                     textRedef.delete(0, 1)
             }
-            _onFocusChanged.onNext(Pair(v, hasFocus))
         }
         addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}

@@ -1,23 +1,16 @@
 package com.tminus1010.buva.app
 
-import com.tminus1010.buva.domain.ReconciliationToDo
 import com.tminus1010.buva.all_layers.extensions.isZero
-import com.tminus1010.buva.data.AccountsRepo
-import com.tminus1010.buva.data.PlansRepo
-import com.tminus1010.buva.data.ReconciliationsRepo
+import com.tminus1010.buva.data.*
 import com.tminus1010.buva.domain.CategoryAmounts
-import com.tminus1010.buva.domain.LocalDatePeriod
 import com.tminus1010.buva.domain.Plan
+import com.tminus1010.buva.domain.ReconciliationToDo
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.doLogx
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.rx3.asFlow
-import java.math.BigDecimal
-import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
 
-// TODO()
 @Singleton
 class ReconciliationsToDoInteractor @Inject constructor(
     plansRepo: PlansRepo,
@@ -25,10 +18,13 @@ class ReconciliationsToDoInteractor @Inject constructor(
     reconciliationsRepo: ReconciliationsRepo,
     accountsRepo: AccountsRepo,
     budgetedInteractor: BudgetedInteractor,
+    currentDate: CurrentDate,
+    reconciliationSkipInteractor: ReconciliationSkipInteractor,
+    settingsRepo: SettingsRepo,
 ) {
     private val planReconciliationsToDo =
-        combine(plansRepo.plans, transactionsInteractor.transactionBlocks, reconciliationsRepo.reconciliations)
-        { plans, transactionBlocks, reconciliations ->
+        combine(plansRepo.plans, transactionsInteractor.transactionBlocks, reconciliationsRepo.reconciliations, reconciliationSkipInteractor.reconciliationSkips, settingsRepo.anchorDateOffset)
+        { plans, transactionBlocks, reconciliations, reconciliationSkips, anchorDateOffset ->
             transactionBlocks
                 .map { transactionBlock ->
                     Triple(
@@ -37,37 +33,36 @@ class ReconciliationsToDoInteractor @Inject constructor(
                         reconciliations.find { it.localDate in transactionBlock.datePeriod!! }
                     )
                 }
-                .logx("planReconciliationsToDo 111")
                 .filter { (transactionBlock, plan, reconciliation) ->
-                    plan == null
-                            && reconciliation == null
-                            && transactionBlock.isFullyImported
-                            && transactionBlock.isFullyCategorized
+                    (plan == null).also { if (!it) logz("filtering transaction block ${transactionBlock.datePeriod?.toDisplayStr()} b/c plan") }
+                            && (reconciliation == null).also { if (!it) logz("filtering transaction block ${transactionBlock.datePeriod?.toDisplayStr()} b/c reconciliation") }
+                            && transactionBlock.isFullyImported.also { if (!it) logz("filtering transaction block ${transactionBlock.datePeriod?.toDisplayStr()} b/c isFullyImported") }
+                            && transactionBlock.spendBlock.isFullyCategorized.also { if (!it) logz("filtering transaction block ${transactionBlock.datePeriod?.toDisplayStr()} b/c isFullyCategorized") }
+                            && (currentDate.flow.value !in transactionBlock.datePeriod!!).also { if (!it) logz("filtering transaction block ${transactionBlock.datePeriod.toDisplayStr()} b/c it's current") }
+                            && reconciliationSkips.none { it.unadjustedlocalDate.plusDays(anchorDateOffset) in transactionBlock.datePeriod }
                 }
-                .logx("planReconciliationsToDo 222")
-                .map {
+                .map { (transactionBlock) ->
                     ReconciliationToDo.PlanZ(
                         Plan(
-                            LocalDatePeriod(
-                                LocalDate.of(2020, 1, 1),
-                                LocalDate.of(2020, 1, 1)
-                            ),
-                            BigDecimal.TEN,
+                            transactionBlock.datePeriod!!,
+                            transactionBlock.total,
                             CategoryAmounts(),
                         ),
-                        it.first,
+                        transactionBlock,
                     )
                 }
+                .sortedByDescending { it.plan.localDatePeriod.startDate }
         }
             .sample(50)
-            .doLogx("planReconciliationsToDo 333")
+            .doLogx("planReconciliationsToDo 31113")
 
     private val accountReconciliationsToDo =
         combine(accountsRepo.accountsAggregate, budgetedInteractor.budgeted)
         { accountsAggregate, budgeted ->
-            val difference = accountsAggregate.total - budgeted.totalAmount
+            val difference = accountsAggregate.total - budgeted.total
             if (difference.isZero) null else ReconciliationToDo.Accounts(difference)
         }
+            .doLogx("accountReconciliationsToDo 32223")
 
     val reconciliationsToDo =
         combine(planReconciliationsToDo, accountReconciliationsToDo)
@@ -77,8 +72,10 @@ class ReconciliationsToDoInteractor @Inject constructor(
                 planReconciliationsToDo,
             ).flatten().filterNotNull()
         }
+            .doLogx("mmm")
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 
     val currentReconciliationToDo =
         reconciliationsToDo.map { it.firstOrNull() }
+            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 }

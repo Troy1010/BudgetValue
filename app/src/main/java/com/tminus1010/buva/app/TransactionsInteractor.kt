@@ -51,7 +51,7 @@ class TransactionsInteractor @Inject constructor(
                 .filter { it.date in datePeriod }
             transactionsRedefined.removeIf { it.date in datePeriod }
             if (transactionSet.isNotEmpty())
-                returning += TransactionBlock.create(transactionSet, datePeriod)
+                returning += TransactionBlock(transactionSet, datePeriod)
             if (transactionsRedefined.isEmpty()) break
             datePeriod = datePeriodService.getDatePeriod(transactionsRedefined[0].date)
         }

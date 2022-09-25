@@ -3,27 +3,35 @@ package com.tminus1010.buva.ui.reconciliation
 import androidx.lifecycle.ViewModel
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.extensions.isZero
-import com.tminus1010.buva.all_layers.extensions.observe
 import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.app.*
+import com.tminus1010.buva.data.ActivePlanRepo
+import com.tminus1010.buva.data.ActiveReconciliationRepo
 import com.tminus1010.buva.domain.ReconciliationToDo
+import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
 import com.tminus1010.tmcommonkotlin.androidx.ShowToast
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
 class ReconciliationHostVM @Inject constructor(
-    reconciliationsToDoInteractor: ReconciliationsToDoInteractor,
+    private val reconciliationsToDoInteractor: ReconciliationsToDoInteractor,
     private val saveActiveReconciliation: SaveActiveReconciliation,
     private val budgetedWithActiveReconciliationInteractor: BudgetedWithActiveReconciliationInteractor,
     private val activeReconciliationInteractor: ActiveReconciliationInteractor,
     private val showToast: ShowToast,
     private val equalizeActiveReconciliation: EqualizeActiveReconciliation,
+    private val activePlanRepo: ActivePlanRepo,
+    private val activeReconciliationRepo: ActiveReconciliationRepo,
+    private val throbberSharedVM: ThrobberSharedVM,
+    private val reconciliationSkipInteractor: ReconciliationSkipInteractor
 ) : ViewModel() {
     // # User Intents
     fun userSave() {
@@ -36,11 +44,27 @@ class ReconciliationHostVM @Inject constructor(
         )
             showToast(NativeText.Simple("Invalid input"))
         else
-            GlobalScope.launch { saveActiveReconciliation() }
+            suspend { saveActiveReconciliation(reconciliationsToDoInteractor.currentReconciliationToDo.value!!) }
+                .observe(GlobalScope)
+                .use(throbberSharedVM)
     }
 
     fun userEqualizeActiveReconciliation() {
-        suspend { equalizeActiveReconciliation() }.observe(GlobalScope)
+        suspend { equalizeActiveReconciliation() }
+            .observe(GlobalScope)
+            .use(throbberSharedVM)
+    }
+
+    fun userUseActivePlan() {
+        activePlanRepo.activePlan
+            .onEach { activeReconciliationRepo.pushCategoryAmounts(it.categoryAmounts) }
+            .observe(GlobalScope)
+    }
+
+    fun userSkip() {
+        val x = reconciliationsToDoInteractor.currentReconciliationToDo.value as ReconciliationToDo.PlanZ
+        suspend { reconciliationSkipInteractor.push(x.plan.localDatePeriod.midDate) }
+            .observe(GlobalScope)
     }
 
     // # State
@@ -64,7 +88,19 @@ class ReconciliationHostVM @Inject constructor(
                 if (it is ReconciliationToDo.Accounts)
                     ButtonVMItem(
                         title = "Equalize",
-                        onClick = ::userEqualizeActiveReconciliation
+                        onClick = ::userEqualizeActiveReconciliation,
+                    )
+                else null,
+                if (it is ReconciliationToDo.PlanZ)
+                    ButtonVMItem(
+                        title = "Use Active Plan",
+                        onClick = ::userUseActivePlan,
+                    )
+                else null,
+                if (it is ReconciliationToDo.PlanZ)
+                    ButtonVMItem(
+                        title = "Skip",
+                        onClick = ::userSkip,
                     )
                 else null,
                 ButtonVMItem(

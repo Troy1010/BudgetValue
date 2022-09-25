@@ -3,13 +3,23 @@ package com.tminus1010.buva.data.service
 import androidx.room.*
 import com.tminus1010.buva.domain.*
 import com.tminus1010.buva.domain.Transaction
-import com.tminus1010.buva.domain.Account
-import com.tminus1010.buva.domain.Plan
 import kotlinx.coroutines.flow.Flow
 import java.math.BigDecimal
 
 @Dao
 interface MiscDAO {
+    /**
+     * [ReconciliationSkip]
+     */
+    @Query("select * from ReconciliationSkip")
+    fun fetchReconciliationSkips(): Flow<List<ReconciliationSkip>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(reconciliationSkip: ReconciliationSkip)
+
+    @Delete
+    suspend fun delete(reconciliationSkip: ReconciliationSkip)
+
     /**
      * [Account]
      */
