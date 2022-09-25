@@ -8,4 +8,8 @@ import java.time.LocalDate
 data class ReconciliationSkip internal constructor(
     @PrimaryKey
     val unadjustedlocalDate: LocalDate,
-)
+) {
+    fun localDate(anchorDateOffset: Long): LocalDate {
+        return unadjustedlocalDate.plusDays(anchorDateOffset)
+    }
+}

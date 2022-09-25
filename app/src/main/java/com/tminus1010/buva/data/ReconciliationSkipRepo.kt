@@ -21,4 +21,7 @@ class ReconciliationSkipRepo @Inject constructor(
 
     suspend fun delete(reconciliationSkip: ReconciliationSkip) =
         miscDAO.delete(reconciliationSkip)
+
+    suspend fun delete(reconciliationSkips: List<ReconciliationSkip>) =
+        miscDAO.delete(reconciliationSkips)
 }

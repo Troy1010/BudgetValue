@@ -20,6 +20,9 @@ interface MiscDAO {
     @Delete
     suspend fun delete(reconciliationSkip: ReconciliationSkip)
 
+    @Delete
+    suspend fun delete(reconciliationSkips: List<ReconciliationSkip>)
+
     /**
      * [Account]
      */

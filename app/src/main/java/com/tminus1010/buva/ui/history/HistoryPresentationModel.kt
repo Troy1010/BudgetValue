@@ -1,12 +1,13 @@
 package com.tminus1010.buva.ui.history
 
-import com.tminus1010.buva.domain.TransactionBlock
+import com.tminus1010.buva.app.ReconciliationSkipInteractor
 import com.tminus1010.buva.data.CurrentDatePeriod
 import com.tminus1010.buva.data.PlansRepo
 import com.tminus1010.buva.data.ReconciliationsRepo
 import com.tminus1010.buva.domain.*
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
@@ -66,7 +67,7 @@ sealed class HistoryPresentationModel {
             )
     }
 
-    class TransactionBlockPresentationModel(transactionBlock: TransactionBlock, currentDatePeriod: CurrentDatePeriod) : HistoryPresentationModel() {
+    class TransactionBlockPresentationModel(transactionBlock: TransactionBlock, currentDatePeriod: CurrentDatePeriod, hasSkip: Boolean, reconciliationSkipInteractor: ReconciliationSkipInteractor) : HistoryPresentationModel() {
         override val title: String = "Actual"
         override val subTitle: Flow<NativeText?> =
             currentDatePeriod.flow
@@ -80,6 +81,15 @@ sealed class HistoryPresentationModel {
             transactionBlock.categoryAmounts
         override val defaultAmount =
             transactionBlock.defaultAmount.toString()
+        override val menuVMItems =
+            listOfNotNull(
+                if (hasSkip)
+                    MenuVMItem(
+                        title = "Remove Skip",
+                        onClick = { suspend { reconciliationSkipInteractor.removeSkipIn(transactionBlock) }.observe(GlobalScope) },
+                    )
+                else null
+            )
     }
 
     class BudgetedPresentationModel(budgeted: Budgeted) : HistoryPresentationModel() {

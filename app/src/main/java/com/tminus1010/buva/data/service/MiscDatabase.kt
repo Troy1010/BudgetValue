@@ -7,7 +7,7 @@ import com.tminus1010.buva.domain.*
 
 @TypeConverters(RoomTypeConverter::class, RoomWithCategoriesTypeConverter::class)
 @Database(
-    version = 50,
+    version = 51,
     entities = [Future::class, Transaction::class, Account::class, Reconciliation::class, Plan::class, ReconciliationSkip::class],
 //    autoMigrations = [AutoMigration(from = 41, to = 42)]
 )

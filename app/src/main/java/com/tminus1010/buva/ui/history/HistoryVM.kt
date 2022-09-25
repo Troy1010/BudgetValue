@@ -4,18 +4,22 @@ import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.buva.all_layers.categoryComparator
+import com.tminus1010.buva.all_layers.combine
 import com.tminus1010.buva.app.BudgetedInteractor
 import com.tminus1010.buva.app.DatePeriodService
+import com.tminus1010.buva.app.ReconciliationSkipInteractor
 import com.tminus1010.buva.app.TransactionsInteractor
 import com.tminus1010.buva.data.CurrentDatePeriod
 import com.tminus1010.buva.data.PlansRepo
 import com.tminus1010.buva.data.ReconciliationsRepo
+import com.tminus1010.buva.data.SettingsRepo
 import com.tminus1010.buva.domain.Category
+import com.tminus1010.buva.domain.Domain
 import com.tminus1010.buva.domain.LocalDatePeriod
 import com.tminus1010.buva.ui.all_features.view_model_item.*
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
-import com.tminus1010.tmcommonkotlin.tuple.Quadruple
+import com.tminus1010.tmcommonkotlin.tuple.Sextuple
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +35,8 @@ class HistoryVM @Inject constructor(
     private val currentDatePeriod: CurrentDatePeriod,
     private val plansRepo: PlansRepo,
     private val reconciliationsRepo: ReconciliationsRepo,
+    private val reconciliationSkipInteractor: ReconciliationSkipInteractor,
+    private val settingsRepo: SettingsRepo,
 ) : ViewModel() {
     // # Internal
     private val activeCategories =
@@ -48,10 +54,10 @@ class HistoryVM @Inject constructor(
 
 
     private val historyVMItems =
-        combine(reconciliationsRepo.reconciliations, plansRepo.plans, transactionsInteractor.transactionBlocks, budgetedInteractor.budgeted, ::Quadruple)
+        combine(reconciliationsRepo.reconciliations, plansRepo.plans, transactionsInteractor.transactionBlocks, budgetedInteractor.budgeted, reconciliationSkipInteractor.reconciliationSkips, settingsRepo.anchorDateOffset, ::Sextuple)
             .flowOn(Dispatchers.Default)
             .sample(500)
-            .map { (reconciliations, plans, transactionBlocks, budgeted) ->
+            .map { (reconciliations, plans, transactionBlocks, budgeted, reconciliationSkips, anchorDateOffset) ->
                 // # Define blocks
                 val blockPeriods = sortedSetOf<LocalDatePeriod>(compareBy { it.startDate })
                 transactionBlocks.forEach { if (!datePeriodService.isDatePeriodValid(it.datePeriod!!)) error("datePeriod was not valid:${it.datePeriod}") }
@@ -64,7 +70,7 @@ class HistoryVM @Inject constructor(
                 for (blockPeriod in blockPeriods) {
                     listOfNotNull(
                         transactionBlocks.filter { it.datePeriod == blockPeriod } // TODO("sort by sortDate")
-                            .let { it.map { HistoryPresentationModel.TransactionBlockPresentationModel(it, currentDatePeriod) } },
+                            .let { it.map { HistoryPresentationModel.TransactionBlockPresentationModel(it, currentDatePeriod, Domain.shouldSkip(reconciliationSkips, it, anchorDateOffset), reconciliationSkipInteractor) } },
                         reconciliations.filter { it.localDate in blockPeriod }
                             .let { it.map { HistoryPresentationModel.ReconciliationPresentationModel(it, reconciliationsRepo) } },
                         plans.filter { it.localDatePeriod.startDate in blockPeriod }

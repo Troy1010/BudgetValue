@@ -1,12 +1,13 @@
 package com.tminus1010.buva.ui.all_features.view_model_item
 
+import com.tminus1010.buva.app.ReconciliationSkipInteractor
 import com.tminus1010.buva.data.CurrentDatePeriod
-import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
-import com.tminus1010.buva.ui.history.HistoryPresentationModel
 import com.tminus1010.buva.domain.TransactionBlock
+import com.tminus1010.buva.ui.history.HistoryPresentationModel
+import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
 
-class TransactionBlockCompletionPresentationModel(transactionBlock: TransactionBlock, currentDatePeriod: CurrentDatePeriod) {
-    val transactionTitle = HistoryPresentationModel.TransactionBlockPresentationModel(transactionBlock, currentDatePeriod).subTitle
+class TransactionBlockCompletionPresentationModel(transactionBlock: TransactionBlock, currentDatePeriod: CurrentDatePeriod, shouldSkip: Boolean, reconciliationSkipInteractor: ReconciliationSkipInteractor) {
+    val transactionTitle = HistoryPresentationModel.TransactionBlockPresentationModel(transactionBlock, currentDatePeriod, shouldSkip, reconciliationSkipInteractor).subTitle
     val transactionCompletionPercentage = transactionBlock.percentageOfCategorizedTransactions
 
     fun toPresentationModels(): List<IHasToViewItemRecipe> {
