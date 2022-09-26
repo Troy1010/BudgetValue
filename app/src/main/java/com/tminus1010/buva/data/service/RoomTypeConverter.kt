@@ -20,11 +20,11 @@ object RoomTypeConverter {
             .build()
 
     @TypeConverter
-    fun fromBigDecimalToString(x: BigDecimal): String =
+    fun fromBigDecimalToString(x: BigDecimal?): String? =
         moshi.toJson(x)
 
     @TypeConverter
-    fun toBigDecimal(s: String): BigDecimal =
+    fun toBigDecimal(s: String?): BigDecimal? =
         moshi.fromJson(s)
 
     @TypeConverter

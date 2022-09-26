@@ -5,10 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.buva.all_layers.categoryComparator
 import com.tminus1010.buva.all_layers.combine
-import com.tminus1010.buva.app.BudgetedInteractor
-import com.tminus1010.buva.app.DatePeriodService
-import com.tminus1010.buva.app.ReconciliationSkipInteractor
-import com.tminus1010.buva.app.TransactionsInteractor
+import com.tminus1010.buva.app.*
 import com.tminus1010.buva.data.CurrentDatePeriod
 import com.tminus1010.buva.data.PlansRepo
 import com.tminus1010.buva.data.ReconciliationsRepo
@@ -37,6 +34,7 @@ class HistoryVM @Inject constructor(
     private val reconciliationsRepo: ReconciliationsRepo,
     private val reconciliationSkipInteractor: ReconciliationSkipInteractor,
     private val settingsRepo: SettingsRepo,
+    private val accountsInteractor: AccountsInteractor,
 ) : ViewModel() {
     // # Internal
     private val activeCategories =
@@ -70,7 +68,7 @@ class HistoryVM @Inject constructor(
                 for (blockPeriod in blockPeriods) {
                     listOfNotNull(
                         transactionBlocks.filter { it.datePeriod == blockPeriod } // TODO("sort by sortDate")
-                            .let { it.map { HistoryPresentationModel.TransactionBlockPresentationModel(it, currentDatePeriod, Domain.shouldSkip(reconciliationSkips, it, anchorDateOffset), reconciliationSkipInteractor) } },
+                            .let { it.map { HistoryPresentationModel.TransactionBlockPresentationModel(it, accountsInteractor.guessAccountsTotalInPast(it), currentDatePeriod, Domain.shouldSkip(reconciliationSkips, it, anchorDateOffset), reconciliationSkipInteractor) } },
                         reconciliations.filter { it.localDate in blockPeriod }
                             .let { it.map { HistoryPresentationModel.ReconciliationPresentationModel(it, reconciliationsRepo) } },
                         plans.filter { it.localDatePeriod.startDate in blockPeriod }
@@ -93,16 +91,22 @@ class HistoryVM @Inject constructor(
             TableViewVMItem(
                 recipeGrid = listOf(
                     listOf(
-                        TextPresentationModel(text1 = "Categories"),
-                        TextPresentationModel(text1 = "Default"),
+                        TextPresentationModel(text1 = ""),
+                        TextPresentationModel(text1 = "Accounts\nTotal"),
+                        TextPresentationModel(text1 = "Income"),
+                        TextPresentationModel(text1 = "Spends"),
+                        TextPresentationModel(text1 = "Difference"),
                         *activeCategories.map {
                             TextPresentationModel(text1 = it.name)
                         }.toTypedArray()
                     ),
                     *historyVMItems.map { historyVMItem ->
                         listOf(
-                            BasicHeaderWithSubtitlePresentationModel(historyVMItem.title, runBlocking { historyVMItem.subTitle.first() }) { showPopupMenu.onNext(Pair(it, historyVMItem.menuVMItems)) }, // TODO("Duct-tape solution to non-resizing frozen row")
-                            TextPresentationModel(text1 = historyVMItem.defaultAmount),
+                            BasicHeaderWithSubtitlePresentationModel(historyVMItem.title, runBlocking { historyVMItem.subTitle.first() }) { showPopupMenu.onNext(Pair(it, historyVMItem.menuVMItems)) }, // TODO("Blocking is a duct-tape solution to non-resizing frozen row")
+                            TextPresentationModel(text3 = historyVMItem.accountsTotal),
+                            TextPresentationModel(text3 = historyVMItem.incomeTotal),
+                            TextPresentationModel(text3 = historyVMItem.spendTotal),
+                            TextPresentationModel(text3 = historyVMItem.difference),
                             *historyVMItem.amountStrings(activeCategories).map {
                                 TextPresentationModel(text1 = it)
                             }.toTypedArray()
@@ -112,7 +116,7 @@ class HistoryVM @Inject constructor(
                 dividerMap = activeCategories.withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
                     .associate { it.index to it.value.type.name }
-                    .mapKeys { it.key + 2 } // Categories row, Default row
+                    .mapKeys { it.key + 5 }
                     .mapValues { DividerVMItem(it.value) },
                 shouldFitItemWidthsInsideTable = false,
                 colFreezeCount = 1,

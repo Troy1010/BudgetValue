@@ -7,7 +7,7 @@ import com.tminus1010.buva.ui.history.HistoryPresentationModel
 import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
 
 class TransactionBlockCompletionPresentationModel(transactionBlock: TransactionBlock, currentDatePeriod: CurrentDatePeriod, shouldSkip: Boolean, reconciliationSkipInteractor: ReconciliationSkipInteractor) {
-    val transactionTitle = HistoryPresentationModel.TransactionBlockPresentationModel(transactionBlock, currentDatePeriod, shouldSkip, reconciliationSkipInteractor).subTitle
+    val transactionTitle = HistoryPresentationModel.TransactionBlockPresentationModel(transactionBlock, null, currentDatePeriod, shouldSkip, reconciliationSkipInteractor).subTitle
     val transactionCompletionPercentage = transactionBlock.percentageOfCategorizedTransactions
 
     fun toPresentationModels(): List<IHasToViewItemRecipe> {

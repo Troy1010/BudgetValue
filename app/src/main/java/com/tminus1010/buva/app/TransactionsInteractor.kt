@@ -16,13 +16,13 @@ import javax.inject.Singleton
 class TransactionsInteractor @Inject constructor(
     private val transactionsRepo: TransactionsRepo,
     private val datePeriodService: DatePeriodService,
-    private val redoUndoInteractor: RedoUndoInteractor,
+    private val undoService: UndoService,
 ) {
     // # Input
     suspend fun push(vararg transactions: Transaction) = push(transactions.toList())
     suspend fun push(transactions: List<Transaction>) {
         val oldTransactionsAndIDs = transactions.map { Pair(transactionsRepo.getTransaction2(it.id), it.id) }
-        redoUndoInteractor.useAndAdd(
+        undoService.useAndAdd(
             RedoUndo(
                 redo = { transactions.forEach { transactionsRepo.push(it) } },
                 undo = { oldTransactionsAndIDs.forEach { val (oldTransaction, id) = it; oldTransaction?.also { transactionsRepo.push(it) } ?: transactionsRepo.delete(id) } },
@@ -32,7 +32,7 @@ class TransactionsInteractor @Inject constructor(
 
     suspend fun clear() {
         val oldTransactionsAndIDs = transactionsRepo.transactionsAggregate.first().transactions.map { Pair(transactionsRepo.getTransaction2(it.id), it.id) }
-        redoUndoInteractor.useAndAdd(
+        undoService.useAndAdd(
             RedoUndo(
                 redo = { transactionsRepo.clear() },
                 undo = { oldTransactionsAndIDs.forEach { val (oldTransaction, id) = it; oldTransaction?.also { transactionsRepo.push(it) } ?: transactionsRepo.delete(id) } },

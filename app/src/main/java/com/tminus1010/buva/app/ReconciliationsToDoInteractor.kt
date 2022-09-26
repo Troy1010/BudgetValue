@@ -71,10 +71,9 @@ class ReconciliationsToDoInteractor @Inject constructor(
     val reconciliationsToDo =
         combine(planReconciliationsToDo, accountReconciliationsToDo)
         { planReconciliationsToDo, accountReconciliationsToDo ->
-            listOf(
-                listOf(accountReconciliationsToDo),
-                planReconciliationsToDo,
-            ).flatten().filterNotNull()
+            listOf(accountReconciliationsToDo)
+                .plus(planReconciliationsToDo)
+                .filterNotNull()
         }
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 

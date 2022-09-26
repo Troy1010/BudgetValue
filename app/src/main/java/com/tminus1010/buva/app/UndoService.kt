@@ -7,7 +7,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class RedoUndoInteractor @Inject constructor() {
+class UndoService @Inject constructor() {
     // # Input
     suspend fun useAndAdd(redoUndo: RedoUndo) {
         redoUndo.redo()

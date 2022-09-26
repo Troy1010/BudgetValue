@@ -43,7 +43,7 @@ class CategorizeVM @Inject constructor(
     private val errors: Errors,
     futuresRepo: FuturesRepo,
     private val futuresInteractor: FuturesInteractor,
-    private val redoUndoInteractor: RedoUndoInteractor,
+    private val undoService: UndoService,
     private val setStringSharedVM: SetStringSharedVM,
     private val categorizeTransactions: CategorizeTransactions,
     private val categoryInteractor: CategoryInteractor,
@@ -69,13 +69,13 @@ class CategorizeVM @Inject constructor(
 
     fun userUndo() {
         errors.globalScope.launch {
-            redoUndoInteractor.undo()
+            undoService.undo()
         }.use(throbberSharedVM)
     }
 
     fun userRedo() {
         errors.globalScope.launch {
-            redoUndoInteractor.redo()
+            undoService.redo()
         }.use(throbberSharedVM)
     }
 
@@ -224,8 +224,8 @@ class CategorizeVM @Inject constructor(
     val navToSetString = MutableSharedFlow<String>()
 
     // # State
-    val isUndoAvailable = redoUndoInteractor.isUndoAvailable
-    val isRedoAvailable = redoUndoInteractor.isRedoAvailable
+    val isUndoAvailable = undoService.isUndoAvailable
+    val isRedoAvailable = undoService.isRedoAvailable
     val isTransactionAvailable =
         transactionsInteractor.mostRecentUncategorizedSpend
             .map { it != null }

@@ -12,6 +12,4 @@ data class Reconciliation(
     override val categoryAmounts: CategoryAmounts,
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-) : CategoryAmountsAndTotal.FromDefaultAmount(categoryAmounts, defaultAmount) {
-    constructor(localDate: LocalDate, defaultAmount: BigDecimal, categoryAmounts: Map<Category, BigDecimal>, id: Int = 0) : this(localDate, defaultAmount, CategoryAmounts(categoryAmounts), id)
-}
+) : CategoryAmountsAndTotal.FromDefaultAmount(categoryAmounts, defaultAmount)

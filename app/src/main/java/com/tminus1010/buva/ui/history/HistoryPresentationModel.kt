@@ -13,7 +13,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import java.math.BigDecimal
 
 /**
@@ -22,7 +21,10 @@ import java.math.BigDecimal
 sealed class HistoryPresentationModel {
     abstract val title: String
     abstract val subTitle: Flow<NativeText?>
-    abstract val defaultAmount: String
+    abstract val accountsTotal: Flow<NativeText?>
+    abstract val difference: Flow<NativeText?>
+    abstract val incomeTotal: Flow<NativeText?>
+    abstract val spendTotal: Flow<NativeText?>
     protected abstract val categoryAmounts: Map<Category, BigDecimal>
     fun amountStrings(activeCategories: List<Category>) =
         activeCategories
@@ -31,6 +33,10 @@ sealed class HistoryPresentationModel {
     open val menuVMItems: List<MenuVMItem> = listOf()
 
     class PlanPresentationModel(plan: Plan, currentDatePeriod: CurrentDatePeriod, plansRepo: PlansRepo) : HistoryPresentationModel() {
+        override val accountsTotal: Flow<NativeText?> = flowOf(null)
+        override val difference: Flow<NativeText?> = flowOf(null)
+        override val incomeTotal: Flow<NativeText?> = flowOf(null)
+        override val spendTotal: Flow<NativeText?> = flowOf(null)
         override val title: String = "Plan"
         override val subTitle: Flow<NativeText?> =
             currentDatePeriod.flow
@@ -42,32 +48,39 @@ sealed class HistoryPresentationModel {
                 }
         override val categoryAmounts =
             plan.categoryAmounts
-        override val defaultAmount =
-            plan.defaultAmount.toString()
         override val menuVMItems =
             listOf(
-                MenuVMItem("Delete") { GlobalScope.launch { plansRepo.delete(plan) } }
+                MenuVMItem(
+                    title = "Delete",
+                    onClick = { suspend { plansRepo.delete(plan) }.observe(GlobalScope) }
+                )
             )
     }
 
     class ReconciliationPresentationModel(reconciliation: Reconciliation, reconciliationsRepo: ReconciliationsRepo) : HistoryPresentationModel() {
+        override val accountsTotal: Flow<NativeText?> = flowOf(null)
+        override val difference: Flow<NativeText?> = flowOf(null)
+        override val incomeTotal: Flow<NativeText?> = flowOf(null)
+        override val spendTotal: Flow<NativeText?> = flowOf(null)
         override val title: String = "Reconciliation"
         override val subTitle: Flow<NativeText?> =
             flowOf(NativeText.Simple(reconciliation.localDate.toDisplayStr()))
         override val categoryAmounts =
             reconciliation.categoryAmounts
-        override val defaultAmount =
-            reconciliation.defaultAmount.toString()
         override val menuVMItems =
             listOf(
                 MenuVMItem(
                     title = "Delete",
-                    onClick = { GlobalScope.launch { reconciliationsRepo.delete(reconciliation) } }
+                    onClick = { suspend { reconciliationsRepo.delete(reconciliation) }.observe(GlobalScope) }
                 )
             )
     }
 
-    class TransactionBlockPresentationModel(transactionBlock: TransactionBlock, currentDatePeriod: CurrentDatePeriod, hasSkip: Boolean, reconciliationSkipInteractor: ReconciliationSkipInteractor) : HistoryPresentationModel() {
+    class TransactionBlockPresentationModel(transactionBlock: TransactionBlock, accountsTotalEstimate: BigDecimal?, currentDatePeriod: CurrentDatePeriod, hasSkip: Boolean, reconciliationSkipInteractor: ReconciliationSkipInteractor) : HistoryPresentationModel() {
+        override val accountsTotal: Flow<NativeText?> = flowOf(NativeText.Simple(accountsTotalEstimate?.toString() ?: ""))
+        override val difference: Flow<NativeText?> = flowOf(NativeText.Simple(transactionBlock.total.toString()))
+        override val incomeTotal: Flow<NativeText?> = flowOf(NativeText.Simple(transactionBlock.incomeBlock.total.toString()))
+        override val spendTotal: Flow<NativeText?> = flowOf(NativeText.Simple(transactionBlock.spendBlock.total.toString()))
         override val title: String = "Actual"
         override val subTitle: Flow<NativeText?> =
             currentDatePeriod.flow
@@ -79,8 +92,6 @@ sealed class HistoryPresentationModel {
                 }
         override val categoryAmounts =
             transactionBlock.categoryAmounts
-        override val defaultAmount =
-            transactionBlock.defaultAmount.toString()
         override val menuVMItems =
             listOfNotNull(
                 if (hasSkip)
@@ -93,20 +104,13 @@ sealed class HistoryPresentationModel {
     }
 
     class BudgetedPresentationModel(budgeted: Budgeted) : HistoryPresentationModel() {
+        override val accountsTotal: Flow<NativeText?> = flowOf(null)
+        override val difference: Flow<NativeText?> = flowOf(null)
+        override val incomeTotal: Flow<NativeText?> = flowOf(null)
+        override val spendTotal: Flow<NativeText?> = flowOf(null)
         override val title: String = "Budgeted"
-        override val subTitle: Flow<NativeText?> =
-            flowOf(NativeText.Simple(budgeted.total.toString()))
+        override val subTitle: Flow<NativeText?> = flowOf(null)
         override val categoryAmounts =
             budgeted.categoryAmounts
-        override val defaultAmount =
-            budgeted.defaultAmount.toString()
-    }
-
-    class ActiveReconciliationPresentationModel(override val categoryAmounts: CategoryAmounts, defaultAmount: BigDecimal) : HistoryPresentationModel() {
-        override val title: String = "Reconciliation"
-        override val subTitle: Flow<NativeText?> =
-            flowOf(NativeText.Simple("Current"))
-        override val defaultAmount =
-            defaultAmount.toString()
     }
 }

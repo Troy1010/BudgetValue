@@ -7,6 +7,7 @@ import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.app.*
 import com.tminus1010.buva.data.ActivePlanRepo
 import com.tminus1010.buva.data.ActiveReconciliationRepo
+import com.tminus1010.buva.domain.CategoryAmounts
 import com.tminus1010.buva.domain.ReconciliationToDo
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
@@ -16,8 +17,8 @@ import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,15 +32,15 @@ class ReconciliationHostVM @Inject constructor(
     private val activePlanRepo: ActivePlanRepo,
     private val activeReconciliationRepo: ActiveReconciliationRepo,
     private val throbberSharedVM: ThrobberSharedVM,
-    private val reconciliationSkipInteractor: ReconciliationSkipInteractor
+    private val reconciliationSkipInteractor: ReconciliationSkipInteractor,
 ) : ViewModel() {
     // # User Intents
     fun userSave() {
         if (
-            !budgetedWithActiveReconciliationInteractor.categoryAmountsAndTotal.value!!.isAllValid.logx("isAllValid")
+            !budgetedWithActiveReconciliationInteractor.categoryAmountsAndTotal.value!!.isAllValid
             || (
-                    activeReconciliationInteractor.categoryAmountsAndTotal.value!!.categoryAmounts.isEmpty().logx("categoryAmounts.isEmpty()")
-                            && activeReconciliationInteractor.categoryAmountsAndTotal.value!!.defaultAmount.isZero.logx("defaultAmount.isZero")
+                    activeReconciliationInteractor.categoryAmountsAndTotal.value!!.categoryAmounts.isEmpty()
+                            && activeReconciliationInteractor.categoryAmountsAndTotal.value!!.defaultAmount.isZero
                     )
         )
             showToast(NativeText.Simple("Invalid input"))
@@ -56,8 +57,12 @@ class ReconciliationHostVM @Inject constructor(
     }
 
     fun userUseActivePlan() {
-        activePlanRepo.activePlan
-            .onEach { activeReconciliationRepo.pushCategoryAmounts(it.categoryAmounts) }
+        suspend { activeReconciliationRepo.pushCategoryAmounts(activePlanRepo.activePlan.first().categoryAmounts) }
+            .observe(GlobalScope)
+    }
+
+    fun userClearActiveReconciliation() {
+        suspend { activeReconciliationRepo.pushCategoryAmounts(CategoryAmounts()) }
             .observe(GlobalScope)
     }
 
@@ -91,9 +96,13 @@ class ReconciliationHostVM @Inject constructor(
                         onClick = ::userEqualizeActiveReconciliation,
                     )
                 else null,
+                ButtonVMItem(
+                    title = "Clear",
+                    onClick = ::userClearActiveReconciliation,
+                ),
                 if (it is ReconciliationToDo.PlanZ)
                     ButtonVMItem(
-                        title = "Use Active Plan",
+                        title = "Use Plan",
                         onClick = ::userUseActivePlan,
                     )
                 else null,

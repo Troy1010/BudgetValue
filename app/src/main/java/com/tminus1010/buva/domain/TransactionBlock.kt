@@ -22,8 +22,7 @@ data class TransactionBlock private constructor(
      */
     constructor(unfilteredTransactions: List<Transaction>, datePeriod: LocalDatePeriod?, nothing: Unit? = null) : this(if (datePeriod == null) unfilteredTransactions else unfilteredTransactions.filter { it.date in datePeriod }, datePeriod)
 
-    @IgnoredOnParcel
-    val size = transactions.size
+    val size get() = transactions.size
     val spendBlock get() = TransactionBlock(transactions.filter { it.isSpend }, datePeriod)
     val incomeBlock get() = TransactionBlock(transactions.filter { it.isIncome }, datePeriod)
 

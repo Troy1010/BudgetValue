@@ -7,6 +7,7 @@ import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
 import com.tminus1010.buva.databinding.ItemHeaderBinding
 import com.tminus1010.buva.databinding.ItemTextViewBinding
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
+import com.tminus1010.tmcommonkotlin.view.NativeText
 import com.tminus1010.tmcommonkotlin.view.extensions.toPX
 import kotlinx.coroutines.flow.Flow
 
@@ -15,6 +16,7 @@ data class TextPresentationModel(
     val style: Style = Style.ONE,
     val text1: String? = null,
     val text2: Flow<String?>? = null,
+    val text3: Flow<NativeText?>? = null,
     val onClick: (() -> Unit)? = null,
     val onLongClick: (() -> Unit)? = null,
     val menuVMItems: MenuVMItems? = null,
@@ -26,6 +28,7 @@ data class TextPresentationModel(
             ViewItemRecipe3(context, ItemHeaderBinding::inflate) { vb ->
                 vb.root.text = text1
                 if (text2 != null) vb.root.bind(text2) { text = it }
+                if (text3 != null) vb.root.bind(text3) { text = it?.toCharSequence(context) }
                 onClick?.also { onClick -> vb.root.setOnClickListener { onClick() } }
                 onLongClick?.also { onLongClick -> vb.root.setOnLongClickListener { onLongClick(); true } }
                 menuVMItems?.bind(vb.root)
@@ -38,6 +41,7 @@ data class TextPresentationModel(
                 }
                 vb.root.text = text1
                 if (text2 != null) vb.root.bind(text2) { text = it }
+                if (text3 != null) vb.root.bind(text3) { text = it?.toCharSequence(context) }
                 onClick?.also { onClick -> vb.root.setOnClickListener { onClick() } }
                 onLongClick?.also { onLongClick -> vb.root.setOnLongClickListener { onLongClick(); true } }
                 menuVMItems?.bind(vb.root)

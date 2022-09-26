@@ -2,10 +2,7 @@ package com.tminus1010.buva.app
 
 import com.tminus1010.buva.data.AccountsRepo
 import com.tminus1010.buva.data.ActiveReconciliationRepo
-import com.tminus1010.buva.domain.AccountsAggregate
-import com.tminus1010.buva.domain.Budgeted
-import com.tminus1010.buva.domain.CategoryAmounts
-import com.tminus1010.buva.domain.CategoryAmountsAndTotal
+import com.tminus1010.buva.domain.*
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,13 +15,20 @@ class ActiveReconciliationInteractor @Inject constructor(
     accountsRepo: AccountsRepo,
     budgetedInteractor: BudgetedInteractor,
     activeReconciliationRepo: ActiveReconciliationRepo,
+    reconciliationsToDoInteractor: ReconciliationsToDoInteractor,
 ) {
     val categoryAmountsAndTotal =
-        combine(activeReconciliationRepo.activeReconciliationCAs, accountsRepo.accountsAggregate, budgetedInteractor.budgeted)
-        { activeReconciliationCAs, accountsAggregate, budgeted ->
+        combine(activeReconciliationRepo.activeReconciliationCAs, accountsRepo.accountsAggregate, budgetedInteractor.budgeted, reconciliationsToDoInteractor.currentReconciliationToDo)
+        { activeReconciliationCAs, accountsAggregate, budgeted, currentReconciliationToDo ->
             CategoryAmountsAndTotal.FromTotal(
                 categoryAmounts = activeReconciliationCAs,
-                total = accountsAggregate.total - budgeted.total,
+                total = when (currentReconciliationToDo) {
+                    is ReconciliationToDo.PlanZ ->
+                        currentReconciliationToDo.transactionBlock.total
+                    is ReconciliationToDo.Accounts ->
+                        accountsAggregate.total - budgeted.total
+                    else -> BigDecimal.ZERO
+                },
             )
         }
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
