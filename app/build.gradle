@@ -175,8 +175,8 @@ dependencies {
     implementation 'com.trello.rxlifecycle4:rxlifecycle-android-lifecycle-kotlin:4.0.0'
 
     // # Mockk
-    testImplementation "io.mockk:mockk:1.11.0"
-    androidTestImplementation "io.mockk:mockk-android:1.11.0"
+    testImplementation "io.mockk:mockk:1.12.7"
+    androidTestImplementation "io.mockk:mockk-android:1.12.7"
 
     // # Moshi
     implementation "com.squareup.moshi:moshi-kotlin:1.13.0"
@@ -197,7 +197,7 @@ dependencies {
 
     // # Coroutines
     // ## Coroutines & Rx
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-rx3:1.6.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-rx3:1.6.4"
 
     // # MPAndroidChart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
