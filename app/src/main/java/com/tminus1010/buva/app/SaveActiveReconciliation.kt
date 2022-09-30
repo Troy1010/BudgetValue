@@ -26,15 +26,7 @@ class SaveActiveReconciliation @Inject constructor(
                     is ReconciliationToDo.PlanZ ->
                         reconciliationToDo.plan.localDatePeriod.midDate
                 },
-                total = activeReconciliationInteractor.categoryAmountsAndTotal.first().total.logx("SaveTotal"),
-//                defaultAmount = when (reconciliationToDo) {
-//                    is ReconciliationToDo.Anytime,
-//                    is ReconciliationToDo.Accounts,
-//                    -> activeReconciliationRepo.activeReconciliationCAs.first().defaultAmount(BigDecimal.ZERO)
-//                    is ReconciliationToDo.PlanZ ->
-//                        error("Oh no!")
-////                        activeReconciliationInteractor.defaultAmount.first()
-//                },
+                total = activeReconciliationInteractor.categoryAmountsAndTotal.first().total,
                 categoryAmounts = activeReconciliationRepo.activeReconciliationCAs.first(),
             )
         )

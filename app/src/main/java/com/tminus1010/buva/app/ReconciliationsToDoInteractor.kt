@@ -37,7 +37,6 @@ class ReconciliationsToDoInteractor @Inject constructor(
                             reconciliations.find { it.date in transactionBlock.datePeriod!! }
                         )
                     }
-                    .logx("qqqwwweeerrr")
                     .filter { (transactionBlock, plan, reconciliation) ->
                         (plan == null)
                             .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod?.toDisplayStr()} b/c plan") }
@@ -68,7 +67,7 @@ class ReconciliationsToDoInteractor @Inject constructor(
 
     private val accountReconciliationsToDo =
         combine(entireHistoryInteractor.categoryAmountsAndTotal, accountsRepo.accountsAggregate, ::Pair)
-            .flatMapConcat { (entireHistory, accountsAggregate) ->
+            .flatMapLatest { (entireHistory, accountsAggregate) ->
                 if (entireHistory.total.easyEquals(accountsAggregate.total))
                     flowOf(null)
                 else
