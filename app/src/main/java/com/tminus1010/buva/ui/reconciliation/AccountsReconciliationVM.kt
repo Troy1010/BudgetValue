@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.buva.app.ActiveReconciliationInteractor
 import com.tminus1010.buva.app.ActiveReconciliationInteractor2
-import com.tminus1010.buva.app.BudgetedWithActiveReconciliationInteractor
+import com.tminus1010.buva.app.BudgetedForActiveReconciliationInteractor
 import com.tminus1010.buva.app.UserCategories
 import com.tminus1010.buva.data.ActiveReconciliationRepo
 import com.tminus1010.buva.domain.Category
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountsReconciliationVM @Inject constructor(
-    budgetedWithActiveReconciliationInteractor: BudgetedWithActiveReconciliationInteractor,
+    budgetedForActiveReconciliationInteractor: BudgetedForActiveReconciliationInteractor,
     activeReconciliationInteractor: ActiveReconciliationInteractor,
     private val activeReconciliationInteractor2: ActiveReconciliationInteractor2,
     private val activeReconciliationRepo: ActiveReconciliationRepo,
@@ -37,7 +37,7 @@ class AccountsReconciliationVM @Inject constructor(
 
     // # State
     val reconciliationTableView =
-        combine(userCategories.flow, activeReconciliationInteractor.categoryAmountsAndTotal, budgetedWithActiveReconciliationInteractor.categoryAmountsAndTotal)
+        combine(userCategories.flow, activeReconciliationInteractor.categoryAmountsAndTotal, budgetedForActiveReconciliationInteractor.categoryAmountsAndTotal)
         { categories, activeReconciliation, budgetedWithActiveReconciliation ->
             TableViewVMItem(
                 recipeGrid = listOf(
@@ -45,6 +45,11 @@ class AccountsReconciliationVM @Inject constructor(
                         HeaderPresentationModel("Categories"),
                         HeaderPresentationModel("Reconcile"),
                         BudgetHeaderPresentationModel("Budgeted", budgetedWithActiveReconciliation.total.toString()),
+                    ),
+                    listOf(
+                        TextVMItem("Total"),
+                        TextVMItem(activeReconciliation.total.toString()),
+                        AmountPresentationModel(budgetedWithActiveReconciliation.total),
                     ),
                     listOf(
                         TextVMItem("Default"),
@@ -62,7 +67,7 @@ class AccountsReconciliationVM @Inject constructor(
                 dividerMap = categories.withIndex()
                     .distinctUntilChangedWith(compareBy { it.value.type })
                     .associate { it.index to it.value.type.name }
-                    .mapKeys { it.key + 2 } // header row, default row
+                    .mapKeys { it.key + 3 } // header row, default row
                     .mapValues { DividerVMItem(it.value) },
                 shouldFitItemWidthsInsideTable = true,
                 rowFreezeCount = 1,

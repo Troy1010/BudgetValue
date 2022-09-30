@@ -81,7 +81,7 @@ class HostActivity : AppCompatActivity() {
         setContentView(vb.root)
         // # Setup
         // ## Logs
-        hostFrag.navController.addOnDestinationChangedListener { _, navDestination, _ -> Log.d("budgetvalue.Nav", "${navDestination.label}") }
+        hostFrag.navController.addOnDestinationChangedListener { _, navDestination, _ -> Log.d("buva.Nav", "${navDestination.label}") }
         // ## Mediation
         AndroidNavigationWrapper.nav = hostFrag.navController
         viewModel.showAlertDialog.onNext(ShowAlertDialog(this))

@@ -75,4 +75,15 @@ data class CategoryAmounts constructor(private val map: @RawValue Map<Category, 
     val categorizedAmount by lazy {
         this.values.sum().toString().toMoneyBigDecimal()
     }
+
+    companion object {
+        fun addTogether(vararg categoryAmounts: Map<Category, BigDecimal>): CategoryAmounts {
+            return categoryAmounts
+                .fold(hashMapOf<Category, BigDecimal>()) { acc, map ->
+                    map.forEach { (k, v) -> acc[k] = (acc[k] ?: BigDecimal.ZERO) + v }
+                    acc
+                }
+                .let { CategoryAmounts(it) }
+        }
+    }
 }

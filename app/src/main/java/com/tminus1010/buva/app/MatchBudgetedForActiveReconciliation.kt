@@ -4,13 +4,13 @@ import com.tminus1010.buva.data.ActiveReconciliationRepo
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
-class EqualizeActiveReconciliation @Inject constructor(
+class MatchBudgetedForActiveReconciliation @Inject constructor(
     private val activeReconciliationRepo: ActiveReconciliationRepo,
-    private val budgetedWithActiveReconciliationInteractor: BudgetedWithActiveReconciliationInteractor,
+    private val budgetedForActiveReconciliationInteractor: BudgetedForActiveReconciliationInteractor,
 ) {
     suspend operator fun invoke() {
         activeReconciliationRepo.activeReconciliationCAs.first()
-            .subtractTogether(budgetedWithActiveReconciliationInteractor.categoryAmountsAndTotal.first().categoryAmounts)
+            .subtractTogether(budgetedForActiveReconciliationInteractor.categoryAmountsAndTotal.first().categoryAmounts)
             .also { activeReconciliationRepo.pushCategoryAmounts(it) }
     }
 }

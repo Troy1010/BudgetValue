@@ -59,6 +59,8 @@ class TransactionsInteractor @Inject constructor(
     }
 
     // # Output
+    val transactionsAggregate =
+        transactionsRepo.transactionsAggregate
     val transactionBlocks =
         transactionsRepo.transactionsAggregate
             .map { getBlocksFromTransactions(it.transactions) }

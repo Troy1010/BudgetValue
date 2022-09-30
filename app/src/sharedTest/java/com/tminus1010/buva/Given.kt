@@ -34,14 +34,14 @@ object Given {
         id = "eriuhtyuirethgyuidrthu"
     )
     val reconciliation1 = Reconciliation(
-        localDate = LocalDate.of(2020, 1, 2),
+        date = LocalDate.of(2020, 1, 2),
         defaultAmount = 33.toBigDecimal(),
         categoryAmounts = mapOf(
             givenCategories.value!![0] to 10.toBigDecimal()
         )
     )
     val reconciliation2 = Reconciliation(
-        localDate = LocalDate.of(2020, 1, 1),
+        date = LocalDate.of(2020, 1, 1),
         defaultAmount = 33.toBigDecimal(),
         categoryAmounts = mapOf(
             givenCategories.value!![0] to 5.toBigDecimal(),

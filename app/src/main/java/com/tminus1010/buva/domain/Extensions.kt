@@ -11,3 +11,6 @@ fun List<TransactionBlock>.averagedCategoryAmounts() =
 fun List<TransactionBlock>.averagedTotal() =
     (fold(BigDecimal.ZERO) { acc, v -> acc + v.total } / size.toBigDecimal().toString().toMoneyBigDecimal())
         .toString().toMoneyBigDecimal()
+
+fun Collection<CategoryAmountsAndTotal>.addTogether() =
+    CategoryAmountsAndTotal.addTogether(this)

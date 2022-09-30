@@ -25,10 +25,10 @@ import javax.inject.Inject
 class ReconciliationHostVM @Inject constructor(
     private val reconciliationsToDoInteractor: ReconciliationsToDoInteractor,
     private val saveActiveReconciliation: SaveActiveReconciliation,
-    private val budgetedWithActiveReconciliationInteractor: BudgetedWithActiveReconciliationInteractor,
+    private val budgetedForActiveReconciliationInteractor: BudgetedForActiveReconciliationInteractor,
     private val activeReconciliationInteractor: ActiveReconciliationInteractor,
     private val showToast: ShowToast,
-    private val equalizeActiveReconciliation: EqualizeActiveReconciliation,
+    private val matchBudgetedForActiveReconciliation: MatchBudgetedForActiveReconciliation,
     private val activePlanRepo: ActivePlanRepo,
     private val activeReconciliationRepo: ActiveReconciliationRepo,
     private val throbberSharedVM: ThrobberSharedVM,
@@ -37,7 +37,7 @@ class ReconciliationHostVM @Inject constructor(
     // # User Intents
     fun userSave() {
         if (
-            !budgetedWithActiveReconciliationInteractor.categoryAmountsAndTotal.value!!.isAllValid
+            !budgetedForActiveReconciliationInteractor.categoryAmountsAndTotal.value!!.isAllValid
             || (
                     activeReconciliationInteractor.categoryAmountsAndTotal.value!!.categoryAmounts.isEmpty()
                             && activeReconciliationInteractor.categoryAmountsAndTotal.value!!.defaultAmount.isZero
@@ -50,8 +50,9 @@ class ReconciliationHostVM @Inject constructor(
                 .use(throbberSharedVM)
     }
 
+    // TODO: Given a plan reconciliation in the future and no account reconciliation, this does not work as expected.
     fun userEqualizeActiveReconciliation() {
-        suspend { equalizeActiveReconciliation() }
+        suspend { matchBudgetedForActiveReconciliation() }
             .observe(GlobalScope)
             .use(throbberSharedVM)
     }
@@ -69,6 +70,12 @@ class ReconciliationHostVM @Inject constructor(
     fun userSkip() {
         val x = reconciliationsToDoInteractor.currentReconciliationToDo.value as ReconciliationToDo.PlanZ
         suspend { reconciliationSkipInteractor.push(x.plan.localDatePeriod.midDate) }
+            .observe(GlobalScope)
+    }
+
+    fun userMatchActual() {
+        val x = reconciliationsToDoInteractor.currentReconciliationToDo.value as ReconciliationToDo.PlanZ
+        suspend { activeReconciliationRepo.pushCategoryAmounts(CategoryAmounts(x.transactionBlock.categoryAmounts.mapValues { -it.value })) }
             .observe(GlobalScope)
     }
 
@@ -104,6 +111,12 @@ class ReconciliationHostVM @Inject constructor(
                     ButtonVMItem(
                         title = "Use Plan",
                         onClick = ::userUseActivePlan,
+                    )
+                else null,
+                if (it is ReconciliationToDo.PlanZ)
+                    ButtonVMItem(
+                        title = "Match",
+                        onClick = ::userMatchActual,
                     )
                 else null,
                 if (it is ReconciliationToDo.PlanZ)

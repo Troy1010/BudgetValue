@@ -11,7 +11,7 @@ import java.math.BigDecimal
 
 class AmountPresentationModel(
     val bigDecimal: BigDecimal?,
-    private val checkIfValid: (BigDecimal) -> Boolean
+    private val checkIfValid: (BigDecimal) -> Boolean = { true }
 ) : IHasToViewItemRecipe {
     val s get() = bigDecimal?.toString()
     val isValid get() = checkIfValid(bigDecimal ?: BigDecimal.ZERO)

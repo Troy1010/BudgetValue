@@ -1,6 +1,7 @@
 package com.tminus1010.buva.domain
 
 import androidx.room.Ignore
+import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import java.math.BigDecimal
 
 sealed class CategoryAmountsAndTotal {
@@ -22,5 +23,21 @@ sealed class CategoryAmountsAndTotal {
     ) : CategoryAmountsAndTotal() {
         @delegate:Ignore
         override val total by lazy { categoryAmounts.total(defaultAmount) }
+    }
+
+    companion object {
+        operator fun invoke(): FromTotal {
+            return FromTotal(CategoryAmounts(), BigDecimal.ZERO)
+        }
+
+        fun addTogether(categoryAmountsAndTotals: Collection<CategoryAmountsAndTotal>): CategoryAmountsAndTotal =
+            addTogether(*categoryAmountsAndTotals.toTypedArray())
+
+        fun addTogether(vararg categoryAmountsAndTotals: CategoryAmountsAndTotal): CategoryAmountsAndTotal {
+            return FromTotal(
+                CategoryAmounts.addTogether(*categoryAmountsAndTotals.map { it.categoryAmounts }.toTypedArray()),
+                categoryAmountsAndTotals.map { it.total }.sum()
+            )
+        }
     }
 }

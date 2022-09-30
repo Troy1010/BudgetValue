@@ -7,9 +7,9 @@ import java.time.LocalDate
 
 @Entity
 data class Reconciliation(
-    val localDate: LocalDate,
-    override val defaultAmount: BigDecimal,
+    val date: LocalDate,
+    override val total: BigDecimal,
     override val categoryAmounts: CategoryAmounts,
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-) : CategoryAmountsAndTotal.FromDefaultAmount(categoryAmounts, defaultAmount)
+) : CategoryAmountsAndTotal.FromTotal(categoryAmounts, total)
