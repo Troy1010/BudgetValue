@@ -6,11 +6,14 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import com.tminus1010.buva.R
+import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.tmcommonkotlin.customviews.IViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
 import com.tminus1010.buva.databinding.ItemSpinnerBinding
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import java.util.concurrent.atomic.AtomicBoolean
 
 @Suppress("UNCHECKED_CAST")
@@ -20,6 +23,7 @@ class SpinnerVMItem<T>(
     private val onNewItem: (T) -> Unit
 ) : IHasToViewItemRecipe {
     constructor(values: Array<T>, behaviorSubject: BehaviorSubject<T>) : this(values, behaviorSubject.value, behaviorSubject::onNext)
+    constructor(values: Array<T>, mutableStateFlow: MutableStateFlow<T>) : this(values, mutableStateFlow.value, mutableStateFlow::onNext)
 
     init {
         if (values.isEmpty()) error("Values was empty, and that is unsupported atm. Perhaps an empty set of values should be supported..?")

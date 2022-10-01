@@ -3,13 +3,14 @@ package com.tminus1010.buva.ui.review
 import android.content.Context
 import android.view.View
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.utils.ColorTemplate
-import com.tminus1010.buva.all_layers.extensions.asObservable2
-import com.tminus1010.buva.all_layers.extensions.divertErrors
+import com.tminus1010.buva.all_layers.extensions.onNext
+import com.tminus1010.buva.all_layers.extensions.throttleFist
 import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.data.TransactionsRepo
 import com.tminus1010.buva.domain.Category
@@ -18,21 +19,16 @@ import com.tminus1010.buva.domain.LocalDatePeriod
 import com.tminus1010.buva.domain.TransactionBlock
 import com.tminus1010.buva.ui.all_features.view_model_item.PieChartVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.SpinnerVMItem
+import com.tminus1010.tmcommonkotlin.androidx.ShowToast
 import com.tminus1010.tmcommonkotlin.core.extensions.nextOrSame
 import com.tminus1010.tmcommonkotlin.core.extensions.previousOrSame
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.divertErrors
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.pairwise
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
-import com.tminus1010.tmcommonkotlin.rx3.extensions.pairwise
-import com.tminus1010.tmcommonkotlin.rx3.replayNonError
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.subjects.BehaviorSubject
-import io.reactivex.rxjava3.subjects.PublishSubject
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.rx3.asFlow
+import kotlinx.coroutines.flow.*
 import java.math.BigDecimal
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -43,21 +39,19 @@ import javax.inject.Inject
 @HiltViewModel
 class ReviewVM @Inject constructor(
     transactionsRepo: TransactionsRepo,
+    showToast: ShowToast,
 ) : ViewModel() {
-    // # Events
-    val errors = PublishSubject.create<Throwable>()
-    val errorsFlow = MutableSharedFlow<Throwable>()
-
     // # UserIntents
-    val userSelectedDuration = BehaviorSubject.createDefault(SelectableDuration.BY_MONTH)
-    val userUsePeriodType = BehaviorSubject.createDefault(UsePeriodType.USE_DAY_COUNT_PERIODS)
-    val userPrevious = PublishSubject.create<Unit>()
-    val userNext = PublishSubject.create<Unit>()
+    val userSelectedDuration = MutableStateFlow(SelectableDuration.BY_MONTH)
+    val userUsePeriodType = MutableStateFlow(UsePeriodType.USE_DAY_COUNT_PERIODS)
+    val userPrevious = MutableSharedFlow<Unit>()
+    val userNext = MutableSharedFlow<Unit>()
 
     // # Internal
+    private val errors = MutableSharedFlow<Throwable>()
     private val currentPageNumber =
-        userSelectedDuration.switchMap {
-            Observable.merge(userPrevious.map { 1 }, userNext.map { -1 }, errors.filter { it is TooFarBackException }.map { -1 })
+        userSelectedDuration.flatMapLatest {
+            merge(userPrevious.map { 1 }, userNext.map { -1 }, errors.filter { it is TooFarBackException }.map { -1 })
                 .scan(0L) { acc, v ->
                     if (acc + v < 0) errors.onNext(NoMoreDataException())
                     (acc + v).coerceAtLeast(0)
@@ -69,7 +63,7 @@ class ReviewVM @Inject constructor(
         .plus(ColorTemplate.COLORFUL_COLORS.toList())
         .plus(ColorTemplate.PASTEL_COLORS.toList())
     private val period =
-        Observable.combineLatest(userSelectedDuration, currentPageNumber, userUsePeriodType, transactionsRepo.transactionsAggregate.map { it.mostRecentSpend }.asObservable2()) // TODO("Filtering for not-null on mostRecentSpend might be bad?")
+        combine(userSelectedDuration, currentPageNumber, userUsePeriodType, transactionsRepo.transactionsAggregate.map { it.mostRecentSpend })
         { userSelectedDuration, currentPageNumber, userUsePeriodType, mostRecentSpend ->
             val mostRecentSpendDate = (mostRecentSpend?.date ?: throw NoMostRecentSpendException())
             when (userSelectedDuration) {
@@ -182,7 +176,7 @@ class ReviewVM @Inject constructor(
                     null
             }.let { Box(it) }
         }
-            .startWithItem(Box(null))
+            .onStart { emit(Box(null)) }
             .pairwise()
             .map { (a, b) ->
                 if (b.first != null && b.first!!.endDate < transactionsRepo.transactionsAggregate.value?.oldestSpend?.date)
@@ -191,10 +185,10 @@ class ReviewVM @Inject constructor(
                     b
             }
             .divertErrors(errors)
-            .replayNonError(1)
+            .shareIn(viewModelScope, SharingStarted.Lazily, 1)
 
     private val transactionBlock =
-        combine(transactionsRepo.transactionsAggregate.map { it.spends }, period.asFlow().map { it.first }, ::TransactionBlock)
+        combine(transactionsRepo.transactionsAggregate.map { it.spends }, period.map { it.first }, ::TransactionBlock)
 
     /**
      * A [PieEntry] represents 1 chunk of the pie, but without everything it needs, like color.
@@ -232,27 +226,42 @@ class ReviewVM @Inject constructor(
      */
     private val pieData = pieDataSet.map(::PieData)
 
+    init {
+        errors.observe(viewModelScope) {
+            when (it) {
+                is NoMostRecentSpendException -> logz("Swallowing error:${it.javaClass.simpleName}")
+                is NoMoreDataException,
+                is TooFarBackException,
+                -> Unit
+                else -> logz("error:", it)
+            }
+        }
+    }
+
+    // # Events
+    init {
+        errors
+            .throttleFist(2000)
+            .observe(viewModelScope) {
+                when (it) {
+                    is NoMostRecentSpendException -> Unit
+                    is NoMoreDataException -> showToast("No more data. Import more transactions")
+                    is TooFarBackException -> showToast("No more data")
+                    else -> showToast("An error occurred")
+                }
+            }
+    }
+
     // # State
     /**
      * [PieChartVMItem] is everything you need to produce a [PieChart], once you get access to a [Context] in the layer above.
      */
     val pieChartVMItem =
-        PieChartVMItem(
-            pieData = pieData.divertErrors(errorsFlow),
-        )
-
+        PieChartVMItem(pieData.divertErrors(errors))
     val selectableDurationSpinnerVMItem =
-        SpinnerVMItem(
-            SelectableDuration.values(),
-            userSelectedDuration,
-        )
-
+        SpinnerVMItem(SelectableDuration.values(), userSelectedDuration)
     val usePeriodTypeSpinnerVMItem =
-        SpinnerVMItem(
-            UsePeriodType.values(),
-            userUsePeriodType,
-        )
-
+        SpinnerVMItem(UsePeriodType.values(), userUsePeriodType)
     val title =
         period.map { (it) -> it?.toDisplayStr() ?: "Forever" }
     val leftVisibility =
