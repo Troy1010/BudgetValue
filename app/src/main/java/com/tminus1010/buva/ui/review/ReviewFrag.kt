@@ -39,9 +39,9 @@ class ReviewFrag : Fragment(R.layout.frag_review) {
         reviewVM.selectableDurationSpinnerVMItem.bind(vb.spinnerDuration)
         reviewVM.usePeriodTypeSpinnerVMItem.bind(vb.spinnerUsePeriodType)
         vb.tvTitle.bind(reviewVM.title) { text = it }
-        vb.ivLeft.bind(reviewVM.isLeftVisible) { easyVisibility = it }
-        vb.ivRight.bind(reviewVM.isRightVisible) { easyVisibility = it }
-        // # View Events -> UserIntents
+        vb.ivLeft.bind(reviewVM.leftVisibility) { visibility = it }
+        vb.ivRight.bind(reviewVM.isRightVisible) { visibility = it }
+        // # UserIntents
         vb.ivLeft.onClick { reviewVM.userPrevious.onNext(Unit) }
         vb.ivRight.onClick { reviewVM.userNext.onNext(Unit) }
     }

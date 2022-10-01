@@ -6,7 +6,7 @@ import java.time.LocalDate
 
 sealed class ReconciliationToDo {
     @Parcelize
-    class PlanZ(val plan: Plan, val transactionBlock: TransactionBlock) : ReconciliationToDo(), Parcelable
+    class PlanZ(val transactionBlock: TransactionBlock) : ReconciliationToDo(), Parcelable
     class Accounts(val date: LocalDate) : ReconciliationToDo()
     object Anytime : ReconciliationToDo()
 }

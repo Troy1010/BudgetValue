@@ -7,18 +7,22 @@ import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.app.*
 import com.tminus1010.buva.data.ActivePlanRepo
 import com.tminus1010.buva.data.ActiveReconciliationRepo
+import com.tminus1010.buva.data.ReconciliationsRepo
 import com.tminus1010.buva.domain.CategoryAmounts
+import com.tminus1010.buva.domain.CategoryAmountsAndTotal
+import com.tminus1010.buva.domain.Reconciliation
 import com.tminus1010.buva.domain.ReconciliationToDo
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
 import com.tminus1010.tmcommonkotlin.androidx.ShowToast
-import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import java.math.BigDecimal
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,50 +37,70 @@ class ReconciliationHostVM @Inject constructor(
     private val activeReconciliationRepo: ActiveReconciliationRepo,
     private val throbberSharedVM: ThrobberSharedVM,
     private val reconciliationSkipInteractor: ReconciliationSkipInteractor,
+    private val reconciliationsRepo: ReconciliationsRepo,
+    private val categoryInteractor: CategoryInteractor,
 ) : ViewModel() {
     // # User Intents
     fun userSave() {
-        if (
-            !budgetedForActiveReconciliationInteractor.categoryAmountsAndTotal.value!!.isAllValid
-            || (
-                    activeReconciliationInteractor.categoryAmountsAndTotal.value!!.categoryAmounts.isEmpty()
-                            && activeReconciliationInteractor.categoryAmountsAndTotal.value!!.defaultAmount.isZero
-                    )
-        )
-            showToast(NativeText.Simple("Invalid input"))
-        else
-            suspend { saveActiveReconciliation(reconciliationsToDoInteractor.currentReconciliationToDo.value!!) }
-                .observe(GlobalScope)
+//        if (
+//            !budgetedForActiveReconciliationInteractor.categoryAmountsAndTotal.value!!.isAllValid
+//            || (
+//                    activeReconciliationInteractor.categoryAmountsAndTotal.value!!.categoryAmounts.isEmpty()
+//                            && activeReconciliationInteractor.categoryAmountsAndTotal.value!!.defaultAmount.isZero
+//                    )
+//        )
+//            showToast(NativeText.Simple("Invalid input"))
+//        else
+            GlobalScope.launch { saveActiveReconciliation(reconciliationsToDoInteractor.currentReconciliationToDo.value!!) }
                 .use(throbberSharedVM)
     }
 
     // TODO: Given a plan reconciliation in the future and no account reconciliation, this does not work as expected.
     fun userEqualizeActiveReconciliation() {
-        suspend { matchBudgetedForActiveReconciliation() }
-            .observe(GlobalScope)
+        GlobalScope.launch { matchBudgetedForActiveReconciliation() }
             .use(throbberSharedVM)
     }
 
     fun userUseActivePlan() {
-        suspend { activeReconciliationRepo.pushCategoryAmounts(activePlanRepo.activePlan.first().categoryAmounts) }
-            .observe(GlobalScope)
+        GlobalScope.launch { activeReconciliationRepo.pushCategoryAmounts(activePlanRepo.activePlan.first().categoryAmounts) }
     }
 
     fun userClearActiveReconciliation() {
-        suspend { activeReconciliationRepo.pushCategoryAmounts(CategoryAmounts()) }
-            .observe(GlobalScope)
+        GlobalScope.launch { activeReconciliationRepo.pushCategoryAmounts(CategoryAmounts()) }
     }
 
     fun userSkip() {
-        val x = reconciliationsToDoInteractor.currentReconciliationToDo.value as ReconciliationToDo.PlanZ
-        suspend { reconciliationSkipInteractor.push(x.plan.localDatePeriod.midDate) }
-            .observe(GlobalScope)
+        GlobalScope.launch {
+            Pair(reconciliationsToDoInteractor.currentReconciliationToDo.first(), activeReconciliationInteractor.categoryAmountsAndTotal.first())
+                .let { (currentReconciliationToDo, activeReconciliationCAsAndTotal) ->
+                    val y =
+                        (currentReconciliationToDo as? ReconciliationToDo.PlanZ)
+                            ?.let { CategoryAmountsAndTotal.FromTotal(CategoryAmounts(it.transactionBlock.categoryAmounts.mapValues { -it.value }), BigDecimal.ZERO) }
+                    val z =
+                        CategoryAmountsAndTotal.addTogether(
+                            y,
+                            activeReconciliationCAsAndTotal
+                        )
+                            .fillIntoCategory(categoryInteractor.defaultFillCategory.first()!!)
+                    Reconciliation(
+                        date = when (currentReconciliationToDo) {
+                            is ReconciliationToDo.PlanZ ->
+                                currentReconciliationToDo.transactionBlock.datePeriod!!.startDate
+                            is ReconciliationToDo.Accounts ->
+                                currentReconciliationToDo.date
+                            else -> error("Unhandled:$currentReconciliationToDo")
+                        },
+                        total = z.total,
+                        categoryAmounts = z.categoryAmounts,
+                    )
+                }
+                .also { reconciliationsRepo.push(it) }
+        }
     }
 
     fun userMatchActual() {
         val x = reconciliationsToDoInteractor.currentReconciliationToDo.value as ReconciliationToDo.PlanZ
-        suspend { activeReconciliationRepo.pushCategoryAmounts(CategoryAmounts(x.transactionBlock.categoryAmounts.mapValues { -it.value })) }
-            .observe(GlobalScope)
+        GlobalScope.launch { activeReconciliationRepo.pushCategoryAmounts(CategoryAmounts(x.transactionBlock.categoryAmounts.mapValues { -it.value })) }
     }
 
     // # State
@@ -119,7 +143,7 @@ class ReconciliationHostVM @Inject constructor(
                         onClick = ::userMatchActual,
                     )
                 else null,
-                if (it is ReconciliationToDo.PlanZ)
+                if (it is ReconciliationToDo.PlanZ || it is ReconciliationToDo.Accounts)
                     ButtonVMItem(
                         title = "Skip",
                         onClick = ::userSkip,

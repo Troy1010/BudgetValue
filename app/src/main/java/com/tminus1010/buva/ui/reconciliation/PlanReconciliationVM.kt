@@ -35,18 +35,18 @@ class PlanReconciliationVM @Inject constructor(
         GlobalScope.launch { activeReconciliationRepo.pushCategoryAmount(category, s.toMoneyBigDecimal()) }
     }
 
-    fun userDumpIntoCategory(category: Category) {
-        GlobalScope.launch { activeReconciliationInteractor2.dumpIntoCategory(category) }
+    fun userFillIntoCategory(category: Category) {
+        GlobalScope.launch { activeReconciliationInteractor2.fillIntoCategory(category) }
     }
 
     // # Internal
     private val reconciliationToDo = savedStateHandle.getLiveData<ReconciliationToDo.PlanZ>(KEY1).asFlow()
 
     // # State
-    val subTitle = reconciliationToDo.map { it.plan.localDatePeriod.toDisplayStr() }
+    val subTitle = reconciliationToDo.map { it.transactionBlock.datePeriod!!.toDisplayStr() }
     val reconciliationTableView =
-        combine(userCategories.flow, activeReconciliationInteractor.categoryAmountsAndTotal, budgetedForActiveReconciliationInteractor.categoryAmountsAndTotal, reconciliationToDo)
-        { categories, activeReconciliation, budgetedForActiveReconciliation, reconciliationToDo ->
+        combine(userCategories.flow, activeReconciliationInteractor.categoryAmountsAndTotal, budgetedForActiveReconciliationInteractor.categoryAmountsAndTotal, reconciliationToDo, activeReconciliationInteractor.targetDefaultAmount)
+        { categories, activeReconciliation, budgetedForActiveReconciliation, reconciliationToDo, targetDefaultAmount ->
             TableViewVMItem(
                 recipeGrid = listOf(
                     listOf(
@@ -64,14 +64,14 @@ class PlanReconciliationVM @Inject constructor(
                     listOf(
                         TextVMItem("Default"),
                         TextVMItem(reconciliationToDo.transactionBlock.defaultAmount.toString()),
-                        TextVMItem(activeReconciliation.defaultAmount.toString()),
+                        AmountPresentationModel(activeReconciliation.defaultAmount, checkIfValid = { activeReconciliation.defaultAmount == targetDefaultAmount }),
                         AmountPresentationModel(budgetedForActiveReconciliation.defaultAmount, checkIfValid = { budgetedForActiveReconciliation.isDefaultAmountValid })
                     ),
                     *categories.map { category ->
                         listOf(
                             TextVMItem(category.name),
                             TextVMItem(reconciliationToDo.transactionBlock.categoryAmounts[category]?.toString() ?: ""),
-                            CategoryAmountPresentationModel(category, activeReconciliation.categoryAmounts[category], ::userUpdateActiveReconciliationCategoryAmount, menuVMItems = MenuVMItems(MenuVMItem("Dump into category", onClick = { userDumpIntoCategory(category) }))),
+                            CategoryAmountPresentationModel(category, activeReconciliation.categoryAmounts[category], ::userUpdateActiveReconciliationCategoryAmount, menuVMItems = MenuVMItems(MenuVMItem("Fill into category", onClick = { userFillIntoCategory(category) }))),
                             AmountPresentationModel(budgetedForActiveReconciliation.categoryAmounts[category]) { budgetedForActiveReconciliation.isValid(category) },
                         )
                     }.toTypedArray(),

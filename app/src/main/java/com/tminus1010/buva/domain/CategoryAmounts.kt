@@ -54,6 +54,12 @@ data class CategoryAmounts constructor(private val map: @RawValue Map<Category, 
         return totalAmount - this.filter { it.key != fillCategory }.values.sum()
     }
 
+    fun calcCategoryAmountToGetTargetDefaultAmount(category: Category, targetDefaultAmount: BigDecimal): BigDecimal {
+        return this.toMutableMap().also { it[category] = BigDecimal.ZERO }
+            .let { CategoryAmounts(it) }
+            .let { -targetDefaultAmount - it.categorizedAmount }
+    }
+
     /**
      * A [total] is how much the Transaction/Plan/whatever has in total.
      * The [categorizedAmount] is how much is categorized.

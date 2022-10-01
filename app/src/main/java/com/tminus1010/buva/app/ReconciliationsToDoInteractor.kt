@@ -52,16 +52,9 @@ class ReconciliationsToDoInteractor @Inject constructor(
                             .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod.toDisplayStr()} b/c it's skipped") }
                     }
                     .map { (transactionBlock) ->
-                        ReconciliationToDo.PlanZ(
-                            Plan(
-                                transactionBlock.datePeriod!!,
-                                transactionBlock.total,
-                                CategoryAmounts(),
-                            ),
-                            transactionBlock,
-                        )
+                        ReconciliationToDo.PlanZ(transactionBlock)
                     }
-                    .sortedBy { it.plan.localDatePeriod.startDate }
+                    .sortedBy { it.transactionBlock.datePeriod!!.startDate }
             }
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 

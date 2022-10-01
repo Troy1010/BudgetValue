@@ -1,6 +1,7 @@
 package com.tminus1010.buva.ui.review
 
 import android.content.Context
+import android.view.View
 import androidx.lifecycle.ViewModel
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
@@ -254,8 +255,8 @@ class ReviewVM @Inject constructor(
 
     val title =
         period.map { (it) -> it?.toDisplayStr() ?: "Forever" }
-    val isLeftVisible =
-        userSelectedDuration.map { it != SelectableDuration.FOREVER }
+    val leftVisibility =
+        userSelectedDuration.map { if (it != SelectableDuration.FOREVER) View.VISIBLE else View.GONE }
     val isRightVisible =
-        userSelectedDuration.map { it != SelectableDuration.FOREVER }
+        userSelectedDuration.map { if (it != SelectableDuration.FOREVER) View.VISIBLE else View.GONE }
 }

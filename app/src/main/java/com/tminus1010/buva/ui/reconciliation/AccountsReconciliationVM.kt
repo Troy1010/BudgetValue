@@ -31,7 +31,7 @@ class AccountsReconciliationVM @Inject constructor(
     }
 
     fun userDumpIntoCategory(category: Category) {
-        suspend { activeReconciliationInteractor2.dumpIntoCategory(category) }
+        suspend { activeReconciliationInteractor2.fillIntoCategory(category) }
             .observe(GlobalScope)
     }
 

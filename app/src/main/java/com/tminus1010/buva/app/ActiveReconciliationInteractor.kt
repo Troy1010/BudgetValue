@@ -6,6 +6,7 @@ import com.tminus1010.buva.domain.ReconciliationToDo
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -26,6 +27,17 @@ class ActiveReconciliationInteractor @Inject constructor(
                     else -> BigDecimal.ZERO
                 },
             )
+        }
+            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
+
+    val targetDefaultAmount =
+        reconciliationsToDoInteractor.currentReconciliationToDo.map { currentReconciliationToDo ->
+            when (currentReconciliationToDo) {
+                is ReconciliationToDo.PlanZ ->
+                    -currentReconciliationToDo.transactionBlock.incomeBlock.total
+                else ->
+                    BigDecimal.ZERO
+            }
         }
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 }

@@ -20,8 +20,8 @@ class BudgetedForActiveReconciliationInteractor @Inject constructor(
     reconciliationsRepo: ReconciliationsRepo,
 ) {
     val categoryAmountsAndTotal =
-        combine(activeReconciliationInteractor.categoryAmountsAndTotal, reconciliationsToDoInteractor.currentReconciliationToDo, reconciliationsRepo.reconciliations, transactionsInteractor.spendBlocks)
-        { activeReconciliation, currentReconciliationToDo, reconciliations, spendBlocks ->
+        combine(activeReconciliationInteractor.categoryAmountsAndTotal, reconciliationsToDoInteractor.currentReconciliationToDo, reconciliationsRepo.reconciliations, transactionsInteractor.transactionBlocks)
+        { activeReconciliation, currentReconciliationToDo, reconciliations, transactionBlocks ->
             val relevantReconciliations =
                 when (currentReconciliationToDo) {
                     is ReconciliationToDo.PlanZ ->
@@ -30,23 +30,23 @@ class BudgetedForActiveReconciliationInteractor @Inject constructor(
                         reconciliations.filter { it.date < currentReconciliationToDo.date }
                     else -> reconciliations
                 }
-            val relevantSpendBlocks =
+            val relevantTransactionBlocks =
                 when (currentReconciliationToDo) {
                     is ReconciliationToDo.PlanZ ->
-                        spendBlocks.filter { it.datePeriod!!.startDate < currentReconciliationToDo.transactionBlock.datePeriod!!.endDate }
+                        transactionBlocks.filter { it.datePeriod!!.startDate < currentReconciliationToDo.transactionBlock.datePeriod!!.endDate }
                     is ReconciliationToDo.Accounts ->
-                        spendBlocks.filter { it.datePeriod!!.startDate < currentReconciliationToDo.date }
-                    else -> spendBlocks
+                        transactionBlocks.filter { it.datePeriod!!.startDate < currentReconciliationToDo.date }
+                    else -> transactionBlocks
                 }
             BudgetedWithActiveReconciliation(
                 categoryAmounts = CategoryAmounts.addTogether(
                     activeReconciliation.categoryAmounts,
                     *relevantReconciliations.map { it.categoryAmounts }.toTypedArray(),
-                    *relevantSpendBlocks.map { it.categoryAmounts }.toTypedArray(),
+                    *relevantTransactionBlocks.map { it.categoryAmounts }.toTypedArray(),
                 ),
                 total = activeReconciliation.total
                     .plus(relevantReconciliations.map { it.total }.sum())
-                    .plus(relevantSpendBlocks.map { it.total }.sum()),
+                    .plus(relevantTransactionBlocks.map { it.total }.sum()),
                 caValidation = {
                     when (currentReconciliationToDo) {
                         is ReconciliationToDo.Accounts,

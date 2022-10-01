@@ -9,12 +9,12 @@ import com.tminus1010.buva.domain.Reconciliation
 import com.tminus1010.buva.domain.TransactionBlock
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
-import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import java.math.BigDecimal
 
 /**
@@ -50,7 +50,7 @@ sealed class HistoryPresentationModel {
             listOf(
                 MenuVMItem(
                     title = "Delete",
-                    onClick = { suspend { reconciliationsRepo.delete(reconciliation) }.observe(GlobalScope) }
+                    onClick = { GlobalScope.launch { reconciliationsRepo.delete(reconciliation) } }
                 )
             )
     }
@@ -77,7 +77,7 @@ sealed class HistoryPresentationModel {
                 if (hasSkip)
                     MenuVMItem(
                         title = "Remove Skip",
-                        onClick = { suspend { reconciliationSkipInteractor.removeSkipIn(transactionBlock) }.observe(GlobalScope) },
+                        onClick = { GlobalScope.launch { reconciliationSkipInteractor.removeSkipIn(transactionBlock) } },
                     )
                 else null
             )

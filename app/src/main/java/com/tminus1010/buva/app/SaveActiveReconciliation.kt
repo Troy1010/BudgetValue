@@ -24,7 +24,7 @@ class SaveActiveReconciliation @Inject constructor(
                     is ReconciliationToDo.Accounts ->
                         reconciliationToDo.date
                     is ReconciliationToDo.PlanZ ->
-                        reconciliationToDo.plan.localDatePeriod.midDate
+                        reconciliationToDo.transactionBlock.datePeriod!!.midDate
                 },
                 total = activeReconciliationInteractor.categoryAmountsAndTotal.first().total,
                 categoryAmounts = activeReconciliationRepo.activeReconciliationCAs.first(),

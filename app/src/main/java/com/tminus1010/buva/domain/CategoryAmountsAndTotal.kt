@@ -25,6 +25,13 @@ sealed class CategoryAmountsAndTotal {
         override val total by lazy { categoryAmounts.total(defaultAmount) }
     }
 
+    fun fillIntoCategory(category: Category): CategoryAmountsAndTotal {
+        return FromTotal(
+            categoryAmounts.fillIntoCategory(category, total),
+            total
+        )
+    }
+
     companion object {
         operator fun invoke(): FromTotal {
             return FromTotal(CategoryAmounts(), BigDecimal.ZERO)
@@ -33,10 +40,11 @@ sealed class CategoryAmountsAndTotal {
         fun addTogether(categoryAmountsAndTotals: Collection<CategoryAmountsAndTotal>): CategoryAmountsAndTotal =
             addTogether(*categoryAmountsAndTotals.toTypedArray())
 
-        fun addTogether(vararg categoryAmountsAndTotals: CategoryAmountsAndTotal): CategoryAmountsAndTotal {
+        fun addTogether(vararg categoryAmountsAndTotals: CategoryAmountsAndTotal?): CategoryAmountsAndTotal {
+            val categoryAmountsAndTotalsRedefinated = categoryAmountsAndTotals.filterNotNull()
             return FromTotal(
-                CategoryAmounts.addTogether(*categoryAmountsAndTotals.map { it.categoryAmounts }.toTypedArray()),
-                categoryAmountsAndTotals.map { it.total }.sum()
+                CategoryAmounts.addTogether(*categoryAmountsAndTotalsRedefinated.map { it.categoryAmounts }.toTypedArray()),
+                categoryAmountsAndTotalsRedefinated.map { it.total }.sum()
             )
         }
     }
