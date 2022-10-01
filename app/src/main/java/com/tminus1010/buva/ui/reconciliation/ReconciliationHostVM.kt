@@ -2,14 +2,14 @@ package com.tminus1010.buva.ui.reconciliation
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.buva.R
-import com.tminus1010.buva.all_layers.extensions.isZero
 import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.app.*
+import com.tminus1010.buva.data.AccountsRepo
 import com.tminus1010.buva.data.ActivePlanRepo
 import com.tminus1010.buva.data.ActiveReconciliationRepo
 import com.tminus1010.buva.data.ReconciliationsRepo
 import com.tminus1010.buva.domain.CategoryAmounts
-import com.tminus1010.buva.domain.CategoryAmountsAndTotal
+import com.tminus1010.buva.domain.Domain
 import com.tminus1010.buva.domain.Reconciliation
 import com.tminus1010.buva.domain.ReconciliationToDo
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
@@ -31,6 +31,7 @@ class ReconciliationHostVM @Inject constructor(
     private val saveActiveReconciliation: SaveActiveReconciliation,
     private val budgetedForActiveReconciliationInteractor: BudgetedForActiveReconciliationInteractor,
     private val activeReconciliationInteractor: ActiveReconciliationInteractor,
+    private val activeReconciliationInteractor2: ActiveReconciliationInteractor2,
     private val showToast: ShowToast,
     private val matchBudgetedForActiveReconciliation: MatchBudgetedForActiveReconciliation,
     private val activePlanRepo: ActivePlanRepo,
@@ -39,6 +40,8 @@ class ReconciliationHostVM @Inject constructor(
     private val reconciliationSkipInteractor: ReconciliationSkipInteractor,
     private val reconciliationsRepo: ReconciliationsRepo,
     private val categoryInteractor: CategoryInteractor,
+    private val accountsRepo: AccountsRepo,
+    private val transactionsInteractor: TransactionsInteractor,
 ) : ViewModel() {
     // # User Intents
     fun userSave() {
@@ -51,8 +54,8 @@ class ReconciliationHostVM @Inject constructor(
 //        )
 //            showToast(NativeText.Simple("Invalid input"))
 //        else
-            GlobalScope.launch { saveActiveReconciliation(reconciliationsToDoInteractor.currentReconciliationToDo.value!!) }
-                .use(throbberSharedVM)
+        GlobalScope.launch { saveActiveReconciliation(reconciliationsToDoInteractor.currentReconciliationToDo.value!!) }
+            .use(throbberSharedVM)
     }
 
     // TODO: Given a plan reconciliation in the future and no account reconciliation, this does not work as expected.
@@ -71,29 +74,42 @@ class ReconciliationHostVM @Inject constructor(
 
     fun userSkip() {
         GlobalScope.launch {
-            Pair(reconciliationsToDoInteractor.currentReconciliationToDo.first(), activeReconciliationInteractor.categoryAmountsAndTotal.first())
-                .let { (currentReconciliationToDo, activeReconciliationCAsAndTotal) ->
-                    val y =
-                        (currentReconciliationToDo as? ReconciliationToDo.PlanZ)
-                            ?.let { CategoryAmountsAndTotal.FromTotal(CategoryAmounts(it.transactionBlock.categoryAmounts.mapValues { -it.value }), BigDecimal.ZERO) }
-                    val z =
-                        CategoryAmountsAndTotal.addTogether(
-                            y,
-                            activeReconciliationCAsAndTotal
-                        )
-                            .fillIntoCategory(categoryInteractor.defaultFillCategory.first()!!)
-                    Reconciliation(
-                        date = when (currentReconciliationToDo) {
-                            is ReconciliationToDo.PlanZ ->
-                                currentReconciliationToDo.transactionBlock.datePeriod!!.startDate
-                            is ReconciliationToDo.Accounts ->
-                                currentReconciliationToDo.date
-                            else -> error("Unhandled:$currentReconciliationToDo")
-                        },
-                        total = z.total,
-                        categoryAmounts = z.categoryAmounts,
-                    )
-                }
+            val currentReconciliationToDo = reconciliationsToDoInteractor.currentReconciliationToDo.first()
+            Reconciliation(
+                date = when (currentReconciliationToDo) {
+                    is ReconciliationToDo.PlanZ ->
+                        currentReconciliationToDo.transactionBlock.datePeriod!!.startDate
+                    is ReconciliationToDo.Accounts ->
+                        currentReconciliationToDo.date
+                    else ->
+                        error("Unhandled:$currentReconciliationToDo")
+                },
+                total = when (currentReconciliationToDo) {
+                    is ReconciliationToDo.Accounts ->
+                        Domain.guessAccountsTotalInPast(currentReconciliationToDo.date, accountsRepo.accountsAggregate.first(), transactionsInteractor.transactionBlocks.first(), reconciliationsRepo.reconciliations.first())
+                    is ReconciliationToDo.PlanZ ->
+                        BigDecimal.ZERO
+                    else ->
+                        error("Unhandled:$currentReconciliationToDo")
+                },
+                categoryAmounts = when (currentReconciliationToDo) {
+                    is ReconciliationToDo.PlanZ ->
+                        CategoryAmounts(currentReconciliationToDo.transactionBlock.categoryAmounts.mapValues { -it.value })
+                            .fillToGetTargetDefaultAmount(
+                                categoryInteractor.defaultFillCategory.first()!!,
+                                -currentReconciliationToDo.transactionBlock.incomeBlock.total,
+                            )
+                    is ReconciliationToDo.Accounts ->
+                        CategoryAmounts()
+                            .subtractTogether(budgetedForActiveReconciliationInteractor.categoryAmountsAndTotal.first().categoryAmounts)
+                            .fillIntoCategory(
+                                categoryInteractor.defaultFillCategory.first()!!,
+                                Domain.guessAccountsTotalInPast(currentReconciliationToDo.date, accountsRepo.accountsAggregate.first(), transactionsInteractor.transactionBlocks.first(), reconciliationsRepo.reconciliations.first()),
+                            )
+                    else ->
+                        error("Unhandled:$currentReconciliationToDo")
+                },
+            )
                 .also { reconciliationsRepo.push(it) }
         }
     }

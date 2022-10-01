@@ -9,30 +9,37 @@ import com.tminus1010.buva.app.UserCategories
 import com.tminus1010.buva.data.ActiveReconciliationRepo
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.ui.all_features.view_model_item.*
-import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AccountsReconciliationVM @Inject constructor(
     budgetedForActiveReconciliationInteractor: BudgetedForActiveReconciliationInteractor,
-    activeReconciliationInteractor: ActiveReconciliationInteractor,
+    private val activeReconciliationInteractor: ActiveReconciliationInteractor,
     private val activeReconciliationInteractor2: ActiveReconciliationInteractor2,
     private val activeReconciliationRepo: ActiveReconciliationRepo,
     userCategories: UserCategories,
 ) : ViewModel() {
     // # User Intents
     fun userSetCategoryAmount(category: Category, s: String) {
-        suspend { activeReconciliationRepo.pushCategoryAmount(category, s.toMoneyBigDecimal()) }
-            .observe(GlobalScope)
+        GlobalScope.launch { activeReconciliationRepo.pushCategoryAmount(category, s.toMoneyBigDecimal()) }
     }
 
     fun userDumpIntoCategory(category: Category) {
-        suspend { activeReconciliationInteractor2.fillIntoCategory(category) }
-            .observe(GlobalScope)
+        GlobalScope.launch {
+            activeReconciliationRepo.pushCategoryAmount(
+                category = category,
+                activeReconciliationRepo.activeReconciliationCAs.first().calcFillAmount(
+                    fillCategory = category,
+                    total = activeReconciliationInteractor.categoryAmountsAndTotal.first().total,
+                ),
+            )
+        }
     }
 
     // # State

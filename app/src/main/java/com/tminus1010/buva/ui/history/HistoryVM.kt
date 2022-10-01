@@ -4,7 +4,6 @@ import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.buva.all_layers.categoryComparator
-import com.tminus1010.buva.app.AccountsInteractor
 import com.tminus1010.buva.app.DatePeriodService
 import com.tminus1010.buva.app.ReconciliationSkipInteractor
 import com.tminus1010.buva.app.TransactionsInteractor
@@ -30,7 +29,6 @@ class HistoryVM @Inject constructor(
     private val plansRepo: PlansRepo,
     private val reconciliationSkipInteractor: ReconciliationSkipInteractor,
     private val settingsRepo: SettingsRepo,
-    private val accountsInteractor: AccountsInteractor,
     private val transactionsInteractor: TransactionsInteractor,
     private val reconciliationsRepo: ReconciliationsRepo,
     private val accountsRepo: AccountsRepo,
@@ -65,7 +63,17 @@ class HistoryVM @Inject constructor(
                 for (blockPeriod in blockPeriods) {
                     listOfNotNull(
                         transactionBlocks.filter { it.datePeriod == blockPeriod } // TODO("sort by sortDate")
-                            .let { it.map { HistoryPresentationModel.TransactionBlockPresentationModel(it, accountsInteractor.guessAccountsTotalInPast(it), currentDatePeriod, Domain.shouldSkip(reconciliationSkips, it, anchorDateOffset), reconciliationSkipInteractor) } },
+                            .let {
+                                it.map {
+                                    HistoryPresentationModel.TransactionBlockPresentationModel(
+                                        it,
+                                        Domain.guessAccountsTotalInPast(it.datePeriod!!.endDate, accountsRepo.accountsAggregate.first(), transactionsInteractor.transactionBlocks.first(), reconciliationsRepo.reconciliations.first()),
+                                        currentDatePeriod,
+                                        Domain.shouldSkip(reconciliationSkips, it, anchorDateOffset),
+                                        reconciliationSkipInteractor,
+                                    )
+                                }
+                            },
                         reconciliations.filter { it.date in blockPeriod }
                             .let { it.map { HistoryPresentationModel.ReconciliationPresentationModel(it, reconciliationsRepo) } },
                     ).flatten().also { historyColumnDatas.addAll(it) }

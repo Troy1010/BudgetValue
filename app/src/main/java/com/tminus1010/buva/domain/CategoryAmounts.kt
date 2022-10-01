@@ -50,8 +50,18 @@ data class CategoryAmounts constructor(private val map: @RawValue Map<Category, 
                 .let { CategoryAmounts(it) }
     }
 
-    fun calcFillAmount(fillCategory: Category, totalAmount: BigDecimal): BigDecimal {
-        return totalAmount - this.filter { it.key != fillCategory }.values.sum()
+    fun fillToGetTargetDefaultAmount(category: Category, targetDefaultAmount: BigDecimal): CategoryAmounts {
+        return if (category == Category.DEFAULT)
+            this
+        else
+            this
+                .filter { it.key != category }
+                .copy(category to calcCategoryAmountToGetTargetDefaultAmount(category, targetDefaultAmount))
+                .let { CategoryAmounts(it) }
+    }
+
+    fun calcFillAmount(fillCategory: Category, total: BigDecimal): BigDecimal {
+        return total - this.filter { it.key != fillCategory }.values.sum()
     }
 
     fun calcCategoryAmountToGetTargetDefaultAmount(category: Category, targetDefaultAmount: BigDecimal): BigDecimal {
