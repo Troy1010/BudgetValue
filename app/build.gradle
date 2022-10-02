@@ -10,7 +10,6 @@ plugins {
 
 android {
     compileSdk 31
-    buildToolsVersion "30.0.3"
 
     compileOptions.sourceCompatibility JavaVersion.VERSION_1_8
     compileOptions.targetCompatibility JavaVersion.VERSION_1_8
@@ -44,16 +43,6 @@ android {
 
     buildFeatures {
         viewBinding true
-    }
-
-
-    sourceSets {
-        androidTest {
-            java.srcDirs += "src/sharedTest/java"
-        }
-        test {
-            java.srcDirs += "src/sharedTest/java"
-        }
     }
 
     testOptions {

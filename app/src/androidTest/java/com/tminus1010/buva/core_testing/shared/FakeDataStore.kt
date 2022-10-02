@@ -1,4 +1,4 @@
-package com.tminus1010.buva
+package com.tminus1010.buva.core_testing.shared
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.MutablePreferences

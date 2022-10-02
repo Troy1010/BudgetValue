@@ -1,6 +1,6 @@
 package com.tminus1010.buva.domain
 
-import com.tminus1010.buva.Given
+import com.tminus1010.buva.core_testing.shared.Given
 import junit.framework.Assert.fail
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -12,11 +12,11 @@ class CategoryAmountsTest {
         // # Given
         val map1 =
             mapOf(
-                Given.categories[0].logx("category 0") to BigDecimal("100"),
-                Given.categories[1].logx("category 1") to BigDecimal("200"),
-                Given.categories[2].logx("category 2") to BigDecimal("100"),
+                com.tminus1010.buva.core_testing.shared.Given.categories[0].logx("category 0") to BigDecimal("100"),
+                com.tminus1010.buva.core_testing.shared.Given.categories[1].logx("category 1") to BigDecimal("200"),
+                com.tminus1010.buva.core_testing.shared.Given.categories[2].logx("category 2") to BigDecimal("100"),
             )
-        val map2 = map1.plus(Given.categories[3] to BigDecimal("40"))
+        val map2 = map1.plus(com.tminus1010.buva.core_testing.shared.Given.categories[3] to BigDecimal("40"))
         val sortedMap =
             map2.toSortedMap(compareBy { map1[it] })
                 .logx("sortedMap")
@@ -34,18 +34,18 @@ class CategoryAmountsTest {
         // # Given
         val categoryAmounts =
             CategoryAmounts(
-                Given.categories[0] to BigDecimal("100"),
-                Given.categories[1] to BigDecimal("200"),
-                Given.categories[2] to BigDecimal("300"),
+                com.tminus1010.buva.core_testing.shared.Given.categories[0] to BigDecimal("100"),
+                com.tminus1010.buva.core_testing.shared.Given.categories[1] to BigDecimal("200"),
+                com.tminus1010.buva.core_testing.shared.Given.categories[2] to BigDecimal("300"),
             )
         // # When & Then
         assertEquals(
             CategoryAmounts(
-                Given.categories[6] to BigDecimal("100"),
-                Given.categories[1] to BigDecimal("200"),
-                Given.categories[2] to BigDecimal("300"),
+                com.tminus1010.buva.core_testing.shared.Given.categories[6] to BigDecimal("100"),
+                com.tminus1010.buva.core_testing.shared.Given.categories[1] to BigDecimal("200"),
+                com.tminus1010.buva.core_testing.shared.Given.categories[2] to BigDecimal("300"),
             ),
-            categoryAmounts.replaceKey(Given.categories[0], Given.categories[6])
+            categoryAmounts.replaceKey(com.tminus1010.buva.core_testing.shared.Given.categories[0], com.tminus1010.buva.core_testing.shared.Given.categories[6])
         )
     }
 }
