@@ -66,7 +66,7 @@ class AccountsReconciliationVM @Inject constructor(
                     *categories.map { category ->
                         listOf(
                             TextVMItem(category.name),
-                            CategoryAmountPresentationModel(category, activeReconciliation.categoryAmounts[category], ::userSetCategoryAmount, menuVMItems = MenuVMItems(MenuVMItem("Dump into category", onClick = { userDumpIntoCategory(category) }))),
+                            CategoryAmountPresentationModel(category, activeReconciliation.categoryAmounts[category], ::userSetCategoryAmount, menuVMItems = MenuVMItems(MenuVMItem("Fill into category", onClick = { userDumpIntoCategory(category) }))),
                             AmountPresentationModel(budgetedWithActiveReconciliation.categoryAmounts[category]) { budgetedWithActiveReconciliation.isValid(category) },
                         )
                     }.toTypedArray(),

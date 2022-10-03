@@ -6,6 +6,7 @@ import com.tminus1010.buva.domain.CategoryAmounts
 import com.tminus1010.buva.domain.Domain
 import com.tminus1010.buva.domain.Plan
 import com.tminus1010.buva.domain.ReconciliationToDo
+import com.tminus1010.tmcommonkotlin.tuple.Quadruple
 import com.tminus1010.tmcommonkotlin.tuple.Quintuple
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
@@ -15,32 +16,27 @@ import javax.inject.Singleton
 
 @Singleton
 class ReconciliationsToDoInteractor @Inject constructor(
-    plansRepo: PlansRepo,
     transactionsInteractor: TransactionsInteractor,
     reconciliationsRepo: ReconciliationsRepo,
     currentDate: CurrentDate,
     reconciliationSkipInteractor: ReconciliationSkipInteractor,
     settingsRepo: SettingsRepo,
     accountsRepo: AccountsRepo,
-    entireHistoryInteractor: EntireHistoryInteractor,
 ) {
     private val planReconciliationsToDo =
-        combine(plansRepo.plans, transactionsInteractor.transactionBlocks, reconciliationsRepo.reconciliations, reconciliationSkipInteractor.reconciliationSkips, settingsRepo.anchorDateOffset, ::Quintuple)
+        combine(transactionsInteractor.transactionBlocks, reconciliationsRepo.reconciliations, reconciliationSkipInteractor.reconciliationSkips, settingsRepo.anchorDateOffset, ::Quadruple)
             .sample(50)
             .distinctUntilChanged()
-            .map { (plans, transactionBlocks, reconciliations, reconciliationSkips, anchorDateOffset) ->
+            .map { (transactionBlocks, reconciliations, reconciliationSkips, anchorDateOffset) ->
                 transactionBlocks
                     .map { transactionBlock ->
-                        Triple(
+                        Pair(
                             transactionBlock,
-                            plans.find { it.localDatePeriod == transactionBlock.datePeriod!! },
                             reconciliations.find { it.date in transactionBlock.datePeriod!! }
                         )
                     }
-                    .filter { (transactionBlock, plan, reconciliation) ->
-                        (plan == null)
-                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod?.toDisplayStr()} b/c plan") }
-                                && (reconciliation == null)
+                    .filter { (transactionBlock, reconciliation) ->
+                        (reconciliation == null)
                             .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod?.toDisplayStr()} b/c reconciliation") }
                                 && transactionBlock.isFullyImported
                             .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod?.toDisplayStr()} b/c isFullyImported") }
@@ -58,30 +54,25 @@ class ReconciliationsToDoInteractor @Inject constructor(
             }
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 
-    private val accountReconciliationsToDo =
-        combine(entireHistoryInteractor.categoryAmountsAndTotal, accountsRepo.accountsAggregate, ::Pair)
-            .flatMapLatest { (entireHistory, accountsAggregate) ->
-                if (entireHistory.total.easyEquals(accountsAggregate.total))
-                    flowOf(null)
-                else
-                    planReconciliationsToDo.map { planReconciliationsToDo ->
-                        ReconciliationToDo.Accounts(
-                            date = planReconciliationsToDo.mapNotNull { it.transactionBlock.datePeriod?.startDate }.minOrNull()?.minusDays(1)
-                                ?: LocalDate.now()
-                        )
-                    }
-            }
+//    private val accountReconciliationsToDo =
+//        combine(entireHistoryInteractor.categoryAmountsAndTotal, accountsRepo.accountsAggregate, ::Pair)
+//            .flatMapLatest { (entireHistory, accountsAggregate) ->
+//                if (entireHistory.total.easyEquals(accountsAggregate.total))
+//                    flowOf(null)
+//                else
+//                    planReconciliationsToDo.map { planReconciliationsToDo ->
+//                        ReconciliationToDo.Accounts(
+//                            date = planReconciliationsToDo.mapNotNull { it.transactionBlock.datePeriod?.startDate }.minOrNull()?.minusDays(1)
+//                                ?: LocalDate.now()
+//                        )
+//                    }
+//            }
 
     val reconciliationsToDo =
-        combine(planReconciliationsToDo, accountReconciliationsToDo)
-        { planReconciliationsToDo, accountReconciliationsToDo ->
-            listOf(accountReconciliationsToDo)
-                .plus(planReconciliationsToDo)
-                .filterNotNull()
-        }
+        planReconciliationsToDo
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 
     val currentReconciliationToDo =
-        reconciliationsToDo.map { it.firstOrNull() }
+        reconciliationsToDo.map { it.firstOrNull() ?: ReconciliationToDo.Anytime }
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 }

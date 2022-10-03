@@ -4,87 +4,65 @@ import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.buva.all_layers.categoryComparator
-import com.tminus1010.buva.app.DatePeriodService
-import com.tminus1010.buva.app.ReconciliationSkipInteractor
+import com.tminus1010.buva.app.HistoryInteractor
 import com.tminus1010.buva.app.TransactionsInteractor
-import com.tminus1010.buva.data.*
-import com.tminus1010.buva.domain.Category
-import com.tminus1010.buva.domain.Domain
-import com.tminus1010.buva.domain.LocalDatePeriod
+import com.tminus1010.buva.data.AccountsRepo
+import com.tminus1010.buva.data.CurrentDatePeriod
+import com.tminus1010.buva.data.ReconciliationsRepo
+import com.tminus1010.buva.domain.*
 import com.tminus1010.buva.ui.all_features.view_model_item.*
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
-import com.tminus1010.tmcommonkotlin.tuple.Quadruple
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.PublishSubject
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
 class HistoryVM @Inject constructor(
-    private val datePeriodService: DatePeriodService,
     private val currentDatePeriod: CurrentDatePeriod,
-    private val plansRepo: PlansRepo,
-    private val reconciliationSkipInteractor: ReconciliationSkipInteractor,
-    private val settingsRepo: SettingsRepo,
     private val transactionsInteractor: TransactionsInteractor,
     private val reconciliationsRepo: ReconciliationsRepo,
     private val accountsRepo: AccountsRepo,
+    private val historyInteractor: HistoryInteractor,
 ) : ViewModel() {
     // # Internal
     private val activeCategories =
-        combine(reconciliationsRepo.reconciliations, transactionsInteractor.transactionBlocks)
-        { reconciliations, transactionBlocks ->
-            sequenceOf<Set<Category>>()
-                .plus(reconciliations.map { it.categoryAmounts.keys })
-                .plus(transactionBlocks.map { it.categoryAmounts.keys })
-                .plus(listOf(Domain.sumedCategoryAmountsAndTotalToDate(null, transactionBlocks, reconciliations).categoryAmounts.keys))
-                .fold(setOf<Category>()) { acc, v -> acc + v }
-                .toList()
-                .sortedWith(categoryComparator)
-        }
-
+        historyInteractor.entireHistory.map { it.addedTogether.categoryAmounts.map { it.key }.sortedWith(categoryComparator) }
 
     private val historyVMItems =
-        combine(reconciliationsRepo.reconciliations, transactionsInteractor.transactionBlocks, reconciliationSkipInteractor.reconciliationSkips, settingsRepo.anchorDateOffset, ::Quadruple)
-            .flowOn(Dispatchers.Default)
-            .sample(500)
-            .map { (reconciliations, transactionBlocks, reconciliationSkips, anchorDateOffset) ->
-                // # Define blocks
-                val blockPeriods = sortedSetOf<LocalDatePeriod>(compareBy { it.startDate })
-                transactionBlocks.forEach { if (!datePeriodService.isDatePeriodValid(it.datePeriod!!)) error("datePeriod was not valid:${it.datePeriod}") }
-                transactionBlocks.forEach { blockPeriods.add(it.datePeriod!!) }
-                reconciliations.forEach { blockPeriods.add(datePeriodService.getDatePeriod(it.date)) }
-                // # Define historyColumnDatas
-                val historyColumnDatas = arrayListOf<HistoryPresentationModel>()
-                // ## Add TransactionBlocks, Reconciliations, Plans
-                for (blockPeriod in blockPeriods) {
-                    listOfNotNull(
-                        transactionBlocks.filter { it.datePeriod == blockPeriod } // TODO("sort by sortDate")
-                            .let {
-                                it.map {
-                                    HistoryPresentationModel.TransactionBlockPresentationModel(
-                                        it,
-                                        Domain.guessAccountsTotalInPast(it.datePeriod!!.endDate, accountsRepo.accountsAggregate.first(), transactionsInteractor.transactionBlocks.first(), reconciliationsRepo.reconciliations.first()),
-                                        currentDatePeriod,
-                                        Domain.shouldSkip(reconciliationSkips, it, anchorDateOffset),
-                                        reconciliationSkipInteractor,
-                                    )
-                                }
-                            },
-                        reconciliations.filter { it.date in blockPeriod }
-                            .let { it.map { HistoryPresentationModel.ReconciliationPresentationModel(it, reconciliationsRepo) } },
-                    ).flatten().also { historyColumnDatas.addAll(it) }
+        historyInteractor.entireHistory.map { entireHistory ->
+            entireHistory
+                .sortedBy {
+                    when (it) {
+                        is TransactionBlock -> it.datePeriod?.startDate
+                        is Reconciliation -> it.date
+                        else -> null
+                    }
                 }
-                // ## Add Budgeted
-                historyColumnDatas.add(HistoryPresentationModel.BudgetedPresentationModel(
-                    Domain.sumedCategoryAmountsAndTotalToDate(null, transactionBlocks, reconciliations)
-                ))
-                //
-                historyColumnDatas
-            }
+                .map {
+                    when (it) {
+                        is TransactionBlock ->
+                            HistoryPresentationModel.TransactionBlockPresentationModel(
+                                it,
+                                Domain.guessAccountsTotalInPast(it.datePeriod!!.endDate, accountsRepo.accountsAggregate.first(), transactionsInteractor.transactionBlocks.first(), reconciliationsRepo.reconciliations.first()),
+                                currentDatePeriod
+                            )
+                        is Reconciliation ->
+                            HistoryPresentationModel.ReconciliationPresentationModel(
+                                it,
+                                reconciliationsRepo,
+                            )
+                        is BudgetedVsAccountsAutomaticReconciliation ->
+                            HistoryPresentationModel.BudgetedVsAccountsAutomaticReconciliationPresentationModel(
+                                it
+                            )
+                        else -> error("Unhandled:$it")
+                    }
+                }
+                .plus(HistoryPresentationModel.BudgetedPresentationModel(entireHistory.addedTogether))
+        }
 
     // # Events
     val showPopupMenu = PublishSubject.create<Pair<View, List<MenuVMItem>>>()

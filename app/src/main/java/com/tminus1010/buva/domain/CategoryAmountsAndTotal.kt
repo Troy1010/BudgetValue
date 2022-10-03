@@ -37,10 +37,10 @@ sealed class CategoryAmountsAndTotal {
             return FromTotal(CategoryAmounts(), BigDecimal.ZERO)
         }
 
-        fun addTogether(categoryAmountsAndTotals: Collection<CategoryAmountsAndTotal>): CategoryAmountsAndTotal =
-            addTogether(*categoryAmountsAndTotals.toTypedArray())
+        fun addTogether(vararg categoryAmountsAndTotals: CategoryAmountsAndTotal?): CategoryAmountsAndTotal =
+            addTogether(categoryAmountsAndTotals.toList())
 
-        fun addTogether(vararg categoryAmountsAndTotals: CategoryAmountsAndTotal?): CategoryAmountsAndTotal {
+        fun addTogether(categoryAmountsAndTotals: Collection<CategoryAmountsAndTotal?>): CategoryAmountsAndTotal {
             val categoryAmountsAndTotalsRedefinated = categoryAmountsAndTotals.filterNotNull()
             return FromTotal(
                 CategoryAmounts.addTogether(*categoryAmountsAndTotalsRedefinated.map { it.categoryAmounts }.toTypedArray()),

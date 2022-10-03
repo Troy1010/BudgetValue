@@ -1,12 +1,8 @@
 package com.tminus1010.buva.ui.history
 
-import com.tminus1010.buva.app.ReconciliationSkipInteractor
 import com.tminus1010.buva.data.CurrentDatePeriod
 import com.tminus1010.buva.data.ReconciliationsRepo
-import com.tminus1010.buva.domain.Category
-import com.tminus1010.buva.domain.CategoryAmountsAndTotal
-import com.tminus1010.buva.domain.Reconciliation
-import com.tminus1010.buva.domain.TransactionBlock
+import com.tminus1010.buva.domain.*
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
 import com.tminus1010.tmcommonkotlin.view.NativeText
@@ -55,7 +51,18 @@ sealed class HistoryPresentationModel {
             )
     }
 
-    class TransactionBlockPresentationModel(transactionBlock: TransactionBlock, accountsTotalEstimate: BigDecimal?, currentDatePeriod: CurrentDatePeriod, hasSkip: Boolean, reconciliationSkipInteractor: ReconciliationSkipInteractor) : HistoryPresentationModel() {
+    class BudgetedVsAccountsAutomaticReconciliationPresentationModel(budgetedVsAccountsAutomaticReconciliation: BudgetedVsAccountsAutomaticReconciliation) : HistoryPresentationModel() {
+        override val accountsTotal: Flow<NativeText?> = flowOf(null)
+        override val difference: Flow<NativeText?> = flowOf(NativeText.Simple(budgetedVsAccountsAutomaticReconciliation.total.toString()))
+        override val incomeTotal: Flow<NativeText?> = flowOf(null)
+        override val spendTotal: Flow<NativeText?> = flowOf(null)
+        override val default: Flow<NativeText?> = flowOf(NativeText.Simple(budgetedVsAccountsAutomaticReconciliation.defaultAmount.toString()))
+        override val title: String = "Accounts Total Leftover"
+        override val subTitle: Flow<NativeText?> = flowOf(null)
+        override val categoryAmounts = budgetedVsAccountsAutomaticReconciliation.categoryAmounts
+    }
+
+    class TransactionBlockPresentationModel(transactionBlock: TransactionBlock, accountsTotalEstimate: BigDecimal?, currentDatePeriod: CurrentDatePeriod) : HistoryPresentationModel() {
         override val accountsTotal: Flow<NativeText?> = flowOf(NativeText.Simple(accountsTotalEstimate?.toString() ?: ""))
         override val difference: Flow<NativeText?> = flowOf(NativeText.Simple(transactionBlock.total.toString()))
         override val incomeTotal: Flow<NativeText?> = flowOf(NativeText.Simple(transactionBlock.incomeBlock.total.toString()))
@@ -72,15 +79,6 @@ sealed class HistoryPresentationModel {
                 }
         override val categoryAmounts =
             transactionBlock.categoryAmounts
-        override val menuVMItems =
-            listOfNotNull(
-                if (hasSkip)
-                    MenuVMItem(
-                        title = "Remove Skip",
-                        onClick = { GlobalScope.launch { reconciliationSkipInteractor.removeSkipIn(transactionBlock) } },
-                    )
-                else null
-            )
     }
 
     class BudgetedPresentationModel(categoryAmountsAndTotal: CategoryAmountsAndTotal) : HistoryPresentationModel() {
