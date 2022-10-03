@@ -11,6 +11,8 @@ import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.extensions.easyText2
 import com.tminus1010.buva.databinding.FragImportBinding
 import com.tminus1010.buva.databinding.ItemAccountBinding
+import com.tminus1010.buva.databinding.ItemButtonBinding
+import com.tminus1010.buva.framework.android.LifecycleRVAdapter2
 import com.tminus1010.buva.framework.android.onDone
 import com.tminus1010.buva.framework.android.viewBinding
 import com.tminus1010.tmcommonkotlin.androidx.GenViewHolder
@@ -28,29 +30,14 @@ class ImportFrag : Fragment(R.layout.frag_import) {
         vb.buttonsview.bind(viewModel.buttons) { buttons = it }
         vb.recyclerviewAccounts.layoutManager = LinearLayoutManager(requireActivity())
         vb.recyclerviewAccounts.bind(viewModel.accountVMItemList) { accountsPresentationModel ->
-            adapter = object : RecyclerView.Adapter<GenViewHolder<ItemAccountBinding>>() {
+            adapter = object : LifecycleRVAdapter2<GenViewHolder<ItemAccountBinding>>() {
                 override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
                     GenViewHolder(ItemAccountBinding.inflate(layoutInflater, parent, false))
 
                 override fun getItemCount() = accountsPresentationModel.size
-                override fun onBindViewHolder(holder: GenViewHolder<ItemAccountBinding>, position: Int) {
-                    val vb = holder.vb
-                    val accountPresentationModel = accountsPresentationModel[position]
-                    vb.edittextName.easyText2 = accountPresentationModel.title
-                    vb.edittextName.onDone {
-                        // TODO("There should be a better way to avoid NO_POSITION error.")
-                        if (holder.adapterPosition == RecyclerView.NO_POSITION) return@onDone
-                        val accountVMItem = accountsPresentationModel[holder.adapterPosition]
-                        accountVMItem.userSetTitle(it)
-                    }
-                    vb.edittextAmount.easyText2 = accountPresentationModel.amount
-                    vb.edittextAmount.onDone {
-                        // TODO("There should be a better way to avoid NO_POSITION error.")
-                        if (holder.adapterPosition == RecyclerView.NO_POSITION) return@onDone
-                        val accountVMItem = accountsPresentationModel[holder.adapterPosition]
-                        accountVMItem.userSetAmount(it)
-                    }
-                    vb.btnDeleteAccount.setOnClickListener { accountPresentationModel.userDeleteAccount() }
+
+                override fun onLifecycleAttached(holder: GenViewHolder<ItemAccountBinding>) {
+                    accountsPresentationModel[holder.bindingAdapterPosition].bind(holder.vb)
                 }
             }
         }

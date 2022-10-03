@@ -16,7 +16,7 @@ class CategoryAmountPresentationModel(
     private val onDone: ((Category, String) -> Unit)? = null,
     private val menuVMItems: MenuVMItems? = null,
 ) : IHasToViewItemRecipe {
-    val amountStr by lazy { amount?.toString() ?: "" }
+    private val amountStr by lazy { amount?.toString() ?: "" }
 
     fun bind(editText: EditText) {
         editText.setText(amountStr)
