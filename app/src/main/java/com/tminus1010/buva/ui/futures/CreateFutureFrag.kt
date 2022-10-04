@@ -10,7 +10,7 @@ import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.data.service.MoshiProvider
 import com.tminus1010.buva.databinding.FragCreateFutureBinding
-import com.tminus1010.buva.framework.android.viewBinding
+import com.tminus1010.buva.all_layers.android.viewBinding
 import com.tminus1010.buva.ui.choose_categories.ChooseCategoriesFrag
 import com.tminus1010.buva.ui.choose_transaction.ChooseTransactionFrag
 import com.tminus1010.buva.ui.receipt_categorization.ReceiptCategorizationHostFrag

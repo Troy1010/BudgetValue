@@ -9,6 +9,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.tminus1010.buva.R
+import com.tminus1010.buva.all_layers.android.GridMarginDecoration
+import com.tminus1010.buva.all_layers.android.LifecycleRVAdapter2
+import com.tminus1010.buva.all_layers.android.viewBinding
 import com.tminus1010.buva.databinding.FragChooseCategoriesBinding
 import com.tminus1010.buva.databinding.ItemCategoryBtnBinding
 import com.tminus1010.buva.framework.android.*

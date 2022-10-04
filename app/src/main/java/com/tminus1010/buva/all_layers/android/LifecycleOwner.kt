@@ -1,4 +1,4 @@
-package com.tminus1010.buva.framework.android
+package com.tminus1010.buva.all_layers.android
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver

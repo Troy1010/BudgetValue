@@ -1,4 +1,4 @@
-package com.tminus1010.buva.framework.observable
+package com.tminus1010.buva.all_layers.observable
 
 import com.tminus1010.tmcommonkotlin.rx3.extensions.boxStartNull
 import com.tminus1010.tmcommonkotlin.rx3.extensions.isCold

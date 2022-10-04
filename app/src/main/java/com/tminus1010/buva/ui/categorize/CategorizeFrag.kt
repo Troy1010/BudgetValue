@@ -9,9 +9,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.tminus1010.buva.R
 import com.tminus1010.buva.databinding.FragCategorizeBinding
-import com.tminus1010.buva.framework.android.GridMarginDecoration
-import com.tminus1010.buva.framework.android.LifecycleRVAdapter2
-import com.tminus1010.buva.framework.android.viewBinding
+import com.tminus1010.buva.all_layers.android.GridMarginDecoration
+import com.tminus1010.buva.all_layers.android.LifecycleRVAdapter2
+import com.tminus1010.buva.all_layers.android.viewBinding
 import com.tminus1010.buva.ui.category_details.CategoryDetailsFrag
 import com.tminus1010.buva.ui.choose_categories.ChooseCategoriesSharedVM
 import com.tminus1010.buva.ui.errors.Errors

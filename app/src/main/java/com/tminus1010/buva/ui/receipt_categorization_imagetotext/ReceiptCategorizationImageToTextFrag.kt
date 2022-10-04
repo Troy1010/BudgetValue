@@ -19,7 +19,7 @@ import com.tminus1010.buva.data.service.MoshiProvider
 import com.tminus1010.buva.data.service.MoshiWithCategoriesProvider
 import com.tminus1010.buva.databinding.FragReceiptCategorizationImagetotextBinding
 import com.tminus1010.buva.domain.Transaction
-import com.tminus1010.buva.framework.android.onDone
+import com.tminus1010.buva.all_layers.android.onDone
 import com.tminus1010.tmcommonkotlin.androidx.CreateImageFile
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe

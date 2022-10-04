@@ -12,7 +12,7 @@ import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.databinding.FragCategoryDetailsBinding
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.TransactionMatcher
-import com.tminus1010.buva.framework.android.viewBinding
+import com.tminus1010.buva.all_layers.android.viewBinding
 import com.tminus1010.buva.ui.choose_transaction.ChooseTransactionFrag
 import com.tminus1010.buva.ui.errors.Errors
 import com.tminus1010.buva.ui.set_search_texts.SetSearchTextsSharedVM

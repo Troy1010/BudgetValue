@@ -1,4 +1,4 @@
-package com.tminus1010.buva.framework.observable
+package com.tminus1010.buva.all_layers.observable
 
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observer

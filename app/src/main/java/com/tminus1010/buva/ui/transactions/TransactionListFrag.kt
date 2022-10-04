@@ -9,7 +9,7 @@ import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.data.service.MoshiWithCategoriesProvider
 import com.tminus1010.buva.databinding.FragTransactionsBinding
-import com.tminus1010.buva.framework.android.viewBinding
+import com.tminus1010.buva.all_layers.android.viewBinding
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind

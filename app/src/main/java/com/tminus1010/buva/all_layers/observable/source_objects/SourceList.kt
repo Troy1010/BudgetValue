@@ -1,4 +1,4 @@
-package com.tminus1010.buva.framework.observable.source_objects
+package com.tminus1010.buva.all_layers.observable.source_objects
 
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.pairwise
 import io.reactivex.rxjava3.core.Observable

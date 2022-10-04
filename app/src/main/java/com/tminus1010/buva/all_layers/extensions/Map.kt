@@ -1,6 +1,6 @@
 package com.tminus1010.buva.all_layers.extensions
 
-import com.tminus1010.buva.framework.observable.source_objects.SourceHashMap
+import com.tminus1010.buva.all_layers.observable.source_objects.SourceHashMap
 
 fun <K, V: Any> Map<K, V>.toSourceHashMap(exitValue: V): SourceHashMap<K, V> {
     return SourceHashMap(this, exitValue)

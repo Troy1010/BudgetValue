@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.tminus1010.buva.R
 import com.tminus1010.buva.databinding.ItemCategoryBtnBinding
 import com.tminus1010.buva.databinding.SubfragChooseCategoryBinding
-import com.tminus1010.buva.framework.android.GridMarginDecoration
-import com.tminus1010.buva.framework.android.LifecycleRVAdapter2
+import com.tminus1010.buva.all_layers.android.GridMarginDecoration
+import com.tminus1010.buva.all_layers.android.LifecycleRVAdapter2
 import com.tminus1010.tmcommonkotlin.androidx.GenViewHolder
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind

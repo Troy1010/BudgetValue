@@ -8,7 +8,7 @@ import com.tminus1010.buva.data.AccountsRepo
 import com.tminus1010.buva.databinding.ItemAccountBinding
 import com.tminus1010.buva.databinding.ItemMoneyEditTextBinding
 import com.tminus1010.buva.domain.Account
-import com.tminus1010.buva.framework.android.onDone
+import com.tminus1010.buva.all_layers.android.onDone
 import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
 import com.tminus1010.tmcommonkotlin.customviews.IViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipe3

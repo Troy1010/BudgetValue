@@ -1,6 +1,6 @@
 package com.tminus1010.buva.framework
 
-import com.tminus1010.buva.framework.observable.Rx
+import com.tminus1010.buva.all_layers.observable.Rx
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.junit.Test
 

@@ -9,7 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.buva.R
-import com.tminus1010.buva.framework.android.viewBinding
+import com.tminus1010.buva.all_layers.android.viewBinding
 import com.tminus1010.buva.databinding.FragErrorBinding
 import com.tminus1010.buva.databinding.ItemButtonBinding
 import com.tminus1010.tmcommonkotlin.androidx.GenViewHolder

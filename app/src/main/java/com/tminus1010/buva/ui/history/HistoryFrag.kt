@@ -9,7 +9,7 @@ import androidx.navigation.NavController
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.extensions.show
 import com.tminus1010.buva.databinding.FragHistoryBinding
-import com.tminus1010.buva.framework.android.viewBinding
+import com.tminus1010.buva.all_layers.android.viewBinding
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import com.tminus1010.tmcommonkotlin.rx3.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint

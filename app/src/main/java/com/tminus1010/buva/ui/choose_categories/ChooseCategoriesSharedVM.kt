@@ -1,6 +1,6 @@
 package com.tminus1010.buva.ui.choose_categories
 
-import com.tminus1010.buva.framework.observable.source_objects.SourceList
+import com.tminus1010.buva.all_layers.observable.source_objects.SourceList
 import com.tminus1010.buva.domain.Category
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted

@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.tminus1010.buva.R
 import com.tminus1010.buva.databinding.FragPlanBinding
-import com.tminus1010.buva.framework.android.viewBinding
+import com.tminus1010.buva.all_layers.android.viewBinding
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.combine

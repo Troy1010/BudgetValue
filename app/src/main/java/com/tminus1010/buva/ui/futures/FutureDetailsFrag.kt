@@ -10,7 +10,7 @@ import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.databinding.FragCreateFutureBinding
 import com.tminus1010.buva.domain.Future
-import com.tminus1010.buva.framework.android.viewBinding
+import com.tminus1010.buva.all_layers.android.viewBinding
 import com.tminus1010.buva.ui.choose_categories.ChooseCategoriesSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind

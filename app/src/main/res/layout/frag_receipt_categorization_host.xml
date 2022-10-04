@@ -50,7 +50,7 @@
         app:layout_constraintBottom_toTopOf="@id/buttonsview"
         app:layout_constraintTop_toBottomOf="@id/textview_amount_to_categorize_header" />
 
-    <com.tminus1010.buva.framework.android.ButtonsView
+    <com.tminus1010.buva.all_layers.android.ButtonsView
         android:id="@+id/buttonsview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

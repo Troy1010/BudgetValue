@@ -1,4 +1,4 @@
-package com.tminus1010.buva.framework.android
+package com.tminus1010.buva.all_layers.android
 
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.tmcommonkotlin.androidx.ExposedLifecycleOwner

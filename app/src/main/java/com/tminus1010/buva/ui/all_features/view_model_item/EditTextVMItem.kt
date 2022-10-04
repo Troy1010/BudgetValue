@@ -4,7 +4,7 @@ import android.content.Context
 import android.widget.EditText
 import com.tminus1010.buva.all_layers.extensions.easyText2
 import com.tminus1010.buva.databinding.ItemEditTextBinding
-import com.tminus1010.buva.framework.android.onDone
+import com.tminus1010.buva.all_layers.android.onDone
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
 import com.tminus1010.tmcommonkotlin.customviews.IViewItemRecipe3
