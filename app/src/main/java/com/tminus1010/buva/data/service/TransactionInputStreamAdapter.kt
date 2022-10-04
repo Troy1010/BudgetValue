@@ -19,6 +19,12 @@ class TransactionInputStreamAdapter @Inject constructor() {
             .toList()
     }
 
+    fun parseToTransactions(bufferedReader: BufferedReader): List<Transaction> {
+        return bufferedReader.lineSequence()
+            .mapNotNull { line -> runCatching { parseToTransaction(line.split(",")) }.getOrElse { logz("Ignoring line:$line\nbecause:", it); null } }
+            .toList()
+    }
+
     private val dateTimeFormatter1 = DateTimeFormatter.ofPattern("yyyyMMdd")
 
     /**
