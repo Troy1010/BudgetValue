@@ -56,6 +56,9 @@ interface MiscDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun push(transaction: Transaction)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun push(transaction: List<Transaction>)
+
     @Query("DELETE FROM `Transaction` WHERE id=:id")
     suspend fun deleteTransaction(id: String)
 

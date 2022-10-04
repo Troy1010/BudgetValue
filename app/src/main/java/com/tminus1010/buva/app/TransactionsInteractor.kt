@@ -24,7 +24,7 @@ class TransactionsInteractor @Inject constructor(
         val oldTransactionsAndIDs = transactions.map { Pair(transactionsRepo.getTransaction(it.id), it.id) }
         undoService.useAndAdd(
             RedoUndo(
-                redo = { transactions.forEach { transactionsRepo.push(it) } },
+                redo = { transactionsRepo.push(transactions) },
                 undo = { oldTransactionsAndIDs.forEach { val (oldTransaction, id) = it; oldTransaction?.also { transactionsRepo.push(it) } ?: transactionsRepo.delete(id) } },
             )
         )
@@ -62,7 +62,7 @@ class TransactionsInteractor @Inject constructor(
     val transactionsAggregate =
         transactionsRepo.transactionsAggregate
     val transactionBlocks =
-        transactionsRepo.transactionsAggregate
+        transactionsAggregate
             .map { getBlocksFromTransactions(it.transactions) }
             .shareIn(GlobalScope, SharingStarted.WhileSubscribed(), 1)
     val incomeBlocks =
