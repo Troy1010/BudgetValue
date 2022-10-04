@@ -39,7 +39,7 @@ class ImportTransactions @Inject constructor(
         var transactionsCategorizedCounter = 0
         var transactionsIgnoredBecauseTheyWereAlreadyImportedCounter = 0
         transactions
-            .filter { (transactionsRepo.getTransaction2(it.id) == null).also { if (!it) transactionsIgnoredBecauseTheyWereAlreadyImportedCounter++ } }
+            .filter { (transactionsRepo.getTransaction(it.id) == null).also { if (!it) transactionsIgnoredBecauseTheyWereAlreadyImportedCounter++ } }
             .map { transaction ->
                 val matchedCategorization =
                     userCategories.flow.value!!

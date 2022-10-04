@@ -21,7 +21,7 @@ class TransactionsInteractor @Inject constructor(
     // # Input
     suspend fun push(vararg transactions: Transaction) = push(transactions.toList())
     suspend fun push(transactions: List<Transaction>) {
-        val oldTransactionsAndIDs = transactions.map { Pair(transactionsRepo.getTransaction2(it.id), it.id) }
+        val oldTransactionsAndIDs = transactions.map { Pair(transactionsRepo.getTransaction(it.id), it.id) }
         undoService.useAndAdd(
             RedoUndo(
                 redo = { transactions.forEach { transactionsRepo.push(it) } },
@@ -31,7 +31,7 @@ class TransactionsInteractor @Inject constructor(
     }
 
     suspend fun clear() {
-        val oldTransactionsAndIDs = transactionsRepo.transactionsAggregate.first().transactions.map { Pair(transactionsRepo.getTransaction2(it.id), it.id) }
+        val oldTransactionsAndIDs = transactionsRepo.transactionsAggregate.first().transactions.map { Pair(transactionsRepo.getTransaction(it.id), it.id) }
         undoService.useAndAdd(
             RedoUndo(
                 redo = { transactionsRepo.clear() },

@@ -28,6 +28,6 @@ class TransactionsRepo @Inject constructor(
     suspend fun clear() =
         miscDAO.clearTransactions()
 
-    suspend fun getTransaction2(id: String) =
+    suspend fun getTransaction(id: String) =
         miscDAO.getTransaction(id)
 }
