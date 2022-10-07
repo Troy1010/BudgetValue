@@ -2,7 +2,7 @@ package com.tminus1010.buva.domain
 
 import java.math.BigDecimal
 
-class BudgetedWithActiveReconciliation(
+class CategoryAmountsAndTotalWithValidation(
     categoryAmounts: CategoryAmounts,
     total: BigDecimal,
     private val caValidation: (BigDecimal?) -> Boolean,

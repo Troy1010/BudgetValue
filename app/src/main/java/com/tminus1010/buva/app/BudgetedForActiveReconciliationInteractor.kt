@@ -2,7 +2,7 @@ package com.tminus1010.buva.app
 
 import com.tminus1010.buva.all_layers.extensions.easyEquals
 import com.tminus1010.buva.data.ReconciliationsRepo
-import com.tminus1010.buva.domain.BudgetedWithActiveReconciliation
+import com.tminus1010.buva.domain.CategoryAmountsAndTotalWithValidation
 import com.tminus1010.buva.domain.CategoryAmounts
 import com.tminus1010.buva.domain.ReconciliationToDo
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
@@ -38,7 +38,7 @@ class BudgetedForActiveReconciliationInteractor @Inject constructor(
                         transactionBlocks.filter { it.datePeriod!!.startDate < currentReconciliationToDo.date }
                     else -> transactionBlocks
                 }
-            BudgetedWithActiveReconciliation(
+            CategoryAmountsAndTotalWithValidation(
                 categoryAmounts = CategoryAmounts.addTogether(
                     activeReconciliation.categoryAmounts,
                     *relevantReconciliations.map { it.categoryAmounts }.toTypedArray(),
