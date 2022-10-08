@@ -2,8 +2,8 @@ package com.tminus1010.buva.data.service
 
 import com.tminus1010.buva.all_layers.extensions.isPositive
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
-import com.tminus1010.buva.domain.Transaction
 import com.tminus1010.buva.domain.CategoryAmounts
+import com.tminus1010.buva.domain.Transaction
 import com.tminus1010.tmcommonkotlin.core.extensions.ifNull
 import java.io.BufferedReader
 import java.io.InputStream
@@ -13,11 +13,8 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class TransactionInputStreamAdapter @Inject constructor() {
-    fun parseToTransactions(inputStream: InputStream): List<Transaction> {
-        return BufferedReader(InputStreamReader(inputStream)).lineSequence()
-            .mapNotNull { line -> runCatching { parseToTransaction(line.split(",")) }.getOrElse { logz("Ignoring line:$line\nbecause:", it); null } }
-            .toList()
-    }
+    fun parseToTransactions(inputStream: InputStream): List<Transaction> =
+        parseToTransactions(BufferedReader(InputStreamReader(inputStream)))
 
     fun parseToTransactions(bufferedReader: BufferedReader): List<Transaction> {
         return bufferedReader.lineSequence()
