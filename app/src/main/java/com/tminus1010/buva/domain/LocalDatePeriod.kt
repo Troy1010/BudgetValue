@@ -26,6 +26,10 @@ data class LocalDatePeriod(
     val days get() = period.days
     val midDate get() = startDate.plus(period.minusDays(period.days.toLong() / 2))
 
+    operator fun contains(period: LocalDatePeriod): Boolean {
+        return period.startDate in this && period.endDate in this
+    }
+
     operator fun contains(localDate: LocalDate): Boolean {
         return (localDate.isAfter(startDate) || localDate == startDate) &&
                 (localDate.isBefore(endDate) || localDate == endDate)

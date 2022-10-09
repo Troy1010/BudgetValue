@@ -46,4 +46,10 @@ object Domain {
                 .plus(relevantTransactionBlocks.map { it.total }.sum()),
         )
     }
+
+    fun isPeriodFullyImported(period: LocalDatePeriod, transactionImportInfos: List<TransactionImportInfo>): Boolean {
+        return transactionImportInfos.map { it.period }
+            .mergeOverlapping()
+            .any { period in it }
+    }
 }
