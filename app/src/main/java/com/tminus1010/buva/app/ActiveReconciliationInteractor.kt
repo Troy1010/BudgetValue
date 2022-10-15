@@ -7,10 +7,7 @@ import com.tminus1010.buva.domain.CategoryAmountsAndTotal
 import com.tminus1010.buva.domain.Domain
 import com.tminus1010.buva.domain.ReconciliationToDo
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.*
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -20,28 +17,36 @@ class ActiveReconciliationInteractor @Inject constructor(
     accountsRepo: AccountsRepo,
     transactionsInteractor: TransactionsInteractor,
     reconciliationsRepo: ReconciliationsRepo,
+    planReconciliationInteractor: PlanReconciliationInteractor,
 ) {
-    val categoryAmountsAndTotal =
-        combine(activeReconciliationRepo.activeReconciliationCAs, reconciliationsToDoInteractor.currentReconciliationToDo, accountsRepo.accountsAggregate, transactionsInteractor.transactionBlocks, reconciliationsRepo.reconciliations)
-        { activeReconciliationCAs, currentReconciliationToDo, accountsAggregate, transactionBlocks, reconciliations ->
-            CategoryAmountsAndTotal.FromTotal(
-                categoryAmounts = activeReconciliationCAs,
-                total = when (currentReconciliationToDo) {
-                    is ReconciliationToDo.Accounts ->
-                        Domain.guessAccountsTotalInPast(currentReconciliationToDo.date, accountsAggregate, transactionBlocks, reconciliations)
-                    else -> BigDecimal.ZERO
-                },
-            )
+    val activeReconciliationCAsAndTotal =
+        reconciliationsToDoInteractor.currentReconciliationToDo.flatMapLatest { currentReconciliationToDo ->
+            when (currentReconciliationToDo) {
+                is ReconciliationToDo.PlanZ ->
+                    planReconciliationInteractor.activeReconciliationCAsAndTotal
+                else ->
+                    combine(activeReconciliationRepo.activeReconciliationCAs, accountsRepo.accountsAggregate, transactionsInteractor.transactionBlocks, reconciliationsRepo.reconciliations)
+                    { activeReconciliationCAs, accountsAggregate, transactionBlocks, reconciliations ->
+                        CategoryAmountsAndTotal.FromTotal(
+                            categoryAmounts = activeReconciliationCAs,
+                            total = when (currentReconciliationToDo) {
+                                is ReconciliationToDo.Accounts ->
+                                    Domain.guessAccountsTotalInPast(currentReconciliationToDo.date, accountsAggregate, transactionBlocks, reconciliations)
+                                else -> BigDecimal.ZERO
+                            },
+                        )
+                    }
+            }
         }
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 
     val targetDefaultAmount =
-        reconciliationsToDoInteractor.currentReconciliationToDo.map { currentReconciliationToDo ->
+        reconciliationsToDoInteractor.currentReconciliationToDo.flatMapLatest { currentReconciliationToDo ->
             when (currentReconciliationToDo) {
                 is ReconciliationToDo.PlanZ ->
-                    -currentReconciliationToDo.transactionBlock.incomeBlock.total
+                    planReconciliationInteractor.targetDefaultAmount
                 else ->
-                    BigDecimal.ZERO
+                    flowOf(BigDecimal.ZERO)
             }
         }
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)

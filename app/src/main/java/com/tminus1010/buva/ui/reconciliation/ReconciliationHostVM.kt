@@ -39,6 +39,7 @@ class ReconciliationHostVM @Inject constructor(
     private val categoryInteractor: CategoryInteractor,
     private val accountsRepo: AccountsRepo,
     private val transactionsInteractor: TransactionsInteractor,
+    private val planReconciliationInteractor: PlanReconciliationInteractor,
 ) : ViewModel() {
     // # User Intents
     fun userSave() {
@@ -69,9 +70,16 @@ class ReconciliationHostVM @Inject constructor(
         GlobalScope.launch { activeReconciliationRepo.pushCategoryAmounts(CategoryAmounts()) }
     }
 
-    fun userMatchActual() {
+    fun userMatch() {
         val x = reconciliationsToDoInteractor.currentReconciliationToDo.value as ReconciliationToDo.PlanZ
         GlobalScope.launch { activeReconciliationRepo.pushCategoryAmounts(CategoryAmounts(x.transactionBlock.categoryAmounts.mapValues { -it.value })) }
+    }
+
+    fun userMatchUp() {
+        when (val x = reconciliationsToDoInteractor.currentReconciliationToDo.value) {
+            is ReconciliationToDo.PlanZ -> GlobalScope.launch { planReconciliationInteractor.matchUp() }.use(throbberSharedVM)
+            else -> error("Unhandled type:$x")
+        }
     }
 
     // # State
@@ -111,7 +119,13 @@ class ReconciliationHostVM @Inject constructor(
                 if (it is ReconciliationToDo.PlanZ)
                     ButtonVMItem(
                         title = "Match",
-                        onClick = ::userMatchActual,
+                        onClick = ::userMatch,
+                    )
+                else null,
+                if (it is ReconciliationToDo.PlanZ)
+                    ButtonVMItem(
+                        title = "Match Up",
+                        onClick = ::userMatchUp,
                     )
                 else null,
                 ButtonVMItem(

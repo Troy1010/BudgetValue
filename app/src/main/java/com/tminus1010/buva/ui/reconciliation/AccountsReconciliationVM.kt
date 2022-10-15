@@ -36,7 +36,7 @@ class AccountsReconciliationVM @Inject constructor(
                 category = category,
                 activeReconciliationRepo.activeReconciliationCAs.first().calcFillAmount(
                     fillCategory = category,
-                    total = activeReconciliationInteractor.categoryAmountsAndTotal.first().total,
+                    total = activeReconciliationInteractor.activeReconciliationCAsAndTotal.first().total,
                 ),
             )
         }
@@ -44,7 +44,7 @@ class AccountsReconciliationVM @Inject constructor(
 
     // # State
     val reconciliationTableView =
-        combine(userCategories.flow, activeReconciliationInteractor.categoryAmountsAndTotal, budgetedForActiveReconciliationInteractor.categoryAmountsAndTotal)
+        combine(userCategories.flow, activeReconciliationInteractor.activeReconciliationCAsAndTotal, budgetedForActiveReconciliationInteractor.categoryAmountsAndTotal)
         { categories, activeReconciliation, budgetedWithActiveReconciliation ->
             TableViewVMItem(
                 recipeGrid = listOf(

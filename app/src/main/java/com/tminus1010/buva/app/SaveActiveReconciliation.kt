@@ -6,7 +6,6 @@ import com.tminus1010.buva.domain.CategoryAmounts
 import com.tminus1010.buva.domain.Reconciliation
 import com.tminus1010.buva.domain.ReconciliationToDo
 import kotlinx.coroutines.flow.first
-import java.math.BigDecimal
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -26,7 +25,7 @@ class SaveActiveReconciliation @Inject constructor(
                     is ReconciliationToDo.PlanZ ->
                         reconciliationToDo.transactionBlock.datePeriod!!.midDate
                 },
-                total = activeReconciliationInteractor.categoryAmountsAndTotal.first().total,
+                total = activeReconciliationInteractor.activeReconciliationCAsAndTotal.first().total,
                 categoryAmounts = activeReconciliationRepo.activeReconciliationCAs.first(),
             )
         )

@@ -20,7 +20,7 @@ class BudgetedForActiveReconciliationInteractor @Inject constructor(
     reconciliationsRepo: ReconciliationsRepo,
 ) {
     val categoryAmountsAndTotal =
-        combine(activeReconciliationInteractor.categoryAmountsAndTotal, reconciliationsToDoInteractor.currentReconciliationToDo, reconciliationsRepo.reconciliations, transactionsInteractor.transactionBlocks)
+        combine(activeReconciliationInteractor.activeReconciliationCAsAndTotal, reconciliationsToDoInteractor.currentReconciliationToDo, reconciliationsRepo.reconciliations, transactionsInteractor.transactionBlocks)
         { activeReconciliation, currentReconciliationToDo, reconciliations, transactionBlocks ->
             val relevantReconciliations =
                 when (currentReconciliationToDo) {

@@ -26,7 +26,6 @@ class PlanReconciliationVM @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val activeReconciliationRepo: ActiveReconciliationRepo,
     userCategories: UserCategories,
-    private val activeReconciliationInteractor: ActiveReconciliationInteractor,
     private val activeReconciliationInteractor2: ActiveReconciliationInteractor2,
     private val planReconciliationInteractor: PlanReconciliationInteractor,
 ) : ViewModel() {
@@ -45,7 +44,7 @@ class PlanReconciliationVM @Inject constructor(
     // # State
     val subTitle = reconciliationToDo.map { it.transactionBlock.datePeriod!!.toDisplayStr() }
     val reconciliationTableView =
-        combine(userCategories.flow, activeReconciliationInteractor.categoryAmountsAndTotal, planReconciliationInteractor.budgeted, reconciliationToDo, activeReconciliationInteractor.targetDefaultAmount)
+        combine(userCategories.flow, planReconciliationInteractor.activeReconciliationCAsAndTotal, planReconciliationInteractor.budgeted, reconciliationToDo, planReconciliationInteractor.targetDefaultAmount)
         { categories, activeReconciliation, budgeted, reconciliationToDo, targetDefaultAmount ->
             TableViewVMItem(
                 recipeGrid = listOf(

@@ -29,6 +29,15 @@ data class CategoryAmounts constructor(private val map: @RawValue Map<Category, 
             .let { CategoryAmounts(it) }
     }
 
+    fun maxTogether(other: Map<Category, BigDecimal>): CategoryAmounts {
+        return listOf(this, other)
+            .fold(hashMapOf<Category, BigDecimal>()) { acc, map ->
+                map.forEach { (k, v) -> acc[k] = maxOf(acc[k] ?: BigDecimal.ZERO, v) }
+                acc
+            }
+            .let { CategoryAmounts(it) }
+    }
+
     fun subtractTogether(other: Map<Category, BigDecimal>): CategoryAmounts {
         return addTogether(other.mapValues { -it.value })
     }
