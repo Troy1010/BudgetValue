@@ -1,6 +1,5 @@
 package com.tminus1010.buva.app
 
-import com.tminus1010.buva.all_layers.extensions.easyEquals
 import com.tminus1010.buva.data.ActiveReconciliationRepo
 import com.tminus1010.buva.domain.*
 import kotlinx.coroutines.GlobalScope
@@ -16,10 +15,10 @@ class PlanReconciliationInteractor @Inject constructor(
     private val historyInteractor: HistoryInteractor,
 ) {
     suspend fun matchUp() {
-        val CAs = activeReconciliationCAsAndTotal.first().categoryAmounts
+        val activeReconciliationCAs = activeReconciliationCAsAndTotal.first().categoryAmounts
         val budgetedCAsWithFlippedSign = summedRelevantHistory.first().categoryAmounts.mapValues { -it.value }
         activeReconciliationRepo.pushCategoryAmounts(
-            CAs.maxTogether(budgetedCAsWithFlippedSign)
+            activeReconciliationCAs.maxTogether(budgetedCAsWithFlippedSign)
         )
     }
 
@@ -57,18 +56,13 @@ class PlanReconciliationInteractor @Inject constructor(
                     activeReconciliation,
                     relevantHistory,
                 ),
-                caValidation = { true },
-                defaultAmountValidation = { (it ?: BigDecimal.ZERO).easyEquals(BigDecimal.ZERO) },
+                caValidation = { (it ?: BigDecimal.ZERO) >= BigDecimal.ZERO },
+                defaultAmountValidation = { true },
             )
         }
             // TODO: GlobalScope without any disposal strategy is not ideal.
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 
-    //    val targetDefaultAmount =
-//        reconciliationsToDoInteractor.currentReconciliationToDo.filterIsInstance<ReconciliationToDo.PlanZ>().map { currentReconciliationToDo ->
-//            -currentReconciliationToDo.transactionBlock.incomeBlock.total
-//        }
-//            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
     val targetDefaultAmount =
         summedRelevantHistory.map { summedRelevantHistory ->
             -summedRelevantHistory.defaultAmount
