@@ -3,17 +3,18 @@ package com.tminus1010.buva.environment
 import androidx.navigation.NavController
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.ui.category_details.CategoryDetailsFrag
+import com.tminus1010.tmcommonkotlin.androidx.launchOnMainThread
 import dagger.Reusable
 import javax.inject.Inject
 
 @Reusable
 class AndroidNavigationWrapperImpl @Inject constructor() : AndroidNavigationWrapper {
-    private val nav get() = Companion.nav ?: error("This class expects that Companion.nav is assigned")
-    override fun navToCreateCategory() {
+    private val nav get() = Companion.nav ?: error("This class expects Companion.nav to be assigned")
+    override fun navToCreateCategory() = launchOnMainThread {
         CategoryDetailsFrag.navTo(nav, null)
     }
 
-    override fun navToEditCategory(category: Category) {
+    override fun navToEditCategory(category: Category) = launchOnMainThread {
         CategoryDetailsFrag.navTo(nav, category)
     }
 

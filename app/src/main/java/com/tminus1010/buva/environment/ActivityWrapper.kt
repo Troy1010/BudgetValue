@@ -5,7 +5,7 @@ import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
 import javax.inject.Inject
 
 class ActivityWrapper @Inject constructor() {
-    private val activity get() = Companion.activity ?: error("This class expects that Companion.activity is assigned")
+    private val activity get() = Companion.activity ?: error("This class expects Companion.activity to be assigned")
 
     val showAlertDialog get() = ShowAlertDialog(activity)
 
