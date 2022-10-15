@@ -62,12 +62,9 @@ class ReconciliationHostVM @Inject constructor(
             .use(throbberSharedVM)
     }
 
-    fun userUseActivePlan() {
-        GlobalScope.launch { activeReconciliationRepo.pushCategoryAmounts(activePlanRepo.activePlan.first().categoryAmounts) }
-    }
-
-    fun userClearActiveReconciliation() {
-        GlobalScope.launch { activeReconciliationRepo.pushCategoryAmounts(CategoryAmounts()) }
+    fun userResetActiveReconciliation() {
+        GlobalScope.launch { activeReconciliationInteractor.reset() }
+            .use(throbberSharedVM)
     }
 
     fun userMatchUp() {
@@ -102,15 +99,9 @@ class ReconciliationHostVM @Inject constructor(
                     )
                 else null,
                 ButtonVMItem(
-                    title = "Clear",
-                    onClick = ::userClearActiveReconciliation,
+                    title = "Reset",
+                    onClick = ::userResetActiveReconciliation,
                 ),
-                if (it is ReconciliationToDo.PlanZ)
-                    ButtonVMItem(
-                        title = "Use Plan",
-                        onClick = ::userUseActivePlan,
-                    )
-                else null,
                 if (it is ReconciliationToDo.PlanZ)
                     ButtonVMItem(
                         title = "Match Up",

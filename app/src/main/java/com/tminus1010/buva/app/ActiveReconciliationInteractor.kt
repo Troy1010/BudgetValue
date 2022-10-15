@@ -1,8 +1,10 @@
 package com.tminus1010.buva.app
 
 import com.tminus1010.buva.data.AccountsRepo
+import com.tminus1010.buva.data.ActivePlanRepo
 import com.tminus1010.buva.data.ActiveReconciliationRepo
 import com.tminus1010.buva.data.ReconciliationsRepo
+import com.tminus1010.buva.domain.CategoryAmounts
 import com.tminus1010.buva.domain.CategoryAmountsAndTotal
 import com.tminus1010.buva.domain.Domain
 import com.tminus1010.buva.domain.ReconciliationToDo
@@ -12,13 +14,25 @@ import java.math.BigDecimal
 import javax.inject.Inject
 
 class ActiveReconciliationInteractor @Inject constructor(
-    activeReconciliationRepo: ActiveReconciliationRepo,
-    reconciliationsToDoInteractor: ReconciliationsToDoInteractor,
+    private val activeReconciliationRepo: ActiveReconciliationRepo,
+    private val reconciliationsToDoInteractor: ReconciliationsToDoInteractor,
+    private val activePlanRepo: ActivePlanRepo,
     accountsRepo: AccountsRepo,
     transactionsInteractor: TransactionsInteractor,
     reconciliationsRepo: ReconciliationsRepo,
     planReconciliationInteractor: PlanReconciliationInteractor,
 ) {
+    suspend fun reset() {
+        activeReconciliationRepo.pushCategoryAmounts(
+            when (reconciliationsToDoInteractor.currentReconciliationToDo.first()) {
+                is ReconciliationToDo.PlanZ ->
+                    activePlanRepo.activePlan.first().categoryAmounts
+                else ->
+                    CategoryAmounts()
+            }
+        )
+    }
+
     val activeReconciliationCAsAndTotal =
         reconciliationsToDoInteractor.currentReconciliationToDo.flatMapLatest { currentReconciliationToDo ->
             when (currentReconciliationToDo) {
