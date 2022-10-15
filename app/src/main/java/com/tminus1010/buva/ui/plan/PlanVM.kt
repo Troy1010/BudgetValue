@@ -8,7 +8,7 @@ import com.tminus1010.buva.app.ActivePlanInteractor
 import com.tminus1010.buva.app.UserCategories
 import com.tminus1010.buva.data.ActivePlanRepo
 import com.tminus1010.buva.domain.Category
-import com.tminus1010.buva.ui.Navigator
+import com.tminus1010.buva.presentation.Navigator
 import com.tminus1010.buva.ui.all_features.view_model_item.*
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith

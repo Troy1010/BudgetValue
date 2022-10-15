@@ -1,4 +1,4 @@
-package com.tminus1010.buva.ui
+package com.tminus1010.buva.presentation
 
 import com.tminus1010.buva.environment.AndroidNavigationWrapperImpl
 import com.tminus1010.buva.environment.AndroidNavigationWrapper
