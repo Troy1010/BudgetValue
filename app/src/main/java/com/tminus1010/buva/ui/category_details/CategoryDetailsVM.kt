@@ -3,7 +3,9 @@ package com.tminus1010.buva.ui.category_details
 import androidx.lifecycle.*
 import com.tminus1010.buva.all_layers.InvalidCategoryNameException
 import com.tminus1010.buva.all_layers.KEY1
-import com.tminus1010.buva.all_layers.extensions.*
+import com.tminus1010.buva.all_layers.extensions.easyEmit
+import com.tminus1010.buva.all_layers.extensions.onNext
+import com.tminus1010.buva.all_layers.extensions.replaceFirst
 import com.tminus1010.buva.app.DeleteCategoryFromActiveDomain
 import com.tminus1010.buva.app.ReplaceCategoryGlobally
 import com.tminus1010.buva.data.CategoriesRepo
@@ -16,12 +18,10 @@ import com.tminus1010.buva.ui.errors.Errors
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
 
 @HiltViewModel
 class CategoryDetailsVM @Inject constructor(
