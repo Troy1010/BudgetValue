@@ -8,7 +8,6 @@ import com.tminus1010.buva.data.AccountsRepo
 import com.tminus1010.buva.data.ActivePlanRepo
 import com.tminus1010.buva.data.ActiveReconciliationRepo
 import com.tminus1010.buva.data.ReconciliationsRepo
-import com.tminus1010.buva.domain.CategoryAmounts
 import com.tminus1010.buva.domain.ReconciliationToDo
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
@@ -17,7 +16,6 @@ import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,12 +23,10 @@ import javax.inject.Inject
 @HiltViewModel
 class ReconciliationHostVM @Inject constructor(
     private val reconciliationsToDoInteractor: ReconciliationsToDoInteractor,
-    private val saveActiveReconciliation: SaveActiveReconciliation,
     private val budgetedForActiveReconciliationInteractor: BudgetedForActiveReconciliationInteractor,
     private val activeReconciliationInteractor: ActiveReconciliationInteractor,
     private val activeReconciliationInteractor2: ActiveReconciliationInteractor2,
     private val showToast: ShowToast,
-    private val matchBudgetedForActiveReconciliation: MatchBudgetedForActiveReconciliation,
     private val activePlanRepo: ActivePlanRepo,
     private val activeReconciliationRepo: ActiveReconciliationRepo,
     private val throbberSharedVM: ThrobberSharedVM,
@@ -52,13 +48,7 @@ class ReconciliationHostVM @Inject constructor(
 //        )
 //            showToast(NativeText.Simple("Invalid input"))
 //        else
-        GlobalScope.launch { saveActiveReconciliation(reconciliationsToDoInteractor.currentReconciliationToDo.value!!) }
-            .use(throbberSharedVM)
-    }
-
-    // TODO: Given a plan reconciliation in the future and no account reconciliation, this does not work as expected.
-    fun userEqualizeActiveReconciliation() {
-        GlobalScope.launch { matchBudgetedForActiveReconciliation() }
+        GlobalScope.launch { activeReconciliationInteractor.save() }
             .use(throbberSharedVM)
     }
 
@@ -92,12 +82,6 @@ class ReconciliationHostVM @Inject constructor(
     val buttons =
         reconciliationsToDoInteractor.currentReconciliationToDo.map {
             listOfNotNull(
-                if (it is ReconciliationToDo.Accounts)
-                    ButtonVMItem(
-                        title = "Equalize",
-                        onClick = ::userEqualizeActiveReconciliation,
-                    )
-                else null,
                 ButtonVMItem(
                     title = "Reset",
                     onClick = ::userResetActiveReconciliation,

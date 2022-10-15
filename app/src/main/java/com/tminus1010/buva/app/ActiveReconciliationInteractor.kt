@@ -4,24 +4,40 @@ import com.tminus1010.buva.data.AccountsRepo
 import com.tminus1010.buva.data.ActivePlanRepo
 import com.tminus1010.buva.data.ActiveReconciliationRepo
 import com.tminus1010.buva.data.ReconciliationsRepo
-import com.tminus1010.buva.domain.CategoryAmounts
-import com.tminus1010.buva.domain.CategoryAmountsAndTotal
-import com.tminus1010.buva.domain.Domain
-import com.tminus1010.buva.domain.ReconciliationToDo
+import com.tminus1010.buva.domain.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
 import java.math.BigDecimal
+import java.time.LocalDate
 import javax.inject.Inject
 
 class ActiveReconciliationInteractor @Inject constructor(
     private val activeReconciliationRepo: ActiveReconciliationRepo,
     private val reconciliationsToDoInteractor: ReconciliationsToDoInteractor,
     private val activePlanRepo: ActivePlanRepo,
+    private val reconciliationsRepo: ReconciliationsRepo,
     accountsRepo: AccountsRepo,
     transactionsInteractor: TransactionsInteractor,
-    reconciliationsRepo: ReconciliationsRepo,
     planReconciliationInteractor: PlanReconciliationInteractor,
 ) {
+    suspend fun save() {
+        reconciliationsRepo.push(
+            Reconciliation(
+                date = when (val reconciliationToDo = reconciliationsToDoInteractor.currentReconciliationToDo.first()) {
+                    is ReconciliationToDo.Anytime ->
+                        LocalDate.now()
+                    is ReconciliationToDo.Accounts ->
+                        reconciliationToDo.date
+                    is ReconciliationToDo.PlanZ ->
+                        reconciliationToDo.transactionBlock.datePeriod!!.midDate
+                },
+                total = activeReconciliationCAsAndTotal.first().total,
+                categoryAmounts = activeReconciliationRepo.activeReconciliationCAs.first(),
+            )
+        )
+        reset()
+    }
+
     suspend fun reset() {
         activeReconciliationRepo.pushCategoryAmounts(
             when (reconciliationsToDoInteractor.currentReconciliationToDo.first()) {
