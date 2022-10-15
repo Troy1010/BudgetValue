@@ -7,6 +7,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.room.Room
 import com.tminus1010.buva.data.service.*
+import com.tminus1010.tmcommonkotlin.imagetotext.ImageToText
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
@@ -41,4 +42,7 @@ object EnvironmentModule {
     @Reusable
     fun providesSharedPreferences(application: Application): SharedPreferences =
         application.getSharedPreferences("SharedPref", Context.MODE_PRIVATE)
+
+    @Provides
+    fun provideImageToText(application: Application): ImageToText = ImageToText(application)
 }
