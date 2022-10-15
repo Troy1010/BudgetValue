@@ -70,11 +70,6 @@ class ReconciliationHostVM @Inject constructor(
         GlobalScope.launch { activeReconciliationRepo.pushCategoryAmounts(CategoryAmounts()) }
     }
 
-    fun userMatch() {
-        val x = reconciliationsToDoInteractor.currentReconciliationToDo.value as ReconciliationToDo.PlanZ
-        GlobalScope.launch { activeReconciliationRepo.pushCategoryAmounts(CategoryAmounts(x.transactionBlock.categoryAmounts.mapValues { -it.value })) }
-    }
-
     fun userMatchUp() {
         when (val x = reconciliationsToDoInteractor.currentReconciliationToDo.value) {
             is ReconciliationToDo.PlanZ -> GlobalScope.launch { planReconciliationInteractor.matchUp() }.use(throbberSharedVM)
@@ -114,12 +109,6 @@ class ReconciliationHostVM @Inject constructor(
                     ButtonVMItem(
                         title = "Use Plan",
                         onClick = ::userUseActivePlan,
-                    )
-                else null,
-                if (it is ReconciliationToDo.PlanZ)
-                    ButtonVMItem(
-                        title = "Match",
-                        onClick = ::userMatch,
                     )
                 else null,
                 if (it is ReconciliationToDo.PlanZ)

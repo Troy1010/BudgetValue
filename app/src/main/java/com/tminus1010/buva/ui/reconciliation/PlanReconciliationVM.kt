@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
-import com.tminus1010.buva.app.ActiveReconciliationInteractor
 import com.tminus1010.buva.app.ActiveReconciliationInteractor2
 import com.tminus1010.buva.app.PlanReconciliationInteractor
 import com.tminus1010.buva.app.UserCategories
@@ -44,8 +43,8 @@ class PlanReconciliationVM @Inject constructor(
     // # State
     val subTitle = reconciliationToDo.map { it.transactionBlock.datePeriod!!.toDisplayStr() }
     val reconciliationTableView =
-        combine(userCategories.flow, planReconciliationInteractor.activeReconciliationCAsAndTotal, planReconciliationInteractor.budgeted, reconciliationToDo, planReconciliationInteractor.targetDefaultAmount)
-        { categories, activeReconciliation, budgeted, reconciliationToDo, targetDefaultAmount ->
+        combine(userCategories.flow, planReconciliationInteractor.activeReconciliationCAsAndTotal, planReconciliationInteractor.budgeted, reconciliationToDo)
+        { categories, activeReconciliation, budgeted, reconciliationToDo ->
             TableViewVMItem(
                 recipeGrid = listOf(
                     listOf(
@@ -63,7 +62,7 @@ class PlanReconciliationVM @Inject constructor(
                     listOf(
                         TextVMItem("Default"),
                         TextVMItem(reconciliationToDo.transactionBlock.defaultAmount.toString()),
-                        AmountPresentationModel(activeReconciliation.defaultAmount, checkIfValid = { activeReconciliation.defaultAmount == targetDefaultAmount }),
+                        AmountPresentationModel(activeReconciliation.defaultAmount),
                         AmountPresentationModel(budgeted.defaultAmount, checkIfValid = { budgeted.isDefaultAmountValid })
                     ),
                     *categories.map { category ->
