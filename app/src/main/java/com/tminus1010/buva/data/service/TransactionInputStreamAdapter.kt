@@ -37,7 +37,7 @@ class TransactionInputStreamAdapter @Inject constructor() {
                 .toMoneyBigDecimal()
                 .let { amount ->
                     // if amount is not negative, then see if any columns denote the fact that this should be a negative value
-                    if (amount.isPositive && row.find { Regex("""^Debit${'$'}""").matches(it) } != null)
+                    if (amount.isPositive && row.any { Regex("""^Debit${'$'}""").matches(it) } )
                         -amount
                     else
                         amount
