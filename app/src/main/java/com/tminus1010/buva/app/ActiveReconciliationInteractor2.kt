@@ -13,10 +13,11 @@ class ActiveReconciliationInteractor2 @Inject constructor(
     private val activeReconciliationRepo: ActiveReconciliationRepo,
 ) {
     suspend fun fillIntoCategory(category: Category) {
-        Pair(activeReconciliationRepo.activeReconciliationCAs.first(), activeReconciliationInteractor.targetDefaultAmount.first())
-            .let { (activeReconciliationCAs, targetDefaultAmount) ->
-                activeReconciliationCAs.calcCategoryAmountToGetTargetDefaultAmount(category, targetDefaultAmount)
-            }
-            .also { activeReconciliationRepo.pushCategoryAmount(category, it) }
+        val activeReconciliationCAs = activeReconciliationRepo.activeReconciliationCAs.first()
+        val targetDefaultAmount = activeReconciliationInteractor.targetDefaultAmount.first()
+        activeReconciliationRepo.pushCategoryAmount(
+            category = category,
+            amount = activeReconciliationCAs.calcCategoryAmountToGetTargetDefaultAmount(category, targetDefaultAmount),
+        )
     }
 }

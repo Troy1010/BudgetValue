@@ -23,45 +23,20 @@ class PlanReconciliationInteractor @Inject constructor(
         )
     }
 
-    suspend fun fillIntoCategory(category: Category) {
-        val date =
-            when (val x = reconciliationsToDoInteractor.currentReconciliationToDo.first()) {
-                is ReconciliationToDo.PlanZ -> x.transactionBlock.datePeriod?.endDate
-                else -> null
-            }
-        historyInteractor.entireHistory.first()
-            .filter {
-                if (date == null)
-                    true
-                else
-                    when (it) {
-                        is Reconciliation -> it.date < date
-                        is TransactionBlock -> it.datePeriod!!.startDate < date
-                        else -> true
-                    }
-            }
-            .addTogether()
-            .categoryAmounts
-            .plus(activeReconciliationRepo.activeReconciliationCAs.first())
-            .calcFillAmount(fillCategory = category, total = BigDecimal.ZERO)
-            .also { activeReconciliationRepo.pushCategoryAmount(category, it) }
-    }
-
+    // # Internal
     private val summedRelevantHistory =
         combine(reconciliationsToDoInteractor.currentReconciliationToDo.filterIsInstance<ReconciliationToDo.PlanZ>(), historyInteractor.entireHistory)
         { currentReconciliationToDo, entireHistory ->
-            CategoryAmountsAndTotal.addTogether(
-                entireHistory.filter {
-                    when (it) {
-                        is Reconciliation -> it.date < currentReconciliationToDo.transactionBlock.datePeriod!!.endDate
-                        is TransactionBlock -> it.datePeriod!!.startDate < currentReconciliationToDo.transactionBlock.datePeriod!!.endDate
-                        else -> true
-                    }
+            entireHistory.filter {
+                when (it) {
+                    is Reconciliation -> it.date < currentReconciliationToDo.transactionBlock.datePeriod!!.endDate
+                    is TransactionBlock -> it.datePeriod!!.startDate < currentReconciliationToDo.transactionBlock.datePeriod!!.endDate
+                    else -> true
                 }
-            )
+            }
+                .addTogether()
         }
-            // TODO: GlobalScope without any disposal strategy is not ideal.
-            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
+            .shareIn(GlobalScope, SharingStarted.Eagerly, 1) // TODO: GlobalScope without any disposal strategy is not ideal.
 
     // TODO: This is a quasi-redefinition of ActiveReconciliationInteractor.categoryAmountsAndTotal
     val activeReconciliationCAsAndTotal =
@@ -72,7 +47,7 @@ class PlanReconciliationInteractor @Inject constructor(
             )
         }
             // TODO: GlobalScope without any disposal strategy is not ideal.
-            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
+            .shareIn(GlobalScope, SharingStarted.Eagerly, 1) // TODO: GlobalScope without any disposal strategy is not ideal.
 
     val budgeted =
         combine(activeReconciliationCAsAndTotal, summedRelevantHistory)
@@ -89,9 +64,14 @@ class PlanReconciliationInteractor @Inject constructor(
             // TODO: GlobalScope without any disposal strategy is not ideal.
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 
+    //    val targetDefaultAmount =
+//        reconciliationsToDoInteractor.currentReconciliationToDo.filterIsInstance<ReconciliationToDo.PlanZ>().map { currentReconciliationToDo ->
+//            -currentReconciliationToDo.transactionBlock.incomeBlock.total
+//        }
+//            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
     val targetDefaultAmount =
-        reconciliationsToDoInteractor.currentReconciliationToDo.filterIsInstance<ReconciliationToDo.PlanZ>().map { currentReconciliationToDo ->
-            -currentReconciliationToDo.transactionBlock.incomeBlock.total
+        summedRelevantHistory.map { summedRelevantHistory ->
+            -summedRelevantHistory.defaultAmount
         }
-            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
+            .shareIn(GlobalScope, SharingStarted.Eagerly, 1) // TODO: GlobalScope without any disposal strategy is not ideal.
 }
