@@ -32,6 +32,7 @@ import com.tminus1010.buva.ui.history.HistoryFrag
 import com.tminus1010.buva.ui.importZ.ImportSharedVM
 import com.tminus1010.buva.ui.transactions.TransactionListFrag
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
+import com.tminus1010.tmcommonkotlin.androidx.ShowToast
 import com.tminus1010.tmcommonkotlin.core.tryOrNull
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.pairwise
@@ -41,7 +42,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 
@@ -72,6 +75,12 @@ class HostActivity : AppCompatActivity() {
     lateinit var throbberSharedVM: ThrobberSharedVM
 
     @Inject
+    lateinit var transactionsInteractor: TransactionsInteractor
+
+    @Inject
+    lateinit var showToast: ShowToast
+
+    @Inject
     lateinit var importSharedVM: ImportSharedVM
 
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.frag_nav_host) as HostFrag }
@@ -96,6 +105,15 @@ class HostActivity : AppCompatActivity() {
         vb.bottomNavigation.setOnItemSelectedListener {
             // Requirement: When config change Then do not forget current menu item.
             viewModel.selectMenuItem(it.itemId)
+            // Requirement: Given some spends are not categorized When Reconciliation is clicked Then show toast.
+            if (
+                it.itemId == R.id.reconciliationHostFrag
+                // TODO: Blocking is not ideal.
+                && !runBlocking { transactionsInteractor.transactionsAggregate.first() }.areAllSpendsCategorized
+            ) {
+                showToast("Can't reconcile until all spends are categorized.")
+                return@setOnItemSelectedListener false
+            }
             // Requirement: When menu item clicked Then forget backstack.
             // This will be null When config change.
             val nav = tryOrNull { findNavController(R.id.frag_nav_host) }
