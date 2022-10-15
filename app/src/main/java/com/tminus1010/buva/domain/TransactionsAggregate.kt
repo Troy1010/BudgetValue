@@ -8,4 +8,5 @@ class TransactionsAggregate(
     val mostRecentSpend by lazy { spends.firstOrNull() }
     val oldestSpend by lazy { spends.lastOrNull() }
     val mostRecentUncategorizedSpend by lazy { spends.firstOrNull(Transaction::isUncategorized) }
+    val areAllSpendsCategorized by lazy { spends.all { it.isCategorized } }
 }
