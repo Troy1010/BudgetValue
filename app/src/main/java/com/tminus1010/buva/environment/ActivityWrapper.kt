@@ -4,14 +4,13 @@ import android.app.Activity
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
 import javax.inject.Inject
 
-class ActivityWrapper(activity: Activity) {
-    @Inject
-    constructor() : this(activity ?: error("This class expects that ActivityWrapper.activity is assigned before construction"))
+class ActivityWrapper @Inject constructor() {
+    private val activity get() = Companion.activity ?: error("This class expects that ActivityWrapper.activity is assigned")
 
-    val showAlertDialog = ShowAlertDialog(activity)
+    val showAlertDialog get() = ShowAlertDialog(activity)
 
     companion object {
-        // This pattern can cause memory leaks. Use with care.
+        // This pattern can cause memory leaks. However, this project only has 1 Activity, so a memory leak is unlikely
         var activity: Activity? = null
     }
 }
