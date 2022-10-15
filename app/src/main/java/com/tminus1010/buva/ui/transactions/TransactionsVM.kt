@@ -1,44 +1,39 @@
 package com.tminus1010.buva.ui.transactions
 
+import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.app.TransactionsInteractor
-import com.tminus1010.buva.data.TransactionsRepo
+import com.tminus1010.buva.environment.ActivityWrapper
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.TableViewVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.TransactionPresentationModel
-import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
-import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TransactionsVM @Inject constructor(
     private val transactionsInteractor: TransactionsInteractor,
     private val throbberSharedVM: ThrobberSharedVM,
+    private val activityWrapper: ActivityWrapper,
 ) : ViewModel() {
-    // # Setup
-    val showAlertDialog = MutableSharedFlow<ShowAlertDialog>(1)
-
     // # User Intents
     fun userTryClearTransactionHistory() {
-        suspend {
-            showAlertDialog.value!!(
+        GlobalScope.launch {
+            activityWrapper.showAlertDialog(
                 body = NativeText.Simple("Are you sure you want to clear the transaction history?"),
                 onYes = {
-                    suspend { transactionsInteractor.clear() }
-                        .observe(GlobalScope)
+                    GlobalScope.launch { transactionsInteractor.clear() }
                         .use(throbberSharedVM)
                 }
             )
         }
-            .observe(GlobalScope)
     }
 
     // # Internal
@@ -51,6 +46,7 @@ class TransactionsVM @Inject constructor(
     val navToTransaction = transactionPresentationModels.flatMapLatest { merge(*it.map(TransactionPresentationModel::userTryNavToTransaction).toTypedArray()) }
 
     // # State
+    val noTransactionsMsgVisibility = transactionPresentationModels.map { if (it.isEmpty()) View.VISIBLE else View.GONE }
     val transactionVMItems =
         transactionPresentationModels
             .map {
