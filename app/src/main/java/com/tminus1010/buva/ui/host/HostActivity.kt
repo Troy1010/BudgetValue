@@ -24,7 +24,7 @@ import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.app.*
 import com.tminus1010.buva.databinding.ActivityHostBinding
 import com.tminus1010.buva.environment.ActivityWrapper
-import com.tminus1010.buva.ui.all_features.AndroidNavigationWrapper
+import com.tminus1010.buva.environment.AndroidNavigationWrapperImpl
 import com.tminus1010.buva.ui.all_features.ShowImportResultAlertDialog
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.futures.FuturesFrag
@@ -85,7 +85,7 @@ class HostActivity : AppCompatActivity() {
         hostFrag.navController.addOnDestinationChangedListener { _, navDestination, _ -> Log.d("buva.Nav", "${navDestination.label}") }
         // ## Mediation
         ActivityWrapper.activity = this
-        AndroidNavigationWrapper.nav = hostFrag.navController
+        AndroidNavigationWrapperImpl.nav = hostFrag.navController
         viewModel.showAlertDialog.onNext(ShowAlertDialog(this))
         // ## Initialize app once per install
         GlobalScope.launch { initApp() }.use(throbberSharedVM)

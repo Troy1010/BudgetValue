@@ -21,7 +21,7 @@ object MiscModule {
 
     @Provides
     @Singleton
-    fun provideCategoryDatabase(categoryDatabase: CategoryDatabase): UserCategoriesDAO = categoryDatabase.userCategoriesDAO()
+    fun provideUserCategoriesDAO(categoryDatabase: CategoryDatabase): UserCategoriesDAO = categoryDatabase.userCategoriesDAO()
 
     @Provides
     fun provideImageToText(application: Application): ImageToText = ImageToText(application)

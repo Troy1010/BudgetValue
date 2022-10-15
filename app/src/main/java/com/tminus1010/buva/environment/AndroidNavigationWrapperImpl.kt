@@ -1,4 +1,4 @@
-package com.tminus1010.buva.ui.all_features
+package com.tminus1010.buva.environment
 
 import androidx.navigation.NavController
 import com.tminus1010.buva.domain.Category
@@ -7,8 +7,8 @@ import dagger.Reusable
 import javax.inject.Inject
 
 @Reusable
-class AndroidNavigationWrapper @Inject constructor() : IAndroidNavigationWrapper {
-    private val nav get() = Companion.nav!!
+class AndroidNavigationWrapperImpl @Inject constructor() : AndroidNavigationWrapper {
+    private val nav get() = Companion.nav ?: error("This class expects that Companion.nav is assigned")
     override fun navToCreateCategory() {
         CategoryDetailsFrag.navTo(nav, null)
     }
@@ -18,6 +18,7 @@ class AndroidNavigationWrapper @Inject constructor() : IAndroidNavigationWrapper
     }
 
     companion object {
+        // This pattern can cause memory leaks. However, this project only has 1 NavController, so a memory leak is unlikely
         var nav: NavController? = null
     }
 }

@@ -1,8 +1,8 @@
-package com.tminus1010.buva.ui.all_features
+package com.tminus1010.buva.environment
 
 import com.tminus1010.buva.domain.Category
 
-interface IAndroidNavigationWrapper {
+interface AndroidNavigationWrapper {
     fun navToCreateCategory()
     fun navToEditCategory(category: Category)
 }
