@@ -9,8 +9,6 @@ import com.tminus1010.buva.data.ActivePlanRepo
 import com.tminus1010.buva.data.ActiveReconciliationRepo
 import com.tminus1010.buva.data.ReconciliationsRepo
 import com.tminus1010.buva.domain.CategoryAmounts
-import com.tminus1010.buva.domain.Domain
-import com.tminus1010.buva.domain.Reconciliation
 import com.tminus1010.buva.domain.ReconciliationToDo
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
@@ -22,7 +20,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import java.math.BigDecimal
 import javax.inject.Inject
 
 @HiltViewModel
@@ -72,48 +69,6 @@ class ReconciliationHostVM @Inject constructor(
         GlobalScope.launch { activeReconciliationRepo.pushCategoryAmounts(CategoryAmounts()) }
     }
 
-    fun userSkip() {
-        GlobalScope.launch {
-            val currentReconciliationToDo = reconciliationsToDoInteractor.currentReconciliationToDo.first()
-            Reconciliation(
-                date = when (currentReconciliationToDo) {
-                    is ReconciliationToDo.PlanZ ->
-                        currentReconciliationToDo.transactionBlock.datePeriod!!.startDate
-                    is ReconciliationToDo.Accounts ->
-                        currentReconciliationToDo.date
-                    else ->
-                        error("Unhandled:$currentReconciliationToDo")
-                },
-                total = when (currentReconciliationToDo) {
-                    is ReconciliationToDo.Accounts ->
-                        Domain.guessAccountsTotalInPast(currentReconciliationToDo.date, accountsRepo.accountsAggregate.first(), transactionsInteractor.transactionBlocks.first(), reconciliationsRepo.reconciliations.first())
-                    is ReconciliationToDo.PlanZ ->
-                        BigDecimal.ZERO
-                    else ->
-                        error("Unhandled:$currentReconciliationToDo")
-                },
-                categoryAmounts = when (currentReconciliationToDo) {
-                    is ReconciliationToDo.PlanZ ->
-                        CategoryAmounts(currentReconciliationToDo.transactionBlock.categoryAmounts.mapValues { -it.value })
-                            .fillToGetTargetDefaultAmount(
-                                categoryInteractor.defaultFillCategory.first()!!,
-                                -currentReconciliationToDo.transactionBlock.incomeBlock.total,
-                            )
-                    is ReconciliationToDo.Accounts ->
-                        CategoryAmounts()
-                            .subtractTogether(budgetedForActiveReconciliationInteractor.categoryAmountsAndTotal.first().categoryAmounts)
-                            .fillIntoCategory(
-                                categoryInteractor.defaultFillCategory.first()!!,
-                                Domain.guessAccountsTotalInPast(currentReconciliationToDo.date, accountsRepo.accountsAggregate.first(), transactionsInteractor.transactionBlocks.first(), reconciliationsRepo.reconciliations.first()),
-                            )
-                    else ->
-                        error("Unhandled:$currentReconciliationToDo")
-                },
-            )
-                .also { reconciliationsRepo.push(it) }
-        }
-    }
-
     fun userMatchActual() {
         val x = reconciliationsToDoInteractor.currentReconciliationToDo.value as ReconciliationToDo.PlanZ
         GlobalScope.launch { activeReconciliationRepo.pushCategoryAmounts(CategoryAmounts(x.transactionBlock.categoryAmounts.mapValues { -it.value })) }
@@ -157,12 +112,6 @@ class ReconciliationHostVM @Inject constructor(
                     ButtonVMItem(
                         title = "Match",
                         onClick = ::userMatchActual,
-                    )
-                else null,
-                if (it is ReconciliationToDo.PlanZ || it is ReconciliationToDo.Accounts)
-                    ButtonVMItem(
-                        title = "Skip",
-                        onClick = ::userSkip,
                     )
                 else null,
                 ButtonVMItem(
