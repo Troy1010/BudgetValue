@@ -4,10 +4,10 @@ import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.room.Room
-import com.tminus1010.buva.FakeDataStore
-import com.tminus1010.buva.Given
-import com.tminus1010.buva.core_testing.app
 import com.tminus1010.buva.all_layers.dependency_injection.EnvironmentModule
+import com.tminus1010.buva.core_testing.app
+import com.tminus1010.buva.core_testing.shared.FakeDataStore
+import com.tminus1010.buva.core_testing.shared.Given
 import com.tminus1010.buva.data.service.CategoryDatabase
 import com.tminus1010.buva.data.service.MiscDatabase
 import com.tminus1010.buva.data.service.RoomWithCategoriesTypeConverter

@@ -34,6 +34,9 @@ class ImportTransactions @Inject constructor(
     suspend operator fun invoke(inputStream: InputStream) =
         import(transactionInputStreamAdapter.parseToTransactions(inputStream))
 
+    suspend operator fun invoke(transactions: Iterable<Transaction>) =
+        import(transactions)
+
     private suspend fun import(transactions: Iterable<Transaction>): ImportTransactionsResult {
         var transactionsImportedCounter: Int
         var transactionsCategorizedCounter = 0
