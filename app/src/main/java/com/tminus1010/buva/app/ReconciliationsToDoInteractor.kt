@@ -39,9 +39,9 @@ class ReconciliationsToDoInteractor @Inject constructor(
                         (reconciliation == null)
                             .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod?.toDisplayStr()} b/c reconciliation") }
                                 && transactionBlock.isFullyImported
-                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod?.toDisplayStr()} b/c isFullyImported") }
+                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod?.toDisplayStr()} b/c isFullyImported:$it") }
                                 && transactionBlock.spendBlock.isFullyCategorized
-                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod?.toDisplayStr()} b/c isFullyCategorized") }
+                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod?.toDisplayStr()} b/c isFullyCategorized:$it") }
                                 && (currentDate.flow.value !in transactionBlock.datePeriod!!)
                             .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod.toDisplayStr()} b/c it's current") }
                                 && (!Domain.shouldSkip(reconciliationSkips, transactionBlock, anchorDateOffset))

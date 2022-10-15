@@ -2,6 +2,7 @@ package com.tminus1010.buva.ui.choose_transaction
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tminus1010.buva.app.TransactionsInteractor
 import com.tminus1010.buva.data.TransactionsRepo
 import com.tminus1010.buva.ui.all_features.view_model_item.TextVMItem
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,18 +14,18 @@ import javax.inject.Inject
 @HiltViewModel
 class ChooseTransactionVM @Inject constructor(
     chooseTransactionSharedVM: ChooseTransactionSharedVM,
-    transactionsRepo: TransactionsRepo,
+    transactionsInteractor: TransactionsInteractor,
 ) : ViewModel() {
     // # Events
     val navUp = chooseTransactionSharedVM.userSubmitTransaction.map { Unit }
 
     // # State
     val isNoItemsMsgVisible =
-        transactionsRepo.transactionsAggregate
+        transactionsInteractor.transactionsAggregate
             .map { it.transactions.isEmpty() }
             .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
     val recipeGrid =
-        transactionsRepo.transactionsAggregate
+        transactionsInteractor.transactionsAggregate
             .map { transactionsAggregate ->
                 transactionsAggregate.transactions
                     .let { if (transactionsAggregate.mostRecentUncategorizedSpend == null) it else listOf(transactionsAggregate.mostRecentUncategorizedSpend!!) + it }

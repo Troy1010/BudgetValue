@@ -21,7 +21,6 @@ import javax.inject.Inject
 @HiltViewModel
 class TransactionsVM @Inject constructor(
     private val transactionsInteractor: TransactionsInteractor,
-    private val transactionsRepo: TransactionsRepo,
     private val throbberSharedVM: ThrobberSharedVM,
 ) : ViewModel() {
     // # Setup
@@ -44,7 +43,7 @@ class TransactionsVM @Inject constructor(
 
     // # Internal
     private val transactionPresentationModels =
-        transactionsRepo.transactionsAggregate
+        transactionsInteractor.transactionsAggregate
             .map { it.transactions.map(::TransactionPresentationModel) }
             .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
 

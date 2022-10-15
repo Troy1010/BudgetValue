@@ -5,9 +5,12 @@ import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.app.model.ImportTransactionsResult
 import com.tminus1010.buva.data.FuturesRepo
 import com.tminus1010.buva.data.TransactionsRepo
+import com.tminus1010.buva.data.service.MiscDAO
 import com.tminus1010.buva.data.service.TransactionInputStreamAdapter
+import com.tminus1010.buva.domain.LocalDatePeriod
 import com.tminus1010.buva.domain.TerminationStrategy
 import com.tminus1010.buva.domain.Transaction
+import com.tminus1010.buva.domain.TransactionImportInfo
 import com.tminus1010.buva.environment.ReadUri
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -22,6 +25,7 @@ class ImportTransactions @Inject constructor(
     private val transactionsRepo: TransactionsRepo,
     private val transactionsInteractor: TransactionsInteractor,
     private val readUri: ReadUri,
+    private val miscDAO: MiscDAO,
 ) {
     suspend operator fun invoke(uri: Uri) = withContext(Dispatchers.IO) {
         import(transactionInputStreamAdapter.parseToTransactions(readUri(uri)))
@@ -34,20 +38,28 @@ class ImportTransactions @Inject constructor(
         var transactionsImportedCounter: Int
         var transactionsCategorizedCounter = 0
         var transactionsIgnoredBecauseTheyWereAlreadyImportedCounter = 0
-        transactions
-            .filter { (transactionsRepo.getTransaction(it.id) == null).also { if (!it) transactionsIgnoredBecauseTheyWereAlreadyImportedCounter++ } }
-            .map { transaction ->
-                val matchedCategorization =
-                    userCategories.flow.value!!
-                        .find { it.onImportTransactionMatcher?.isMatch(transaction) ?: false }
-                        ?: futuresRepo.futures.value!!
+        val transactionsToPush =
+            transactions
+                .filter { (transactionsRepo.getTransaction(it.id) == null).also { if (!it) transactionsIgnoredBecauseTheyWereAlreadyImportedCounter++ } }
+                .map { transaction ->
+                    val matchedCategorization =
+                        userCategories.flow.value!!
                             .find { it.onImportTransactionMatcher?.isMatch(transaction) ?: false }
-                            ?.also { if (it.terminationStrategy == TerminationStrategy.ONCE) futuresRepo.setTerminationDate(it, LocalDate.now()) }
-                matchedCategorization?.categorize(transaction)
-                    ?.also { transactionsCategorizedCounter++ }
-                    ?: transaction
-            }
-            .also { transactionsInteractor.push(it.also { transactionsImportedCounter = it.size }) }
+                            ?: futuresRepo.futures.value!!
+                                .find { it.onImportTransactionMatcher?.isMatch(transaction) ?: false }
+                                ?.also { if (it.terminationStrategy == TerminationStrategy.ONCE) futuresRepo.setTerminationDate(it, LocalDate.now()) }
+                    matchedCategorization?.categorize(transaction)
+                        ?.also { transactionsCategorizedCounter++ }
+                        ?: transaction
+                }
+        transactionsInteractor.push(transactionsToPush.also { transactionsImportedCounter = it.size })
+        if (transactionsToPush.isNotEmpty())
+            miscDAO.push(TransactionImportInfo(
+                period = LocalDatePeriod(
+                    startDate = transactionsToPush.minByOrNull { it.date }!!.date,
+                    endDate = transactionsToPush.maxByOrNull { it.date }!!.date,
+                )
+            ))
         return ImportTransactionsResult(
             numberOfTransactionsImported = transactionsImportedCounter,
             numberOfTransactionsCategorizedByFutures = transactionsCategorizedCounter,

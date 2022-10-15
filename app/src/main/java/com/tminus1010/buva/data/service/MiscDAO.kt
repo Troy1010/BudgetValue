@@ -66,6 +66,18 @@ interface MiscDAO {
     suspend fun getTransaction(id: String): Transaction?
 
     /**
+     * [TransactionImportInfo]
+     */
+    @Query("select * from `TransactionImportInfo`")
+    fun fetchTransactionImportInfo(): Flow<List<TransactionImportInfo>>
+
+    @Query("DELETE FROM `TransactionImportInfo`")
+    suspend fun clearTransactionImportInfo()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun push(transactionImportInfo: TransactionImportInfo)
+
+    /**
      * [Plan]
      */
     @Query("select * from `Plan`")

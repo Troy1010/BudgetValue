@@ -14,7 +14,6 @@ import com.tminus1010.buva.all_layers.android.LifecycleRVAdapter2
 import com.tminus1010.buva.all_layers.android.viewBinding
 import com.tminus1010.buva.databinding.FragChooseCategoriesBinding
 import com.tminus1010.buva.databinding.ItemCategoryBtnBinding
-import com.tminus1010.buva.framework.android.*
 import com.tminus1010.tmcommonkotlin.androidx.GenViewHolder
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind

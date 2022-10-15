@@ -47,9 +47,9 @@ object Domain {
         )
     }
 
-    fun isPeriodFullyImported(period: LocalDatePeriod, transactionImportInfos: List<TransactionImportInfo>): Boolean {
+    fun isPeriodFullyImported(datePeriod: LocalDatePeriod, transactionImportInfos: List<TransactionImportInfo>): Boolean {
         return transactionImportInfos.map { it.period }
             .mergeOverlapping()
-            .any { period in it }
+            .any { datePeriod in it }
     }
 }

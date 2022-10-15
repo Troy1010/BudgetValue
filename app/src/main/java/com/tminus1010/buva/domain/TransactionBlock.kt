@@ -11,8 +11,9 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class TransactionBlock private constructor(
-    private val transactions: List<Transaction>,
     val datePeriod: LocalDatePeriod?,
+    private val transactions: List<Transaction>,
+    val isFullyImported: Boolean,
 ) : CategoryAmountsAndTotal.FromTotal(
     transactions.fold(CategoryAmounts()) { acc, transaction -> acc.addTogether(transaction.categoryAmounts) },
     transactions.map { it.amount }.sum()
@@ -20,14 +21,13 @@ data class TransactionBlock private constructor(
     /**
      * the nothing variable is a workaround so that the constructor doesn't have an overload conflict.
      */
-    constructor(unfilteredTransactions: List<Transaction>, datePeriod: LocalDatePeriod?, nothing: Unit? = null) : this(if (datePeriod == null) unfilteredTransactions else unfilteredTransactions.filter { it.date in datePeriod }, datePeriod)
+    constructor(datePeriod: LocalDatePeriod?, unfilteredTransactions: List<Transaction>, isFullyImported: Boolean, nothing: Unit? = null) : this(datePeriod, if (datePeriod == null) unfilteredTransactions else unfilteredTransactions.filter { it.date in datePeriod }.sortedBy { it.date }, isFullyImported)
 
     val size get() = transactions.size
-    val spendBlock get() = TransactionBlock(transactions.filter { it.isSpend }, datePeriod)
-    val incomeBlock get() = TransactionBlock(transactions.filter { it.isIncome }, datePeriod)
+    val spendBlock get() = TransactionBlock(datePeriod, transactions.filter { it.isSpend }, isFullyImported)
+    val incomeBlock get() = TransactionBlock(datePeriod, transactions.filter { it.isIncome }, isFullyImported)
 
     @IgnoredOnParcel
     val percentageOfCategorizedTransactions = transactions.count { it.isCategorized }.toFloat() / transactions.count()
     val isFullyCategorized get() = defaultAmount.isZero
-    val isFullyImported: Boolean get() = true // TODO()
 }

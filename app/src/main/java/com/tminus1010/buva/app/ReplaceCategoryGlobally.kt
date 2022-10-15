@@ -11,7 +11,6 @@ class ReplaceCategoryGlobally @Inject constructor(
     private val plansRepo: PlansRepo,
     private val activeReconciliationRepo: ActiveReconciliationRepo,
     private val activePlanRepo: ActivePlanRepo,
-    private val transactionsRepo: TransactionsRepo,
     private val transactionsInteractor: TransactionsInteractor,
 ) {
     suspend operator fun invoke(originalCategory: Category, newCategory: Category) {
@@ -28,7 +27,7 @@ class ReplaceCategoryGlobally @Inject constructor(
         }
 
         transactionsInteractor.push(
-            transactionsRepo.transactionsAggregate.value?.transactions?.map { it.copy(categoryAmounts = it.categoryAmounts.replaceKey(originalCategory, newCategory)) } ?: emptyList()
+            transactionsInteractor.transactionsAggregate.value?.transactions?.map { it.copy(categoryAmounts = it.categoryAmounts.replaceKey(originalCategory, newCategory)) } ?: emptyList()
         )
 
         categoriesRepo.delete(originalCategory)

@@ -12,7 +12,8 @@ import com.github.mikephil.charting.utils.ColorTemplate
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.all_layers.extensions.throttleFist
 import com.tminus1010.buva.all_layers.extensions.value
-import com.tminus1010.buva.data.TransactionsRepo
+import com.tminus1010.buva.app.IsPeriodFullyImported
+import com.tminus1010.buva.app.TransactionsInteractor
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.CategoryAmounts
 import com.tminus1010.buva.domain.LocalDatePeriod
@@ -24,9 +25,8 @@ import com.tminus1010.tmcommonkotlin.core.extensions.nextOrSame
 import com.tminus1010.tmcommonkotlin.core.extensions.previousOrSame
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.divertErrors
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
-import com.tminus1010.tmcommonkotlin.coroutines.extensions.pairwise
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.pairwiseStartNull
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
-import com.tminus1010.tmcommonkotlin.tuple.Box
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import java.math.BigDecimal
@@ -38,8 +38,9 @@ import javax.inject.Inject
 @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
 @HiltViewModel
 class ReviewVM @Inject constructor(
-    transactionsRepo: TransactionsRepo,
+    transactionsInteractor: TransactionsInteractor,
     showToast: ShowToast,
+    isPeriodFullyImported: IsPeriodFullyImported,
 ) : ViewModel() {
     // # UserIntents
     val userSelectedDuration = MutableStateFlow(SelectableDuration.BY_MONTH)
@@ -63,7 +64,7 @@ class ReviewVM @Inject constructor(
         .plus(ColorTemplate.COLORFUL_COLORS.toList())
         .plus(ColorTemplate.PASTEL_COLORS.toList())
     private val period =
-        combine(userSelectedDuration, currentPageNumber, userUsePeriodType, transactionsRepo.transactionsAggregate.map { it.mostRecentSpend })
+        combine(userSelectedDuration, currentPageNumber, userUsePeriodType, transactionsInteractor.transactionsAggregate.map { it.mostRecentSpend })
         { userSelectedDuration, currentPageNumber, userUsePeriodType, mostRecentSpend ->
             val mostRecentSpendDate = (mostRecentSpend?.date ?: throw NoMostRecentSpendException())
             when (userSelectedDuration) {
@@ -174,12 +175,11 @@ class ReviewVM @Inject constructor(
                     }
                 SelectableDuration.FOREVER ->
                     null
-            }.let { Box(it) }
+            }
         }
-            .onStart { emit(Box(null)) }
-            .pairwise()
+            .pairwiseStartNull()
             .map { (a, b) ->
-                if (b.first != null && b.first!!.endDate < transactionsRepo.transactionsAggregate.value?.oldestSpend?.date)
+                if (b != null && b.endDate < transactionsInteractor.transactionsAggregate.value?.oldestSpend?.date)
                     a.also { errors.onNext(TooFarBackException()) }
                 else
                     b
@@ -188,7 +188,14 @@ class ReviewVM @Inject constructor(
             .shareIn(viewModelScope, SharingStarted.Lazily, 1)
 
     private val transactionBlock =
-        combine(transactionsRepo.transactionsAggregate.map { it.spends }, period.map { it.first }, ::TransactionBlock)
+        combine(transactionsInteractor.transactionsAggregate, period)
+        { transactionsAggregate, period ->
+            TransactionBlock(
+                period,
+                transactionsAggregate.spends,
+                false // TODO: isFullyImported isn't important..? So just using false here..?
+            )
+        }
 
     /**
      * A [PieEntry] represents 1 chunk of the pie, but without everything it needs, like color.
@@ -263,7 +270,7 @@ class ReviewVM @Inject constructor(
     val usePeriodTypeSpinnerVMItem =
         SpinnerVMItem(UsePeriodType.values(), userUsePeriodType)
     val title =
-        period.map { (it) -> it?.toDisplayStr() ?: "Forever" }
+        period.map { it?.toDisplayStr() ?: "Forever" }
     val leftVisibility =
         userSelectedDuration.map { if (it != SelectableDuration.FOREVER) View.VISIBLE else View.GONE }
     val isRightVisible =

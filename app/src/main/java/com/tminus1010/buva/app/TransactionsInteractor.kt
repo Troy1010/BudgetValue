@@ -4,11 +4,9 @@ import com.tminus1010.buva.app.model.RedoUndo
 import com.tminus1010.buva.data.TransactionsRepo
 import com.tminus1010.buva.domain.Transaction
 import com.tminus1010.buva.domain.TransactionBlock
+import com.tminus1010.buva.domain.TransactionsAggregate
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,6 +15,7 @@ class TransactionsInteractor @Inject constructor(
     private val transactionsRepo: TransactionsRepo,
     private val datePeriodService: DatePeriodService,
     private val undoService: UndoService,
+    private val isPeriodFullyImported: IsPeriodFullyImported,
 ) {
     // # Input
     suspend fun push(vararg transactions: Transaction) = push(transactions.toList())
@@ -25,45 +24,35 @@ class TransactionsInteractor @Inject constructor(
         undoService.useAndAdd(
             RedoUndo(
                 redo = { transactionsRepo.push(transactions) },
-                undo = { oldTransactionsAndIDs.forEach { val (oldTransaction, id) = it; oldTransaction?.also { transactionsRepo.push(it) } ?: transactionsRepo.delete(id) } },
+                undo = { oldTransactionsAndIDs.forEach { val (oldTransaction, id) = it; oldTransaction?.also { transactionsRepo.push(it) } ?: transactionsRepo.deleteTransaction(id) } },
             )
         )
     }
 
     suspend fun clear() {
-        val oldTransactionsAndIDs = transactionsRepo.transactionsAggregate.first().transactions.map { Pair(transactionsRepo.getTransaction(it.id), it.id) }
+        val oldTransactionsAndIDs = transactionsAggregate.first().transactions.map { Pair(transactionsRepo.getTransaction(it.id), it.id) }
         undoService.useAndAdd(
             RedoUndo(
-                redo = { transactionsRepo.clear() },
-                undo = { oldTransactionsAndIDs.forEach { val (oldTransaction, id) = it; oldTransaction?.also { transactionsRepo.push(it) } ?: transactionsRepo.delete(id) } },
+                redo = { transactionsRepo.clearTransactions() },
+                undo = { oldTransactionsAndIDs.forEach { val (oldTransaction, id) = it; oldTransaction?.also { transactionsRepo.push(it) } ?: transactionsRepo.deleteTransaction(id) } },
             )
         )
     }
 
-    // # Internal
-    private fun getBlocksFromTransactions(transactions: List<Transaction>): List<TransactionBlock> {
-        val transactionsRedefined = transactions.sortedBy { it.date }.toMutableList()
-        val returning = ArrayList<TransactionBlock>()
-        if (0 !in transactionsRedefined.indices) return returning
-        var datePeriod = datePeriodService.getDatePeriod(transactionsRedefined[0].date)
-        while (datePeriod.startDate <= transactionsRedefined.last().date) {
-            val transactionSet = transactionsRedefined
-                .filter { it.date in datePeriod }
-            transactionsRedefined.removeIf { it.date in datePeriod }
-            if (transactionSet.isNotEmpty())
-                returning += TransactionBlock(transactionSet, datePeriod)
-            if (transactionsRedefined.isEmpty()) break
-            datePeriod = datePeriodService.getDatePeriod(transactionsRedefined[0].date)
-        }
-        return returning
-    }
-
     // # Output
     val transactionsAggregate =
-        transactionsRepo.transactionsAggregate
+        transactionsRepo.fetchTransactions()
+            .map { TransactionsAggregate(it) }
+            .shareIn(GlobalScope, SharingStarted.WhileSubscribed(), 1)
     val transactionBlocks =
-        transactionsAggregate
-            .map { getBlocksFromTransactions(it.transactions) }
+        combine(transactionsAggregate, datePeriodService.getDatePeriodLambda, isPeriodFullyImported.isPeriodFullyImportedLambda)
+        { transactionsAggregate, getDatePeriodLambda, isPeriodFullyImportedLambda ->
+            transactionsAggregate.transactions
+                .groupBy { getDatePeriodLambda(it.date) }
+                .map { (datePeriod, transactions) ->
+                    TransactionBlock(datePeriod, transactions, isPeriodFullyImportedLambda(datePeriod))
+                }
+        }
             .shareIn(GlobalScope, SharingStarted.WhileSubscribed(), 1)
     val incomeBlocks =
         transactionBlocks
@@ -74,11 +63,11 @@ class TransactionsInteractor @Inject constructor(
             .map { it.map { it.spendBlock } }
             .shareIn(GlobalScope, SharingStarted.WhileSubscribed(), 1)
     val uncategorizedSpends =
-        transactionsRepo.transactionsAggregate
+        transactionsAggregate
             .map { it.spends.filter { it.isUncategorized } }
             .shareIn(GlobalScope, SharingStarted.WhileSubscribed(), 1)
     val mostRecentUncategorizedSpend =
-        transactionsRepo.transactionsAggregate
+        transactionsAggregate
             .map { it.mostRecentUncategorizedSpend }
-            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
+            .shareIn(GlobalScope, SharingStarted.Eagerly, 1) // TODO: Should try to not use SharingStarted.Eagerly
 }
