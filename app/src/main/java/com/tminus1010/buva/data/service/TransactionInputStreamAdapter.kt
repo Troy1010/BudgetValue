@@ -18,7 +18,7 @@ class TransactionInputStreamAdapter @Inject constructor() {
 
     fun parseToTransactions(bufferedReader: BufferedReader): List<Transaction> {
         return bufferedReader.lineSequence()
-            .mapNotNull { line -> runCatching { parseToTransaction(line.split(",")) }.getOrElse { logz("Ignoring line:$line\nbecause:", it); null } }
+            .mapNotNull { line -> runCatching { parseToTransaction(line.split(",")) }.getOrElse { logz("Ignoring line:$line\nbecause:$it"); null } }
             .toList()
     }
 
