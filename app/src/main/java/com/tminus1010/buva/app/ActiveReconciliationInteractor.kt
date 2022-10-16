@@ -6,8 +6,8 @@ import com.tminus1010.buva.data.ActiveReconciliationRepo
 import com.tminus1010.buva.data.ReconciliationsRepo
 import com.tminus1010.buva.domain.*
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.time.LocalDate
 import javax.inject.Inject
@@ -40,8 +40,6 @@ class ActiveReconciliationInteractor @Inject constructor(
                     )
                 )
         }
-        delay(2000) // TODO: This is a race condition. There should be a better way to detect when Room has emitted changes after push.
-        reset()
     }
 
     suspend fun reset() {
@@ -86,4 +84,9 @@ class ActiveReconciliationInteractor @Inject constructor(
             }
         }
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
+
+    init {
+        // Requirement: Reset ActiveReconciliation whenever the currentReconciliationToDo changes.
+        GlobalScope.launch { reconciliationsToDoInteractor.currentReconciliationToDo.drop(1).collect { reset() } }
+    }
 }
