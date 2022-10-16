@@ -6,6 +6,7 @@ import com.tminus1010.buva.data.ActiveReconciliationRepo
 import com.tminus1010.buva.data.ReconciliationsRepo
 import com.tminus1010.buva.domain.*
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -39,6 +40,7 @@ class ActiveReconciliationInteractor @Inject constructor(
                     )
                 )
         }
+        delay(2000) // TODO: This is a race condition. There should be a better way to detect when Room has emitted changes after push.
         reset()
     }
 
