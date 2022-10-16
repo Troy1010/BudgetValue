@@ -81,11 +81,11 @@ class PlanReconciliationInteractor @Inject constructor(
 
     val budgeted =
         combine(activeReconciliationCAsAndTotal, summedRelevantHistory, activePlanInteractor.activePlan)
-        { activeReconciliation, relevantHistory, activePlan ->
+        { activeReconciliation, summedRelevantHistory, activePlan ->
             CategoryAmountsAndTotalWithValidation(
                 CategoryAmountsAndTotal.addTogether(
                     activeReconciliation,
-                    relevantHistory,
+                    summedRelevantHistory,
                     activePlan,
                 ),
                 caValidation = { (it ?: BigDecimal.ZERO) >= BigDecimal.ZERO },
