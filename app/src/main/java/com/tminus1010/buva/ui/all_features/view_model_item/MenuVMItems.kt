@@ -4,7 +4,7 @@ import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.TextView
+import android.widget.EditText
 
 data class MenuVMItems(
     private val menuVMItems: List<MenuVMItem>,
@@ -21,7 +21,7 @@ data class MenuVMItems(
 
     fun bind(view: View) {
         when (view) {
-            is TextView ->
+            is EditText ->
                 object : ActionMode.Callback2() {
                     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
                         menuVMItems.withIndex().forEach { (i, menuVMItem) ->
