@@ -86,7 +86,31 @@ class ActiveReconciliationInteractor @Inject constructor(
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 
     init {
-        // Requirement: Reset ActiveReconciliation whenever the currentReconciliationToDo changes.
-        GlobalScope.launch { reconciliationsToDoInteractor.currentReconciliationToDo.drop(1).collect { reset() } }
+        // Requirement: Reset ActiveReconciliation whenever something it derives from changes.
+        //      A reset should not occur when reconciliationsToDoInteractor.currentReconciliationToDo first emits, as it always does at the start.
+        //      A reset should always occur if currentReconciliation is a plan and activePlan emits.
+        GlobalScope.launch {
+            merge(
+                reconciliationsToDoInteractor.currentReconciliationToDo.take(1)
+                    .flatMapLatest {
+                        when (it) {
+                            is ReconciliationToDo.PlanZ ->
+                                activePlanRepo.activePlan
+                            else ->
+                                flowOf()
+                        }
+                    },
+                reconciliationsToDoInteractor.currentReconciliationToDo.drop(1)
+                    .flatMapLatest {
+                        when (it) {
+                            is ReconciliationToDo.PlanZ ->
+                                activePlanRepo.activePlan
+                            else ->
+                                flowOf(Unit)
+                        }
+                    },
+            )
+                .collect { reset() }
+        }
     }
 }
