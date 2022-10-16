@@ -1,6 +1,7 @@
 package com.tminus1010.buva.app
 
 import com.tminus1010.buva.all_layers.InvalidStateException
+import com.tminus1010.buva.all_layers.extensions.isNegative
 import com.tminus1010.buva.data.ActiveReconciliationRepo
 import com.tminus1010.buva.data.ReconciliationsRepo
 import com.tminus1010.buva.domain.*
@@ -37,20 +38,15 @@ class PlanReconciliationInteractor @Inject constructor(
 
     suspend fun matchUp() {
         activeReconciliationRepo.pushCategoryAmounts(
-            activeReconciliationRepo.activeReconciliationCAs.first()
-                .squashTogether(budgeted.first().categoryAmounts.filter { it.value <= BigDecimal.ZERO })
-                { a, b -> if (a == null) b else -b }
+            CategoryAmounts.zip(activeReconciliationRepo.activeReconciliationCAs.first(), budgeted.first().categoryAmounts)
+            { a, b -> if (b.isNegative) a - b else a }
         )
     }
 
     suspend fun reset() {
-        val budgeted = budgeted.first()
-        val activeReconciliation = activeReconciliationCAsAndTotal.first()
         activeReconciliationRepo.pushCategoryAmounts(
-            CategoryAmounts.squashTogether(
-                budgeted.categoryAmounts,
-                activeReconciliation.categoryAmounts,
-            ) { a, b -> if (a == null) b else (b - a) }
+            CategoryAmounts.zip(activeReconciliationRepo.activeReconciliationCAs.first(), budgeted.first().categoryAmounts)
+            { a, b -> a - b }
                 .mapValues { (category, amount) ->
                     when (category.type) {
                         CategoryType.Always -> amount

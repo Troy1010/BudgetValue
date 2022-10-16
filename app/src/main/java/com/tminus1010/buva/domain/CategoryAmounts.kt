@@ -116,5 +116,13 @@ data class CategoryAmounts constructor(private val map: @RawValue Map<Category, 
                 }
                 .let { CategoryAmounts(it) }
         }
+
+        fun zip(a: Map<Category, BigDecimal>, b: Map<Category, BigDecimal>, lambda: (BigDecimal, BigDecimal) -> BigDecimal?): CategoryAmounts {
+            val categories = a.keys + b.keys
+            return categories
+                .associateWith { lambda(a[it] ?: BigDecimal.ZERO, b[it] ?: BigDecimal.ZERO) }
+                .filterValues { it != null }.mapValues { it.value!! }
+                .let { CategoryAmounts(it) }
+        }
     }
 }
