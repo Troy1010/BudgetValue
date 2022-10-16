@@ -10,6 +10,7 @@ import com.tminus1010.buva.data.AccountsRepo
 import com.tminus1010.buva.data.CurrentDatePeriod
 import com.tminus1010.buva.data.ReconciliationsRepo
 import com.tminus1010.buva.domain.*
+import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.view_model_item.*
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
@@ -26,6 +27,7 @@ class HistoryVM @Inject constructor(
     private val reconciliationsRepo: ReconciliationsRepo,
     private val accountsRepo: AccountsRepo,
     private val historyInteractor: HistoryInteractor,
+    private val throbberSharedVM: ThrobberSharedVM,
 ) : ViewModel() {
     // # Internal
     private val activeCategories =
@@ -53,6 +55,7 @@ class HistoryVM @Inject constructor(
                             HistoryPresentationModel.ReconciliationPresentationModel(
                                 it,
                                 reconciliationsRepo,
+                                throbberSharedVM
                             )
                         is BudgetedVsAccountsAutomaticReconciliation ->
                             HistoryPresentationModel.BudgetedVsAccountsAutomaticReconciliationPresentationModel(

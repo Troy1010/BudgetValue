@@ -3,9 +3,12 @@ package com.tminus1010.buva.ui.history
 import com.tminus1010.buva.data.CurrentDatePeriod
 import com.tminus1010.buva.data.ReconciliationsRepo
 import com.tminus1010.buva.domain.*
+import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.view.NativeText
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -31,7 +34,7 @@ sealed class HistoryPresentationModel {
 
     open val menuVMItems: List<MenuVMItem> = listOf()
 
-    class ReconciliationPresentationModel(reconciliation: Reconciliation, reconciliationsRepo: ReconciliationsRepo) : HistoryPresentationModel() {
+    class ReconciliationPresentationModel(reconciliation: Reconciliation, reconciliationsRepo: ReconciliationsRepo, throbberSharedVM: ThrobberSharedVM) : HistoryPresentationModel() {
         override val accountsTotal: Flow<NativeText?> = flowOf(null)
         override val difference: Flow<NativeText?> = flowOf(NativeText.Simple(reconciliation.total.toString()))
         override val incomeTotal: Flow<NativeText?> = flowOf(null)
@@ -46,7 +49,7 @@ sealed class HistoryPresentationModel {
             listOf(
                 MenuVMItem(
                     title = "Delete",
-                    onClick = { GlobalScope.launch { reconciliationsRepo.delete(reconciliation) } }
+                    onClick = { GlobalScope.launch(Dispatchers.IO) { reconciliationsRepo.delete(reconciliation) }.use(throbberSharedVM) }
                 )
             )
     }

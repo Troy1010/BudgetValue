@@ -4,7 +4,6 @@ import android.view.View
 import com.tminus1010.tmcommonkotlin.coroutines.IJobEvents
 import io.reactivex.rxjava3.core.Completable
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -37,13 +36,9 @@ class ThrobberSharedVM @Inject constructor() : IJobEvents {
     private val asyncTaskEnded = MutableSharedFlow<Unit>()
 
     // # State
-    /**
-     * Requirement: Given task is short Then do not show spinner.
-     */
     val visibility =
         merge(asyncTaskStarted.map { 1 }, asyncTaskEnded.map { -1 })
             .scan(0) { acc, v -> acc + v }
             .map { if (it == 0) View.GONE else View.VISIBLE }
-            .onEach { if (it == View.VISIBLE) delay(250) } // TODO: This might cause bugs..
             .stateIn(GlobalScope, SharingStarted.Eagerly, View.GONE)
 }
