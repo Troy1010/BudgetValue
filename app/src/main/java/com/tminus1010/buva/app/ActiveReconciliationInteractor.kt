@@ -16,25 +16,29 @@ class ActiveReconciliationInteractor @Inject constructor(
     private val reconciliationsToDoInteractor: ReconciliationsToDoInteractor,
     private val activePlanRepo: ActivePlanRepo,
     private val reconciliationsRepo: ReconciliationsRepo,
+    private val planReconciliationInteractor: PlanReconciliationInteractor,
     accountsRepo: AccountsRepo,
     transactionsInteractor: TransactionsInteractor,
-    planReconciliationInteractor: PlanReconciliationInteractor,
 ) {
     suspend fun save() {
-        reconciliationsRepo.push(
-            Reconciliation(
-                date = when (val reconciliationToDo = reconciliationsToDoInteractor.currentReconciliationToDo.first()) {
-                    is ReconciliationToDo.Anytime ->
-                        LocalDate.now()
-                    is ReconciliationToDo.Accounts ->
-                        reconciliationToDo.date
-                    is ReconciliationToDo.PlanZ ->
-                        reconciliationToDo.transactionBlock.datePeriod!!.midDate
-                },
-                total = activeReconciliationCAsAndTotal.first().total,
-                categoryAmounts = activeReconciliationRepo.activeReconciliationCAs.first(),
-            )
-        )
+        when (val reconciliationToDo = reconciliationsToDoInteractor.currentReconciliationToDo.first()) {
+            is ReconciliationToDo.PlanZ ->
+                planReconciliationInteractor.save()
+            else ->
+                reconciliationsRepo.push(
+                    Reconciliation(
+                        date = when (reconciliationToDo) {
+                            is ReconciliationToDo.Anytime ->
+                                LocalDate.now()
+                            is ReconciliationToDo.Accounts ->
+                                reconciliationToDo.date
+                            else -> error("Unhandled type:$reconciliationToDo")
+                        },
+                        total = activeReconciliationCAsAndTotal.first().total,
+                        categoryAmounts = activeReconciliationRepo.activeReconciliationCAs.first(),
+                    )
+                )
+        }
         reset()
     }
 

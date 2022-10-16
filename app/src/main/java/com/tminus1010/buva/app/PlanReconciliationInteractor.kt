@@ -1,6 +1,8 @@
 package com.tminus1010.buva.app
 
+import com.tminus1010.buva.all_layers.InvalidStateException
 import com.tminus1010.buva.data.ActiveReconciliationRepo
+import com.tminus1010.buva.data.ReconciliationsRepo
 import com.tminus1010.buva.domain.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
@@ -13,7 +15,20 @@ class PlanReconciliationInteractor @Inject constructor(
     private val activeReconciliationRepo: ActiveReconciliationRepo,
     private val reconciliationsToDoInteractor: ReconciliationsToDoInteractor,
     private val historyInteractor: HistoryInteractor,
+    private val reconciliationsRepo: ReconciliationsRepo,
 ) {
+    suspend fun save() {
+        if (!budgeted.first().isAllValid) throw InvalidStateException()
+        val reconciliationToDo = reconciliationsToDoInteractor.currentReconciliationToDo.first() as ReconciliationToDo.PlanZ
+        reconciliationsRepo.push(
+            Reconciliation(
+                date = reconciliationToDo.transactionBlock.datePeriod!!.midDate,
+                total = activeReconciliationCAsAndTotal.first().total,
+                categoryAmounts = activeReconciliationCAsAndTotal.first().categoryAmounts,
+            )
+        )
+    }
+
     suspend fun matchUp() {
         val activeReconciliationCAs = activeReconciliationCAsAndTotal.first().categoryAmounts
         val budgetedCAsWithFlippedSign = summedRelevantHistory.first().categoryAmounts.mapValues { -it.value }

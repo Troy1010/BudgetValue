@@ -2,6 +2,7 @@ package com.tminus1010.buva.ui.reconciliation
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.buva.R
+import com.tminus1010.buva.all_layers.InvalidStateException
 import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.app.*
 import com.tminus1010.buva.data.AccountsRepo
@@ -17,6 +18,7 @@ import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onError
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -39,16 +41,15 @@ class ReconciliationHostVM @Inject constructor(
 ) : ViewModel() {
     // # User Intents
     fun userSave() {
-//        if (
-//            !budgetedForActiveReconciliationInteractor.categoryAmountsAndTotal.value!!.isAllValid
-//            || (
-//                    activeReconciliationInteractor.categoryAmountsAndTotal.value!!.categoryAmounts.isEmpty()
-//                            && activeReconciliationInteractor.categoryAmountsAndTotal.value!!.defaultAmount.isZero
-//                    )
-//        )
-//            showToast(NativeText.Simple("Invalid input"))
-//        else
-        GlobalScope.launch { activeReconciliationInteractor.save() }
+        GlobalScope.launch(
+            context = onError {
+                when (it) {
+                    is InvalidStateException -> showToast("Invalid input")
+                    else -> throw it
+                }
+            },
+            block = { activeReconciliationInteractor.save() },
+        )
             .use(throbberSharedVM)
     }
 

@@ -5,3 +5,4 @@ class TestException(msg: String? = null, cause: Throwable? = null) : Exception(m
 class InvalidCategoryNameException : Exception("InvalidCategoryName")
 class InvalidCategoryAmounts(msg: String) : RuntimeException(msg)
 class InvalidSearchText(msg: String) : RuntimeException(msg)
+class InvalidStateException(msg: String? = null) : RuntimeException(msg)
