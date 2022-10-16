@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.buva.all_layers.extensions.easyEmit
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
-import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.app.TransactionsInteractor
 import com.tminus1010.buva.ui.all_features.SubFragEventSharedVM
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
