@@ -55,7 +55,8 @@ class ActiveReconciliationInteractor @Inject constructor(
         activeReconciliationRepo.pushCategoryAmounts(
             when (reconciliationsToDoInteractor.currentReconciliationToDo.first()) {
                 is ReconciliationToDo.PlanZ ->
-                    activePlanRepo.activePlan.first().categoryAmounts
+//                    activePlanRepo.activePlan.first().categoryAmounts
+                    CategoryAmounts()
                 else ->
                     CategoryAmounts()
             }

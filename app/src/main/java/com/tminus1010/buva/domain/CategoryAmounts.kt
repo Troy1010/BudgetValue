@@ -8,6 +8,7 @@ import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
 import java.math.BigDecimal
 
+@Suppress("PROPERTY_WONT_BE_SERIALIZED")
 @Parcelize
 data class CategoryAmounts constructor(private val map: @RawValue Map<Category, BigDecimal> = emptyMap()) : Map<Category, BigDecimal> by map, Parcelable {
     constructor(vararg categoryAmounts: Pair<Category, BigDecimal>) : this(categoryAmounts.associate { it.first to it.second })
@@ -20,22 +21,24 @@ data class CategoryAmounts constructor(private val map: @RawValue Map<Category, 
         return CategoryAmounts(this.toMutableMap().apply { putAll(map) })
     }
 
-    fun addTogether(other: Map<Category, BigDecimal>): CategoryAmounts {
+    /**
+     * This could use a better name.. but it essentially lets you define a new map from 2 maps.
+     */
+    fun zipTogether(other: Map<Category, BigDecimal>, lambda: (BigDecimal?, BigDecimal) -> BigDecimal): CategoryAmounts {
         return listOf(this, other)
             .fold(hashMapOf<Category, BigDecimal>()) { acc, map ->
-                map.forEach { (k, v) -> acc[k] = (acc[k] ?: BigDecimal.ZERO) + v }
+                map.forEach { (k, v) -> acc[k] = lambda(acc[k], v) }
                 acc
             }
             .let { CategoryAmounts(it) }
     }
 
+    fun addTogether(other: Map<Category, BigDecimal>): CategoryAmounts {
+        return zipTogether(other) { a, b -> (a ?: BigDecimal.ZERO) + b }
+    }
+
     fun maxTogether(other: Map<Category, BigDecimal>): CategoryAmounts {
-        return listOf(this, other)
-            .fold(hashMapOf<Category, BigDecimal>()) { acc, map ->
-                map.forEach { (k, v) -> acc[k] = maxOf(acc[k] ?: BigDecimal.ZERO, v) }
-                acc
-            }
-            .let { CategoryAmounts(it) }
+        return zipTogether(other) { a, b -> maxOf(a ?: BigDecimal.ZERO, b) }
     }
 
     fun subtractTogether(other: Map<Category, BigDecimal>): CategoryAmounts {

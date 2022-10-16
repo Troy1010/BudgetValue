@@ -11,6 +11,8 @@ class ActivePlanInteractor @Inject constructor(
     private val activePlanRepo: ActivePlanRepo,
     private val transactionsInteractor: TransactionsInteractor,
 ) {
+    val activePlan = activePlanRepo.activePlan
+
     suspend fun estimateActivePlanFromHistory() {
         activePlanRepo.updateTotal(transactionsInteractor.incomeBlocks.first().averagedTotal())
         activePlanRepo.pushCategoryAmounts(transactionsInteractor.spendBlocks.first().filter { it.defaultAmount.isZero }.averagedCategoryAmounts())

@@ -16,24 +16,30 @@ class PlanReconciliationInteractor @Inject constructor(
     private val reconciliationsToDoInteractor: ReconciliationsToDoInteractor,
     private val historyInteractor: HistoryInteractor,
     private val reconciliationsRepo: ReconciliationsRepo,
+    private val activePlanInteractor: ActivePlanInteractor,
 ) {
     suspend fun save() {
         if (!budgeted.first().isAllValid) throw InvalidStateException()
         val reconciliationToDo = reconciliationsToDoInteractor.currentReconciliationToDo.first() as ReconciliationToDo.PlanZ
+        val casAndTotalToPush =
+            CategoryAmountsAndTotal.addTogether(
+                activeReconciliationCAsAndTotal.first(),
+                activePlanInteractor.activePlan.first()
+            )
         reconciliationsRepo.push(
             Reconciliation(
                 date = reconciliationToDo.transactionBlock.datePeriod!!.midDate,
-                total = activeReconciliationCAsAndTotal.first().total,
-                categoryAmounts = activeReconciliationCAsAndTotal.first().categoryAmounts,
+                total = casAndTotalToPush.total,
+                categoryAmounts = casAndTotalToPush.categoryAmounts,
             )
         )
     }
 
     suspend fun matchUp() {
-        val activeReconciliationCAs = activeReconciliationCAsAndTotal.first().categoryAmounts
-        val budgetedCAsWithFlippedSign = summedRelevantHistory.first().categoryAmounts.mapValues { -it.value }
         activeReconciliationRepo.pushCategoryAmounts(
-            activeReconciliationCAs.maxTogether(budgetedCAsWithFlippedSign)
+            activeReconciliationRepo.activeReconciliationCAs.first()
+                .zipTogether(budgeted.first().categoryAmounts.filter { it.value <= BigDecimal.ZERO })
+                { _, b -> -b }
         )
     }
 
@@ -64,12 +70,13 @@ class PlanReconciliationInteractor @Inject constructor(
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1) // TODO: GlobalScope without any disposal strategy is not ideal.
 
     val budgeted =
-        combine(activeReconciliationCAsAndTotal, summedRelevantHistory)
-        { activeReconciliation, relevantHistory ->
+        combine(activeReconciliationCAsAndTotal, summedRelevantHistory, activePlanInteractor.activePlan)
+        { activeReconciliation, relevantHistory, activePlan ->
             CategoryAmountsAndTotalWithValidation(
                 CategoryAmountsAndTotal.addTogether(
                     activeReconciliation,
                     relevantHistory,
+                    activePlan,
                 ),
                 caValidation = { (it ?: BigDecimal.ZERO) >= BigDecimal.ZERO },
                 defaultAmountValidation = { true },
