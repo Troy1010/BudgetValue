@@ -3,7 +3,6 @@ package com.tminus1010.buva.ui.reconciliation
 import androidx.lifecycle.ViewModel
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.buva.app.ActiveReconciliationInteractor
-import com.tminus1010.buva.app.ActiveReconciliationInteractor2
 import com.tminus1010.buva.app.BudgetedForActiveReconciliationInteractor
 import com.tminus1010.buva.app.UserCategories
 import com.tminus1010.buva.data.ActiveReconciliationRepo
@@ -21,7 +20,6 @@ import javax.inject.Inject
 class AccountsReconciliationVM @Inject constructor(
     budgetedForActiveReconciliationInteractor: BudgetedForActiveReconciliationInteractor,
     private val activeReconciliationInteractor: ActiveReconciliationInteractor,
-    private val activeReconciliationInteractor2: ActiveReconciliationInteractor2,
     private val activeReconciliationRepo: ActiveReconciliationRepo,
     userCategories: UserCategories,
 ) : ViewModel() {

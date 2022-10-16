@@ -27,7 +27,6 @@ class ReconciliationHostVM @Inject constructor(
     private val reconciliationsToDoInteractor: ReconciliationsToDoInteractor,
     private val budgetedForActiveReconciliationInteractor: BudgetedForActiveReconciliationInteractor,
     private val activeReconciliationInteractor: ActiveReconciliationInteractor,
-    private val activeReconciliationInteractor2: ActiveReconciliationInteractor2,
     private val showToast: ShowToast,
     private val activePlanRepo: ActivePlanRepo,
     private val activeReconciliationRepo: ActiveReconciliationRepo,

@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
-import com.tminus1010.buva.app.ActiveReconciliationInteractor2
+import com.tminus1010.buva.app.ActiveReconciliationInteractor
 import com.tminus1010.buva.app.PlanReconciliationInteractor
 import com.tminus1010.buva.app.UserCategories
 import com.tminus1010.buva.data.ActiveReconciliationRepo
@@ -25,7 +25,7 @@ class PlanReconciliationVM @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val activeReconciliationRepo: ActiveReconciliationRepo,
     userCategories: UserCategories,
-    private val activeReconciliationInteractor2: ActiveReconciliationInteractor2,
+    private val activeReconciliationInteractor: ActiveReconciliationInteractor,
     private val planReconciliationInteractor: PlanReconciliationInteractor,
 ) : ViewModel() {
     // # User Intents
@@ -34,7 +34,7 @@ class PlanReconciliationVM @Inject constructor(
     }
 
     fun userFillIntoCategory(category: Category) {
-        GlobalScope.launch { activeReconciliationInteractor2.fillIntoCategory(category) }
+        GlobalScope.launch { activeReconciliationInteractor.fillIntoCategory(category) }
     }
 
     // # Internal
