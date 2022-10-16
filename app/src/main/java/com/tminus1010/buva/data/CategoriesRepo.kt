@@ -1,6 +1,6 @@
 package com.tminus1010.buva.data
 
-import com.tminus1010.buva.data.service.UserCategoriesDAO
+import com.tminus1010.buva.environment.UserCategoriesDAO
 import com.tminus1010.buva.domain.Category
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow

@@ -7,7 +7,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.android.viewBinding
-import com.tminus1010.buva.data.service.MoshiWithCategoriesProvider
+import com.tminus1010.buva.environment.MoshiWithCategoriesProvider
 import com.tminus1010.buva.databinding.FragTransactionsBinding
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind

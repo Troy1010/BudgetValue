@@ -1,4 +1,4 @@
-package com.tminus1010.buva.data.service
+package com.tminus1010.buva.data
 
 import com.tminus1010.buva.all_layers.extensions.isPositive
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal

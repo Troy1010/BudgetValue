@@ -1,6 +1,6 @@
 package com.tminus1010.buva.data
 
-import com.tminus1010.buva.data.service.MiscDAO
+import com.tminus1010.buva.environment.MiscDAO
 import com.tminus1010.buva.domain.Account
 import com.tminus1010.buva.domain.AccountsAggregate
 import kotlinx.coroutines.GlobalScope

@@ -5,7 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.tminus1010.buva.all_layers.extensions.isZero
-import com.tminus1010.buva.data.service.MoshiWithCategoriesProvider
+import com.tminus1010.buva.environment.MoshiWithCategoriesProvider
 import com.tminus1010.buva.domain.CategoryAmounts
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.ActivePlan

@@ -9,9 +9,9 @@ import com.tminus1010.buva.app.DatePeriodService
 import com.tminus1010.buva.core_testing.app
 import com.tminus1010.buva.core_testing.shared.FakeDataStore
 import com.tminus1010.buva.core_testing.shared.Given
-import com.tminus1010.buva.data.service.CategoryDatabase
-import com.tminus1010.buva.data.service.MiscDatabase
-import com.tminus1010.buva.data.service.RoomWithCategoriesTypeConverter
+import com.tminus1010.buva.environment.CategoryDatabase
+import com.tminus1010.buva.environment.MiscDatabase
+import com.tminus1010.buva.environment.RoomWithCategoriesTypeConverter
 import com.tminus1010.buva.domain.ActivePlan
 import com.tminus1010.buva.domain.CategoryAmounts
 import dagger.Module

@@ -6,7 +6,7 @@ import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.app.TransactionsInteractor
-import com.tminus1010.buva.data.service.MoshiWithCategoriesProvider
+import com.tminus1010.buva.environment.MoshiWithCategoriesProvider
 import com.tminus1010.buva.domain.CategoryAmounts
 import com.tminus1010.buva.domain.Transaction
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem

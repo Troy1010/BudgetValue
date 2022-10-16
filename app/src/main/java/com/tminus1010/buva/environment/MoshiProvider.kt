@@ -1,4 +1,4 @@
-package com.tminus1010.buva.data.service
+package com.tminus1010.buva.environment
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory

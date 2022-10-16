@@ -6,7 +6,7 @@ import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.room.Room
-import com.tminus1010.buva.data.service.*
+import com.tminus1010.buva.environment.*
 import com.tminus1010.tmcommonkotlin.imagetotext.ImageToText
 import dagger.Module
 import dagger.Provides

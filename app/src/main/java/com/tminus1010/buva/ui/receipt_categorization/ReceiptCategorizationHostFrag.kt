@@ -10,13 +10,11 @@ import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.all_layers.KEY2
 import com.tminus1010.buva.all_layers.extensions.easyEmit
-import com.tminus1010.buva.data.service.MoshiProvider
-import com.tminus1010.buva.data.service.MoshiWithCategoriesProvider
+import com.tminus1010.buva.environment.MoshiProvider
 import com.tminus1010.buva.databinding.FragReceiptCategorizationHostBinding
 import com.tminus1010.buva.domain.Transaction
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
-import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
 import java.math.BigDecimal

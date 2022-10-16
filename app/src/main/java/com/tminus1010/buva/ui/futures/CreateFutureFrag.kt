@@ -8,7 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.extensions.onNext
-import com.tminus1010.buva.data.service.MoshiProvider
+import com.tminus1010.buva.environment.MoshiProvider
 import com.tminus1010.buva.databinding.FragCreateFutureBinding
 import com.tminus1010.buva.all_layers.android.viewBinding
 import com.tminus1010.buva.ui.choose_categories.ChooseCategoriesFrag

@@ -9,7 +9,7 @@ import com.tminus1010.buva.all_layers.KEY2
 import com.tminus1010.buva.all_layers.extensions.easyEmit
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
-import com.tminus1010.buva.data.service.MoshiProvider
+import com.tminus1010.buva.environment.MoshiProvider
 import com.tminus1010.buva.domain.Transaction
 import com.tminus1010.buva.ui.all_features.SubFragEventSharedVM
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem

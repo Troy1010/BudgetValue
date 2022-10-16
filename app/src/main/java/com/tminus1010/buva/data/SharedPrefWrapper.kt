@@ -1,4 +1,4 @@
-package com.tminus1010.buva.data.service
+package com.tminus1010.buva.data
 
 import android.content.SharedPreferences
 import io.reactivex.rxjava3.core.Completable

@@ -1,4 +1,4 @@
-package com.tminus1010.buva.data.service
+package com.tminus1010.buva.environment
 
 import androidx.room.TypeConverter
 import com.squareup.moshi.Moshi
