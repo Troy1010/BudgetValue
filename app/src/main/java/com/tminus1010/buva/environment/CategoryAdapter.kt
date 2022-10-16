@@ -15,7 +15,7 @@ class CategoryAdapter @Inject constructor(
 ) {
     fun parseCategory(categoryName: String): Category {
         if (categoryName == Category.DEFAULT.name) error("Should never have to parse \"${Category.DEFAULT.name}\"")
-        return userCategoryMap.value!![categoryName]
+        return userCategoryMap.value!![categoryName] // Using this breaks responsiveness. However, not using it means we need DTOs.. Hm.
             ?: Category.UNRECOGNIZED.also { if (categoryName != Category.UNRECOGNIZED.name) logz("Warning: returning category Unrecognized for unrecognized name:$categoryName") }
     }
 
