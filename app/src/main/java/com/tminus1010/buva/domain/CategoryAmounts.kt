@@ -24,16 +24,16 @@ data class CategoryAmounts constructor(private val map: @RawValue Map<Category, 
     /**
      * This could use a better name.. but it essentially lets you define a new map from 2 maps.
      */
-    fun zipTogether(other: Map<Category, BigDecimal>, lambda: (BigDecimal?, BigDecimal) -> BigDecimal): CategoryAmounts {
-        return Companion.zipTogether(listOf(this, other), lambda)
+    fun squashTogether(other: Map<Category, BigDecimal>, lambda: (BigDecimal?, BigDecimal) -> BigDecimal): CategoryAmounts {
+        return Companion.squashTogether(listOf(this, other), lambda)
     }
 
     fun addTogether(other: Map<Category, BigDecimal>): CategoryAmounts {
-        return zipTogether(other) { a, b -> (a ?: BigDecimal.ZERO) + b }
+        return squashTogether(other) { a, b -> (a ?: BigDecimal.ZERO) + b }
     }
 
     fun maxTogether(other: Map<Category, BigDecimal>): CategoryAmounts {
-        return zipTogether(other) { a, b -> maxOf(a ?: BigDecimal.ZERO, b) }
+        return squashTogether(other) { a, b -> maxOf(a ?: BigDecimal.ZERO, b) }
     }
 
     fun subtractTogether(other: Map<Category, BigDecimal>): CategoryAmounts {
@@ -101,14 +101,14 @@ data class CategoryAmounts constructor(private val map: @RawValue Map<Category, 
 
     companion object {
         fun addTogether(vararg categoryAmounts: Map<Category, BigDecimal>): CategoryAmounts {
-            return zipTogether(categoryAmounts.asIterable()) { a, b -> (a ?: BigDecimal.ZERO) + b }
+            return squashTogether(categoryAmounts.asIterable()) { a, b -> (a ?: BigDecimal.ZERO) + b }
         }
 
-        fun zipTogether(vararg categoryAmounts: Map<Category, BigDecimal>, lambda: (BigDecimal?, BigDecimal) -> BigDecimal): CategoryAmounts {
-            return zipTogether(categoryAmounts.asIterable(), lambda)
+        fun squashTogether(vararg categoryAmounts: Map<Category, BigDecimal>, lambda: (BigDecimal?, BigDecimal) -> BigDecimal): CategoryAmounts {
+            return squashTogether(categoryAmounts.asIterable(), lambda)
         }
 
-        fun zipTogether(categoryAmounts: Iterable<Map<Category, BigDecimal>>, lambda: (BigDecimal?, BigDecimal) -> BigDecimal): CategoryAmounts {
+        fun squashTogether(categoryAmounts: Iterable<Map<Category, BigDecimal>>, lambda: (BigDecimal?, BigDecimal) -> BigDecimal): CategoryAmounts {
             return categoryAmounts
                 .fold(hashMapOf<Category, BigDecimal>()) { acc, map ->
                     map.forEach { (k, v) -> acc[k] = lambda(acc[k], v) }

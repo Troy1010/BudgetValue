@@ -38,7 +38,7 @@ class PlanReconciliationInteractor @Inject constructor(
     suspend fun matchUp() {
         activeReconciliationRepo.pushCategoryAmounts(
             activeReconciliationRepo.activeReconciliationCAs.first()
-                .zipTogether(budgeted.first().categoryAmounts.filter { it.value <= BigDecimal.ZERO })
+                .squashTogether(budgeted.first().categoryAmounts.filter { it.value <= BigDecimal.ZERO })
                 { a, b -> if (a == null) b else -b }
         )
     }
@@ -47,7 +47,7 @@ class PlanReconciliationInteractor @Inject constructor(
         val budgeted = budgeted.first()
         val activeReconciliation = activeReconciliationCAsAndTotal.first()
         activeReconciliationRepo.pushCategoryAmounts(
-            CategoryAmounts.zipTogether(
+            CategoryAmounts.squashTogether(
                 budgeted.categoryAmounts,
                 activeReconciliation.categoryAmounts,
             ) { a, b -> if (a == null) b else (b - a) }
