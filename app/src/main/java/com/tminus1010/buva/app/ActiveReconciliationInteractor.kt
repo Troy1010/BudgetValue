@@ -104,7 +104,7 @@ class ActiveReconciliationInteractor @Inject constructor(
                     .flatMapLatest {
                         when (it) {
                             is ReconciliationToDo.PlanZ ->
-                                activePlanRepo.activePlan.drop(1)
+                                activePlanRepo.activePlan.drop(1) // TODO: This is not disposing when currentReconciliationToDo.drop(1) emits..
                             else ->
                                 flowOf()
                         }
@@ -119,6 +119,7 @@ class ActiveReconciliationInteractor @Inject constructor(
                         }
                     },
             )
+                .debounce(1000) // TODO: This is not ideal.
                 .collect { reset() }
         }
     }
