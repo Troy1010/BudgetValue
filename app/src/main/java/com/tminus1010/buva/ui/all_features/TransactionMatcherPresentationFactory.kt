@@ -1,14 +1,13 @@
 package com.tminus1010.buva.ui.all_features
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import com.tminus1010.buva.all_layers.extensions.remove
 import com.tminus1010.buva.all_layers.extensions.replaceFirst
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.buva.domain.TransactionMatcher
 import com.tminus1010.buva.domain.flattened
-import com.tminus1010.buva.ui.all_features.model.SearchType
+import com.tminus1010.buva.domain.SearchType
 import com.tminus1010.buva.ui.all_features.view_model_item.EditTextVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItems
