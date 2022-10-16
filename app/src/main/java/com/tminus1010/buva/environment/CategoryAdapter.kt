@@ -19,7 +19,10 @@ class CategoryAdapter @Inject constructor(
             ?: Category.UNRECOGNIZED.also { if (categoryName != Category.UNRECOGNIZED.name) logz("Warning: returning category Unrecognized for unrecognized name:$categoryName") }
     }
 
-    private val userCategoryMap =
+    /**
+     * Because we are using userCategoryMap synchronously in order to avoid using DTOs, any adaptation that depends on it must be redone when this emits.
+     */
+    val userCategoryMap =
         userCategories.flow
             .map { it.associate { it.name to it } }
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
