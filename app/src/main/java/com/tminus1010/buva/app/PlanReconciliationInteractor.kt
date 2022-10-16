@@ -86,8 +86,9 @@ class PlanReconciliationInteractor @Inject constructor(
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 
     val targetDefaultAmount =
-        summedRelevantHistory.map { summedRelevantHistory ->
-            -summedRelevantHistory.defaultAmount
+        combine(budgeted, activeReconciliationCAsAndTotal)
+        { budgeted, activeReconciliationCAsAndTotal ->
+            activeReconciliationCAsAndTotal.defaultAmount - budgeted.defaultAmount
         }
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1) // TODO: GlobalScope without any disposal strategy is not ideal.
 }
