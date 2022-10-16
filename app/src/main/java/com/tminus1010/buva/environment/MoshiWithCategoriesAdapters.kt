@@ -3,7 +3,6 @@ package com.tminus1010.buva.environment
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 import com.squareup.moshi.Types
-import com.tminus1010.buva.app.CategoryAdapter
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.CategoryAmountFormulas
 import com.tminus1010.buva.domain.CategoryAmounts

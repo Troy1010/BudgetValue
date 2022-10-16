@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.buva.all_layers.extensions.easyEmit
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem2
-import com.tminus1010.buva.app.CategoryAdapter
 import com.tminus1010.buva.app.UserCategories
 import com.tminus1010.buva.domain.Category
 import dagger.hilt.android.lifecycle.HiltViewModel

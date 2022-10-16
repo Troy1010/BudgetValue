@@ -5,7 +5,7 @@ import androidx.lifecycle.*
 import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.all_layers.extensions.*
 import com.tminus1010.buva.app.CategorizeTransactions
-import com.tminus1010.buva.app.CategoryAdapter
+import com.tminus1010.buva.environment.CategoryAdapter
 import com.tminus1010.buva.data.FuturesRepo
 import com.tminus1010.buva.domain.*
 import com.tminus1010.buva.all_layers.observable.source_objects.SourceHashMap

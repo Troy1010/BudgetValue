@@ -1,6 +1,7 @@
-package com.tminus1010.buva.app
+package com.tminus1010.buva.environment
 
 import com.tminus1010.buva.all_layers.extensions.value
+import com.tminus1010.buva.app.UserCategories
 import com.tminus1010.buva.domain.Category
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
