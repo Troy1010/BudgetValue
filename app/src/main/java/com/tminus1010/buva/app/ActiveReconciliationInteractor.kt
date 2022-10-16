@@ -105,7 +105,7 @@ class ActiveReconciliationInteractor @Inject constructor(
                     .flatMapLatest {
                         when (it) {
                             is ReconciliationToDo.PlanZ ->
-                                activePlanRepo.activePlan
+                                activePlanRepo.activePlan.drop(1)
                             else ->
                                 flowOf()
                         }
