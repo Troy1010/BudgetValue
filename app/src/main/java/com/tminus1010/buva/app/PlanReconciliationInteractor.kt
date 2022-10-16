@@ -39,18 +39,25 @@ class PlanReconciliationInteractor @Inject constructor(
         activeReconciliationRepo.pushCategoryAmounts(
             activeReconciliationRepo.activeReconciliationCAs.first()
                 .zipTogether(budgeted.first().categoryAmounts.filter { it.value <= BigDecimal.ZERO })
-                { _, b -> -b }
+                { a, b -> if (a == null) b else -b }
         )
     }
 
-    suspend fun getResetCAs(): CategoryAmounts {
-        return budgeted.first().categoryAmounts
-            .mapValues { (category, amount) ->
-                when (category.type) {
-                    CategoryType.Always -> -amount
-                    else -> BigDecimal.ZERO
-                }
-            }.toCategoryAmounts()
+    suspend fun reset() {
+        val budgeted = budgeted.first()
+        val activeReconciliation = activeReconciliationCAsAndTotal.first()
+        activeReconciliationRepo.pushCategoryAmounts(
+            CategoryAmounts.zipTogether(
+                budgeted.categoryAmounts,
+                activeReconciliation.categoryAmounts,
+            ) { a, b -> if (a == null) b else (b - a) }
+                .mapValues { (category, amount) ->
+                    when (category.type) {
+                        CategoryType.Always -> amount
+                        else -> BigDecimal.ZERO
+                    }
+                }.toCategoryAmounts()
+        )
     }
 
     // # Internal

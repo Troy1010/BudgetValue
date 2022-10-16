@@ -52,16 +52,14 @@ class ActiveReconciliationInteractor @Inject constructor(
     }
 
     suspend fun reset() {
-        activeReconciliationRepo.pushCategoryAmounts(
-            when (reconciliationsToDoInteractor.currentReconciliationToDo.first()) {
-                is ReconciliationToDo.PlanZ ->
-                    planReconciliationInteractor.getResetCAs()
+        when (reconciliationsToDoInteractor.currentReconciliationToDo.first()) {
+            is ReconciliationToDo.PlanZ ->
+                planReconciliationInteractor.reset()
 //                    activePlanRepo.activePlan.first().categoryAmounts
 //                    CategoryAmounts()
-                else ->
-                    CategoryAmounts()
-            }
-        )
+            else ->
+                activeReconciliationRepo.pushCategoryAmounts(CategoryAmounts())
+        }
     }
 
     val activeReconciliationCAsAndTotal =
