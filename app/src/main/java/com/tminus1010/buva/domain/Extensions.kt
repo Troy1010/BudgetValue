@@ -37,3 +37,7 @@ fun Iterable<LocalDatePeriod>.mergeOverlapping(): List<LocalDatePeriod> {
     }
     return currentPeriods.toList()
 }
+
+fun Map<Category, BigDecimal>.toCategoryAmounts(): CategoryAmounts {
+    return CategoryAmounts(this)
+}

@@ -43,6 +43,16 @@ class PlanReconciliationInteractor @Inject constructor(
         )
     }
 
+    suspend fun getResetCAs(): CategoryAmounts {
+        return budgeted.first().categoryAmounts
+            .mapValues { (category, amount) ->
+                when (category.type) {
+                    CategoryType.Always -> -amount
+                    else -> BigDecimal.ZERO
+                }
+            }.toCategoryAmounts()
+    }
+
     // # Internal
     private val summedRelevantHistory =
         combine(reconciliationsToDoInteractor.currentReconciliationToDo.filterIsInstance<ReconciliationToDo.PlanZ>(), historyInteractor.entireHistory)
