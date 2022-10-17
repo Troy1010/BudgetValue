@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk 33
 
     compileOptions.sourceCompatibility JavaVersion.VERSION_1_8
     compileOptions.targetCompatibility JavaVersion.VERSION_1_8
@@ -19,7 +19,7 @@ android {
     defaultConfig {
         applicationId "com.tminus1010.buva"
         minSdkVersion 29
-        targetSdkVersion 31
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
 
@@ -93,8 +93,8 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.4.0'
 
     // # Fragment, Activity
-    implementation "androidx.fragment:fragment-ktx:1.4.1"
-    implementation 'androidx.activity:activity-ktx:1.6.0-alpha01'
+    implementation "androidx.fragment:fragment-ktx:1.5.3"
+    implementation 'androidx.activity:activity-ktx:1.7.0-alpha01'
 
     // # JUnit
     // # JUnit 4

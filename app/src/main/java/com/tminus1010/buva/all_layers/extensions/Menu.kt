@@ -17,7 +17,7 @@ val Menu.items get() = iterator().asSequence()
 fun Menu.unCheckAllMenuItems() {
     items.forEach { item ->
         if (item.hasSubMenu())
-            item.subMenu.unCheckAllMenuItems()
+            item.subMenu?.unCheckAllMenuItems()
         else
             item.isChecked = false
     }
