@@ -9,7 +9,7 @@ class HasAppBeenInitializedRepo @Inject constructor(
     fun wasAppInitialized(): Boolean =
         sharedPrefWrapper.isAppInitialized()
 
-    suspend fun pushAppInitBool2(appInitBool: Boolean) {
+    suspend fun pushAppInitBool(appInitBool: Boolean) {
         sharedPrefWrapper.pushAppInitBool(appInitBool)
             .subscribeOn(Schedulers.io())
             .blockingAwait()

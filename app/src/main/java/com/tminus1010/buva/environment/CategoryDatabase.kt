@@ -7,7 +7,7 @@ import com.tminus1010.buva.domain.Category
 
 @TypeConverters(RoomTypeConverter::class)
 @Database(
-    version = 2,
+    version = 4,
     entities = [Category::class],
 )
 abstract class CategoryDatabase : RoomDatabase() {

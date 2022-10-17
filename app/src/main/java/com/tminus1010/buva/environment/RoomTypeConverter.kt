@@ -3,10 +3,7 @@ package com.tminus1010.buva.environment
 import androidx.room.TypeConverter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import com.tminus1010.buva.domain.AmountFormula
-import com.tminus1010.buva.domain.LocalDatePeriod
-import com.tminus1010.buva.domain.TerminationStrategy
-import com.tminus1010.buva.domain.TransactionMatcher
+import com.tminus1010.buva.domain.*
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import java.math.BigDecimal
@@ -40,7 +37,15 @@ object RoomTypeConverter {
         moshi.toJson(x)
 
     @TypeConverter
-    fun fromJson(s: String): TerminationStrategy? =
+    fun fromResetStrategyToJson(s: String): TerminationStrategy? =
+        moshi.fromJson(s)
+
+    @TypeConverter
+    fun fromJsonToResetStrategy(x: ResetStrategy): String =
+        moshi.toJson(x)
+
+    @TypeConverter
+    fun fromJson(s: String): ResetStrategy? =
         moshi.fromJson(s)
 
     @TypeConverter

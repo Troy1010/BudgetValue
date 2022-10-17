@@ -5,10 +5,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.ToJson
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import com.tminus1010.buva.domain.AmountFormula
-import com.tminus1010.buva.domain.CategoryType
-import com.tminus1010.buva.domain.TerminationStrategy
-import com.tminus1010.buva.domain.TransactionMatcher
+import com.tminus1010.buva.domain.*
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -28,15 +25,15 @@ object MoshiAdapters {
         s.toBigDecimal()
 
     /**
-     * [CategoryType]
+     * [CategoryDisplayType]
      */
     @ToJson
-    fun toJson(x: CategoryType): String =
+    fun toJson(x: CategoryDisplayType): String =
         x.ordinal.toString()
 
     @FromJson
-    fun fromJson2(s: String): CategoryType =
-        CategoryType.values()[s.toInt()]
+    fun fromJson2(s: String): CategoryDisplayType =
+        CategoryDisplayType.values()[s.toInt()]
 
 
     /**
@@ -73,6 +70,23 @@ object MoshiAdapters {
                 TransactionMatcher.Multi(fromJson6(s.dropWhile { it != '`' }.drop(1))!!.map { fromJson11(it) })
             else -> error("Unhandled s:$s")
         }
+
+
+    /**
+     * [ResetStrategy]
+     */
+    @ToJson
+    fun toJson(x: ResetStrategy): String =
+        when (x) {
+            is ResetStrategy.Basic -> x.budgetedMax.toString()
+        }
+
+    @FromJson
+    fun fromJson20(s: String): ResetStrategy =
+        if (s == "null")
+            ResetStrategy.Basic(null)
+        else
+            ResetStrategy.Basic(s.toBigDecimal())
 
     /**
      * [LocalDate]

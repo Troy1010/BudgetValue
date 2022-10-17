@@ -43,8 +43,8 @@ class CategoryDetailsVM @Inject constructor(
         category.value = category.value!!.copy(defaultAmountFormula = amountFormula)
     }
 
-    fun userSetCategoryType(categoryType: CategoryType) {
-        category.value = category.value!!.copy(type = categoryType)
+    fun userSetCategoryType(categoryDisplayType: CategoryDisplayType) {
+        category.value = category.value!!.withDisplayType(categoryDisplayType)
     }
 
     fun userDeleteCategory() {
@@ -127,7 +127,7 @@ class CategoryDetailsVM @Inject constructor(
                     ),
                     listOf(
                         TextVMItem("Type"),
-                        SpinnerVMItem(values = CategoryType.getPickableValues().toTypedArray(), initialValue = category.type, onNewItem = ::userSetCategoryType),
+                        SpinnerVMItem(values = CategoryDisplayType.getPickableValues().toTypedArray(), initialValue = category.displayType, onNewItem = ::userSetCategoryType),
                     ),
                     listOf(
                         TextPresentationModel(style = TextPresentationModel.Style.TWO, text1 = "Is Remembered By Default"),

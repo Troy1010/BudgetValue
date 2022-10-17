@@ -102,8 +102,8 @@ class HistoryVM @Inject constructor(
                     }.toTypedArray()
                 ).reflectXY(),
                 dividerMap = activeCategories.withIndex()
-                    .distinctUntilChangedWith(compareBy { it.value.type })
-                    .associate { it.index to it.value.type.name }
+                    .distinctUntilChangedWith(compareBy { it.value.displayType })
+                    .associate { it.index to it.value.displayType.name }
                     .mapKeys { it.key + 6 }
                     .mapValues { DividerVMItem(it.value) },
                 shouldFitItemWidthsInsideTable = false,

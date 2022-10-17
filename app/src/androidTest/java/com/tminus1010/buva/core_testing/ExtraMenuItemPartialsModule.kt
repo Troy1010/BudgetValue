@@ -46,7 +46,7 @@ object ExtraMenuItemPartialsModule {
                 ),
                 MenuVMItem("Redo App Init") {
                     GlobalScope.launch {
-                        hasAppBeenInitializedRepo.pushAppInitBool2(false)
+                        hasAppBeenInitializedRepo.pushAppInitBool(false)
                         initApp()
                     }
                 },

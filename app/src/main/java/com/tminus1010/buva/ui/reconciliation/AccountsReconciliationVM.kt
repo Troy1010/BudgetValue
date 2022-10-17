@@ -70,8 +70,8 @@ class AccountsReconciliationVM @Inject constructor(
                     }.toTypedArray(),
                 ),
                 dividerMap = categories.withIndex()
-                    .distinctUntilChangedWith(compareBy { it.value.type })
-                    .associate { it.index to it.value.type.name }
+                    .distinctUntilChangedWith(compareBy { it.value.displayType })
+                    .associate { it.index to it.value.displayType.name }
                     .mapKeys { it.key + 3 } // header row, default row
                     .mapValues { DividerVMItem(it.value) },
                 shouldFitItemWidthsInsideTable = true,

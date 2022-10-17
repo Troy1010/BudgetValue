@@ -195,8 +195,8 @@ class FutureDetailsVM @Inject constructor(
                     }.toTypedArray(),
                 ),
                 dividerMap = categoryAmountFormulaItemFlows.keys.withIndex()
-                    .distinctUntilChangedWith(compareBy { it.value.type })
-                    .associate { it.index to it.value.type.name }
+                    .distinctUntilChangedWith(compareBy { it.value.displayType })
+                    .associate { it.index to it.value.displayType.name }
                     .mapKeys { it.key + 1 } // header row
                     .mapValues { DividerVMItem(it.value) },
                 shouldFitItemWidthsInsideTable = true,

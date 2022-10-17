@@ -44,15 +44,17 @@ class PlanReconciliationInteractor @Inject constructor(
     }
 
     suspend fun reset() {
+        val activeReconciliationCAs = activeReconciliationRepo.activeReconciliationCAs.first()
+        val budgetedCAs = budgeted.first().categoryAmounts
+        val categories = (activeReconciliationCAs.keys + budgetedCAs.keys)
         activeReconciliationRepo.pushCategoryAmounts(
-            CategoryAmounts.zip(activeReconciliationRepo.activeReconciliationCAs.first(), budgeted.first().categoryAmounts)
-            { a, b -> a - b }
-                .mapValues { (category, amount) ->
-                    when (category.type) {
-                        CategoryType.Always -> amount
-                        else -> BigDecimal.ZERO
+            categories
+                .associateWith {
+                    when (it.resetStrategy) {
+                        is ResetStrategy.Basic -> it.resetStrategy.calc(it, activeReconciliationCAs, budgetedCAs)
                     }
-                }.toCategoryAmounts()
+                }
+                .toCategoryAmounts()
         )
     }
 

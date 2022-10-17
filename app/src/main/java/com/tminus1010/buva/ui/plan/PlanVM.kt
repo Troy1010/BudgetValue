@@ -75,14 +75,20 @@ class PlanVM @Inject constructor(
                         TextVMItem(text3 = activePlanRepo.activePlan.map { it.defaultAmount.toString() }),
                         *categoryAmountItemObservables.map { (category, amount) -> MoneyEditVMItem(text2 = amount.map { it.toString() }, onDone = { userSaveActivePlanCA(category, it) }) }.toTypedArray()
                     ),
+                    listOf(
+                        TextVMItem("Reset Min/Max", style = TextVMItem.Style.HEADER),
+                        TextVMItem(),
+                        TextVMItem(),
+                        *categoryAmountItemObservables.keys.map { TextVMItem(text1 = it.name, menuVMItems = MenuVMItems(MenuVMItem("Edit", onClick = { userEditCategory(it) }))) }.toTypedArray()
+                    ),
                 ).reflectXY()
             }
     val dividerMap =
         categoryAmounts
             .map {
                 it.map { it.key }.withIndex()
-                    .distinctUntilChangedWith(compareBy { it.value.type })
-                    .associate { it.index to it.value.type.name }
+                    .distinctUntilChangedWith(compareBy { it.value.displayType })
+                    .associate { it.index to it.value.displayType.name }
                     .mapKeys { it.key + 3 } // header row, expected row, default row
                     .mapValues { DividerVMItem(it.value) }
             }

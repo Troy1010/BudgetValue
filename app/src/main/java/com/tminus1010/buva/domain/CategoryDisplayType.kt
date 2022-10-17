@@ -1,6 +1,6 @@
 package com.tminus1010.buva.domain
 
-enum class CategoryType {
+enum class CategoryDisplayType {
     Special, Always, Reservoir;
 
     companion object {

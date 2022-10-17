@@ -11,7 +11,7 @@ import com.tminus1010.buva.environment.CategoryDatabase
 import com.tminus1010.buva.environment.MiscDatabase
 import com.tminus1010.buva.environment.RoomWithCategoriesTypeConverter
 import com.tminus1010.buva.domain.Category
-import com.tminus1010.buva.domain.CategoryType
+import com.tminus1010.buva.domain.CategoryDisplayType
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -49,19 +49,6 @@ class CategoriesRepoTest {
         val result = categoriesRepo.userCategories.first()
         // # Then
         assertEquals(listOf(givenCategory), result)
-    }
-
-    @Test
-    fun update() = runBlocking {
-        // # Given
-        val givenCategory = Category("Given Category")
-        val givenNewType = CategoryType.Reservoir
-        categoriesRepo.push(givenCategory)
-        // # When
-        categoriesRepo.update(givenCategory.copy(type = givenNewType))
-        val result = categoriesRepo.userCategories.first().find { it.name == givenCategory.name }!!.type
-        // # Then
-        assertEquals(givenNewType, result)
     }
 
     @Test
