@@ -6,7 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.room.Room
 import com.tminus1010.buva.core_testing.shared.FakeDataStore
 import com.tminus1010.buva.core_testing.app
-import com.tminus1010.buva.all_layers.dependency_injection.EnvironmentModule
+import com.tminus1010.buva.environment.EnvironmentModule
 import com.tminus1010.buva.environment.CategoryDatabase
 import com.tminus1010.buva.environment.MiscDatabase
 import com.tminus1010.buva.environment.RoomWithCategoriesTypeConverter

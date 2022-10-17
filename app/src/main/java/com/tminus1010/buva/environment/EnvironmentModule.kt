@@ -1,4 +1,4 @@
-package com.tminus1010.buva.all_layers.dependency_injection
+package com.tminus1010.buva.environment
 
 import android.app.Application
 import android.content.Context
@@ -6,7 +6,6 @@ import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.room.Room
-import com.tminus1010.buva.environment.*
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable

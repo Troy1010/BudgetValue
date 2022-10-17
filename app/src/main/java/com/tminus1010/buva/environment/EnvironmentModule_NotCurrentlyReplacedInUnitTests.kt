@@ -1,4 +1,4 @@
-package com.tminus1010.buva.all_layers.dependency_injection
+package com.tminus1010.buva.environment
 
 import android.app.Application
 import com.tminus1010.buva.environment.CategoryDatabase
