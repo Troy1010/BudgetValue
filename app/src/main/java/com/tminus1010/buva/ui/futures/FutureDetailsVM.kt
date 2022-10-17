@@ -8,7 +8,7 @@ import com.tminus1010.buva.app.CategorizeTransactions
 import com.tminus1010.buva.environment.CategoryAdapter
 import com.tminus1010.buva.data.FuturesRepo
 import com.tminus1010.buva.domain.*
-import com.tminus1010.buva.all_layers.observable.source_objects.SourceHashMap
+import com.tminus1010.buva.all_layers.source_objects.SourceHashMap
 import com.tminus1010.buva.ui.all_features.TransactionMatcherPresentationFactory
 import com.tminus1010.buva.ui.all_features.view_model_item.*
 import com.tminus1010.buva.ui.choose_categories.ChooseCategoriesSharedVM
