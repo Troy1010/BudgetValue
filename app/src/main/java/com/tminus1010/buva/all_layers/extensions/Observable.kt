@@ -4,7 +4,6 @@ import com.tminus1010.buva.domain.AmountFormula
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.CategoryAmountFormulas
 import com.tminus1010.buva.domain.CategoryAmounts
-import com.tminus1010.buva.all_layers.observable.ColdObservable
 import com.tminus1010.buva.all_layers.observable.source_objects.SourceHashMap
 import com.tminus1010.buva.all_layers.observable.source_objects.SourceList
 import com.tminus1010.tmcommonkotlin.rx3.extensions.value
@@ -95,9 +94,6 @@ fun <T : Any> Observable<T>.nonLazyCache(compositeDisposable: CompositeDisposabl
 
 val <T : Any> Observable<Box<T?>>.unbox: T
     get() = this.value!!.first!!
-
-fun <T : Any> Observable<T>.cold(): ColdObservable<T> =
-    ColdObservable(this)
 
 fun <T : Any, D : Any> Observable<T>.mapBox(lambda: (T) -> D?): Observable<Box<D?>> =
     map { Box(lambda(it)) }
