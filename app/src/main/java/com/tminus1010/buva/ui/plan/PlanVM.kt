@@ -9,6 +9,7 @@ import com.tminus1010.buva.app.UserCategories
 import com.tminus1010.buva.data.ActivePlanRepo
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.ui.all_features.Navigator
+import com.tminus1010.buva.ui.all_features.toDisplayStr
 import com.tminus1010.buva.ui.all_features.view_model_item.*
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
@@ -76,10 +77,10 @@ class PlanVM @Inject constructor(
                         *categoryAmountItemObservables.map { (category, amount) -> MoneyEditVMItem(text2 = amount.map { it.toString() }, onDone = { userSaveActivePlanCA(category, it) }) }.toTypedArray()
                     ),
                     listOf(
-                        TextVMItem("Reset Min/Max", style = TextVMItem.Style.HEADER),
+                        TextVMItem("Reset Max", style = TextVMItem.Style.HEADER),
                         TextVMItem(),
                         TextVMItem(),
-                        *categoryAmountItemObservables.keys.map { TextVMItem(text1 = it.name, menuVMItems = MenuVMItems(MenuVMItem("Edit", onClick = { userEditCategory(it) }))) }.toTypedArray()
+                        *categoryAmountItemObservables.keys.map { TextVMItem(text1 = it.resetStrategy.toDisplayStr(), menuVMItems = MenuVMItems(MenuVMItem("Edit Category", onClick = { userEditCategory(it) }))) }.toTypedArray()
                     ),
                 ).reflectXY()
             }
