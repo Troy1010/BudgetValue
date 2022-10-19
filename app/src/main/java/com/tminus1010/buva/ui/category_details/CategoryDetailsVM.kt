@@ -72,6 +72,10 @@ class CategoryDetailsVM @Inject constructor(
         category.value = category.value!!.copy(isRememberedByDefault = b)
     }
 
+    fun userSetResetMax(x: BigDecimal?) {
+        category.value = category.value!!.copy(resetStrategy = ResetStrategy.Basic(x))
+    }
+
     fun userAddSearchText() {
         category.value = category.value!!.copy(onImportTransactionMatcher = category.value!!.onImportTransactionMatcher.withSearchText(""))
     }
@@ -110,7 +114,7 @@ class CategoryDetailsVM @Inject constructor(
     // # State
     val title = flowOf("Category").shareIn(viewModelScope, SharingStarted.Eagerly, 1)
     val optionsTableView =
-        combine(category.asFlow(), transactionMatcherPresentationFactory.viewModelItems(category.map { it.onImportTransactionMatcher }, { category.value = category.value?.copy(onImportTransactionMatcher = it) }, ::userNavToChooseTransactionForTransactionMatcher).asFlow(), )
+        combine(category.asFlow(), transactionMatcherPresentationFactory.viewModelItems(category.map { it.onImportTransactionMatcher }, { category.value = category.value?.copy(onImportTransactionMatcher = it) }, ::userNavToChooseTransactionForTransactionMatcher).asFlow())
         { category, transactionMatcherVMItems ->
             TableViewVMItem(
                 recipeGrid = listOfNotNull(
@@ -122,9 +126,20 @@ class CategoryDetailsVM @Inject constructor(
                         TextVMItem("Default Amount"),
                         AmountFormulaPresentationModel1(
                             amountFormula = this.category.map { it.defaultAmountFormula },
-                            onNewAmountFormula = ::userSetCategoryDefaultAmountFormula
+                            onNewAmountFormula = ::userSetCategoryDefaultAmountFormula,
                         ),
                     ),
+                    if (category.displayType == CategoryDisplayType.Reservoir)
+                        listOf(
+                            TextVMItem("Budget Reset Max"),
+                            AmountPresentationModel(
+                                bigDecimal = when (val x = category.resetStrategy) {
+                                    is ResetStrategy.Basic -> x.budgetedMax
+                                },
+                                onNewAmount = ::userSetResetMax,
+                            ),
+                        )
+                    else null,
                     listOf(
                         TextVMItem("Type"),
                         SpinnerVMItem(values = CategoryDisplayType.getPickableValues().toTypedArray(), initialValue = category.displayType, onNewItem = ::userSetCategoryType),
@@ -133,7 +148,7 @@ class CategoryDetailsVM @Inject constructor(
                         TextPresentationModel(style = TextPresentationModel.Style.TWO, text1 = "Is Remembered By Default"),
                         CheckboxVMItem(initialValue = category.isRememberedByDefault, onCheckChanged = ::userSetIsRememberedByDefault),
                     ),
-                    *transactionMatcherVMItems.toTypedArray()
+                    *transactionMatcherVMItems.toTypedArray(),
                 ),
                 shouldFitItemWidthsInsideTable = true,
             )
