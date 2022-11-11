@@ -5,10 +5,11 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.tminus1010.buva.all_layers.extensions.isZero
-import com.tminus1010.buva.environment.MoshiWithCategoriesProvider
-import com.tminus1010.buva.domain.CategoryAmounts
-import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.ActivePlan
+import com.tminus1010.buva.domain.Category
+import com.tminus1010.buva.domain.CategoryAmounts
+import com.tminus1010.buva.environment.MoshiWithCategoriesProvider
+import com.tminus1010.buva.environment.UserCategoriesDAO
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import kotlinx.coroutines.GlobalScope
@@ -20,12 +21,16 @@ import javax.inject.Singleton
 @Singleton
 class ActivePlanRepo @Inject constructor(
     private val dataStore: DataStore<Preferences>,
-    private val moshiWithCategoriesProvider: MoshiWithCategoriesProvider
-) {
+    private val moshiWithCategoriesProvider: MoshiWithCategoriesProvider,
+    private val userCategoriesDAO: UserCategoriesDAO,
+
+    ) {
     private val key = stringPreferencesKey("ActivePlanRepo3")
 
     val activePlan =
-        dataStore.data
+        userCategoriesDAO.fetchUserCategories().flatMapLatest {
+            dataStore.data
+        }
             .map { moshiWithCategoriesProvider.moshi.fromJson<ActivePlan>(it[key]) }
             .filterNotNull()
             .distinctUntilChanged()

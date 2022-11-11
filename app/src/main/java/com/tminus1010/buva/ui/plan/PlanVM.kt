@@ -1,9 +1,11 @@
 package com.tminus1010.buva.ui.plan
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.tminus1010.buva.all_layers.categoryComparator
-import com.tminus1010.buva.all_layers.extensions.flatMapSourceHashMap
+import com.tminus1010.buva.all_layers.extensions.flatMapSourceMap
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
+import com.tminus1010.buva.all_layers.source_objects.SourceMap
 import com.tminus1010.buva.app.ActivePlanInteractor
 import com.tminus1010.buva.app.UserCategories
 import com.tminus1010.buva.data.ActivePlanRepo
@@ -51,7 +53,7 @@ class PlanVM @Inject constructor(
     }
 
     // # Internal
-    val categoryAmounts =
+    private val categoryAmounts =
         combine(activePlanRepo.activePlan.map { it.categoryAmounts }, userCategories.flow)
         { categoryAmounts, userCategories ->
             userCategories.associateWith { BigDecimal.ZERO }
@@ -61,7 +63,8 @@ class PlanVM @Inject constructor(
 
     // # State
     val planRecipeGrid =
-        categoryAmounts.flatMapSourceHashMap { it.itemFlowMap }
+        categoryAmounts
+            .flatMapSourceMap(SourceMap(viewModelScope)) { it.itemFlowMap }
             .map { categoryAmountItemObservables ->
                 listOf(
                     listOf(

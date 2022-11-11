@@ -24,7 +24,7 @@ data class Category(
         return transaction.categorize(this)
     }
 
-    override fun toString() = name // for logs
+    override fun toString() = Pair(name, (resetStrategy as? ResetStrategy.Basic)?.budgetedMax).toString() // for logs
 
     @delegate:Ignore
     val displayType by lazy {
@@ -36,6 +36,17 @@ data class Category(
             else ->
                 CategoryDisplayType.Reservoir
         }
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return (name == (other as? Category)?.name)
+                && resetStrategy == (other as? Category)?.resetStrategy
+    }
+
+    override fun hashCode(): Int {
+        var result = name.hashCode()
+        result = 31 * result + resetStrategy.hashCode()
+        return result
     }
 
     companion object {

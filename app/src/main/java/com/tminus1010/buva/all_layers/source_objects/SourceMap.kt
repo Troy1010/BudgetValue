@@ -1,5 +1,7 @@
 package com.tminus1010.buva.all_layers.source_objects
 
+import com.tminus1010.buva.all_layers.extensions.reliableContains
+import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.tmcommonkotlin.core.extensions.removeIf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
@@ -22,14 +24,17 @@ class SourceMap<K, V : Any>(coroutineScope: CoroutineScope, private val _map: Mu
                 }
                 acc
             }
-            .stateIn(coroutineScope, SharingStarted.Eagerly, _map.mapValues { MutableStateFlow(it.value) })
+            .shareIn(coroutineScope, SharingStarted.Eagerly, 1)
+
     val map =
         change.map { _map }
-            .stateIn(coroutineScope, SharingStarted.Eagerly, _map)
+            .onStart { emit(_map) }
+            .shareIn(coroutineScope, SharingStarted.Eagerly, 1)
+            .also { runBlocking { it.take(1).collect() } } // Without this, there is a race condition where .value might not get the .onStart emission.
 
     fun adjustTo(newMap: Map<K, V>) {
         // If any keys should be removed, remove them.
-        this.removeIf { it.key !in newMap }
+        this.removeIf { !newMap.reliableContains(it.key) }
         // If any values do not match, update them.
         newMap.filter { (k, v) -> k !in this || v != this[k] }.forEach { (k, v) -> this[k] = v }
     }
@@ -59,9 +64,8 @@ class SourceMap<K, V : Any>(coroutineScope: CoroutineScope, private val _map: Mu
     }
 
     override fun remove(key: K): V? {
-        val originalResult = _map.remove(key)
         runBlocking {
-            if (exitValue != null && key in map.value)
+            if (exitValue != null && key in map.value!!)
                 change.emit(
                     Change(
                         type = AddRemEditType.EDIT,
@@ -73,10 +77,10 @@ class SourceMap<K, V : Any>(coroutineScope: CoroutineScope, private val _map: Mu
                 Change(
                     type = AddRemEditType.REMOVE,
                     key = key,
-                    value = map.value[key]!! // TODO: This seems unnecessary
+                    value = map.value!![key]!! // TODO: This seems unnecessary
                 )
             )
         }
-        return originalResult
+        return _map.remove(key)
     }
 }

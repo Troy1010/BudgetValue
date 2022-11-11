@@ -15,7 +15,6 @@ class SourceListTest {
         givenSourceList.adjustTo(givenList)
         // # Then
         assertEquals(givenSourceList, givenList)
-        logz("sourceList:$givenSourceList newList:$givenList")
     }
 
     companion object {

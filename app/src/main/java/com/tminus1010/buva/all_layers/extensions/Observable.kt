@@ -1,11 +1,12 @@
 package com.tminus1010.buva.all_layers.extensions
 
+import com.tminus1010.buva.all_layers.source_objects.SourceHashMap
+import com.tminus1010.buva.all_layers.source_objects.SourceList
+import com.tminus1010.buva.all_layers.source_objects.SourceMap
 import com.tminus1010.buva.domain.AmountFormula
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.CategoryAmountFormulas
 import com.tminus1010.buva.domain.CategoryAmounts
-import com.tminus1010.buva.all_layers.source_objects.SourceHashMap
-import com.tminus1010.buva.all_layers.source_objects.SourceList
 import com.tminus1010.tmcommonkotlin.rx3.extensions.value
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import io.reactivex.rxjava3.core.Observable
@@ -33,12 +34,26 @@ fun <T : Any> Observable<CategoryAmountFormulas>.flatMapSourceHashMap(sourceHash
 
 fun <K, V : Any, T : Any> Observable<Map<K, V>>.flatMapSourceHashMap(sourceHashMap: SourceHashMap<K, V> = SourceHashMap(), outputChooser: (SourceHashMap<K, V>) -> Observable<T>): Observable<T> =
     compose { upstream ->
-        Observable.create<T> { downstream ->
+        Observable.create { downstream ->
             CompositeDisposable(
                 outputChooser(sourceHashMap)
                     .subscribe({ downstream.onNext(it) }, { downstream.onError(it) }),
                 upstream
                     .subscribe({ sourceHashMap.adjustTo(it) },
+                        { downstream.onError(it) },
+                        { downstream.onComplete() })
+            ).also { downstream.setDisposable(it) }
+        }
+    }
+
+fun <K, V : Any, T : Any> Observable<Map<K, V>>.flatMapSourceMap(sourceMap: SourceMap<K, V>, outputChooser: (SourceMap<K, V>) -> Observable<T>): Observable<T> =
+    compose { upstream ->
+        Observable.create { downstream ->
+            CompositeDisposable(
+                outputChooser(sourceMap)
+                    .subscribe({ downstream.onNext(it) }, { downstream.onError(it) }),
+                upstream
+                    .subscribe({ sourceMap.adjustTo(it) },
                         { downstream.onError(it) },
                         { downstream.onComplete() })
             ).also { downstream.setDisposable(it) }
