@@ -24,7 +24,7 @@ import com.tminus1010.buva.ui.set_string.SetStringSharedVM
 import com.tminus1010.tmcommonkotlin.androidx.ShowToast
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.divertErrors
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
-import com.tminus1010.tmcommonkotlin.coroutines.extensions.takeUntilSignal
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.takeUntil
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -103,7 +103,7 @@ class CategorizeVM @Inject constructor(
     }
 
     fun userAddTransactionToFutureWithEdit(future: Future) {
-        setStringSharedVM.userSubmitString.take(1).takeUntilSignal(setStringSharedVM.userCancel).observe(errors.globalScope) { s ->
+        setStringSharedVM.userSubmitString.take(1).takeUntil(setStringSharedVM.userCancel).observe(errors.globalScope) { s ->
             errors.globalScope.launch { // TODO: There should be a better way than launching within a launch, right?
                 futuresInteractor.addDescriptionToFutureAndCategorize(
                     description = s,
@@ -127,7 +127,7 @@ class CategorizeVM @Inject constructor(
     }
 
     fun userUseDescriptionWithEdit(future: Future) {
-        setStringSharedVM.userSubmitString.take(1).takeUntilSignal(setStringSharedVM.userCancel).observe(errors.globalScope) { s ->
+        setStringSharedVM.userSubmitString.take(1).takeUntil(setStringSharedVM.userCancel).observe(errors.globalScope) { s ->
             errors.globalScope.launch { // TODO: There should be a better way than launching within a launch, right?
                 categorizeTransactions(TransactionMatcher.SearchText(s)::isMatch, future::categorize)
                     .also { showToast(NativeText.Simple("$it transactions categorized")) }
@@ -148,7 +148,7 @@ class CategorizeVM @Inject constructor(
     }
 
     fun userUseDescriptionWithEditOnCategory(category: Category) {
-        setStringSharedVM.userSubmitString.take(1).takeUntilSignal(setStringSharedVM.userCancel).observe(errors.globalScope) { s ->
+        setStringSharedVM.userSubmitString.take(1).takeUntil(setStringSharedVM.userCancel).observe(errors.globalScope) { s ->
             errors.globalScope.launch { // TODO: There should be a better way than launching within a launch, right?
                 categorizeTransactions(TransactionMatcher.SearchText(s)::isMatch, categorize = { it.categorize(category) })
                     .also { showToast(NativeText.Simple("$it transactions categorized")) }
@@ -172,7 +172,7 @@ class CategorizeVM @Inject constructor(
     }
 
     fun userUseAndRememberDescriptionWithEditOnCategory(category: Category) {
-        setStringSharedVM.userSubmitString.take(1).takeUntilSignal(setStringSharedVM.userCancel).observe(errors.globalScope) { s ->
+        setStringSharedVM.userSubmitString.take(1).takeUntil(setStringSharedVM.userCancel).observe(errors.globalScope) { s ->
             errors.globalScope.launch { // TODO: There should be a better way than launching within a launch, right?
                 categoryInteractor.addDescriptionAndCategorize(
                     category = category,

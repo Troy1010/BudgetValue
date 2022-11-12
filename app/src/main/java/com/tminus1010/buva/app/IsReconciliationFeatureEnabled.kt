@@ -42,7 +42,7 @@ class IsReconciliationFeatureEnabled @Inject constructor(
 //
 //    init {
 //        GlobalScope.launch {
-//            isReconciliationReadyToBeEnabled.takeUntilSignal(flow.filter { it }).filter { it }.take(1).collect { setTrue() }
+//            isReconciliationReadyToBeEnabled.takeUntil(flow.filter { it }).filter { it }.take(1).collect { setTrue() }
 //        }
 //    }
 }
