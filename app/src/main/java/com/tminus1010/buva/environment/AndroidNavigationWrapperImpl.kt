@@ -1,5 +1,6 @@
 package com.tminus1010.buva.environment
 
+import android.annotation.SuppressLint
 import androidx.navigation.NavController
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.ui.category_details.CategoryDetailsFrag
@@ -19,7 +20,8 @@ class AndroidNavigationWrapperImpl @Inject constructor() : AndroidNavigationWrap
     }
 
     companion object {
-        // This pattern can cause memory leaks. However, this project only has 1 NavController, so a memory leak is unlikely
+        // This pattern can cause memory leaks. However, this project only has 1 Activity, so a memory leak is unlikely
+        @SuppressLint("StaticFieldLeak")
         var nav: NavController? = null
     }
 }

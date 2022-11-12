@@ -25,4 +25,7 @@ object EnvironmentModule_NotCurrentlyReplacedInUnitTests {
 
     @Provides
     fun provideImageToText(application: Application): ImageToText = ImageToText(application)
+
+    @Provides
+    fun provideAndroidNavigationWrapper(): AndroidNavigationWrapper = AndroidNavigationWrapperImpl()
 }
