@@ -26,6 +26,8 @@ class InitApp @Inject constructor(
                 Category("Improvements", AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Medical", AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Misc", AmountFormula.Value(BigDecimal.ZERO)),
+                Category("Fast Food", AmountFormula.Value(BigDecimal.ZERO)),
+                Category("Groceries", AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Unknown", AmountFormula.Value(BigDecimal.ZERO), isRememberedByDefault = false),
                 Category("Savings", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(null)),
                 Category("Emergency", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(null)),
