@@ -9,13 +9,11 @@ import androidx.navigation.NavController
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.InvalidCategoryNameException
 import com.tminus1010.buva.all_layers.KEY1
+import com.tminus1010.buva.all_layers.android.viewBinding
 import com.tminus1010.buva.databinding.FragCategoryDetailsBinding
 import com.tminus1010.buva.domain.Category
-import com.tminus1010.buva.domain.TransactionMatcher
-import com.tminus1010.buva.all_layers.android.viewBinding
 import com.tminus1010.buva.ui.choose_transaction.ChooseTransactionFrag
 import com.tminus1010.buva.ui.errors.Errors
-import com.tminus1010.buva.ui.set_search_texts.SetSearchTextsSharedVM
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
