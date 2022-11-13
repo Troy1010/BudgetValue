@@ -8,10 +8,10 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.tminus1010.buva.R
-import com.tminus1010.buva.databinding.FragCategorizeBinding
 import com.tminus1010.buva.all_layers.android.GridMarginDecoration
 import com.tminus1010.buva.all_layers.android.LifecycleRVAdapter2
 import com.tminus1010.buva.all_layers.android.viewBinding
+import com.tminus1010.buva.databinding.FragCategorizeBinding
 import com.tminus1010.buva.ui.category_details.CategoryDetailsFrag
 import com.tminus1010.buva.ui.choose_categories.ChooseCategoriesSharedVM
 import com.tminus1010.buva.ui.errors.Errors
@@ -19,8 +19,6 @@ import com.tminus1010.buva.ui.futures.CreateFutureFrag
 import com.tminus1010.buva.ui.futures.FutureDetailsFrag
 import com.tminus1010.buva.ui.receipt_categorization.ReceiptCategorizationHostFrag
 import com.tminus1010.buva.ui.review.NoMostRecentSpendException
-import com.tminus1010.buva.ui.set_string.SetStringFrag
-import com.tminus1010.buva.ui.set_string.SetStringSharedVM
 import com.tminus1010.tmcommonkotlin.androidx.GenViewHolder
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
@@ -41,9 +39,6 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     @Inject
     lateinit var errors: Errors
 
-    @Inject
-    lateinit var setStringSharedVM: SetStringSharedVM
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Events
@@ -59,7 +54,6 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
         viewModel.navToReplayOrFutureDetails.observe(viewLifecycleOwner) { FutureDetailsFrag.navTo(nav, it, chooseCategoriesSharedVM) }
         viewModel.navToReceiptCategorization.observe(viewLifecycleOwner) { ReceiptCategorizationHostFrag.navTo(nav, it) }
         viewModel.navToReceiptCategorizationImageToText.observe(viewLifecycleOwner) { TODO() }
-        viewModel.navToSetString.observe(viewLifecycleOwner) { SetStringFrag.navTo(nav, it, setStringSharedVM) }
         // # State
         vb.textviewDate.bind(viewModel.date) { text = it }
         vb.textviewAmount.bind(viewModel.latestUncategorizedTransactionAmount) { text = it }

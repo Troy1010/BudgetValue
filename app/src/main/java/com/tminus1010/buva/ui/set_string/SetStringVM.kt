@@ -1,50 +1,76 @@
 package com.tminus1010.buva.ui.set_string
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.tminus1010.buva.all_layers.extensions.onNext
+import com.tminus1010.buva.all_layers.KEY1
+import com.tminus1010.buva.all_layers.KEY2
+import com.tminus1010.buva.environment.ParcelableLambdaWrapper
+import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.EditTextVMItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.merge
 import javax.inject.Inject
 
 @HiltViewModel
 class SetStringVM @Inject constructor(
-    private val setStringSharedVM: SetStringSharedVM,
+    private val savedStateHandle: SavedStateHandle,
+    private val navigator: Navigator,
 ) : ViewModel() {
     // # User Intents
     fun userSubmit() {
-        setStringSharedVM.userSubmitString.onNext(latestS)
+        savedStateHandle.get<ParcelableLambdaWrapper>(KEY2)!!.lambda2(currentS ?: "")
+        navigator.navUp()
+    }
+
+    fun userSubmitFirstWord() {
+        savedStateHandle.get<ParcelableLambdaWrapper>(KEY2)!!.lambda2(currentS?.split(Regex("""\s"""))?.firstOrNull() ?: "")
+        navigator.navUp()
+    }
+
+    fun userSubmitFirst2Words() {
+        savedStateHandle.get<ParcelableLambdaWrapper>(KEY2)!!.lambda2(currentS?.split(Regex("""\s"""))?.take(2)?.joinToString(" ") ?: "")
+        navigator.navUp()
+    }
+
+    fun userSubmitFirst3Words() {
+        savedStateHandle.get<ParcelableLambdaWrapper>(KEY2)!!.lambda2(currentS?.split(Regex("""\s"""))?.take(3)?.joinToString(" ") ?: "")
+        navigator.navUp()
     }
 
     fun userCancel() {
-        setStringSharedVM.userCancel.onNext()
+        savedStateHandle.get<ParcelableLambdaWrapper>(KEY2)!!.lambda2(null)
+        navigator.navUp()
     }
 
     // # Internal
-    var latestS = setStringSharedVM.initialS
-
-    // # Events
-    val navUp =
-        merge(
-            setStringSharedVM.userSubmitString,
-            setStringSharedVM.userCancel,
-        )
+    private var currentS: String? = savedStateHandle[KEY1]
 
     // # State
     val editTextVMItem =
         EditTextVMItem(
-            text = setStringSharedVM.initialS,
-            onDone = { latestS = it }
+            text = savedStateHandle[KEY1],
+            onDone = { currentS = it }
         )
     val buttons =
         flowOf(
             listOf(
                 ButtonVMItem(
+                    title = "Submit first three words",
+                    onClick = ::userSubmitFirst3Words,
+                ),
+                ButtonVMItem(
+                    title = "Submit first two words",
+                    onClick = ::userSubmitFirst2Words,
+                ),
+                ButtonVMItem(
+                    title = "Submit first word",
+                    onClick = ::userSubmitFirstWord,
+                ),
+                ButtonVMItem(
                     title = "Submit",
                     onClick = ::userSubmit,
-                )
+                ),
             )
         )
 }
