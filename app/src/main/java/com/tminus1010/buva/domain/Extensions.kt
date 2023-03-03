@@ -28,7 +28,11 @@ fun Iterable<LocalDatePeriod>.mergeOverlapping(): List<LocalDatePeriod> {
         if (result != null) {
             val firstPeriodToRemove = result.first
             val secondPeriodToRemove = result.second
-            val newPeriod = LocalDatePeriod(firstPeriodToRemove.startDate, secondPeriodToRemove.endDate)
+            val newPeriod =
+                LocalDatePeriod(
+                    listOf(result.first.startDate, result.second.startDate).minByOrNull { it }!!,
+                    listOf(result.first.endDate, result.second.endDate).minByOrNull { it }!!,
+                )
             currentPeriods[currentPeriods.indexOf(firstPeriodToRemove)] = newPeriod
             currentPeriods.remove(secondPeriodToRemove)
         } else {

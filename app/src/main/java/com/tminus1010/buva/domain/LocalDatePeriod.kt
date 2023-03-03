@@ -15,7 +15,7 @@ data class LocalDatePeriod(
     val endDate: LocalDate,
 ) : Parcelable {
     init {
-        if (endDate < startDate) error("endDate < startDate is illegal. Perhaps this could be supported?")
+        if (endDate < startDate) error("endDate < startDate is illegal. Perhaps this could be supported? startDate:$startDate endDate:$endDate")
     }
 
     constructor(startDate: LocalDate, period: Period) : this(startDate, startDate.plus(period))
