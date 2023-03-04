@@ -31,7 +31,14 @@ class MarginDecoration(
                                 outRect.apply { top = spacing }
                     }
                 else
-                    TODO()
+                    when (parent.getChildAdapterPosition(view)) {
+                        0 -> return // The first item does not get a margin
+                        else ->
+                            if (layoutManager.reverseLayout)
+                                outRect.apply { right = spacing }
+                            else
+                                outRect.apply { left = spacing }
+                    }
             is GridLayoutManager ->
                 if (layoutManager.orientation == LinearLayoutManager.VERTICAL)
                     TODO()
