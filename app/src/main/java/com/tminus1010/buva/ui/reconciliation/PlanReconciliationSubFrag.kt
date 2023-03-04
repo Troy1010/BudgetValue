@@ -24,7 +24,7 @@ class PlanReconciliationSubFrag : Fragment(R.layout.subfrag_plan_reconciliation)
     }
 
     companion object {
-        operator fun invoke(reconciliationToDo: ReconciliationToDo.PlanZ): PlanReconciliationSubFrag {
+        fun create(reconciliationToDo: ReconciliationToDo.PlanZ): PlanReconciliationSubFrag {
             return PlanReconciliationSubFrag().apply {
                 arguments = Bundle().apply {
                     putParcelable(KEY1, reconciliationToDo)

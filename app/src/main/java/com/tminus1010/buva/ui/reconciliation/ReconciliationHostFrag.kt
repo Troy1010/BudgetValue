@@ -29,10 +29,9 @@ class ReconciliationHostFrag : Fragment(R.layout.frag_reconciliation_host) {
                 .replace(
                     R.id.frame,
                     when (it) {
-                        is ReconciliationToDo.PlanZ -> PlanReconciliationSubFrag(it)
+                        is ReconciliationToDo.PlanZ -> PlanReconciliationSubFrag.create(it)
                         is ReconciliationToDo.Accounts,
                         is ReconciliationToDo.Anytime,
-                        null,
                         -> AccountsReconciliationSubFrag()
                     },
                 )
