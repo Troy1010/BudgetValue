@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import com.tminus1010.buva.R
 import com.tminus1010.buva.databinding.FragReviewHostBinding
 import com.tminus1010.buva.ui.history.HistoryFrag
+import com.tminus1010.buva.ui.review_bar_chart.ReviewBarChartFrag
 import com.tminus1010.buva.ui.review_pie_chart.ReviewPieChartFrag
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,6 +28,7 @@ class ReviewHostFrag : Fragment(R.layout.frag_review_host) {
                     when (it) {
                         ReviewPieChartFrag::class.java -> ReviewPieChartFrag()
                         HistoryFrag::class.java -> HistoryFrag()
+                        ReviewBarChartFrag::class.java -> ReviewBarChartFrag()
                         else -> error("Unhandled Fragment")
                     },
                 )
