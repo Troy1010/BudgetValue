@@ -13,6 +13,6 @@
         android:id="@+id/reconciliationHostFrag"
         android:title="Reconcile" />
     <item
-        android:id="@+id/reviewPieChartFrag"
+        android:id="@+id/reviewHostFrag"
         android:title="Review" />
 </menu>

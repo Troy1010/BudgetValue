@@ -23,7 +23,7 @@ class ReconciliationHostFrag : Fragment(R.layout.frag_reconciliation_host) {
         vb.buttonsview.bind(reconciliationHostVM.buttons) { buttons = it }
         vb.tvSubTitle.bind(reconciliationHostVM.subTitle) { text = it.toCharSequence(context) }
         vb.tvTitle.bind(reconciliationHostVM.title) { text = it.toCharSequence(context) }
-        vb.frame.bind(reconciliationHostVM.currentReconciliationToDo) {
+        vb.frame.bind(reconciliationHostVM.currentReconciliationToDo) { // TODO: Probably shouldn't emit currentReconciliationToDo to View layer
             this@ReconciliationHostFrag.childFragmentManager
                 .beginTransaction()
                 .replace(
