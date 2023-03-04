@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.R
+import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.buva.databinding.ItemButtonBinding
@@ -16,17 +17,25 @@ class ButtonsView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.editTextStyle,
 ) : RecyclerView(context, attrs, defStyleAttr) {
+    val orientation by lazy { attrs?.getAttributeIntValue("http://schemas.android.com/apk/res/android", "orientation", LinearLayoutManager.VERTICAL) ?: LinearLayoutManager.VERTICAL }
+
     var buttons = emptyList<ButtonVMItem>()
         set(value) {
             field = value; adapter?.notifyDataSetChanged()
         }
 
     init {
-        layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
+        layoutManager = LinearLayoutManager(context, orientation, true)
         addItemDecoration(MarginDecoration(7))
         adapter = object : LifecycleRVAdapter2<GenViewHolder<ItemButtonBinding>>() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-                GenViewHolder(ItemButtonBinding.inflate(LayoutInflater.from(context), parent, false))
+                GenViewHolder(
+                    ItemButtonBinding.inflate(LayoutInflater.from(context), parent, false)
+                        .also {
+                            if (orientation == LinearLayoutManager.HORIZONTAL)
+                                it.root.updateLayoutParams { width = ViewGroup.LayoutParams.WRAP_CONTENT }
+                        }
+                )
 
             override fun getItemCount() = buttons.size
             override fun onLifecycleAttached(holder: GenViewHolder<ItemButtonBinding>) {
