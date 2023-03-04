@@ -1,4 +1,4 @@
-package com.tminus1010.buva.ui.review
+package com.tminus1010.buva.ui.review_pie_chart
 
 import android.content.Context
 import android.view.View
@@ -37,7 +37,7 @@ import javax.inject.Inject
 
 @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
 @HiltViewModel
-class ReviewVM @Inject constructor(
+class ReviewPieChartVM @Inject constructor(
     transactionsInteractor: TransactionsInteractor,
     showToast: ShowToast,
     isPeriodFullyImported: IsPeriodFullyImported,
@@ -58,11 +58,14 @@ class ReviewVM @Inject constructor(
                     (acc + v).coerceAtLeast(0)
                 }
         }
-    private val _colors = listOf<Int>()
-        .plus(ColorTemplate.VORDIPLOM_COLORS.toList())
-        .plus(ColorTemplate.JOYFUL_COLORS.toList())
-        .plus(ColorTemplate.COLORFUL_COLORS.toList())
-        .plus(ColorTemplate.PASTEL_COLORS.toList())
+    private val _colors =
+        listOf<Int>()
+            .plus(ColorTemplate.VORDIPLOM_COLORS.toList())
+            .plus(ColorTemplate.JOYFUL_COLORS.toList())
+            .plus(ColorTemplate.COLORFUL_COLORS.toList())
+            .plus(ColorTemplate.PASTEL_COLORS.toList())
+
+    // TODO: This should be refactored into Domain because ..?
     private val period =
         combine(userSelectedDuration, currentPageNumber, userUsePeriodType, transactionsInteractor.transactionsAggregate.map { it.mostRecentSpend })
         { userSelectedDuration, currentPageNumber, userUsePeriodType, mostRecentSpend ->

@@ -96,10 +96,10 @@
         android:label="ReconciliationHostFrag"
         tools:layout="@layout/frag_reconciliation_host" />
     <fragment
-        android:id="@+id/reviewFrag"
-        android:name="com.tminus1010.buva.ui.review.ReviewFrag"
-        android:label="ReviewFrag"
-        tools:layout="@layout/frag_review" />
+        android:id="@+id/reviewPieChartFrag"
+        android:name="com.tminus1010.buva.ui.review_pie_chart.ReviewPieChartFrag"
+        android:label="ReviewPieChartFrag"
+        tools:layout="@layout/frag_review_pie_chart" />
     <fragment
         android:id="@+id/accountsReconciliationSubFrag"
         android:name="com.tminus1010.buva.ui.reconciliation.AccountsReconciliationSubFrag"

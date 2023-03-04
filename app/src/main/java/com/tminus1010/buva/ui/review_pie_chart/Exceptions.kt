@@ -1,4 +1,4 @@
-package com.tminus1010.buva.ui.review
+package com.tminus1010.buva.ui.review_pie_chart
 
 class TooFarBackException: Exception()
 class NoMostRecentSpendException: Exception("")

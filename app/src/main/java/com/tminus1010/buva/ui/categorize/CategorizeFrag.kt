@@ -18,7 +18,7 @@ import com.tminus1010.buva.ui.errors.Errors
 import com.tminus1010.buva.ui.futures.CreateFutureFrag
 import com.tminus1010.buva.ui.futures.FutureDetailsFrag
 import com.tminus1010.buva.ui.receipt_categorization.ReceiptCategorizationHostFrag
-import com.tminus1010.buva.ui.review.NoMostRecentSpendException
+import com.tminus1010.buva.ui.review_pie_chart.NoMostRecentSpendException
 import com.tminus1010.tmcommonkotlin.androidx.GenViewHolder
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
