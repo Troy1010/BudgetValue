@@ -1,6 +1,7 @@
 package com.tminus1010.buva.all_layers.extensions
 
 import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.Entry
 
 
 fun <E : Any> List<E>.plusIfNotNull(x: E?): List<E> =
@@ -24,6 +25,9 @@ fun <T> List<T>.remove(predicate: (T) -> Boolean): List<T> {
 
 fun List<Float>.toBarEntries() =
     withIndex().map { (i, f) -> BarEntry(i.toFloat(), f) }
+
+fun List<Float>.toEntries() =
+    withIndex().map { (i, f) -> Entry(i.toFloat(), f) }
 
 @JvmName("duifghsildufhguisrhgilurhtguilrhtgiu")
 fun List<Pair<Float, String>>.toBarEntries() =
