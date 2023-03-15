@@ -25,7 +25,7 @@ class ReviewTotalLineChartVM @Inject constructor(
                 .sortedBy { it.datePeriod?.startDate }
                 .map {
                     Pair(
-                        Domain.guessAccountsTotalInPast(it.datePeriod!!.endDate, accountsRepo.accountsAggregate.first(), transactionsInteractor.transactionBlocks.first(), reconciliationsRepo.reconciliations.first()).toFloat().absoluteValue,
+                        Domain.guessAccountsTotalInPast(it.datePeriod!!.endDate, accountsRepo.accountsAggregate.first(), transactionsInteractor.transactionBlocks.first(), reconciliationsRepo.reconciliations.first()).toFloat(),
                         it.datePeriod.startDate.toDisplayStr(),
                     )
                 }
