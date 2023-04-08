@@ -8,4 +8,5 @@ interface AndroidNavigationWrapper {
     fun navUp()
     suspend fun navToSetString(s: String): String?
     fun navToImport()
+    fun navToCategorize()
 }

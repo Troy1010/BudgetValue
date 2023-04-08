@@ -78,6 +78,10 @@ class HostVM @Inject constructor(
                 title = "Old Import",
                 onClick = { navigator.navToImport(); unCheckAllMenuItems.onNext() },
             ),
+            MenuVMItem(
+                title = "Old Categorize",
+                onClick = { navigator.navToCategorize(); unCheckAllMenuItems.onNext() },
+            ),
             *getExtraMenuItemPartials(nav)
         )
     val levelUpPlan = NativeText.Multi(NativeText.Resource(R.string.level_up_prefix), NativeText.Simple(" "), NativeText.Resource(R.string.level_up_plan))

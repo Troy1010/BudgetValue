@@ -31,6 +31,10 @@ class AndroidNavigationWrapperImpl @Inject constructor() : AndroidNavigationWrap
         nav.navigate(R.id.importFrag)
     }
 
+    override fun navToCategorize() = launchOnMainThread {
+        nav.navigate(R.id.categorizeNestedGraph)
+    }
+
     override fun navUp() = launchOnMainThread {
         nav.navigateUp()
     }
