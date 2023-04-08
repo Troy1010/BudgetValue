@@ -128,9 +128,6 @@ class HostActivity : AppCompatActivity() {
         importSharedVM.navToSelectFile.observe(this) { launchChooseFile(this) }
         isPlanFeatureEnabled.flow.pairwise().filter { !it.first && it.second }.observe(this) { activePlanInteractor.estimateActivePlanFromHistory(); ShowAlertDialog(this)(viewModel.levelUpPlan) }
         isReconciliationFeatureEnabled.flow.pairwise().filter { !it.first && it.second }.observe(this) { ShowAlertDialog(this)(viewModel.levelUpReconciliation) }
-        viewModel.navToFutures.observe(this) { FuturesFrag.navTo(nav) }
-        viewModel.navToTransactions.observe(this) { TransactionListFrag.navTo(nav) }
-        viewModel.navToHistory.observe(this) { HistoryFrag.navTo(nav) }
         viewModel.navToAccessibility.observe(this) { startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }
         viewModel.unCheckAllMenuItems.observe(this) { vb.bottomNavigation.unCheckAllItems() } // TODO: Not working
         // # State

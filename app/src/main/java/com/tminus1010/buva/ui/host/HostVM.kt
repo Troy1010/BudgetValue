@@ -38,10 +38,10 @@ class HostVM @Inject constructor(
             showAlertDialog.value!!(
                 NativeText.Simple(
                     """
-                                    Accessibility settings apply to all applications, so you must edit them in your phone's settings.
-                                    
-                                    Would you like to go there now?
-                                """.trimIndent()
+                    Accessibility settings apply to all applications, so you must edit them in your phone's settings.
+                    
+                    Would you like to go there now?
+                    """.trimIndent()
                 ),
                 onYes = navToAccessibility::onNext)
         }
@@ -49,9 +49,6 @@ class HostVM @Inject constructor(
 
     // # Events
     val unCheckAllMenuItems = MutableSharedFlow<Unit>()
-    val navToHistory = MutableSharedFlow<Unit>()
-    val navToTransactions = MutableSharedFlow<Unit>()
-    val navToFutures = MutableSharedFlow<Unit>()
     val navToAccessibility = MutableSharedFlow<Unit>()
 
     // # State
@@ -60,15 +57,15 @@ class HostVM @Inject constructor(
         MenuVMItems(
             MenuVMItem(
                 title = "History",
-                onClick = { navToHistory.onNext(); unCheckAllMenuItems.onNext() },
+                onClick = { navigator.navToHistory(); unCheckAllMenuItems.onNext() },
             ),
             MenuVMItem(
                 title = "Transactions",
-                onClick = { navToTransactions.onNext(); unCheckAllMenuItems.onNext() },
+                onClick = { navigator.navToTransactions(); unCheckAllMenuItems.onNext() },
             ),
             MenuVMItem(
                 title = "Futures",
-                onClick = { navToFutures.onNext(); unCheckAllMenuItems.onNext() },
+                onClick = { navigator.navToFutures(); unCheckAllMenuItems.onNext() },
             ),
             MenuVMItem(
                 title = "Accessibility Settings",

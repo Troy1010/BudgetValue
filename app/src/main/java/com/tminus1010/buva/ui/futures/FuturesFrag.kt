@@ -35,10 +35,4 @@ class FuturesFrag : Fragment(R.layout.frag_futures) {
         vb.tmTableViewFutures.bind(viewModel.futuresTableView) { it.bind(this) }
         vb.buttonsview.bind(viewModel.buttons) { buttons = it }
     }
-
-    companion object {
-        fun navTo(nav: NavController) {
-            nav.navigate(R.id.futuresFrag)
-        }
-    }
 }

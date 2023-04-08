@@ -35,6 +35,18 @@ class AndroidNavigationWrapperImpl @Inject constructor() : AndroidNavigationWrap
         nav.navigate(R.id.categorizeNestedGraph)
     }
 
+    override fun navToFutures() = launchOnMainThread {
+        nav.navigate(R.id.futuresFrag)
+    }
+
+    override fun navToTransactions() = launchOnMainThread {
+        nav.navigate(R.id.transactionsFrag)
+    }
+
+    override fun navToHistory() = launchOnMainThread {
+        nav.navigate(R.id.historyFrag)
+    }
+
     override fun navUp() = launchOnMainThread {
         nav.navigateUp()
     }

@@ -9,4 +9,7 @@ interface AndroidNavigationWrapper {
     suspend fun navToSetString(s: String): String?
     fun navToImport()
     fun navToCategorize()
+    fun navToFutures()
+    fun navToTransactions()
+    fun navToHistory()
 }
