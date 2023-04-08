@@ -2,6 +2,7 @@ package com.tminus1010.buva.environment
 
 import android.annotation.SuppressLint
 import androidx.navigation.NavController
+import com.tminus1010.buva.R
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.ui.category_details.CategoryDetailsFrag
 import com.tminus1010.buva.ui.set_string.SetStringFrag
@@ -24,6 +25,10 @@ class AndroidNavigationWrapperImpl @Inject constructor() : AndroidNavigationWrap
 
     override fun navToEditCategory(category: Category) = launchOnMainThread {
         CategoryDetailsFrag.navTo(nav, category)
+    }
+
+    override fun navToImport() = launchOnMainThread {
+        nav.navigate(R.id.importFrag)
     }
 
     override fun navUp() = launchOnMainThread {

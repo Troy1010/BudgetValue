@@ -6,6 +6,7 @@ import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.data.SelectedPage
+import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItems
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
@@ -21,6 +22,7 @@ import javax.inject.Inject
 class HostVM @Inject constructor(
     getExtraMenuItemPartials: GetExtraMenuItemPartials,
     private val selectedPage: SelectedPage,
+    private val navigator: Navigator,
 ) : ViewModel() {
     // # Setup
     val nav = BehaviorSubject.create<NavController>()
@@ -29,6 +31,20 @@ class HostVM @Inject constructor(
     // # User Intents
     fun selectMenuItem(int: Int) {
         selectedPage.set(int)
+    }
+
+    fun userTryNavToAccessibilitySettings() {
+        GlobalScope.launch {
+            showAlertDialog.value!!(
+                NativeText.Simple(
+                    """
+                                    Accessibility settings apply to all applications, so you must edit them in your phone's settings.
+                                    
+                                    Would you like to go there now?
+                                """.trimIndent()
+                ),
+                onYes = navToAccessibility::onNext)
+        }
     }
 
     // # Events
@@ -56,19 +72,11 @@ class HostVM @Inject constructor(
             ),
             MenuVMItem(
                 title = "Accessibility Settings",
-                onClick = {
-                    GlobalScope.launch {
-                        showAlertDialog.value!!(
-                            NativeText.Simple(
-                                """
-                                    Accessibility settings apply to all applications, so you must edit them in your phone's settings.
-                                    
-                                    Would you like to go there now?
-                                """.trimIndent()
-                            ),
-                            onYes = navToAccessibility::onNext)
-                    }
-                },
+                onClick = { userTryNavToAccessibilitySettings() },
+            ),
+            MenuVMItem(
+                title = "Old Import",
+                onClick = { navigator.navToImport(); unCheckAllMenuItems.onNext() },
             ),
             *getExtraMenuItemPartials(nav)
         )
