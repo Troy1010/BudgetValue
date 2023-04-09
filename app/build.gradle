@@ -195,7 +195,7 @@ dependencies {
     // ## Coroutines & Rx
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-rx3:1.6.4"
     // ## Coroutines & Test
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:+"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
 
     // # MPAndroidChart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
