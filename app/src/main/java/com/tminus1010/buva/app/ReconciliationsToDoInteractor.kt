@@ -7,6 +7,7 @@ import com.tminus1010.buva.data.SettingsRepo
 import com.tminus1010.buva.domain.Domain
 import com.tminus1010.buva.domain.ReconciliationToDo
 import com.tminus1010.tmcommonkotlin.tuple.Quadruple
+import com.tminus1010.tmcommonkotlin.tuple.createTuple
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
@@ -22,7 +23,7 @@ class ReconciliationsToDoInteractor @Inject constructor(
     accountsRepo: AccountsRepo,
 ) {
     private val planReconciliationsToDo =
-        combine(transactionsInteractor.transactionBlocks, reconciliationsRepo.reconciliations, reconciliationSkipInteractor.reconciliationSkips, settingsRepo.anchorDateOffset, ::Quadruple)
+        combine(transactionsInteractor.transactionBlocks, reconciliationsRepo.reconciliations, reconciliationSkipInteractor.reconciliationSkips, settingsRepo.anchorDateOffset, ::createTuple)
             .sample(50)
             .distinctUntilChanged()
             .map { (transactionBlocks, reconciliations, reconciliationSkips, anchorDateOffset) ->
