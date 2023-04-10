@@ -22,6 +22,7 @@ class AccountsRepo @Inject constructor(
             .shareIn(GlobalScope, SharingStarted.WhileSubscribed(), 1)
     val accountsUpdateInfos =
         miscDAO.fetchAccountsUpdateInfo()
+            .shareIn(GlobalScope, SharingStarted.WhileSubscribed(), 1)
 
     suspend fun update(account: Account) {
         if (miscDAO.getAccount(account.id) != account)

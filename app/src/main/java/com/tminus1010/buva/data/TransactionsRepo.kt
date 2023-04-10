@@ -5,6 +5,7 @@ import com.tminus1010.buva.environment.MiscDAO
 import com.tminus1010.buva.environment.UserCategoriesDAO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class TransactionsRepo @Inject constructor(
@@ -16,4 +17,8 @@ class TransactionsRepo @Inject constructor(
             miscDAO.fetchTransactions()
         }
     }
+
+    val mostRecentImportItemDate =
+        fetchTransactionImportInfo()
+            .map { transactionImportInfos -> transactionImportInfos.maxByOrNull { it.period.endDate }?.period?.endDate }
 }

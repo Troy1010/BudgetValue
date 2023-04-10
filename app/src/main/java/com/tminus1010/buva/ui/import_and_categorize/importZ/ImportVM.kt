@@ -21,13 +21,12 @@ class ImportVM @Inject constructor(
 ) : ViewModel() {
     // # State
     val text =
-        transactionsRepo.fetchTransactionImportInfo()
-            .map { transactionImportInfos -> transactionImportInfos.maxByOrNull { it.period.endDate }?.period?.endDate?.toDisplayStr() }
+        transactionsRepo.mostRecentImportItemDate
             .map {
                 if (it == null)
                     NativeText.Simple("No imports have occurred yet.")
                 else
-                    NativeText.Simple("Most recent import item date: $it")
+                    NativeText.Simple("Most recent import item date: ${it.toDisplayStr()}")
             }
             .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
     val buttons =

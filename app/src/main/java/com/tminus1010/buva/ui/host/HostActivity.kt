@@ -23,6 +23,7 @@ import com.tminus1010.buva.all_layers.extensions.unCheckAllItems
 import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.app.*
 import com.tminus1010.buva.data.AccountsRepo
+import com.tminus1010.buva.data.TransactionsRepo
 import com.tminus1010.buva.databinding.ActivityHostBinding
 import com.tminus1010.buva.environment.ActivityWrapper
 import com.tminus1010.buva.environment.AndroidNavigationWrapperImpl
@@ -36,6 +37,7 @@ import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.pairwise
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
+import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.GlobalScope
@@ -43,6 +45,8 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.time.LocalDate
+import java.time.Period
 import javax.inject.Inject
 
 
@@ -81,6 +85,12 @@ class HostActivity : AppCompatActivity() {
     @Inject
     lateinit var showToast: ShowToast
 
+    @Inject
+    lateinit var activityWrapper: ActivityWrapper
+
+    @Inject
+    lateinit var transactionsRepo: TransactionsRepo
+
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.fragmentcontainerview) as HostFrag }
     private val nav by lazy { findNavController(R.id.fragmentcontainerview) }
     private val showImportResultAlertDialog by lazy { ShowImportResultAlertDialog(ShowAlertDialog(this)) }
@@ -102,34 +112,75 @@ class HostActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(vb.bottomnavigationview, hostFrag.navController)
         //
         vb.bottomnavigationview.setOnItemSelectedListener {
+            fun goForward(): Boolean {
+                // Requirement: When menu item clicked Then forget backstack.
+                // This will be null When config change.
+                val nav = tryOrNull { findNavController(R.id.fragmentcontainerview) }
+                // clearBackStack might not be necessary.
+                nav?.clearBackStack(it.itemId)
+                nav?.navigate(it.itemId)
+                // setOnItemSelectedListener overrides setupWithNavController's behavior, so that behavior is restored here.
+                return NavigationUI.onNavDestinationSelected(it, hostFrag.navController)
+            }
             // Requirement: When config change Then do not forget current menu item.
             viewModel.selectMenuItem(it.itemId)
-            // Requirement: Given some spends are not categorized When Reconciliation is clicked Then show toast.
-            if (
-                it.itemId == R.id.reconciliationHostFrag
-                // TODO: Blocking is not ideal.
-                && runBlocking { !transactionsInteractor.transactionsAggregate.first().areAllSpendsCategorized }
-            ) {
-                showToast("Can't reconcile until all spends are categorized.")
-                return@setOnItemSelectedListener false
+            //
+            if (it.itemId == R.id.reconciliationHostFrag) {
+                if (runBlocking { !transactionsInteractor.transactionsAggregate.first().areAllSpendsCategorized }) {
+                    GlobalScope.launch {
+                        activityWrapper.showAlertDialog(
+                            body = NativeText.Simple("It's not recommended to reconcile until after categorization is complete.\n\nDo you want to go there now?"),
+                            onYes = { TODO() },
+                            onNo = { goForward() },
+                        )
+                    }
+                    return@setOnItemSelectedListener false
+                } else if (runBlocking { accountsRepo.accountsAggregate.value?.accounts?.ifEmpty { null } == null }) {
+                    GlobalScope.launch {
+                        activityWrapper.showAlertDialog(
+                            body = NativeText.Simple("It's not recommended to reconcile until after an account has been added.\n\nDo you want to go there now?"),
+                            onYes = { TODO() },
+                            onNo = { goForward() },
+                        )
+                    }
+                    return@setOnItemSelectedListener false
+                } else if (
+                    runBlocking {
+                        val x = accountsRepo.accountsUpdateInfos.first().map { it.date }.maxByOrNull { it }
+                        if (x == null)
+                            true
+                        else
+                            Period.between(x, LocalDate.now()).days > 7
+                    }
+                ) {
+                    GlobalScope.launch {
+                        activityWrapper.showAlertDialog(
+                            body = NativeText.Simple("It's not recommended to reconcile if accounts have not been updated recently.\n\nDo you want to go there now?"),
+                            onYes = { TODO() },
+                            onNo = { goForward() },
+                        )
+                    }
+                    return@setOnItemSelectedListener false
+                } else if (
+                    runBlocking {
+                        val x = transactionsRepo.mostRecentImportItemDate.first()
+                        if (x == null)
+                            true
+                        else
+                            Period.between(x, LocalDate.now()).days > 7
+                    }
+                ) {
+                    GlobalScope.launch {
+                        activityWrapper.showAlertDialog(
+                            body = NativeText.Simple("It's not recommended to reconcile if transactions have not been imported recently.\n\nDo you want to go there now?"),
+                            onYes = { TODO() },
+                            onNo = { goForward() },
+                        )
+                    }
+                    return@setOnItemSelectedListener false
+                }
             }
-            // Requirement: Given no accounts have been added When Reconciliation is clicked Then show toast.
-            if (
-                it.itemId == R.id.reconciliationHostFrag
-                // TODO: Blocking is not ideal.
-                && runBlocking { accountsRepo.accountsAggregate.value?.accounts?.ifEmpty { null } == null }
-            ) {
-                showToast("Can't reconcile until an account has been added.")
-                return@setOnItemSelectedListener false
-            }
-            // Requirement: When menu item clicked Then forget backstack.
-            // This will be null When config change.
-            val nav = tryOrNull { findNavController(R.id.fragmentcontainerview) }
-            // clearBackStack might not be necessary.
-            nav?.clearBackStack(it.itemId)
-            nav?.navigate(it.itemId)
-            // setOnItemSelectedListener overrides setupWithNavController's behavior, so that behavior is restored here.
-            NavigationUI.onNavDestinationSelected(it, hostFrag.navController)
+            goForward()
         }
         viewModel.selectedPageRedefined.value?.also { vb.bottomnavigationview.selectedItemId = it }
         // # Events
