@@ -8,6 +8,7 @@ import com.tminus1010.buva.environment.ParcelableLambdaWrapper
 import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.EditTextVMItem
+import com.tminus1010.tmcommonkotlin.core.tryOrNull
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
@@ -19,52 +20,57 @@ class SetStringVM @Inject constructor(
 ) : ViewModel() {
     // # User Intents
     fun userSubmit() {
-        savedStateHandle.get<ParcelableLambdaWrapper>(KEY2)!!.lambda2(currentS ?: "")
+        callback(currentS ?: "")
         navigator.navUp()
     }
 
     fun userSubmitFirstWord() {
-        savedStateHandle.get<ParcelableLambdaWrapper>(KEY2)!!.lambda2(currentS?.split(Regex("""\s"""))?.firstOrNull() ?: "")
+        callback(firstWord)
         navigator.navUp()
     }
 
     fun userSubmitFirst2Words() {
-        savedStateHandle.get<ParcelableLambdaWrapper>(KEY2)!!.lambda2(currentS?.split(Regex("""\s"""))?.take(2)?.joinToString(" ") ?: "")
+        callback(firstTwoWords)
         navigator.navUp()
     }
 
     fun userSubmitFirst3Words() {
-        savedStateHandle.get<ParcelableLambdaWrapper>(KEY2)!!.lambda2(currentS?.split(Regex("""\s"""))?.take(3)?.joinToString(" ") ?: "")
+        callback(firstThreeWords)
         navigator.navUp()
     }
 
     fun userCancel() {
-        savedStateHandle.get<ParcelableLambdaWrapper>(KEY2)!!.lambda2(null)
+        callback(null)
         navigator.navUp()
     }
 
     // # Internal
-    private var currentS: String? = savedStateHandle[KEY1]
+    private val callback = savedStateHandle.get<ParcelableLambdaWrapper>(KEY2)!!.lambda
+    private val originalS = savedStateHandle.get<String>(KEY1)
+    private val firstWord = tryOrNull { originalS?.split(Regex("""\s"""))?.firstOrNull() }
+    private val firstTwoWords = tryOrNull { originalS?.split(Regex("""\s"""))?.take(2)?.joinToString(" ") }
+    private val firstThreeWords = tryOrNull { originalS?.split(Regex("""\s"""))?.take(3)?.joinToString(" ") }
+    private var currentS: String? = originalS
 
     // # State
     val editTextVMItem =
         EditTextVMItem(
-            text = savedStateHandle[KEY1],
+            text = originalS,
             onDone = { currentS = it }
         )
     val buttons =
         flowOf(
             listOf(
                 ButtonVMItem(
-                    title = "Submit first three words",
+                    title = "Submit \"$firstThreeWords\"",
                     onClick = ::userSubmitFirst3Words,
                 ),
                 ButtonVMItem(
-                    title = "Submit first two words",
+                    title = "Submit \"$firstTwoWords\"",
                     onClick = ::userSubmitFirst2Words,
                 ),
                 ButtonVMItem(
-                    title = "Submit first word",
+                    title = "Submit \"$firstWord\"",
                     onClick = ::userSubmitFirstWord,
                 ),
                 ButtonVMItem(
