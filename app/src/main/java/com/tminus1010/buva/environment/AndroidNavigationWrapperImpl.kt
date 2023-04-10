@@ -1,11 +1,13 @@
 package com.tminus1010.buva.environment
 
 import android.annotation.SuppressLint
+import android.os.Bundle
 import androidx.navigation.NavController
 import com.tminus1010.buva.R
+import com.tminus1010.buva.all_layers.KEY1
+import com.tminus1010.buva.all_layers.KEY2
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.ui.category_details.CategoryDetailsFrag
-import com.tminus1010.buva.ui.set_string.SetStringFrag
 import com.tminus1010.tmcommonkotlin.androidx.launchOnMainThread
 import dagger.Reusable
 import kotlinx.coroutines.GlobalScope
@@ -58,9 +60,15 @@ class AndroidNavigationWrapperImpl @Inject constructor() : AndroidNavigationWrap
     override suspend fun navToSetString(s: String): String? {
         return channelFlow { // TODO: This could be simplified.
             launchOnMainThread {
-                SetStringFrag.navTo(nav, s, ParcelableLambdaWrapper {
-                    GlobalScope.launch { send(it) }
-                })
+                nav.navigate(
+                    R.id.editStringFrag,
+                    Bundle().apply {
+                        putString(KEY1, s)
+                        putParcelable(KEY2, ParcelableLambdaWrapper {
+                            GlobalScope.launch { send(it) }
+                        })
+                    }
+                )
             }
             awaitClose()
         }.take(1).first()

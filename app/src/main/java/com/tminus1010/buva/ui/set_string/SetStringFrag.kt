@@ -21,22 +21,10 @@ class SetStringFrag : Fragment(R.layout.frag_set_string) {
     private val viewModel by viewModels<SetStringVM>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // # Setup
+        // # User Intents
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) { viewModel.userCancel() }
         // # State
         viewModel.editTextVMItem.bind(vb.et)
         vb.buttonsview.bind(viewModel.buttons) { buttons = it }
-    }
-
-    companion object {
-        fun navTo(nav: NavController, s: String, parcelableLambdaWrapper: ParcelableLambdaWrapper) {
-            nav.navigate(
-                R.id.editStringFrag,
-                Bundle().apply {
-                    putString(KEY1, s)
-                    putParcelable(KEY2, parcelableLambdaWrapper)
-                }
-            )
-        }
     }
 }
