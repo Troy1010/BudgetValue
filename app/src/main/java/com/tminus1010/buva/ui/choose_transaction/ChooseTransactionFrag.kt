@@ -8,10 +8,8 @@ import androidx.navigation.NavController
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.android.viewBinding
 import com.tminus1010.buva.databinding.FragChooseTransactionBinding
-import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.easyVisibility
-import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -22,8 +20,6 @@ class ChooseTransactionFrag : Fragment(R.layout.frag_choose_transaction) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // # Events
-        viewModel.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         // # State
         vb.tvNoTransactionHistory.bind(viewModel.isNoItemsMsgVisible) { easyVisibility = it }
         vb.tmTableView.bind(viewModel.tableViewVMItem) { it.bind(this) }

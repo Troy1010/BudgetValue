@@ -3,8 +3,10 @@ package com.tminus1010.buva.ui.choose_transaction
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.buva.app.TransactionsInteractor
+import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.view_model_item.TableViewVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.TextVMItem
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -15,9 +17,12 @@ import javax.inject.Inject
 class ChooseTransactionVM @Inject constructor(
     chooseTransactionSharedVM: ChooseTransactionSharedVM,
     transactionsInteractor: TransactionsInteractor,
+    private val navigator: Navigator,
 ) : ViewModel() {
     // # Events
-    val navUp = chooseTransactionSharedVM.userSubmitTransaction.map { Unit }
+    init {
+        chooseTransactionSharedVM.userSubmitTransaction.observe(viewModelScope) { navigator.navUp() }
+    }
 
     // # State
     val isNoItemsMsgVisible =
