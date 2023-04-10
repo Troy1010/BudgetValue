@@ -99,7 +99,7 @@ class CreateFutureVM @Inject constructor(
         }
     }
 
-    private var onImportTransactionMatcher: MutableLiveData<TransactionMatcher> = MutableLiveData(TransactionMatcher.Multi())
+    private val onImportTransactionMatcher: MutableLiveData<TransactionMatcher> = MutableLiveData(TransactionMatcher.Multi())
     fun userAddSearchText() {
         onImportTransactionMatcher.value = onImportTransactionMatcher.value.withSearchText("")
     }
