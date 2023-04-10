@@ -25,9 +25,9 @@ import com.tminus1010.buva.app.*
 import com.tminus1010.buva.databinding.ActivityHostBinding
 import com.tminus1010.buva.environment.ActivityWrapper
 import com.tminus1010.buva.environment.AndroidNavigationWrapperImpl
+import com.tminus1010.buva.environment.HostActivityWrapper
 import com.tminus1010.buva.ui.all_features.ShowImportResultAlertDialog
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
-import com.tminus1010.buva.ui.import_and_categorize.importZ.ImportSharedVM
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
 import com.tminus1010.tmcommonkotlin.androidx.ShowToast
 import com.tminus1010.tmcommonkotlin.core.tryOrNull
@@ -77,9 +77,6 @@ class HostActivity : AppCompatActivity() {
     @Inject
     lateinit var showToast: ShowToast
 
-    @Inject
-    lateinit var importSharedVM: ImportSharedVM
-
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.fragmentcontainerview) as HostFrag }
     private val nav by lazy { findNavController(R.id.fragmentcontainerview) }
     private val showImportResultAlertDialog by lazy { ShowImportResultAlertDialog(ShowAlertDialog(this)) }
@@ -91,6 +88,7 @@ class HostActivity : AppCompatActivity() {
         hostFrag.navController.addOnDestinationChangedListener { _, navDestination, _ -> Log.d("buva.Nav", "${navDestination.label}") }
         // ## Mediation
         ActivityWrapper.activity = this
+        HostActivityWrapper.hostActivity = this
         AndroidNavigationWrapperImpl.nav = hostFrag.navController
         viewModel.showAlertDialog.onNext(ShowAlertDialog(this))
         // ## Initialize app once per install
@@ -122,7 +120,6 @@ class HostActivity : AppCompatActivity() {
         }
         viewModel.selectedPageRedefined.value?.also { vb.bottomnavigationview.selectedItemId = it }
         // # Events
-        importSharedVM.navToSelectFile.observe(this) { launchChooseFile(this) }
         isPlanFeatureEnabled.flow.pairwise().filter { !it.first && it.second }.observe(this) { activePlanInteractor.estimateActivePlanFromHistory(); ShowAlertDialog(this)(viewModel.levelUpPlan) }
         isReconciliationFeatureEnabled.flow.pairwise().filter { !it.first && it.second }.observe(this) { ShowAlertDialog(this)(viewModel.levelUpReconciliation) }
         viewModel.navToAccessibility.observe(this) { startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.buva.data.AccountsRepo
 import com.tminus1010.buva.domain.Account
+import com.tminus1010.buva.environment.HostActivityWrapper
 import com.tminus1010.buva.ui.all_features.view_model_item.AccountsPresentationModel
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ImportVM @Inject constructor(
     private val accountsRepo: AccountsRepo,
-    private val importSharedVM: ImportSharedVM,
+    private val hostActivityWrapper: HostActivityWrapper,
 ) : ViewModel() {
     // # User Intents
     fun userAddAccount() {
@@ -36,7 +37,7 @@ class ImportVM @Inject constructor(
             listOfNotNull(
                 ButtonVMItem(
                     title = "Import",
-                    onClick = importSharedVM::userTryNavToSelectFile
+                    onClick = hostActivityWrapper::launchChooseFile
                 ),
                 ButtonVMItem(
                     title = "Add Account",
