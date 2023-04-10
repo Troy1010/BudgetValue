@@ -22,6 +22,7 @@ import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.all_layers.extensions.unCheckAllItems
 import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.app.*
+import com.tminus1010.buva.data.AccountsRepo
 import com.tminus1010.buva.databinding.ActivityHostBinding
 import com.tminus1010.buva.environment.ActivityWrapper
 import com.tminus1010.buva.environment.AndroidNavigationWrapperImpl
@@ -75,6 +76,9 @@ class HostActivity : AppCompatActivity() {
     lateinit var transactionsInteractor: TransactionsInteractor
 
     @Inject
+    lateinit var accountsRepo: AccountsRepo
+
+    @Inject
     lateinit var showToast: ShowToast
 
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.fragmentcontainerview) as HostFrag }
@@ -104,9 +108,18 @@ class HostActivity : AppCompatActivity() {
             if (
                 it.itemId == R.id.reconciliationHostFrag
                 // TODO: Blocking is not ideal.
-                && !runBlocking { transactionsInteractor.transactionsAggregate.first() }.areAllSpendsCategorized
+                && runBlocking { !transactionsInteractor.transactionsAggregate.first().areAllSpendsCategorized }
             ) {
                 showToast("Can't reconcile until all spends are categorized.")
+                return@setOnItemSelectedListener false
+            }
+            // Requirement: Given no accounts have been added When Reconciliation is clicked Then show toast.
+            if (
+                it.itemId == R.id.reconciliationHostFrag
+                // TODO: Blocking is not ideal.
+                && runBlocking { accountsRepo.accountsAggregate.value?.accounts?.ifEmpty { null } == null }
+            ) {
+                showToast("Can't reconcile until an account has been added.")
                 return@setOnItemSelectedListener false
             }
             // Requirement: When menu item clicked Then forget backstack.
