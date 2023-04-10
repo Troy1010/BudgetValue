@@ -6,6 +6,16 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/tvLastUpdateDate"
+        style="@style/AppTheme.StandardTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Last updated on ..."
+        tools:visibility="visible" />
+
+    <TextView
         android:id="@+id/tvNoAccounts"
         style="@style/AppTheme.StandardTextView"
         android:layout_width="match_parent"
@@ -21,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/buttonsview"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/tvLastUpdateDate" />
 
     <com.tminus1010.buva.all_layers.android.ButtonsView
         android:id="@+id/buttonsview"

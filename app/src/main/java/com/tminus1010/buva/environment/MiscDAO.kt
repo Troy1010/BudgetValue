@@ -78,6 +78,18 @@ interface MiscDAO {
     suspend fun push(transactionImportInfo: TransactionImportInfo)
 
     /**
+     * [AccountsUpdateInfo]
+     */
+    @Query("select * from `AccountsUpdateInfo`")
+    fun fetchAccountsUpdateInfo(): Flow<List<AccountsUpdateInfo>>
+
+    @Query("DELETE FROM `AccountsUpdateInfo`")
+    suspend fun clearAccountsUpdateInfo()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun push(accountsUpdateInfo: AccountsUpdateInfo)
+
+    /**
      * [Plan]
      */
     @Query("select * from `Plan`")

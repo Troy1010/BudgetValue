@@ -18,7 +18,7 @@ class ImportFrag : Fragment(R.layout.frag_import) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # State
-        vb.tv.bind(viewModel.text) { text = it.toCharSequence(requireContext()) }
+        vb.tvMostRecentImportDate.bind(viewModel.text) { text = it.toCharSequence(requireContext()) }
         vb.buttonsview.bind(viewModel.buttons) { buttons = it }
     }
 }

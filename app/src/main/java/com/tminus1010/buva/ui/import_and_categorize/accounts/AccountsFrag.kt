@@ -23,6 +23,8 @@ class AccountsFrag : Fragment(R.layout.frag_accounts) {
         super.onViewCreated(view, savedInstanceState)
         vb = FragAccountsBinding.bind(view)
         // # State
+        vb.tvLastUpdateDate.bind(viewModel.accountsRecentlyUpdated) { text = it?.toCharSequence(context) }
+        vb.tvLastUpdateDate.bind(viewModel.accountsRecentlyUpdatedVisibility) { visibility = it }
         vb.tvNoAccounts.bind(viewModel.noAccountsTextVisibility) { visibility = it }
         vb.buttonsview.bind(viewModel.buttons) { buttons = it }
         vb.recyclerviewAccounts.layoutManager = LinearLayoutManager(requireActivity())
