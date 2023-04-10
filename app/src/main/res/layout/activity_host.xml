@@ -26,7 +26,6 @@
 
     </FrameLayout>
 
-
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentcontainerview"
         android:name="com.tminus1010.buva.ui.host.HostFrag"
