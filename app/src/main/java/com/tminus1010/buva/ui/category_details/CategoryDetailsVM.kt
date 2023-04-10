@@ -1,7 +1,6 @@
 package com.tminus1010.buva.ui.category_details
 
 import androidx.lifecycle.*
-import com.tminus1010.buva.all_layers.InvalidCategoryNameException
 import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.all_layers.extensions.easyEmit
 import com.tminus1010.buva.all_layers.extensions.onNext
@@ -10,11 +9,13 @@ import com.tminus1010.buva.app.DeleteCategoryFromActiveDomain
 import com.tminus1010.buva.app.ReplaceCategoryGlobally
 import com.tminus1010.buva.data.CategoriesRepo
 import com.tminus1010.buva.domain.*
+import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.TransactionMatcherPresentationFactory
 import com.tminus1010.buva.ui.all_features.view_model_item.*
 import com.tminus1010.buva.ui.choose_transaction.ChooseTransactionSharedVM
 import com.tminus1010.buva.ui.errors.Errors
+import com.tminus1010.tmcommonkotlin.androidx.ShowToast
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,6 +34,8 @@ class CategoryDetailsVM @Inject constructor(
     private val throbberSharedVM: ThrobberSharedVM,
     private val chooseTransactionSharedVM: ChooseTransactionSharedVM,
     private val transactionMatcherPresentationFactory: TransactionMatcherPresentationFactory,
+    private val showToast: ShowToast,
+    private val navigator: Navigator,
 ) : ViewModel() {
     // # User Intents
     fun userSetCategoryName(s: String) {
@@ -51,20 +54,23 @@ class CategoryDetailsVM @Inject constructor(
         errors.globalScope.launch {
             deleteCategoryFromActiveDomain(category.value!!)
         }.use(throbberSharedVM)
-        navUp.easyEmit(Unit)
+        navigator.navUp()
     }
 
     fun userSubmit() {
-        errors.globalScope.launch(errors) {
+        errors.globalScope.launch {
             if (category.value!!.name == ""
                 || category.value!!.name.equals(Category.DEFAULT.name, ignoreCase = true)
                 || category.value!!.name.equals(Category.UNRECOGNIZED.name, ignoreCase = true)
-            ) throw InvalidCategoryNameException()
-            if (originalCategory != null && originalCategory.name != category.value!!.name)
-                replaceCategoryGlobally(originalCategory, category.value!!)
-            else
-                categoriesRepo.push(category.value!!)
-            navUp.easyEmit(Unit)
+            ) {
+                showToast("Invalid name")
+            } else {
+                if (originalCategory != null && originalCategory.name != category.value!!.name)
+                    replaceCategoryGlobally(originalCategory, category.value!!)
+                else
+                    categoriesRepo.push(category.value!!)
+                navigator.navUp()
+            }
         }.use(throbberSharedVM)
     }
 
@@ -107,7 +113,6 @@ class CategoryDetailsVM @Inject constructor(
     }
 
     // # Events
-    val navUp = MutableSharedFlow<Unit>()
     val showDeleteConfirmationPopup = MutableSharedFlow<String>()
     val navToChooseTransaction = MutableSharedFlow<Unit>()
 
