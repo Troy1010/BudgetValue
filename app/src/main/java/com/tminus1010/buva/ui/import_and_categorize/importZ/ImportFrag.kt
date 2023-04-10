@@ -1,4 +1,4 @@
-package com.tminus1010.buva.ui.importZ
+package com.tminus1010.buva.ui.import_and_categorize.importZ
 
 import android.os.Bundle
 import android.view.View

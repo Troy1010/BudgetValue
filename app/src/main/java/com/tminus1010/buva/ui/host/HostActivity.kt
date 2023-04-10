@@ -27,7 +27,7 @@ import com.tminus1010.buva.environment.ActivityWrapper
 import com.tminus1010.buva.environment.AndroidNavigationWrapperImpl
 import com.tminus1010.buva.ui.all_features.ShowImportResultAlertDialog
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
-import com.tminus1010.buva.ui.importZ.ImportSharedVM
+import com.tminus1010.buva.ui.import_and_categorize.importZ.ImportSharedVM
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
 import com.tminus1010.tmcommonkotlin.androidx.ShowToast
 import com.tminus1010.tmcommonkotlin.core.tryOrNull

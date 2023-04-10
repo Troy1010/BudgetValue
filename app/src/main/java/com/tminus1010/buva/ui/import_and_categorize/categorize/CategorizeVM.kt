@@ -1,4 +1,4 @@
-package com.tminus1010.buva.ui.categorize
+package com.tminus1010.buva.ui.import_and_categorize.categorize
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

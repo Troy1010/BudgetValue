@@ -12,7 +12,7 @@
         app:popUpToInclusive="true" />
     <fragment
         android:id="@+id/importFrag"
-        android:name="com.tminus1010.buva.ui.importZ.ImportFrag"
+        android:name="com.tminus1010.buva.ui.import_and_categorize.importZ.ImportFrag"
         android:label="Import"
         tools:layout="@layout/frag_import" />
     <fragment
@@ -49,7 +49,7 @@
         app:startDestination="@id/categorizeFrag">
         <fragment
             android:id="@+id/categorizeFrag"
-            android:name="com.tminus1010.buva.ui.categorize.CategorizeFrag"
+            android:name="com.tminus1010.buva.ui.import_and_categorize.categorize.CategorizeFrag"
             android:label="CategorizeFrag"
             tools:layout="@layout/frag_categorize">
             <action

@@ -1,4 +1,4 @@
-package com.tminus1010.buva.ui.importZ
+package com.tminus1010.buva.ui.import_and_categorize.importZ
 
 import com.tminus1010.buva.all_layers.extensions.onNext
 import kotlinx.coroutines.flow.MutableSharedFlow
