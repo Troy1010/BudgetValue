@@ -38,7 +38,10 @@ class ReceiptCategorizationSharedVM @Inject constructor(
     }
 
     val categoryAmounts = SourceList<Pair<Category, BigDecimal>>()
-    val categoryAmountsRedefined = categoryAmounts.flow.map { CategoryAmounts(it.fold(mutableMapOf()) { acc, v -> acc[v.first] = (acc[v.first] ?: BigDecimal("0")) + v.second; acc }) }.stateIn(GlobalScope, SharingStarted.Eagerly, CategoryAmounts())
+    val categoryAmountsRedefined =
+        categoryAmounts.flow
+            .map { CategoryAmounts(it.fold(mutableMapOf()) { acc, v -> acc[v.first] = (acc[v.first] ?: BigDecimal("0")) + v.second; acc }) }
+            .stateIn(GlobalScope, SharingStarted.Eagerly, CategoryAmounts())
     val rememberedAmount = MutableStateFlow(BigDecimal("0"))
     val amountLeftToCategorize =
         combine(total, categoryAmountsRedefined)

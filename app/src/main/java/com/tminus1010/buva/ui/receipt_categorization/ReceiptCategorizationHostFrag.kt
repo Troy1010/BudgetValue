@@ -10,12 +10,10 @@ import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.all_layers.KEY2
 import com.tminus1010.buva.all_layers.extensions.easyEmit
-import com.tminus1010.buva.environment.MoshiProvider
 import com.tminus1010.buva.databinding.FragReceiptCategorizationHostBinding
 import com.tminus1010.buva.domain.Transaction
-import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
+import com.tminus1010.buva.environment.MoshiProvider
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
-import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
 import java.math.BigDecimal
 
@@ -33,8 +31,6 @@ class ReceiptCategorizationHostFrag : Fragment(R.layout.frag_receipt_categorizat
             //If we ever start to show an empty child fragment (b/c user pressed back button), navigate up.
             if (childFragmentManager.backStackEntryCount == 0) parentFragmentManager.popBackStack()
         }
-        // # Events
-        viewModel.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         // # State
         vb.framelayout.bind(viewModel.fragment) {
             childFragmentManager.beginTransaction()

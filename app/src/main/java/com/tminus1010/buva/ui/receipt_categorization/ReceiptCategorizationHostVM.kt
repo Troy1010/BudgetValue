@@ -9,13 +9,17 @@ import com.tminus1010.buva.all_layers.KEY2
 import com.tminus1010.buva.all_layers.extensions.easyEmit
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
-import com.tminus1010.buva.environment.MoshiProvider
 import com.tminus1010.buva.domain.Transaction
+import com.tminus1010.buva.environment.MoshiProvider
+import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.SubFragEventSharedVM
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
 import com.tminus1010.buva.ui.choose_amount.ChooseAmountSubFrag
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -25,6 +29,7 @@ class ReceiptCategorizationHostVM @Inject constructor(
     moshiProvider: MoshiProvider,
     private val subFragEventSharedVM: SubFragEventSharedVM,
     private val receiptCategorizationSharedVM: ReceiptCategorizationSharedVM,
+    private val navigator: Navigator,
 ) : ViewModel() {
     // # View Events
     val currentFrag = MutableStateFlow<Fragment?>(null)
@@ -37,7 +42,7 @@ class ReceiptCategorizationHostVM @Inject constructor(
     fun userSubmitCategorization() {
         transaction.value?.also { receiptCategorizationSharedVM.submitCategorization(it) }
         if (descriptionAndTotal != null) receiptCategorizationSharedVM.userSubmitCategorization()
-        navUp.easyEmit(Unit)
+        navigator.navUp()
     }
 
     // # Internal
@@ -45,9 +50,6 @@ class ReceiptCategorizationHostVM @Inject constructor(
         .also { it.value?.also { receiptCategorizationSharedVM.total.onNext(it.amount) } }
     private val descriptionAndTotal = savedStateHandle.get<String?>(KEY2)?.let { moshiProvider.moshi.adapter<Pair<String, BigDecimal>>(Types.newParameterizedType(Pair::class.java, String::class.java, BigDecimal::class.java)).fromJson(it) }
         ?.also { receiptCategorizationSharedVM.total.onNext(it.second) }
-
-    // # Events
-    val navUp = MutableSharedFlow<Unit>()
 
     // # State
     val fragment = subFragEventSharedVM.showFragment.onStart { emit(ChooseAmountSubFrag()) }
