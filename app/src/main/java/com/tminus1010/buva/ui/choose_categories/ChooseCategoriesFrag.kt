@@ -15,9 +15,7 @@ import com.tminus1010.buva.all_layers.android.viewBinding
 import com.tminus1010.buva.databinding.FragChooseCategoriesBinding
 import com.tminus1010.buva.databinding.ItemCategoryBtnBinding
 import com.tminus1010.tmcommonkotlin.androidx.GenViewHolder
-import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
-import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.map
 
@@ -28,8 +26,6 @@ class ChooseCategoriesFrag : Fragment(R.layout.frag_choose_categories) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // # Events
-        selectCategoriesVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         // # State
         vb.buttonsview.bind(selectCategoriesVM.buttons) { buttons = it }
         val spanSize = if (requireContext().resources.configuration.fontScale <= 1.0) 3 else 2

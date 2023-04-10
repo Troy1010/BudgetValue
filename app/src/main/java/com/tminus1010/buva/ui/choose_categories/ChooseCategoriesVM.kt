@@ -1,13 +1,12 @@
 package com.tminus1010.buva.ui.choose_categories
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.buva.all_layers.extensions.easyEmit
-import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
-import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem2
 import com.tminus1010.buva.app.UserCategories
 import com.tminus1010.buva.domain.Category
+import com.tminus1010.buva.ui.all_features.Navigator
+import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
+import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem2
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -16,21 +15,15 @@ import javax.inject.Inject
 class ChooseCategoriesVM @Inject constructor(
     private val userCategories: UserCategories,
     private val chooseCategoriesSharedVM: ChooseCategoriesSharedVM,
+    private val navigator: Navigator,
 ) : ViewModel() {
     // # User Intents
-    fun userSubmit() {
-        navUp.easyEmit()
-    }
-
     fun userToggleCategory(category: Category) {
         if (category in chooseCategoriesSharedVM.selectedCategories.value)
             chooseCategoriesSharedVM.unselectCategories(category)
         else
             chooseCategoriesSharedVM.selectCategories(category)
     }
-
-    // # Events
-    val navUp = MutableSharedFlow<Unit>()
 
     // # State
     val categoryButtonVMItems =
@@ -49,7 +42,7 @@ class ChooseCategoriesVM @Inject constructor(
             listOf(
                 ButtonVMItem(
                     title = "Submit",
-                    onClick = { userSubmit() }
+                    onClick = { navigator.navUp() }
                 )
             )
         )
