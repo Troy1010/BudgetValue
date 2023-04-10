@@ -197,7 +197,7 @@ class CategorizeVM @Inject constructor(
         errors.observe(viewModelScope) {
             when (it) {
                 is NoMostRecentSpendException -> showToast("No transaction available")
-                else -> throw it
+                else -> throw Exception(it)
             }
         }
     }

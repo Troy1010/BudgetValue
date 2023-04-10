@@ -44,7 +44,7 @@ class ReconciliationHostVM @Inject constructor(
             context = onError {
                 when (it) {
                     is InvalidStateException -> showToast("Invalid input")
-                    else -> throw it
+                    else -> throw Exception(it)
                 }
             },
             block = { activeReconciliationInteractor.save() },

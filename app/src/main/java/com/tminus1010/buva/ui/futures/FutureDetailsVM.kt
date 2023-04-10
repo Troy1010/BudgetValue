@@ -68,7 +68,7 @@ class FutureDetailsVM @Inject constructor(
             when (e) {
                 is InvalidFillCategoryException -> showToast(NativeText.Simple("Invalid fill category"))
                 is InvalidNameException -> showToast(NativeText.Simple("Invalid name"))
-                else -> throw e
+                else -> throw Exception(e)
             }
         }
     }

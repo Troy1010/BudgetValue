@@ -35,7 +35,7 @@ class CategoryDetailsFrag : Fragment(R.layout.frag_category_details) {
         errors.observe(viewLifecycleOwner) {
             when (it) {
                 is InvalidCategoryNameException -> easyToast("Invalid name")
-                else -> throw it
+                else -> throw Exception(it)
             }
         }
         categoryDetailsVM.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }

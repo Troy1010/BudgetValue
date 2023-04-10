@@ -91,7 +91,7 @@ class CreateFutureVM @Inject constructor(
                             is NoDescriptionEnteredException -> showToast(NativeText.Simple("Fill description or use another search type"))
                             is InvalidFillCategoryException -> showToast(NativeText.Simple("Invalid fill category"))
                             is InvalidNameException -> showToast(NativeText.Simple("Invalid name"))
-                            else -> throw e
+                            else -> throw Exception(e)
                         }
                     }
                 }
