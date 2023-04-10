@@ -3,16 +3,17 @@ package com.tminus1010.buva.ui.futures
 import android.annotation.SuppressLint
 import androidx.lifecycle.*
 import com.tminus1010.buva.all_layers.extensions.*
+import com.tminus1010.buva.all_layers.source_objects.SourceHashMap
 import com.tminus1010.buva.app.CategorizeTransactions
-import com.tminus1010.buva.environment.CategoryAdapter
 import com.tminus1010.buva.app.TransactionsInteractor
 import com.tminus1010.buva.data.FuturesRepo
 import com.tminus1010.buva.domain.*
-import com.tminus1010.buva.all_layers.source_objects.SourceHashMap
+import com.tminus1010.buva.environment.CategoryAdapter
+import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.TransactionMatcherPresentationFactory
 import com.tminus1010.buva.ui.all_features.view_model_item.*
 import com.tminus1010.buva.ui.choose_categories.ChooseCategoriesSharedVM
-import com.tminus1010.buva.ui.choose_transaction.ChooseTransactionSharedVM
+import com.tminus1010.buva.ui.errors.Errors
 import com.tminus1010.buva.ui.receipt_categorization.ReceiptCategorizationSharedVM
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
 import com.tminus1010.tmcommonkotlin.androidx.ShowToast
@@ -21,10 +22,8 @@ import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -38,7 +37,8 @@ class CreateFutureVM @Inject constructor(
     private val transactionsInteractor: TransactionsInteractor,
     private val receiptCategorizationSharedVM: ReceiptCategorizationSharedVM,
     private val transactionMatcherPresentationFactory: TransactionMatcherPresentationFactory,
-    private val chooseTransactionSharedVM: ChooseTransactionSharedVM,
+    private val errors: Errors,
+    private val navigator: Navigator,
 ) : ViewModel() {
     // # Setup
     val showAlertDialog = MutableSharedFlow<ShowAlertDialog>(1)
@@ -138,8 +138,20 @@ class CreateFutureVM @Inject constructor(
     }
 
     fun userNavToChooseTransactionForTransactionMatcher(transactionMatcher: TransactionMatcher) {
-        lastSelectedTransactionMather = transactionMatcher
-        navToChooseTransaction.onNext()
+        errors.globalScope.launch {
+            val transaction = navigator.navToChooseTransaction()
+            if (transaction != null)
+                withContext(Dispatchers.Main) {
+                    onImportTransactionMatcher.value =
+                        when (transactionMatcher) {
+                            is TransactionMatcher.ByValue ->
+                                TransactionMatcher.Multi(onImportTransactionMatcher.value!!.flattened().replaceFirst({ it == transactionMatcher }, TransactionMatcher.ByValue(transaction.amount)))
+                            is TransactionMatcher.SearchText ->
+                                TransactionMatcher.Multi(onImportTransactionMatcher.value!!.flattened().replaceFirst({ it == transactionMatcher }, TransactionMatcher.SearchText(transaction.description)))
+                            else -> error("Unhandled type Z")
+                        }
+                }
+        }
     }
 
     // # Internal
@@ -147,16 +159,6 @@ class CreateFutureVM @Inject constructor(
         receiptCategorizationSharedVM.userSubmitCategorization.observe(viewModelScope) {
             selectedCategoriesSharedVM.selectCategories(*it.keys.toTypedArray())
             userCategoryAmountFormulas.adjustTo(it.mapValues { AmountFormula.Value(it.value) })
-        }
-        chooseTransactionSharedVM.userSubmitTransaction.observe(viewModelScope) {
-            onImportTransactionMatcher.value =
-                when (lastSelectedTransactionMather) {
-                    is TransactionMatcher.ByValue ->
-                        TransactionMatcher.Multi(onImportTransactionMatcher.value!!.flattened().replaceFirst({ it == lastSelectedTransactionMather }, TransactionMatcher.ByValue(it.amount)))
-                    is TransactionMatcher.SearchText ->
-                        TransactionMatcher.Multi(onImportTransactionMatcher.value!!.flattened().replaceFirst({ it == lastSelectedTransactionMather }, TransactionMatcher.SearchText(it.description)))
-                    else -> error("Unhandled type Z")
-                }
         }
     }
 
@@ -179,13 +181,10 @@ class CreateFutureVM @Inject constructor(
                 ?: AmountFormula.Value(BigDecimal.ZERO)
         }
             .stateIn(viewModelScope, SharingStarted.Eagerly, AmountFormula.Value(BigDecimal.ZERO))
-    private var lastSelectedTransactionMather: TransactionMatcher? = null
-
 
     // # Events
     val navUp = MutableSharedFlow<Unit>()
     val navToCategorySelection = MutableSharedFlow<Unit>()
-    val navToChooseTransaction = MutableSharedFlow<Unit>()
     val navToReceiptCategorization = MutableSharedFlow<Pair<String, BigDecimal>>()
 
     // # State

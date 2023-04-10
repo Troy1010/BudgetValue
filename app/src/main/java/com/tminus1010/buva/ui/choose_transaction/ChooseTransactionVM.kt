@@ -1,12 +1,15 @@
 package com.tminus1010.buva.ui.choose_transaction
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tminus1010.buva.all_layers.KEY2
 import com.tminus1010.buva.app.TransactionsInteractor
+import com.tminus1010.buva.domain.Transaction
+import com.tminus1010.buva.environment.ParcelableTransactionLambdaWrapper
 import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.view_model_item.TableViewVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.TextVMItem
-import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -15,13 +18,19 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChooseTransactionVM @Inject constructor(
-    chooseTransactionSharedVM: ChooseTransactionSharedVM,
+    private val savedStateHandle: SavedStateHandle,
     transactionsInteractor: TransactionsInteractor,
     private val navigator: Navigator,
 ) : ViewModel() {
-    // # Events
-    init {
-        chooseTransactionSharedVM.userSubmitTransaction.observe(viewModelScope) { navigator.navUp() }
+    // # User Intents
+    fun userSubmitTransaction(transaction: Transaction) {
+        savedStateHandle.get<ParcelableTransactionLambdaWrapper>(KEY2)!!.lambda2(transaction)
+        navigator.navUp()
+    }
+
+    fun userCancel() {
+        savedStateHandle.get<ParcelableTransactionLambdaWrapper>(KEY2)!!.lambda2(null)
+        navigator.navUp()
     }
 
     // # State
@@ -42,7 +51,7 @@ class ChooseTransactionVM @Inject constructor(
                         listOf(
                             TextVMItem(
                                 text1 = it.description,
-                                onClick = { chooseTransactionSharedVM.userSubmitTransaction(it) },
+                                onClick = { userSubmitTransaction(it) },
                             ),
                         )
                     },

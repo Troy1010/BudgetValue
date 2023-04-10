@@ -36,7 +36,6 @@ class CreateFutureFrag : Fragment(R.layout.frag_create_future) {
         // # Events
         viewModel.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         viewModel.navToCategorySelection.observe(viewLifecycleOwner) { ChooseCategoriesFrag.navTo(nav) }
-        viewModel.navToChooseTransaction.observe(viewLifecycleOwner) { ChooseTransactionFrag.navTo(nav) }
         viewModel.navToReceiptCategorization.observe(viewLifecycleOwner) { ReceiptCategorizationHostFrag.navTo(nav, it, moshiProvider) }
         // # State
         vb.tmTableViewOtherInput.bind(viewModel.optionsTableView) { it.bind(this) }

@@ -1,6 +1,7 @@
 package com.tminus1010.buva.environment
 
 import com.tminus1010.buva.domain.Category
+import com.tminus1010.buva.domain.Transaction
 
 interface AndroidNavigationWrapper {
     fun navToCreateCategory()
@@ -13,4 +14,5 @@ interface AndroidNavigationWrapper {
     fun navToTransactions()
     fun navToHistory()
     fun navToCreateFuture()
+    suspend fun navToChooseTransaction(): Transaction?
 }

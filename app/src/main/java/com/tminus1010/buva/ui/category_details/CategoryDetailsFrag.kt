@@ -25,7 +25,6 @@ class CategoryDetailsFrag : Fragment(R.layout.frag_category_details) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Events
-        categoryDetailsVM.navToChooseTransaction.observe(viewLifecycleOwner) { ChooseTransactionFrag.navTo(nav) }
         categoryDetailsVM.showDeleteConfirmationPopup.observe(viewLifecycleOwner) {
             AlertDialog.Builder(requireContext())
                 .setMessage("Are you sure you want to delete these categories?\n\t${it}")

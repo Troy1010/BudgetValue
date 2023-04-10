@@ -2,6 +2,7 @@ package com.tminus1010.buva.ui.choose_transaction
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
@@ -20,6 +21,8 @@ class ChooseTransactionFrag : Fragment(R.layout.frag_choose_transaction) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // # User Intents
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) { viewModel.userCancel() }
         // # State
         vb.tvNoTransactionHistory.bind(viewModel.isNoItemsMsgVisible) { easyVisibility = it }
         vb.tmTableView.bind(viewModel.tableViewVMItem) { it.bind(this) }

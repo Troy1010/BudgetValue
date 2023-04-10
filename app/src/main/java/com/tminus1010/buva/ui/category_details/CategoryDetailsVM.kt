@@ -3,7 +3,6 @@ package com.tminus1010.buva.ui.category_details
 import androidx.lifecycle.*
 import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.all_layers.extensions.easyEmit
-import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.all_layers.extensions.replaceFirst
 import com.tminus1010.buva.app.DeleteCategoryFromActiveDomain
 import com.tminus1010.buva.app.ReplaceCategoryGlobally
@@ -13,14 +12,14 @@ import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.TransactionMatcherPresentationFactory
 import com.tminus1010.buva.ui.all_features.view_model_item.*
-import com.tminus1010.buva.ui.choose_transaction.ChooseTransactionSharedVM
 import com.tminus1010.buva.ui.errors.Errors
 import com.tminus1010.tmcommonkotlin.androidx.ShowToast
-import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -32,7 +31,6 @@ class CategoryDetailsVM @Inject constructor(
     private val replaceCategoryGlobally: ReplaceCategoryGlobally,
     private val errors: Errors,
     private val throbberSharedVM: ThrobberSharedVM,
-    private val chooseTransactionSharedVM: ChooseTransactionSharedVM,
     private val transactionMatcherPresentationFactory: TransactionMatcherPresentationFactory,
     private val showToast: ShowToast,
     private val navigator: Navigator,
@@ -91,30 +89,27 @@ class CategoryDetailsVM @Inject constructor(
     }
 
     fun userNavToChooseTransactionForTransactionMatcher(transactionMatcher: TransactionMatcher) {
-        lastSelectedTransactionMather = transactionMatcher
-        navToChooseTransaction.onNext()
+        errors.globalScope.launch {
+            val transaction = navigator.navToChooseTransaction()
+            if (transaction != null)
+                withContext(Dispatchers.Main) {
+                    when (transactionMatcher) {
+                        is TransactionMatcher.ByValue ->
+                            category.value = category.value!!.copy(onImportTransactionMatcher = TransactionMatcher.Multi(category.value!!.onImportTransactionMatcher.flattened().replaceFirst({ it == transactionMatcher }, TransactionMatcher.ByValue(transaction.amount))))
+                        is TransactionMatcher.SearchText ->
+                            category.value = category.value!!.copy(onImportTransactionMatcher = TransactionMatcher.Multi(category.value!!.onImportTransactionMatcher.flattened().replaceFirst({ it == transactionMatcher }, TransactionMatcher.SearchText(transaction.description))))
+                        else -> error("Unhandled type Z")
+                    }
+                }
+        }
     }
 
     // # Internal
     private val originalCategory = savedStateHandle.get<Category>(KEY1)
     private val category = savedStateHandle.getLiveData<Category>(KEY1)
-    private var lastSelectedTransactionMather: TransactionMatcher? = null
-
-    init {
-        chooseTransactionSharedVM.userSubmitTransaction.observe(viewModelScope) {
-            when (lastSelectedTransactionMather) {
-                is TransactionMatcher.ByValue ->
-                    category.value = category.value!!.copy(onImportTransactionMatcher = TransactionMatcher.Multi(category.value!!.onImportTransactionMatcher.flattened().replaceFirst({ it == lastSelectedTransactionMather }, TransactionMatcher.ByValue(it.amount))))
-                is TransactionMatcher.SearchText ->
-                    category.value = category.value!!.copy(onImportTransactionMatcher = TransactionMatcher.Multi(category.value!!.onImportTransactionMatcher.flattened().replaceFirst({ it == lastSelectedTransactionMather }, TransactionMatcher.SearchText(it.description))))
-                else -> error("Unhandled type Z")
-            }
-        }
-    }
 
     // # Events
     val showDeleteConfirmationPopup = MutableSharedFlow<String>()
-    val navToChooseTransaction = MutableSharedFlow<Unit>()
 
     // # State
     val title = flowOf("Category").shareIn(viewModelScope, SharingStarted.Eagerly, 1)

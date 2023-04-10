@@ -7,6 +7,7 @@ import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.all_layers.KEY2
 import com.tminus1010.buva.domain.Category
+import com.tminus1010.buva.domain.Transaction
 import com.tminus1010.buva.ui.category_details.CategoryDetailsFrag
 import com.tminus1010.tmcommonkotlin.androidx.launchOnMainThread
 import dagger.Reusable
@@ -65,6 +66,22 @@ class AndroidNavigationWrapperImpl @Inject constructor() : AndroidNavigationWrap
                     Bundle().apply {
                         putString(KEY1, s)
                         putParcelable(KEY2, ParcelableLambdaWrapper {
+                            GlobalScope.launch { send(it) }
+                        })
+                    }
+                )
+            }
+            awaitClose()
+        }.take(1).first()
+    }
+
+    override suspend fun navToChooseTransaction(): Transaction? {
+        return channelFlow { // TODO: This could be simplified.
+            launchOnMainThread {
+                nav.navigate(
+                    R.id.chooseTransactionFrag,
+                    Bundle().apply {
+                        putParcelable(KEY2, ParcelableTransactionLambdaWrapper {
                             GlobalScope.launch { send(it) }
                         })
                     }
