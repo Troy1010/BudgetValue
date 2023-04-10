@@ -1,4 +1,4 @@
-package com.tminus1010.buva.ui.plan
+package com.tminus1010.buva.ui.budget.plan
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

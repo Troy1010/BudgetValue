@@ -1,4 +1,4 @@
-package com.tminus1010.buva.ui.reconciliation.accounts_reconciliation
+package com.tminus1010.buva.ui.budget.reconciliation.accounts_reconciliation
 
 import android.os.Bundle
 import android.view.View

@@ -1,4 +1,4 @@
-package com.tminus1010.buva.ui.plan
+package com.tminus1010.buva.ui.budget.plan
 
 import android.os.Bundle
 import android.view.View

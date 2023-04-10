@@ -4,6 +4,7 @@ import android.app.Application
 import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
+@Deprecated("This is not maintained due to lack of effort")
 class IsPlanFeatureEnabled @Inject constructor(
     private val app: Application,
     transactionsInteractor: TransactionsInteractor,

@@ -1,4 +1,4 @@
-package com.tminus1010.buva.ui.reconciliation
+package com.tminus1010.buva.ui.budget.reconciliation
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.buva.R
@@ -10,8 +10,8 @@ import com.tminus1010.buva.app.ReconciliationsToDoInteractor
 import com.tminus1010.buva.domain.ReconciliationToDo
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
-import com.tminus1010.buva.ui.reconciliation.accounts_reconciliation.AccountsReconciliationFrag
-import com.tminus1010.buva.ui.reconciliation.plan_reconciliation.PlanReconciliationFrag
+import com.tminus1010.buva.ui.budget.reconciliation.accounts_reconciliation.AccountsReconciliationFrag
+import com.tminus1010.buva.ui.budget.reconciliation.plan_reconciliation.PlanReconciliationFrag
 import com.tminus1010.tmcommonkotlin.androidx.ShowToast
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.view.NativeText
