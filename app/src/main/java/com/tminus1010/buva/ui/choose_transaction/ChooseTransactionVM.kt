@@ -24,14 +24,17 @@ class ChooseTransactionVM @Inject constructor(
 ) : ViewModel() {
     // # User Intents
     fun userSubmitTransaction(transaction: Transaction) {
-        savedStateHandle.get<ParcelableTransactionLambdaWrapper>(KEY2)!!.lambda2(transaction)
+        callback(transaction)
         navigator.navUp()
     }
 
     fun userCancel() {
-        savedStateHandle.get<ParcelableTransactionLambdaWrapper>(KEY2)!!.lambda2(null)
+        callback(null)
         navigator.navUp()
     }
+
+    // # Internal
+    private val callback = savedStateHandle.get<ParcelableTransactionLambdaWrapper>(KEY2)!!.lambda
 
     // # State
     val isNoItemsMsgVisible =
