@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.ui.import_and_categorize.categorize.CategorizeFrag
+import com.tminus1010.buva.ui.import_and_categorize.importZ.AccountsFrag
 import com.tminus1010.buva.ui.import_and_categorize.importZ.ImportFrag
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +20,8 @@ class ImportAndCategorizeHostVM @Inject constructor(
         when (id) {
             R.id.importFrag ->
                 _frag.onNext(ImportFrag::class.java)
+            R.id.accountsFrag ->
+                _frag.onNext(AccountsFrag::class.java)
             R.id.categorizeFrag ->
                 _frag.onNext(CategorizeFrag::class.java)
             else -> error("Unknown id")

@@ -24,18 +24,5 @@ class ImportFrag : Fragment(R.layout.frag_import) {
         super.onViewCreated(view, savedInstanceState)
         // # State
         vb.buttonsview.bind(viewModel.buttons) { buttons = it }
-        vb.recyclerviewAccounts.layoutManager = LinearLayoutManager(requireActivity())
-        vb.recyclerviewAccounts.bind(viewModel.accountVMItemList) { accountsPresentationModel ->
-            adapter = object : LifecycleRVAdapter2<GenViewHolder<ItemAccountBinding>>() {
-                override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-                    GenViewHolder(ItemAccountBinding.inflate(layoutInflater, parent, false))
-
-                override fun getItemCount() = accountsPresentationModel.size
-
-                override fun onLifecycleAttached(holder: GenViewHolder<ItemAccountBinding>) {
-                    accountsPresentationModel[holder.bindingAdapterPosition].bind(holder.vb)
-                }
-            }
-        }
     }
 }

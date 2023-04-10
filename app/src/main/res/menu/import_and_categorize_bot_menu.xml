@@ -4,6 +4,9 @@
         android:id="@+id/importFrag"
         android:title="Import" />
     <item
+        android:id="@+id/accountsFrag"
+        android:title="Accounts" />
+    <item
         android:id="@+id/categorizeFrag"
         android:title="Categorize" />
 </menu>
