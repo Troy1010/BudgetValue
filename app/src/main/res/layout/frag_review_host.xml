@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,18 +8,20 @@
         android:id="@+id/fragmentcontainerview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/buttonsview"
+        app:layout_constraintBottom_toTopOf="@id/bottomnavigationview"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.tminus1010.buva.all_layers.android.ButtonsView
-        android:id="@+id/buttonsview"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomnavigationview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:orientation="horizontal"
+        android:background="@color/colorBackgroundHighlight"
+        android:gravity="center"
+        android:textAlignment="center"
+        app:itemIconTint="@color/bottom_nav_color_selector"
+        app:itemTextColor="@color/bottom_nav_color_selector"
+        app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:itemCount="3"
-        tools:layoutManager="LinearLayoutManager"
-        tools:listitem="@layout/item_button" />
+        app:menu="@menu/review_bot_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

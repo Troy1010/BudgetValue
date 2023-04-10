@@ -12,17 +12,17 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ReviewHostFrag : Fragment(R.layout.frag_review_host) {
     lateinit var vb: FragReviewHostBinding
-    val reviewHostVM by viewModels<ReviewHostVM>()
+    val viewModel by viewModels<ReviewHostVM>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = FragReviewHostBinding.bind(view)
-        vb.fragmentcontainerview.bind(reviewHostVM.frag) {
+        vb.fragmentcontainerview.bind(viewModel.frag) {
             this@ReviewHostFrag.childFragmentManager
                 .beginTransaction()
                 .replace(id, it.getDeclaredConstructor().newInstance())
                 .commitNowAllowingStateLoss()
         }
-        vb.buttonsview.bind(reviewHostVM.buttons) { buttons = it }
+        vb.bottomnavigationview.setOnItemSelectedListener { viewModel.userSelectMenuItem(it.itemId); true }
     }
 }
