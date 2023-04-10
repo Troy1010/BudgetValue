@@ -16,7 +16,7 @@ data class Category(
     val name: String,
     val defaultAmountFormula: AmountFormula = AmountFormula.Value(BigDecimal.ZERO),
     val isRequired: Boolean = false,
-    val resetStrategy: ResetStrategy = ResetStrategy.Basic(BigDecimal.ZERO), // TODO: Perhaps ResetStrategy should be a part of the Plan..? Or perhaps ActivePlan value should just be a part of Category..?
+    val resetStrategy: ResetStrategy = ResetStrategy.Basic(null), // TODO: Perhaps ResetStrategy should be a part of the Plan..? Or perhaps ActivePlan value should just be a part of Category..?
     val onImportTransactionMatcher: TransactionMatcher? = null,
     val isRememberedByDefault: Boolean = true,
 ) : ICategorizer, Parcelable {

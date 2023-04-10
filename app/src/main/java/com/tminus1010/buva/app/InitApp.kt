@@ -26,13 +26,13 @@ class InitApp @Inject constructor(
                 Category("Improvements", AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Medical", AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Misc", AmountFormula.Value(BigDecimal.ZERO)),
-                Category("Fast Food", AmountFormula.Value(BigDecimal.ZERO)),
-                Category("Groceries", AmountFormula.Value(BigDecimal.ZERO)),
-                Category("Unknown", AmountFormula.Value(BigDecimal.ZERO), isRememberedByDefault = false),
-                Category("Savings", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(null)),
-                Category("Emergency", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(null)),
-                Category("Gifts", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(null)),
-                Category("Activities", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(null)),
+                Category("Fast Food", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(0)),
+                Category("Groceries", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(0)),
+                Category("Unknown", AmountFormula.Value(BigDecimal.ZERO), isRememberedByDefault = false, resetStrategy = ResetStrategy.Basic(0)),
+                Category("Savings", AmountFormula.Value(BigDecimal.ZERO)),
+                Category("Emergency", AmountFormula.Value(BigDecimal.ZERO)),
+                Category("Gifts", AmountFormula.Value(BigDecimal.ZERO)),
+                Category("Activities", AmountFormula.Value(BigDecimal.ZERO)),
             )
     }
 }

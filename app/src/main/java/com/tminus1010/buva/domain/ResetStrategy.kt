@@ -10,6 +10,8 @@ sealed class ResetStrategy : Parcelable {
      */
     @Parcelize
     data class Basic(val budgetedMax: BigDecimal?) : ResetStrategy() {
+        constructor(budgetedMax: Int) : this(budgetedMax.toBigDecimal())
+
         fun calc(category: Category, activeReconciliationCAs: CategoryAmounts, budgetedCAs: CategoryAmounts): BigDecimal {
             val budgetedValueIfNoActiveReconciliation = (budgetedCAs[category] ?: BigDecimal.ZERO) - (activeReconciliationCAs[category] ?: BigDecimal.ZERO)
             return if (budgetedMax == null || budgetedValueIfNoActiveReconciliation < budgetedMax)
