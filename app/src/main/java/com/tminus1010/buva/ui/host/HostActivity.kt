@@ -27,10 +27,7 @@ import com.tminus1010.buva.environment.ActivityWrapper
 import com.tminus1010.buva.environment.AndroidNavigationWrapperImpl
 import com.tminus1010.buva.ui.all_features.ShowImportResultAlertDialog
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
-import com.tminus1010.buva.ui.futures.FuturesFrag
-import com.tminus1010.buva.ui.history.HistoryFrag
 import com.tminus1010.buva.ui.importZ.ImportSharedVM
-import com.tminus1010.buva.ui.transactions.TransactionListFrag
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
 import com.tminus1010.tmcommonkotlin.androidx.ShowToast
 import com.tminus1010.tmcommonkotlin.core.tryOrNull
@@ -83,8 +80,8 @@ class HostActivity : AppCompatActivity() {
     @Inject
     lateinit var importSharedVM: ImportSharedVM
 
-    val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.frag_nav_host) as HostFrag }
-    private val nav by lazy { findNavController(R.id.frag_nav_host) }
+    val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.fragmentcontainerview) as HostFrag }
+    private val nav by lazy { findNavController(R.id.fragmentcontainerview) }
     private val showImportResultAlertDialog by lazy { ShowImportResultAlertDialog(ShowAlertDialog(this)) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,9 +97,9 @@ class HostActivity : AppCompatActivity() {
         GlobalScope.launch { initApp() }.use(throbberSharedVM)
         // ## Bind bottom menu to navigation.
         // In order for NavigationUI.setupWithNavController to work, the ids in R.menu.* must exactly match R.navigation.*
-        NavigationUI.setupWithNavController(vb.bottomNavigation, hostFrag.navController)
+        NavigationUI.setupWithNavController(vb.bottomnavigationview, hostFrag.navController)
         //
-        vb.bottomNavigation.setOnItemSelectedListener {
+        vb.bottomnavigationview.setOnItemSelectedListener {
             // Requirement: When config change Then do not forget current menu item.
             viewModel.selectMenuItem(it.itemId)
             // Requirement: Given some spends are not categorized When Reconciliation is clicked Then show toast.
@@ -116,23 +113,23 @@ class HostActivity : AppCompatActivity() {
             }
             // Requirement: When menu item clicked Then forget backstack.
             // This will be null When config change.
-            val nav = tryOrNull { findNavController(R.id.frag_nav_host) }
+            val nav = tryOrNull { findNavController(R.id.fragmentcontainerview) }
             // clearBackStack might not be necessary.
             nav?.clearBackStack(it.itemId)
             nav?.navigate(it.itemId)
             // setOnItemSelectedListener overrides setupWithNavController's behavior, so that behavior is restored here.
             NavigationUI.onNavDestinationSelected(it, hostFrag.navController)
         }
-        viewModel.selectedPageRedefined.value?.also { vb.bottomNavigation.selectedItemId = it }
+        viewModel.selectedPageRedefined.value?.also { vb.bottomnavigationview.selectedItemId = it }
         // # Events
         importSharedVM.navToSelectFile.observe(this) { launchChooseFile(this) }
         isPlanFeatureEnabled.flow.pairwise().filter { !it.first && it.second }.observe(this) { activePlanInteractor.estimateActivePlanFromHistory(); ShowAlertDialog(this)(viewModel.levelUpPlan) }
         isReconciliationFeatureEnabled.flow.pairwise().filter { !it.first && it.second }.observe(this) { ShowAlertDialog(this)(viewModel.levelUpReconciliation) }
         viewModel.navToAccessibility.observe(this) { startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }
-        viewModel.unCheckAllMenuItems.observe(this) { vb.bottomNavigation.unCheckAllItems() } // TODO: Not working
+        viewModel.unCheckAllMenuItems.observe(this) { vb.bottomnavigationview.unCheckAllItems() } // TODO: Not working
         // # State
-        isPlanFeatureEnabled.flow.observe(this) { vb.bottomNavigation.menu.findItem(R.id.planFrag).isVisible = it }
-        isReconciliationFeatureEnabled.flow.observe(this) { vb.bottomNavigation.menu.findItem(R.id.reconciliationHostFrag).isVisible = it }
+        isPlanFeatureEnabled.flow.observe(this) { vb.bottomnavigationview.menu.findItem(R.id.planFrag).isVisible = it }
+        isReconciliationFeatureEnabled.flow.observe(this) { vb.bottomnavigationview.menu.findItem(R.id.reconciliationHostFrag).isVisible = it }
         vb.frameProgressBar.bind(throbberSharedVM.visibility) { visibility = it }
     }
 
