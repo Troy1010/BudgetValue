@@ -137,7 +137,7 @@ class CategorizeVM @Inject constructor(
             val s = navigator.navToSetString((transactionsInteractor.mostRecentUncategorizedSpend.value ?: throw NoMostRecentSpendException()).description)
             if (s != null)
                 categorizeTransactions(TransactionMatcher.SearchText(s)::isMatch, categorize = { it.categorize(category) })
-                    .also { showToast(NativeText.Simple("$it transactions categorized")) }
+                    .also { showToast("$it transactions categorized") }
         }
     }
 
@@ -147,7 +147,7 @@ class CategorizeVM @Inject constructor(
                 category = category,
                 description = (transactionsInteractor.mostRecentUncategorizedSpend.value ?: throw NoMostRecentSpendException()).description,
             )
-                .also { showToast(NativeText.Simple("$it transactions categorized")) }
+                .also { showToast("$it transactions categorized") }
         }.use(throbberSharedVM)
     }
 
@@ -155,7 +155,10 @@ class CategorizeVM @Inject constructor(
         errors.globalScope.launch {
             val s = navigator.navToSetString((transactionsInteractor.mostRecentUncategorizedSpend.value ?: throw NoMostRecentSpendException()).description)
             if (s != null)
-                categorizeTransactions(TransactionMatcher.SearchText(s)::isMatch, categorize = { it.categorize(category) })
+                categoryInteractor.addDescriptionAndCategorize(
+                    category = category,
+                    description = s,
+                )
                     .also { showToast("$it transactions categorized") }
         }
     }

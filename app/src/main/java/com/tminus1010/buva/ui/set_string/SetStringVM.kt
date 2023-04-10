@@ -47,9 +47,9 @@ class SetStringVM @Inject constructor(
     // # Internal
     private val callback = savedStateHandle.get<ParcelableLambdaWrapper>(KEY2)!!.lambda
     private val originalS = savedStateHandle.get<String>(KEY1)
-    private val firstWord = tryOrNull { originalS?.split(Regex("""\s"""))?.firstOrNull() }
-    private val firstTwoWords = tryOrNull { originalS?.split(Regex("""\s"""))?.take(2)?.joinToString(" ") }
-    private val firstThreeWords = tryOrNull { originalS?.split(Regex("""\s"""))?.take(3)?.joinToString(" ") }
+    private val firstWord = tryOrNull { originalS?.split(Regex("""\s+"""))?.firstOrNull() }
+    private val firstTwoWords = tryOrNull { originalS?.split(Regex("""\s+"""))?.take(2)?.joinToString(" ") }
+    private val firstThreeWords = tryOrNull { originalS?.split(Regex("""\s+"""))?.take(3)?.joinToString(" ") }
     private var currentS: String? = originalS
 
     // # State
@@ -60,19 +60,22 @@ class SetStringVM @Inject constructor(
         )
     val buttons =
         flowOf(
-            listOf(
-                ButtonVMItem(
-                    title = "Submit \"$firstThreeWords\"",
-                    onClick = ::userSubmitFirst3Words,
-                ),
-                ButtonVMItem(
-                    title = "Submit \"$firstTwoWords\"",
-                    onClick = ::userSubmitFirst2Words,
-                ),
-                ButtonVMItem(
-                    title = "Submit \"$firstWord\"",
-                    onClick = ::userSubmitFirstWord,
-                ),
+            listOfNotNull(
+                if (firstThreeWords != null)
+                    ButtonVMItem(
+                        title = "Submit \"$firstThreeWords\"",
+                        onClick = ::userSubmitFirst3Words,
+                    ) else null,
+                if (firstTwoWords != null)
+                    ButtonVMItem(
+                        title = "Submit \"$firstTwoWords\"",
+                        onClick = ::userSubmitFirst2Words,
+                    ) else null,
+                if (firstWord != null)
+                    ButtonVMItem(
+                        title = "Submit \"$firstWord\"",
+                        onClick = ::userSubmitFirstWord,
+                    ) else null,
                 ButtonVMItem(
                     title = "Submit",
                     onClick = ::userSubmit,
