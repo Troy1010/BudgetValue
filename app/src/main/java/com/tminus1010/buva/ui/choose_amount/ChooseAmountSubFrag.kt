@@ -19,10 +19,9 @@ class ChooseAmountSubFrag : Fragment(R.layout.subfrag_choose_amount) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = SubfragChooseAmountBinding.bind(view)
-        // # Setup View
+        // # State
         vb.tmTableViewPlusMinus.bind(viewModel.plusMinusButtonsTableView) { it.bind(this) }
         vb.moneyEditText.run { viewModel.amountMenuVMItem.bind(this) }
-        // # State
         vb.moneyEditText.bind(viewModel.amount) { setText(it) }
         // # Bind User Intents
         vb.moneyEditText.onDone { viewModel.userSetAmount.easyEmit(it) }

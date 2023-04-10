@@ -4,11 +4,9 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.InvalidStateException
 import com.tminus1010.buva.all_layers.extensions.value
-import com.tminus1010.buva.app.*
-import com.tminus1010.buva.data.AccountsRepo
-import com.tminus1010.buva.data.ActivePlanRepo
-import com.tminus1010.buva.data.ActiveReconciliationRepo
-import com.tminus1010.buva.data.ReconciliationsRepo
+import com.tminus1010.buva.app.ActiveReconciliationInteractor
+import com.tminus1010.buva.app.PlanReconciliationInteractor
+import com.tminus1010.buva.app.ReconciliationsToDoInteractor
 import com.tminus1010.buva.domain.ReconciliationToDo
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
@@ -25,17 +23,9 @@ import javax.inject.Inject
 @HiltViewModel
 class ReconciliationHostVM @Inject constructor(
     private val reconciliationsToDoInteractor: ReconciliationsToDoInteractor,
-    private val budgetedForActiveReconciliationInteractor: BudgetedForActiveReconciliationInteractor,
     private val activeReconciliationInteractor: ActiveReconciliationInteractor,
     private val showToast: ShowToast,
-    private val activePlanRepo: ActivePlanRepo,
-    private val activeReconciliationRepo: ActiveReconciliationRepo,
     private val throbberSharedVM: ThrobberSharedVM,
-    private val reconciliationSkipInteractor: ReconciliationSkipInteractor,
-    private val reconciliationsRepo: ReconciliationsRepo,
-    private val categoryInteractor: CategoryInteractor,
-    private val accountsRepo: AccountsRepo,
-    private val transactionsInteractor: TransactionsInteractor,
     private val planReconciliationInteractor: PlanReconciliationInteractor,
 ) : ViewModel() {
     // # User Intents
