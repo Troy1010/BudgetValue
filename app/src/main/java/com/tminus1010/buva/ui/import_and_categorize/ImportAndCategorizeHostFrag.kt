@@ -12,17 +12,17 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ImportAndCategorizeHostFrag : Fragment(R.layout.frag_import_and_categorize_host) {
     lateinit var vb: FragImportAndCategorizeHostBinding
-    val importAndCategorizeHostVM by viewModels<ImportAndCategorizeHostVM>()
+    val viewModel by viewModels<ImportAndCategorizeHostVM>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = FragImportAndCategorizeHostBinding.bind(view)
-        vb.fragmentcontainerview.bind(importAndCategorizeHostVM.frag) {
+        vb.fragmentcontainerview.bind(viewModel.frag) {
             this@ImportAndCategorizeHostFrag.childFragmentManager
                 .beginTransaction()
                 .replace(id, it.getDeclaredConstructor().newInstance())
                 .commitNowAllowingStateLoss()
         }
-        vb.buttonsview.bind(importAndCategorizeHostVM.buttons) { buttons = it }
+        vb.bottomnavigationview.setOnItemSelectedListener { viewModel.userSelectMenuItem(it.itemId); true }
     }
 }
