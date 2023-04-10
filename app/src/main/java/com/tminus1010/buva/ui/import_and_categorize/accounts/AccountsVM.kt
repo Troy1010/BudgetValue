@@ -27,7 +27,7 @@ class AccountsVM @Inject constructor(
     }
 
     // # State
-    val textVisibility =
+    val noAccountsTextVisibility =
         accountsRepo.accountsAggregate
             .map { if (it.accounts.isNotEmpty()) View.GONE else View.VISIBLE }
     val accountVMItemList =
