@@ -1,4 +1,4 @@
-package com.tminus1010.buva.ui.reconciliation
+package com.tminus1010.buva.ui.reconciliation.plan_reconciliation
 
 import android.os.Bundle
 import android.view.View

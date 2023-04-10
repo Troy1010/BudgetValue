@@ -1,11 +1,10 @@
-package com.tminus1010.buva.ui.reconciliation
+package com.tminus1010.buva.ui.reconciliation.accounts_reconciliation
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.tminus1010.buva.R
-import com.tminus1010.buva.ui.reconciliation.AccountsReconciliationVM
 import com.tminus1010.buva.databinding.ItemTmTableViewBinding
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import dagger.hilt.android.AndroidEntryPoint

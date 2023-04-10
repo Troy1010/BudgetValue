@@ -101,11 +101,6 @@
         android:label="ReviewHostFrag"
         tools:layout="@layout/frag_review_host" />
     <fragment
-        android:id="@+id/accountsReconciliationSubFrag"
-        android:name="com.tminus1010.buva.ui.reconciliation.AccountsReconciliationSubFrag"
-        android:label="AccountsReconciliationSubFrag"
-        tools:layout="@layout/item_tm_table_view" />
-    <fragment
         android:id="@+id/transactionBlocksFrag"
         android:name="com.tminus1010.buva.ui.transactions.TransactionBlocksFrag"
         android:label="TransactionBlocksFrag"
