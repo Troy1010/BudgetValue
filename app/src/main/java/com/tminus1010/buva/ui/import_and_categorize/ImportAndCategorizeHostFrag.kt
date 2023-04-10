@@ -17,10 +17,10 @@ class ImportAndCategorizeHostFrag : Fragment(R.layout.frag_import_and_categorize
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = FragImportAndCategorizeHostBinding.bind(view)
-        vb.frame.bind(importAndCategorizeHostVM.frag) {
+        vb.fragmentcontainerview.bind(importAndCategorizeHostVM.frag) {
             this@ImportAndCategorizeHostFrag.childFragmentManager
                 .beginTransaction()
-                .replace(R.id.frame, it.getDeclaredConstructor().newInstance())
+                .replace(id, it.getDeclaredConstructor().newInstance())
                 .commitNowAllowingStateLoss()
         }
         vb.buttonsview.bind(importAndCategorizeHostVM.buttons) { buttons = it }

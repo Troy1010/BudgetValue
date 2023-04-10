@@ -17,10 +17,10 @@ class ReviewHostFrag : Fragment(R.layout.frag_review_host) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = FragReviewHostBinding.bind(view)
-        vb.frame.bind(reviewHostVM.frag) {
+        vb.fragmentcontainerview.bind(reviewHostVM.frag) {
             this@ReviewHostFrag.childFragmentManager
                 .beginTransaction()
-                .replace(R.id.frame, it.getDeclaredConstructor().newInstance())
+                .replace(id, it.getDeclaredConstructor().newInstance())
                 .commitNowAllowingStateLoss()
         }
         vb.buttonsview.bind(reviewHostVM.buttons) { buttons = it }
