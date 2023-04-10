@@ -27,4 +27,16 @@ class SetStringFrag : Fragment(R.layout.frag_set_string) {
         viewModel.editTextVMItem.bind(vb.et)
         vb.buttonsview.bind(viewModel.buttons) { buttons = it }
     }
+
+    companion object {
+        fun navTo(nav: NavController, s: String, callback: (String?) -> Unit) {
+            nav.navigate(
+                R.id.editStringFrag,
+                Bundle().apply {
+                    putString(KEY1, s)
+                    putParcelable(KEY2, ParcelableLambdaWrapper(callback))
+                }
+            )
+        }
+    }
 }
