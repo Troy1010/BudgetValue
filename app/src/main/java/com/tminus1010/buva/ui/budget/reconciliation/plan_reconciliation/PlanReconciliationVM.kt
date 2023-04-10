@@ -1,4 +1,4 @@
-package com.tminus1010.buva.ui.reconciliation.plan_reconciliation
+package com.tminus1010.buva.ui.budget.reconciliation.plan_reconciliation
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
