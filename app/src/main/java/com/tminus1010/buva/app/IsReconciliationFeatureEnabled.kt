@@ -5,6 +5,7 @@ import com.tminus1010.buva.data.ReconciliationsRepo
 import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
+@Deprecated("This is not maintained due to lack of effort")
 class IsReconciliationFeatureEnabled @Inject constructor(
     private val app: Application,
     reconciliationsRepo: ReconciliationsRepo,

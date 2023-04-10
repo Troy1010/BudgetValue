@@ -101,6 +101,11 @@
         android:label="ReviewHostFrag"
         tools:layout="@layout/frag_review_host" />
     <fragment
+        android:id="@+id/budgetHostFrag"
+        android:name="com.tminus1010.buva.ui.budget.BudgetHostFrag"
+        android:label="BudgetHostFrag"
+        tools:layout="@layout/frag_budget_host" />
+    <fragment
         android:id="@+id/transactionBlocksFrag"
         android:name="com.tminus1010.buva.ui.transactions.TransactionBlocksFrag"
         android:label="TransactionBlocksFrag"

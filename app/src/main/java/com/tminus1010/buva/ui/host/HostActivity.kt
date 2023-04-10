@@ -21,7 +21,10 @@ import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.all_layers.extensions.unCheckAllItems
 import com.tminus1010.buva.all_layers.extensions.value
-import com.tminus1010.buva.app.*
+import com.tminus1010.buva.app.ActivePlanInteractor
+import com.tminus1010.buva.app.ImportTransactions
+import com.tminus1010.buva.app.InitApp
+import com.tminus1010.buva.app.TransactionsInteractor
 import com.tminus1010.buva.data.AccountsRepo
 import com.tminus1010.buva.data.TransactionsRepo
 import com.tminus1010.buva.databinding.ActivityHostBinding
@@ -34,14 +37,12 @@ import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
 import com.tminus1010.tmcommonkotlin.androidx.ShowToast
 import com.tminus1010.tmcommonkotlin.core.tryOrNull
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
-import com.tminus1010.tmcommonkotlin.coroutines.extensions.pairwise
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -57,12 +58,6 @@ class HostActivity : AppCompatActivity() {
 
     @Inject
     lateinit var initApp: InitApp
-
-    @Inject
-    lateinit var isPlanFeatureEnabled: IsPlanFeatureEnabled
-
-    @Inject
-    lateinit var isReconciliationFeatureEnabled: IsReconciliationFeatureEnabled
 
     @Inject
     lateinit var activePlanInteractor: ActivePlanInteractor
@@ -104,7 +99,7 @@ class HostActivity : AppCompatActivity() {
         ActivityWrapper.activity = this
         HostActivityWrapper.hostActivity = this
         AndroidNavigationWrapperImpl.nav = hostFrag.navController
-        viewModel.showAlertDialog.onNext(ShowAlertDialog(this))
+        viewModel.showAlertDialog.onNext(ShowAlertDialog(this)) // TODO: Refactor
         // ## Initialize app once per install
         GlobalScope.launch { initApp() }.use(throbberSharedVM)
         // ## Bind bottom menu to navigation.
@@ -184,13 +179,9 @@ class HostActivity : AppCompatActivity() {
         }
         viewModel.selectedPageRedefined.value?.also { vb.bottomnavigationview.selectedItemId = it }
         // # Events
-        isPlanFeatureEnabled.flow.pairwise().filter { !it.first && it.second }.observe(this) { activePlanInteractor.estimateActivePlanFromHistory(); ShowAlertDialog(this)(viewModel.levelUpPlan) }
-        isReconciliationFeatureEnabled.flow.pairwise().filter { !it.first && it.second }.observe(this) { ShowAlertDialog(this)(viewModel.levelUpReconciliation) }
         viewModel.navToAccessibility.observe(this) { startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }
         viewModel.unCheckAllMenuItems.observe(this) { vb.bottomnavigationview.unCheckAllItems() } // TODO: Not working
         // # State
-        isPlanFeatureEnabled.flow.observe(this) { vb.bottomnavigationview.menu.findItem(R.id.planFrag).isVisible = it }
-        isReconciliationFeatureEnabled.flow.observe(this) { vb.bottomnavigationview.menu.findItem(R.id.reconciliationHostFrag).isVisible = it }
         vb.frameProgressBar.bind(throbberSharedVM.visibility) { visibility = it }
     }
 
