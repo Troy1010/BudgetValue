@@ -3,7 +3,7 @@ package com.tminus1010.buva.ui.choose_transaction
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.buva.app.TransactionsInteractor
-import com.tminus1010.buva.data.TransactionsRepo
+import com.tminus1010.buva.ui.all_features.view_model_item.TableViewVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.TextVMItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,13 +24,25 @@ class ChooseTransactionVM @Inject constructor(
         transactionsInteractor.transactionsAggregate
             .map { it.transactions.isEmpty() }
             .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
-    val recipeGrid =
+    val tableViewVMItem =
         transactionsInteractor.transactionsAggregate
             .map { transactionsAggregate ->
                 transactionsAggregate.transactions
                     .let { if (transactionsAggregate.mostRecentUncategorizedSpend == null) it else listOf(transactionsAggregate.mostRecentUncategorizedSpend!!) + it }
                     .distinctBy { it.description }
             }
-            .map { it.map { listOf(TextVMItem(it.description, onClick = { chooseTransactionSharedVM.userSubmitTransaction(it) })) } }
+            .map {
+                TableViewVMItem(
+                    recipeGrid = it.map {
+                        listOf(
+                            TextVMItem(
+                                text1 = it.description,
+                                onClick = { chooseTransactionSharedVM.userSubmitTransaction(it) },
+                            ),
+                        )
+                    },
+                    shouldFitItemWidthsInsideTable = true
+                )
+            }
             .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
 }
