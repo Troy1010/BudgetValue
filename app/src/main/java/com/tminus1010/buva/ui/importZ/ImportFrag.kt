@@ -6,15 +6,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.tminus1010.buva.R
-import com.tminus1010.buva.all_layers.extensions.easyText2
+import com.tminus1010.buva.all_layers.android.LifecycleRVAdapter2
+import com.tminus1010.buva.all_layers.android.viewBinding
 import com.tminus1010.buva.databinding.FragImportBinding
 import com.tminus1010.buva.databinding.ItemAccountBinding
-import com.tminus1010.buva.databinding.ItemButtonBinding
-import com.tminus1010.buva.all_layers.android.LifecycleRVAdapter2
-import com.tminus1010.buva.all_layers.android.onDone
-import com.tminus1010.buva.all_layers.android.viewBinding
 import com.tminus1010.tmcommonkotlin.androidx.GenViewHolder
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import dagger.hilt.android.AndroidEntryPoint

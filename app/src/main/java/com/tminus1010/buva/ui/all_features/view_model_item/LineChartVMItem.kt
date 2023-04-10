@@ -35,7 +35,8 @@ class LineChartVMItem(
                 object : ValueFormatter() {
                     override fun getFormattedValue(value: Float): String {
                         // TODO: There should be a more simple and performant way to do this.
-                        return it.map { it.second }.withIndex().associate { it.index.toFloat() to it.value }[value]!!
+                        // TODO: This might not work correctly. Sometimes it falls back to null, which I don't think is expected.
+                        return it.map { it.second }.withIndex().associate { it.index.toFloat() to it.value }[value] ?: ""
                     }
                 }
             invalidate()

@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/importFrag"
+        android:id="@+id/importAndCategorizeHostFrag"
         android:title="Import" />
-    <item
-        android:id="@+id/categorizeNestedGraph"
-        android:title="Categorize" />
     <item
         android:id="@+id/planFrag"
         android:title="Plan" />

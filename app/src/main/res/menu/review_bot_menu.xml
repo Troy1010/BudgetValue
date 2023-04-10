@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/history"
+        android:title="History" />
+    <item
+        android:id="@+id/spendPieChart"
+        android:title="Spend Pie Chart" />
+    <item
+        android:id="@+id/spendBarChart"
+        android:title="Spend Bar Chart" />
+    <item
+        android:id="@+id/totalLineChart"
+        android:title="Total Line Chart" />
+</menu>

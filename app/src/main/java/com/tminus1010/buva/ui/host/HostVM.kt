@@ -6,6 +6,7 @@ import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.data.SelectedPage
+import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItems
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
@@ -21,6 +22,7 @@ import javax.inject.Inject
 class HostVM @Inject constructor(
     getExtraMenuItemPartials: GetExtraMenuItemPartials,
     private val selectedPage: SelectedPage,
+    private val navigator: Navigator,
 ) : ViewModel() {
     // # Setup
     val nav = BehaviorSubject.create<NavController>()
@@ -31,11 +33,22 @@ class HostVM @Inject constructor(
         selectedPage.set(int)
     }
 
+    fun userTryNavToAccessibilitySettings() {
+        GlobalScope.launch {
+            showAlertDialog.value!!(
+                NativeText.Simple(
+                    """
+                    Accessibility settings apply to all applications, so you must edit them in your phone's settings.
+                    
+                    Would you like to go there now?
+                    """.trimIndent()
+                ),
+                onYes = navToAccessibility::onNext)
+        }
+    }
+
     // # Events
     val unCheckAllMenuItems = MutableSharedFlow<Unit>()
-    val navToHistory = MutableSharedFlow<Unit>()
-    val navToTransactions = MutableSharedFlow<Unit>()
-    val navToFutures = MutableSharedFlow<Unit>()
     val navToAccessibility = MutableSharedFlow<Unit>()
 
     // # State
@@ -44,31 +57,27 @@ class HostVM @Inject constructor(
         MenuVMItems(
             MenuVMItem(
                 title = "History",
-                onClick = { navToHistory.onNext(); unCheckAllMenuItems.onNext() },
+                onClick = { navigator.navToHistory(); unCheckAllMenuItems.onNext() },
             ),
             MenuVMItem(
                 title = "Transactions",
-                onClick = { navToTransactions.onNext(); unCheckAllMenuItems.onNext() },
+                onClick = { navigator.navToTransactions(); unCheckAllMenuItems.onNext() },
             ),
             MenuVMItem(
                 title = "Futures",
-                onClick = { navToFutures.onNext(); unCheckAllMenuItems.onNext() },
+                onClick = { navigator.navToFutures(); unCheckAllMenuItems.onNext() },
             ),
             MenuVMItem(
                 title = "Accessibility Settings",
-                onClick = {
-                    GlobalScope.launch {
-                        showAlertDialog.value!!(
-                            NativeText.Simple(
-                                """
-                                    Accessibility settings apply to all applications, so you must edit them in your phone's settings.
-                                    
-                                    Would you like to go there now?
-                                """.trimIndent()
-                            ),
-                            onYes = navToAccessibility::onNext)
-                    }
-                },
+                onClick = { userTryNavToAccessibilitySettings() },
+            ),
+            MenuVMItem(
+                title = "Old Import",
+                onClick = { navigator.navToImport(); unCheckAllMenuItems.onNext() },
+            ),
+            MenuVMItem(
+                title = "Old Categorize",
+                onClick = { navigator.navToCategorize(); unCheckAllMenuItems.onNext() },
             ),
             *getExtraMenuItemPartials(nav)
         )

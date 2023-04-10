@@ -22,6 +22,6 @@
         app:itemTextColor="@color/bottom_nav_color_selector"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/review_bot_menu" />
+        app:menu="@menu/import_and_categorize_bot_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
