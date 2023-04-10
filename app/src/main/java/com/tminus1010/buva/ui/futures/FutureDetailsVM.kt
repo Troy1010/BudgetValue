@@ -155,7 +155,6 @@ class FutureDetailsVM @Inject constructor(
     // # Events
     val navUp = MutableSharedFlow<Unit>()
     val navToChooseCategories = MutableSharedFlow<Unit>()
-    val navToSetSearchTexts = MutableSharedFlow<Unit>()
 
     // # State
     val optionsTableView =

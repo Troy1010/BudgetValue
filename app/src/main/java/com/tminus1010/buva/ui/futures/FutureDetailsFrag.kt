@@ -29,7 +29,6 @@ class FutureDetailsFrag : Fragment(R.layout.frag_create_future) {
         // # Events
         viewModel.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
         viewModel.navToChooseCategories.observe(viewLifecycleOwner) { nav.navigate(R.id.chooseCategoriesFrag) }
-        viewModel.navToSetSearchTexts.observe(viewLifecycleOwner) { TODO() } // nav.navigate(R.id.setSearchTextsFrag) }
         // # State
         vb.tmTableViewOtherInput.bind(viewModel.optionsTableView) { it.bind(this) }
         vb.tmTableViewCategoryAmounts.bind(viewModel.categoryAmountsTableView) { it.bind(this) }
