@@ -6,6 +6,7 @@ import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.data.FuturesRepo
 import com.tminus1010.buva.domain.Future
 import com.tminus1010.buva.domain.TransactionMatcher
+import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.view_model_item.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -15,19 +16,15 @@ import javax.inject.Inject
 @HiltViewModel
 class FuturesVM @Inject constructor(
     private val futuresRepo: FuturesRepo,
+    private val navigator: Navigator,
 ) : ViewModel() {
     // # User Intents
     fun userDeleteFuture(future: Future) {
         runBlocking { futuresRepo.delete(future) }
     }
 
-    fun userCreateFuture() {
-        runBlocking { navToCreateFuture.onNext() }
-    }
-
     // # Events
     val navToFutureDetails = MutableSharedFlow<Future>()
-    val navToCreateFuture = MutableSharedFlow<Unit>()
 
     // # State
     val futuresTableView =
@@ -70,7 +67,10 @@ class FuturesVM @Inject constructor(
     val buttons =
         flowOf(
             listOfNotNull(
-                ButtonVMItem(title = "Create Future", onClick = { userCreateFuture() }),
+                ButtonVMItem(
+                    title = "Create Future",
+                    onClick = navigator::navToCreateFuture
+                ),
             )
         )
             .shareIn(viewModelScope, SharingStarted.Eagerly, 1)

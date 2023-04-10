@@ -87,10 +87,6 @@ class CategorizeVM @Inject constructor(
         }.use(throbberSharedVM)
     }
 
-    fun userTryNavToCreateFuture2() {
-        navToCreateFuture.onNext()
-    }
-
     fun userAddTransactionToFuture(future: Future) {
         errors.globalScope.launch {
             futuresInteractor.addDescriptionToFutureAndCategorize(
@@ -191,7 +187,6 @@ class CategorizeVM @Inject constructor(
     }
 
     // # Events
-    val navToCreateFuture = MutableSharedFlow<Unit>()
     val navToCategoryDetails = MutableSharedFlow<Category>()
     val navToNewCategory = MutableSharedFlow<Unit>()
     val navToReplayOrFutureDetails = MutableSharedFlow<Future>()
@@ -372,7 +367,7 @@ class CategorizeVM @Inject constructor(
                 else null,
                 ButtonVMItem(
                     title = "Create Future",
-                    onClick = ::userTryNavToCreateFuture2,
+                    onClick = navigator::navToCreateFuture,
                 ),
             )
         }

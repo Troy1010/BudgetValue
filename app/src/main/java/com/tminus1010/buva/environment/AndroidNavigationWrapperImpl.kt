@@ -47,6 +47,10 @@ class AndroidNavigationWrapperImpl @Inject constructor() : AndroidNavigationWrap
         nav.navigate(R.id.historyFrag)
     }
 
+    override fun navToCreateFuture() = launchOnMainThread {
+        nav.navigate(R.id.createFutureFrag)
+    }
+
     override fun navUp() = launchOnMainThread {
         nav.navigateUp()
     }

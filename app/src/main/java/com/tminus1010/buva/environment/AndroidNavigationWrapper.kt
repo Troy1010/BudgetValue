@@ -12,4 +12,5 @@ interface AndroidNavigationWrapper {
     fun navToFutures()
     fun navToTransactions()
     fun navToHistory()
+    fun navToCreateFuture()
 }
