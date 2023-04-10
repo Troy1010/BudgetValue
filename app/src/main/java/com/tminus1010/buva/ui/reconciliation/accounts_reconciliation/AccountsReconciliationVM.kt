@@ -59,13 +59,13 @@ class AccountsReconciliationVM @Inject constructor(
                     listOf(
                         TextVMItem("Default"),
                         TextVMItem(activeReconciliation.defaultAmount.toString()),
-                        AmountPresentationModel(budgetedWithActiveReconciliation.defaultAmount) { budgetedWithActiveReconciliation.isDefaultAmountValid },
+                        AmountPresentationModel(budgetedWithActiveReconciliation.defaultAmount, checkIfValid = { budgetedWithActiveReconciliation.isDefaultAmountValid }),
                     ),
                     *categories.map { category ->
                         listOf(
                             TextVMItem(category.name),
                             CategoryAmountPresentationModel(category, activeReconciliation.categoryAmounts[category], ::userSetCategoryAmount, menuVMItems = MenuVMItems(MenuVMItem("Fill into category", onClick = { userDumpIntoCategory(category) }))),
-                            AmountPresentationModel(budgetedWithActiveReconciliation.categoryAmounts[category]) { budgetedWithActiveReconciliation.isValid(category) },
+                            AmountPresentationModel(budgetedWithActiveReconciliation.categoryAmounts[category], checkIfValid = { budgetedWithActiveReconciliation.isValid(category) }),
                         )
                     }.toTypedArray(),
                 ),
