@@ -31,6 +31,7 @@ import com.tminus1010.buva.databinding.ActivityHostBinding
 import com.tminus1010.buva.environment.ActivityWrapper
 import com.tminus1010.buva.environment.AndroidNavigationWrapperImpl
 import com.tminus1010.buva.environment.HostActivityWrapper
+import com.tminus1010.buva.ui.all_features.ReadyToBudgetPresentationFactory
 import com.tminus1010.buva.ui.all_features.ShowImportResultAlertDialog
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
@@ -39,15 +40,11 @@ import com.tminus1010.tmcommonkotlin.core.tryOrNull
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
-import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.time.LocalDate
-import java.time.Period
 import javax.inject.Inject
 
 
@@ -86,6 +83,9 @@ class HostActivity : AppCompatActivity() {
     @Inject
     lateinit var transactionsRepo: TransactionsRepo
 
+    @Inject
+    lateinit var readyToBudgetPresentationFactory: ReadyToBudgetPresentationFactory
+
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.fragmentcontainerview) as HostFrag }
     private val nav by lazy { findNavController(R.id.fragmentcontainerview) }
     private val showImportResultAlertDialog by lazy { ShowImportResultAlertDialog(ShowAlertDialog(this)) }
@@ -120,60 +120,12 @@ class HostActivity : AppCompatActivity() {
             // Requirement: When config change Then do not forget current menu item.
             viewModel.selectMenuItem(it.itemId)
             //
-            if (it.itemId == R.id.reconciliationHostFrag) {
-                if (runBlocking { !transactionsInteractor.transactionsAggregate.first().areAllSpendsCategorized }) {
-                    GlobalScope.launch {
-                        activityWrapper.showAlertDialog(
-                            body = NativeText.Simple("It's not recommended to reconcile until after categorization is complete.\n\nDo you want to go there now?"),
-                            onYes = { TODO() },
-                            onNo = { goForward() },
-                        )
+            if (it.itemId == R.id.budgetHostFrag) {
+                kotlin.runCatching { runBlocking { readyToBudgetPresentationFactory.checkIfReadyToBudget() } }
+                    .onFailure {
+                        GlobalScope.launch { readyToBudgetPresentationFactory.tryShowAlertDialog(onContinue = { goForward() }) }
+                        return@setOnItemSelectedListener false
                     }
-                    return@setOnItemSelectedListener false
-                } else if (runBlocking { accountsRepo.accountsAggregate.value?.accounts?.ifEmpty { null } == null }) {
-                    GlobalScope.launch {
-                        activityWrapper.showAlertDialog(
-                            body = NativeText.Simple("It's not recommended to reconcile until after an account has been added.\n\nDo you want to go there now?"),
-                            onYes = { TODO() },
-                            onNo = { goForward() },
-                        )
-                    }
-                    return@setOnItemSelectedListener false
-                } else if (
-                    runBlocking {
-                        val x = accountsRepo.accountsUpdateInfos.first().map { it.date }.maxByOrNull { it }
-                        if (x == null)
-                            true
-                        else
-                            Period.between(x, LocalDate.now()).days > 7
-                    }
-                ) {
-                    GlobalScope.launch {
-                        activityWrapper.showAlertDialog(
-                            body = NativeText.Simple("It's not recommended to reconcile if accounts have not been updated recently.\n\nDo you want to go there now?"),
-                            onYes = { TODO() },
-                            onNo = { goForward() },
-                        )
-                    }
-                    return@setOnItemSelectedListener false
-                } else if (
-                    runBlocking {
-                        val x = transactionsRepo.mostRecentImportItemDate.first()
-                        if (x == null)
-                            true
-                        else
-                            Period.between(x, LocalDate.now()).days > 7
-                    }
-                ) {
-                    GlobalScope.launch {
-                        activityWrapper.showAlertDialog(
-                            body = NativeText.Simple("It's not recommended to reconcile if transactions have not been imported recently.\n\nDo you want to go there now?"),
-                            onYes = { TODO() },
-                            onNo = { goForward() },
-                        )
-                    }
-                    return@setOnItemSelectedListener false
-                }
             }
             goForward()
         }
