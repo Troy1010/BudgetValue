@@ -11,7 +11,7 @@ sealed class TransactionMatcher : Parcelable {
     @Parcelize
     data class SearchText(val searchText: String) : TransactionMatcher() {
         override fun isMatch(transaction: Transaction): Boolean {
-            return searchText.uppercase() in transaction.description.uppercase()
+            return searchText.uppercase().replace(Regex("""\s+"""), " ") in transaction.description.uppercase().replace(Regex("""\s+"""), " ")
         }
 
         companion object {
