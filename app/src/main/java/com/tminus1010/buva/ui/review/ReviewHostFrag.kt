@@ -17,10 +17,10 @@ class ReviewHostFrag : Fragment(R.layout.frag_review_host) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = FragReviewHostBinding.bind(view)
-        vb.fragmentcontainerview.bind(viewModel.frag) {
+        vb.fragmentcontainerview.bind(viewModel.frag) { fragFactory ->
             this@ReviewHostFrag.childFragmentManager
                 .beginTransaction()
-                .replace(id, it.getDeclaredConstructor().newInstance())
+                .replace(id, fragFactory())
                 .commitNowAllowingStateLoss()
         }
         vb.bottomnavigationview.setOnItemSelectedListener { viewModel.userSelectMenuItem(it.itemId); true }

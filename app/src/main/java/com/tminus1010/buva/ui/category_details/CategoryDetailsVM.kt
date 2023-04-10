@@ -2,12 +2,12 @@ package com.tminus1010.buva.ui.category_details
 
 import androidx.lifecycle.*
 import com.tminus1010.buva.all_layers.KEY1
-import com.tminus1010.buva.all_layers.extensions.easyEmit
 import com.tminus1010.buva.all_layers.extensions.replaceFirst
 import com.tminus1010.buva.app.DeleteCategoryFromActiveDomain
 import com.tminus1010.buva.app.ReplaceCategoryGlobally
 import com.tminus1010.buva.data.CategoriesRepo
 import com.tminus1010.buva.domain.*
+import com.tminus1010.buva.environment.ActivityWrapper
 import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.TransactionMatcherPresentationFactory
@@ -15,9 +15,14 @@ import com.tminus1010.buva.ui.all_features.view_model_item.*
 import com.tminus1010.buva.ui.errors.Errors
 import com.tminus1010.tmcommonkotlin.androidx.ShowToast
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
+import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
@@ -34,6 +39,7 @@ class CategoryDetailsVM @Inject constructor(
     private val transactionMatcherPresentationFactory: TransactionMatcherPresentationFactory,
     private val showToast: ShowToast,
     private val navigator: Navigator,
+    private val activityWrapper: ActivityWrapper,
 ) : ViewModel() {
     // # User Intents
     fun userSetCategoryName(s: String) {
@@ -48,11 +54,19 @@ class CategoryDetailsVM @Inject constructor(
         category.value = category.value!!.withDisplayType(categoryDisplayType)
     }
 
-    fun userDeleteCategory() {
-        errors.globalScope.launch {
-            deleteCategoryFromActiveDomain(category.value!!)
-        }.use(throbberSharedVM)
-        navigator.navUp()
+    fun userTryDeleteCategory() {
+        GlobalScope.launch {
+            activityWrapper.showAlertDialog(
+                body = NativeText.Simple("Are you sure you want to delete these categories?\n\t${category.value!!.name}"),
+                onYes = {
+                    errors.globalScope.launch {
+                        deleteCategoryFromActiveDomain(category.value!!)
+                    }.use(throbberSharedVM)
+                    navigator.navUp()
+                },
+                onNo = { }
+            )
+        }
     }
 
     fun userSubmit() {
@@ -108,9 +122,6 @@ class CategoryDetailsVM @Inject constructor(
     private val originalCategory = savedStateHandle.get<Category>(KEY1)
     private val category = savedStateHandle.getLiveData<Category>(KEY1)
 
-    // # Events
-    val showDeleteConfirmationPopup = MutableSharedFlow<String>()
-
     // # State
     val title = flowOf("Category").shareIn(viewModelScope, SharingStarted.Eagerly, 1)
     val optionsTableView =
@@ -159,7 +170,7 @@ class CategoryDetailsVM @Inject constructor(
             listOfNotNull(
                 ButtonVMItem(
                     title = "Delete",
-                    onClick = { showDeleteConfirmationPopup.easyEmit(category.value!!.name) }
+                    onClick = { userTryDeleteCategory() }
                 ),
                 ButtonVMItem(
                     title = "Done",

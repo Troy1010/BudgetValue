@@ -10,6 +10,7 @@ import com.tminus1010.buva.ui.review.review_spend_bar_chart.ReviewSpendBarChartF
 import com.tminus1010.buva.ui.review_spend_bar_chart.ReviewTotalLineChartFrag
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,17 +20,18 @@ class ReviewHostVM @Inject constructor(
     fun userSelectMenuItem(id: Int) {
         when (id) {
             R.id.spendPieChart ->
-                frag.onNext(ReviewPieChartFrag::class.java)
+                _frag.onNext(ReviewPieChartFrag::class.java)
             R.id.history ->
-                frag.onNext(HistoryFrag::class.java)
+                _frag.onNext(HistoryFrag::class.java)
             R.id.spendBarChart ->
-                frag.onNext(ReviewSpendBarChartFrag::class.java)
+                _frag.onNext(ReviewSpendBarChartFrag::class.java)
             R.id.totalLineChart ->
-                frag.onNext(ReviewTotalLineChartFrag::class.java)
+                _frag.onNext(ReviewTotalLineChartFrag::class.java)
             else -> error("Unknown id")
         }
     }
 
     // # State
-    val frag = MutableStateFlow<Class<out Fragment>>(HistoryFrag::class.java)
+    private val _frag = MutableStateFlow<Class<out Fragment>>(HistoryFrag::class.java)
+    val frag = _frag.map { { it.newInstance() } }
 }

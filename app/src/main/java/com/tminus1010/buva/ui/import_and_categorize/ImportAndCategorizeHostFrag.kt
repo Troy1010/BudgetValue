@@ -17,10 +17,10 @@ class ImportAndCategorizeHostFrag : Fragment(R.layout.frag_import_and_categorize
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = FragImportAndCategorizeHostBinding.bind(view)
-        vb.fragmentcontainerview.bind(viewModel.frag) {
+        vb.fragmentcontainerview.bind(viewModel.frag) { fragFactory ->
             this@ImportAndCategorizeHostFrag.childFragmentManager
                 .beginTransaction()
-                .replace(id, it.getDeclaredConstructor().newInstance())
+                .replace(id, fragFactory())
                 .commitNowAllowingStateLoss()
         }
         vb.bottomnavigationview.setOnItemSelectedListener { viewModel.userSelectMenuItem(it.itemId); true }

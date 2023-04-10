@@ -8,6 +8,7 @@ import com.tminus1010.buva.ui.import_and_categorize.categorize.CategorizeFrag
 import com.tminus1010.buva.ui.import_and_categorize.importZ.ImportFrag
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,13 +18,14 @@ class ImportAndCategorizeHostVM @Inject constructor(
     fun userSelectMenuItem(id: Int) {
         when (id) {
             R.id.importFrag ->
-                frag.onNext(ImportFrag::class.java)
+                _frag.onNext(ImportFrag::class.java)
             R.id.categorizeFrag ->
-                frag.onNext(CategorizeFrag::class.java)
+                _frag.onNext(CategorizeFrag::class.java)
             else -> error("Unknown id")
         }
     }
 
     // # State
-    val frag = MutableStateFlow<Class<out Fragment>>(ImportFrag::class.java)
+    private val _frag = MutableStateFlow<Class<out Fragment>>(ImportFrag::class.java)
+    val frag = _frag.map { { it.newInstance() } }
 }
