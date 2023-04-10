@@ -14,15 +14,12 @@ import com.tminus1010.buva.all_layers.android.viewBinding
 import com.tminus1010.buva.databinding.FragCategorizeBinding
 import com.tminus1010.buva.ui.category_details.CategoryDetailsFrag
 import com.tminus1010.buva.ui.choose_categories.ChooseCategoriesSharedVM
-import com.tminus1010.buva.ui.errors.Errors
 import com.tminus1010.buva.ui.futures.CreateFutureFrag
 import com.tminus1010.buva.ui.futures.FutureDetailsFrag
 import com.tminus1010.buva.ui.receipt_categorization.ReceiptCategorizationHostFrag
-import com.tminus1010.buva.ui.review_pie_chart.NoMostRecentSpendException
 import com.tminus1010.tmcommonkotlin.androidx.GenViewHolder
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
-import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

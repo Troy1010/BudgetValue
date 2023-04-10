@@ -27,7 +27,7 @@
         tools:layout="@layout/frag_plan" />
     <fragment
         android:id="@+id/historyFrag"
-        android:name="com.tminus1010.buva.ui.history.HistoryFrag"
+        android:name="com.tminus1010.buva.ui.review.history.HistoryFrag"
         android:label="History"
         tools:layout="@layout/frag_history" />
     <fragment

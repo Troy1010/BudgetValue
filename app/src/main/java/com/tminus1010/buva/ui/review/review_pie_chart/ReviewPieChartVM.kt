@@ -1,4 +1,4 @@
-package com.tminus1010.buva.ui.review_pie_chart
+package com.tminus1010.buva.ui.review.review_pie_chart
 
 import android.content.Context
 import android.view.View

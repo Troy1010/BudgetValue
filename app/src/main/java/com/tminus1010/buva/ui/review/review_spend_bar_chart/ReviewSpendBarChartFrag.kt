@@ -1,4 +1,4 @@
-package com.tminus1010.buva.ui.review_spend_bar_chart
+package com.tminus1010.buva.ui.review.review_spend_bar_chart
 
 import android.os.Bundle
 import android.view.View

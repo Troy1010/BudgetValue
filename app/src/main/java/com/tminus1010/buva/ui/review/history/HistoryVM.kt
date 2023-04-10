@@ -1,4 +1,4 @@
-package com.tminus1010.buva.ui.history
+package com.tminus1010.buva.ui.review.history
 
 import android.view.View
 import androidx.lifecycle.ViewModel
