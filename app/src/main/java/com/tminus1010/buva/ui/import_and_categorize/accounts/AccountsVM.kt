@@ -1,5 +1,6 @@
 package com.tminus1010.buva.ui.import_and_categorize.importZ
 
+import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.buva.data.AccountsRepo
@@ -26,6 +27,9 @@ class AccountsVM @Inject constructor(
     }
 
     // # State
+    val textVisibility =
+        accountsRepo.accountsAggregate
+            .map { if (it.accounts.isNotEmpty()) View.GONE else View.VISIBLE }
     val accountVMItemList =
         accountsRepo.accountsAggregate
             .map { AccountsPresentationModel(it, accountsRepo) }

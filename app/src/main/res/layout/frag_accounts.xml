@@ -5,6 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/tvNoAccounts"
+        style="@style/AppTheme.StandardTextView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="No accounts have been added."
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/buttonsview"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_accounts"
         android:layout_width="match_parent"
