@@ -55,19 +55,33 @@ class ReconciliationHostVM @Inject constructor(
     }
 
     // # State
-    val currentReconciliationToDo = reconciliationsToDoInteractor.currentReconciliationToDo
-    val title =
-        currentReconciliationToDo.map {
-            NativeText.Simple(
+    val currentReconciliationToDo =
+        reconciliationsToDoInteractor.currentReconciliationToDo
+            .map {
                 when (it) {
-                    is ReconciliationToDo.Accounts -> "Accounts Reconciliation"
-                    is ReconciliationToDo.PlanZ -> "Plan Reconciliation"
+                    is ReconciliationToDo.PlanZ -> {
+                        { PlanReconciliationSubFrag.create(it) }
+                    }
+                    is ReconciliationToDo.Accounts,
                     is ReconciliationToDo.Anytime,
-                    null,
-                    -> "Anytime Reconciliation"
+                    -> {
+                        { AccountsReconciliationSubFrag() }
+                    }
                 }
-            )
-        }
+            }
+    val title =
+        reconciliationsToDoInteractor.currentReconciliationToDo
+            .map {
+                NativeText.Simple(
+                    when (it) {
+                        is ReconciliationToDo.Accounts -> "Accounts Reconciliation"
+                        is ReconciliationToDo.PlanZ -> "Plan Reconciliation"
+                        is ReconciliationToDo.Anytime,
+                        null,
+                        -> "Anytime Reconciliation"
+                    }
+                )
+            }
     val subTitle = reconciliationsToDoInteractor.reconciliationsToDo.map { NativeText.Plural(R.plurals.reconciliations_required, it.size, it.size) }
     val buttons =
         reconciliationsToDoInteractor.currentReconciliationToDo.map {
