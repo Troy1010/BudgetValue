@@ -6,26 +6,26 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.KEY1
-import com.tminus1010.buva.databinding.SubfragPlanReconciliationBinding
+import com.tminus1010.buva.databinding.FragPlanReconciliationBinding
 import com.tminus1010.buva.domain.ReconciliationToDo
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class PlanReconciliationSubFrag : Fragment(R.layout.subfrag_plan_reconciliation) {
-    lateinit var vb: SubfragPlanReconciliationBinding
+class PlanReconciliationFrag : Fragment(R.layout.frag_plan_reconciliation) {
+    lateinit var vb: FragPlanReconciliationBinding
     val viewModel by viewModels<PlanReconciliationVM>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        vb = SubfragPlanReconciliationBinding.bind(view)
+        vb = FragPlanReconciliationBinding.bind(view)
         // # State
         vb.tmTableView.bind(viewModel.reconciliationTableView) { it.bind(this) }
         vb.tvSubtitle.bind(viewModel.subTitle) { text = it }
     }
 
     companion object {
-        fun create(reconciliationToDo: ReconciliationToDo.PlanZ): PlanReconciliationSubFrag {
-            return PlanReconciliationSubFrag().apply {
+        fun create(reconciliationToDo: ReconciliationToDo.PlanZ): PlanReconciliationFrag {
+            return PlanReconciliationFrag().apply {
                 arguments = Bundle().apply {
                     putParcelable(KEY1, reconciliationToDo)
                 }

@@ -10,7 +10,7 @@ import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AccountsReconciliationSubFrag : Fragment(R.layout.item_tm_table_view) {
+class AccountsReconciliationFrag : Fragment(R.layout.item_tm_table_view) {
     private lateinit var vb: ItemTmTableViewBinding
     private val viewModel by viewModels<AccountsReconciliationVM>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
