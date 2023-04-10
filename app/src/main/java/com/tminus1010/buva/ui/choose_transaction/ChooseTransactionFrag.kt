@@ -7,8 +7,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.buva.R
+import com.tminus1010.buva.all_layers.KEY2
 import com.tminus1010.buva.all_layers.android.viewBinding
 import com.tminus1010.buva.databinding.FragChooseTransactionBinding
+import com.tminus1010.buva.domain.Transaction
+import com.tminus1010.buva.environment.ParcelableTransactionLambdaWrapper
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.easyVisibility
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,8 +32,13 @@ class ChooseTransactionFrag : Fragment(R.layout.frag_choose_transaction) {
     }
 
     companion object {
-        fun navTo(nav: NavController) {
-            nav.navigate(R.id.chooseTransactionFrag)
+        fun navTo(nav: NavController, callback: (Transaction?) -> Unit) {
+            nav.navigate(
+                R.id.chooseTransactionFrag,
+                Bundle().apply {
+                    putParcelable(KEY2, ParcelableTransactionLambdaWrapper(callback))
+                }
+            )
         }
     }
 }

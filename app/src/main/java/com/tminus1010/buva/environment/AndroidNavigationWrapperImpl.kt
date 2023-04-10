@@ -1,29 +1,21 @@
 package com.tminus1010.buva.environment
 
 import android.annotation.SuppressLint
-import android.os.Bundle
 import androidx.navigation.NavController
 import com.tminus1010.buva.R
-import com.tminus1010.buva.all_layers.KEY2
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.Transaction
 import com.tminus1010.buva.ui.category_details.CategoryDetailsFrag
+import com.tminus1010.buva.ui.choose_transaction.ChooseTransactionFrag
 import com.tminus1010.buva.ui.set_string.SetStringFrag
 import com.tminus1010.tmcommonkotlin.androidx.launchOnMainThread
 import dagger.Reusable
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 @Reusable
 class AndroidNavigationWrapperImpl @Inject constructor() : AndroidNavigationWrapper {
-    private val nav get() = Companion.nav ?: error("This class expects Companion.nav to be assigned")
     override fun navToCreateCategory() = launchOnMainThread {
         CategoryDetailsFrag.navTo(nav, null)
     }
@@ -66,21 +58,13 @@ class AndroidNavigationWrapperImpl @Inject constructor() : AndroidNavigationWrap
         }
     }
 
-    override suspend fun navToChooseTransaction(): Transaction? {
-        return channelFlow { // TODO: This could be simplified.
-            launchOnMainThread {
-                nav.navigate(
-                    R.id.chooseTransactionFrag,
-                    Bundle().apply {
-                        putParcelable(KEY2, ParcelableTransactionLambdaWrapper {
-                            GlobalScope.launch { send(it) }
-                        })
-                    }
-                )
-            }
-            awaitClose()
-        }.take(1).first()
+    override suspend fun navToChooseTransaction(): Transaction? = suspendCoroutine { downstream ->
+        launchOnMainThread {
+            ChooseTransactionFrag.navTo(nav, callback = { downstream.resume(it) })
+        }
     }
+
+    private val nav get() = Companion.nav ?: error("This class expects Companion.nav to be assigned")
 
     companion object {
         // This pattern can cause memory leaks. However, this project only has 1 Activity, so a memory leak is unlikely

@@ -16,6 +16,7 @@ class ReadyToBudgetPresentationFactory @Inject constructor(
     private val accountsRepo: AccountsRepo,
     private val transactionsRepo: TransactionsRepo,
     private val activityWrapper: ActivityWrapper,
+    private val navigator: Navigator,
 ) {
     suspend fun tryShowAlertDialog(onContinue: () -> Unit) {
         runCatching { checkIfReadyToBudget() }
