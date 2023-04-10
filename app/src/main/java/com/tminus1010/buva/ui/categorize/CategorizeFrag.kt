@@ -36,18 +36,9 @@ class CategorizeFrag : Fragment(R.layout.frag_categorize) {
     @Inject
     lateinit var chooseCategoriesSharedVM: ChooseCategoriesSharedVM
 
-    @Inject
-    lateinit var errors: Errors
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Events
-        errors.observe(viewLifecycleOwner) {
-            when (it) {
-                is NoMostRecentSpendException -> easyToast("No transaction available")
-                else -> throw it
-            }
-        }
         viewModel.navToCreateFuture.observe(viewLifecycleOwner) { CreateFutureFrag.navTo(nav) }
         viewModel.navToNewCategory.observe(viewLifecycleOwner) { CategoryDetailsFrag.navTo(nav, null) }
         viewModel.navToCategoryDetails.observe(viewLifecycleOwner) { CategoryDetailsFrag.navTo(nav, it) }

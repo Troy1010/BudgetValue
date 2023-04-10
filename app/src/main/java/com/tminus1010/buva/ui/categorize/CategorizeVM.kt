@@ -23,6 +23,7 @@ import com.tminus1010.buva.ui.errors.Errors
 import com.tminus1010.buva.ui.review_pie_chart.NoMostRecentSpendException
 import com.tminus1010.tmcommonkotlin.androidx.ShowToast
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.divertErrors
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -197,6 +198,15 @@ class CategorizeVM @Inject constructor(
     val navToReceiptCategorization = MutableSharedFlow<Transaction>()
     val navToReceiptCategorizationImageToText = MutableSharedFlow<Transaction>()
 
+    init {
+        errors.observe(viewModelScope) {
+            when (it) {
+                is NoMostRecentSpendException -> showToast("No transaction available")
+                else -> throw it
+            }
+        }
+    }
+
     // # State
     val isUndoAvailable = undoService.isUndoAvailable
     val isRedoAvailable = undoService.isRedoAvailable
@@ -278,10 +288,6 @@ class CategorizeVM @Inject constructor(
                                 MenuVMItem(
                                     title = "Use With Edit",
                                     onClick = { userUseDescriptionWithEditOnCategory(category) },
-                                ),
-                                MenuVMItem(
-                                    title = "Delete",
-                                    onClick = { userDeleteCategory(category) },
                                 ),
                             )
                         },
