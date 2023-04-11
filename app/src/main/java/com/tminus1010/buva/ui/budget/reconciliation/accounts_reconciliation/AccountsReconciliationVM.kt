@@ -21,7 +21,6 @@ class AccountsReconciliationVM @Inject constructor(
     private val activeAccountsReconciliationInteractor: ActiveAccountsReconciliationInteractor,
     private val activeReconciliationRepo: ActiveReconciliationRepo,
     private val userCategories: UserCategories,
-    private val budgetedInteractor: BudgetedInteractor,
 ) : ViewModel() {
     // # User Intents
     fun userSetCategoryAmount(category: Category, s: String) {
@@ -42,7 +41,7 @@ class AccountsReconciliationVM @Inject constructor(
 
     // # State
     val reconciliationTableView =
-        combine(userCategories.flow, activeAccountsReconciliationInteractor.activeReconciliationCAsAndTotal, budgetedInteractor.budgeted)
+        combine(userCategories.flow, activeAccountsReconciliationInteractor.activeReconciliationCAsAndTotal, activeAccountsReconciliationInteractor.budgeted)
         { categories, activeReconciliation, budgeted ->
             TableViewVMItem(
                 recipeGrid = listOf(

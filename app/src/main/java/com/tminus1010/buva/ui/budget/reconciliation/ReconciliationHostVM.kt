@@ -52,7 +52,7 @@ class ReconciliationHostVM @Inject constructor(
     fun userMatchUp() {
         when (val x = reconciliationsToDoInteractor.currentReconciliationToDo.value) {
             is ReconciliationToDo.PlanZ -> GlobalScope.launch { activePlanReconciliationInteractor.matchUp() }.use(throbberSharedVM)
-            else -> error("Unhandled type:$x")
+            else -> GlobalScope.launch { activeAccountsReconciliationInteractor.matchUp() }.use(throbberSharedVM)
         }
     }
 
@@ -92,12 +92,10 @@ class ReconciliationHostVM @Inject constructor(
                     title = "Reset",
                     onClick = ::userResetActiveReconciliation,
                 ),
-                if (it is ReconciliationToDo.PlanZ)
-                    ButtonVMItem(
-                        title = "Match Up",
-                        onClick = ::userMatchUp,
-                    )
-                else null,
+                ButtonVMItem(
+                    title = "Match Up",
+                    onClick = ::userMatchUp,
+                ),
                 ButtonVMItem(
                     title = "Save",
                     onClick = ::userSave

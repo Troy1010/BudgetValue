@@ -1,5 +1,6 @@
 package com.tminus1010.buva.app
 
+import com.tminus1010.buva.all_layers.extensions.isNegative
 import com.tminus1010.buva.data.AccountsRepo
 import com.tminus1010.buva.data.ActivePlanRepo
 import com.tminus1010.buva.data.ActiveReconciliationRepo
@@ -22,6 +23,7 @@ class ActiveAccountsReconciliationInteractor @Inject constructor(
     private val activePlanReconciliationInteractor: ActivePlanReconciliationInteractor,
     private val accountsRepo: AccountsRepo,
     private val transactionsInteractor: TransactionsInteractor,
+    private val historyInteractor: HistoryInteractor,
 ) {
     suspend fun fillIntoCategory(category: Category) {
         val activeReconciliationCAs = activeReconciliationRepo.activeReconciliationCAs.first()
@@ -51,6 +53,13 @@ class ActiveAccountsReconciliationInteractor @Inject constructor(
                     )
                 )
         }
+    }
+
+    suspend fun matchUp() {
+        activeReconciliationRepo.pushCategoryAmounts(
+            CategoryAmounts.zip(activeReconciliationRepo.activeReconciliationCAs.first(), budgeted.first().categoryAmounts)
+            { a, b -> if (b.isNegative) a - b else a }
+        )
     }
 
     suspend fun reset() {
@@ -95,6 +104,16 @@ class ActiveAccountsReconciliationInteractor @Inject constructor(
             }
         }
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
+
+    val budgeted =
+        combine(activeReconciliationCAsAndTotal, historyInteractor.entireHistory)
+        { activeReconciliationCAsAndTotal, entireHistory ->
+            CategoryAmountsAndTotalWithValidation(
+                categoryAmountsAndTotal = CategoryAmountsAndTotal.addTogether(entireHistory.addedTogether, activeReconciliationCAsAndTotal),
+                caValidation = { (it ?: BigDecimal.ZERO) >= BigDecimal.ZERO },
+                defaultAmountValidation = { true },
+            )
+        }
 
     init {
         // Requirement: Reset ActiveReconciliation whenever something it derives from changes.
