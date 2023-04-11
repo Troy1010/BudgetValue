@@ -10,9 +10,9 @@ import kotlinx.coroutines.flow.sample
 import javax.inject.Inject
 
 class HistoryInteractor @Inject constructor(
-    transactionsInteractor: TransactionsInteractor,
-    reconciliationsRepo: ReconciliationsRepo,
-    budgetedVsAccountsAutomaticReconciliationInteractor: BudgetedVsAccountsAutomaticReconciliationInteractor,
+    private val transactionsInteractor: TransactionsInteractor,
+    private val reconciliationsRepo: ReconciliationsRepo,
+    private val budgetedVsAccountsAutomaticReconciliationInteractor: BudgetedVsAccountsAutomaticReconciliationInteractor,
 ) {
     val entireHistory =
         combine(transactionsInteractor.transactionBlocks, reconciliationsRepo.reconciliations, budgetedVsAccountsAutomaticReconciliationInteractor.budgetedVsAccountsAutomaticReconciliation, ::createTuple)

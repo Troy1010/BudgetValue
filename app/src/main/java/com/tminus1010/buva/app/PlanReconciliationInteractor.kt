@@ -11,7 +11,7 @@ import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton // TODO: Only using Singleton to avoid excessive leaks while using GlobalScope without any disposal strategy.
+@Singleton // TODO: Using Singleton to avoid excessive leaks while using GlobalScope without any disposal strategy.
 class PlanReconciliationInteractor @Inject constructor(
     private val activeReconciliationRepo: ActiveReconciliationRepo,
     private val reconciliationsToDoInteractor: ReconciliationsToDoInteractor,
@@ -71,7 +71,9 @@ class PlanReconciliationInteractor @Inject constructor(
             }
                 .addTogether()
         }
-            .shareIn(GlobalScope, SharingStarted.Eagerly, 1) // TODO: GlobalScope without any disposal strategy is not ideal.
+            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
+
+    //
 
     // TODO: This is a quasi-redefinition of ActiveReconciliationInteractor.categoryAmountsAndTotal
     val activeReconciliationCAsAndTotal =
@@ -81,14 +83,13 @@ class PlanReconciliationInteractor @Inject constructor(
                 total = BigDecimal.ZERO,
             )
         }
-            // TODO: GlobalScope without any disposal strategy is not ideal.
-            .shareIn(GlobalScope, SharingStarted.Eagerly, 1) // TODO: GlobalScope without any disposal strategy is not ideal.
+            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 
     val budgeted =
         combine(activeReconciliationCAsAndTotal, summedRelevantHistory, activePlanInteractor.activePlan)
         { activeReconciliation, summedRelevantHistory, activePlan ->
             CategoryAmountsAndTotalWithValidation(
-                CategoryAmountsAndTotal.addTogether(
+                categoryAmountsAndTotal = CategoryAmountsAndTotal.addTogether(
                     activeReconciliation,
                     summedRelevantHistory,
                     activePlan,
@@ -97,7 +98,6 @@ class PlanReconciliationInteractor @Inject constructor(
                 defaultAmountValidation = { true },
             )
         }
-            // TODO: GlobalScope without any disposal strategy is not ideal.
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 
     val targetDefaultAmount =
@@ -105,5 +105,5 @@ class PlanReconciliationInteractor @Inject constructor(
         { budgeted, activeReconciliationCAsAndTotal ->
             activeReconciliationCAsAndTotal.defaultAmount - budgeted.defaultAmount
         }
-            .shareIn(GlobalScope, SharingStarted.Eagerly, 1) // TODO: GlobalScope without any disposal strategy is not ideal.
+            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 }

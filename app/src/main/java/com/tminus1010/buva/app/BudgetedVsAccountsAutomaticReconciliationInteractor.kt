@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
 class BudgetedVsAccountsAutomaticReconciliationInteractor @Inject constructor(
-    private val accountsRepo: AccountsRepo,
     private val transactionsInteractor: TransactionsInteractor,
     private val reconciliationsRepo: ReconciliationsRepo,
+    private val accountsRepo: AccountsRepo,
 ) {
     val budgetedVsAccountsAutomaticReconciliation =
         combine(transactionsInteractor.transactionBlocks, reconciliationsRepo.reconciliations, accountsRepo.accountsAggregate)

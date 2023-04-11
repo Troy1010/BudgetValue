@@ -43,7 +43,7 @@ class ReviewPieChartVM @Inject constructor(
     isPeriodFullyImported: IsPeriodFullyImported,
 ) : ViewModel() {
     // # UserIntents
-    val userSelectedDuration = MutableStateFlow(SelectableDuration.BY_MONTH)
+    val userSelectedDuration = MutableStateFlow(SelectableDuration.BY_6_MONTHS)
     val userUsePeriodType = MutableStateFlow(UsePeriodType.USE_DAY_COUNT_PERIODS)
     val userPrevious = MutableSharedFlow<Unit>()
     val userNext = MutableSharedFlow<Unit>()
