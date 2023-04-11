@@ -17,12 +17,15 @@ class BudgetHostFrag : Fragment(R.layout.frag_budget_host) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = FragBudgetHostBinding.bind(view)
+        // # State
         vb.fragmentcontainerview.bind(viewModel.fragFactory) { fragFactory ->
             this@BudgetHostFrag.childFragmentManager
                 .beginTransaction()
                 .replace(id, fragFactory())
                 .commitNowAllowingStateLoss()
         }
+        vb.bottomnavigationview.bind(viewModel.selectedItemId) { selectedItemId = it }
+        // # User Intent
         vb.bottomnavigationview.setOnItemSelectedListener { viewModel.userSelectMenuItem(it.itemId); true }
     }
 }

@@ -21,6 +21,11 @@
         android:label="Reconcile"
         tools:layout="@layout/frag_reconcile" />
     <fragment
+        android:id="@+id/budgetFrag"
+        android:name="com.tminus1010.buva.ui.budget.budget.BudgetFrag"
+        android:label="Budget"
+        tools:layout="@layout/frag_budget" />
+    <fragment
         android:id="@+id/planFrag"
         android:name="com.tminus1010.buva.ui.budget.plan.PlanFrag"
         android:label="Plan"
