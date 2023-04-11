@@ -1,7 +1,7 @@
 package com.tminus1010.buva.app
 
 import com.tminus1010.buva.data.ReconciliationsRepo
-import com.tminus1010.buva.domain.CategoryAmountsAndTotals
+import com.tminus1010.buva.domain.CategoryAmountsAndTotalsAggregate
 import com.tminus1010.tmcommonkotlin.tuple.createTuple
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -19,7 +19,7 @@ class HistoryInteractor @Inject constructor(
             .sample(500)
             .distinctUntilChanged()
             .map { (transactionBlocks, reconciliations, budgetedVsAccountsAutomaticReconciliation) ->
-                CategoryAmountsAndTotals(
+                CategoryAmountsAndTotalsAggregate(
                     categoryAmountsAndTotals = transactionBlocks
                         .plus(reconciliations)
                         .plus(budgetedVsAccountsAutomaticReconciliation)
