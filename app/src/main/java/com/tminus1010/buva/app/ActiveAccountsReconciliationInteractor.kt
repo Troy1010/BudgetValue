@@ -1,6 +1,5 @@
 package com.tminus1010.buva.app
 
-import com.tminus1010.buva.all_layers.extensions.isNegative
 import com.tminus1010.buva.data.AccountsRepo
 import com.tminus1010.buva.data.ActivePlanRepo
 import com.tminus1010.buva.data.ActiveReconciliationRepo
@@ -56,21 +55,35 @@ class ActiveAccountsReconciliationInteractor @Inject constructor(
     }
 
     suspend fun resolve() {
+        val activeReconciliationCAs = activeReconciliationRepo.activeReconciliationCAs.first()
+        val budgetedCAs = budgeted.first().categoryAmounts
+        val activePlanCAs = activePlanRepo.activePlan.first().categoryAmounts
+        val categories = (activeReconciliationCAs.keys + budgetedCAs.keys + activePlanCAs.keys)
         activeReconciliationRepo.pushCategoryAmounts(
-            CategoryAmounts.zip(activeReconciliationRepo.activeReconciliationCAs.first(), budgeted.first().categoryAmounts)
-            { a, b -> if (b.isNegative) a - b else a }
+            categories
+                .associateWith {
+                    when (it.planResolutionStrategy) {
+                        is ResolutionStrategy.Basic -> it.planResolutionStrategy.calc(it, activeReconciliationCAs, budgetedCAs)
+                        is ResolutionStrategy.MatchPlan -> it.planResolutionStrategy.calc(it, activeReconciliationCAs, budgetedCAs, activePlanCAs)
+                    }
+                }
+                .toCategoryAmounts()
         )
     }
 
     suspend fun reset() {
-        when (reconciliationsToDoInteractor.currentReconciliationToDo.first()) {
-            is ReconciliationToDo.PlanZ ->
-                activePlanReconciliationInteractor.reset()
-//                    activePlanRepo.activePlan.first().categoryAmounts
-//                    CategoryAmounts()
-            else ->
-                activeReconciliationRepo.pushCategoryAmounts(CategoryAmounts())
-        }
+        val activeReconciliationCAs = activeReconciliationRepo.activeReconciliationCAs.first()
+        val budgetedCAs = budgeted.first().categoryAmounts
+        val categories = (activeReconciliationCAs.keys + budgetedCAs.keys)
+        activeReconciliationRepo.pushCategoryAmounts(
+            categories
+                .associateWith {
+                    when (it.resetStrategy) {
+                        is ResetStrategy.Basic -> it.resetStrategy.calc(it, activeReconciliationCAs, budgetedCAs)
+                    }
+                }
+                .toCategoryAmounts()
+        )
     }
 
     val activeReconciliationCAsAndTotal =

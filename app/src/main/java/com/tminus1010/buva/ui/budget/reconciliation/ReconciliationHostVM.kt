@@ -44,15 +44,21 @@ class ReconciliationHostVM @Inject constructor(
             .use(throbberSharedVM)
     }
 
-    fun userResetActiveReconciliation() {
-        GlobalScope.launch { activeAccountsReconciliationInteractor.reset() }
-            .use(throbberSharedVM)
+    fun userReset() {
+        when (reconciliationsToDoInteractor.currentReconciliationToDo.value) {
+            is ReconciliationToDo.PlanZ ->
+                GlobalScope.launch { activePlanReconciliationInteractor.reset() }.use(throbberSharedVM)
+            else ->
+                GlobalScope.launch { activeAccountsReconciliationInteractor.reset() }.use(throbberSharedVM)
+        }
     }
 
     fun userResolve() {
-        when (val x = reconciliationsToDoInteractor.currentReconciliationToDo.value) {
-            is ReconciliationToDo.PlanZ -> GlobalScope.launch { activePlanReconciliationInteractor.resolve() }.use(throbberSharedVM)
-            else -> GlobalScope.launch { activeAccountsReconciliationInteractor.resolve() }.use(throbberSharedVM)
+        when (reconciliationsToDoInteractor.currentReconciliationToDo.value) {
+            is ReconciliationToDo.PlanZ ->
+                GlobalScope.launch { activePlanReconciliationInteractor.resolve() }.use(throbberSharedVM)
+            else ->
+                GlobalScope.launch { activeAccountsReconciliationInteractor.resolve() }.use(throbberSharedVM)
         }
     }
 
@@ -90,7 +96,7 @@ class ReconciliationHostVM @Inject constructor(
             listOfNotNull(
                 ButtonVMItem(
                     title = "Reset",
-                    onClick = ::userResetActiveReconciliation,
+                    onClick = ::userReset,
                 ),
                 ButtonVMItem(
                     title = "Resolve",
