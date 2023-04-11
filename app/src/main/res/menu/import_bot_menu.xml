@@ -4,9 +4,9 @@
         android:id="@+id/importTransactionsFrag"
         android:title="Transactions" />
     <item
-        android:id="@+id/accountsFrag"
-        android:title="Accounts" />
-    <item
         android:id="@+id/categorizeNestedGraph"
         android:title="Categorize" />
+    <item
+        android:id="@+id/accountsFrag"
+        android:title="Accounts" />
 </menu>
