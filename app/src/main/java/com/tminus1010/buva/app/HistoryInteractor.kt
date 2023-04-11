@@ -12,10 +12,10 @@ import javax.inject.Inject
 class HistoryInteractor @Inject constructor(
     private val transactionsInteractor: TransactionsInteractor,
     private val reconciliationsRepo: ReconciliationsRepo,
-    private val budgetedVsAccountsAutomaticReconciliationInteractor: BudgetedVsAccountsAutomaticReconciliationInteractor,
+    private val automaticBalanceInteractor: AutomaticBalanceInteractor,
 ) {
     val entireHistory =
-        combine(transactionsInteractor.transactionBlocks, reconciliationsRepo.reconciliations, budgetedVsAccountsAutomaticReconciliationInteractor.budgetedVsAccountsAutomaticReconciliation, ::createTuple)
+        combine(transactionsInteractor.transactionBlocks, reconciliationsRepo.reconciliations, automaticBalanceInteractor.automaticBalanceReconciliation, ::createTuple)
             .sample(500)
             .distinctUntilChanged()
             .map { (transactionBlocks, reconciliations, budgetedVsAccountsAutomaticReconciliation) ->

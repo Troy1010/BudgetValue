@@ -57,7 +57,7 @@ class HistoryVM @Inject constructor(
                                 reconciliationsRepo,
                                 throbberSharedVM
                             )
-                        is BudgetedVsAccountsAutomaticReconciliation ->
+                        is AutomaticBalanceReconciliation ->
                             HistoryPresentationModel.BudgetedVsAccountsAutomaticReconciliationPresentationModel(
                                 it
                             )

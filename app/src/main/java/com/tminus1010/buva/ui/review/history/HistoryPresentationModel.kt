@@ -54,15 +54,15 @@ sealed class HistoryPresentationModel {
             )
     }
 
-    class BudgetedVsAccountsAutomaticReconciliationPresentationModel(budgetedVsAccountsAutomaticReconciliation: BudgetedVsAccountsAutomaticReconciliation) : HistoryPresentationModel() {
+    class BudgetedVsAccountsAutomaticReconciliationPresentationModel(automaticBalanceReconciliation: AutomaticBalanceReconciliation) : HistoryPresentationModel() {
         override val accountsTotal: Flow<NativeText?> = flowOf(null)
-        override val difference: Flow<NativeText?> = flowOf(NativeText.Simple(budgetedVsAccountsAutomaticReconciliation.total.toString()))
+        override val difference: Flow<NativeText?> = flowOf(NativeText.Simple(automaticBalanceReconciliation.total.toString()))
         override val incomeTotal: Flow<NativeText?> = flowOf(null)
         override val spendTotal: Flow<NativeText?> = flowOf(null)
-        override val default: Flow<NativeText?> = flowOf(NativeText.Simple(budgetedVsAccountsAutomaticReconciliation.defaultAmount.toString()))
+        override val default: Flow<NativeText?> = flowOf(NativeText.Simple(automaticBalanceReconciliation.defaultAmount.toString()))
         override val title: String = "Accounts Total Leftover"
         override val subTitle: Flow<NativeText?> = flowOf(null)
-        override val categoryAmounts = budgetedVsAccountsAutomaticReconciliation.categoryAmounts
+        override val categoryAmounts = automaticBalanceReconciliation.categoryAmounts
     }
 
     class TransactionBlockPresentationModel(transactionBlock: TransactionBlock, accountsTotalEstimate: BigDecimal?, currentDatePeriod: CurrentDatePeriod) : HistoryPresentationModel() {
