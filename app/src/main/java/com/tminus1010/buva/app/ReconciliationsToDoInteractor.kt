@@ -54,7 +54,7 @@ class ReconciliationsToDoInteractor @Inject constructor(
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 
 //    private val accountReconciliationsToDo =
-//        combine(entireHistoryInteractor.categoryAmountsAndTotal, accountsRepo.accountsAggregate, ::Pair)
+//        combine(entireHistoryInteractor.categoryAmountsAndTotal, accountsRepo.accountsAggregate, ::createTuple)
 //            .flatMapLatest { (entireHistory, accountsAggregate) ->
 //                if (entireHistory.total.easyEquals(accountsAggregate.total))
 //                    flowOf(null)
