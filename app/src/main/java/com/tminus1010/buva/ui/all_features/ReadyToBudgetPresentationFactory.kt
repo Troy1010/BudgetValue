@@ -53,6 +53,7 @@ class ReadyToBudgetPresentationFactory @Inject constructor(
 
     // Check is in a separate exposed method so that you can block for it if you want.
     suspend fun checkIfReadyToBudget() {
+        // TODO: using .first() here might cause problems if default values before real emission would give incorrect results.
         if (!transactionsInteractor.transactionsAggregate.first().areAllSpendsCategorized)
             throw CategorizationIsNotCompleteException()
         else if (accountsRepo.accountsAggregate.value?.accounts?.ifEmpty { null } == null)

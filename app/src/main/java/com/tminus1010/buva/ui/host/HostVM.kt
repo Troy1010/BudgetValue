@@ -7,6 +7,7 @@ import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.data.SelectedPage
 import com.tminus1010.buva.ui.all_features.Navigator
+import com.tminus1010.buva.ui.all_features.ReadyToBudgetPresentationFactory
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItems
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
@@ -15,6 +16,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,6 +27,7 @@ class HostVM @Inject constructor(
     getExtraMenuItemPartials: GetExtraMenuItemPartials,
     private val selectedPage: SelectedPage,
     private val navigator: Navigator,
+    private val readyToBudgetPresentationFactory: ReadyToBudgetPresentationFactory,
 ) : ViewModel() {
     // # Setup
     val nav = BehaviorSubject.create<NavController>()
@@ -52,7 +57,16 @@ class HostVM @Inject constructor(
     val navToAccessibility = MutableSharedFlow<Unit>()
 
     // # State
-    val selectedPageRedefined = selectedPage.flow
+    val selectedPageRedefined =
+        selectedPage.flow
+            .map { selectedPage ->
+                if (selectedPage == R.id.budgetHostFrag)
+                    runCatching { readyToBudgetPresentationFactory.checkIfReadyToBudget(); selectedPage }.getOrNull()
+                        ?: R.id.importAndCategorizeHostFrag
+                else
+                    selectedPage
+            }
+            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
     val topMenuVMItems =
         MenuVMItems(
             MenuVMItem(
