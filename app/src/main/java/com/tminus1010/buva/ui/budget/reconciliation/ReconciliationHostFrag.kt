@@ -21,7 +21,7 @@ class ReconciliationHostFrag : Fragment(R.layout.frag_reconciliation_host) {
         vb.buttonsview.bind(viewModel.buttons) { buttons = it }
         vb.tvSubTitle.bind(viewModel.subTitle) { text = it.toCharSequence(context) }
         vb.tvTitle.bind(viewModel.title) { text = it.toCharSequence(context) }
-        vb.frame.bind(viewModel.currentReconciliationToDo) { fragFactory ->
+        vb.frame.bind(viewModel.fragFactory) { fragFactory ->
             this@ReconciliationHostFrag.childFragmentManager
                 .beginTransaction()
                 .replace(id, fragFactory())

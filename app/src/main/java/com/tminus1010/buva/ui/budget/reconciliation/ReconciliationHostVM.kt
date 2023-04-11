@@ -57,7 +57,7 @@ class ReconciliationHostVM @Inject constructor(
     }
 
     // # State
-    val currentReconciliationToDo =
+    val fragFactory =
         reconciliationsToDoInteractor.currentReconciliationToDo
             .map {
                 when (it) {

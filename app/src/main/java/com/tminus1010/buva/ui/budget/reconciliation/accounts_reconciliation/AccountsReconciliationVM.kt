@@ -30,7 +30,7 @@ class AccountsReconciliationVM @Inject constructor(
         GlobalScope.launch {
             activeReconciliationRepo.pushCategoryAmount(
                 category = category,
-                activeReconciliationRepo.activeReconciliationCAs.first().calcFillAmount(
+                amount = activeReconciliationRepo.activeReconciliationCAs.first().calcFillAmount(
                     fillCategory = category,
                     total = activeAccountsReconciliationInteractor.activeReconciliationCAsAndTotal.first().total,
                 ),

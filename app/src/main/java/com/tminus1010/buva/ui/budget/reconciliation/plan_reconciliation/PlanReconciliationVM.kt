@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
-import com.tminus1010.buva.app.ActivePlanInteractor
 import com.tminus1010.buva.app.ActiveAccountsReconciliationInteractor
+import com.tminus1010.buva.app.ActivePlanInteractor
 import com.tminus1010.buva.app.ActivePlanReconciliationInteractor
 import com.tminus1010.buva.app.UserCategories
 import com.tminus1010.buva.data.ActiveReconciliationRepo
@@ -23,9 +23,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PlanReconciliationVM @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val activeReconciliationRepo: ActiveReconciliationRepo,
-    userCategories: UserCategories,
+    private val userCategories: UserCategories,
     private val activeAccountsReconciliationInteractor: ActiveAccountsReconciliationInteractor,
     private val activePlanInteractor: ActivePlanInteractor,
     private val activePlanReconciliationInteractor: ActivePlanReconciliationInteractor,
@@ -68,7 +68,7 @@ class PlanReconciliationVM @Inject constructor(
                         AmountPresentationModel(reconciliationToDo.transactionBlock.defaultAmount),
                         AmountPresentationModel(activePlan.defaultAmount),
                         AmountPresentationModel(activeReconciliation.defaultAmount),
-                        AmountPresentationModel(budgeted.defaultAmount, checkIfValid = { budgeted.isDefaultAmountValid })
+                        AmountPresentationModel(budgeted.defaultAmount, checkIfValid = { budgeted.isDefaultAmountValid }),
                     ),
                     *categories.map { category ->
                         listOf(
