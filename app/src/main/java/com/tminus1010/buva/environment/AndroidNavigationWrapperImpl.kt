@@ -18,7 +18,7 @@ import kotlin.coroutines.suspendCoroutine
 @Reusable
 class AndroidNavigationWrapperImpl @Inject constructor() : AndroidNavigationWrapper {
     override fun navToImportTransactions() = launchOnMainThread {
-        ImportAndCategorizeHostFrag.navTo(nav, R.id.importFrag)
+        ImportAndCategorizeHostFrag.navTo(nav, R.id.importTransactionsFrag)
     }
 
     override fun navToAccounts() = launchOnMainThread {

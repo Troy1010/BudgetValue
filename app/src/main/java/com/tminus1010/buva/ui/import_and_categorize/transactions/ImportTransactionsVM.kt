@@ -1,4 +1,4 @@
-package com.tminus1010.buva.ui.import_and_categorize.importZ
+package com.tminus1010.buva.ui.import_and_categorize.transactions
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.shareIn
 import javax.inject.Inject
 
 @HiltViewModel
-class ImportVM @Inject constructor(
+class ImportTransactionsVM @Inject constructor(
     private val hostActivityWrapper: HostActivityWrapper,
     private val transactionsRepo: TransactionsRepo,
 ) : ViewModel() {

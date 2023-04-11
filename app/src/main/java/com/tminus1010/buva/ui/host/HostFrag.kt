@@ -6,6 +6,7 @@ import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.ImportFailedException
 import com.tminus1010.buva.all_layers.TestException
 import com.tminus1010.buva.all_layers.extensions.getBackStack
+import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
 import com.tminus1010.buva.ui.errors.ErrorVM
 import com.tminus1010.tmcommonkotlin.androidx.ShowToast
@@ -19,6 +20,9 @@ import javax.inject.Inject
 class HostFrag : NavHostFragment() {
     @Inject
     lateinit var showToast: ShowToast
+
+    @Inject
+    lateinit var navigator: Navigator
     val errorVM by activityViewModels<ErrorVM>()
     fun handle(e: Throwable, vararg buttonVMItems: ButtonVMItem) {
         val buttonPartialsRedef =
@@ -38,7 +42,7 @@ class HostFrag : NavHostFragment() {
                 }
                 else -> {
                     showToast(NativeText.Simple("An error occurred"))
-                    nav.navigate(R.id.importFrag) // TODO("Clear backstack")
+                    navigator.navToImportTransactions()
                 }
             }
         }

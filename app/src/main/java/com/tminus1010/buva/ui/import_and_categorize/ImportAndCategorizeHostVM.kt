@@ -7,8 +7,8 @@ import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.ui.import_and_categorize.categorize.CategorizeFrag
-import com.tminus1010.buva.ui.import_and_categorize.importZ.AccountsFrag
-import com.tminus1010.buva.ui.import_and_categorize.importZ.ImportFrag
+import com.tminus1010.buva.ui.import_and_categorize.transactions.AccountsFrag
+import com.tminus1010.buva.ui.import_and_categorize.transactions.ImportTransactionsFrag
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
@@ -23,11 +23,11 @@ class ImportAndCategorizeHostVM @Inject constructor(
     }
 
     // # Internal
-    private val subNavId = savedStateHandle.get<Int>(KEY1) ?: R.id.importFrag
+    private val subNavId = savedStateHandle.get<Int>(KEY1) ?: R.id.importTransactionsFrag
     private fun createFragFactoryFromID(id: Int): () -> Fragment {
         return when (id) {
-            R.id.importFrag -> {
-                { ImportFrag() }
+            R.id.importTransactionsFrag -> {
+                { ImportTransactionsFrag() }
             }
             R.id.accountsFrag -> {
                 { AccountsFrag() }

@@ -8,13 +8,13 @@
         android:id="@+id/errorFrag_clear_backstack"
         app:destination="@id/errorFrag"
         app:launchSingleTop="true"
-        app:popUpTo="@id/importFrag"
+        app:popUpTo="@id/importTransactionsFrag"
         app:popUpToInclusive="true" />
     <fragment
-        android:id="@+id/importFrag"
-        android:name="com.tminus1010.buva.ui.import_and_categorize.importZ.ImportFrag"
+        android:id="@+id/importTransactionsFrag"
+        android:name="com.tminus1010.buva.ui.import_and_categorize.transactions.ImportTransactionsFrag"
         android:label="Import"
-        tools:layout="@layout/frag_import" />
+        tools:layout="@layout/frag_import_transactions" />
     <fragment
         android:id="@+id/reconcileFrag"
         android:name="com.tminus1010.buva.ui.budget.reconciliation.ReconciliationHostFrag"
@@ -37,7 +37,7 @@
         tools:layout="@layout/frag_error">
         <action
             android:id="@+id/action_errorFrag_to_importFrag"
-            app:destination="@id/importFrag" />
+            app:destination="@id/importTransactionsFrag" />
     </fragment>
     <fragment
         android:id="@+id/categoryDetailsFrag"
