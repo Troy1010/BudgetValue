@@ -1,4 +1,4 @@
-package com.tminus1010.buva.ui.import_and_categorize.categorize
+package com.tminus1010.buva.ui.importZ.categorize
 
 import android.os.Bundle
 import android.view.View
@@ -14,7 +14,6 @@ import com.tminus1010.buva.all_layers.android.viewBinding
 import com.tminus1010.buva.databinding.FragCategorizeBinding
 import com.tminus1010.buva.ui.category_details.CategoryDetailsFrag
 import com.tminus1010.buva.ui.choose_categories.ChooseCategoriesSharedVM
-import com.tminus1010.buva.ui.futures.CreateFutureFrag
 import com.tminus1010.buva.ui.futures.FutureDetailsFrag
 import com.tminus1010.buva.ui.receipt_categorization.ReceiptCategorizationHostFrag
 import com.tminus1010.tmcommonkotlin.androidx.GenViewHolder

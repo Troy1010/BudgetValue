@@ -12,7 +12,7 @@
         app:popUpToInclusive="true" />
     <fragment
         android:id="@+id/importTransactionsFrag"
-        android:name="com.tminus1010.buva.ui.import_and_categorize.transactions.ImportTransactionsFrag"
+        android:name="com.tminus1010.buva.ui.importZ.transactions.ImportTransactionsFrag"
         android:label="Import"
         tools:layout="@layout/frag_import_transactions" />
     <fragment
@@ -49,7 +49,7 @@
         app:startDestination="@id/categorizeFrag">
         <fragment
             android:id="@+id/categorizeFrag"
-            android:name="com.tminus1010.buva.ui.import_and_categorize.categorize.CategorizeFrag"
+            android:name="com.tminus1010.buva.ui.importZ.categorize.CategorizeFrag"
             android:label="CategorizeFrag"
             tools:layout="@layout/frag_categorize">
             <action
@@ -137,7 +137,7 @@
         tools:layout="@layout/frag_receipt_categorization_imagetotext" />
     <fragment
         android:id="@+id/importAndCategorizeHostFrag"
-        android:name="com.tminus1010.buva.ui.import_and_categorize.ImportAndCategorizeHostFrag"
+        android:name="com.tminus1010.buva.ui.importZ.ImportHostFrag"
         android:label="ImportAndCategorizeHostFrag"
         tools:layout="@layout/frag_receipt_categorization_imagetotext" />
 </navigation>
