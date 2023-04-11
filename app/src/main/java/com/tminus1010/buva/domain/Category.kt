@@ -16,7 +16,9 @@ data class Category(
     val name: String,
     val defaultAmountFormula: AmountFormula = AmountFormula.Value(BigDecimal.ZERO),
     val isRequired: Boolean = false,
-    val resetStrategy: ResetStrategy = ResetStrategy.Basic(null), // TODO: Perhaps ResetStrategy should be a part of the Plan..? Or perhaps ActivePlan value should just be a part of Category..?
+    val resetStrategy: ResetStrategy = ResetStrategy.Basic(null),
+    val planResolutionStrategy: ResolutionStrategy = ResolutionStrategy.MatchPlan,
+    val anytimeResolutionStrategy: ResolutionStrategy = ResolutionStrategy.Basic(BigDecimal.ZERO),
     val onImportTransactionMatcher: TransactionMatcher? = null,
     val isRememberedByDefault: Boolean = true,
 ) : ICategorizer, Parcelable {
@@ -60,8 +62,16 @@ fun Category.withDisplayType(categoryDisplayType: CategoryDisplayType): Category
         CategoryDisplayType.Special ->
             error("Unhandled type:$categoryDisplayType")
         CategoryDisplayType.Always ->
-            this.copy(resetStrategy = ResetStrategy.Basic(budgetedMax = BigDecimal.ZERO))
+            this.copy(
+                resetStrategy = ResetStrategy.Basic(budgetedMax = BigDecimal.ZERO),
+                planResolutionStrategy = ResolutionStrategy.MatchPlan,
+                anytimeResolutionStrategy = ResolutionStrategy.Basic(budgetedMin = BigDecimal.ZERO)
+            )
         CategoryDisplayType.Reservoir ->
-            this.copy(resetStrategy = ResetStrategy.Basic(budgetedMax = null))
+            this.copy(
+                resetStrategy = ResetStrategy.Basic(budgetedMax = null),
+                planResolutionStrategy = ResolutionStrategy.Basic(budgetedMin = BigDecimal.ZERO),
+                anytimeResolutionStrategy = ResolutionStrategy.Basic(budgetedMin = BigDecimal.ZERO)
+            )
     }
 }
