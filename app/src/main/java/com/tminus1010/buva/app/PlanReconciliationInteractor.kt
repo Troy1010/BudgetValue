@@ -92,7 +92,7 @@ class PlanReconciliationInteractor @Inject constructor(
                 categoryAmountsAndTotal = CategoryAmountsAndTotal.addTogether(
                     activeReconciliation,
                     summedRelevantHistory,
-                    activePlan,
+                    CategoryAmountsAndTotal.FromTotal(activePlan.categoryAmounts, BigDecimal.ZERO),
                 ),
                 caValidation = { (it ?: BigDecimal.ZERO) >= BigDecimal.ZERO },
                 defaultAmountValidation = { true },
