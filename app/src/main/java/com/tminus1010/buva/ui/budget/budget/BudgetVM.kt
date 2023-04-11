@@ -1,7 +1,7 @@
 package com.tminus1010.buva.ui.budget.budget
 
 import androidx.lifecycle.ViewModel
-import com.tminus1010.buva.app.HistoryInteractor
+import com.tminus1010.buva.app.BudgetedInteractor
 import com.tminus1010.buva.app.UserCategories
 import com.tminus1010.buva.ui.all_features.view_model_item.AmountPresentationModel
 import com.tminus1010.buva.ui.all_features.view_model_item.DividerVMItem
@@ -15,26 +15,26 @@ import javax.inject.Inject
 @HiltViewModel
 class BudgetVM @Inject constructor(
     private val userCategories: UserCategories,
-    private val historyInteractor: HistoryInteractor,
+    private val budgetedInteractor: BudgetedInteractor,
 ) : ViewModel() {
     // # State
     val tableViewVMItem =
-        combine(userCategories.flow, historyInteractor.entireHistory)
-        { categories, categoryAmountsAndTotalsAggregate ->
+        combine(userCategories.flow, budgetedInteractor.budgeted)
+        { categories, budgeted ->
             TableViewVMItem(
                 recipeGrid = listOf(
                     listOf(
                         TextVMItem("Total"),
-                        AmountPresentationModel(categoryAmountsAndTotalsAggregate.addedTogether.total),
+                        AmountPresentationModel(budgeted.total),
                     ),
                     listOf(
                         TextVMItem("Default"),
-                        AmountPresentationModel(categoryAmountsAndTotalsAggregate.addedTogether.defaultAmount),
+                        AmountPresentationModel(budgeted.defaultAmount, checkIfValid = { budgeted.isDefaultAmountValid }),
                     ),
                     *categories.map { category ->
                         listOf(
                             TextVMItem(category.name),
-                            AmountPresentationModel(categoryAmountsAndTotalsAggregate.addedTogether.categoryAmounts[category]),
+                            AmountPresentationModel(budgeted.categoryAmounts[category], checkIfValid = { budgeted.isValid(category) }),
                         )
                     }.toTypedArray(),
                 ),
