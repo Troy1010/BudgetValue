@@ -33,7 +33,7 @@ class ChooseTransactionVM @Inject constructor(
         navigator.navUp()
     }
 
-    // # Internal
+    // # Private
     private val callback = savedStateHandle.get<ParcelableTransactionLambdaWrapper>(KEY2)!!.lambda
 
     // # State

@@ -38,7 +38,7 @@ class TransactionDetailsVM @Inject constructor(
         }
     }
 
-    // # Internal
+    // # Private
     private val transaction = moshiWithCategoriesProvider.moshi.fromJson<Transaction>(savedStateHandle.get(KEY1))!!
 
     // # Events

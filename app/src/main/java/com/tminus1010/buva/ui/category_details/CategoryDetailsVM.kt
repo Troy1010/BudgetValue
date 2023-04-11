@@ -118,7 +118,7 @@ class CategoryDetailsVM @Inject constructor(
         }
     }
 
-    // # Internal
+    // # Private
     private val originalCategory = savedStateHandle.get<Category>(KEY1)
     private val category = savedStateHandle.getLiveData<Category>(KEY1)
 

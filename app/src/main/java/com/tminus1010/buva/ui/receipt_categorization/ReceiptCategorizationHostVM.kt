@@ -45,7 +45,7 @@ class ReceiptCategorizationHostVM @Inject constructor(
         navigator.navUp()
     }
 
-    // # Internal
+    // # Private
     private val transaction = savedStateHandle.getLiveData<Transaction>(KEY1)
         .also { it.value?.also { receiptCategorizationSharedVM.total.onNext(it.amount) } }
     private val descriptionAndTotal = savedStateHandle.get<String?>(KEY2)?.let { moshiProvider.moshi.adapter<Pair<String, BigDecimal>>(Types.newParameterizedType(Pair::class.java, String::class.java, BigDecimal::class.java)).fromJson(it) }

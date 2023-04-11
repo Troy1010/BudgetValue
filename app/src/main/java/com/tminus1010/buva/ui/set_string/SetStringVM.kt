@@ -44,7 +44,7 @@ class SetStringVM @Inject constructor(
         navigator.navUp()
     }
 
-    // # Internal
+    // # Private
     private val callback = savedStateHandle.get<ParcelableLambdaWrapper>(KEY2)!!.lambda
     private val originalS = savedStateHandle.get<String>(KEY1)
     private val firstWord = tryOrNull { originalS?.split(Regex("""\s+"""))?.firstOrNull() }

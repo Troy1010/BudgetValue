@@ -127,7 +127,7 @@ class FutureDetailsVM @Inject constructor(
         future.value = future.value!!.copy(onImportTransactionMatcher = future.value!!.onImportTransactionMatcher.withSearchTotal(BigDecimal.ZERO))
     }
 
-    // # Internal
+    // # Private
     private val originalFuture = savedStateHandle.get<Future>(KEY1)!!
     private val future = savedStateHandle.getLiveData<Future>(KEY1)
     private val categoryAmountFormulas =

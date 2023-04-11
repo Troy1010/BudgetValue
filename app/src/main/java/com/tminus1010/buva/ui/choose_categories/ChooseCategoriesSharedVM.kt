@@ -25,7 +25,7 @@ class ChooseCategoriesSharedVM @Inject constructor() {
         _selectedCategories.removeAll(categories)
     }
 
-    // # Internal
+    // # Private
     private val _selectedCategories = SourceList<Category>()
 
     // # Output

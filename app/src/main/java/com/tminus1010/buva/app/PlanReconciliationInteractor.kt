@@ -58,7 +58,7 @@ class PlanReconciliationInteractor @Inject constructor(
         )
     }
 
-    // # Internal
+    // # Private
     private val summedRelevantHistory =
         combine(reconciliationsToDoInteractor.currentReconciliationToDo.filterIsInstance<ReconciliationToDo.PlanZ>(), historyInteractor.entireHistory)
         { currentReconciliationToDo, entireHistory ->

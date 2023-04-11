@@ -26,7 +26,7 @@ class UndoService @Inject constructor() {
             ?.also { it.redo() }
     }
 
-    // # Internal
+    // # Private
     private val undoQueue = SourceList<RedoUndo>()
     private val redoQueue = SourceList<RedoUndo>()
 

@@ -31,7 +31,7 @@ class ThrobberSharedVM @Inject constructor() : IJobEvents {
         runBlocking { asyncTaskEnded.emit(Unit) }
     }
 
-    // # Internal
+    // # Private
     private val asyncTaskStarted = MutableSharedFlow<Unit>()
     private val asyncTaskEnded = MutableSharedFlow<Unit>()
 

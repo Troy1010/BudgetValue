@@ -48,7 +48,7 @@ class ReviewPieChartVM @Inject constructor(
     val userPrevious = MutableSharedFlow<Unit>()
     val userNext = MutableSharedFlow<Unit>()
 
-    // # Internal
+    // # Private
     private val errors = MutableSharedFlow<Throwable>()
     private val currentPageNumber =
         userSelectedDuration.flatMapLatest {

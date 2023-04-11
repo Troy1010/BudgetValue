@@ -154,7 +154,7 @@ class CreateFutureVM @Inject constructor(
         }
     }
 
-    // # Internal
+    // # Private
     init {
         receiptCategorizationSharedVM.userSubmitCategorization.observe(viewModelScope) {
             selectedCategoriesSharedVM.selectCategories(*it.keys.toTypedArray())

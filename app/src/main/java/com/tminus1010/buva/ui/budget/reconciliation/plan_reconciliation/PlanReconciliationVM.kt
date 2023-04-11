@@ -39,7 +39,7 @@ class PlanReconciliationVM @Inject constructor(
         GlobalScope.launch { activeReconciliationInteractor.fillIntoCategory(category) }
     }
 
-    // # Internal
+    // # Private
     private val reconciliationToDo = savedStateHandle.getLiveData<ReconciliationToDo.PlanZ>(KEY1).asFlow()
 
     // # State

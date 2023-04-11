@@ -55,7 +55,7 @@ class ReceiptCategorizationImageToTextVM @Inject constructor(
         receiptText.onNext(createSpannableStringAndFormatForReceipt(receiptText.value?.let { "${it}\n$s" } ?: ""))
     }
 
-    // # Internal
+    // # Private
     private fun createSpannableStringAndFormatForReadout(s: String?): SpannableString {
         return s
             ?.let { Regex("""[0-9]+\s*\.\s*[0-9]\s*[0-9]""").replace(it) { it.value.filter { !it.isWhitespace() } } }

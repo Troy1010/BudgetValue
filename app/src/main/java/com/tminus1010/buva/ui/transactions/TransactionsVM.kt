@@ -36,7 +36,7 @@ class TransactionsVM @Inject constructor(
         }
     }
 
-    // # Internal
+    // # Private
     private val transactionPresentationModels =
         transactionsInteractor.transactionsAggregate
             .map { it.transactions.map(::TransactionPresentationModel) }

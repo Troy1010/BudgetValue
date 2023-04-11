@@ -52,7 +52,7 @@ class PlanVM @Inject constructor(
         navigator.navToEditCategory(category)
     }
 
-    // # Internal
+    // # Private
     private val categoryAmounts =
         combine(activePlanRepo.activePlan.map { it.categoryAmounts }, userCategories.flow)
         { categoryAmounts, userCategories ->

@@ -29,7 +29,7 @@ class HistoryVM @Inject constructor(
     private val historyInteractor: HistoryInteractor,
     private val throbberSharedVM: ThrobberSharedVM,
 ) : ViewModel() {
-    // # Internal
+    // # Private
     private val activeCategories =
         historyInteractor.entireHistory.map { it.addedTogether.categoryAmounts.map { it.key }.sortedWith(categoryComparator) }
 
