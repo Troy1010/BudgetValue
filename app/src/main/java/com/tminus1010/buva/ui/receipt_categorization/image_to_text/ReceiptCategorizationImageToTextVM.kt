@@ -1,4 +1,4 @@
-package com.tminus1010.buva.ui.receipt_categorization_imagetotext
+package com.tminus1010.buva.ui.receipt_categorization.image_to_text
 
 import android.text.SpannableString
 import android.text.Spanned
