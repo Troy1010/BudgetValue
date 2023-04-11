@@ -62,39 +62,39 @@ class PlanVM @Inject constructor(
         }
 
     // # State
-    val planRecipeGrid =
+    val tableViewVMItem =
         categoryAmounts
             .flatMapSourceMap(SourceMap(viewModelScope)) { it.itemFlowMap }
             .map { categoryAmountItemObservables ->
-                listOf(
-                    listOf(
-                        TextVMItem("Category", style = TextVMItem.Style.HEADER),
-                        TextVMItem("Expected Income"),
-                        TextVMItem("Default"),
-                        *categoryAmountItemObservables.keys.map { TextVMItem(it.name, menuVMItems = MenuVMItems(MenuVMItem(title = "Edit", onClick = { userEditCategory(it) }), MenuVMItem(title = "Create Category", onClick = { userCreateCategory() }))) }.toTypedArray()
-                    ),
-                    listOf(
-                        TextVMItem("Plan", style = TextVMItem.Style.HEADER),
-                        MoneyEditVMItem(text2 = activePlanRepo.activePlan.map { it.total.toString() }, onDone = { userSaveExpectedIncome(it) }),
-                        TextVMItem(text3 = activePlanRepo.activePlan.map { it.defaultAmount.toString() }),
-                        *categoryAmountItemObservables.map { (category, amount) -> MoneyEditVMItem(text2 = amount.map { it.toString() }, onDone = { userSaveActivePlanCA(category, it) }) }.toTypedArray()
-                    ),
-                    listOf(
-                        TextVMItem("Reset Max", style = TextVMItem.Style.HEADER),
-                        TextVMItem(),
-                        TextVMItem(),
-                        *categoryAmountItemObservables.keys.map { TextVMItem(text1 = it.resetStrategy.toDisplayStr(), menuVMItems = MenuVMItems(MenuVMItem("Edit Category", onClick = { userEditCategory(it) }))) }.toTypedArray()
-                    ),
-                ).reflectXY()
-            }
-    val dividerMap =
-        categoryAmounts
-            .map {
-                it.map { it.key }.withIndex()
-                    .distinctUntilChangedWith(compareBy { it.value.displayType })
-                    .associate { it.index to it.value.displayType.name }
-                    .mapKeys { it.key + 3 } // header row, expected row, default row
-                    .mapValues { DividerVMItem(it.value) }
+                TableViewVMItem(
+                    recipeGrid = listOf(
+                        listOf(
+                            TextVMItem("Category", style = TextVMItem.Style.HEADER),
+                            TextVMItem("Expected Income"),
+                            TextVMItem("Default"),
+                            *categoryAmountItemObservables.keys.map { TextVMItem(it.name, menuVMItems = MenuVMItems(MenuVMItem(title = "Edit", onClick = { userEditCategory(it) }), MenuVMItem(title = "Create Category", onClick = { userCreateCategory() }))) }.toTypedArray()
+                        ),
+                        listOf(
+                            TextVMItem("Plan", style = TextVMItem.Style.HEADER),
+                            MoneyEditVMItem(text2 = activePlanRepo.activePlan.map { it.total.toString() }, onDone = { userSaveExpectedIncome(it) }),
+                            TextVMItem(text3 = activePlanRepo.activePlan.map { it.defaultAmount.toString() }),
+                            *categoryAmountItemObservables.map { (category, amount) -> MoneyEditVMItem(text2 = amount.map { it.toString() }, onDone = { userSaveActivePlanCA(category, it) }) }.toTypedArray()
+                        ),
+                        listOf(
+                            TextVMItem("Reset Max", style = TextVMItem.Style.HEADER),
+                            TextVMItem(),
+                            TextVMItem(),
+                            *categoryAmountItemObservables.keys.map { TextVMItem(text1 = it.resetStrategy.toDisplayStr(), menuVMItems = MenuVMItems(MenuVMItem("Edit Category", onClick = { userEditCategory(it) }))) }.toTypedArray()
+                        ),
+                    ).reflectXY(),
+                    dividerMap = categoryAmountItemObservables.map { it.key }.withIndex()
+                        .distinctUntilChangedWith(compareBy { it.value.displayType })
+                        .associate { it.index to it.value.displayType.name }
+                        .mapKeys { it.key + 3 } // header row, default row
+                        .mapValues { DividerVMItem(it.value) },
+                    shouldFitItemWidthsInsideTable = true,
+                    rowFreezeCount = 1,
+                )
             }
     val buttons =
         flowOf(
