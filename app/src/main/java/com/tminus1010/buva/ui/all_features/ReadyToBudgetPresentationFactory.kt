@@ -24,27 +24,23 @@ class ReadyToBudgetPresentationFactory @Inject constructor(
                 when (it) {
                     is CategorizationIsNotCompleteException ->
                         activityWrapper.showAlertDialog(
-                            body = NativeText.Simple("It's not recommended to reconcile until after categorization is complete.\n\nDo you want to go there now?"),
+                            body = NativeText.Simple("It's usually a good idea to complete categorization before budgeting.\n\nDo you want to go there now?"),
                             onContinue = onContinue,
-                            onRedirect = { TODO() },
+                            onYes = { navigator.navToCategorize() },
                         )
-                    is NoAccountsExistException ->
+                    is NoAccountsExistException,
+                    is AccountsNotUpdatedRecentlyException,
+                    ->
                         activityWrapper.showAlertDialog(
-                            body = NativeText.Simple("It's not recommended to reconcile until after an account has been added.\n\nDo you want to go there now?"),
+                            body = NativeText.Simple("It's usually a good idea to update your accounts before budgeting.\n\nDo you want to go there now?"),
                             onContinue = onContinue,
-                            onRedirect = { TODO() },
-                        )
-                    is AccountsNotUpdatedRecentlyException ->
-                        activityWrapper.showAlertDialog(
-                            body = NativeText.Simple("It's not recommended to reconcile if accounts have not been updated recently.\n\nDo you want to go there now?"),
-                            onContinue = onContinue,
-                            onRedirect = { TODO() },
+                            onYes = { navigator.navToAccounts() },
                         )
                     is NoRecentTransactionImportItemException ->
                         activityWrapper.showAlertDialog(
-                            body = NativeText.Simple("It's not recommended to reconcile if transactions have not been imported recently.\n\nDo you want to go there now?"),
+                            body = NativeText.Simple("It's usually a good idea to import recent transactions before budgeting.\n\nDo you want to go there now?"),
                             onContinue = onContinue,
-                            onRedirect = { TODO() },
+                            onYes = { navigator.navToImportTransactions() },
                         )
                 }
             }

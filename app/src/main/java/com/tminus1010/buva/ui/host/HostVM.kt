@@ -71,18 +71,12 @@ class HostVM @Inject constructor(
                 title = "Accessibility Settings",
                 onClick = { userTryNavToAccessibilitySettings() },
             ),
-            MenuVMItem(
-                title = "Old Import",
-                onClick = { navigator.navToImport(); unCheckAllMenuItems.onNext() },
-            ),
-            MenuVMItem(
-                title = "Old Categorize",
-                onClick = { navigator.navToCategorize(); unCheckAllMenuItems.onNext() },
-            ),
             *getExtraMenuItemPartials(nav)
         )
+
     // TODO: Cleanup? Unless I want to work on this feature..
     val levelUpPlan = NativeText.Multi(NativeText.Resource(R.string.level_up_prefix), NativeText.Simple(" "), NativeText.Resource(R.string.level_up_plan))
+
     // TODO: Cleanup? Unless I want to work on this feature..
     val levelUpReconciliation = NativeText.Multi(NativeText.Resource(R.string.level_up_prefix), NativeText.Simple(" "), NativeText.Resource(R.string.level_up_reconciliation))
 }
