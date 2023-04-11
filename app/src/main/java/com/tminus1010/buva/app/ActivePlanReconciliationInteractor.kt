@@ -36,7 +36,7 @@ class ActivePlanReconciliationInteractor @Inject constructor(
         )
     }
 
-    suspend fun matchUp() {
+    suspend fun resolve() {
         activeReconciliationRepo.pushCategoryAmounts(
             CategoryAmounts.zip(activeReconciliationRepo.activeReconciliationCAs.first(), budgeted.first().categoryAmounts)
             { a, b -> if (b.isNegative) a - b else a }
