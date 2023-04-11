@@ -19,12 +19,15 @@ class ImportHostFrag : Fragment(R.layout.frag_import_host) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = FragImportHostBinding.bind(view)
+        // # State
         vb.fragmentcontainerview.bind(viewModel.fragFactory) { fragFactory ->
             this@ImportHostFrag.childFragmentManager
                 .beginTransaction()
                 .replace(id, fragFactory())
                 .commitNowAllowingStateLoss()
         }
+        vb.bottomnavigationview.bind(viewModel.selectedItemId) { selectedItemId = it }
+        // # User Intents
         vb.bottomnavigationview.setOnItemSelectedListener { viewModel.userSelectMenuItem(it.itemId); true }
     }
 
