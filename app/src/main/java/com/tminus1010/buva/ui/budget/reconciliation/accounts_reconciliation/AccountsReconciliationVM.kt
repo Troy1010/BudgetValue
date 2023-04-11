@@ -3,7 +3,6 @@ package com.tminus1010.buva.ui.budget.reconciliation.accounts_reconciliation
 import androidx.lifecycle.ViewModel
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.buva.app.ActiveReconciliationInteractor
-import com.tminus1010.buva.app.BudgetedForActiveReconciliationInteractor
 import com.tminus1010.buva.app.UserCategories
 import com.tminus1010.buva.data.ActiveReconciliationRepo
 import com.tminus1010.buva.domain.Category
@@ -18,7 +17,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountsReconciliationVM @Inject constructor(
-    budgetedForActiveReconciliationInteractor: BudgetedForActiveReconciliationInteractor,
     private val activeReconciliationInteractor: ActiveReconciliationInteractor,
     private val activeReconciliationRepo: ActiveReconciliationRepo,
     userCategories: UserCategories,
@@ -42,30 +40,30 @@ class AccountsReconciliationVM @Inject constructor(
 
     // # State
     val reconciliationTableView =
-        combine(userCategories.flow, activeReconciliationInteractor.activeReconciliationCAsAndTotal, budgetedForActiveReconciliationInteractor.categoryAmountsAndTotal)
-        { categories, activeReconciliation, budgetedWithActiveReconciliation ->
+        combine(userCategories.flow, activeReconciliationInteractor.activeReconciliationCAsAndTotal, activeReconciliationInteractor.budgeted)
+        { categories, activeReconciliation, budgeted ->
             TableViewVMItem(
                 recipeGrid = listOf(
                     listOf(
                         HeaderPresentationModel("Categories"),
                         HeaderPresentationModel("Reconcile"),
-                        BudgetHeaderPresentationModel("Budgeted", budgetedWithActiveReconciliation.total.toString()),
+                        BudgetHeaderPresentationModel("Budgeted", budgeted.total.toString()),
                     ),
                     listOf(
                         TextVMItem("Total"),
                         TextVMItem(activeReconciliation.total.toString()),
-                        AmountPresentationModel(budgetedWithActiveReconciliation.total),
+                        AmountPresentationModel(budgeted.total),
                     ),
                     listOf(
                         TextVMItem("Default"),
                         TextVMItem(activeReconciliation.defaultAmount.toString()),
-                        AmountPresentationModel(budgetedWithActiveReconciliation.defaultAmount, checkIfValid = { budgetedWithActiveReconciliation.isDefaultAmountValid }),
+                        AmountPresentationModel(budgeted.defaultAmount, checkIfValid = { budgeted.isDefaultAmountValid }),
                     ),
                     *categories.map { category ->
                         listOf(
                             TextVMItem(category.name),
                             CategoryAmountPresentationModel(category, activeReconciliation.categoryAmounts[category], ::userSetCategoryAmount, menuVMItems = MenuVMItems(MenuVMItem("Fill into category", onClick = { userDumpIntoCategory(category) }))),
-                            AmountPresentationModel(budgetedWithActiveReconciliation.categoryAmounts[category], checkIfValid = { budgetedWithActiveReconciliation.isValid(category) }),
+                            AmountPresentationModel(budgeted.categoryAmounts[category], checkIfValid = { budgeted.isValid(category) }),
                         )
                     }.toTypedArray(),
                 ),
