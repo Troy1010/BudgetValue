@@ -1,5 +1,6 @@
 package com.tminus1010.buva.app
 
+import com.tminus1010.buva.all_layers.InvalidStateException
 import com.tminus1010.buva.data.AccountsRepo
 import com.tminus1010.buva.data.ActivePlanRepo
 import com.tminus1010.buva.data.ActiveReconciliationRepo
@@ -34,24 +35,20 @@ class ActiveAccountsReconciliationInteractor @Inject constructor(
     }
 
     suspend fun save() {
-        when (val reconciliationToDo = reconciliationsToDoInteractor.currentReconciliationToDo.first()) {
-            is ReconciliationToDo.PlanZ ->
-                activePlanReconciliationInteractor.save()
-            else ->
-                reconciliationsRepo.push(
-                    Reconciliation(
-                        date = when (reconciliationToDo) {
-                            is ReconciliationToDo.Anytime ->
-                                LocalDate.now()
-                            is ReconciliationToDo.Accounts ->
-                                reconciliationToDo.date
-                            else -> error("Unhandled type:$reconciliationToDo")
-                        },
-                        total = activeReconciliationCAsAndTotal.first().total,
-                        categoryAmounts = activeReconciliationRepo.activeReconciliationCAs.first(),
-                    )
-                )
-        }
+        if (!budgeted.first().isAllValid) throw InvalidStateException()
+        reconciliationsRepo.push(
+            Reconciliation(
+                date = when (val reconciliationToDo = reconciliationsToDoInteractor.currentReconciliationToDo.first()) {
+                    is ReconciliationToDo.Anytime ->
+                        LocalDate.now()
+                    is ReconciliationToDo.Accounts ->
+                        reconciliationToDo.date
+                    else -> error("Unhandled type:$reconciliationToDo")
+                },
+                total = activeReconciliationCAsAndTotal.first().total,
+                categoryAmounts = activeReconciliationRepo.activeReconciliationCAs.first(),
+            )
+        )
     }
 
     suspend fun resolve() {

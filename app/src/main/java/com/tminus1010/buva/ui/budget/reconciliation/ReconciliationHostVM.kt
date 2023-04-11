@@ -17,6 +17,7 @@ import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onError
 import kotlinx.coroutines.launch
@@ -39,7 +40,14 @@ class ReconciliationHostVM @Inject constructor(
                     else -> throw Exception(it)
                 }
             },
-            block = { activeAccountsReconciliationInteractor.save() },
+            block = {
+                when (reconciliationsToDoInteractor.currentReconciliationToDo.first()) {
+                    is ReconciliationToDo.PlanZ ->
+                        activePlanReconciliationInteractor.save()
+                    else ->
+                        activeAccountsReconciliationInteractor.save()
+                }
+            },
         )
             .use(throbberSharedVM)
     }
