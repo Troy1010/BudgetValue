@@ -86,7 +86,7 @@ object MoshiAdapters {
         if (s == "null")
             ResetStrategy.Basic(null)
         else
-            ResetStrategy.Basic(s.toBigDecimal())
+            ResetStrategy.Basic(runCatching { s.toBigDecimal() }.getOrDefault(BigDecimal.ZERO))
 
     /**
      * [LocalDate]
