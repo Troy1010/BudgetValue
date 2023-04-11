@@ -1,6 +1,5 @@
 package com.tminus1010.buva.ui.all_features
 
-import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.app.TransactionsInteractor
 import com.tminus1010.buva.data.AccountsRepo
 import com.tminus1010.buva.data.TransactionsRepo
@@ -28,9 +27,7 @@ class ReadyToBudgetPresentationFactory @Inject constructor(
                             onContinue = onContinue,
                             onYes = { navigator.navToCategorize() },
                         )
-                    is NoAccountsExistException,
-                    is AccountsNotUpdatedRecentlyException,
-                    ->
+                    is AccountsNotUpdatedRecentlyException ->
                         activityWrapper.showAlertDialog(
                             body = NativeText.Simple("It's usually a good idea to update your accounts before budgeting.\n\nDo you want to go there now?"),
                             onContinue = onContinue,
@@ -47,7 +44,6 @@ class ReadyToBudgetPresentationFactory @Inject constructor(
     }
 
     class CategorizationIsNotCompleteException : Exception()
-    class NoAccountsExistException : Exception()
     class AccountsNotUpdatedRecentlyException : Exception()
     class NoRecentTransactionImportItemException : Exception()
 
@@ -56,12 +52,10 @@ class ReadyToBudgetPresentationFactory @Inject constructor(
         // TODO: using .first() here might cause problems if default values before real emission would give incorrect results.
         if (!transactionsInteractor.transactionsAggregate.first().areAllSpendsCategorized)
             throw CategorizationIsNotCompleteException()
-        else if (accountsRepo.accountsAggregate.value?.accounts?.ifEmpty { null } == null)
-            throw NoAccountsExistException()
         else if (
-            accountsRepo.accountsUpdateInfos.first().map { it.date }.maxByOrNull { it }
-                ?.let { Period.between(it, LocalDate.now()).days > 7 }
-                ?: true
+            accountsRepo.accountsAggregate.first().accounts.isEmpty()
+            || accountsRepo.accountsUpdateInfos.first().map { it.date }.maxByOrNull { it }
+                ?.let { Period.between(it, LocalDate.now()).days > 7 } ?: true
         )
             throw AccountsNotUpdatedRecentlyException()
         else if (
