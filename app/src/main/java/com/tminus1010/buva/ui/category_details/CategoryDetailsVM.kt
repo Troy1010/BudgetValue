@@ -121,11 +121,17 @@ class CategoryDetailsVM @Inject constructor(
     // # Private
     private val originalCategory = savedStateHandle.get<Category>(KEY1)
     private val category = savedStateHandle.getLiveData<Category>(KEY1)
+    private val transactionMatcherVMItems =
+        transactionMatcherPresentationFactory.viewModelItems(
+            transactionMatcher = category.map { it.onImportTransactionMatcher },
+            onChange = { category.value = category.value?.copy(onImportTransactionMatcher = it) },
+            userNavToChooseTransactionForTransactionMatcher = ::userNavToChooseTransactionForTransactionMatcher,
+        ).asFlow()
 
     // # State
     val title = flowOf("Category").shareIn(viewModelScope, SharingStarted.Eagerly, 1)
     val optionsTableView =
-        combine(category.asFlow(), transactionMatcherPresentationFactory.viewModelItems(category.map { it.onImportTransactionMatcher }, { category.value = category.value?.copy(onImportTransactionMatcher = it) }, ::userNavToChooseTransactionForTransactionMatcher).asFlow())
+        combine(category.asFlow(), transactionMatcherVMItems)
         { category, transactionMatcherVMItems ->
             TableViewVMItem(
                 recipeGrid = listOfNotNull(
