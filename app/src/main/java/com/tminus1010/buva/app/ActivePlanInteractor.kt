@@ -2,6 +2,7 @@ package com.tminus1010.buva.app
 
 import com.tminus1010.buva.all_layers.extensions.isZero
 import com.tminus1010.buva.data.ActivePlanRepo
+import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.averagedCategoryAmounts
 import com.tminus1010.buva.domain.averagedTotal
 import kotlinx.coroutines.flow.first
@@ -16,5 +17,13 @@ class ActivePlanInteractor @Inject constructor(
     suspend fun estimateActivePlanFromHistory() {
         activePlanRepo.updateTotal(transactionsInteractor.incomeBlocks.first().averagedTotal())
         activePlanRepo.pushCategoryAmounts(transactionsInteractor.spendBlocks.first().filter { it.defaultAmount.isZero }.averagedCategoryAmounts())
+    }
+
+    suspend fun fillIntoCategory(category: Category) {
+        val activeReconciliationCAs = activePlanRepo.activePlan.first().categoryAmounts
+        activePlanRepo.updateCategoryAmount(
+            category = category,
+            amount = activeReconciliationCAs.calcCategoryAmountToGetTargetDefaultAmount(category, -activePlanRepo.activePlan.first().total),
+        )
     }
 }

@@ -6,6 +6,7 @@ import com.tminus1010.buva.all_layers.categoryComparator
 import com.tminus1010.buva.all_layers.extensions.flatMapSourceMap
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.buva.all_layers.source_objects.SourceMap
+import com.tminus1010.buva.app.ActiveAccountsReconciliationInteractor
 import com.tminus1010.buva.app.ActivePlanInteractor
 import com.tminus1010.buva.app.UserCategories
 import com.tminus1010.buva.data.ActivePlanRepo
@@ -52,6 +53,10 @@ class PlanVM @Inject constructor(
         navigator.navToEditCategory(category)
     }
 
+    fun userFillIntoCategory(category: Category) {
+        GlobalScope.launch { activePlanInteractor.fillIntoCategory(category) }
+    }
+
     // # Private
     private val categoryAmounts =
         combine(activePlanRepo.activePlan.map { it.categoryAmounts }, userCategories.flow)
@@ -78,7 +83,13 @@ class PlanVM @Inject constructor(
                             TextVMItem("Plan", style = TextVMItem.Style.HEADER),
                             MoneyEditVMItem(text2 = activePlanRepo.activePlan.map { it.total.toString() }, onDone = { userSaveExpectedIncome(it) }),
                             TextVMItem(text3 = activePlanRepo.activePlan.map { it.defaultAmount.toString() }),
-                            *categoryAmountItemObservables.map { (category, amount) -> MoneyEditVMItem(text2 = amount.map { it.toString() }, onDone = { userSaveActivePlanCA(category, it) }) }.toTypedArray()
+                            *categoryAmountItemObservables.map { (category, amount) ->
+                                MoneyEditVMItem(
+                                    text2 = amount.map { it.toString() },
+                                    onDone = { userSaveActivePlanCA(category, it) },
+                                    menuVMItems = MenuVMItems(MenuVMItem("Fill into category", onClick = { userFillIntoCategory(category) }))
+                                )
+                            }.toTypedArray()
                         ),
                         listOf(
                             TextVMItem("Reset Max", style = TextVMItem.Style.HEADER),
