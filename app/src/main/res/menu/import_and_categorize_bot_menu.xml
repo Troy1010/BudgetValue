@@ -7,6 +7,6 @@
         android:id="@+id/accountsFrag"
         android:title="Accounts" />
     <item
-        android:id="@+id/categorizeFrag"
+        android:id="@+id/categorizeNestedGraph"
         android:title="Categorize" />
 </menu>
