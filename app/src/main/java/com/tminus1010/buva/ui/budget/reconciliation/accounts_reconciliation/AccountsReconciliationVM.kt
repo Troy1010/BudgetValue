@@ -3,6 +3,7 @@ package com.tminus1010.buva.ui.budget.reconciliation.accounts_reconciliation
 import androidx.lifecycle.ViewModel
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.buva.app.ActiveAccountsReconciliationInteractor
+import com.tminus1010.buva.app.BudgetedInteractor
 import com.tminus1010.buva.app.UserCategories
 import com.tminus1010.buva.data.ActiveReconciliationRepo
 import com.tminus1010.buva.domain.Category
@@ -20,6 +21,7 @@ class AccountsReconciliationVM @Inject constructor(
     private val activeAccountsReconciliationInteractor: ActiveAccountsReconciliationInteractor,
     private val activeReconciliationRepo: ActiveReconciliationRepo,
     private val userCategories: UserCategories,
+    private val budgetedInteractor: BudgetedInteractor,
 ) : ViewModel() {
     // # User Intents
     fun userSetCategoryAmount(category: Category, s: String) {
@@ -40,7 +42,7 @@ class AccountsReconciliationVM @Inject constructor(
 
     // # State
     val reconciliationTableView =
-        combine(userCategories.flow, activeAccountsReconciliationInteractor.activeReconciliationCAsAndTotal, activeAccountsReconciliationInteractor.budgeted)
+        combine(userCategories.flow, activeAccountsReconciliationInteractor.activeReconciliationCAsAndTotal, budgetedInteractor.budgeted)
         { categories, activeReconciliation, budgeted ->
             TableViewVMItem(
                 recipeGrid = listOf(
