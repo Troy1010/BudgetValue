@@ -12,7 +12,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton // TODO: Using Singleton to avoid excessive leaks while using GlobalScope without any disposal strategy.
-class PlanReconciliationInteractor @Inject constructor(
+class ActivePlanReconciliationInteractor @Inject constructor(
     private val activeReconciliationRepo: ActiveReconciliationRepo,
     private val reconciliationsToDoInteractor: ReconciliationsToDoInteractor,
     private val historyInteractor: HistoryInteractor,

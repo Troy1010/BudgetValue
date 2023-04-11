@@ -2,7 +2,7 @@ package com.tminus1010.buva.ui.budget.reconciliation.accounts_reconciliation
 
 import androidx.lifecycle.ViewModel
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
-import com.tminus1010.buva.app.ActiveReconciliationInteractor
+import com.tminus1010.buva.app.ActiveAccountsReconciliationInteractor
 import com.tminus1010.buva.app.UserCategories
 import com.tminus1010.buva.data.ActiveReconciliationRepo
 import com.tminus1010.buva.domain.Category
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountsReconciliationVM @Inject constructor(
-    private val activeReconciliationInteractor: ActiveReconciliationInteractor,
+    private val activeAccountsReconciliationInteractor: ActiveAccountsReconciliationInteractor,
     private val activeReconciliationRepo: ActiveReconciliationRepo,
     userCategories: UserCategories,
 ) : ViewModel() {
@@ -32,7 +32,7 @@ class AccountsReconciliationVM @Inject constructor(
                 category = category,
                 activeReconciliationRepo.activeReconciliationCAs.first().calcFillAmount(
                     fillCategory = category,
-                    total = activeReconciliationInteractor.activeReconciliationCAsAndTotal.first().total,
+                    total = activeAccountsReconciliationInteractor.activeReconciliationCAsAndTotal.first().total,
                 ),
             )
         }
@@ -40,7 +40,7 @@ class AccountsReconciliationVM @Inject constructor(
 
     // # State
     val reconciliationTableView =
-        combine(userCategories.flow, activeReconciliationInteractor.activeReconciliationCAsAndTotal, activeReconciliationInteractor.budgeted)
+        combine(userCategories.flow, activeAccountsReconciliationInteractor.activeReconciliationCAsAndTotal, activeAccountsReconciliationInteractor.budgeted)
         { categories, activeReconciliation, budgeted ->
             TableViewVMItem(
                 recipeGrid = listOf(

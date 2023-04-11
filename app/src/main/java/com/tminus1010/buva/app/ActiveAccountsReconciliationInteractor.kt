@@ -13,15 +13,17 @@ import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.time.LocalDate
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class ActiveReconciliationInteractor @Inject constructor(
+@Singleton // TODO: Using Singleton to avoid excessive leaks while using GlobalScope without any disposal strategy.
+class ActiveAccountsReconciliationInteractor @Inject constructor(
     private val activeReconciliationRepo: ActiveReconciliationRepo,
     private val reconciliationsToDoInteractor: ReconciliationsToDoInteractor,
     private val activePlanRepo: ActivePlanRepo,
     private val reconciliationsRepo: ReconciliationsRepo,
-    private val planReconciliationInteractor: PlanReconciliationInteractor,
-    accountsRepo: AccountsRepo,
-    transactionsInteractor: TransactionsInteractor,
+    private val activePlanReconciliationInteractor: ActivePlanReconciliationInteractor,
+    private val accountsRepo: AccountsRepo,
+    private val transactionsInteractor: TransactionsInteractor,
 ) {
     suspend fun fillIntoCategory(category: Category) {
         val activeReconciliationCAs = activeReconciliationRepo.activeReconciliationCAs.first()
@@ -35,7 +37,7 @@ class ActiveReconciliationInteractor @Inject constructor(
     suspend fun save() {
         when (val reconciliationToDo = reconciliationsToDoInteractor.currentReconciliationToDo.first()) {
             is ReconciliationToDo.PlanZ ->
-                planReconciliationInteractor.save()
+                activePlanReconciliationInteractor.save()
             else ->
                 reconciliationsRepo.push(
                     Reconciliation(
@@ -56,7 +58,7 @@ class ActiveReconciliationInteractor @Inject constructor(
     suspend fun reset() {
         when (reconciliationsToDoInteractor.currentReconciliationToDo.first()) {
             is ReconciliationToDo.PlanZ ->
-                planReconciliationInteractor.reset()
+                activePlanReconciliationInteractor.reset()
 //                    activePlanRepo.activePlan.first().categoryAmounts
 //                    CategoryAmounts()
             else ->
@@ -68,7 +70,7 @@ class ActiveReconciliationInteractor @Inject constructor(
         reconciliationsToDoInteractor.currentReconciliationToDo.flatMapLatest { currentReconciliationToDo ->
             when (currentReconciliationToDo) {
                 is ReconciliationToDo.PlanZ ->
-                    planReconciliationInteractor.activeReconciliationCAsAndTotal
+                    activePlanReconciliationInteractor.activeReconciliationCAsAndTotal
                 else ->
                     combine(activeReconciliationRepo.activeReconciliationCAs, accountsRepo.accountsAggregate, transactionsInteractor.transactionBlocks, reconciliationsRepo.reconciliations)
                     { activeReconciliationCAs, accountsAggregate, transactionBlocks, reconciliations ->
@@ -130,7 +132,7 @@ class ActiveReconciliationInteractor @Inject constructor(
         reconciliationsToDoInteractor.currentReconciliationToDo.flatMapLatest { currentReconciliationToDo ->
             when (currentReconciliationToDo) {
                 is ReconciliationToDo.PlanZ ->
-                    planReconciliationInteractor.targetDefaultAmount
+                    activePlanReconciliationInteractor.targetDefaultAmount
                 else ->
                     flowOf(BigDecimal.ZERO)
             }

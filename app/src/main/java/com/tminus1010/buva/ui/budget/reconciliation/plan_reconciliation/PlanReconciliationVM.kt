@@ -6,8 +6,8 @@ import androidx.lifecycle.asFlow
 import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.buva.app.ActivePlanInteractor
-import com.tminus1010.buva.app.ActiveReconciliationInteractor
-import com.tminus1010.buva.app.PlanReconciliationInteractor
+import com.tminus1010.buva.app.ActiveAccountsReconciliationInteractor
+import com.tminus1010.buva.app.ActivePlanReconciliationInteractor
 import com.tminus1010.buva.app.UserCategories
 import com.tminus1010.buva.data.ActiveReconciliationRepo
 import com.tminus1010.buva.domain.Category
@@ -26,9 +26,9 @@ class PlanReconciliationVM @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val activeReconciliationRepo: ActiveReconciliationRepo,
     userCategories: UserCategories,
-    private val activeReconciliationInteractor: ActiveReconciliationInteractor,
+    private val activeAccountsReconciliationInteractor: ActiveAccountsReconciliationInteractor,
     private val activePlanInteractor: ActivePlanInteractor,
-    private val planReconciliationInteractor: PlanReconciliationInteractor,
+    private val activePlanReconciliationInteractor: ActivePlanReconciliationInteractor,
 ) : ViewModel() {
     // # User Intents
     fun userUpdateActiveReconciliationCategoryAmount(category: Category, s: String) {
@@ -36,7 +36,7 @@ class PlanReconciliationVM @Inject constructor(
     }
 
     fun userFillIntoCategory(category: Category) {
-        GlobalScope.launch { activeReconciliationInteractor.fillIntoCategory(category) }
+        GlobalScope.launch { activeAccountsReconciliationInteractor.fillIntoCategory(category) }
     }
 
     // # Private
@@ -45,7 +45,7 @@ class PlanReconciliationVM @Inject constructor(
     // # State
     val subTitle = reconciliationToDo.map { it.transactionBlock.datePeriod!!.toDisplayStr() }
     val reconciliationTableView =
-        combine(userCategories.flow, planReconciliationInteractor.activeReconciliationCAsAndTotal, planReconciliationInteractor.budgeted, reconciliationToDo, activePlanInteractor.activePlan)
+        combine(userCategories.flow, activePlanReconciliationInteractor.activeReconciliationCAsAndTotal, activePlanReconciliationInteractor.budgeted, reconciliationToDo, activePlanInteractor.activePlan)
         { categories, activeReconciliation, budgeted, reconciliationToDo, activePlan ->
             TableViewVMItem(
                 recipeGrid = listOf(

@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.InvalidStateException
 import com.tminus1010.buva.all_layers.extensions.value
-import com.tminus1010.buva.app.ActiveReconciliationInteractor
-import com.tminus1010.buva.app.PlanReconciliationInteractor
+import com.tminus1010.buva.app.ActiveAccountsReconciliationInteractor
+import com.tminus1010.buva.app.ActivePlanReconciliationInteractor
 import com.tminus1010.buva.app.ReconciliationsToDoInteractor
 import com.tminus1010.buva.domain.ReconciliationToDo
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
@@ -25,10 +25,10 @@ import javax.inject.Inject
 @HiltViewModel
 class ReconciliationHostVM @Inject constructor(
     private val reconciliationsToDoInteractor: ReconciliationsToDoInteractor,
-    private val activeReconciliationInteractor: ActiveReconciliationInteractor,
+    private val activeAccountsReconciliationInteractor: ActiveAccountsReconciliationInteractor,
     private val showToast: ShowToast,
     private val throbberSharedVM: ThrobberSharedVM,
-    private val planReconciliationInteractor: PlanReconciliationInteractor,
+    private val activePlanReconciliationInteractor: ActivePlanReconciliationInteractor,
 ) : ViewModel() {
     // # User Intents
     fun userSave() {
@@ -39,19 +39,19 @@ class ReconciliationHostVM @Inject constructor(
                     else -> throw Exception(it)
                 }
             },
-            block = { activeReconciliationInteractor.save() },
+            block = { activeAccountsReconciliationInteractor.save() },
         )
             .use(throbberSharedVM)
     }
 
     fun userResetActiveReconciliation() {
-        GlobalScope.launch { activeReconciliationInteractor.reset() }
+        GlobalScope.launch { activeAccountsReconciliationInteractor.reset() }
             .use(throbberSharedVM)
     }
 
     fun userMatchUp() {
         when (val x = reconciliationsToDoInteractor.currentReconciliationToDo.value) {
-            is ReconciliationToDo.PlanZ -> GlobalScope.launch { planReconciliationInteractor.matchUp() }.use(throbberSharedVM)
+            is ReconciliationToDo.PlanZ -> GlobalScope.launch { activePlanReconciliationInteractor.matchUp() }.use(throbberSharedVM)
             else -> error("Unhandled type:$x")
         }
     }
