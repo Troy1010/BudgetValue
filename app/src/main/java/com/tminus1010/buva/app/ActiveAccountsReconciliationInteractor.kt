@@ -22,6 +22,7 @@ class ActiveAccountsReconciliationInteractor @Inject constructor(
     private val activePlanReconciliationInteractor: ActivePlanReconciliationInteractor,
     private val accountsRepo: AccountsRepo,
     private val transactionsInteractor: TransactionsInteractor,
+    private val historyInteractor: HistoryInteractor,
 ) {
     suspend fun fillIntoCategory(category: Category) {
         val activeReconciliationCAs = activeReconciliationRepo.activeReconciliationCAs.first()
@@ -95,6 +96,16 @@ class ActiveAccountsReconciliationInteractor @Inject constructor(
             }
         }
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
+
+    val budgeted =
+        historyInteractor.entireHistory
+            .map { categoryAmountsAndTotalsAggregate ->
+                CategoryAmountsAndTotalWithValidation(
+                    categoryAmountsAndTotal = categoryAmountsAndTotalsAggregate.addedTogether,
+                    caValidation = { (it ?: BigDecimal.ZERO) >= BigDecimal.ZERO },
+                    defaultAmountValidation = { true },
+                )
+            }
 
     init {
         // Requirement: Reset ActiveReconciliation whenever something it derives from changes.
