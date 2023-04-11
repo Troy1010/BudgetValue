@@ -27,7 +27,7 @@ class ReviewPieChartFrag : Fragment(R.layout.frag_review_pie_chart) {
         vb.tvTitle.bind(reviewPieChartVM.title) { text = it }
         vb.ivLeft.bind(reviewPieChartVM.leftVisibility) { visibility = it }
         vb.ivRight.bind(reviewPieChartVM.isRightVisible) { visibility = it }
-        // # UserIntents
+        // # User Intent
         vb.ivLeft.onClick { reviewPieChartVM.userPrevious.onNext(Unit) }
         vb.ivRight.onClick { reviewPieChartVM.userNext.onNext(Unit) }
     }
