@@ -24,7 +24,7 @@
         android:id="@+id/budgetFrag"
         android:name="com.tminus1010.buva.ui.budget.budget.BudgetFrag"
         android:label="Budget"
-        tools:layout="@layout/frag_budget" />
+        tools:layout="@layout/item_tm_table_view" />
     <fragment
         android:id="@+id/planFrag"
         android:name="com.tminus1010.buva.ui.budget.plan.PlanFrag"
