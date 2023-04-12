@@ -11,26 +11,26 @@ import org.junit.Test
 import java.math.BigDecimal
 
 class Playground {
-    @Test
-    fun test1() {
-        val b = Category("Emergency", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(BigDecimal("4")))
-        val a =
-            mapOf(
-                Category("Unrecognized", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(BigDecimal("0"))) to BigDecimal("23.33"),
-                Category("Improvements", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(BigDecimal("0"))) to BigDecimal("943.27"),
-                Category("Medical", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(BigDecimal("0"))) to BigDecimal("283.13"),
-                Category("Rent", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(BigDecimal("0"))) to BigDecimal("83.35"),
-                Category("Unknown", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(BigDecimal("0"))) to BigDecimal("8"),
-                Category("Activities", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(null)) to BigDecimal("8"),
-                b.copy(resetStrategy = ResetStrategy.Basic(BigDecimal("5"))) to BigDecimal("50.71"),
-                Category("Gifts", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(null)) to BigDecimal("31.70"),
-                Category("Misc", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(BigDecimal("9.99"))) to BigDecimal("123.89"),
-                Category("Savings", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(null)) to BigDecimal("211.07"),
-            )
-                .toSortedMap(categoryComparator)
-        (b !in a).logx("mmm1")
-        (!a.reliableContains(b)).logx("mmm2")
-    }
+//    @Test
+//    fun test1() {
+//        val b = Category("Emergency", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(BigDecimal("4")))
+//        val a =
+//            mapOf(
+//                Category("Unrecognized", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(BigDecimal("0"))) to BigDecimal("23.33"),
+//                Category("Improvements", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(BigDecimal("0"))) to BigDecimal("943.27"),
+//                Category("Medical", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(BigDecimal("0"))) to BigDecimal("283.13"),
+//                Category("Rent", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(BigDecimal("0"))) to BigDecimal("83.35"),
+//                Category("Unknown", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(BigDecimal("0"))) to BigDecimal("8"),
+//                Category("Activities", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(null)) to BigDecimal("8"),
+//                b.copy(resetStrategy = ResetStrategy.Basic(BigDecimal("5"))) to BigDecimal("50.71"),
+//                Category("Gifts", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(null)) to BigDecimal("31.70"),
+//                Category("Misc", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(BigDecimal("9.99"))) to BigDecimal("123.89"),
+//                Category("Savings", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(null)) to BigDecimal("211.07"),
+//            )
+//                .toSortedMap(categoryComparator)
+//        (b !in a).logx("mmm1")
+//        (!a.reliableContains(b)).logx("mmm2")
+//    }
 
     @Test
     fun test2() {

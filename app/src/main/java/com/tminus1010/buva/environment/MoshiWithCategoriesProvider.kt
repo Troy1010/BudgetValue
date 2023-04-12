@@ -3,6 +3,7 @@ package com.tminus1010.buva.environment
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.tminus1010.buva.domain.Category
+import com.tminus1010.buva.environment.adapter.*
 import javax.inject.Inject
 
 /**
@@ -11,8 +12,13 @@ import javax.inject.Inject
 class MoshiWithCategoriesProvider @Inject constructor(moshiWithCategoriesAdapters: MoshiWithCategoriesAdapters) {
     val moshi =
         Moshi.Builder()
+            .add(PairAdapterFactory)
+            .add(TripleAdapterFactory)
+            .add(BigDecimalAdapter)
+            .add(ResetStrategyAdapter)
+            .add(ResolutionStrategyAdapter)
             .addLast(KotlinJsonAdapterFactory())
             .add(moshiWithCategoriesAdapters)
-            .add(MoshiAdapters)
+            .add(MiscAdapter)
             .build()
 }

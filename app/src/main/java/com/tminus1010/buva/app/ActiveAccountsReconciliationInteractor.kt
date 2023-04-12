@@ -59,9 +59,10 @@ class ActiveAccountsReconciliationInteractor @Inject constructor(
         activeReconciliationRepo.pushCategoryAmounts(
             categories
                 .associateWith {
-                    when (it.planResolutionStrategy) {
-                        is ResolutionStrategy.Basic -> it.planResolutionStrategy.calc(it, activeReconciliationCAs, budgetedCAs)
-                        is ResolutionStrategy.MatchPlan -> it.planResolutionStrategy.calc(it, activeReconciliationCAs, budgetedCAs, activePlanCAs)
+                    when (val x = it.reconciliationStrategyGroup.planResolutionStrategy) {
+                        is ResolutionStrategy.Basic -> x.calc(it, activeReconciliationCAs, budgetedCAs)
+                        is ResolutionStrategy.MatchPlan -> x.calc(it, activeReconciliationCAs, budgetedCAs, activePlanCAs)
+                        else -> activeReconciliationCAs[it] ?: BigDecimal.ZERO
                     }
                 }
                 .toCategoryAmounts()
@@ -75,8 +76,9 @@ class ActiveAccountsReconciliationInteractor @Inject constructor(
         activeReconciliationRepo.pushCategoryAmounts(
             categories
                 .associateWith {
-                    when (it.resetStrategy) {
-                        is ResetStrategy.Basic -> it.resetStrategy.calc(it, activeReconciliationCAs, budgetedCAs)
+                    when (val x = it.reconciliationStrategyGroup.resetStrategy) {
+                        is ResetStrategy.Basic -> x.calc(it, activeReconciliationCAs, budgetedCAs)
+                        null -> activeReconciliationCAs[it] ?: BigDecimal.ZERO
                     }
                 }
                 .toCategoryAmounts()

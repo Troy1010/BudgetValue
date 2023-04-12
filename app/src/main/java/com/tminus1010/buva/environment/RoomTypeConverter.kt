@@ -4,6 +4,7 @@ import androidx.room.TypeConverter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.tminus1010.buva.domain.*
+import com.tminus1010.buva.environment.adapter.*
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import java.math.BigDecimal
@@ -12,7 +13,12 @@ import java.time.LocalDate
 object RoomTypeConverter {
     val moshi =
         Moshi.Builder()
-            .add(MoshiAdapters)
+            .add(PairAdapterFactory)
+            .add(TripleAdapterFactory)
+            .add(BigDecimalAdapter)
+            .add(ResetStrategyAdapter)
+            .add(ResolutionStrategyAdapter)
+            .add(MiscAdapter)
             .addLast(KotlinJsonAdapterFactory())
             .build()
 
@@ -86,5 +92,13 @@ object RoomTypeConverter {
 
     @TypeConverter
     fun toListOfString(s: String): List<String>? =
+        moshi.fromJson(s)
+
+    @TypeConverter
+    fun toJson(x: ReconciliationStrategyGroup): String =
+        moshi.toJson(x)
+
+    @TypeConverter
+    fun fromJson2345(s: String): ReconciliationStrategyGroup? =
         moshi.fromJson(s)
 }

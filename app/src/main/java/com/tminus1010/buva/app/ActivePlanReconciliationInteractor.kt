@@ -50,8 +50,9 @@ class ActivePlanReconciliationInteractor @Inject constructor(
         activeReconciliationRepo.pushCategoryAmounts(
             categories
                 .associateWith {
-                    when (it.resetStrategy) {
-                        is ResetStrategy.Basic -> it.resetStrategy.calc(it, activeReconciliationCAs, budgetedCAs)
+                    when (val x = it.reconciliationStrategyGroup.resetStrategy) {
+                        is ResetStrategy.Basic -> x.calc(it, activeReconciliationCAs, budgetedCAs)
+                        else -> activeReconciliationCAs[it] ?: BigDecimal.ZERO
                     }
                 }
                 .toCategoryAmounts()
