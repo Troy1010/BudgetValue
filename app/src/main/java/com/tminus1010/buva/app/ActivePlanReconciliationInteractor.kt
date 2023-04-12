@@ -105,7 +105,7 @@ class ActivePlanReconciliationInteractor @Inject constructor(
                     summedRelevantHistory,
                     CategoryAmountsAndTotal.FromTotal(activePlan.categoryAmounts, BigDecimal.ZERO),
                 ),
-                caValidation = { (it ?: BigDecimal.ZERO) >= BigDecimal.ZERO },
+                caValidation = { (it ?: BigDecimal.ZERO) >= BigDecimal.ZERO }, // TODO: Doesn't really make sense to have caValidation when each category is validated in its own way.
                 defaultAmountValidation = { true },
             )
         }
