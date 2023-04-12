@@ -6,7 +6,6 @@ import com.tminus1010.buva.all_layers.categoryComparator
 import com.tminus1010.buva.all_layers.extensions.flatMapSourceMap
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.buva.all_layers.source_objects.SourceMap
-import com.tminus1010.buva.app.ActiveAccountsReconciliationInteractor
 import com.tminus1010.buva.app.ActivePlanInteractor
 import com.tminus1010.buva.app.UserCategories
 import com.tminus1010.buva.data.ActivePlanRepo
@@ -63,7 +62,6 @@ class PlanVM @Inject constructor(
         { categoryAmounts, userCategories ->
             userCategories.associateWith { BigDecimal.ZERO }
                 .plus(categoryAmounts)
-                .toSortedMap(categoryComparator)
         }
 
     // # State
@@ -71,19 +69,20 @@ class PlanVM @Inject constructor(
         categoryAmounts
             .flatMapSourceMap(SourceMap(viewModelScope)) { it.itemFlowMap }
             .map { categoryAmountItemObservables ->
+                val categoryAmountItemObservablesRedefined = categoryAmountItemObservables.toSortedMap(categoryComparator)
                 TableViewVMItem(
                     recipeGrid = listOf(
                         listOf(
                             TextVMItem("Category", style = TextVMItem.Style.HEADER),
                             TextVMItem("Expected Income"),
                             TextVMItem("Default"),
-                            *categoryAmountItemObservables.keys.map { TextVMItem(it.name, menuVMItems = MenuVMItems(MenuVMItem(title = "Edit", onClick = { userEditCategory(it) }), MenuVMItem(title = "Create Category", onClick = { userCreateCategory() }))) }.toTypedArray()
+                            *categoryAmountItemObservablesRedefined.keys.map { TextVMItem(it.name, menuVMItems = MenuVMItems(MenuVMItem(title = "Edit", onClick = { userEditCategory(it) }), MenuVMItem(title = "Create Category", onClick = { userCreateCategory() }))) }.toTypedArray()
                         ),
                         listOf(
                             TextVMItem("Plan", style = TextVMItem.Style.HEADER),
                             MoneyEditVMItem(text2 = activePlanRepo.activePlan.map { it.total.toString() }, onDone = { userSaveExpectedIncome(it) }),
                             TextVMItem(text3 = activePlanRepo.activePlan.map { it.defaultAmount.toString() }),
-                            *categoryAmountItemObservables.map { (category, amount) ->
+                            *categoryAmountItemObservablesRedefined.map { (category, amount) ->
                                 MoneyEditVMItem(
                                     text2 = amount.map { it.toString() },
                                     onDone = { userSaveActivePlanCA(category, it) },
@@ -95,10 +94,16 @@ class PlanVM @Inject constructor(
                             TextVMItem("Reset Max", style = TextVMItem.Style.HEADER),
                             TextVMItem(),
                             TextVMItem(),
-                            *categoryAmountItemObservables.keys.map { TextVMItem(text1 = it.resetStrategy.toDisplayStr(), menuVMItems = MenuVMItems(MenuVMItem("Edit Category", onClick = { userEditCategory(it) }))) }.toTypedArray()
+                            *categoryAmountItemObservablesRedefined.keys.map { TextVMItem(text1 = it.resetStrategy.toDisplayStr(), menuVMItems = MenuVMItems(MenuVMItem("Edit Category", onClick = { userEditCategory(it) }))) }.toTypedArray(),
+                        ),
+                        listOf(
+                            TextVMItem("Plan Resolve", style = TextVMItem.Style.HEADER),
+                            TextVMItem(),
+                            TextVMItem(),
+                            *categoryAmountItemObservablesRedefined.keys.map { TextVMItem(text1 = it.planResolutionStrategy.toDisplayStr(), menuVMItems = MenuVMItems(MenuVMItem("Edit Category", onClick = { userEditCategory(it) }))) }.toTypedArray(),
                         ),
                     ).reflectXY(),
-                    dividerMap = categoryAmountItemObservables.map { it.key }.withIndex()
+                    dividerMap = categoryAmountItemObservablesRedefined.map { it.key }.withIndex()
                         .distinctUntilChangedWith(compareBy { it.value.displayType })
                         .associate { it.index to it.value.displayType.name }
                         .mapKeys { it.key + 3 } // header row, default row
