@@ -19,8 +19,8 @@ sealed class ResolutionStrategy : Parcelable {
             return activePlanValue - budgetedValueIfNoActiveReconciliation
         }
 
-        fun isValid(category: Category, activeReconciliationCAs: CategoryAmounts, budgetedCAs: CategoryAmounts, activePlanCAs: CategoryAmounts): Boolean {
-            return activeReconciliationCAs[category] == calc(category, activeReconciliationCAs, budgetedCAs, activePlanCAs)
+        fun validation(category: Category, activeReconciliationCAs: CategoryAmounts, budgetedCAs: CategoryAmounts, activePlanCAs: CategoryAmounts): Validation {
+            return if (activeReconciliationCAs[category] == calc(category, activeReconciliationCAs, budgetedCAs, activePlanCAs)) Validation.Success else Validation.Failure
         }
     }
 
@@ -45,8 +45,8 @@ sealed class ResolutionStrategy : Parcelable {
                 budgetedMin - budgetedValueIfNoActiveReconciliation
         }
 
-        fun isValid(category: Category, budgetedCAs: CategoryAmounts): Boolean {
-            return (budgetedCAs[category] ?: BigDecimal.ZERO) >= budgetedMin
+        fun validation(category: Category, budgetedCAs: CategoryAmounts): Validation {
+            return if ((budgetedCAs[category] ?: BigDecimal.ZERO) >= budgetedMin) Validation.Success else Validation.Failure
         }
     }
 }

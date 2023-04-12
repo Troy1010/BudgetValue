@@ -67,7 +67,7 @@ class PlanReconciliationVM @Inject constructor(
                         AmountPresentationModel(reconciliationToDo.transactionBlock.defaultAmount),
                         AmountPresentationModel(activePlan.defaultAmount),
                         AmountPresentationModel(activeReconciliation.defaultAmount),
-                        AmountPresentationModel(budgeted.defaultAmount, checkIfValid = { budgeted.isDefaultAmountValid }),
+                        AmountPresentationModel(budgeted.defaultAmount, validation = { budgeted.defaultValidationResult }),
                     ),
                     *categories.map { category ->
                         listOf(
@@ -77,10 +77,10 @@ class PlanReconciliationVM @Inject constructor(
                             CategoryAmountPresentationModel(category, activeReconciliation.categoryAmounts[category], ::userUpdateActiveReconciliationCategoryAmount, menuVMItems = MenuVMItems(MenuVMItem("Fill into category", onClick = { userFillIntoCategory(category) }))),
                             AmountPresentationModel(
                                 bigDecimal = budgeted.categoryAmounts[category],
-                                checkIfValid = {
+                                validation = {
                                     when (val x = category.reconciliationStrategyGroup.planResolutionStrategy) {
-                                        is ResolutionStrategy.MatchPlan -> x.isValid(category, activeReconciliation.categoryAmounts, budgeted.categoryAmounts, activePlan.categoryAmounts)
-                                        is ResolutionStrategy.Basic -> x.isValid(category, budgeted.categoryAmounts)
+                                        is ResolutionStrategy.MatchPlan -> x.validation(category, activeReconciliation.categoryAmounts, budgeted.categoryAmounts, activePlan.categoryAmounts)
+                                        is ResolutionStrategy.Basic -> x.validation(category, budgeted.categoryAmounts)
                                     }
                                 },
                             ),

@@ -49,7 +49,7 @@ class AccountsReconciliationVM @Inject constructor(
                     listOf(
                         TextVMItem("Default"),
                         TextVMItem(activeReconciliation.defaultAmount.toString()),
-                        AmountPresentationModel(budgeted.defaultAmount, checkIfValid = { budgeted.isDefaultAmountValid }),
+                        AmountPresentationModel(budgeted.defaultAmount, validation = { budgeted.defaultValidationResult }),
                     ),
                     *categories.map { category ->
                         listOf(
@@ -57,10 +57,10 @@ class AccountsReconciliationVM @Inject constructor(
                             CategoryAmountPresentationModel(category, activeReconciliation.categoryAmounts[category], ::userSetCategoryAmount, menuVMItems = MenuVMItems(MenuVMItem("Fill into category", onClick = { userFillIntoCategory(category) }))),
                             AmountPresentationModel(
                                 bigDecimal = budgeted.categoryAmounts[category],
-                                checkIfValid = {
+                                validation = {
                                     when (val x = category.reconciliationStrategyGroup.anytimeResolutionStrategy) {
                                         is ResolutionStrategy.MatchPlan -> error("MatchPlan doesn't make sense in AccountsReconciliationVM.")
-                                        is ResolutionStrategy.Basic -> x.isValid(category, budgeted.categoryAmounts)
+                                        is ResolutionStrategy.Basic -> x.validation(category, budgeted.categoryAmounts)
                                     }
                                 },
                             ),

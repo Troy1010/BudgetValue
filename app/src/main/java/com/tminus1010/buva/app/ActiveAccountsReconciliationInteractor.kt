@@ -1,6 +1,7 @@
 package com.tminus1010.buva.app
 
 import com.tminus1010.buva.all_layers.InvalidStateException
+import com.tminus1010.buva.all_layers.extensions.isZero
 import com.tminus1010.buva.data.AccountsRepo
 import com.tminus1010.buva.data.ActivePlanRepo
 import com.tminus1010.buva.data.ActiveReconciliationRepo
@@ -108,8 +109,8 @@ class ActiveAccountsReconciliationInteractor @Inject constructor(
         { activeReconciliationCAsAndTotal, entireHistory ->
             CategoryAmountsAndTotalWithValidation(
                 categoryAmountsAndTotal = CategoryAmountsAndTotal.addTogether(entireHistory.addedTogether, activeReconciliationCAsAndTotal),
-                caValidation = { (it ?: BigDecimal.ZERO) >= BigDecimal.ZERO },
-                defaultAmountValidation = { true },
+                caValidation = { if((it ?: BigDecimal.ZERO) >= BigDecimal.ZERO) Validation.Success else Validation.Failure },
+                defaultAmountValidation = { if (it?.isZero ?: true) Validation.Success else Validation.Warning },
             )
         }
 }

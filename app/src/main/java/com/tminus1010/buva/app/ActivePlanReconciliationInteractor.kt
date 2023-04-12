@@ -1,6 +1,7 @@
 package com.tminus1010.buva.app
 
 import com.tminus1010.buva.all_layers.InvalidStateException
+import com.tminus1010.buva.all_layers.extensions.isZero
 import com.tminus1010.buva.data.ActiveReconciliationRepo
 import com.tminus1010.buva.data.ReconciliationsRepo
 import com.tminus1010.buva.domain.*
@@ -113,16 +114,9 @@ class ActivePlanReconciliationInteractor @Inject constructor(
                     summedRelevantHistory,
                     CategoryAmountsAndTotal.FromTotal(activePlan.categoryAmounts, BigDecimal.ZERO),
                 ),
-                caValidation = { (it ?: BigDecimal.ZERO) >= BigDecimal.ZERO }, // TODO: Doesn't really make sense to have caValidation when each category is validated in its own way.
-                defaultAmountValidation = { true },
+                caValidation = { if ((it ?: BigDecimal.ZERO) >= BigDecimal.ZERO) Validation.Success else Validation.Failure }, // TODO: Doesn't really make sense to have caValidation when each category is validated in its own way.
+                defaultAmountValidation = { if (it?.isZero ?: true) Validation.Success else Validation.Warning },
             )
-        }
-            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
-
-    val targetDefaultAmount =
-        combine(budgeted, activeReconciliationCAsAndTotal)
-        { budgeted, activeReconciliationCAsAndTotal ->
-            activeReconciliationCAsAndTotal.defaultAmount - budgeted.defaultAmount
         }
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 }
