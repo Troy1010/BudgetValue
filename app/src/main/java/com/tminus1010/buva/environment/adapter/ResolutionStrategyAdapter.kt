@@ -16,7 +16,7 @@ object ResolutionStrategyAdapter {
     @FromJson
     fun fromJson21(s: String): ResolutionStrategy =
         when (s) {
-            "null" -> ResolutionStrategy.Basic(null)
+            "null" -> ResolutionStrategy.Basic()
             "MatchPlan" -> ResolutionStrategy.MatchPlan
             else -> ResolutionStrategy.Basic(runCatching { s.toBigDecimal() }.getOrDefault(BigDecimal.ZERO))
         }

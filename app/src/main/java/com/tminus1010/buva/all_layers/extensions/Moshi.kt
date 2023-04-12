@@ -14,9 +14,9 @@ inline fun <reified T> getType(): Type = T::class.java
 @Suppress("UNCHECKED_CAST")
 inline fun <reified T> Moshi.easyToJson(x: T): String {
     return when (getType<T>()) {
-        getType<Triple<ResetStrategy?, ResolutionStrategy?, ResolutionStrategy?>>() -> {
-            val type = Types.newParameterizedType(Triple::class.java, getType<ResetStrategy?>(), getType<ResolutionStrategy?>(), getType<ResolutionStrategy?>())
-            adapter<Triple<ResetStrategy?, ResolutionStrategy?, ResolutionStrategy?>>(type).toJson(x as Triple<ResetStrategy?, ResolutionStrategy?, ResolutionStrategy?>)
+        getType<Triple<ResetStrategy?, ResolutionStrategy, ResolutionStrategy>>() -> {
+            val type = Types.newParameterizedType(Triple::class.java, getType<ResetStrategy?>(), getType<ResolutionStrategy>(), getType<ResolutionStrategy>())
+            adapter<Triple<ResetStrategy?, ResolutionStrategy, ResolutionStrategy>>(type).toJson(x as Triple<ResetStrategy?, ResolutionStrategy, ResolutionStrategy>)
         }
         else -> toJson(x)
     }
@@ -25,9 +25,9 @@ inline fun <reified T> Moshi.easyToJson(x: T): String {
 
 inline fun <reified T : Any> Moshi.easyFromJson(s: String): T {
     return when (getType<T>()) {
-        getType<Triple<ResetStrategy?, ResolutionStrategy?, ResolutionStrategy?>>() -> {
-            val type = Types.newParameterizedType(Triple::class.java, getType<ResetStrategy?>(), getType<ResolutionStrategy?>(), getType<ResolutionStrategy?>())
-            adapter<Triple<ResetStrategy?, ResolutionStrategy?, ResolutionStrategy?>>(type).fromJson(s) as T
+        getType<Triple<ResetStrategy?, ResolutionStrategy, ResolutionStrategy>>() -> {
+            val type = Types.newParameterizedType(Triple::class.java, getType<ResetStrategy?>(), getType<ResolutionStrategy>(), getType<ResolutionStrategy>())
+            adapter<Triple<ResetStrategy?, ResolutionStrategy, ResolutionStrategy>>(type).fromJson(s) as T
         }
         else -> fromJson(s)
     }

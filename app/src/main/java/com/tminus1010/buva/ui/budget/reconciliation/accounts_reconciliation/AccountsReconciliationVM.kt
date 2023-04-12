@@ -64,7 +64,7 @@ class AccountsReconciliationVM @Inject constructor(
                         listOf(
                             TextVMItem(category.name),
                             CategoryAmountPresentationModel(category, activeReconciliation.categoryAmounts[category], ::userSetCategoryAmount, menuVMItems = MenuVMItems(MenuVMItem("Fill into category", onClick = { userDumpIntoCategory(category) }))),
-                            AmountPresentationModel(budgeted.categoryAmounts[category], checkIfValid = { budgeted.isValid(category) }),
+                            AmountPresentationModel(budgeted.categoryAmounts[category], checkIfValid = { budgeted.isValid(category) }), // TODO:Make this checkIfValid similar to PlanReconciliationVM's
                         )
                     }.toTypedArray(),
                 ),

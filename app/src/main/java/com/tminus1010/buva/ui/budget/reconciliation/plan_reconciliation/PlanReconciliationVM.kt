@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import com.tminus1010.buva.all_layers.KEY1
-import com.tminus1010.buva.all_layers.extensions.easyEquals
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.buva.app.ActiveAccountsReconciliationInteractor
 import com.tminus1010.buva.app.ActivePlanInteractor
@@ -82,9 +81,8 @@ class PlanReconciliationVM @Inject constructor(
                                 bigDecimal = budgeted.categoryAmounts[category],
                                 checkIfValid = {
                                     when (val x = category.reconciliationStrategyGroup.planResolutionStrategy) {
-                                        is ResolutionStrategy.MatchPlan -> activePlan.categoryAmounts[category]?.easyEquals(it) ?: true
-                                        is ResolutionStrategy.Basic -> if (x.budgetedMin == null) true else x.budgetedMin < it || x.budgetedMin.easyEquals(it)
-                                        else -> true
+                                        is ResolutionStrategy.MatchPlan -> x.isValid(category, activeReconciliation.categoryAmounts, budgeted.categoryAmounts, activePlan.categoryAmounts)
+                                        is ResolutionStrategy.Basic -> x.isValid(category, budgeted.categoryAmounts)
                                     }
                                 },
                             ),

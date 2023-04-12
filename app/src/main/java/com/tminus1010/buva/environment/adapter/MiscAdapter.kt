@@ -98,12 +98,12 @@ object MiscAdapter {
             "Always",
             "null",
             -> ReconciliationStrategyGroup.Always
-            else -> basicMoshi.easyFromJson<Triple<ResetStrategy?, ResolutionStrategy?, ResolutionStrategy?>>(s)
+            else -> basicMoshi.easyFromJson<Triple<ResetStrategy?, ResolutionStrategy, ResolutionStrategy>>(s)
                 .let {
                     ReconciliationStrategyGroup.Reservoir(
                         resetStrategy = it.first,
-                        planResolutionStrategy = it.second,
-                        anytimeResolutionStrategy = it.third,
+                        planResolutionStrategy = it.second ?: ResolutionStrategy.Basic(), // TODO: Fix this later
+                        anytimeResolutionStrategy = it.third ?: ResolutionStrategy.Basic(), // TODO: Fix this later
                     )
                 }
         }

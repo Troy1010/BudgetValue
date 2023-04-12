@@ -102,18 +102,18 @@ class CategoryDetailsVM @Inject constructor(
     fun userSetPlanResolutionValue(x: BigDecimal?) {
         when (val reconciliationStrategyGroup = category.value!!.reconciliationStrategyGroup) {
             is ReconciliationStrategyGroup.Always ->
-                category.value = category.value!!.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(planResolutionStrategy = ResolutionStrategy.Basic(x)))
+                category.value = category.value!!.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(planResolutionStrategy = ResolutionStrategy.Basic(x ?: BigDecimal.ZERO)))
             is ReconciliationStrategyGroup.Reservoir ->
-                category.value = category.value!!.copy(reconciliationStrategyGroup = reconciliationStrategyGroup.copy(planResolutionStrategy = ResolutionStrategy.Basic(x)))
+                category.value = category.value!!.copy(reconciliationStrategyGroup = reconciliationStrategyGroup.copy(planResolutionStrategy = ResolutionStrategy.Basic(x ?: BigDecimal.ZERO)))
         }
     }
 
     fun userSwitchToResolutionStrategyBasic() {
         when (val reconciliationStrategyGroup = category.value!!.reconciliationStrategyGroup) {
             is ReconciliationStrategyGroup.Always ->
-                category.value = category.value!!.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(planResolutionStrategy = ResolutionStrategy.Basic(null)))
+                category.value = category.value!!.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(planResolutionStrategy = ResolutionStrategy.Basic()))
             is ReconciliationStrategyGroup.Reservoir ->
-                category.value = category.value!!.copy(reconciliationStrategyGroup = reconciliationStrategyGroup.copy(planResolutionStrategy = ResolutionStrategy.Basic(null)))
+                category.value = category.value!!.copy(reconciliationStrategyGroup = reconciliationStrategyGroup.copy(planResolutionStrategy = ResolutionStrategy.Basic()))
         }
     }
 
@@ -210,17 +210,6 @@ class CategoryDetailsVM @Inject constructor(
                                     is ResolutionStrategy.Basic ->
                                         AmountPresentationModel(
                                             bigDecimal = x.budgetedMin,
-                                            onNewAmount = ::userSetPlanResolutionValue,
-                                            menuVMItems = MenuVMItems(
-                                                MenuVMItem(
-                                                    title = "Switch to MatchPlan",
-                                                    onClick = ::userSwitchToResolutionStrategyMatchPlan,
-                                                ),
-                                            ),
-                                        )
-                                    null ->
-                                        AmountPresentationModel(
-                                            bigDecimal = null,
                                             onNewAmount = ::userSetPlanResolutionValue,
                                             menuVMItems = MenuVMItems(
                                                 MenuVMItem(
