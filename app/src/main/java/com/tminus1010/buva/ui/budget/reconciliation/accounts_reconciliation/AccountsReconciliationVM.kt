@@ -7,6 +7,7 @@ import com.tminus1010.buva.app.BudgetedInteractor
 import com.tminus1010.buva.app.UserCategories
 import com.tminus1010.buva.data.ActiveReconciliationRepo
 import com.tminus1010.buva.domain.Category
+import com.tminus1010.buva.domain.ResolutionStrategy
 import com.tminus1010.buva.ui.all_features.view_model_item.*
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -64,7 +65,15 @@ class AccountsReconciliationVM @Inject constructor(
                         listOf(
                             TextVMItem(category.name),
                             CategoryAmountPresentationModel(category, activeReconciliation.categoryAmounts[category], ::userSetCategoryAmount, menuVMItems = MenuVMItems(MenuVMItem("Fill into category", onClick = { userDumpIntoCategory(category) }))),
-                            AmountPresentationModel(budgeted.categoryAmounts[category], checkIfValid = { budgeted.isValid(category) }), // TODO:Make this checkIfValid similar to PlanReconciliationVM's
+                            AmountPresentationModel(
+                                bigDecimal = budgeted.categoryAmounts[category],
+                                checkIfValid = {
+                                    when (val x = category.reconciliationStrategyGroup.anytimeResolutionStrategy) {
+                                        is ResolutionStrategy.MatchPlan -> error("MatchPlan doesn't make sense in AccountsReconciliationVM.")
+                                        is ResolutionStrategy.Basic -> x.isValid(category, budgeted.categoryAmounts)
+                                    }
+                                },
+                            ),
                         )
                     }.toTypedArray(),
                 ),

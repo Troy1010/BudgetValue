@@ -59,10 +59,9 @@ class ActiveAccountsReconciliationInteractor @Inject constructor(
         activeReconciliationRepo.pushCategoryAmounts(
             categories
                 .associateWith {
-                    when (val x = it.reconciliationStrategyGroup.planResolutionStrategy) {
+                    when (val x = it.reconciliationStrategyGroup.anytimeResolutionStrategy) {
                         is ResolutionStrategy.Basic -> x.calc(it, activeReconciliationCAs, budgetedCAs)
                         is ResolutionStrategy.MatchPlan -> x.calc(it, activeReconciliationCAs, budgetedCAs, activePlanCAs)
-                        else -> activeReconciliationCAs[it] ?: BigDecimal.ZERO
                     }
                 }
                 .toCategoryAmounts()
