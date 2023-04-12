@@ -1,7 +1,6 @@
 package com.tminus1010.buva.app
 
 import com.tminus1010.buva.all_layers.InvalidStateException
-import com.tminus1010.buva.all_layers.extensions.isNegative
 import com.tminus1010.buva.data.ActiveReconciliationRepo
 import com.tminus1010.buva.data.ReconciliationsRepo
 import com.tminus1010.buva.domain.*
@@ -37,9 +36,20 @@ class ActivePlanReconciliationInteractor @Inject constructor(
     }
 
     suspend fun resolve() {
+        val activeReconciliationCAs = activeReconciliationRepo.activeReconciliationCAs.first()
+        val activePlanCAs = activePlanInteractor.activePlan.first().categoryAmounts
+        val budgetedCAs = budgeted.first().categoryAmounts
+        val categories = (activeReconciliationCAs.keys + budgetedCAs.keys)
         activeReconciliationRepo.pushCategoryAmounts(
-            CategoryAmounts.zip(activeReconciliationRepo.activeReconciliationCAs.first(), budgeted.first().categoryAmounts)
-            { a, b -> if (b.isNegative) a - b else a }
+            categories
+                .associateWith {
+                    when (val x = it.reconciliationStrategyGroup.planResolutionStrategy) {
+                        is ResolutionStrategy.Basic -> x.calc(it, activeReconciliationCAs, budgetedCAs)
+                        is ResolutionStrategy.MatchPlan -> x.calc(it, activeReconciliationCAs, budgetedCAs, activePlanCAs)
+                        else -> activeReconciliationCAs[it] ?: BigDecimal.ZERO
+                    }
+                }
+                .toCategoryAmounts()
         )
     }
 

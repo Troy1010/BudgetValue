@@ -100,18 +100,30 @@ class CategoryDetailsVM @Inject constructor(
     }
 
     fun userSetPlanResolutionValue(x: BigDecimal?) {
-        TODO()
-//        category.value = category.value!!.copy(planResolutionStrategy = ResolutionStrategy.Basic(x))
+        when (val reconciliationStrategyGroup = category.value!!.reconciliationStrategyGroup) {
+            is ReconciliationStrategyGroup.Always ->
+                category.value = category.value!!.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(planResolutionStrategy = ResolutionStrategy.Basic(x)))
+            is ReconciliationStrategyGroup.Reservoir ->
+                category.value = category.value!!.copy(reconciliationStrategyGroup = reconciliationStrategyGroup.copy(planResolutionStrategy = ResolutionStrategy.Basic(x)))
+        }
     }
 
     fun userSwitchToResolutionStrategyBasic() {
-        TODO()
-//        category.value = category.value!!.copy(planResolutionStrategy = ResolutionStrategy.Basic(null))
+        when (val reconciliationStrategyGroup = category.value!!.reconciliationStrategyGroup) {
+            is ReconciliationStrategyGroup.Always ->
+                category.value = category.value!!.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(planResolutionStrategy = ResolutionStrategy.Basic(null)))
+            is ReconciliationStrategyGroup.Reservoir ->
+                category.value = category.value!!.copy(reconciliationStrategyGroup = reconciliationStrategyGroup.copy(planResolutionStrategy = ResolutionStrategy.Basic(null)))
+        }
     }
 
     fun userSwitchToResolutionStrategyMatchPlan() {
-        TODO()
-//        category.value = category.value!!.copy(planResolutionStrategy = ResolutionStrategy.MatchPlan)
+        when (val reconciliationStrategyGroup = category.value!!.reconciliationStrategyGroup) {
+            is ReconciliationStrategyGroup.Always ->
+                category.value = category.value!!.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(planResolutionStrategy = ResolutionStrategy.MatchPlan))
+            is ReconciliationStrategyGroup.Reservoir ->
+                category.value = category.value!!.copy(reconciliationStrategyGroup = reconciliationStrategyGroup.copy(planResolutionStrategy = ResolutionStrategy.MatchPlan))
+        }
     }
 
     fun userAddSearchText() {
