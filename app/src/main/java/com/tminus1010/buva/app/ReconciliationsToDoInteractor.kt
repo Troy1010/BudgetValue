@@ -6,7 +6,6 @@ import com.tminus1010.buva.data.ReconciliationsRepo
 import com.tminus1010.buva.data.SettingsRepo
 import com.tminus1010.buva.domain.Domain
 import com.tminus1010.buva.domain.ReconciliationToDo
-import com.tminus1010.tmcommonkotlin.tuple.Quadruple
 import com.tminus1010.tmcommonkotlin.tuple.createTuple
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
@@ -36,15 +35,15 @@ class ReconciliationsToDoInteractor @Inject constructor(
                     }
                     .filter { (transactionBlock, reconciliation) ->
                         (reconciliation == null)
-                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod?.toDisplayStr()} b/c reconciliation") }
+//                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod?.toDisplayStr()} b/c reconciliation") }
                                 && transactionBlock.isFullyImported
-                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod?.toDisplayStr()} b/c isFullyImported:$it") }
+//                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod?.toDisplayStr()} b/c isFullyImported:$it") }
                                 && transactionBlock.spendBlock.isFullyCategorized
-                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod?.toDisplayStr()} b/c isFullyCategorized:$it") }
+//                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod?.toDisplayStr()} b/c isFullyCategorized:$it") }
                                 && (currentDate.flow.value !in transactionBlock.datePeriod!!)
-                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod.toDisplayStr()} b/c it's current") }
+//                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod.toDisplayStr()} b/c it's current") }
                                 && (!Domain.shouldSkip(reconciliationSkips, transactionBlock, anchorDateOffset))
-                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod.toDisplayStr()} b/c it's skipped") }
+//                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod.toDisplayStr()} b/c it's skipped") }
                     }
                     .map { (transactionBlock) ->
                         ReconciliationToDo.PlanZ(transactionBlock)
