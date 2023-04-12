@@ -4,6 +4,7 @@ import com.tminus1010.buva.data.CategoriesRepo
 import com.tminus1010.buva.data.HasAppBeenInitializedRepo
 import com.tminus1010.buva.domain.AmountFormula
 import com.tminus1010.buva.domain.Category
+import com.tminus1010.buva.domain.ReconciliationStrategyGroup
 import com.tminus1010.buva.domain.ResetStrategy
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -26,9 +27,8 @@ class InitApp @Inject constructor(
                 Category("Improvements", AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Medical", AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Misc", AmountFormula.Value(BigDecimal.ZERO)),
-                Category("Fast Food", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(0)),
-                Category("Groceries", AmountFormula.Value(BigDecimal.ZERO), resetStrategy = ResetStrategy.Basic(0)),
-                Category("Unknown", AmountFormula.Value(BigDecimal.ZERO), isRememberedByDefault = false, resetStrategy = ResetStrategy.Basic(0)),
+                Category("Food", AmountFormula.Value(BigDecimal.ZERO), reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(ResetStrategy.Basic(0))),
+                Category("Unknown", AmountFormula.Value(BigDecimal.ZERO), isRememberedByDefault = false, reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(ResetStrategy.Basic(0))),
                 Category("Savings", AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Emergency", AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Gifts", AmountFormula.Value(BigDecimal.ZERO)),

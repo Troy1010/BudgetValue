@@ -29,12 +29,12 @@ class BudgetVM @Inject constructor(
                     ),
                     listOf(
                         TextVMItem("Default"),
-                        AmountPresentationModel(budgeted.defaultAmount, checkIfValid = { budgeted.isDefaultAmountValid }),
+                        AmountPresentationModel(budgeted.defaultAmount, validation = { budgeted.defaultValidationResult }),
                     ),
                     *categories.map { category ->
                         listOf(
                             TextVMItem(category.name),
-                            AmountPresentationModel(budgeted.categoryAmounts[category], checkIfValid = { budgeted.isValid(category) }),
+                            AmountPresentationModel(budgeted.categoryAmounts[category], validation = { budgeted.validation(category) }),
                         )
                     }.toTypedArray(),
                 ),

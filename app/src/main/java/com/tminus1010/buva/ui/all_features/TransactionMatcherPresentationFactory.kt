@@ -5,7 +5,6 @@ import androidx.lifecycle.map
 import com.tminus1010.buva.all_layers.extensions.remove
 import com.tminus1010.buva.all_layers.extensions.replaceFirst
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
-import com.tminus1010.buva.domain.SearchType
 import com.tminus1010.buva.domain.TransactionMatcher
 import com.tminus1010.buva.domain.flattened
 import com.tminus1010.buva.ui.all_features.view_model_item.EditTextVMItem
@@ -71,36 +70,5 @@ class TransactionMatcherPresentationFactory @Inject constructor() {
                 }
             }
         }
-    }
-
-    fun searchType(transactionMatcher: TransactionMatcher?): SearchType {
-        return when (transactionMatcher) {
-            is TransactionMatcher.SearchText,
-            -> SearchType.DESCRIPTION
-            is TransactionMatcher.ByValue,
-            -> SearchType.TOTAL
-            is TransactionMatcher.Multi,
-            -> if (transactionMatcher.transactionMatchers.all { it is TransactionMatcher.SearchText })
-                SearchType.DESCRIPTION
-            else
-                SearchType.DESCRIPTION_AND_TOTAL
-            null,
-            -> SearchType.NONE
-        }
-    }
-
-    fun totalTitle(transactionMatcher: TransactionMatcher?): String {
-        return when (searchType(transactionMatcher)) {
-            SearchType.NONE,
-            SearchType.DESCRIPTION,
-            -> "Total Guess"
-            SearchType.TOTAL,
-            SearchType.DESCRIPTION_AND_TOTAL,
-            -> "Exact Total"
-        }
-    }
-
-    fun hasSearchTexts(transactionMatcher: TransactionMatcher?): Boolean {
-        return listOf(SearchType.DESCRIPTION_AND_TOTAL, SearchType.DESCRIPTION).any { it == searchType(transactionMatcher) }
     }
 }

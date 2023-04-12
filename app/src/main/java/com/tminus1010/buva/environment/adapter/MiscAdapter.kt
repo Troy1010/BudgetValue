@@ -1,28 +1,30 @@
-package com.tminus1010.buva.environment
+package com.tminus1010.buva.environment.adapter
 
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.ToJson
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.tminus1010.buva.all_layers.extensions.easyFromJson
+import com.tminus1010.buva.all_layers.extensions.easyToJson
 import com.tminus1010.buva.domain.*
+import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
+import com.tminus1010.tmcommonkotlin.tuple.createTuple
+import java.lang.reflect.Type
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-object MoshiAdapters {
-    val basicMoshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
-
-    /**
-     * [BigDecimal]
-     */
-    @ToJson
-    fun toJson(x: BigDecimal): String =
-        x.toString()
-
-    @FromJson
-    fun fromJson1(s: String): BigDecimal =
-        s.toBigDecimal()
+object MiscAdapter {
+    val basicMoshi =
+        Moshi.Builder()
+            .add(PairAdapterFactory)
+            .add(TripleAdapterFactory)
+            .add(BigDecimalAdapter)
+            .add(ResetStrategyAdapter)
+            .add(ResolutionStrategyAdapter)
+            .addLast(KotlinJsonAdapterFactory())
+            .build()
 
     /**
      * [CategoryDisplayType]
@@ -65,7 +67,7 @@ object MoshiAdapters {
             TransactionMatcher.SearchText.ordinal ->
                 TransactionMatcher.SearchText(s.dropWhile { it != '`' }.drop(1))
             TransactionMatcher.ByValue.ordinal ->
-                TransactionMatcher.ByValue(fromJson1(s.dropWhile { it != '`' }.drop(1)))
+                TransactionMatcher.ByValue(basicMoshi.fromJson(s.dropWhile { it != '`' }.drop(1)))
             TransactionMatcher.Multi.ordinal ->
                 TransactionMatcher.Multi(fromJson6(s.dropWhile { it != '`' }.drop(1))!!.map { fromJson11(it) })
             else -> error("Unhandled s:$s")
@@ -73,20 +75,39 @@ object MoshiAdapters {
 
 
     /**
-     * [ResetStrategy]
+     * [ReconciliationStrategyGroup]
      */
     @ToJson
-    fun toJson(x: ResetStrategy): String =
+    fun toJson(x: ReconciliationStrategyGroup): String =
         when (x) {
-            is ResetStrategy.Basic -> x.budgetedMax.toString()
+            is ReconciliationStrategyGroup.Always -> "Always"
+            is ReconciliationStrategyGroup.Reservoir ->
+                createTuple(
+                    x.resetStrategy,
+                    x.planResolutionStrategy,
+                    x.anytimeResolutionStrategy,
+                )
+                    .let { basicMoshi.easyToJson(it) }
         }
 
+    inline fun <reified T> getType(): Type = T::class.java
+
     @FromJson
-    fun fromJson20(s: String): ResetStrategy =
-        if (s == "null")
-            ResetStrategy.Basic(null)
-        else
-            ResetStrategy.Basic(runCatching { s.toBigDecimal() }.getOrDefault(BigDecimal.ZERO))
+    fun fromJson421(s: String): ReconciliationStrategyGroup =
+        when (s) {
+            "Always",
+            "null",
+            -> ReconciliationStrategyGroup.Always
+            else -> basicMoshi.easyFromJson<Triple<ResetStrategy?, ResolutionStrategy, ResolutionStrategy>>(s)
+                .let {
+                    ReconciliationStrategyGroup.Reservoir(
+                        resetStrategy = it.first,
+                        planResolutionStrategy = it.second ?: ResolutionStrategy.Basic(), // TODO: Fix this later
+                        anytimeResolutionStrategy = it.third ?: ResolutionStrategy.Basic(), // TODO: Fix this later
+                    )
+                }
+        }
+
 
     /**
      * [LocalDate]

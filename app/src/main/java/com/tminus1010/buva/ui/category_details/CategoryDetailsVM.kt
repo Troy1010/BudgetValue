@@ -91,7 +91,39 @@ class CategoryDetailsVM @Inject constructor(
     }
 
     fun userSetResetMax(x: BigDecimal?) {
-        category.value = category.value!!.copy(resetStrategy = ResetStrategy.Basic(x))
+        when (val reconciliationStrategyGroup = category.value!!.reconciliationStrategyGroup) {
+            is ReconciliationStrategyGroup.Always ->
+                category.value = category.value!!.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(resetStrategy = ResetStrategy.Basic(x)))
+            is ReconciliationStrategyGroup.Reservoir ->
+                category.value = category.value!!.copy(reconciliationStrategyGroup = reconciliationStrategyGroup.copy(resetStrategy = ResetStrategy.Basic(x)))
+        }
+    }
+
+    fun userSetPlanResolutionValue(x: BigDecimal?) {
+        when (val reconciliationStrategyGroup = category.value!!.reconciliationStrategyGroup) {
+            is ReconciliationStrategyGroup.Always ->
+                category.value = category.value!!.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(planResolutionStrategy = ResolutionStrategy.Basic(x ?: BigDecimal.ZERO)))
+            is ReconciliationStrategyGroup.Reservoir ->
+                category.value = category.value!!.copy(reconciliationStrategyGroup = reconciliationStrategyGroup.copy(planResolutionStrategy = ResolutionStrategy.Basic(x ?: BigDecimal.ZERO)))
+        }
+    }
+
+    fun userSwitchToResolutionStrategyBasic() {
+        when (val reconciliationStrategyGroup = category.value!!.reconciliationStrategyGroup) {
+            is ReconciliationStrategyGroup.Always ->
+                category.value = category.value!!.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(planResolutionStrategy = ResolutionStrategy.Basic()))
+            is ReconciliationStrategyGroup.Reservoir ->
+                category.value = category.value!!.copy(reconciliationStrategyGroup = reconciliationStrategyGroup.copy(planResolutionStrategy = ResolutionStrategy.Basic()))
+        }
+    }
+
+    fun userSwitchToResolutionStrategyMatchPlan() {
+        when (val reconciliationStrategyGroup = category.value!!.reconciliationStrategyGroup) {
+            is ReconciliationStrategyGroup.Always ->
+                category.value = category.value!!.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(planResolutionStrategy = ResolutionStrategy.MatchPlan))
+            is ReconciliationStrategyGroup.Reservoir ->
+                category.value = category.value!!.copy(reconciliationStrategyGroup = reconciliationStrategyGroup.copy(planResolutionStrategy = ResolutionStrategy.MatchPlan))
+        }
     }
 
     fun userAddSearchText() {
@@ -121,11 +153,17 @@ class CategoryDetailsVM @Inject constructor(
     // # Private
     private val originalCategory = savedStateHandle.get<Category>(KEY1)
     private val category = savedStateHandle.getLiveData<Category>(KEY1)
+    private val transactionMatcherVMItems =
+        transactionMatcherPresentationFactory.viewModelItems(
+            transactionMatcher = category.map { it.onImportTransactionMatcher },
+            onChange = { category.value = category.value?.copy(onImportTransactionMatcher = it) },
+            userNavToChooseTransactionForTransactionMatcher = ::userNavToChooseTransactionForTransactionMatcher,
+        ).asFlow()
 
     // # State
     val title = flowOf("Category").shareIn(viewModelScope, SharingStarted.Eagerly, 1)
     val optionsTableView =
-        combine(category.asFlow(), transactionMatcherPresentationFactory.viewModelItems(category.map { it.onImportTransactionMatcher }, { category.value = category.value?.copy(onImportTransactionMatcher = it) }, ::userNavToChooseTransactionForTransactionMatcher).asFlow())
+        combine(category.asFlow(), transactionMatcherVMItems)
         { category, transactionMatcherVMItems ->
             TableViewVMItem(
                 recipeGrid = listOfNotNull(
@@ -140,17 +178,50 @@ class CategoryDetailsVM @Inject constructor(
                             onNewAmountFormula = ::userSetCategoryDefaultAmountFormula,
                         ),
                     ),
-                    if (category.displayType == CategoryDisplayType.Reservoir)
-                        listOf(
-                            TextVMItem("Budget Reset Max"),
-                            AmountPresentationModel(
-                                bigDecimal = when (val x = category.resetStrategy) {
-                                    is ResetStrategy.Basic -> x.budgetedMax
+                    when (category.displayType) {
+                        CategoryDisplayType.Reservoir ->
+                            listOf(
+                                TextVMItem("Budget Reset Max"),
+                                AmountPresentationModel(
+                                    bigDecimal = when (val x = category.reconciliationStrategyGroup.resetStrategy) {
+                                        is ResetStrategy.Basic -> x.budgetedMax
+                                        null -> null
+                                    },
+                                    onNewAmount = ::userSetResetMax,
+                                ),
+                            )
+                        else -> null
+                    },
+                    when (category.displayType) {
+                        CategoryDisplayType.Reservoir ->
+                            listOf(
+                                TextVMItem("Budget Resolve Strategy"),
+                                when (val x = category.reconciliationStrategyGroup.planResolutionStrategy) {
+                                    is ResolutionStrategy.MatchPlan ->
+                                        TextVMItem(
+                                            text1 = "MatchPlan",
+                                            menuVMItems = MenuVMItems(
+                                                MenuVMItem(
+                                                    title = "Switch to Basic",
+                                                    onClick = ::userSwitchToResolutionStrategyBasic,
+                                                ),
+                                            ),
+                                        )
+                                    is ResolutionStrategy.Basic ->
+                                        AmountPresentationModel(
+                                            bigDecimal = x.budgetedMin,
+                                            onNewAmount = ::userSetPlanResolutionValue,
+                                            menuVMItems = MenuVMItems(
+                                                MenuVMItem(
+                                                    title = "Switch to MatchPlan",
+                                                    onClick = ::userSwitchToResolutionStrategyMatchPlan,
+                                                ),
+                                            ),
+                                        )
                                 },
-                                onNewAmount = ::userSetResetMax,
-                            ),
-                        )
-                    else null,
+                            )
+                        else -> null
+                    },
                     listOf(
                         TextVMItem("Type"),
                         SpinnerVMItem(values = CategoryDisplayType.getPickableValues().toTypedArray(), initialValue = category.displayType, onNewItem = ::userSetCategoryType),

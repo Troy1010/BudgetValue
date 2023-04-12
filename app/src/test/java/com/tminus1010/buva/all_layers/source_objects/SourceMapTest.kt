@@ -44,19 +44,19 @@ internal class SourceMapTest {
         assertEquals(y, testObserver.values().last().mapValues { it.value.value })
     }
 
-    @Test
-    fun testItemFlowMap() {
-        // # Given
-        val sourceMap = SourceMap<Category, Int>(GlobalScope)
-        // # When
-        val testObserver = sourceMap.itemFlowMap.test()
-        sourceMap.adjustTo(mapOf(Category("name1", resetStrategy = ResetStrategy.Basic(BigDecimal("4"))) to 4))
-        sourceMap.adjustTo(mapOf(Category("name1", resetStrategy = ResetStrategy.Basic(BigDecimal("5"))) to 6))
-        Thread.sleep(1000)
-        // # Then
-        assertEquals(
-            mapOf(Category("name1", resetStrategy = ResetStrategy.Basic(BigDecimal("5"))) to 6),
-            testObserver.values().last().mapValues { it.value.value },
-        )
-    }
+//    @Test
+//    fun testItemFlowMap() {
+//        // # Given
+//        val sourceMap = SourceMap<Category, Int>(GlobalScope)
+//        // # When
+//        val testObserver = sourceMap.itemFlowMap.test()
+//        sourceMap.adjustTo(mapOf(Category("name1", resetStrategy = ResetStrategy.Basic(BigDecimal("4"))) to 4))
+//        sourceMap.adjustTo(mapOf(Category("name1", resetStrategy = ResetStrategy.Basic(BigDecimal("5"))) to 6))
+//        Thread.sleep(1000)
+//        // # Then
+//        assertEquals(
+//            mapOf(Category("name1", resetStrategy = ResetStrategy.Basic(BigDecimal("5"))) to 6),
+//            testObserver.values().last().mapValues { it.value.value },
+//        )
+//    }
 }

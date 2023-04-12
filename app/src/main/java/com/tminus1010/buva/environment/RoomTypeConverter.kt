@@ -4,6 +4,7 @@ import androidx.room.TypeConverter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.tminus1010.buva.domain.*
+import com.tminus1010.buva.environment.adapter.*
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import java.math.BigDecimal
@@ -12,12 +13,17 @@ import java.time.LocalDate
 object RoomTypeConverter {
     val moshi =
         Moshi.Builder()
-            .add(MoshiAdapters)
+            .add(PairAdapterFactory)
+            .add(TripleAdapterFactory)
+            .add(BigDecimalAdapter)
+            .add(ResetStrategyAdapter)
+            .add(ResolutionStrategyAdapter)
+            .add(MiscAdapter)
             .addLast(KotlinJsonAdapterFactory())
             .build()
 
     @TypeConverter
-    fun fromBigDecimalToString(x: BigDecimal?): String? =
+    fun toJson(x: BigDecimal?): String? =
         moshi.toJson(x)
 
     @TypeConverter
@@ -25,7 +31,7 @@ object RoomTypeConverter {
         moshi.fromJson(s)
 
     @TypeConverter
-    fun fromDateToString(x: LocalDate?): String? =
+    fun toJson(x: LocalDate?): String? =
         moshi.toJson(x)
 
     @TypeConverter
@@ -41,11 +47,19 @@ object RoomTypeConverter {
         moshi.fromJson(s)
 
     @TypeConverter
-    fun fromJsonToResetStrategy(x: ResetStrategy): String =
+    fun toJson(x: ResetStrategy): String =
         moshi.toJson(x)
 
     @TypeConverter
-    fun fromJson(s: String): ResetStrategy? =
+    fun fromJson432(s: String): ResetStrategy? =
+        moshi.fromJson(s)
+
+    @TypeConverter
+    fun toJson(x: ResolutionStrategy): String =
+        moshi.toJson(x)
+
+    @TypeConverter
+    fun fromJson132(s: String): ResolutionStrategy? =
         moshi.fromJson(s)
 
     @TypeConverter
@@ -65,7 +79,7 @@ object RoomTypeConverter {
         moshi.fromJson(s)
 
     @TypeConverter
-    fun fromLocalDatePeriod(x: LocalDatePeriod): String =
+    fun toJson(x: LocalDatePeriod): String =
         moshi.toJson(x)
 
     @TypeConverter
@@ -73,10 +87,18 @@ object RoomTypeConverter {
         moshi.fromJson(s)
 
     @TypeConverter
-    fun fromListOfString(x: List<String>): String =
+    fun toJson(x: List<String>): String =
         moshi.toJson(x)
 
     @TypeConverter
     fun toListOfString(s: String): List<String>? =
+        moshi.fromJson(s)
+
+    @TypeConverter
+    fun toJson(x: ReconciliationStrategyGroup): String =
+        moshi.toJson(x)
+
+    @TypeConverter
+    fun fromJson2345(s: String): ReconciliationStrategyGroup? =
         moshi.fromJson(s)
 }

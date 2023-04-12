@@ -1,7 +1,7 @@
 package com.tminus1010.buva.app
 
 import com.tminus1010.buva.all_layers.InvalidStateException
-import com.tminus1010.buva.all_layers.extensions.isNegative
+import com.tminus1010.buva.all_layers.extensions.isZero
 import com.tminus1010.buva.data.ActiveReconciliationRepo
 import com.tminus1010.buva.data.ReconciliationsRepo
 import com.tminus1010.buva.domain.*
@@ -19,6 +19,15 @@ class ActivePlanReconciliationInteractor @Inject constructor(
     private val reconciliationsRepo: ReconciliationsRepo,
     private val activePlanInteractor: ActivePlanInteractor,
 ) {
+    suspend fun fillIntoCategory(category: Category) {
+        val activeReconciliationCAs = activeReconciliationRepo.activeReconciliationCAs.first()
+        val targetDefaultAmount = activeReconciliationCAsAndTotal.first().defaultAmount - budgeted.first().defaultAmount
+        activeReconciliationRepo.pushCategoryAmount(
+            category = category,
+            amount = activeReconciliationCAs.calcCategoryAmountToGetTargetDefaultAmount(category, targetDefaultAmount),
+        )
+    }
+
     suspend fun save() {
         if (!budgeted.first().isAllValid) throw InvalidStateException()
         val reconciliationToDo = reconciliationsToDoInteractor.currentReconciliationToDo.first() as ReconciliationToDo.PlanZ
@@ -37,9 +46,19 @@ class ActivePlanReconciliationInteractor @Inject constructor(
     }
 
     suspend fun resolve() {
+        val activeReconciliationCAs = activeReconciliationRepo.activeReconciliationCAs.first()
+        val activePlanCAs = activePlanInteractor.activePlan.first().categoryAmounts
+        val budgetedCAs = budgeted.first().categoryAmounts
+        val categories = (activeReconciliationCAs.keys + budgetedCAs.keys)
         activeReconciliationRepo.pushCategoryAmounts(
-            CategoryAmounts.zip(activeReconciliationRepo.activeReconciliationCAs.first(), budgeted.first().categoryAmounts)
-            { a, b -> if (b.isNegative) a - b else a }
+            categories
+                .associateWith {
+                    when (val x = it.reconciliationStrategyGroup.planResolutionStrategy) {
+                        is ResolutionStrategy.Basic -> x.calc(it, budgetedCAs[it], activeReconciliationCAs)
+                        is ResolutionStrategy.MatchPlan -> x.calc(it, budgetedCAs[it], activeReconciliationCAs, activePlanCAs)
+                    }
+                }
+                .toCategoryAmounts()
         )
     }
 
@@ -50,8 +69,9 @@ class ActivePlanReconciliationInteractor @Inject constructor(
         activeReconciliationRepo.pushCategoryAmounts(
             categories
                 .associateWith {
-                    when (it.resetStrategy) {
-                        is ResetStrategy.Basic -> it.resetStrategy.calc(it, activeReconciliationCAs, budgetedCAs)
+                    when (val x = it.reconciliationStrategyGroup.resetStrategy) {
+                        is ResetStrategy.Basic -> x.calc(it, activeReconciliationCAs, budgetedCAs)
+                        else -> activeReconciliationCAs[it] ?: BigDecimal.ZERO
                     }
                 }
                 .toCategoryAmounts()
@@ -94,16 +114,14 @@ class ActivePlanReconciliationInteractor @Inject constructor(
                     summedRelevantHistory,
                     CategoryAmountsAndTotal.FromTotal(activePlan.categoryAmounts, BigDecimal.ZERO),
                 ),
-                caValidation = { (it ?: BigDecimal.ZERO) >= BigDecimal.ZERO },
-                defaultAmountValidation = { true },
+                caValidation = { category, amount ->
+                    when (val x = category.reconciliationStrategyGroup.planResolutionStrategy) {
+                        is ResolutionStrategy.MatchPlan -> x.validation(category, amount, activeReconciliation.categoryAmounts, activePlan.categoryAmounts)
+                        is ResolutionStrategy.Basic -> x.validation(category, amount)
+                    }
+                },
+                defaultAmountValidation = { if (it?.isZero ?: true) Validation.Success else Validation.Warning },
             )
-        }
-            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
-
-    val targetDefaultAmount =
-        combine(budgeted, activeReconciliationCAsAndTotal)
-        { budgeted, activeReconciliationCAsAndTotal ->
-            activeReconciliationCAsAndTotal.defaultAmount - budgeted.defaultAmount
         }
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 }

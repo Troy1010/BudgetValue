@@ -7,6 +7,7 @@ import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.app.ActiveAccountsReconciliationInteractor
 import com.tminus1010.buva.app.ActivePlanReconciliationInteractor
 import com.tminus1010.buva.app.ReconciliationsToDoInteractor
+import com.tminus1010.buva.data.ActivePlanRepo
 import com.tminus1010.buva.domain.ReconciliationToDo
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
@@ -17,8 +18,7 @@ import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onError
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,6 +29,7 @@ class ReconciliationHostVM @Inject constructor(
     private val showToast: ShowToast,
     private val throbberSharedVM: ThrobberSharedVM,
     private val activePlanReconciliationInteractor: ActivePlanReconciliationInteractor,
+    private val activePlanRepo: ActivePlanRepo,
 ) : ViewModel() {
     // # User Intents
     fun userSave() {
@@ -39,20 +40,55 @@ class ReconciliationHostVM @Inject constructor(
                     else -> throw Exception(it)
                 }
             },
-            block = { activeAccountsReconciliationInteractor.save() },
+            block = {
+                when (reconciliationsToDoInteractor.currentReconciliationToDo.first()) {
+                    is ReconciliationToDo.PlanZ ->
+                        activePlanReconciliationInteractor.save()
+                    else ->
+                        activeAccountsReconciliationInteractor.save()
+                }
+            },
         )
             .use(throbberSharedVM)
     }
 
-    fun userResetActiveReconciliation() {
-        GlobalScope.launch { activeAccountsReconciliationInteractor.reset() }
-            .use(throbberSharedVM)
+    fun userReset() {
+        when (reconciliationsToDoInteractor.currentReconciliationToDo.value) {
+            is ReconciliationToDo.PlanZ ->
+                GlobalScope.launch { activePlanReconciliationInteractor.reset() }.use(throbberSharedVM)
+            else ->
+                GlobalScope.launch { activeAccountsReconciliationInteractor.reset() }.use(throbberSharedVM)
+        }
     }
 
     fun userResolve() {
-        when (val x = reconciliationsToDoInteractor.currentReconciliationToDo.value) {
-            is ReconciliationToDo.PlanZ -> GlobalScope.launch { activePlanReconciliationInteractor.resolve() }.use(throbberSharedVM)
-            else -> GlobalScope.launch { activeAccountsReconciliationInteractor.resolve() }.use(throbberSharedVM)
+        when (reconciliationsToDoInteractor.currentReconciliationToDo.value) {
+            is ReconciliationToDo.PlanZ ->
+                GlobalScope.launch { activePlanReconciliationInteractor.resolve() }.use(throbberSharedVM)
+            else ->
+                GlobalScope.launch { activeAccountsReconciliationInteractor.resolve() }.use(throbberSharedVM)
+        }
+    }
+
+    // # Private
+    init {
+        // Requirement: Whenever there's a new currentReconiliation, or the user changed something relevant, reset.
+        //      There might be a better way to do this?
+        GlobalScope.launch {
+            merge(
+                reconciliationsToDoInteractor.currentReconciliationToDo.drop(1),
+                reconciliationsToDoInteractor.currentReconciliationToDo
+                    .flatMapLatest {
+                        when (it) {
+                            is ReconciliationToDo.PlanZ ->
+                                activePlanRepo.activePlan
+                            else ->
+                                flowOf()
+                        }
+                    },
+            )
+                .debounce(1000) // TODO: This is not ideal.
+                .collect { userReset() }
         }
     }
 
@@ -90,7 +126,7 @@ class ReconciliationHostVM @Inject constructor(
             listOfNotNull(
                 ButtonVMItem(
                     title = "Reset",
-                    onClick = ::userResetActiveReconciliation,
+                    onClick = ::userReset,
                 ),
                 ButtonVMItem(
                     title = "Resolve",
