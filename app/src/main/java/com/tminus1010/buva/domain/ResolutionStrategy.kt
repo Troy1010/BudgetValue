@@ -31,7 +31,7 @@ sealed class ResolutionStrategy : Parcelable {
             val budgetedValueIfNoActiveReconciliation = (budgetedCAs[category] ?: BigDecimal.ZERO) - (activeReconciliationCAs[category] ?: BigDecimal.ZERO)
             // If the current value is good, then leave it as-is.
             return if (budgetedMin == null || budgetedValueIfNoActiveReconciliation >= budgetedMin)
-                (budgetedCAs[category] ?: BigDecimal.ZERO)
+                activeReconciliationCAs[category] ?: BigDecimal.ZERO
             else
                 budgetedMin - budgetedValueIfNoActiveReconciliation
         }
