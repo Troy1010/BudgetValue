@@ -91,8 +91,12 @@ class CategoryDetailsVM @Inject constructor(
     }
 
     fun userSetResetMax(x: BigDecimal?) {
-        TODO()
-//        category.value = category.value!!.copy(resetStrategy = ResetStrategy.Basic(x))
+        when (val reconciliationStrategyGroup = category.value!!.reconciliationStrategyGroup) {
+            is ReconciliationStrategyGroup.Always ->
+                category.value = category.value!!.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(resetStrategy = ResetStrategy.Basic(x)))
+            is ReconciliationStrategyGroup.Reservoir ->
+                category.value = category.value!!.copy(reconciliationStrategyGroup = reconciliationStrategyGroup.copy(resetStrategy = ResetStrategy.Basic(x)))
+        }
     }
 
     fun userSetPlanResolutionValue(x: BigDecimal?) {

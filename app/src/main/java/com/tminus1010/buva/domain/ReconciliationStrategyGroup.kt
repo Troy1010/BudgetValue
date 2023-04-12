@@ -19,7 +19,7 @@ sealed class ReconciliationStrategyGroup : Parcelable {
     }
 
     @Parcelize
-    class Reservoir(
+    data class Reservoir(
         override val resetStrategy: ResetStrategy? = null,
         override val planResolutionStrategy: ResolutionStrategy? = null,
         override val anytimeResolutionStrategy: ResolutionStrategy? = null,
