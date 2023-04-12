@@ -11,7 +11,7 @@ sealed class ReconciliationStrategyGroup : Parcelable {
     @Parcelize
     object Always : ReconciliationStrategyGroup() {
         override val resetStrategy: ResetStrategy?
-            get() = null // TODO: Perhaps should be ResetStrategy.MatchPlan?
+            get() = ResetStrategy.Basic(null)
         override val planResolutionStrategy: ResolutionStrategy
             get() = ResolutionStrategy.MatchPlan
         override val anytimeResolutionStrategy: ResolutionStrategy?
