@@ -16,12 +16,14 @@ class AmountPresentationModel(
     val bigDecimal: BigDecimal?,
     private val checkIfValid: (BigDecimal) -> Boolean = { true },
     private val onNewAmount: ((BigDecimal?) -> Unit)? = null,
+    private val menuVMItems: MenuVMItems? = null,
 ) : IHasToViewItemRecipe {
     val s get() = bigDecimal?.toString()
     val isValid get() = checkIfValid(bigDecimal ?: BigDecimal.ZERO)
     override fun toViewItemRecipe(context: Context): IViewItemRecipe3 {
         return if (onNewAmount != null)
             ViewItemRecipe3(context, ItemEditTextBinding::inflate) { vb ->
+                menuVMItems?.bind(vb.root)
                 vb.edittext.setText(s)
                 vb.edittext.setTextColor(
                     context.theme.getColorByAttr(
@@ -35,6 +37,7 @@ class AmountPresentationModel(
             }
         else
             ViewItemRecipe3(context, ItemTextViewBinding::inflate) { vb ->
+                menuVMItems?.bind(vb.root)
                 vb.textview.text = s
                 vb.textview.setTextColor(
                     context.theme.getColorByAttr(
