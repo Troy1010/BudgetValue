@@ -46,7 +46,6 @@ class ActivePlanReconciliationInteractor @Inject constructor(
                     when (val x = it.reconciliationStrategyGroup.planResolutionStrategy) {
                         is ResolutionStrategy.Basic -> x.calc(it, activeReconciliationCAs, budgetedCAs)
                         is ResolutionStrategy.MatchPlan -> x.calc(it, activeReconciliationCAs, budgetedCAs, activePlanCAs)
-                        else -> activeReconciliationCAs[it] ?: BigDecimal.ZERO
                     }
                 }
                 .toCategoryAmounts()

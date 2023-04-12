@@ -125,34 +125,4 @@ class ActiveAccountsReconciliationInteractor @Inject constructor(
                 defaultAmountValidation = { true },
             )
         }
-
-    init {
-        // Requirement: Reset ActiveReconciliation whenever something it derives from changes.
-        //      A reset should not occur when reconciliationsToDoInteractor.currentReconciliationToDo first emits, as it always does at the start.
-        //      A reset should always occur if currentReconciliation is a plan and activePlan emits.
-        GlobalScope.launch {
-            merge(
-                reconciliationsToDoInteractor.currentReconciliationToDo.take(1)
-                    .flatMapLatest {
-                        when (it) {
-                            is ReconciliationToDo.PlanZ ->
-                                activePlanRepo.activePlan.drop(1) // TODO: This is not disposing when currentReconciliationToDo.drop(1) emits..
-                            else ->
-                                flowOf()
-                        }
-                    },
-                reconciliationsToDoInteractor.currentReconciliationToDo.drop(1)
-                    .flatMapLatest {
-                        when (it) {
-                            is ReconciliationToDo.PlanZ ->
-                                activePlanRepo.activePlan
-                            else ->
-                                flowOf(Unit)
-                        }
-                    },
-            )
-                .debounce(1000) // TODO: This is not ideal.
-                .collect { reset() }
-        }
-    }
 }
