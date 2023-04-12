@@ -3,7 +3,6 @@ package com.tminus1010.buva.ui.budget.reconciliation.accounts_reconciliation
 import androidx.lifecycle.ViewModel
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.buva.app.ActiveAccountsReconciliationInteractor
-import com.tminus1010.buva.app.BudgetedInteractor
 import com.tminus1010.buva.app.UserCategories
 import com.tminus1010.buva.data.ActiveReconciliationRepo
 import com.tminus1010.buva.domain.Category
@@ -13,7 +12,6 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,16 +26,8 @@ class AccountsReconciliationVM @Inject constructor(
         GlobalScope.launch { activeReconciliationRepo.pushCategoryAmount(category, s.toMoneyBigDecimal()) }
     }
 
-    fun userDumpIntoCategory(category: Category) {
-        GlobalScope.launch {
-            activeReconciliationRepo.pushCategoryAmount(
-                category = category,
-                amount = activeReconciliationRepo.activeReconciliationCAs.first().calcFillAmount(
-                    fillCategory = category,
-                    total = activeAccountsReconciliationInteractor.activeReconciliationCAsAndTotal.first().total,
-                ),
-            )
-        }
+    fun userFillIntoCategory(category: Category) {
+        GlobalScope.launch { activeAccountsReconciliationInteractor.fillIntoCategory(category) }
     }
 
     // # State
@@ -64,7 +54,7 @@ class AccountsReconciliationVM @Inject constructor(
                     *categories.map { category ->
                         listOf(
                             TextVMItem(category.name),
-                            CategoryAmountPresentationModel(category, activeReconciliation.categoryAmounts[category], ::userSetCategoryAmount, menuVMItems = MenuVMItems(MenuVMItem("Fill into category", onClick = { userDumpIntoCategory(category) }))),
+                            CategoryAmountPresentationModel(category, activeReconciliation.categoryAmounts[category], ::userSetCategoryAmount, menuVMItems = MenuVMItems(MenuVMItem("Fill into category", onClick = { userFillIntoCategory(category) }))),
                             AmountPresentationModel(
                                 bigDecimal = budgeted.categoryAmounts[category],
                                 checkIfValid = {

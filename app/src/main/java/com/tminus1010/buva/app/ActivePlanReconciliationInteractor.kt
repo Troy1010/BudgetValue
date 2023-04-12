@@ -18,6 +18,15 @@ class ActivePlanReconciliationInteractor @Inject constructor(
     private val reconciliationsRepo: ReconciliationsRepo,
     private val activePlanInteractor: ActivePlanInteractor,
 ) {
+    suspend fun fillIntoCategory(category: Category) {
+        val activeReconciliationCAs = activeReconciliationRepo.activeReconciliationCAs.first()
+        val targetDefaultAmount = activeReconciliationCAsAndTotal.first().defaultAmount - budgeted.first().defaultAmount
+        activeReconciliationRepo.pushCategoryAmount(
+            category = category,
+            amount = activeReconciliationCAs.calcCategoryAmountToGetTargetDefaultAmount(category, targetDefaultAmount),
+        )
+    }
+
     suspend fun save() {
         if (!budgeted.first().isAllValid) throw InvalidStateException()
         val reconciliationToDo = reconciliationsToDoInteractor.currentReconciliationToDo.first() as ReconciliationToDo.PlanZ

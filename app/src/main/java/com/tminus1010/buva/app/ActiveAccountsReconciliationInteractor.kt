@@ -8,7 +8,6 @@ import com.tminus1010.buva.data.ReconciliationsRepo
 import com.tminus1010.buva.domain.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.time.LocalDate
 import javax.inject.Inject
@@ -20,14 +19,13 @@ class ActiveAccountsReconciliationInteractor @Inject constructor(
     private val reconciliationsToDoInteractor: ReconciliationsToDoInteractor,
     private val activePlanRepo: ActivePlanRepo,
     private val reconciliationsRepo: ReconciliationsRepo,
-    private val activePlanReconciliationInteractor: ActivePlanReconciliationInteractor,
     private val accountsRepo: AccountsRepo,
     private val transactionsInteractor: TransactionsInteractor,
     private val historyInteractor: HistoryInteractor,
 ) {
     suspend fun fillIntoCategory(category: Category) {
         val activeReconciliationCAs = activeReconciliationRepo.activeReconciliationCAs.first()
-        val targetDefaultAmount = targetDefaultAmount.first()
+        val targetDefaultAmount = activeReconciliationCAsAndTotal.first().defaultAmount - budgeted.first().defaultAmount
         activeReconciliationRepo.pushCategoryAmount(
             category = category,
             amount = activeReconciliationCAs.calcCategoryAmountToGetTargetDefaultAmount(category, targetDefaultAmount),
@@ -88,7 +86,7 @@ class ActiveAccountsReconciliationInteractor @Inject constructor(
         reconciliationsToDoInteractor.currentReconciliationToDo.flatMapLatest { currentReconciliationToDo ->
             when (currentReconciliationToDo) {
                 is ReconciliationToDo.PlanZ ->
-                    activePlanReconciliationInteractor.activeReconciliationCAsAndTotal
+                    flowOf()
                 else ->
                     combine(activeReconciliationRepo.activeReconciliationCAs, accountsRepo.accountsAggregate, transactionsInteractor.transactionBlocks, reconciliationsRepo.reconciliations)
                     { activeReconciliationCAs, accountsAggregate, transactionBlocks, reconciliations ->
@@ -101,17 +99,6 @@ class ActiveAccountsReconciliationInteractor @Inject constructor(
                             },
                         )
                     }
-            }
-        }
-            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
-
-    val targetDefaultAmount =
-        reconciliationsToDoInteractor.currentReconciliationToDo.flatMapLatest { currentReconciliationToDo ->
-            when (currentReconciliationToDo) {
-                is ReconciliationToDo.PlanZ ->
-                    activePlanReconciliationInteractor.targetDefaultAmount
-                else ->
-                    flowOf(BigDecimal.ZERO)
             }
         }
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
