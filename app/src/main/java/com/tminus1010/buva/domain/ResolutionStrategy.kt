@@ -12,15 +12,15 @@ sealed class ResolutionStrategy : Parcelable {
          * Calculate a ActiveReconciliationValue which would resolve an invalid BudgetValue.
          * (Assumes what an invalid BudgetValue would be based on class input)
          */
-        fun calc(category: Category, activeReconciliationCAs: CategoryAmounts, budgetedCAs: CategoryAmounts, activePlanCAs: CategoryAmounts): BigDecimal {
-            val budgetedValueIfNoActiveReconciliation = (budgetedCAs[category] ?: BigDecimal.ZERO) - (activeReconciliationCAs[category] ?: BigDecimal.ZERO)
+        fun calc(category: Category, budgetedAmount: BigDecimal?, activeReconciliationCAs: CategoryAmounts, activePlanCAs: CategoryAmounts): BigDecimal {
+            val budgetedValueIfNoActiveReconciliation = (budgetedAmount ?: BigDecimal.ZERO) - (activeReconciliationCAs[category] ?: BigDecimal.ZERO)
             val activePlanValue = activePlanCAs[category] ?: BigDecimal.ZERO
             // Always match the activePlanValue.
             return activePlanValue - budgetedValueIfNoActiveReconciliation
         }
 
-        fun validation(category: Category, activeReconciliationCAs: CategoryAmounts, budgetedCAs: CategoryAmounts, activePlanCAs: CategoryAmounts): Validation {
-            return if (activeReconciliationCAs[category] == calc(category, activeReconciliationCAs, budgetedCAs, activePlanCAs)) Validation.Success else Validation.Failure
+        fun validation(category: Category, budgetedAmount: BigDecimal?, activeReconciliationCAs: CategoryAmounts, activePlanCAs: CategoryAmounts): Validation {
+            return if (activeReconciliationCAs[category] == calc(category, budgetedAmount, activeReconciliationCAs, activePlanCAs)) Validation.Success else Validation.Failure
         }
     }
 
@@ -36,8 +36,8 @@ sealed class ResolutionStrategy : Parcelable {
          * Calculate a ActiveReconciliationValue which would resolve an invalid BudgetValue.
          * (Assumes what an invalid BudgetValue would be based on class input)
          */
-        fun calc(category: Category, activeReconciliationCAs: CategoryAmounts, budgetedCAs: CategoryAmounts): BigDecimal {
-            val budgetedValueIfNoActiveReconciliation = (budgetedCAs[category] ?: BigDecimal.ZERO) - (activeReconciliationCAs[category] ?: BigDecimal.ZERO)
+        fun calc(category: Category, budgetedAmount: BigDecimal?, activeReconciliationCAs: CategoryAmounts): BigDecimal {
+            val budgetedValueIfNoActiveReconciliation = (budgetedAmount ?: BigDecimal.ZERO) - (activeReconciliationCAs[category] ?: BigDecimal.ZERO)
             // If the current value is good, then leave it as-is.
             return if (budgetedValueIfNoActiveReconciliation >= budgetedMin)
                 activeReconciliationCAs[category] ?: BigDecimal.ZERO
@@ -45,8 +45,8 @@ sealed class ResolutionStrategy : Parcelable {
                 budgetedMin - budgetedValueIfNoActiveReconciliation
         }
 
-        fun validation(category: Category, budgetedCAs: CategoryAmounts): Validation {
-            return if ((budgetedCAs[category] ?: BigDecimal.ZERO) >= budgetedMin) Validation.Success else Validation.Failure
+        fun validation(category: Category, amount: BigDecimal?): Validation {
+            return if ((amount ?: BigDecimal.ZERO) >= budgetedMin) Validation.Success else Validation.Failure
         }
     }
 }

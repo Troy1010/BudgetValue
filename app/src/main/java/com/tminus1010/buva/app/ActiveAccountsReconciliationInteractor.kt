@@ -59,8 +59,8 @@ class ActiveAccountsReconciliationInteractor @Inject constructor(
             categories
                 .associateWith {
                     when (val x = it.reconciliationStrategyGroup.anytimeResolutionStrategy) {
-                        is ResolutionStrategy.Basic -> x.calc(it, activeReconciliationCAs, budgetedCAs)
-                        is ResolutionStrategy.MatchPlan -> x.calc(it, activeReconciliationCAs, budgetedCAs, activePlanCAs)
+                        is ResolutionStrategy.Basic -> x.calc(it, budgetedCAs[it], activeReconciliationCAs)
+                        is ResolutionStrategy.MatchPlan -> x.calc(it, budgetedCAs[it], activeReconciliationCAs, activePlanCAs)
                     }
                 }
                 .toCategoryAmounts()
@@ -108,9 +108,18 @@ class ActiveAccountsReconciliationInteractor @Inject constructor(
         combine(activeReconciliationCAsAndTotal, historyInteractor.entireHistory)
         { activeReconciliationCAsAndTotal, entireHistory ->
             CategoryAmountsAndTotalWithValidation(
-                categoryAmountsAndTotal = CategoryAmountsAndTotal.addTogether(entireHistory.addedTogether, activeReconciliationCAsAndTotal),
-                caValidation = { if((it ?: BigDecimal.ZERO) >= BigDecimal.ZERO) Validation.Success else Validation.Failure },
+                categoryAmountsAndTotal = CategoryAmountsAndTotal.addTogether(
+                    entireHistory.addedTogether,
+                    activeReconciliationCAsAndTotal,
+                ),
+                caValidation = { category, amount ->
+                    when (val x = category.reconciliationStrategyGroup.anytimeResolutionStrategy) {
+                        is ResolutionStrategy.MatchPlan -> error("MatchPlan doesn't really work here")
+                        is ResolutionStrategy.Basic -> x.validation(category, amount)
+                    }
+                },
                 defaultAmountValidation = { if (it?.isZero ?: true) Validation.Success else Validation.Warning },
             )
         }
+            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 }

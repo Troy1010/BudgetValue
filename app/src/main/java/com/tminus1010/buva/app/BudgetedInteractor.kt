@@ -15,8 +15,18 @@ class BudgetedInteractor @Inject constructor(
             .map { categoryAmountsAndTotalsAggregate ->
                 CategoryAmountsAndTotalWithValidation(
                     categoryAmountsAndTotal = categoryAmountsAndTotalsAggregate.addedTogether,
-                    caValidation = { if ((it ?: BigDecimal.ZERO) >= BigDecimal.ZERO) Validation.Success else Validation.Failure }, // TODO: Doesn't really make sense to have caValidation when each category is validated in its own way.
-                    defaultAmountValidation = { if (it?.isZero ?: true) Validation.Success else Validation.Warning },
+                    caValidation = { category, amount ->
+                        if ((amount ?: BigDecimal.ZERO) >= BigDecimal.ZERO)
+                            Validation.Success
+                        else
+                            Validation.Failure
+                    },
+                    defaultAmountValidation = {
+                        if (it?.isZero ?: true)
+                            Validation.Success
+                        else
+                            Validation.Warning
+                    },
                 )
             }
 }

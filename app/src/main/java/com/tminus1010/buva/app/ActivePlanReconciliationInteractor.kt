@@ -54,8 +54,8 @@ class ActivePlanReconciliationInteractor @Inject constructor(
             categories
                 .associateWith {
                     when (val x = it.reconciliationStrategyGroup.planResolutionStrategy) {
-                        is ResolutionStrategy.Basic -> x.calc(it, activeReconciliationCAs, budgetedCAs)
-                        is ResolutionStrategy.MatchPlan -> x.calc(it, activeReconciliationCAs, budgetedCAs, activePlanCAs)
+                        is ResolutionStrategy.Basic -> x.calc(it, budgetedCAs[it], activeReconciliationCAs)
+                        is ResolutionStrategy.MatchPlan -> x.calc(it, budgetedCAs[it], activeReconciliationCAs, activePlanCAs)
                     }
                 }
                 .toCategoryAmounts()
@@ -114,7 +114,12 @@ class ActivePlanReconciliationInteractor @Inject constructor(
                     summedRelevantHistory,
                     CategoryAmountsAndTotal.FromTotal(activePlan.categoryAmounts, BigDecimal.ZERO),
                 ),
-                caValidation = { if ((it ?: BigDecimal.ZERO) >= BigDecimal.ZERO) Validation.Success else Validation.Failure }, // TODO: Doesn't really make sense to have caValidation when each category is validated in its own way.
+                caValidation = { category, amount ->
+                    when (val x = category.reconciliationStrategyGroup.planResolutionStrategy) {
+                        is ResolutionStrategy.MatchPlan -> x.validation(category, amount, activeReconciliation.categoryAmounts, activePlan.categoryAmounts)
+                        is ResolutionStrategy.Basic -> x.validation(category, amount)
+                    }
+                },
                 defaultAmountValidation = { if (it?.isZero ?: true) Validation.Success else Validation.Warning },
             )
         }

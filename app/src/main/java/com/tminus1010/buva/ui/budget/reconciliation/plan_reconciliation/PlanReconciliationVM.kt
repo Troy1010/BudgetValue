@@ -11,7 +11,6 @@ import com.tminus1010.buva.app.UserCategories
 import com.tminus1010.buva.data.ActiveReconciliationRepo
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.ReconciliationToDo
-import com.tminus1010.buva.domain.ResolutionStrategy
 import com.tminus1010.buva.ui.all_features.view_model_item.*
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -75,15 +74,7 @@ class PlanReconciliationVM @Inject constructor(
                             TextVMItem(reconciliationToDo.transactionBlock.categoryAmounts[category]?.toString() ?: ""),
                             AmountPresentationModel(activePlan.categoryAmounts[category]),
                             CategoryAmountPresentationModel(category, activeReconciliation.categoryAmounts[category], ::userUpdateActiveReconciliationCategoryAmount, menuVMItems = MenuVMItems(MenuVMItem("Fill into category", onClick = { userFillIntoCategory(category) }))),
-                            AmountPresentationModel(
-                                bigDecimal = budgeted.categoryAmounts[category],
-                                validation = {
-                                    when (val x = category.reconciliationStrategyGroup.planResolutionStrategy) {
-                                        is ResolutionStrategy.MatchPlan -> x.validation(category, activeReconciliation.categoryAmounts, budgeted.categoryAmounts, activePlan.categoryAmounts)
-                                        is ResolutionStrategy.Basic -> x.validation(category, budgeted.categoryAmounts)
-                                    }
-                                },
-                            ),
+                            AmountPresentationModel(bigDecimal = budgeted.categoryAmounts[category], validation = { budgeted.validation(category) }),
                         )
                     }.toTypedArray(),
                 ),
