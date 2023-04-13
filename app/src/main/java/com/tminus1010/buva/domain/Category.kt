@@ -15,7 +15,7 @@ data class Category(
     val name: String,
     val defaultAmountFormula: AmountFormula = AmountFormula.Value(BigDecimal.ZERO),
     val isRequired: Boolean = false,
-    val reconciliationStrategyGroup: ReconciliationStrategyGroup = ReconciliationStrategyGroup.Always,
+    val reconciliationStrategyGroup: ReconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(ResetStrategy.Basic(0)),
     val onImportTransactionMatcher: TransactionMatcher? = null,
     val isRememberedByDefault: Boolean = true,
 ) : ICategorizer, Parcelable {
