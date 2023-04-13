@@ -17,12 +17,15 @@ class ReviewHostFrag : Fragment(R.layout.frag_review_host) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = FragReviewHostBinding.bind(view)
-        vb.fragmentcontainerview.bind(viewModel.frag) { fragFactory ->
+        // # State
+        vb.fragmentcontainerview.bind(viewModel.fragFactory) { fragFactory ->
             this@ReviewHostFrag.childFragmentManager
                 .beginTransaction()
                 .replace(id, fragFactory())
                 .commitNowAllowingStateLoss()
         }
+        vb.bottomnavigationview.bind(viewModel.selectedItemId) { selectedItemId = it }
+        // # User Intent
         vb.bottomnavigationview.setOnItemSelectedListener { viewModel.userSelectMenuItem(it.itemId); true }
     }
 }
