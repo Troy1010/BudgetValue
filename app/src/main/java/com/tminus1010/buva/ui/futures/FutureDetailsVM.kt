@@ -31,7 +31,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FutureDetailsVM @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val categoryAdapter: CategoryAdapter,
     private val selectedCategoriesSharedVM: ChooseCategoriesSharedVM,
     private val futuresRepo: FuturesRepo,

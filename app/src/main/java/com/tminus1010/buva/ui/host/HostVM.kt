@@ -5,7 +5,7 @@ import androidx.navigation.NavController
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.all_layers.extensions.value
-import com.tminus1010.buva.data.SelectedPage
+import com.tminus1010.buva.data.SelectedHostPage
 import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.ReadyToBudgetPresentationFactory
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItem
@@ -25,7 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HostVM @Inject constructor(
     getExtraMenuItemPartials: GetExtraMenuItemPartials,
-    private val selectedPage: SelectedPage,
+    private val selectedHostPage: SelectedHostPage,
     private val navigator: Navigator,
     private val readyToBudgetPresentationFactory: ReadyToBudgetPresentationFactory,
 ) : ViewModel() {
@@ -35,7 +35,7 @@ class HostVM @Inject constructor(
 
     // # User Intents
     fun selectMenuItem(int: Int) {
-        selectedPage.set(int)
+        selectedHostPage.set(int)
     }
 
     fun userTryNavToAccessibilitySettings() {
@@ -58,7 +58,7 @@ class HostVM @Inject constructor(
 
     // # State
     val selectedPageRedefined =
-        selectedPage.flow
+        selectedHostPage.flow
             .map { selectedPage ->
                 if (selectedPage == R.id.budgetHostFrag)
                     runCatching { readyToBudgetPresentationFactory.checkIfReadyToBudget(); selectedPage }.getOrNull()

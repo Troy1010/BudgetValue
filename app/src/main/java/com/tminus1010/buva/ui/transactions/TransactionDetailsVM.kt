@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TransactionDetailsVM @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val transactionsInteractor: TransactionsInteractor,
     showToast: ShowToast,
     moshiWithCategoriesProvider: MoshiWithCategoriesProvider,

@@ -30,7 +30,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoryDetailsVM @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val deleteCategoryFromActiveDomain: DeleteCategoryFromActiveDomain,
     private val categoriesRepo: CategoriesRepo,
     private val replaceCategoryGlobally: ReplaceCategoryGlobally,

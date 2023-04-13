@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BudgetHostVM @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     // # User Intent
     fun userSelectMenuItem(id: Int) {

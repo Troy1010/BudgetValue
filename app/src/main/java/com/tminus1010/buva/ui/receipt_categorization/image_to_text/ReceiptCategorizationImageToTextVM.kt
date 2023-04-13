@@ -33,7 +33,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ReceiptCategorizationImageToTextVM @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     moshiWithCategoriesProvider: MoshiWithCategoriesProvider,
     moshiProvider: MoshiProvider,
     private val imageToText: ImageToText,

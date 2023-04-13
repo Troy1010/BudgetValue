@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ReceiptCategorizationHostVM @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     moshiProvider: MoshiProvider,
     private val subFragEventSharedVM: SubFragEventSharedVM,
     private val receiptCategorizationSharedVM: ReceiptCategorizationSharedVM,

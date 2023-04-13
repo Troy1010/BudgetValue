@@ -14,10 +14,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SelectedPage @Inject constructor(
+class SelectedHostPage @Inject constructor(
     private val dataStore: DataStore<Preferences>,
 ) {
-    private val key = stringPreferencesKey("SelectedPage")
+    private val key = stringPreferencesKey("SelectedHostPage")
 
     val flow =
         dataStore.data
