@@ -1,9 +1,9 @@
 package com.tminus1010.buva.domain
 
 import com.tminus1010.buva.core_testing.shared.Given
-import junit.framework.Assert.fail
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import org.junit.jupiter.api.assertThrows
 import java.math.BigDecimal
 
 class CategoryAmountsTest {
@@ -21,11 +21,8 @@ class CategoryAmountsTest {
             map2.toSortedMap(compareBy { map1[it] })
                 .logx("sortedMap")
         // # When & Then
-        try {
+        assertThrows<IllegalStateException> {
             CategoryAmounts(sortedMap)
-            fail()
-        } catch (e: Throwable) {
-            // Success
         }
     }
 
@@ -38,14 +35,13 @@ class CategoryAmountsTest {
                 Given.categories[1] to BigDecimal("200"),
                 Given.categories[2] to BigDecimal("300"),
             )
-        // # When & Then
-        assertEquals(
+        val expected =
             CategoryAmounts(
                 Given.categories[6] to BigDecimal("100"),
                 Given.categories[1] to BigDecimal("200"),
                 Given.categories[2] to BigDecimal("300"),
-            ),
-            categoryAmounts.replaceKey(Given.categories[0], Given.categories[6])
-        )
+            )
+        // # When & Then
+        assertEquals(expected, categoryAmounts.replaceKey(Given.categories[0], Given.categories[6]))
     }
 }
