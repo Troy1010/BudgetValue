@@ -1,8 +1,6 @@
-package com.tminus1010.buva.all_features.models
+package com.tminus1010.buva.domain
 
-import com.tminus1010.buva.domain.CategoryAmountFormulas
 import com.tminus1010.buva.app.InitApp
-import com.tminus1010.buva.domain.AmountFormula
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.math.BigDecimal

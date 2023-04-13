@@ -1,9 +1,7 @@
-package com.tminus1010.buva.model_domain
-
-import com.tminus1010.buva.domain.LocalDatePeriod
-import org.junit.Test
+package com.tminus1010.buva.domain
 
 import org.junit.Assert.*
+import org.junit.Test
 import java.time.LocalDate
 import java.time.Month
 

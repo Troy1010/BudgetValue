@@ -1,4 +1,4 @@
-package com.tminus1010.buva.framework.observable.source_objects
+package com.tminus1010.buva.all_layers.source_objects
 
 import com.tminus1010.buva.all_layers.source_objects.SourceList
 import junit.framework.Assert.assertEquals
