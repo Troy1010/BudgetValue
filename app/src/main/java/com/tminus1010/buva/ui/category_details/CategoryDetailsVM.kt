@@ -87,7 +87,7 @@ class CategoryDetailsVM @Inject constructor(
     }
 
     fun userSetIsRememberedByDefault(b: Boolean) {
-        category.value = category.value!!.copy(isRememberedByDefault = b)
+        category.value = category.value!!.copy(isRememberedWithEditByDefault = b)
     }
 
     fun userSetResetMax(x: BigDecimal?) {
@@ -171,7 +171,7 @@ class CategoryDetailsVM @Inject constructor(
                     ),
                     listOf(
                         TextPresentationModel(style = TextPresentationModel.Style.TWO, text1 = "Is Remembered By Default"),
-                        CheckboxVMItem(initialValue = category.isRememberedByDefault, onCheckChanged = ::userSetIsRememberedByDefault),
+                        CheckboxVMItem(initialValue = category.isRememberedWithEditByDefault, onCheckChanged = ::userSetIsRememberedByDefault),
                     ),
                     *transactionMatcherVMItems.toTypedArray(),
                 ),

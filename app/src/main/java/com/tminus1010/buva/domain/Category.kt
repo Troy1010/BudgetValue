@@ -17,7 +17,7 @@ data class Category(
     val isRequired: Boolean = false,
     val reconciliationStrategyGroup: ReconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(ResetStrategy.Basic(0)),
     val onImportTransactionMatcher: TransactionMatcher? = null,
-    val isRememberedByDefault: Boolean = true,
+    val isRememberedWithEditByDefault: Boolean = true,
 ) : ICategorizer, Parcelable {
     override fun categorize(transaction: Transaction): Transaction {
         return transaction.categorize(this)

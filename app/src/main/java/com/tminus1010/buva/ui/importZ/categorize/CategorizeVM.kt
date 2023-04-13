@@ -244,8 +244,8 @@ class CategorizeVM @Inject constructor(
                                     chooseCategoriesSharedVM.unselectCategories(category)
                                 else
                                     chooseCategoriesSharedVM.selectCategories(category)
-                            else if (category.isRememberedByDefault)
-                                userUseAndRememberDescriptionOnCategory(category)
+                            else if (category.isRememberedWithEditByDefault)
+                                userUseAndRememberDescriptionWithEditOnCategory(category)
                             else
                                 userUseDescriptionOnCategory(category)
                         },
@@ -265,19 +265,19 @@ class CategorizeVM @Inject constructor(
                                     title = "Edit",
                                     onClick = { userTryNavToCategorySettings(category) },
                                 ),
-                                if (category.isRememberedByDefault)
+                                if (category.isRememberedWithEditByDefault)
                                     MenuVMItem(
                                         title = "Use",
                                         onClick = { userUseDescriptionOnCategory(category) },
                                     )
                                 else
                                     MenuVMItem(
-                                        title = "Use and Remember",
-                                        onClick = { userUseAndRememberDescriptionOnCategory(category) },
+                                        title = "Use and Remember with Edit",
+                                        onClick = { userUseAndRememberDescriptionWithEditOnCategory(category) },
                                     ),
                                 MenuVMItem(
-                                    title = "Use and Remember with Edit",
-                                    onClick = { userUseAndRememberDescriptionWithEditOnCategory(category) },
+                                    title = "Use and Remember",
+                                    onClick = { userUseAndRememberDescriptionOnCategory(category) },
                                 ),
                                 MenuVMItem(
                                     title = "Use Only Once",
