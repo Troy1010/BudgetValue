@@ -1,4 +1,5 @@
 package android.util;
+// Intentionally changed this^ so that Log doesn't cause unit-test crashes.
 
 public class Log {
     public static int d(String tag, String msg) {
