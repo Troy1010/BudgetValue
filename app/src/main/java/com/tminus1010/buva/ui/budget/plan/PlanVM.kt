@@ -76,7 +76,21 @@ class PlanVM @Inject constructor(
                             TextVMItem("Category", style = TextVMItem.Style.HEADER),
                             TextVMItem("Expected Income"),
                             TextVMItem("Default"),
-                            *categoryAmountItemObservablesRedefined.keys.map { TextVMItem(it.name, menuVMItems = MenuVMItems(MenuVMItem(title = "Edit", onClick = { userEditCategory(it) }), MenuVMItem(title = "Create Category", onClick = { userCreateCategory() }))) }.toTypedArray()
+                            *categoryAmountItemObservablesRedefined.keys.map {
+                                TextVMItem(
+                                    text1 = it.name,
+                                    menuVMItems = MenuVMItems(
+                                        MenuVMItem(
+                                            title = "Edit",
+                                            onClick = { userEditCategory(it) }
+                                        ),
+                                        MenuVMItem(
+                                            title = "Create Category",
+                                            onClick = { userCreateCategory() }
+                                        ),
+                                    )
+                                )
+                            }.toTypedArray()
                         ),
                         listOf(
                             TextVMItem("Plan", style = TextVMItem.Style.HEADER),
