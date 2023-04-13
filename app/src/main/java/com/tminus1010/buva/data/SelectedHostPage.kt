@@ -21,7 +21,7 @@ class SelectedHostPage @Inject constructor(
 
     val flow =
         dataStore.data
-            .map { it[key]?.toIntOrNull() ?: R.id.importTransactionsFrag }
+            .map { it[key]?.toIntOrNull() ?: R.id.importHostFrag }
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 
     fun set(int: Int) {
