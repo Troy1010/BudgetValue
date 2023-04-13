@@ -99,33 +99,6 @@ class CategoryDetailsVM @Inject constructor(
         }
     }
 
-    fun userSetPlanResolutionValue(x: BigDecimal?) {
-        when (val reconciliationStrategyGroup = category.value!!.reconciliationStrategyGroup) {
-            is ReconciliationStrategyGroup.Always ->
-                category.value = category.value!!.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(planResolutionStrategy = ResolutionStrategy.Basic(x ?: BigDecimal.ZERO)))
-            is ReconciliationStrategyGroup.Reservoir ->
-                category.value = category.value!!.copy(reconciliationStrategyGroup = reconciliationStrategyGroup.copy(planResolutionStrategy = ResolutionStrategy.Basic(x ?: BigDecimal.ZERO)))
-        }
-    }
-
-    fun userSwitchToResolutionStrategyBasic() {
-        when (val reconciliationStrategyGroup = category.value!!.reconciliationStrategyGroup) {
-            is ReconciliationStrategyGroup.Always ->
-                category.value = category.value!!.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(planResolutionStrategy = ResolutionStrategy.Basic()))
-            is ReconciliationStrategyGroup.Reservoir ->
-                category.value = category.value!!.copy(reconciliationStrategyGroup = reconciliationStrategyGroup.copy(planResolutionStrategy = ResolutionStrategy.Basic()))
-        }
-    }
-
-    fun userSwitchToResolutionStrategyMatchPlan() {
-        when (val reconciliationStrategyGroup = category.value!!.reconciliationStrategyGroup) {
-            is ReconciliationStrategyGroup.Always ->
-                category.value = category.value!!.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(planResolutionStrategy = ResolutionStrategy.MatchPlan))
-            is ReconciliationStrategyGroup.Reservoir ->
-                category.value = category.value!!.copy(reconciliationStrategyGroup = reconciliationStrategyGroup.copy(planResolutionStrategy = ResolutionStrategy.MatchPlan))
-        }
-    }
-
     fun userAddSearchText() {
         category.value = category.value!!.copy(onImportTransactionMatcher = category.value!!.onImportTransactionMatcher.withSearchText(""))
     }
@@ -189,36 +162,6 @@ class CategoryDetailsVM @Inject constructor(
                                     },
                                     onNewAmount = ::userSetResetMax,
                                 ),
-                            )
-                        else -> null
-                    },
-                    when (category.displayType) {
-                        CategoryDisplayType.Reservoir ->
-                            listOf(
-                                TextVMItem("Budget Resolve Strategy"),
-                                when (val x = category.reconciliationStrategyGroup.planResolutionStrategy) {
-                                    is ResolutionStrategy.MatchPlan ->
-                                        TextVMItem(
-                                            text1 = "MatchPlan",
-                                            menuVMItems = MenuVMItems(
-                                                MenuVMItem(
-                                                    title = "Switch to Basic",
-                                                    onClick = ::userSwitchToResolutionStrategyBasic,
-                                                ),
-                                            ),
-                                        )
-                                    is ResolutionStrategy.Basic ->
-                                        AmountPresentationModel(
-                                            bigDecimal = x.budgetedMin,
-                                            onNewAmount = ::userSetPlanResolutionValue,
-                                            menuVMItems = MenuVMItems(
-                                                MenuVMItem(
-                                                    title = "Switch to MatchPlan",
-                                                    onClick = ::userSwitchToResolutionStrategyMatchPlan,
-                                                ),
-                                            ),
-                                        )
-                                },
                             )
                         else -> null
                     },

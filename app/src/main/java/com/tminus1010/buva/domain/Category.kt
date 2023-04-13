@@ -16,9 +16,6 @@ data class Category(
     val defaultAmountFormula: AmountFormula = AmountFormula.Value(BigDecimal.ZERO),
     val isRequired: Boolean = false,
     val reconciliationStrategyGroup: ReconciliationStrategyGroup = ReconciliationStrategyGroup.Always,
-//    val resetStrategy: ResetStrategy = ResetStrategy.Basic(null),
-//    val planResolutionStrategy: ResolutionStrategy = ResolutionStrategy.MatchPlan,
-//    val anytimeResolutionStrategy: ResolutionStrategy = ResolutionStrategy.Basic(BigDecimal.ZERO),
     val onImportTransactionMatcher: TransactionMatcher? = null,
     val isRememberedByDefault: Boolean = true,
 ) : ICategorizer, Parcelable {
@@ -64,12 +61,6 @@ fun Category.withDisplayType(categoryDisplayType: CategoryDisplayType): Category
         CategoryDisplayType.Always ->
             this.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Always)
         CategoryDisplayType.Reservoir ->
-            this.copy(
-                reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(
-                    resetStrategy = ResetStrategy.Basic(null),
-                    planResolutionStrategy = ResolutionStrategy.Basic(budgetedMin = BigDecimal.ZERO),
-                    anytimeResolutionStrategy = ResolutionStrategy.Basic(budgetedMin = BigDecimal.ZERO),
-                )
-            )
+            this.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(ResetStrategy.Basic(null)))
     }
 }

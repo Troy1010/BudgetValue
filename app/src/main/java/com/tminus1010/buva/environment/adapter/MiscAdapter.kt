@@ -5,12 +5,9 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.ToJson
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import com.tminus1010.buva.all_layers.extensions.easyFromJson
-import com.tminus1010.buva.all_layers.extensions.easyToJson
 import com.tminus1010.buva.domain.*
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
-import com.tminus1010.tmcommonkotlin.tuple.createTuple
-import java.lang.reflect.Type
+import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -82,15 +79,8 @@ object MiscAdapter {
         when (x) {
             is ReconciliationStrategyGroup.Always -> "Always"
             is ReconciliationStrategyGroup.Reservoir ->
-                createTuple(
-                    x.resetStrategy,
-                    x.planResolutionStrategy,
-                    x.anytimeResolutionStrategy,
-                )
-                    .let { basicMoshi.easyToJson(it) }
+                basicMoshi.toJson(x.resetStrategy)
         }
-
-    inline fun <reified T> getType(): Type = T::class.java
 
     @FromJson
     fun fromJson421(s: String): ReconciliationStrategyGroup =
@@ -98,14 +88,9 @@ object MiscAdapter {
             "Always",
             "null",
             -> ReconciliationStrategyGroup.Always
-            else -> basicMoshi.easyFromJson<Triple<ResetStrategy?, ResolutionStrategy, ResolutionStrategy>>(s)
-                .let {
-                    ReconciliationStrategyGroup.Reservoir(
-                        resetStrategy = it.first,
-                        planResolutionStrategy = it.second ?: ResolutionStrategy.Basic(), // TODO: Fix this later
-                        anytimeResolutionStrategy = it.third ?: ResolutionStrategy.Basic(), // TODO: Fix this later
-                    )
-                }
+            else ->
+                runCatching { ReconciliationStrategyGroup.Reservoir(basicMoshi.fromJson<ResetStrategy?>(s)) }
+                    .getOrElse { ReconciliationStrategyGroup.Reservoir(null) }
         }
 
 
