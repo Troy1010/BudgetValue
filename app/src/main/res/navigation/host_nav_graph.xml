@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_graph"
-    app:startDestination="@id/importAndCategorizeHostFrag">
+    app:startDestination="@id/importHostFrag">
     <action
         android:id="@+id/errorFrag_clear_backstack"
         app:destination="@id/errorFrag"
@@ -141,8 +141,8 @@
         android:label="ReceiptCategorizationImageToTextFrag"
         tools:layout="@layout/frag_receipt_categorization_imagetotext" />
     <fragment
-        android:id="@+id/importAndCategorizeHostFrag"
+        android:id="@+id/importHostFrag"
         android:name="com.tminus1010.buva.ui.importZ.ImportHostFrag"
-        android:label="ImportAndCategorizeHostFrag"
+        android:label="importHostFrag"
         tools:layout="@layout/frag_receipt_categorization_imagetotext" />
 </navigation>

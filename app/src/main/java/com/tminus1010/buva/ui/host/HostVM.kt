@@ -62,7 +62,7 @@ class HostVM @Inject constructor(
             .map { selectedPage ->
                 if (selectedPage == R.id.budgetHostFrag)
                     runCatching { readyToBudgetPresentationFactory.checkIfReadyToBudget(); selectedPage }.getOrNull()
-                        ?: R.id.importAndCategorizeHostFrag
+                        ?: R.id.importHostFrag
                 else
                     selectedPage
             }

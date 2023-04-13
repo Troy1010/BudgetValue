@@ -34,7 +34,7 @@ class ImportHostFrag : Fragment(R.layout.frag_import_host) {
     companion object {
         fun navTo(nav: NavController, subNavId: Int? = null) {
             nav.navigate(
-                R.id.importAndCategorizeHostFrag,
+                R.id.importHostFrag,
                 Bundle().apply {
                     if (subNavId != null) putInt(KEY1, subNavId)
                 },
