@@ -4,29 +4,31 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.KEY1
-import com.tminus1010.buva.all_layers.extensions.onNext
+import com.tminus1010.buva.data.SelectedImportHostPage
 import com.tminus1010.buva.ui.importZ.categorize.CategorizeFrag
 import com.tminus1010.buva.ui.importZ.transactions.AccountsFrag
 import com.tminus1010.buva.ui.importZ.transactions.ImportTransactionsFrag
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @HiltViewModel
 class ImportHostVM @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
+    private val selectedImportHostPage: SelectedImportHostPage,
 ) : ViewModel() {
     // # User Intent
     fun userSelectMenuItem(id: Int) {
-        selectedItemId.onNext(id)
+        selectedImportHostPage.set(id)
     }
 
     // # Private
-    private val subNavId = savedStateHandle.get<Int>(KEY1) ?: R.id.importTransactionsFrag
+    init {
+        savedStateHandle.get<Int>(KEY1)?.also { selectedImportHostPage.set(it) }
+    }
 
     // # State
-    val selectedItemId = MutableStateFlow(value = subNavId)
+    val selectedItemId = selectedImportHostPage.flow
     val fragFactory =
         selectedItemId.map {
             when (it) {
