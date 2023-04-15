@@ -6,9 +6,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.tminus1010.buva.R
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,8 +19,8 @@ class SelectedHostPage @Inject constructor(
 
     val flow =
         dataStore.data
-            .map { it[key]?.toIntOrNull() ?: R.id.importHostFrag }
-            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
+            .mapNotNull { it[key]?.toIntOrNull() }
+            .stateIn(GlobalScope, SharingStarted.Eagerly, R.id.importHostFrag)
 
     fun set(int: Int) {
         GlobalScope.launch { dataStore.edit { it[key] = int.toString() } }
