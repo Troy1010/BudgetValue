@@ -1,6 +1,7 @@
 package com.tminus1010.buva.all_layers.extensions
 
 import android.view.View
+import com.tminus1010.buva.R
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 
@@ -33,3 +34,9 @@ fun View.heightObservable(): Observable<Int> {
 fun View.onClick(lambda: () -> Unit) {
     setOnClickListener { lambda() }
 }
+
+var View.isSettingSelectedItemId: Boolean
+    get() = getTag(R.id.tag_is_setting_selected_item_id) as? Boolean ?: false
+    set(value) {
+        setTag(R.id.tag_is_setting_selected_item_id, value)
+    }

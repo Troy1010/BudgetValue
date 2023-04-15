@@ -5,6 +5,7 @@ import androidx.navigation.NavController
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.all_layers.extensions.value
+import com.tminus1010.buva.data.SelectedBudgetHostPage
 import com.tminus1010.buva.data.SelectedHostPage
 import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.ReadyToBudgetPresentationFactory
@@ -28,6 +29,7 @@ class HostVM @Inject constructor(
     private val selectedHostPage: SelectedHostPage,
     private val navigator: Navigator,
     private val readyToBudgetPresentationFactory: ReadyToBudgetPresentationFactory,
+    private val selectedBudgetHostPage: SelectedBudgetHostPage,
 ) : ViewModel() {
     // # Setup
     val nav = BehaviorSubject.create<NavController>()
