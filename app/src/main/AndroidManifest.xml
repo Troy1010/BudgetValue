@@ -19,7 +19,8 @@
         tools:replace="android:allowBackup">
         <activity
             android:name="com.tminus1010.buva.ui.host.HostActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,6 +29,7 @@
         </activity>
         <activity android:name=".MockImportSelectionActivity" />
         <activity android:name=".PlaygroundActivity" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.tminus1010.buva.provider"
