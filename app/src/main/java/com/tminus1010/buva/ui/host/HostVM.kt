@@ -9,6 +9,7 @@ import com.tminus1010.buva.data.SelectedBudgetHostPage
 import com.tminus1010.buva.data.SelectedHostPage
 import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.ReadyToBudgetPresentationFactory
+import com.tminus1010.buva.ui.all_features.ReadyToReconcilePresentationService
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItems
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
@@ -17,9 +18,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,6 +27,7 @@ class HostVM @Inject constructor(
     private val selectedHostPage: SelectedHostPage,
     private val navigator: Navigator,
     private val readyToBudgetPresentationFactory: ReadyToBudgetPresentationFactory,
+    private val readyToReconcilePresentationService: ReadyToReconcilePresentationService,
     private val selectedBudgetHostPage: SelectedBudgetHostPage,
 ) : ViewModel() {
     // # Setup
@@ -36,8 +35,9 @@ class HostVM @Inject constructor(
     val showAlertDialog = MutableSharedFlow<ShowAlertDialog>(1)
 
     // # User Intents
-    fun selectMenuItem(int: Int) {
-        selectedHostPage.set(int)
+    fun selectMenuItem(id: Int) {
+        // Requirement: Given app is not readyToBudget When user navigates to BudgetHost Then show popup.
+        selectedHostPage.set(id)
     }
 
     fun userTryNavToAccessibilitySettings() {
@@ -59,18 +59,7 @@ class HostVM @Inject constructor(
     val navToAccessibility = MutableSharedFlow<Unit>()
 
     // # State
-    val selectedPageRedefined =
-        selectedHostPage.flow
-            .map { selectedPage ->
-                if (selectedPage == R.id.budgetHostFrag)
-                    // Requirement: Given app is not readyToBudget When user navigates to BudgetHost Then show popup.
-                    // Requirement: Given app is not readyToBudget and SelectedHostPage is Budget When user launches app Then show default page.
-                    runCatching { readyToBudgetPresentationFactory.checkIfReady(); selectedPage }.getOrNull()
-                        ?: R.id.importHostFrag
-                else
-                    selectedPage
-            }
-            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
+    val selectedItemId = selectedHostPage.flow
     val topMenuVMItems =
         MenuVMItems(
             MenuVMItem(

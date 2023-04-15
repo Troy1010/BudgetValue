@@ -20,7 +20,6 @@ import androidx.navigation.ui.NavigationUI
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.all_layers.extensions.unCheckAllItems
-import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.app.ActivePlanInteractor
 import com.tminus1010.buva.app.ImportTransactions
 import com.tminus1010.buva.app.InitApp
@@ -41,10 +40,7 @@ import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 
@@ -129,7 +125,11 @@ class HostActivity : AppCompatActivity() {
             }
             goForward()
         }
-        viewModel.selectedPageRedefined.value?.also { vb.bottomnavigationview.selectedItemId = it }
+        GlobalScope.launch { // Doing this in the same scope as initApp() so that it has time to finish.
+            withContext(Dispatchers.Main) {
+                viewModel.selectedItemId.value.also { vb.bottomnavigationview.selectedItemId = it }
+            }
+        }.use(throbberSharedVM)
         // # Events
         viewModel.navToAccessibility.observe(this) { startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }
         viewModel.unCheckAllMenuItems.observe(this) { vb.bottomnavigationview.unCheckAllItems() } // TODO: Not working

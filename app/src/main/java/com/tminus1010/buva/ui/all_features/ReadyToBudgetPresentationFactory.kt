@@ -66,3 +66,5 @@ class ReadyToBudgetPresentationFactory @Inject constructor(
             throw NoRecentTransactionImportItemException()
     }
 }
+
+suspend fun ReadyToBudgetPresentationFactory.isReady() = runCatching { checkIfReady(); true }.getOrDefault(false)
