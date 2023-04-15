@@ -18,7 +18,7 @@ class ReadyToBudgetPresentationFactory @Inject constructor(
     private val navigator: Navigator,
 ) {
     suspend fun tryShowAlertDialog(onContinue: () -> Unit) {
-        runCatching { checkIfReadyToBudget() }
+        runCatching { checkIfReady() }
             .onFailure {
                 when (it) {
                     is CategorizationIsNotCompleteException ->
@@ -48,7 +48,7 @@ class ReadyToBudgetPresentationFactory @Inject constructor(
     class NoRecentTransactionImportItemException : Exception()
 
     // Check is in a separate exposed method so that you can block for it if you want.
-    suspend fun checkIfReadyToBudget() {
+    suspend fun checkIfReady() {
         // TODO: using .first() here might cause problems if default values before real emission would give incorrect results.
         if (!transactionsInteractor.transactionsAggregate.first().areAllSpendsCategorized)
             throw CategorizationIsNotCompleteException()

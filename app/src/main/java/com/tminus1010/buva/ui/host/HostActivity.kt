@@ -121,7 +121,7 @@ class HostActivity : AppCompatActivity() {
             viewModel.selectMenuItem(it.itemId)
             //
             if (it.itemId == R.id.budgetHostFrag) {
-                kotlin.runCatching { runBlocking { readyToBudgetPresentationFactory.checkIfReadyToBudget() } }
+                kotlin.runCatching { runBlocking { readyToBudgetPresentationFactory.checkIfReady() } }
                     .onFailure {
                         GlobalScope.launch { readyToBudgetPresentationFactory.tryShowAlertDialog(onContinue = { goForward() }) }
                         return@setOnItemSelectedListener false
