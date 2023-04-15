@@ -63,6 +63,8 @@ class HostVM @Inject constructor(
         selectedHostPage.flow
             .map { selectedPage ->
                 if (selectedPage == R.id.budgetHostFrag)
+                    // Requirement: Given app is not readyToBudget When user navigates to BudgetHost Then show popup.
+                    // Requirement: Given app is not readyToBudget and SelectedHostPage is Budget When user launches app Then show default page.
                     runCatching { readyToBudgetPresentationFactory.checkIfReadyToBudget(); selectedPage }.getOrNull()
                         ?: R.id.importHostFrag
                 else
