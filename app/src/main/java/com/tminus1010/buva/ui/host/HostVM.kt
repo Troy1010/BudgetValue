@@ -5,9 +5,11 @@ import androidx.navigation.NavController
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.all_layers.extensions.value
-import com.tminus1010.buva.data.SelectedBudgetHostPage
+import com.tminus1010.buva.app.IsReadyToBudget
+import com.tminus1010.buva.app.isReady
 import com.tminus1010.buva.data.SelectedHostPage
-import com.tminus1010.buva.ui.all_features.*
+import com.tminus1010.buva.ui.all_features.Navigator
+import com.tminus1010.buva.ui.all_features.ReadyToBudgetPresentationFactory
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItems
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
@@ -26,9 +28,7 @@ class HostVM @Inject constructor(
     private val selectedHostPage: SelectedHostPage,
     private val navigator: Navigator,
     private val readyToBudgetPresentationFactory: ReadyToBudgetPresentationFactory,
-    private val readyToReconcilePresentationService: ReadyToReconcilePresentationService,
-    private val selectedBudgetHostPage: SelectedBudgetHostPage,
-    private val throbberSharedVM: ThrobberSharedVM,
+    private val isReadyToBudget: IsReadyToBudget,
 ) : ViewModel() {
     // # Setup
     val nav = BehaviorSubject.create<NavController>()
@@ -39,7 +39,7 @@ class HostVM @Inject constructor(
         // Requirement: Given app is not readyToBudget When user clicks Budget Then show popup.
         when (id) {
             R.id.budgetHostFrag ->
-                if (runBlocking { readyToBudgetPresentationFactory.isReady() })
+                if (runBlocking { isReadyToBudget.isReady() })
                     selectedHostPage.set(id)
                 else
                     GlobalScope.launch {
