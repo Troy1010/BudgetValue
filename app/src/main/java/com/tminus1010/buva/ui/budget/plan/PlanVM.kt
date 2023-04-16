@@ -12,6 +12,7 @@ import com.tminus1010.buva.data.ActivePlanRepo
 import com.tminus1010.buva.data.CategoryRepo
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.ReconciliationStrategyGroup
+import com.tminus1010.buva.domain.ResetStrategy
 import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.toDisplayStr
@@ -68,6 +69,10 @@ class PlanVM @Inject constructor(
 
     fun userFillIntoCategory(category: Category) {
         GlobalScope.launch { activePlanInteractor.fillIntoCategory(category) }
+    }
+
+    private fun userSetBudgetMax(category: Category, s: String) {
+        GlobalScope.launch { categoryRepo.push(category.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(ResetStrategy.Basic(s.toMoneyBigDecimal())))) }.use(throbberSharedVM)
     }
 
     // # Private
@@ -136,10 +141,21 @@ class PlanVM @Inject constructor(
                             TextVMItem(),
                             TextVMItem(),
                             *categoryAmountItemObservablesRedefined.keys.map { category ->
-                                TextVMItem(
-                                    text1 = category.reconciliationStrategyGroup.resetStrategy.toDisplayStr(),
-                                    menuVMItems = getSharedMenuItems(category)
-                                )
+                                when (category.reconciliationStrategyGroup) {
+                                    is ReconciliationStrategyGroup.Always ->
+                                        TextVMItem(
+                                            text1 = category.reconciliationStrategyGroup.resetStrategy.toDisplayStr(),
+                                            menuVMItems = getSharedMenuItems(category)
+                                        )
+                                    is ReconciliationStrategyGroup.Reservoir ->
+                                        MoneyEditVMItem(
+                                            text1 = when (val x = category.reconciliationStrategyGroup.resetStrategy) {
+                                                is ResetStrategy.Basic -> x.budgetedMax?.toString() ?: "n/a"
+                                                null -> "n/a"
+                                            },
+                                            onDone = { userSetBudgetMax(category, it) }
+                                        )
+                                }
                             }.toTypedArray(),
                         ),
                     ).reflectXY(),
@@ -152,6 +168,7 @@ class PlanVM @Inject constructor(
                     rowFreezeCount = 1,
                 )
             }
+
     val buttons =
         flowOf(
             listOf(
