@@ -6,7 +6,7 @@ import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.app.IsReadyToBudget
-import com.tminus1010.buva.app.isReady
+import com.tminus1010.buva.app.get
 import com.tminus1010.buva.data.SelectedHostPage
 import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.ReadyToBudgetPresentationFactory
@@ -39,7 +39,7 @@ class HostVM @Inject constructor(
         // Requirement: Given app is not readyToBudget When user clicks Budget Then show popup.
         when (id) {
             R.id.budgetHostFrag ->
-                if (runBlocking { isReadyToBudget.isReady() })
+                if (runBlocking { isReadyToBudget.get() })
                     selectedHostPage.set(id)
                 else
                     GlobalScope.launch {

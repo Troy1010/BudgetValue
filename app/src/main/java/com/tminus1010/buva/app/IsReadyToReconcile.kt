@@ -23,4 +23,4 @@ class IsReadyToReconcile @Inject constructor(
     }
 }
 
-suspend fun IsReadyToReconcile.isReady() = runCatching { check(); true }.getOrDefault(false)
+suspend fun IsReadyToReconcile.get() = runCatching { check(); true }.getOrDefault(false)

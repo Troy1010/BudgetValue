@@ -22,10 +22,10 @@ class InitApp @Inject constructor(
 ) {
     suspend operator fun invoke() {
         // Requirement: Given app is not readyToBudget and SelectedHostPage is Budget When user launches app Then show default page.
-        if (selectedHostPage.flow.first() == R.id.budgetHostFrag && !isReadyToBudget.isReady())
+        if (selectedHostPage.flow.first() == R.id.budgetHostFrag && !isReadyToBudget.get())
             selectedHostPage.setDefault()
         // Requirement: Given app is not readyToReconcile and SelectedBudgetHostPage is reconcile When user launches app Then app navigates to a default page.
-        if ((selectedBudgetHostPage.flow.first() == R.id.reconciliationHostFrag) && !isReadyToReconcile.isReady())
+        if ((selectedBudgetHostPage.flow.first() == R.id.reconciliationHostFrag) && !isReadyToReconcile.get())
             selectedBudgetHostPage.setDefault()
         //
         if (!hasAppBeenInitializedRepo.wasAppInitialized()) {

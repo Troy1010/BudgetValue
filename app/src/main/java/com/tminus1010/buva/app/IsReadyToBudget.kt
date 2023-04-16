@@ -34,4 +34,4 @@ class IsReadyToBudget @Inject constructor(
     }
 }
 
-suspend fun IsReadyToBudget.isReady() = runCatching { check(); true }.getOrDefault(false)
+suspend fun IsReadyToBudget.get() = runCatching { check(); true }.getOrDefault(false)
