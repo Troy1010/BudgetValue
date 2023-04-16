@@ -13,4 +13,5 @@ interface AndroidNavigationWrapper {
     fun navToHistory()
     fun navToCreateFuture()
     suspend fun navToChooseTransaction(): Transaction?
+    fun navTo(id: Int)
 }

@@ -56,6 +56,10 @@ class AndroidNavigationWrapperImpl @Inject constructor() : AndroidNavigationWrap
         }
     }
 
+    override fun navTo(id: Int) = launchOnMainThread {
+        nav.navigate(id)
+    }
+
     private val nav get() = Companion.nav ?: error("This class expects Companion.nav to be assigned")
 
     companion object {

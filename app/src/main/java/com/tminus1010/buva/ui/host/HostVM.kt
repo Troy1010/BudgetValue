@@ -1,6 +1,7 @@
 package com.tminus1010.buva.ui.host
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.extensions.onNext
@@ -13,6 +14,7 @@ import com.tminus1010.buva.ui.all_features.ReadyToBudgetPresentationFactory
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItems
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -66,13 +68,16 @@ class HostVM @Inject constructor(
         }
     }
 
+    // # Private
+    init {
+        selectedHostPage.flow.observe(viewModelScope) { navigator.navTo(it) }
+    }
+
     // # Events
     val unCheckAllMenuItems = MutableSharedFlow<Unit>()
     val navToAccessibility = MutableSharedFlow<Unit>()
-    val navToId = selectedHostPage.flow
 
     // # State
-    val selectedItemId = selectedHostPage.flow
     val topMenuVMItems =
         MenuVMItems(
             MenuVMItem(

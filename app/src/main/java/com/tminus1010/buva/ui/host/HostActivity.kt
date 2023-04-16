@@ -18,8 +18,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.tminus1010.buva.R
-import com.tminus1010.buva.all_layers.extensions.isSettingSelectedItemId
-import com.tminus1010.buva.all_layers.extensions.items
 import com.tminus1010.buva.all_layers.extensions.unCheckAllItems
 import com.tminus1010.buva.app.ActivePlanInteractor
 import com.tminus1010.buva.app.ImportTransactions
@@ -37,7 +35,6 @@ import com.tminus1010.buva.ui.all_features.ShowImportResultAlertDialog
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
 import com.tminus1010.tmcommonkotlin.androidx.ShowToast
-import com.tminus1010.tmcommonkotlin.core.tryOrNull
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
@@ -104,30 +101,14 @@ class HostActivity : AppCompatActivity() {
         AndroidNavigationWrapperImpl.nav = hostFrag.navController
         // ## Initialize app TODO: Shouldn't this be in BaseApp?
         GlobalScope.launch { initApp() }.use(throbberSharedVM)
+        // ## Setup NavController with BottomNavigationView
+        NavigationUI.setupWithNavController(vb.bottomnavigationview, hostFrag.navController)
         // # User Intent
-        vb.bottomnavigationview.setOnItemSelectedListener {
-            if (!vb.bottomnavigationview.isSettingSelectedItemId) {
-                viewModel.selectMenuItem(it.itemId)
-                false
-            } else {
-                true
-            }
-        }
+        vb.bottomnavigationview.setOnItemSelectedListener { viewModel.selectMenuItem(it.itemId); false }
         // # Events
         viewModel.navToAccessibility.observe(this) { startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }
         viewModel.unCheckAllMenuItems.observe(this) { vb.bottomnavigationview.unCheckAllItems() } // TODO: Not working
-        viewModel.navToId.observe(this) { id ->
-            // Requirement: When click bot menu item Then forget backstack
-            // This will be null When config change.
-            val nav = tryOrNull { findNavController(R.id.fragmentcontainerview) }
-            // clearBackStack might not be necessary.
-            nav?.clearBackStack(id)
-            nav?.navigate(id)
-            val menuItem = vb.bottomnavigationview.menu.items.find { it.itemId == id }!!
-            NavigationUI.onNavDestinationSelected(menuItem, hostFrag.navController)
-        }
         // # State
-        vb.bottomnavigationview.bind(viewModel.selectedItemId) { isSettingSelectedItemId = true; selectedItemId = it; isSettingSelectedItemId = false }
         vb.frameProgressBar.bind(throbberSharedVM.visibility) { visibility = it }
     }
 
