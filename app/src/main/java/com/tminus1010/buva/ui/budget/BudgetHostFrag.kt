@@ -28,12 +28,12 @@ class BudgetHostFrag : Fragment(R.layout.frag_budget_host) {
             }
         }
         // # State
+        vb.bottomnavigationview.bind(viewModel.selectedItemId) { isSettingSelectedItemId = true; selectedItemId = it; isSettingSelectedItemId = false }
         vb.fragmentcontainerview.bind(viewModel.fragFactory) { fragFactory ->
             this@BudgetHostFrag.childFragmentManager
                 .beginTransaction()
                 .replace(id, fragFactory())
                 .commitNowAllowingStateLoss()
         }
-        vb.bottomnavigationview.bind(viewModel.selectedItemId) { isSettingSelectedItemId = true; selectedItemId = it; isSettingSelectedItemId = false }
     }
 }

@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.KEY1
+import com.tminus1010.buva.all_layers.extensions.isSettingSelectedItemId
 import com.tminus1010.buva.databinding.FragImportHostBinding
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,16 +20,23 @@ class ImportHostFrag : Fragment(R.layout.frag_import_host) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = FragImportHostBinding.bind(view)
+        // # User Intent
+        vb.bottomnavigationview.setOnItemSelectedListener {
+            if (!vb.bottomnavigationview.isSettingSelectedItemId) {
+                viewModel.userSelectMenuItem(it.itemId)
+                false
+            } else {
+                true
+            }
+        }
         // # State
+        vb.bottomnavigationview.bind(viewModel.selectedItemId) { isSettingSelectedItemId = true; selectedItemId = it; isSettingSelectedItemId = false }
         vb.fragmentcontainerview.bind(viewModel.fragFactory) { fragFactory ->
             this@ImportHostFrag.childFragmentManager
                 .beginTransaction()
                 .replace(id, fragFactory())
                 .commitNowAllowingStateLoss()
         }
-        vb.bottomnavigationview.bind(viewModel.selectedItemId) { selectedItemId = it }
-        // # User Intents
-        vb.bottomnavigationview.setOnItemSelectedListener { viewModel.userSelectMenuItem(it.itemId); true }
     }
 
     companion object {
