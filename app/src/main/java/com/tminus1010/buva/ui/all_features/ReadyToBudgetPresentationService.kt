@@ -5,10 +5,10 @@ import com.tminus1010.buva.environment.ActivityWrapper
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import javax.inject.Inject
 
-class ReadyToBudgetPresentationFactory @Inject constructor(
-    private val isReadyToBudget: IsReadyToBudget,
+class ReadyToBudgetPresentationService @Inject constructor(
     private val activityWrapper: ActivityWrapper,
     private val navigator: Navigator,
+    private val isReadyToBudget: IsReadyToBudget,
 ) {
     suspend fun tryShowAlertDialog(onContinue: () -> Unit) {
         runCatching { isReadyToBudget.check() }

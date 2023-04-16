@@ -17,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HostFrag : NavHostFragment() {
+class HostNavHostFrag : NavHostFragment() {
     @Inject
     lateinit var showToast: ShowToast
 

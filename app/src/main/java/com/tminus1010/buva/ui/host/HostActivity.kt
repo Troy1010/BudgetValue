@@ -30,7 +30,7 @@ import com.tminus1010.buva.databinding.ActivityHostBinding
 import com.tminus1010.buva.environment.ActivityWrapper
 import com.tminus1010.buva.environment.AndroidNavigationWrapperImpl
 import com.tminus1010.buva.environment.HostActivityWrapper
-import com.tminus1010.buva.ui.all_features.ReadyToBudgetPresentationFactory
+import com.tminus1010.buva.ui.all_features.ReadyToBudgetPresentationService
 import com.tminus1010.buva.ui.all_features.ShowImportResultAlertDialog
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
@@ -81,12 +81,12 @@ class HostActivity : AppCompatActivity() {
     lateinit var transactionsRepo: TransactionsRepo
 
     @Inject
-    lateinit var readyToBudgetPresentationFactory: ReadyToBudgetPresentationFactory
+    lateinit var readyToBudgetPresentationService: ReadyToBudgetPresentationService
 
     @Inject
     lateinit var selectedHostPage: SelectedHostPage
 
-    val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.fragmentcontainerview) as HostFrag }
+    val hostNavHostFrag by lazy { supportFragmentManager.findFragmentById(R.id.fragmentcontainerview) as HostNavHostFrag }
     private val nav by lazy { findNavController(R.id.fragmentcontainerview) }
     private val showImportResultAlertDialog by lazy { ShowImportResultAlertDialog(ShowAlertDialog(this)) }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,15 +94,15 @@ class HostActivity : AppCompatActivity() {
         setContentView(vb.root)
         // # Setup
         // ## Logs
-        hostFrag.navController.addOnDestinationChangedListener { _, navDestination, _ -> Log.d("buva.Nav", "${navDestination.label}") }
+        hostNavHostFrag.navController.addOnDestinationChangedListener { _, navDestination, _ -> Log.d("buva.Nav", "${navDestination.label}") }
         // ## Mediation
         ActivityWrapper.activity = this
         HostActivityWrapper.hostActivity = this
-        AndroidNavigationWrapperImpl.nav = hostFrag.navController
+        AndroidNavigationWrapperImpl.nav = hostNavHostFrag.navController
         // ## Initialize app TODO: Shouldn't this be in BaseApp?
         GlobalScope.launch { initApp() }.use(throbberSharedVM)
         // ## Setup NavController with BottomNavigationView
-        NavigationUI.setupWithNavController(vb.bottomnavigationview, hostFrag.navController)
+        NavigationUI.setupWithNavController(vb.bottomnavigationview, hostNavHostFrag.navController)
         // # User Intent
         vb.bottomnavigationview.setOnItemSelectedListener { viewModel.selectMenuItem(it.itemId); false }
         // # Events
@@ -147,7 +147,7 @@ class HostActivity : AppCompatActivity() {
     val coroutineExceptionHandler =
         CoroutineExceptionHandler { _, e ->
             logz("Error during importTransactions:", e)
-            hostFrag.handle(e)
+            hostNavHostFrag.handle(e)
         }
 
     val importTransactionsLauncher =

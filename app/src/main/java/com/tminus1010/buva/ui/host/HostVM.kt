@@ -10,7 +10,7 @@ import com.tminus1010.buva.app.get
 import com.tminus1010.buva.data.SelectedHostPage
 import com.tminus1010.buva.environment.ActivityWrapper
 import com.tminus1010.buva.ui.all_features.Navigator
-import com.tminus1010.buva.ui.all_features.ReadyToBudgetPresentationFactory
+import com.tminus1010.buva.ui.all_features.ReadyToBudgetPresentationService
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItems
@@ -29,7 +29,7 @@ class HostVM @Inject constructor(
     getExtraMenuItemPartials: GetExtraMenuItemPartials,
     private val selectedHostPage: SelectedHostPage,
     private val navigator: Navigator,
-    private val readyToBudgetPresentationFactory: ReadyToBudgetPresentationFactory,
+    private val readyToBudgetPresentationService: ReadyToBudgetPresentationService,
     private val isReadyToBudget: IsReadyToBudget,
     private val activityWrapper: ActivityWrapper,
     private val throbberSharedVM: ThrobberSharedVM,
@@ -46,7 +46,7 @@ class HostVM @Inject constructor(
                         selectedHostPage.set(id)
                     else
                         GlobalScope.launch {
-                            readyToBudgetPresentationFactory.tryShowAlertDialog(onContinue = { selectedHostPage.set(id) })
+                            readyToBudgetPresentationService.tryShowAlertDialog(onContinue = { selectedHostPage.set(id) })
                         }
                 }.use(throbberSharedVM)
             else ->

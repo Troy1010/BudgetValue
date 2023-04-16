@@ -30,4 +30,9 @@ class Navigator @Inject constructor(
         selectedHostPage.set(R.id.importHostFrag)
         selectedImportHostPage.set(R.id.importTransactionsFrag)
     }
+
+    fun navToPlan() {
+        selectedHostPage.set(R.id.budgetHostFrag)
+        selectedBudgetHostPage.set(R.id.planFrag)
+    }
 }

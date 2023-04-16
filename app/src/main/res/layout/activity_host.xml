@@ -28,7 +28,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentcontainerview"
-        android:name="com.tminus1010.buva.ui.host.HostFrag"
+        android:name="com.tminus1010.buva.ui.host.HostNavHostFrag"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:defaultNavHost="true"

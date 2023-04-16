@@ -36,7 +36,7 @@ class BudgetHostVM @Inject constructor(
                         selectedBudgetHostPage.set(id)
                     else
                         GlobalScope.launch {
-                            readyToReconcilePresentationService.tryShowAlertDialog()
+                            readyToReconcilePresentationService.tryShowAlertDialog(onContinue = { selectedBudgetHostPage.set(R.id.reconciliationHostFrag) })
                         }
                 }.use(throbberSharedVM)
             else ->
