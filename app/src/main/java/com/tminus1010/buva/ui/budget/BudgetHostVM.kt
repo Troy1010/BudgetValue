@@ -4,6 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.KEY1
+import com.tminus1010.buva.app.IsReadyToReconcile
+import com.tminus1010.buva.app.get
 import com.tminus1010.buva.data.SelectedBudgetHostPage
 import com.tminus1010.buva.ui.all_features.ReadyToReconcilePresentationService
 import com.tminus1010.buva.ui.budget.budget.BudgetFrag
@@ -20,13 +22,17 @@ class BudgetHostVM @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val selectedBudgetHostPage: SelectedBudgetHostPage,
     private val readyToReconcilePresentationService: ReadyToReconcilePresentationService,
+    private val isReadyToReconcile: IsReadyToReconcile,
 ) : ViewModel() {
     // # User Intent
     fun userSelectMenuItem(id: Int) {
         when (id) {
             R.id.reconciliationHostFrag ->
                 GlobalScope.launch {
-                    readyToReconcilePresentationService.tryShowAlertDialog()
+                    if (isReadyToReconcile.get())
+                        selectedBudgetHostPage.set(id)
+                    else
+                        readyToReconcilePresentationService.tryShowAlertDialog()
                 }
             else ->
                 selectedBudgetHostPage.set(id)
