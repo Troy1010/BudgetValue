@@ -9,7 +9,6 @@ import com.tminus1010.buva.domain.AmountFormula
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.ReconciliationStrategyGroup
 import com.tminus1010.buva.ui.all_features.ReadyToBudgetPresentationFactory
-import com.tminus1010.buva.ui.all_features.ReadyToReconcilePresentationService
 import com.tminus1010.buva.ui.all_features.isReady
 import kotlinx.coroutines.flow.first
 import java.math.BigDecimal
@@ -19,7 +18,7 @@ class InitApp @Inject constructor(
     private val hasAppBeenInitializedRepo: HasAppBeenInitializedRepo,
     private val categoriesRepo: CategoriesRepo,
     private val readyToBudgetPresentationFactory: ReadyToBudgetPresentationFactory,
-    private val readyToReconcilePresentationService: ReadyToReconcilePresentationService,
+    private val isReadyToReconcile: IsReadyToReconcile,
     private val selectedHostPage: SelectedHostPage,
     private val selectedBudgetHostPage: SelectedBudgetHostPage,
 ) {
@@ -28,7 +27,7 @@ class InitApp @Inject constructor(
         if (selectedHostPage.flow.first() == R.id.budgetHostFrag && !readyToBudgetPresentationFactory.isReady())
             selectedHostPage.setDefault()
         // Requirement: Given app is not readyToReconcile and SelectedBudgetHostPage is reconcile When user launches app Then app navigates to a default page.
-        if ((selectedBudgetHostPage.flow.first() == R.id.reconciliationHostFrag) && !readyToReconcilePresentationService.isReady())
+        if ((selectedBudgetHostPage.flow.first() == R.id.reconciliationHostFrag) && !isReadyToReconcile.isReady())
             selectedBudgetHostPage.setDefault()
         //
         if (!hasAppBeenInitializedRepo.wasAppInitialized()) {
