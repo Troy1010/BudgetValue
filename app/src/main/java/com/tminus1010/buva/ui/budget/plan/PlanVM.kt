@@ -108,7 +108,17 @@ class PlanVM @Inject constructor(
                             TextVMItem("Reset Max", style = TextVMItem.Style.HEADER),
                             TextVMItem(),
                             TextVMItem(),
-                            *categoryAmountItemObservablesRedefined.keys.map { TextVMItem(text1 = it.reconciliationStrategyGroup.resetStrategy.toDisplayStr(), menuVMItems = MenuVMItems(MenuVMItem("Edit Category", onClick = { userEditCategory(it) }))) }.toTypedArray(),
+                            *categoryAmountItemObservablesRedefined.keys.map {
+                                TextVMItem(
+                                    text1 = it.reconciliationStrategyGroup.resetStrategy.toDisplayStr(),
+                                    menuVMItems = MenuVMItems(
+                                        MenuVMItem(
+                                            title = "Edit Category",
+                                            onClick = { userEditCategory(it) },
+                                        ),
+                                    )
+                                )
+                            }.toTypedArray(),
                         ),
                     ).reflectXY(),
                     dividerMap = categoryAmountItemObservablesRedefined.map { it.key }.withIndex()
