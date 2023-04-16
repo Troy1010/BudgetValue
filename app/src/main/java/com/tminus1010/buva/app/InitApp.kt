@@ -28,7 +28,7 @@ class InitApp @Inject constructor(
         // Requirement: Given app is not readyToReconcile and SelectedBudgetHostPage is reconcile When user launches app Then show default page.
         if ((selectedBudgetHostPage.flow.first() == R.id.reconciliationHostFrag) && !isReadyToReconcile.get())
             selectedBudgetHostPage.setDefault()
-        // 
+        //
         if ((selectedBudgetHostPage.flow.first() == R.id.budgetFrag) && !isReadyToBudgeted.get())
             selectedBudgetHostPage.setDefault()
         //
