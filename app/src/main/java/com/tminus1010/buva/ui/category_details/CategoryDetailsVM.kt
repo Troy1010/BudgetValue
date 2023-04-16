@@ -5,7 +5,7 @@ import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.all_layers.extensions.replaceFirst
 import com.tminus1010.buva.app.DeleteCategoryFromActiveDomain
 import com.tminus1010.buva.app.ReplaceCategoryGlobally
-import com.tminus1010.buva.data.CategoriesRepo
+import com.tminus1010.buva.data.CategoryRepo
 import com.tminus1010.buva.domain.*
 import com.tminus1010.buva.environment.ActivityWrapper
 import com.tminus1010.buva.ui.all_features.Navigator
@@ -32,7 +32,7 @@ import javax.inject.Inject
 class CategoryDetailsVM @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val deleteCategoryFromActiveDomain: DeleteCategoryFromActiveDomain,
-    private val categoriesRepo: CategoriesRepo,
+    private val categoryRepo: CategoryRepo,
     private val replaceCategoryGlobally: ReplaceCategoryGlobally,
     private val errors: Errors,
     private val throbberSharedVM: ThrobberSharedVM,
@@ -80,7 +80,7 @@ class CategoryDetailsVM @Inject constructor(
                 if (originalCategory != null && originalCategory.name != category.value!!.name)
                     replaceCategoryGlobally(originalCategory, category.value!!)
                 else
-                    categoriesRepo.push(category.value!!)
+                    categoryRepo.push(category.value!!)
                 navigator.navUp()
             }
         }.use(throbberSharedVM)

@@ -1,7 +1,7 @@
 package com.tminus1010.buva.app
 
 import com.tminus1010.buva.R
-import com.tminus1010.buva.data.CategoriesRepo
+import com.tminus1010.buva.data.CategoryRepo
 import com.tminus1010.buva.data.HasAppBeenInitializedRepo
 import com.tminus1010.buva.data.SelectedBudgetHostPage
 import com.tminus1010.buva.data.SelectedHostPage
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 class InitApp @Inject constructor(
     private val hasAppBeenInitializedRepo: HasAppBeenInitializedRepo,
-    private val categoriesRepo: CategoriesRepo,
+    private val categoryRepo: CategoryRepo,
     private val isReadyToReconcile: IsReadyToReconcile,
     private val isReadyToBudget: IsReadyToBudget,
     private val selectedHostPage: SelectedHostPage,
@@ -29,7 +29,7 @@ class InitApp @Inject constructor(
             selectedBudgetHostPage.setDefault()
         //
         if (!hasAppBeenInitializedRepo.wasAppInitialized()) {
-            initCategories.forEach { categoriesRepo.push(it) }
+            initCategories.forEach { categoryRepo.push(it) }
             hasAppBeenInitializedRepo.pushAppInitBool(true)
         }
     }

@@ -35,7 +35,7 @@ class ActiveReconciliationRepoTest {
     @Test
     fun default() = runBlocking {
         // # Given
-        Given.categories.forEach { categoriesRepo.push(it) }
+        Given.categories.forEach { categoryRepo.push(it) }
         // # When
         // # Then
         assertEquals(
@@ -48,7 +48,7 @@ class ActiveReconciliationRepoTest {
     @Test
     fun push() = runBlocking {
         // # Given
-        Given.categories.forEach { categoriesRepo.push(it) }
+        Given.categories.forEach { categoryRepo.push(it) }
         // # When
         activeReconciliationRepo.pushCategoryAmounts(CategoryAmounts(Given.categories[0] to BigDecimal("7")))
         Thread.sleep(500) // Why is this necessary..?
@@ -63,7 +63,7 @@ class ActiveReconciliationRepoTest {
     @Test
     fun pushCategoryAmount() = runBlocking {
         // # Given
-        Given.categories.forEach { categoriesRepo.push(it) }
+        Given.categories.forEach { categoryRepo.push(it) }
         // # When
         activeReconciliationRepo.pushCategoryAmount(Given.categories[0], BigDecimal("7"))
         Thread.sleep(500) // Why is this necessary..?
@@ -82,7 +82,7 @@ class ActiveReconciliationRepoTest {
     lateinit var activeReconciliationRepo: ActiveReconciliationRepo
 
     @Inject
-    lateinit var categoriesRepo: CategoriesRepo
+    lateinit var categoryRepo: CategoryRepo
 
     @Before
     fun before() {

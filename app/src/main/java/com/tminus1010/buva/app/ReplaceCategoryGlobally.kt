@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class ReplaceCategoryGlobally @Inject constructor(
-    private val categoriesRepo: CategoriesRepo,
+    private val categoryRepo: CategoryRepo,
     private val reconciliationsRepo: ReconciliationsRepo,
     private val plansRepo: PlansRepo,
     private val activeReconciliationRepo: ActiveReconciliationRepo,
@@ -15,7 +15,7 @@ class ReplaceCategoryGlobally @Inject constructor(
     private val transactionsInteractor: TransactionsInteractor,
 ) {
     suspend operator fun invoke(originalCategory: Category, newCategory: Category) {
-        categoriesRepo.push(newCategory)
+        categoryRepo.push(newCategory)
         activePlanRepo.pushCategoryAmounts(activePlanRepo.activePlan.first().categoryAmounts.replaceKey(originalCategory, newCategory))
         activeReconciliationRepo.pushCategoryAmounts(activeReconciliationRepo.activeReconciliationCAs.value.replaceKey(originalCategory, newCategory))
 
@@ -31,6 +31,6 @@ class ReplaceCategoryGlobally @Inject constructor(
             transactionsInteractor.transactionsAggregate.value?.transactions?.map { it.copy(categoryAmounts = it.categoryAmounts.replaceKey(originalCategory, newCategory)) } ?: emptyList()
         )
 
-        categoriesRepo.delete(originalCategory)
+        categoryRepo.delete(originalCategory)
     }
 }

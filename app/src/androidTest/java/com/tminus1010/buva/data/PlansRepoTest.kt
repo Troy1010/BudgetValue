@@ -40,7 +40,7 @@ class PlansRepoTest {
     @Test
     fun default() = runBlocking {
         // # Given
-        Given.categories.forEach { categoriesRepo.push(it) }
+        Given.categories.forEach { categoryRepo.push(it) }
         // # When
         val result = plansRepo.plans.value
         // # Then
@@ -50,7 +50,7 @@ class PlansRepoTest {
     @Test
     fun push() = runBlocking {
         // # Given
-        Given.categories.forEach { categoriesRepo.push(it) }
+        Given.categories.forEach { categoryRepo.push(it) }
         val givenPlan =
             Plan(
                 datePeriodService.getDatePeriod2(LocalDate.now()).first(),
@@ -67,7 +67,7 @@ class PlansRepoTest {
     @Test
     fun updatePlanCategoryAmount() = runBlocking {
         // # Given
-        Given.categories.forEach { categoriesRepo.push(it) }
+        Given.categories.forEach { categoryRepo.push(it) }
         val givenPlan =
             Plan(
                 datePeriodService.getDatePeriod2(LocalDate.now()).first(),
@@ -95,7 +95,7 @@ class PlansRepoTest {
     @Test
     fun updatePlanAmount() = runBlocking {
         // # Given
-        Given.categories.forEach { categoriesRepo.push(it) }
+        Given.categories.forEach { categoryRepo.push(it) }
         val givenPlan =
             Plan(
                 datePeriodService.getDatePeriod2(LocalDate.now()).first(),
@@ -123,7 +123,7 @@ class PlansRepoTest {
     @Test
     fun updatePlan() = runBlocking {
         // # Given
-        Given.categories.forEach { categoriesRepo.push(it) }
+        Given.categories.forEach { categoryRepo.push(it) }
         val givenPlan =
             Plan(
                 datePeriodService.getDatePeriod2(LocalDate.now()).first(),
@@ -148,7 +148,7 @@ class PlansRepoTest {
     @Test
     fun delete() = runBlocking {
         // # Given
-        Given.categories.forEach { categoriesRepo.push(it) }
+        Given.categories.forEach { categoryRepo.push(it) }
         val givenPlan =
             Plan(
                 datePeriodService.getDatePeriod2(LocalDate.now()).first(),
@@ -174,7 +174,7 @@ class PlansRepoTest {
     lateinit var datePeriodService: DatePeriodService
 
     @Inject
-    lateinit var categoriesRepo: CategoriesRepo
+    lateinit var categoryRepo: CategoryRepo
 
     @Before
     fun before() {

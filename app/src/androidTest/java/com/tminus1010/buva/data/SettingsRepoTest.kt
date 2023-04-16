@@ -58,7 +58,7 @@ class SettingsRepoTest {
     lateinit var settingsRepo: SettingsRepo
 
     @Inject
-    lateinit var categoriesRepo: CategoriesRepo
+    lateinit var categoryRepo: CategoryRepo
 
     @Before
     fun before() {

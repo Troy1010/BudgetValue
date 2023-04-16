@@ -30,11 +30,11 @@ import javax.inject.Singleton
 
 @UninstallModules(EnvironmentModule::class)
 @HiltAndroidTest
-class CategoriesRepoTest {
+class CategoryRepoTest {
     @Test
     fun default() = runBlocking {
         // # When
-        val result = categoriesRepo.userCategories.first()
+        val result = categoryRepo.userCategories.first()
         // # Then
         assertEquals(listOf<Category>(), result)
     }
@@ -44,8 +44,8 @@ class CategoriesRepoTest {
         // # Given
         val givenCategory = Category("Given Category")
         // # When
-        categoriesRepo.push(givenCategory)
-        val result = categoriesRepo.userCategories.first()
+        categoryRepo.push(givenCategory)
+        val result = categoryRepo.userCategories.first()
         // # Then
         assertEquals(listOf(givenCategory), result)
     }
@@ -54,10 +54,10 @@ class CategoriesRepoTest {
     fun delete() = runBlocking {
         // # Given
         val givenCategory = Category("Given Category")
-        categoriesRepo.push(givenCategory)
+        categoryRepo.push(givenCategory)
         // # When
-        categoriesRepo.delete(givenCategory)
-        val result = categoriesRepo.userCategories.first()
+        categoryRepo.delete(givenCategory)
+        val result = categoryRepo.userCategories.first()
         // # Then
         assertEquals(listOf<Category>(), result)
     }
@@ -66,7 +66,7 @@ class CategoriesRepoTest {
     var hiltAndroidRule = HiltAndroidRule(this)
 
     @Inject
-    lateinit var categoriesRepo: CategoriesRepo
+    lateinit var categoryRepo: CategoryRepo
 
     @Before
     fun before() {

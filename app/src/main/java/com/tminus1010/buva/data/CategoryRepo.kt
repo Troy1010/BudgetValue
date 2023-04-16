@@ -10,7 +10,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CategoriesRepo @Inject constructor(
+class CategoryRepo @Inject constructor(
     private val userCategoriesDAO: UserCategoriesDAO,
 ) {
     val userCategories: Flow<List<Category>> =

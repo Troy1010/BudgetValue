@@ -52,12 +52,12 @@ class MoshiWithCategoriesAdaptersTest {
     lateinit var moshiWithCategoriesProvider: MoshiWithCategoriesProvider
 
     @Inject
-    lateinit var categoriesRepo: CategoriesRepo
+    lateinit var categoryRepo: CategoryRepo
 
     @Before
     fun before() {
         hiltAndroidRule.inject()
-        runBlocking { Given.categories.forEach { categoriesRepo.push(it) } }
+        runBlocking { Given.categories.forEach { categoryRepo.push(it) } }
         Thread.sleep(500)
     }
 

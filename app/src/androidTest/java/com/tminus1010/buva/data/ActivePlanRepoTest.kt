@@ -52,7 +52,7 @@ class ActivePlanRepoTest {
     @Test
     fun clearCategoryAmounts() = runBlocking {
         // # Given
-        Given.categories.forEach { categoriesRepo.push(it) }
+        Given.categories.forEach { categoryRepo.push(it) }
         activePlanRepo.updateCategoryAmount(Given.categories[0], BigDecimal("9"))
         Thread.sleep(500) // Why is this necessary..?
         // # When
@@ -72,7 +72,7 @@ class ActivePlanRepoTest {
     @Test
     fun updateCategoryAmount() = runBlocking {
         // # Given
-        Given.categories.forEach { categoriesRepo.push(it) }
+        Given.categories.forEach { categoryRepo.push(it) }
         // # When
         activePlanRepo.updateCategoryAmount(Given.categories[0], BigDecimal("22"))
         Thread.sleep(500) // Why is this necessary..?
@@ -114,7 +114,7 @@ class ActivePlanRepoTest {
     lateinit var activePlanRepo: ActivePlanRepo
 
     @Inject
-    lateinit var categoriesRepo: CategoriesRepo
+    lateinit var categoryRepo: CategoryRepo
 
     @Before
     fun before() {
