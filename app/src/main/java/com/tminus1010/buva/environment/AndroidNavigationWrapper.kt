@@ -8,12 +8,9 @@ interface AndroidNavigationWrapper {
     fun navToEditCategory(category: Category)
     fun navUp()
     suspend fun navToSetString(s: String): String?
-    fun navToCategorize()
     fun navToFutures()
     fun navToTransactions()
     fun navToHistory()
     fun navToCreateFuture()
     suspend fun navToChooseTransaction(): Transaction?
-    fun navToAccounts()
-    fun navToImportTransactions()
 }

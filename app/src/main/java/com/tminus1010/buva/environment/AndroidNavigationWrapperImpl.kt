@@ -7,7 +7,6 @@ import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.Transaction
 import com.tminus1010.buva.ui.category_details.CategoryDetailsFrag
 import com.tminus1010.buva.ui.choose_transaction.ChooseTransactionFrag
-import com.tminus1010.buva.ui.importZ.ImportHostFrag
 import com.tminus1010.buva.ui.set_string.SetStringFrag
 import com.tminus1010.tmcommonkotlin.androidx.launchOnMainThread
 import dagger.Reusable
@@ -17,24 +16,12 @@ import kotlin.coroutines.suspendCoroutine
 
 @Reusable
 class AndroidNavigationWrapperImpl @Inject constructor() : AndroidNavigationWrapper {
-    override fun navToImportTransactions() = launchOnMainThread {
-        ImportHostFrag.navTo(nav, R.id.importTransactionsFrag)
-    }
-
-    override fun navToAccounts() = launchOnMainThread {
-        ImportHostFrag.navTo(nav, R.id.accountsFrag)
-    }
-
     override fun navToCreateCategory() = launchOnMainThread {
         CategoryDetailsFrag.navTo(nav, null)
     }
 
     override fun navToEditCategory(category: Category) = launchOnMainThread {
         CategoryDetailsFrag.navTo(nav, category)
-    }
-
-    override fun navToCategorize() = launchOnMainThread {
-        ImportHostFrag.navTo(nav, R.id.categorizeNestedGraph)
     }
 
     override fun navToFutures() = launchOnMainThread {
