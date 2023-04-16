@@ -2,14 +2,21 @@ package com.tminus1010.buva.all_layers.extensions
 
 import com.tminus1010.buva.all_layers.source_objects.SourceMap
 import io.reactivex.rxjava3.core.Observable
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx3.asObservable
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.EmptyCoroutineContext
+
+/**
+ * This is a convenience method.
+ *
+ * It is very similar to .stateIn(), except you can use .first() and only get the default value if it were null.
+ */
+fun <T> Flow<T?>.shareInWithDefault(scope: CoroutineScope, started: SharingStarted, defaultValue: T): Flow<T> {
+    return map { it ?: defaultValue }.distinctUntilChanged().shareIn(scope, started, 1)
+}
 
 
 fun <T : Any> Flow<T?>.asObservable2(): Observable<T> {

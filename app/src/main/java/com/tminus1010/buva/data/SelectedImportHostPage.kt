@@ -5,11 +5,10 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.tminus1010.buva.R
+import com.tminus1010.buva.all_layers.extensions.shareInWithDefault
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -23,9 +22,8 @@ class SelectedImportHostPage @Inject constructor(
 
     val flow =
         dataStore.data
-            .map { it[key]?.toIntOrNull() ?: defaultValue }
-            .distinctUntilChanged()
-            .shareIn(GlobalScope, SharingStarted.Eagerly, 1) // not using stateIn bc it means .first() doesn't wait.
+            .map { it[key]?.toIntOrNull() }
+            .shareInWithDefault(GlobalScope, SharingStarted.Eagerly, defaultValue)
 
     fun setDefault() = set(defaultValue)
     fun set(int: Int) {
