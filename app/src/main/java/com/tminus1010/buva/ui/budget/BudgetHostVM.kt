@@ -4,9 +4,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.KEY1
+import com.tminus1010.buva.app.IsReadyToBudgeted
 import com.tminus1010.buva.app.IsReadyToReconcile
 import com.tminus1010.buva.app.get
 import com.tminus1010.buva.data.SelectedBudgetHostPage
+import com.tminus1010.buva.ui.all_features.ReadyToBudgetedPresentationService
 import com.tminus1010.buva.ui.all_features.ReadyToReconcilePresentationService
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.budget.budget.BudgetFrag
@@ -24,7 +26,9 @@ class BudgetHostVM @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val selectedBudgetHostPage: SelectedBudgetHostPage,
     private val readyToReconcilePresentationService: ReadyToReconcilePresentationService,
+    private val readyToBudgetedPresentationService: ReadyToBudgetedPresentationService,
     private val isReadyToReconcile: IsReadyToReconcile,
+    private val isReadyToBudgeted: IsReadyToBudgeted,
     private val throbberSharedVM: ThrobberSharedVM,
 ) : ViewModel() {
     // # User Intent
@@ -36,7 +40,16 @@ class BudgetHostVM @Inject constructor(
                         selectedBudgetHostPage.set(id)
                     else
                         GlobalScope.launch {
-                            readyToReconcilePresentationService.tryShowAlertDialog(onContinue = { selectedBudgetHostPage.set(R.id.reconciliationHostFrag) })
+                            readyToReconcilePresentationService.tryShowAlertDialog(onContinue = { selectedBudgetHostPage.set(id) })
+                        }
+                }.use(throbberSharedVM)
+            R.id.budgetFrag ->
+                GlobalScope.launch {
+                    if (isReadyToBudgeted.get())
+                        selectedBudgetHostPage.set(id)
+                    else
+                        GlobalScope.launch {
+                            readyToBudgetedPresentationService.tryShowAlertDialog(onContinue = { selectedBudgetHostPage.set(id) })
                         }
                 }.use(throbberSharedVM)
             else ->

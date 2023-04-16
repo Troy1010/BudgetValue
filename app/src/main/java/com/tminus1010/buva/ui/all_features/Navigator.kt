@@ -35,4 +35,14 @@ class Navigator @Inject constructor(
         selectedHostPage.set(R.id.budgetHostFrag)
         selectedBudgetHostPage.set(R.id.planFrag)
     }
+
+    fun navToBudgeted() {
+        selectedHostPage.set(R.id.budgetHostFrag)
+        selectedBudgetHostPage.set(R.id.budgetFrag)
+    }
+
+    fun navToReconcile() {
+        selectedHostPage.set(R.id.budgetHostFrag)
+        selectedBudgetHostPage.set(R.id.reconciliationHostFrag)
+    }
 }
