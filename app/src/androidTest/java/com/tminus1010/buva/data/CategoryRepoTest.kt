@@ -11,6 +11,7 @@ import com.tminus1010.buva.environment.CategoryDatabase
 import com.tminus1010.buva.environment.MiscDatabase
 import com.tminus1010.buva.environment.RoomWithCategoriesTypeConverter
 import com.tminus1010.buva.domain.Category
+import com.tminus1010.buva.domain.ReconciliationStrategyGroup
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -60,6 +61,19 @@ class CategoryRepoTest {
         val result = categoryRepo.userCategories.first()
         // # Then
         assertEquals(listOf<Category>(), result)
+    }
+
+    @Test
+    fun replace() = runBlocking {
+        // # Given
+        val givenCategory1 = Category("Given Category", reconciliationStrategyGroup = ReconciliationStrategyGroup.Always)
+        categoryRepo.push(givenCategory1)
+        val givenCategory2 = Category("Given Category", reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir())
+        // # When
+        categoryRepo.push(givenCategory2)
+        val result = categoryRepo.userCategories.first()
+        // # Then
+        assertEquals(listOf(givenCategory2), result)
     }
 
     @get:Rule
