@@ -8,9 +8,11 @@ import com.tminus1010.buva.app.IsReadyToReconcile
 import com.tminus1010.buva.app.get
 import com.tminus1010.buva.data.SelectedBudgetHostPage
 import com.tminus1010.buva.ui.all_features.ReadyToReconcilePresentationService
+import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.budget.budget.BudgetFrag
 import com.tminus1010.buva.ui.budget.plan.PlanFrag
 import com.tminus1010.buva.ui.budget.reconciliation.ReconciliationHostFrag
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.map
@@ -23,6 +25,7 @@ class BudgetHostVM @Inject constructor(
     private val selectedBudgetHostPage: SelectedBudgetHostPage,
     private val readyToReconcilePresentationService: ReadyToReconcilePresentationService,
     private val isReadyToReconcile: IsReadyToReconcile,
+    private val throbberSharedVM: ThrobberSharedVM,
 ) : ViewModel() {
     // # User Intent
     fun userSelectMenuItem(id: Int) {
@@ -32,8 +35,10 @@ class BudgetHostVM @Inject constructor(
                     if (isReadyToReconcile.get())
                         selectedBudgetHostPage.set(id)
                     else
-                        readyToReconcilePresentationService.tryShowAlertDialog()
-                }
+                        GlobalScope.launch {
+                            readyToReconcilePresentationService.tryShowAlertDialog()
+                        }
+                }.use(throbberSharedVM)
             else ->
                 selectedBudgetHostPage.set(id)
         }

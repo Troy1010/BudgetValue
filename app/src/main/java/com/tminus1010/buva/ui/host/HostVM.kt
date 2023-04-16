@@ -10,15 +10,16 @@ import com.tminus1010.buva.data.SelectedHostPage
 import com.tminus1010.buva.environment.ActivityWrapper
 import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.ReadyToBudgetPresentationFactory
+import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItems
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,6 +30,7 @@ class HostVM @Inject constructor(
     private val readyToBudgetPresentationFactory: ReadyToBudgetPresentationFactory,
     private val isReadyToBudget: IsReadyToBudget,
     private val activityWrapper: ActivityWrapper,
+    private val throbberSharedVM: ThrobberSharedVM,
 ) : ViewModel() {
     // # Setup
     val nav = BehaviorSubject.create<NavController>()
@@ -37,12 +39,14 @@ class HostVM @Inject constructor(
     fun selectMenuItem(id: Int) {
         when (id) {
             R.id.budgetHostFrag ->
-                if (runBlocking { isReadyToBudget.get() })
-                    selectedHostPage.set(id)
-                else
-                    GlobalScope.launch {
-                        readyToBudgetPresentationFactory.tryShowAlertDialog(onContinue = { selectedHostPage.set(id) })
-                    }
+                GlobalScope.launch {
+                    if (isReadyToBudget.get())
+                        selectedHostPage.set(id)
+                    else
+                        GlobalScope.launch {
+                            readyToBudgetPresentationFactory.tryShowAlertDialog(onContinue = { selectedHostPage.set(id) })
+                        }
+                }.use(throbberSharedVM)
             else ->
                 selectedHostPage.set(id)
         }
