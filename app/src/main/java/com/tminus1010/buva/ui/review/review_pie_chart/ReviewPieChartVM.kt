@@ -56,7 +56,7 @@ class ReviewPieChartVM @Inject constructor(
                 }
         }
             .distinctUntilChanged()
-            .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
+            .shareIn(viewModelScope, SharingStarted.Lazily, 1)
     private val _colors =
         listOf<Int>()
             .plus(ColorTemplate.VORDIPLOM_COLORS.toList())
