@@ -9,7 +9,6 @@ import com.tminus1010.buva.domain.ResetStrategy
 import com.tminus1010.buva.environment.ActivityWrapper
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class ReadyToReconcilePresentationService @Inject constructor(
@@ -45,4 +44,4 @@ class ReadyToReconcilePresentationService @Inject constructor(
     }
 }
 
-val ReadyToReconcilePresentationService.isReady get() = runCatching { runBlocking { checkIfReady() }; true }.getOrDefault(false)
+suspend fun ReadyToReconcilePresentationService.isReady() = runCatching { checkIfReady(); true }.getOrDefault(false)

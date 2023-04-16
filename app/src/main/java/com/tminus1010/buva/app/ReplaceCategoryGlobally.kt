@@ -3,6 +3,7 @@ package com.tminus1010.buva.app
 import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.data.*
 import com.tminus1010.buva.domain.Category
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class ReplaceCategoryGlobally @Inject constructor(
@@ -15,7 +16,7 @@ class ReplaceCategoryGlobally @Inject constructor(
 ) {
     suspend operator fun invoke(originalCategory: Category, newCategory: Category) {
         categoriesRepo.push(newCategory)
-        activePlanRepo.pushCategoryAmounts(activePlanRepo.activePlan.value.categoryAmounts.replaceKey(originalCategory, newCategory))
+        activePlanRepo.pushCategoryAmounts(activePlanRepo.activePlan.first().categoryAmounts.replaceKey(originalCategory, newCategory))
         activeReconciliationRepo.pushCategoryAmounts(activeReconciliationRepo.activeReconciliationCAs.value.replaceKey(originalCategory, newCategory))
 
         reconciliationsRepo.reconciliations.value?.forEach {

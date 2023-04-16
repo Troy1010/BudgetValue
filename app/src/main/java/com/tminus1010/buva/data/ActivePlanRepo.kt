@@ -26,22 +26,18 @@ class ActivePlanRepo @Inject constructor(
 
     ) {
     private val key = stringPreferencesKey("ActivePlanRepo3")
+    private val defaultValue =
+        ActivePlan(
+            total = BigDecimal.ZERO,
+            categoryAmounts = CategoryAmounts(),
+        )
 
     val activePlan =
-        userCategoriesDAO.fetchUserCategories().flatMapLatest {
-            dataStore.data
-        }
-            .map { moshiWithCategoriesProvider.moshi.fromJson<ActivePlan>(it[key]) }
-            .filterNotNull()
+        userCategoriesDAO.fetchUserCategories()
+            .flatMapLatest { dataStore.data }
+            .map { moshiWithCategoriesProvider.moshi.fromJson<ActivePlan>(it[key]) ?: defaultValue }
             .distinctUntilChanged()
-            .stateIn(
-                GlobalScope,
-                SharingStarted.Eagerly,
-                ActivePlan(
-                    total = BigDecimal.ZERO,
-                    categoryAmounts = CategoryAmounts(),
-                )
-            )
+            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 
     private suspend fun push(activePlan: ActivePlan?) {
         if (activePlan == null)

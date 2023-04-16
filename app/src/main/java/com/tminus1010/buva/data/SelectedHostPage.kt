@@ -18,7 +18,6 @@ class SelectedHostPage @Inject constructor(
     private val dataStore: DataStore<Preferences>,
 ) {
     private val key = stringPreferencesKey("SelectedHostPage")
-
     private val defaultValue = R.id.importHostFrag
 
     val flow =
