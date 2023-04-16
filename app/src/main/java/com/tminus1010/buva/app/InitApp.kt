@@ -17,6 +17,7 @@ class InitApp @Inject constructor(
     private val categoryRepo: CategoryRepo,
     private val isReadyToReconcile: IsReadyToReconcile,
     private val isReadyToBudget: IsReadyToBudget,
+    private val isReadyToBudgeted: IsReadyToBudgeted,
     private val selectedHostPage: SelectedHostPage,
     private val selectedBudgetHostPage: SelectedBudgetHostPage,
 ) {
@@ -24,8 +25,11 @@ class InitApp @Inject constructor(
         // Requirement: Given app is not readyToBudget and SelectedHostPage is Budget When user launches app Then show default page.
         if (selectedHostPage.flow.first() == R.id.budgetHostFrag && !isReadyToBudget.get())
             selectedHostPage.setDefault()
-        // Requirement: Given app is not readyToReconcile and SelectedBudgetHostPage is reconcile When user launches app Then app navigates to a default page.
+        // Requirement: Given app is not readyToReconcile and SelectedBudgetHostPage is reconcile When user launches app Then show default page.
         if ((selectedBudgetHostPage.flow.first() == R.id.reconciliationHostFrag) && !isReadyToReconcile.get())
+            selectedBudgetHostPage.setDefault()
+        // 
+        if ((selectedBudgetHostPage.flow.first() == R.id.budgetFrag) && !isReadyToBudgeted.get())
             selectedBudgetHostPage.setDefault()
         //
         if (!hasAppBeenInitializedRepo.wasAppInitialized()) {
