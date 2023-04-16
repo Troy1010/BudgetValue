@@ -110,12 +110,6 @@ class PlanVM @Inject constructor(
                             TextVMItem(),
                             *categoryAmountItemObservablesRedefined.keys.map { TextVMItem(text1 = it.reconciliationStrategyGroup.resetStrategy.toDisplayStr(), menuVMItems = MenuVMItems(MenuVMItem("Edit Category", onClick = { userEditCategory(it) }))) }.toTypedArray(),
                         ),
-                        listOf(
-                            TextVMItem("Plan Resolve", style = TextVMItem.Style.HEADER),
-                            TextVMItem(),
-                            TextVMItem(),
-                            *categoryAmountItemObservablesRedefined.keys.map { TextVMItem(text1 = it.reconciliationStrategyGroup.planResolutionStrategy.toDisplayStr(), menuVMItems = MenuVMItems(MenuVMItem("Edit Category", onClick = { userEditCategory(it) }))) }.toTypedArray(),
-                        ),
                     ).reflectXY(),
                     dividerMap = categoryAmountItemObservablesRedefined.map { it.key }.withIndex()
                         .distinctUntilChangedWith(compareBy { it.value.displayType })
