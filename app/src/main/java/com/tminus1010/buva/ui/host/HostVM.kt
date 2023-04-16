@@ -4,15 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.extensions.onNext
-import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.app.IsReadyToBudget
 import com.tminus1010.buva.app.get
 import com.tminus1010.buva.data.SelectedHostPage
+import com.tminus1010.buva.environment.ActivityWrapper
 import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.ReadyToBudgetPresentationFactory
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItems
-import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -29,14 +28,13 @@ class HostVM @Inject constructor(
     private val navigator: Navigator,
     private val readyToBudgetPresentationFactory: ReadyToBudgetPresentationFactory,
     private val isReadyToBudget: IsReadyToBudget,
+    private val activityWrapper: ActivityWrapper,
 ) : ViewModel() {
     // # Setup
     val nav = BehaviorSubject.create<NavController>()
-    val showAlertDialog = MutableSharedFlow<ShowAlertDialog>(1)
 
     // # User Intents
     fun selectMenuItem(id: Int) {
-        // Requirement: Given app is not readyToBudget When user clicks Budget Then show popup.
         when (id) {
             R.id.budgetHostFrag ->
                 if (runBlocking { isReadyToBudget.get() })
@@ -52,8 +50,8 @@ class HostVM @Inject constructor(
 
     fun userTryNavToAccessibilitySettings() {
         GlobalScope.launch {
-            showAlertDialog.value!!(
-                NativeText.Simple(
+            activityWrapper.showAlertDialog(
+                body = NativeText.Simple(
                     """
                     Accessibility settings apply to all applications, so you must edit them in your phone's settings.
                     

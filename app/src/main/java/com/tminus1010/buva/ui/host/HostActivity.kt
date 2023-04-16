@@ -20,7 +20,6 @@ import androidx.navigation.ui.NavigationUI
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.extensions.isSettingSelectedItemId
 import com.tminus1010.buva.all_layers.extensions.items
-import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.all_layers.extensions.unCheckAllItems
 import com.tminus1010.buva.app.ActivePlanInteractor
 import com.tminus1010.buva.app.ImportTransactions
@@ -103,7 +102,6 @@ class HostActivity : AppCompatActivity() {
         ActivityWrapper.activity = this
         HostActivityWrapper.hostActivity = this
         AndroidNavigationWrapperImpl.nav = hostFrag.navController
-        viewModel.showAlertDialog.onNext(ShowAlertDialog(this)) // TODO: Refactor
         // ## Initialize app TODO: Shouldn't this be in BaseApp?
         GlobalScope.launch { initApp() }.use(throbberSharedVM)
         // # User Intent
