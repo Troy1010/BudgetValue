@@ -59,7 +59,7 @@ class AndroidNavigationWrapperImpl @Inject constructor() : AndroidNavigationWrap
     private val nav get() = Companion.nav ?: error("This class expects Companion.nav to be assigned")
 
     companion object {
-        // This pattern can cause memory leaks. However, this project only has 1 Activity, so a memory leak is unlikely
+        // This pattern can cause memory leaks. However, this nav controller lasts for the entire application, so it should be fine.
         @SuppressLint("StaticFieldLeak")
         var nav: NavController? = null
     }
