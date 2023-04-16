@@ -16,19 +16,19 @@ class ReadyToBudgetPresentationService @Inject constructor(
                 when (it) {
                     is IsReadyToBudget.CategorizationIsNotCompleteException ->
                         activityWrapper.showAlertDialog(
-                            body = NativeText.Simple("It's usually a good idea to complete categorization before budgeting.\n\nDo you want to go there now?"),
+                            body = NativeText.Simple("It's usually a good idea to complete categorization first.\n\nDo you want to go there now?"),
                             onContinue = onContinue,
                             onYes = { navigator.navToCategorize() },
                         )
                     is IsReadyToBudget.AccountsNotUpdatedRecentlyException ->
                         activityWrapper.showAlertDialog(
-                            body = NativeText.Simple("It's usually a good idea to update your accounts before budgeting.\n\nDo you want to go there now?"),
+                            body = NativeText.Simple("It's usually a good idea to update your accounts first.\n\nDo you want to go there now?"),
                             onContinue = onContinue,
                             onYes = { navigator.navToAccounts() },
                         )
                     is IsReadyToBudget.NoRecentTransactionImportItemException ->
                         activityWrapper.showAlertDialog(
-                            body = NativeText.Simple("It's usually a good idea to import recent transactions before budgeting.\n\nDo you want to go there now?"),
+                            body = NativeText.Simple("It's usually a good idea to import recent transactions first.\n\nDo you want to go there now?"),
                             onContinue = onContinue,
                             onYes = { navigator.navToImportTransactions() },
                         )

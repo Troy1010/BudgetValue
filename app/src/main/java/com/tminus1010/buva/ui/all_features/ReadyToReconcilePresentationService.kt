@@ -16,7 +16,7 @@ class ReadyToReconcilePresentationService @Inject constructor(
                 when (it) {
                     is IsReadyToReconcile.PlanIsInvalidException ->
                         activityWrapper.showAlertDialog(
-                            body = NativeText.Simple("It's usually a good idea to add max values to reservoir categories before reconciling.\n\nDo you want to go there now?"),
+                            body = NativeText.Simple("It's usually a good idea to add max values to reservoir categories first.\n\nDo you want to go there now?"),
                             onContinue = onContinue,
                             onYes = { navigator.navToPlan() },
                         )
