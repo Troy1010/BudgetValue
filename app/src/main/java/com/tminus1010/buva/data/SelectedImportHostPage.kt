@@ -7,8 +7,9 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.tminus1010.buva.R
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -18,12 +19,15 @@ class SelectedImportHostPage @Inject constructor(
     private val dataStore: DataStore<Preferences>,
 ) {
     private val key = stringPreferencesKey("SelectedImportHostPage")
+    private val defaultValue = R.id.importTransactionsFrag
 
     val flow =
         dataStore.data
-            .mapNotNull { it[key]?.toIntOrNull() }
-            .stateIn(GlobalScope, SharingStarted.Eagerly, R.id.importTransactionsFrag)
+            .map { it[key]?.toIntOrNull() ?: defaultValue }
+            .distinctUntilChanged()
+            .shareIn(GlobalScope, SharingStarted.Eagerly, 1) // not using stateIn bc it means .first() doesn't wait.
 
+    fun setDefault() = set(defaultValue)
     fun set(int: Int) {
         GlobalScope.launch { dataStore.edit { it[key] = int.toString() } }
     }
