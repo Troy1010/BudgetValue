@@ -86,7 +86,6 @@ object MiscAdapter {
     fun fromJson421(s: String): ReconciliationStrategyGroup =
         when (s) {
             "Always",
-            "null",
             -> ReconciliationStrategyGroup.Always
             else ->
                 runCatching { ReconciliationStrategyGroup.Reservoir(basicMoshi.fromJson<ResetStrategy?>(s)) }
