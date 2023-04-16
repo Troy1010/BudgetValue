@@ -15,10 +15,6 @@ import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.forEach
-import androidx.navigation.NavController
-import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.tminus1010.buva.R
@@ -50,7 +46,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 
@@ -111,12 +106,6 @@ class HostActivity : AppCompatActivity() {
         viewModel.showAlertDialog.onNext(ShowAlertDialog(this)) // TODO: Refactor
         // ## Initialize app TODO: Shouldn't this be in BaseApp?
         GlobalScope.launch { initApp() }.use(throbberSharedVM)
-        // ## SetupWithNavController
-        // In order for NavigationUI.setupWithNavController to work, the ids in R.menu.* must exactly match R.navigation.*
-        // Even though we are overriding setOnItemSelectedListener, we still need this for addOnDestinationChangedListener so that if Navigator brings us here, the correct highlight is applied.
-        // I tried to remove this and do my own addOnDestinationChangedListener, but unfortunately, the matchDestination method is blocked.
-//        x()
-        // hierarchy.any { it.id == destId }
         // # User Intent
         vb.bottomnavigationview.setOnItemSelectedListener {
             if (!vb.bottomnavigationview.isSettingSelectedItemId) {
@@ -129,46 +118,19 @@ class HostActivity : AppCompatActivity() {
         // # Events
         viewModel.navToAccessibility.observe(this) { startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }
         viewModel.unCheckAllMenuItems.observe(this) { vb.bottomnavigationview.unCheckAllItems() } // TODO: Not working
-        viewModel.navToId.observe(this) { navToId(it) }
+        viewModel.navToId.observe(this) { id ->
+            // Requirement: When click bot menu item Then forget backstack
+            // This will be null When config change.
+            val nav = tryOrNull { findNavController(R.id.fragmentcontainerview) }
+            // clearBackStack might not be necessary.
+            nav?.clearBackStack(id)
+            nav?.navigate(id)
+            val menuItem = vb.bottomnavigationview.menu.items.find { it.itemId == id }!!
+            NavigationUI.onNavDestinationSelected(menuItem, hostFrag.navController)
+        }
         // # State
         vb.bottomnavigationview.bind(viewModel.selectedItemId) { isSettingSelectedItemId = true; selectedItemId = it; isSettingSelectedItemId = false }
         vb.frameProgressBar.bind(throbberSharedVM.visibility) { visibility = it }
-    }
-
-//    fun x() {
-//        val weakReference = WeakReference(vb.bottomnavigationview)
-//        nav.addOnDestinationChangedListener(
-//            object : NavController.OnDestinationChangedListener {
-//                override fun onDestinationChanged(
-//                    controller: NavController,
-//                    destination: NavDestination,
-//                    arguments: Bundle?,
-//                ) {
-//                    val view = weakReference.get()
-//                    if (view == null) {
-//                        nav.removeOnDestinationChangedListener(this)
-//                        return
-//                    }
-//                    view.menu.forEach { item ->
-//                        if (destination.hierarchy.any { it.id == item.itemId }) {
-////                            item.isChecked = true
-//                            selectedHostPage.set(item.itemId)
-//                        }
-//                    }
-//                }
-//            })
-//    }
-
-    fun navToId(id: Int): Boolean {
-        // Requirement: When menu item clicked Then forget backstack.
-        // This will be null When config change.
-        val nav = tryOrNull { findNavController(R.id.fragmentcontainerview) }
-        // clearBackStack might not be necessary.
-        nav?.clearBackStack(id)
-        nav?.navigate(id)
-        // setOnItemSelectedListener overrides setupWithNavController's behavior, so that behavior is restored here.
-        val menuItem = vb.bottomnavigationview.menu.items.find { it.itemId == id }!!
-        return NavigationUI.onNavDestinationSelected(menuItem, hostFrag.navController)
     }
 
     override fun onStart() {
