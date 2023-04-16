@@ -73,6 +73,26 @@
         android:id="@+id/spinner_duration"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/divider2" />
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/colorBackgroundHighlight"
+        app:layout_constraintBottom_toTopOf="@id/dots" />
+
+    <com.mazenrashed.dotsindicator.DotsIndicator
+        android:id="@+id/dots"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="12dp"
+        app:dot_height="14dp"
+        app:dot_width="14dp"
+        app:first_dot_height="14dp"
+        app:first_dot_width="14dp"
+        app:first_selected_dot_resource="@drawable/circle_white"
+        app:first_unselected_dot_resource="@drawable/circle_gray"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

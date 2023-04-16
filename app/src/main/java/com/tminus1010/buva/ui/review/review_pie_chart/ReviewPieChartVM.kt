@@ -12,17 +12,11 @@ import com.github.mikephil.charting.utils.ColorTemplate
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.all_layers.extensions.throttleFist
 import com.tminus1010.buva.all_layers.extensions.value
-import com.tminus1010.buva.app.IsPeriodFullyImported
 import com.tminus1010.buva.app.TransactionsInteractor
-import com.tminus1010.buva.domain.Category
-import com.tminus1010.buva.domain.CategoryAmounts
-import com.tminus1010.buva.domain.LocalDatePeriod
-import com.tminus1010.buva.domain.TransactionBlock
+import com.tminus1010.buva.domain.*
 import com.tminus1010.buva.ui.all_features.view_model_item.PieChartVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.SpinnerVMItem
 import com.tminus1010.tmcommonkotlin.androidx.ShowToast
-import com.tminus1010.tmcommonkotlin.core.extensions.nextOrSame
-import com.tminus1010.tmcommonkotlin.core.extensions.previousOrSame
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.divertErrors
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.pairwiseStartNull
@@ -30,9 +24,6 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import java.math.BigDecimal
-import java.time.DayOfWeek
-import java.time.LocalDate
-import java.time.Month
 import javax.inject.Inject
 
 @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
@@ -40,24 +31,32 @@ import javax.inject.Inject
 class ReviewPieChartVM @Inject constructor(
     transactionsInteractor: TransactionsInteractor,
     showToast: ShowToast,
-    isPeriodFullyImported: IsPeriodFullyImported,
 ) : ViewModel() {
     // # UserIntents
     val userSelectedDuration = MutableStateFlow(SelectableDuration.BY_6_MONTHS)
     val userUsePeriodType = MutableStateFlow(UsePeriodType.USE_DAY_COUNT_PERIODS)
     val userPrevious = MutableSharedFlow<Unit>()
     val userNext = MutableSharedFlow<Unit>()
+    val userClickDot = MutableSharedFlow<Int>()
 
     // # Private
     private val errors = MutableSharedFlow<Throwable>()
     private val currentPageNumber =
         userSelectedDuration.flatMapLatest {
-            merge(userPrevious.map { 1 }, userNext.map { -1 }, errors.filter { it is TooFarBackException }.map { -1 })
-                .scan(0L) { acc, v ->
-                    if (acc + v < 0) errors.onNext(NoMoreDataException())
-                    (acc + v).coerceAtLeast(0)
+            combine(periods, userClickDot)
+            { periods, userClickDot ->
+                ((periods.size - 1) - userClickDot).toLong()
+            }.onStart { emit(0) }
+                .flatMapLatest { i ->
+                    merge(userPrevious.map { 1 }, userNext.map { -1 }, errors.filter { it is TooFarBackException }.map { -1 }) // TODO: Refactor
+                        .scan(i) { acc, v ->
+                            if (acc + v < 0) errors.onNext(NoMoreDataException())
+                            (acc + v).coerceAtLeast(0)
+                        }
                 }
         }
+            .distinctUntilChanged()
+            .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
     private val _colors =
         listOf<Int>()
             .plus(ColorTemplate.VORDIPLOM_COLORS.toList())
@@ -65,120 +64,11 @@ class ReviewPieChartVM @Inject constructor(
             .plus(ColorTemplate.COLORFUL_COLORS.toList())
             .plus(ColorTemplate.PASTEL_COLORS.toList())
 
-    // TODO: This should be refactored into Domain because ..?
     private val period =
         combine(userSelectedDuration, currentPageNumber, userUsePeriodType, transactionsInteractor.transactionsAggregate.map { it.mostRecentSpend })
         { userSelectedDuration, currentPageNumber, userUsePeriodType, mostRecentSpend ->
-            val mostRecentSpendDate = (mostRecentSpend?.date ?: throw NoMostRecentSpendException())
-            when (userSelectedDuration) {
-                SelectableDuration.BY_WEEK ->
-                    when (userUsePeriodType) {
-                        UsePeriodType.USE_DAY_COUNT_PERIODS ->
-                            LocalDatePeriod(
-                                mostRecentSpendDate.minusDays((currentPageNumber + 1) * 7),
-                                mostRecentSpendDate.minusDays((currentPageNumber) * 7),
-                            )
-                        UsePeriodType.USE_CALENDAR_PERIODS -> {
-                            val dateToConsider = mostRecentSpendDate.minusWeeks(currentPageNumber)
-                            LocalDatePeriod(
-                                dateToConsider.previousOrSame(DayOfWeek.SUNDAY),
-                                dateToConsider.nextOrSame(DayOfWeek.SATURDAY),
-                            )
-                        }
-                    }
-                SelectableDuration.BY_MONTH ->
-                    when (userUsePeriodType) {
-                        UsePeriodType.USE_DAY_COUNT_PERIODS ->
-                            LocalDatePeriod(
-                                mostRecentSpendDate.minusDays((currentPageNumber + 1) * 30),
-                                mostRecentSpendDate.minusDays((currentPageNumber) * 30),
-                            )
-                        UsePeriodType.USE_CALENDAR_PERIODS -> {
-                            val dateToConsider = mostRecentSpendDate.minusMonths(currentPageNumber)
-                            LocalDatePeriod(
-                                dateToConsider.withDayOfMonth(1),
-                                dateToConsider.withDayOfMonth(dateToConsider.lengthOfMonth()),
-                            )
-                        }
-                    }
-                SelectableDuration.BY_3_MONTHS ->
-                    when (userUsePeriodType) {
-                        UsePeriodType.USE_DAY_COUNT_PERIODS ->
-                            LocalDatePeriod(
-                                mostRecentSpendDate.minusDays((currentPageNumber + 1) * 365 / 4),
-                                mostRecentSpendDate.minusDays((currentPageNumber) * 365 / 4),
-                            )
-                        UsePeriodType.USE_CALENDAR_PERIODS -> {
-                            val dateToConsider = mostRecentSpendDate.minusMonths(currentPageNumber * 3)
-                            val firstQuarter =
-                                LocalDatePeriod(
-                                    LocalDate.of(dateToConsider.year, Month.JANUARY, 1),
-                                    LocalDate.of(dateToConsider.year, Month.MARCH, Month.MARCH.length(dateToConsider.isLeapYear)),
-                                )
-                            val secondQuarter =
-                                LocalDatePeriod(
-                                    LocalDate.of(dateToConsider.year, Month.APRIL, 1),
-                                    LocalDate.of(dateToConsider.year, Month.JUNE, Month.JUNE.length(dateToConsider.isLeapYear)),
-                                )
-                            val thirdQuarter =
-                                LocalDatePeriod(
-                                    LocalDate.of(dateToConsider.year, Month.JULY, 1),
-                                    LocalDate.of(dateToConsider.year, Month.SEPTEMBER, Month.SEPTEMBER.length(dateToConsider.isLeapYear)),
-                                )
-                            val fourthQuarter =
-                                LocalDatePeriod(
-                                    LocalDate.of(dateToConsider.year, Month.OCTOBER, 1),
-                                    LocalDate.of(dateToConsider.year, Month.DECEMBER, Month.DECEMBER.length(dateToConsider.isLeapYear)),
-                                )
-                            when (dateToConsider) {
-                                in firstQuarter -> firstQuarter
-                                in secondQuarter -> secondQuarter
-                                in thirdQuarter -> thirdQuarter
-                                in fourthQuarter -> fourthQuarter
-                                else -> error("dateToConsider:${dateToConsider} was somehow not in any quarters.")
-                            }
-                        }
-                    }
-                SelectableDuration.BY_6_MONTHS ->
-                    when (userUsePeriodType) {
-                        UsePeriodType.USE_DAY_COUNT_PERIODS ->
-                            LocalDatePeriod(
-                                mostRecentSpendDate.minusDays((currentPageNumber + 1) * 365 / 2),
-                                mostRecentSpendDate.minusDays((currentPageNumber) * 365 / 2),
-                            )
-                        UsePeriodType.USE_CALENDAR_PERIODS -> {
-                            val dateToConsider = mostRecentSpendDate.minusMonths(currentPageNumber * 6)
-                            val firstHalfOfYear =
-                                LocalDatePeriod(
-                                    LocalDate.of(dateToConsider.year, Month.JANUARY, 1),
-                                    LocalDate.of(dateToConsider.year, Month.JUNE, Month.JUNE.length(dateToConsider.isLeapYear)),
-                                )
-                            val secondHalfOfYear =
-                                LocalDatePeriod(
-                                    LocalDate.of(dateToConsider.year, Month.JULY, 1),
-                                    LocalDate.of(dateToConsider.year, Month.DECEMBER, Month.DECEMBER.length(dateToConsider.isLeapYear)),
-                                )
-                            if (dateToConsider in firstHalfOfYear) firstHalfOfYear else secondHalfOfYear
-                        }
-                    }
-                SelectableDuration.BY_YEAR ->
-                    when (userUsePeriodType) {
-                        UsePeriodType.USE_DAY_COUNT_PERIODS ->
-                            LocalDatePeriod(
-                                mostRecentSpendDate.minusDays((currentPageNumber + 1) * 365),
-                                mostRecentSpendDate.minusDays((currentPageNumber) * 365),
-                            )
-                        UsePeriodType.USE_CALENDAR_PERIODS -> {
-                            val dateToConsider = mostRecentSpendDate.minusYears(currentPageNumber)
-                            LocalDatePeriod(
-                                LocalDate.of(dateToConsider.year, Month.JANUARY, 1),
-                                LocalDate.of(dateToConsider.year, Month.DECEMBER, Month.DECEMBER.length(dateToConsider.isLeapYear)),
-                            )
-                        }
-                    }
-                SelectableDuration.FOREVER ->
-                    null
-            }
+            val mostRecentSpendDate = mostRecentSpend?.date ?: throw NoMostRecentSpendException()
+            DatePeriodService.getPeriod(userSelectedDuration, userUsePeriodType, mostRecentSpendDate, currentPageNumber)
         }
             .pairwiseStartNull()
             .map { (a, b) ->
@@ -189,6 +79,16 @@ class ReviewPieChartVM @Inject constructor(
             }
             .divertErrors(errors)
             .shareIn(viewModelScope, SharingStarted.Lazily, 1)
+
+    private val periods =
+        combine(userSelectedDuration, userUsePeriodType, transactionsInteractor.transactionsAggregate)
+        { userSelectedDuration, userUsePeriodType, transactionsAggregate ->
+            val startDate = transactionsAggregate.oldestSpend?.date ?: return@combine listOf()
+            val endDate = transactionsAggregate.mostRecentSpend?.date ?: return@combine listOf()
+            val datePeriod = LocalDatePeriod(startDate, endDate)
+            DatePeriodService.getPeriods(userSelectedDuration, userUsePeriodType, datePeriod)
+        }
+            .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
 
     private val transactionBlock =
         combine(transactionsInteractor.transactionsAggregate, period)
@@ -278,4 +178,12 @@ class ReviewPieChartVM @Inject constructor(
         userSelectedDuration.map { if (it != SelectableDuration.FOREVER) View.VISIBLE else View.GONE }
     val isRightVisible =
         userSelectedDuration.map { if (it != SelectableDuration.FOREVER) View.VISIBLE else View.GONE }
+    val dotCount =
+        periods.map { it.count() }
+    val selectedDot =
+        combine(periods, period)
+        { periods, period ->
+            periods.indexOf(period)
+        }
+            .filterNot { it == -1 }
 }
