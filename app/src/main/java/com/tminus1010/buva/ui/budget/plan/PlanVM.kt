@@ -9,11 +9,15 @@ import com.tminus1010.buva.all_layers.source_objects.SourceMap
 import com.tminus1010.buva.app.ActivePlanInteractor
 import com.tminus1010.buva.app.UserCategories
 import com.tminus1010.buva.data.ActivePlanRepo
+import com.tminus1010.buva.data.CategoryRepo
 import com.tminus1010.buva.domain.Category
+import com.tminus1010.buva.domain.ReconciliationStrategyGroup
 import com.tminus1010.buva.ui.all_features.Navigator
+import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.toDisplayStr
 import com.tminus1010.buva.ui.all_features.view_model_item.*
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
+import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
@@ -30,6 +34,8 @@ class PlanVM @Inject constructor(
     private val activePlanInteractor: ActivePlanInteractor,
     private val userCategories: UserCategories,
     private val navigator: Navigator,
+    private val categoryRepo: CategoryRepo,
+    private val throbberSharedVM: ThrobberSharedVM,
 ) : ViewModel() {
     // # User Intents
     fun userSaveExpectedIncome(s: String) {
@@ -50,6 +56,14 @@ class PlanVM @Inject constructor(
 
     fun userEditCategory(category: Category) {
         navigator.navToEditCategory(category)
+    }
+
+    fun userSwitchToReservoir(category: Category) {
+        GlobalScope.launch { categoryRepo.push(category.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir())) }.use(throbberSharedVM)
+    }
+
+    fun userSwitchToAlways(category: Category) {
+        GlobalScope.launch { categoryRepo.push(category.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Always)) }.use(throbberSharedVM)
     }
 
     fun userFillIntoCategory(category: Category) {
@@ -108,14 +122,24 @@ class PlanVM @Inject constructor(
                             TextVMItem("Reset Max", style = TextVMItem.Style.HEADER),
                             TextVMItem(),
                             TextVMItem(),
-                            *categoryAmountItemObservablesRedefined.keys.map {
+                            *categoryAmountItemObservablesRedefined.keys.map { category ->
                                 TextVMItem(
-                                    text1 = it.reconciliationStrategyGroup.resetStrategy.toDisplayStr(),
+                                    text1 = category.reconciliationStrategyGroup.resetStrategy.toDisplayStr(),
                                     menuVMItems = MenuVMItems(
                                         MenuVMItem(
                                             title = "Edit Category",
-                                            onClick = { userEditCategory(it) },
+                                            onClick = { userEditCategory(category) },
                                         ),
+                                        if (category.reconciliationStrategyGroup is ReconciliationStrategyGroup.Always)
+                                            MenuVMItem(
+                                                title = "Switch to Reservoir",
+                                                onClick = { userSwitchToReservoir(category) },
+                                            )
+                                        else
+                                            MenuVMItem(
+                                                title = "Switch to Always",
+                                                onClick = { userSwitchToAlways(category) },
+                                            ),
                                     )
                                 )
                             }.toTypedArray(),
