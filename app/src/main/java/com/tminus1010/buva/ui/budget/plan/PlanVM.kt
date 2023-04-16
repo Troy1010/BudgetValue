@@ -84,25 +84,38 @@ class PlanVM @Inject constructor(
             .flatMapSourceMap(SourceMap(viewModelScope)) { it.itemFlowMap }
             .map { categoryAmountItemObservables ->
                 val categoryAmountItemObservablesRedefined = categoryAmountItemObservables.toSortedMap(categoryComparator)
+                val getSharedMenuItems = { category: Category ->
+                    MenuVMItems(
+                        MenuVMItem(
+                            title = "Edit Category",
+                            onClick = { userEditCategory(category) },
+                        ),
+                        MenuVMItem(
+                            title = "Create Category",
+                            onClick = { userCreateCategory() }
+                        ),
+                        if (category.reconciliationStrategyGroup is ReconciliationStrategyGroup.Always)
+                            MenuVMItem(
+                                title = "Switch to Reservoir",
+                                onClick = { userSwitchToReservoir(category) },
+                            )
+                        else
+                            MenuVMItem(
+                                title = "Switch to Always",
+                                onClick = { userSwitchToAlways(category) },
+                            ),
+                    )
+                }
                 TableViewVMItem(
                     recipeGrid = listOf(
                         listOf(
                             TextVMItem("Category", style = TextVMItem.Style.HEADER),
                             TextVMItem("Expected Income"),
                             TextVMItem("Default"),
-                            *categoryAmountItemObservablesRedefined.keys.map {
+                            *categoryAmountItemObservablesRedefined.keys.map { category ->
                                 TextVMItem(
-                                    text1 = it.name,
-                                    menuVMItems = MenuVMItems(
-                                        MenuVMItem(
-                                            title = "Edit",
-                                            onClick = { userEditCategory(it) }
-                                        ),
-                                        MenuVMItem(
-                                            title = "Create Category",
-                                            onClick = { userCreateCategory() }
-                                        ),
-                                    )
+                                    text1 = category.name,
+                                    menuVMItems = getSharedMenuItems(category)
                                 )
                             }.toTypedArray()
                         ),
@@ -125,22 +138,7 @@ class PlanVM @Inject constructor(
                             *categoryAmountItemObservablesRedefined.keys.map { category ->
                                 TextVMItem(
                                     text1 = category.reconciliationStrategyGroup.resetStrategy.toDisplayStr(),
-                                    menuVMItems = MenuVMItems(
-                                        MenuVMItem(
-                                            title = "Edit Category",
-                                            onClick = { userEditCategory(category) },
-                                        ),
-                                        if (category.reconciliationStrategyGroup is ReconciliationStrategyGroup.Always)
-                                            MenuVMItem(
-                                                title = "Switch to Reservoir",
-                                                onClick = { userSwitchToReservoir(category) },
-                                            )
-                                        else
-                                            MenuVMItem(
-                                                title = "Switch to Always",
-                                                onClick = { userSwitchToAlways(category) },
-                                            ),
-                                    )
+                                    menuVMItems = getSharedMenuItems(category)
                                 )
                             }.toTypedArray(),
                         ),
