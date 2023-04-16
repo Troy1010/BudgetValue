@@ -7,9 +7,7 @@ import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.data.SelectedBudgetHostPage
 import com.tminus1010.buva.data.SelectedHostPage
-import com.tminus1010.buva.ui.all_features.Navigator
-import com.tminus1010.buva.ui.all_features.ReadyToBudgetPresentationFactory
-import com.tminus1010.buva.ui.all_features.ReadyToReconcilePresentationService
+import com.tminus1010.buva.ui.all_features.*
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItems
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
@@ -19,6 +17,7 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,6 +28,7 @@ class HostVM @Inject constructor(
     private val readyToBudgetPresentationFactory: ReadyToBudgetPresentationFactory,
     private val readyToReconcilePresentationService: ReadyToReconcilePresentationService,
     private val selectedBudgetHostPage: SelectedBudgetHostPage,
+    private val throbberSharedVM: ThrobberSharedVM,
 ) : ViewModel() {
     // # Setup
     val nav = BehaviorSubject.create<NavController>()
@@ -36,8 +36,18 @@ class HostVM @Inject constructor(
 
     // # User Intents
     fun selectMenuItem(id: Int) {
-        // Requirement: Given app is not readyToBudget When user navigates to BudgetHost Then show popup.
-        selectedHostPage.set(id)
+        // Requirement: Given app is not readyToBudget When user clicks Budget Then show popup.
+        when (id) {
+            R.id.budgetHostFrag ->
+                if (runBlocking { readyToBudgetPresentationFactory.isReady() })
+                    selectedHostPage.set(id)
+                else
+                    GlobalScope.launch {
+                        readyToBudgetPresentationFactory.tryShowAlertDialog(onContinue = { selectedHostPage.set(id) })
+                    }
+            else ->
+                selectedHostPage.set(id)
+        }
     }
 
     fun userTryNavToAccessibilitySettings() {
@@ -57,6 +67,7 @@ class HostVM @Inject constructor(
     // # Events
     val unCheckAllMenuItems = MutableSharedFlow<Unit>()
     val navToAccessibility = MutableSharedFlow<Unit>()
+    val navToId = selectedHostPage.flow
 
     // # State
     val selectedItemId = selectedHostPage.flow

@@ -15,9 +15,15 @@ import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.forEach
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.tminus1010.buva.R
+import com.tminus1010.buva.all_layers.extensions.isSettingSelectedItemId
+import com.tminus1010.buva.all_layers.extensions.items
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.all_layers.extensions.unCheckAllItems
 import com.tminus1010.buva.app.ActivePlanInteractor
@@ -25,6 +31,7 @@ import com.tminus1010.buva.app.ImportTransactions
 import com.tminus1010.buva.app.InitApp
 import com.tminus1010.buva.app.TransactionsInteractor
 import com.tminus1010.buva.data.AccountsRepo
+import com.tminus1010.buva.data.SelectedHostPage
 import com.tminus1010.buva.data.TransactionsRepo
 import com.tminus1010.buva.databinding.ActivityHostBinding
 import com.tminus1010.buva.environment.ActivityWrapper
@@ -40,7 +47,10 @@ import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 
@@ -82,6 +92,9 @@ class HostActivity : AppCompatActivity() {
     @Inject
     lateinit var readyToBudgetPresentationFactory: ReadyToBudgetPresentationFactory
 
+    @Inject
+    lateinit var selectedHostPage: SelectedHostPage
+
     val hostFrag by lazy { supportFragmentManager.findFragmentById(R.id.fragmentcontainerview) as HostFrag }
     private val nav by lazy { findNavController(R.id.fragmentcontainerview) }
     private val showImportResultAlertDialog by lazy { ShowImportResultAlertDialog(ShowAlertDialog(this)) }
@@ -96,45 +109,66 @@ class HostActivity : AppCompatActivity() {
         HostActivityWrapper.hostActivity = this
         AndroidNavigationWrapperImpl.nav = hostFrag.navController
         viewModel.showAlertDialog.onNext(ShowAlertDialog(this)) // TODO: Refactor
-        // ## Initialize app once per install
+        // ## Initialize app TODO: Shouldn't this be in BaseApp?
         GlobalScope.launch { initApp() }.use(throbberSharedVM)
-        // ## Bind bottom menu to navigation.
+        // ## SetupWithNavController
         // In order for NavigationUI.setupWithNavController to work, the ids in R.menu.* must exactly match R.navigation.*
-        NavigationUI.setupWithNavController(vb.bottomnavigationview, hostFrag.navController)
-        //
+        // Even though we are overriding setOnItemSelectedListener, we still need this for addOnDestinationChangedListener so that if Navigator brings us here, the correct highlight is applied.
+        // I tried to remove this and do my own addOnDestinationChangedListener, but unfortunately, the matchDestination method is blocked.
+//        x()
+        // hierarchy.any { it.id == destId }
+        // # User Intent
         vb.bottomnavigationview.setOnItemSelectedListener {
-            fun goForward(): Boolean {
-                // Requirement: When menu item clicked Then forget backstack.
-                // This will be null When config change.
-                val nav = tryOrNull { findNavController(R.id.fragmentcontainerview) }
-                // clearBackStack might not be necessary.
-                nav?.clearBackStack(it.itemId)
-                nav?.navigate(it.itemId)
-                // setOnItemSelectedListener overrides setupWithNavController's behavior, so that behavior is restored here.
-                return NavigationUI.onNavDestinationSelected(it, hostFrag.navController)
+            if (!vb.bottomnavigationview.isSettingSelectedItemId) {
+                viewModel.selectMenuItem(it.itemId)
+                false
+            } else {
+                true
             }
-            // Requirement: When config change Then do not forget current menu item.
-            viewModel.selectMenuItem(it.itemId)
-            //
-            if (it.itemId == R.id.budgetHostFrag) {
-                kotlin.runCatching { runBlocking { readyToBudgetPresentationFactory.checkIfReady() } }
-                    .onFailure {
-                        GlobalScope.launch { readyToBudgetPresentationFactory.tryShowAlertDialog(onContinue = { goForward() }) }
-                        return@setOnItemSelectedListener false
-                    }
-            }
-            goForward()
         }
-        GlobalScope.launch { // Doing this in the same scope as initApp() so that it has time to finish.
-            withContext(Dispatchers.Main) {
-                viewModel.selectedItemId.value.also { vb.bottomnavigationview.selectedItemId = it }
-            }
-        }.use(throbberSharedVM)
         // # Events
         viewModel.navToAccessibility.observe(this) { startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }
         viewModel.unCheckAllMenuItems.observe(this) { vb.bottomnavigationview.unCheckAllItems() } // TODO: Not working
+        viewModel.navToId.observe(this) { navToId(it) }
         // # State
+        vb.bottomnavigationview.bind(viewModel.selectedItemId) { isSettingSelectedItemId = true; selectedItemId = it; isSettingSelectedItemId = false }
         vb.frameProgressBar.bind(throbberSharedVM.visibility) { visibility = it }
+    }
+
+//    fun x() {
+//        val weakReference = WeakReference(vb.bottomnavigationview)
+//        nav.addOnDestinationChangedListener(
+//            object : NavController.OnDestinationChangedListener {
+//                override fun onDestinationChanged(
+//                    controller: NavController,
+//                    destination: NavDestination,
+//                    arguments: Bundle?,
+//                ) {
+//                    val view = weakReference.get()
+//                    if (view == null) {
+//                        nav.removeOnDestinationChangedListener(this)
+//                        return
+//                    }
+//                    view.menu.forEach { item ->
+//                        if (destination.hierarchy.any { it.id == item.itemId }) {
+////                            item.isChecked = true
+//                            selectedHostPage.set(item.itemId)
+//                        }
+//                    }
+//                }
+//            })
+//    }
+
+    fun navToId(id: Int): Boolean {
+        // Requirement: When menu item clicked Then forget backstack.
+        // This will be null When config change.
+        val nav = tryOrNull { findNavController(R.id.fragmentcontainerview) }
+        // clearBackStack might not be necessary.
+        nav?.clearBackStack(id)
+        nav?.navigate(id)
+        // setOnItemSelectedListener overrides setupWithNavController's behavior, so that behavior is restored here.
+        val menuItem = vb.bottomnavigationview.menu.items.find { it.itemId == id }!!
+        return NavigationUI.onNavDestinationSelected(menuItem, hostFrag.navController)
     }
 
     override fun onStart() {

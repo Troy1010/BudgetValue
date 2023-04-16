@@ -18,6 +18,15 @@ class BudgetHostFrag : Fragment(R.layout.frag_budget_host) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb = FragBudgetHostBinding.bind(view)
+        // # User Intent
+        vb.bottomnavigationview.setOnItemSelectedListener {
+            if (!vb.bottomnavigationview.isSettingSelectedItemId) {
+                viewModel.userSelectMenuItem(it.itemId)
+                false
+            } else {
+                true
+            }
+        }
         // # State
         vb.fragmentcontainerview.bind(viewModel.fragFactory) { fragFactory ->
             this@BudgetHostFrag.childFragmentManager
@@ -26,7 +35,5 @@ class BudgetHostFrag : Fragment(R.layout.frag_budget_host) {
                 .commitNowAllowingStateLoss()
         }
         vb.bottomnavigationview.bind(viewModel.selectedItemId) { isSettingSelectedItemId = true; selectedItemId = it; isSettingSelectedItemId = false }
-        // # User Intent
-        vb.bottomnavigationview.setOnItemSelectedListener { if (!vb.bottomnavigationview.isSettingSelectedItemId) viewModel.userSelectMenuItem(it.itemId); true }
     }
 }
