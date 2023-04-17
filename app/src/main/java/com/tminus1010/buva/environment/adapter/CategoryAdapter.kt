@@ -14,9 +14,10 @@ class CategoryAdapter @Inject constructor(
     userCategories: UserCategories,
 ) {
     fun parseCategory(categoryName: String): Category {
-        if (categoryName == Category.DEFAULT.name) error("Should never have to parse \"${Category.DEFAULT.name}\"")
-        return userCategoryMap.value!![categoryName] // Using this breaks responsiveness. However, not using it means we need DTOs.. Hm.
-            ?: Category.UNRECOGNIZED.also { if (categoryName != Category.UNRECOGNIZED.name) logz("Warning: returning category Unrecognized for unrecognized name:$categoryName") }
+        return parseCategory(
+            userCategoryMap.value!!, // Using this is awkward. However, not using it means we need DTOs.. Hm.
+            categoryName,
+        )
     }
 
     /**
@@ -30,5 +31,13 @@ class CategoryAdapter @Inject constructor(
     init {
         // TODO: Without this, userCategoryMap.value!! causes NPE. However, using .first() causes a feedback loop.
         runBlocking { userCategoryMap.take(1).collect() }
+    }
+
+    companion object {
+        fun parseCategory(userCategoryMap: Map<String, Category>, categoryName: String): Category {
+            if (categoryName == Category.DEFAULT.name) error("Should never have to parse \"${Category.DEFAULT.name}\"")
+            return userCategoryMap[categoryName]
+                ?: Category.UNRECOGNIZED.also { if (categoryName != Category.UNRECOGNIZED.name) logz("Warning: returning category Unrecognized for unrecognized name:$categoryName") }
+        }
     }
 }
