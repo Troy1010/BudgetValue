@@ -10,9 +10,7 @@ import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.all_layers.android.viewBinding
 import com.tminus1010.buva.databinding.FragTransactionDetailsBinding
 import com.tminus1010.buva.domain.Transaction
-import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
-import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,8 +19,6 @@ class TransactionDetailsFrag : Fragment(R.layout.frag_transaction_details) {
     private val viewModel by viewModels<TransactionDetailsVM>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // # Events
-        viewModel.navUp.observe(viewLifecycleOwner) { nav.navigateUp() } // TODO: Use Navigator instead
         // # State
         vb.buttonsview.bind(viewModel.buttons) { buttons = it }
         vb.tmTableViewTitle.bind(viewModel.transactionInfoTableView) { it.bind(this) }
