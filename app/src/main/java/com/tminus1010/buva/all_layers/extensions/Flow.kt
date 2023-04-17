@@ -9,6 +9,10 @@ import kotlinx.coroutines.rx3.asObservable
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.EmptyCoroutineContext
 
+// This is a bit experimental.
+fun <T, X> Flow<T>.redoWhen(signal: Flow<X>) =
+    signal.flatMapLatest { this }
+
 /**
  * This is a convenience method.
  *
