@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TransactionsVM @Inject constructor(
+class TransactionListVM @Inject constructor(
     private val transactionsInteractor: TransactionsInteractor,
     private val throbberSharedVM: ThrobberSharedVM,
     private val activityWrapper: ActivityWrapper,

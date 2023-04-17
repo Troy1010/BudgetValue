@@ -75,12 +75,12 @@
         android:id="@+id/transactionsFrag"
         android:name="com.tminus1010.buva.ui.transactions.TransactionListFrag"
         android:label="TransactionsFrag"
-        tools:layout="@layout/frag_transactions" />
+        tools:layout="@layout/frag_transaction_list" />
     <fragment
         android:id="@+id/transactionFrag"
         android:name="com.tminus1010.buva.ui.transactions.TransactionDetailsFrag"
         android:label="TransactionFrag"
-        tools:layout="@layout/frag_transaction" />
+        tools:layout="@layout/frag_transaction_details" />
     <fragment
         android:id="@+id/futuresFrag"
         android:name="com.tminus1010.buva.ui.futures.FuturesFrag"
