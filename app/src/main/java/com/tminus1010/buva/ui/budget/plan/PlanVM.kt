@@ -116,9 +116,9 @@ class PlanVM @Inject constructor(
                 TableViewVMItem(
                     recipeGrid = listOf(
                         listOf(
-                            TextVMItem("Category", style = TextVMItem.Style.HEADER),
-                            TextVMItem("Expected Income"),
-                            TextVMItem("Default"),
+                            TextVMItem(text1 = "Category", style = TextVMItem.Style.HEADER),
+                            TextVMItem(text1 = "Expected Income"),
+                            TextVMItem(text1 = "Default"),
                             *categoryAmountItemObservablesRedefined.keys.map { category ->
                                 TextVMItem(
                                     text1 = category.name,
@@ -127,7 +127,7 @@ class PlanVM @Inject constructor(
                             }.toTypedArray()
                         ),
                         listOf(
-                            TextVMItem("Plan", style = TextVMItem.Style.HEADER),
+                            TextVMItem(text1 = "Plan", style = TextVMItem.Style.HEADER),
                             MoneyEditVMItem(text2 = activePlanRepo.activePlan.map { it.total.toString() }, onDone = { userSaveExpectedIncome(it) }),
                             TextVMItem(text3 = activePlanRepo.activePlan.map { it.defaultAmount.toString() }),
                             *categoryAmountItemObservablesRedefined.map { (category, amount) ->
@@ -139,7 +139,7 @@ class PlanVM @Inject constructor(
                             }.toTypedArray()
                         ),
                         listOf(
-                            TextVMItem("Reset Max", style = TextVMItem.Style.HEADER),
+                            TextVMItem(text1 = "Reset Max", style = TextVMItem.Style.HEADER),
                             TextVMItem(),
                             TextVMItem(),
                             *categoryAmountItemObservablesRedefined.keys.map { category ->
