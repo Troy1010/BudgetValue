@@ -6,6 +6,7 @@ import com.squareup.moshi.ToJson
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.tminus1010.buva.domain.*
+import com.tminus1010.buva.environment.adapter.MoshiProvider.moshi
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import java.math.BigDecimal
@@ -13,16 +14,6 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 object MiscAdapter {
-    val basicMoshi =
-        Moshi.Builder()
-            .add(PairAdapterFactory)
-            .add(TripleAdapterFactory)
-            .add(BigDecimalAdapter)
-            .add(ResetStrategyAdapter)
-            .add(ResolutionStrategyAdapter)
-            .addLast(KotlinJsonAdapterFactory())
-            .build()
-
     /**
      * [CategoryDisplayType]
      */
@@ -64,7 +55,7 @@ object MiscAdapter {
             TransactionMatcher.SearchText.ordinal ->
                 TransactionMatcher.SearchText(s.dropWhile { it != '`' }.drop(1))
             TransactionMatcher.ByValue.ordinal ->
-                TransactionMatcher.ByValue(basicMoshi.fromJson(s.dropWhile { it != '`' }.drop(1)))
+                TransactionMatcher.ByValue(moshi.fromJson(s.dropWhile { it != '`' }.drop(1)))
             TransactionMatcher.Multi.ordinal ->
                 TransactionMatcher.Multi(fromJson6(s.dropWhile { it != '`' }.drop(1))!!.map { fromJson11(it) })
             else -> error("Unhandled s:$s")
@@ -79,7 +70,7 @@ object MiscAdapter {
         when (x) {
             is ReconciliationStrategyGroup.Always -> "Always"
             is ReconciliationStrategyGroup.Reservoir ->
-                basicMoshi.toJson(x.resetStrategy)
+                moshi.toJson(x.resetStrategy)
         }
 
     @FromJson
@@ -88,7 +79,7 @@ object MiscAdapter {
             "Always",
             -> ReconciliationStrategyGroup.Always
             else ->
-                runCatching { ReconciliationStrategyGroup.Reservoir(basicMoshi.fromJson<ResetStrategy?>(s)) }
+                runCatching { ReconciliationStrategyGroup.Reservoir(moshi.fromJson<ResetStrategy?>(s)) }
                     .getOrElse { ReconciliationStrategyGroup.Reservoir(null) }
         }
 
@@ -133,13 +124,13 @@ object MiscAdapter {
     @ToJson
     fun toJson(x: List<String>): String {
         val type = Types.newParameterizedType(List::class.java, String::class.java)
-        return basicMoshi.adapter<List<String>>(type).toJson(x)
+        return moshi.adapter<List<String>>(type).toJson(x)
     }
 
     @FromJson
     fun fromJson6(s: String): List<String>? {
         val type = Types.newParameterizedType(List::class.java, String::class.java)
-        return basicMoshi.adapter<List<String>>(type).fromJson(s)
+        return moshi.adapter<List<String>>(type).fromJson(s)
     }
 
     /**
