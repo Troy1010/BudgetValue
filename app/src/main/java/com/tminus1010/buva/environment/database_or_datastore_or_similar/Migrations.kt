@@ -4,11 +4,11 @@ import android.annotation.SuppressLint
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.squareup.moshi.Types
-import com.tminus1010.buva.environment.adapter.MoshiProvider
+import com.tminus1010.buva.environment.adapter.MoshiProvider.moshi
 import javax.inject.Inject
 
 
-class Migrations @Inject constructor(moshiProvider: MoshiProvider) {
+class Migrations @Inject constructor() {
 //    fun MIGRATION_40_41(moshi: Moshi) = object : Migration(40, 41) {
 //        override fun migrate(database: SupportSQLiteDatabase) {
 //            database.execSQL("CREATE TABLE BasicReplayDTO_new (name TEXT, searchText TEXT, categoryAmountFormulasStr TEXT, autoFillCategory TEXT, PRIMARY KEY(name))")
@@ -60,7 +60,7 @@ class Migrations @Inject constructor(moshiProvider: MoshiProvider) {
                     val columnName = cursor.run { getString(getColumnIndex("name")) }
                     val searchText = cursor.run { getString(getColumnIndex("searchText")) }
                     val type = Types.newParameterizedType(List::class.java, String::class.java)
-                    database.query("UPDATE BasicFutureDTO_new SET searchTexts = ${moshiProvider.moshi.adapter<List<String>>(type).toJson(listOf(columnName))} WHERE name = $searchText")
+                    database.query("UPDATE BasicFutureDTO_new SET searchTexts = ${moshi.adapter<List<String>>(type).toJson(listOf(columnName))} WHERE name = $searchText")
                 }
                 cursor.close()
                 database.execSQL("DROP TABLE BasicFutureDTO")

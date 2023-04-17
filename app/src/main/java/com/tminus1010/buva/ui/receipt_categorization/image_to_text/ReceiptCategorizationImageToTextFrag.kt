@@ -14,12 +14,12 @@ import com.squareup.moshi.Types
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.all_layers.KEY2
+import com.tminus1010.buva.all_layers.android.onDone
 import com.tminus1010.buva.all_layers.extensions.onNext
-import com.tminus1010.buva.environment.adapter.MoshiProvider
-import com.tminus1010.buva.environment.adapter.MoshiWithCategoriesProvider
 import com.tminus1010.buva.databinding.FragReceiptCategorizationImagetotextBinding
 import com.tminus1010.buva.domain.Transaction
-import com.tminus1010.buva.all_layers.android.onDone
+import com.tminus1010.buva.environment.adapter.MoshiProvider.moshi
+import com.tminus1010.buva.environment.adapter.MoshiWithCategoriesProvider
 import com.tminus1010.tmcommonkotlin.androidx.CreateImageFile
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
@@ -97,11 +97,11 @@ class ReceiptCategorizationImageToTextFrag : Fragment(R.layout.frag_receipt_cate
             )
         }
 
-        fun navTo(nav: NavController, descriptionAndTotal: Pair<String, BigDecimal>, moshiProvider: MoshiProvider) {
+        fun navTo(nav: NavController, descriptionAndTotal: Pair<String, BigDecimal>) {
             nav.navigate(
                 R.id.receiptCategorizationImageToTextFrag,
                 Bundle().apply {
-                    putString(KEY2, moshiProvider.moshi.adapter<Pair<String, BigDecimal>>(Types.newParameterizedType(Pair::class.java, String::class.java, BigDecimal::class.java)).toJson(descriptionAndTotal))
+                    putString(KEY2, moshi.adapter<Pair<String, BigDecimal>>(Types.newParameterizedType(Pair::class.java, String::class.java, BigDecimal::class.java)).toJson(descriptionAndTotal))
                 },
             )
         }

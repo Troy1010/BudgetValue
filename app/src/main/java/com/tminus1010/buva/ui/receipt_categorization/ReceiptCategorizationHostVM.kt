@@ -10,7 +10,7 @@ import com.tminus1010.buva.all_layers.extensions.easyEmit
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.buva.domain.Transaction
-import com.tminus1010.buva.environment.adapter.MoshiProvider
+import com.tminus1010.buva.environment.adapter.MoshiProvider.moshi
 import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.SubFragEventSharedVM
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
@@ -26,7 +26,6 @@ import javax.inject.Inject
 @HiltViewModel
 class ReceiptCategorizationHostVM @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    moshiProvider: MoshiProvider,
     private val subFragEventSharedVM: SubFragEventSharedVM,
     private val receiptCategorizationSharedVM: ReceiptCategorizationSharedVM,
     private val navigator: Navigator,
@@ -48,7 +47,7 @@ class ReceiptCategorizationHostVM @Inject constructor(
     // # Private
     private val transaction = savedStateHandle.getLiveData<Transaction>(KEY1)
         .also { it.value?.also { receiptCategorizationSharedVM.total.onNext(it.amount) } }
-    private val descriptionAndTotal = savedStateHandle.get<String?>(KEY2)?.let { moshiProvider.moshi.adapter<Pair<String, BigDecimal>>(Types.newParameterizedType(Pair::class.java, String::class.java, BigDecimal::class.java)).fromJson(it) }
+    private val descriptionAndTotal = savedStateHandle.get<String?>(KEY2)?.let { moshi.adapter<Pair<String, BigDecimal>>(Types.newParameterizedType(Pair::class.java, String::class.java, BigDecimal::class.java)).fromJson(it) }
         ?.also { receiptCategorizationSharedVM.total.onNext(it.second) }
 
     // # State

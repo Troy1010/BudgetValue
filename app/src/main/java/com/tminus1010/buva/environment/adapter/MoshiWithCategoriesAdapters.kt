@@ -6,6 +6,7 @@ import com.squareup.moshi.Types
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.CategoryAmountFormulas
 import com.tminus1010.buva.domain.CategoryAmounts
+import com.tminus1010.buva.environment.adapter.MoshiProvider.moshi
 import com.tminus1010.tmcommonkotlin.core.extensions.associate
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
@@ -15,7 +16,6 @@ import javax.inject.Inject
 
 class MoshiWithCategoriesAdapters @Inject constructor(
     private val categoryAdapter: CategoryAdapter,
-    private val moshiProvider: MoshiProvider,
 ) {
     /**
      * [Category]
@@ -33,12 +33,12 @@ class MoshiWithCategoriesAdapters @Inject constructor(
      */
     @ToJson
     fun toJson(x: CategoryAmounts): String =
-        moshiProvider.moshi.toJson(x.associate { toJson(it.key) to it.value.toString() })
+        moshi.toJson(x.associate { toJson(it.key) to it.value.toString() })
 
     @FromJson
     fun fromJson3(s: String): CategoryAmounts {
         return CategoryAmounts(
-            moshiProvider.moshi.adapter<Map<String, String>>(
+            moshi.adapter<Map<String, String>>(
                 Types.newParameterizedType(Map::class.java, String::class.java, String::class.java)
             )
                 .fromJson(s)!!
@@ -51,16 +51,16 @@ class MoshiWithCategoriesAdapters @Inject constructor(
      */
     @ToJson
     fun toJson(x: CategoryAmountFormulas): String =
-        moshiProvider.moshi.toJson(x.associate { toJson(it.key) to moshiProvider.moshi.toJson(it.value) })
+        moshi.toJson(x.associate { toJson(it.key) to moshi.toJson(it.value) })
 
     @FromJson
     fun fromJson4(s: String): CategoryAmountFormulas {
         return CategoryAmountFormulas(
-            moshiProvider.moshi.adapter<Map<String, String>>(
+            moshi.adapter<Map<String, String>>(
                 Types.newParameterizedType(Map::class.java, String::class.java, String::class.java)
             )
                 .fromJson(s)!!
-                .associate { fromJson1(it.key) to moshiProvider.moshi.fromJson(it.value) }
+                .associate { fromJson1(it.key) to moshi.fromJson(it.value) }
         )
     }
 }

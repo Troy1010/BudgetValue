@@ -12,7 +12,7 @@ import com.tminus1010.buva.all_layers.KEY2
 import com.tminus1010.buva.all_layers.extensions.easyEmit
 import com.tminus1010.buva.databinding.FragReceiptCategorizationHostBinding
 import com.tminus1010.buva.domain.Transaction
-import com.tminus1010.buva.environment.adapter.MoshiProvider
+import com.tminus1010.buva.environment.adapter.MoshiProvider.moshi
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import dagger.hilt.android.AndroidEntryPoint
 import java.math.BigDecimal
@@ -53,11 +53,11 @@ class ReceiptCategorizationHostFrag : Fragment(R.layout.frag_receipt_categorizat
             )
         }
 
-        fun navTo(nav: NavController, descriptionAndTotal: Pair<String, BigDecimal>, moshiProvider: MoshiProvider) {
+        fun navTo(nav: NavController, descriptionAndTotal: Pair<String, BigDecimal>) {
             nav.navigate(
                 R.id.receiptCategorizationHostFrag,
                 Bundle().apply {
-                    putString(KEY2, moshiProvider.moshi.adapter<Pair<String, BigDecimal>>(Types.newParameterizedType(Pair::class.java, String::class.java, BigDecimal::class.java)).toJson(descriptionAndTotal))
+                    putString(KEY2, moshi.adapter<Pair<String, BigDecimal>>(Types.newParameterizedType(Pair::class.java, String::class.java, BigDecimal::class.java)).toJson(descriptionAndTotal))
                 },
             )
         }

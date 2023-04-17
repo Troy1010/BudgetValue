@@ -42,7 +42,7 @@ class PlansRepoTest {
         // # Given
         Given.categories.forEach { categoryRepo.push(it) }
         // # When
-        val result = plansRepo.plans.value
+        val result = plansRepo.plans.first()
         // # Then
         assertEquals(listOf<Plan>(), result)
     }
@@ -61,7 +61,7 @@ class PlansRepoTest {
         plansRepo.push(givenPlan)
         Thread.sleep(1000)
         // # Then
-        assertEquals(listOf(givenPlan), plansRepo.plans.value)
+        assertEquals(listOf(givenPlan), plansRepo.plans.first())
     }
 
     @Test
@@ -88,7 +88,7 @@ class PlansRepoTest {
                     CategoryAmounts(Given.categories[0] to BigDecimal("35"))
                 )
             ),
-            plansRepo.plans.value,
+            plansRepo.plans.first(),
         )
     }
 
@@ -116,7 +116,7 @@ class PlansRepoTest {
                     CategoryAmounts(Given.categories[0] to BigDecimal("9"))
                 )
             ),
-            plansRepo.plans.value,
+            plansRepo.plans.first(),
         )
     }
 
@@ -142,7 +142,7 @@ class PlansRepoTest {
         plansRepo.updatePlan(givenPlan2)
         Thread.sleep(1000)
         // # Then
-        assertEquals(listOf(givenPlan2), plansRepo.plans.value)
+        assertEquals(listOf(givenPlan2), plansRepo.plans.first())
     }
 
     @Test
@@ -161,7 +161,7 @@ class PlansRepoTest {
         plansRepo.delete(givenPlan)
         Thread.sleep(1000)
         // # Then
-        assertEquals(listOf<Plan>(), plansRepo.plans.value)
+        assertEquals(listOf<Plan>(), plansRepo.plans.first())
     }
 
     @get:Rule

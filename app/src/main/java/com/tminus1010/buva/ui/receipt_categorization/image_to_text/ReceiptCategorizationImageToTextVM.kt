@@ -11,9 +11,9 @@ import com.squareup.moshi.Types
 import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.all_layers.KEY2
 import com.tminus1010.buva.all_layers.extensions.onNext
-import com.tminus1010.buva.environment.adapter.MoshiProvider
-import com.tminus1010.buva.environment.adapter.MoshiWithCategoriesProvider
 import com.tminus1010.buva.domain.Transaction
+import com.tminus1010.buva.environment.adapter.MoshiProvider.moshi
+import com.tminus1010.buva.environment.adapter.MoshiWithCategoriesProvider
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
@@ -35,7 +35,6 @@ import javax.inject.Inject
 class ReceiptCategorizationImageToTextVM @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     moshiWithCategoriesProvider: MoshiWithCategoriesProvider,
-    moshiProvider: MoshiProvider,
     private val imageToText: ImageToText,
     private val throbberSharedVM: ThrobberSharedVM,
     private val showToast: ShowToast,
@@ -83,7 +82,7 @@ class ReceiptCategorizationImageToTextVM @Inject constructor(
 
     private val transaction = moshiWithCategoriesProvider.moshi.fromJson<Transaction>(savedStateHandle[KEY1])
         .also { logz("transaction:$it") }
-    private val descriptionAndTotal = savedStateHandle.get<String?>(KEY2)?.let { moshiProvider.moshi.adapter<Pair<String, BigDecimal>>(Types.newParameterizedType(Pair::class.java, String::class.java, BigDecimal::class.java)).fromJson(it) }
+    private val descriptionAndTotal = savedStateHandle.get<String?>(KEY2)?.let { moshi.adapter<Pair<String, BigDecimal>>(Types.newParameterizedType(Pair::class.java, String::class.java, BigDecimal::class.java)).fromJson(it) }
         .also { logz("descriptionAndTotal:$it") }
 
     // # Events
