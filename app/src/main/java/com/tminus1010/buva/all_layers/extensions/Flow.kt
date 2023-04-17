@@ -12,7 +12,7 @@ import kotlin.coroutines.EmptyCoroutineContext
 /**
  * This is a convenience method.
  *
- * It is very similar to .stateIn(), except you can use .first() and only get the default value if it were null.
+ * It is very similar to .stateIn(), except it doesn't mess with your ability to use .first(). It will only give the default value if it was null otherwise.
  */
 fun <T> Flow<T?>.easyShareIn(scope: CoroutineScope, started: SharingStarted, defaultValue: T): Flow<T> {
     return map { it ?: defaultValue }.distinctUntilChanged().shareIn(scope, started, 1)
