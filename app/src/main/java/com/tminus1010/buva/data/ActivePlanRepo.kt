@@ -44,7 +44,7 @@ class ActivePlanRepo @Inject constructor(
         if (activePlan == null)
             dataStore.edit { it.remove(key) }
         else
-            dataStore.edit { it[key] = moshiWithCategoriesProvider.moshi.toJson(activePlan) }
+            dataStore.edit { it[key] = moshiWithCategoriesProvider.moshiFlow.first().toJson(activePlan) }
     }
 
     suspend fun clearCategoryAmounts() {
