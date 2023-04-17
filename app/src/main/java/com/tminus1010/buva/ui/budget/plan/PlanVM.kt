@@ -146,14 +146,14 @@ class PlanVM @Inject constructor(
                                 when (category.reconciliationStrategyGroup) {
                                     is ReconciliationStrategyGroup.Always ->
                                         TextVMItem(
-                                            text1 = category.reconciliationStrategyGroup.resetStrategy.toDisplayStr(),
+                                            text1 = "n/a",
                                             menuVMItems = getSharedMenuItems(category),
                                         )
                                     is ReconciliationStrategyGroup.Reservoir ->
                                         MoneyEditVMItem(
                                             text1 = when (val x = category.reconciliationStrategyGroup.resetStrategy) {
-                                                is ResetStrategy.Basic -> x.budgetedMax?.toString() ?: "n/a"
-                                                null -> "n/a"
+                                                is ResetStrategy.Basic -> x.budgetedMax?.toString()
+                                                null -> null
                                             },
                                             onDone = { userSetBudgetMax(category, it) },
                                             validation = {
