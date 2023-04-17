@@ -10,14 +10,12 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CategoryAdapterService @Inject constructor(
+class UserCategoryMapProvider @Inject constructor(
     userCategories: UserCategories,
 ) {
+    @Deprecated("Use moshi instead")
     fun parseCategory(categoryName: String): Category {
-        return parseCategory(
-            userCategoryMap.value!!, // Using this is awkward. However, not using it means we need DTOs.. Hm.
-            categoryName,
-        )
+        return CategoryAdapter(userCategoryMap.value!!).fromJson1(categoryName)
     }
 
     /**
@@ -31,13 +29,5 @@ class CategoryAdapterService @Inject constructor(
     init {
         // TODO: Without this, userCategoryMap.value!! causes NPE. However, using .first() causes a feedback loop.
         runBlocking { userCategoryMap.take(1).collect() }
-    }
-
-    companion object {
-        fun parseCategory(userCategoryMap: Map<String, Category>, categoryName: String): Category {
-            if (categoryName == Category.DEFAULT.name) error("Should never have to parse \"${Category.DEFAULT.name}\"")
-            return userCategoryMap[categoryName]
-                ?: Category.UNRECOGNIZED.also { if (categoryName != Category.UNRECOGNIZED.name) logz("Warning: returning category Unrecognized for unrecognized name:$categoryName") }
-        }
     }
 }

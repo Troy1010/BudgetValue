@@ -1,24 +1,23 @@
 package com.tminus1010.buva.data
 
+import com.tminus1010.buva.all_layers.extensions.redoWhen
 import com.tminus1010.buva.domain.Reconciliation
+import com.tminus1010.buva.environment.adapter.MoshiWithCategoriesProvider
 import com.tminus1010.buva.environment.database_or_datastore_or_similar.MiscDAO
-import com.tminus1010.buva.environment.database_or_datastore_or_similar.UserCategoriesDAO
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.shareIn
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ReconciliationsRepo @Inject constructor(
-    private val userCategoriesDAO: UserCategoriesDAO,
+    private val moshiWithCategoriesProvider: MoshiWithCategoriesProvider,
     private val miscDAO: MiscDAO,
 ) {
     val reconciliations =
-        userCategoriesDAO.fetchUserCategories().flatMapLatest {
-            miscDAO.fetchReconciliations()
-        }
+        miscDAO.fetchReconciliations()
+            .redoWhen(moshiWithCategoriesProvider.moshiFlow) // Room synchronously depends on moshiWithCategories, so we must redo when it emits.
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 
     suspend fun push(reconciliation: Reconciliation) =

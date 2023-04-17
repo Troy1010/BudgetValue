@@ -11,11 +11,9 @@ import com.tminus1010.tmcommonkotlin.core.extensions.associate
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import java.math.BigDecimal
-import javax.inject.Inject
 
-
-class MoshiWithCategoryAdapter @Inject constructor(
-    private val categoryAdapterService: CategoryAdapterService,
+class CategoryAdapter constructor(
+    private val userCategoryMap: Map<String, Category>,
 ) {
     /**
      * [Category]
@@ -25,8 +23,11 @@ class MoshiWithCategoryAdapter @Inject constructor(
         x.name
 
     @FromJson
-    fun fromJson1(s: String): Category =
-        categoryAdapterService.parseCategory(s)
+    fun fromJson1(categoryName: String): Category {
+        if (categoryName == Category.DEFAULT.name) error("Should never have to parse \"${Category.DEFAULT.name}\"")
+        return userCategoryMap[categoryName]
+            ?: Category.UNRECOGNIZED.also { if (categoryName != Category.UNRECOGNIZED.name) logz("Warning: returning category Unrecognized for unrecognized name:$categoryName") }
+    }
 
     /**
      * [CategoryAmounts]

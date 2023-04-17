@@ -15,9 +15,8 @@ import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -26,9 +25,7 @@ import javax.inject.Singleton
 class ActivePlanRepo @Inject constructor(
     private val dataStore: DataStore<Preferences>,
     private val moshiWithCategoriesProvider: MoshiWithCategoriesProvider,
-    private val userCategoriesDAO: UserCategoriesDAO,
-
-    ) {
+) {
     private val key = stringPreferencesKey("ActivePlanRepo3")
     private val defaultValue =
         ActivePlan(
@@ -37,9 +34,10 @@ class ActivePlanRepo @Inject constructor(
         )
 
     val activePlan =
-        userCategoriesDAO.fetchUserCategories()
-            .flatMapLatest { dataStore.data }
-            .map { moshiWithCategoriesProvider.moshi.fromJson<ActivePlan>(it[key]) }
+        combine(moshiWithCategoriesProvider.moshiFlow, dataStore.data)
+        { moshi, data ->
+            moshi.fromJson<ActivePlan>(data[key])
+        }
             .easyShareIn(GlobalScope, SharingStarted.Eagerly, defaultValue)
 
     private suspend fun push(activePlan: ActivePlan?) {
