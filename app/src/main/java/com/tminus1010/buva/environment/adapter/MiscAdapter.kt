@@ -1,10 +1,9 @@
 package com.tminus1010.buva.environment.adapter
 
 import com.squareup.moshi.FromJson
-import com.squareup.moshi.Moshi
 import com.squareup.moshi.ToJson
-import com.squareup.moshi.Types
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.tminus1010.buva.all_layers.extensions.easyFromJson
+import com.tminus1010.buva.all_layers.extensions.easyToJson
 import com.tminus1010.buva.domain.*
 import com.tminus1010.buva.environment.adapter.MoshiProvider.moshi
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
@@ -46,7 +45,7 @@ object MiscAdapter {
         when (x) {
             is TransactionMatcher.SearchText -> TransactionMatcher.SearchText.ordinal.toString() + "`" + x.searchText
             is TransactionMatcher.ByValue -> TransactionMatcher.ByValue.ordinal.toString() + "`" + x.searchTotal.toString()
-            is TransactionMatcher.Multi -> TransactionMatcher.Multi.ordinal.toString() + "`" + toJson(x.transactionMatchers.map { toJson(it) })
+            is TransactionMatcher.Multi -> TransactionMatcher.Multi.ordinal.toString() + "`" + moshi.easyToJson(x.transactionMatchers.map { toJson(it) })
         }
 
     @FromJson
@@ -57,7 +56,7 @@ object MiscAdapter {
             TransactionMatcher.ByValue.ordinal ->
                 TransactionMatcher.ByValue(moshi.fromJson(s.dropWhile { it != '`' }.drop(1)))
             TransactionMatcher.Multi.ordinal ->
-                TransactionMatcher.Multi(fromJson6(s.dropWhile { it != '`' }.drop(1))!!.map { fromJson11(it) })
+                TransactionMatcher.Multi(moshi.easyFromJson<List<String>>(s.dropWhile { it != '`' }.drop(1))!!.map { fromJson11(it) })
             else -> error("Unhandled s:$s")
         }
 
@@ -117,21 +116,6 @@ object MiscAdapter {
                     else -> error("Unhandled string")
                 }
             }
-
-    /**
-     * List<[String]>
-     */
-    @ToJson
-    fun toJson(x: List<String>): String {
-        val type = Types.newParameterizedType(List::class.java, String::class.java)
-        return moshi.adapter<List<String>>(type).toJson(x)
-    }
-
-    @FromJson
-    fun fromJson6(s: String): List<String>? {
-        val type = Types.newParameterizedType(List::class.java, String::class.java)
-        return moshi.adapter<List<String>>(type).fromJson(s)
-    }
 
     /**
      * Pair<[String], [BigDecimal]>
