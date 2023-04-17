@@ -1,4 +1,4 @@
-package com.tminus1010.buva.environment
+package com.tminus1010.buva.environment.android_wrapper
 
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.Transaction

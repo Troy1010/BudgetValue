@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.tminus1010.buva.all_layers.KEY2
 import com.tminus1010.buva.app.TransactionsInteractor
 import com.tminus1010.buva.domain.Transaction
-import com.tminus1010.buva.environment.ParcelableTransactionLambdaWrapper
+import com.tminus1010.buva.environment.android_wrapper.ParcelableTransactionLambdaWrapper
 import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.view_model_item.TableViewVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.TextVMItem

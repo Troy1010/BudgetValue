@@ -1,10 +1,11 @@
-package com.tminus1010.buva.environment
+package com.tminus1010.buva.environment.adapter
 
 import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 import com.tminus1010.buva.domain.CategoryAmountFormulas
 import com.tminus1010.buva.domain.CategoryAmounts
 import com.tminus1010.buva.domain.Category
+import com.tminus1010.buva.environment.adapter.MoshiWithCategoriesProvider
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import dagger.Reusable

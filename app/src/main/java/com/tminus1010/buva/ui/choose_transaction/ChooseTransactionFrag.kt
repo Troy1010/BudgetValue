@@ -11,7 +11,7 @@ import com.tminus1010.buva.all_layers.KEY2
 import com.tminus1010.buva.all_layers.android.viewBinding
 import com.tminus1010.buva.databinding.FragChooseTransactionBinding
 import com.tminus1010.buva.domain.Transaction
-import com.tminus1010.buva.environment.ParcelableTransactionLambdaWrapper
+import com.tminus1010.buva.environment.android_wrapper.ParcelableTransactionLambdaWrapper
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import com.tminus1010.tmcommonkotlin.view.extensions.easyVisibility
 import dagger.hilt.android.AndroidEntryPoint

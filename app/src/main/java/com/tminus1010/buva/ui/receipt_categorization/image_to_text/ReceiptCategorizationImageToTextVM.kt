@@ -11,8 +11,8 @@ import com.squareup.moshi.Types
 import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.all_layers.KEY2
 import com.tminus1010.buva.all_layers.extensions.onNext
-import com.tminus1010.buva.environment.MoshiProvider
-import com.tminus1010.buva.environment.MoshiWithCategoriesProvider
+import com.tminus1010.buva.environment.adapter.MoshiProvider
+import com.tminus1010.buva.environment.adapter.MoshiWithCategoriesProvider
 import com.tminus1010.buva.domain.Transaction
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem

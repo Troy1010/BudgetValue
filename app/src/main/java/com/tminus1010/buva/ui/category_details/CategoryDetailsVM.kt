@@ -7,7 +7,7 @@ import com.tminus1010.buva.app.DeleteCategoryFromActiveDomain
 import com.tminus1010.buva.app.ReplaceCategoryGlobally
 import com.tminus1010.buva.data.CategoryRepo
 import com.tminus1010.buva.domain.*
-import com.tminus1010.buva.environment.ActivityWrapper
+import com.tminus1010.buva.environment.android_wrapper.ActivityWrapper
 import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.TransactionMatcherPresentationFactory

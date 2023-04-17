@@ -4,7 +4,7 @@ import com.tminus1010.buva.R
 import com.tminus1010.buva.data.SelectedBudgetHostPage
 import com.tminus1010.buva.data.SelectedHostPage
 import com.tminus1010.buva.data.SelectedImportHostPage
-import com.tminus1010.buva.environment.AndroidNavigationWrapper
+import com.tminus1010.buva.environment.android_wrapper.AndroidNavigationWrapper
 import dagger.Reusable
 import javax.inject.Inject
 

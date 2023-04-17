@@ -1,4 +1,4 @@
-package com.tminus1010.buva.environment
+package com.tminus1010.buva.environment.adapter
 
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson

@@ -1,9 +1,11 @@
-package com.tminus1010.buva.environment
+package com.tminus1010.buva.environment.database_or_datastore_or_similar
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.tminus1010.buva.domain.*
+import com.tminus1010.buva.environment.adapter.RoomTypeConverter
+import com.tminus1010.buva.environment.adapter.RoomWithCategoriesTypeConverter
 
 @TypeConverters(RoomTypeConverter::class, RoomWithCategoriesTypeConverter::class)
 @Database(

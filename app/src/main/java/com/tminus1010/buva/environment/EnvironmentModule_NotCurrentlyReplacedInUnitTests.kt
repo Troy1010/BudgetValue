@@ -1,10 +1,12 @@
 package com.tminus1010.buva.environment
 
 import android.app.Application
-import com.tminus1010.buva.environment.CategoryDatabase
-import com.tminus1010.buva.environment.MiscDAO
-import com.tminus1010.buva.environment.MiscDatabase
-import com.tminus1010.buva.environment.UserCategoriesDAO
+import com.tminus1010.buva.environment.database_or_datastore_or_similar.MiscDAO
+import com.tminus1010.buva.environment.database_or_datastore_or_similar.MiscDatabase
+import com.tminus1010.buva.environment.database_or_datastore_or_similar.UserCategoriesDAO
+import com.tminus1010.buva.environment.android_wrapper.AndroidNavigationWrapper
+import com.tminus1010.buva.environment.android_wrapper.AndroidNavigationWrapperImpl
+import com.tminus1010.buva.environment.database_or_datastore_or_similar.CategoryDatabase
 import com.tminus1010.tmcommonkotlin.imagetotext.ImageToText
 import dagger.Module
 import dagger.Provides

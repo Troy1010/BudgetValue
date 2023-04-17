@@ -4,8 +4,8 @@ import com.tminus1010.buva.all_layers.extensions.isZero
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.CategoryAmounts
 import com.tminus1010.buva.domain.Plan
-import com.tminus1010.buva.environment.MiscDAO
-import com.tminus1010.buva.environment.UserCategoriesDAO
+import com.tminus1010.buva.environment.database_or_datastore_or_similar.MiscDAO
+import com.tminus1010.buva.environment.database_or_datastore_or_similar.UserCategoriesDAO
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapLatest

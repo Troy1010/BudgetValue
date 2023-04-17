@@ -1,9 +1,10 @@
-package com.tminus1010.buva.environment
+package com.tminus1010.buva.environment.database_or_datastore_or_similar
 
 import android.annotation.SuppressLint
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.squareup.moshi.Types
+import com.tminus1010.buva.environment.adapter.MoshiProvider
 import javax.inject.Inject
 
 

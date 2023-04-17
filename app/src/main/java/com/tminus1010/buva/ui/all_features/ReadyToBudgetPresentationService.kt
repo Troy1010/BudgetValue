@@ -1,7 +1,7 @@
 package com.tminus1010.buva.ui.all_features
 
 import com.tminus1010.buva.app.IsReadyToBudget
-import com.tminus1010.buva.environment.ActivityWrapper
+import com.tminus1010.buva.environment.android_wrapper.ActivityWrapper
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import javax.inject.Inject
 

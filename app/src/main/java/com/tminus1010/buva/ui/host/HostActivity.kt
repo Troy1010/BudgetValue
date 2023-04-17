@@ -27,9 +27,9 @@ import com.tminus1010.buva.data.AccountsRepo
 import com.tminus1010.buva.data.SelectedHostPage
 import com.tminus1010.buva.data.TransactionsRepo
 import com.tminus1010.buva.databinding.ActivityHostBinding
-import com.tminus1010.buva.environment.ActivityWrapper
-import com.tminus1010.buva.environment.AndroidNavigationWrapperImpl
-import com.tminus1010.buva.environment.HostActivityWrapper
+import com.tminus1010.buva.environment.android_wrapper.ActivityWrapper
+import com.tminus1010.buva.environment.android_wrapper.AndroidNavigationWrapperImpl
+import com.tminus1010.buva.environment.android_wrapper.HostActivityWrapper
 import com.tminus1010.buva.ui.all_features.ReadyToBudgetPresentationService
 import com.tminus1010.buva.ui.all_features.ShowImportResultAlertDialog
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM

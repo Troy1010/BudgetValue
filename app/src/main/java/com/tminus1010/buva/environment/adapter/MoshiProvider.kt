@@ -1,15 +1,19 @@
-package com.tminus1010.buva.environment
+package com.tminus1010.buva.environment.adapter
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.environment.adapter.*
+import dagger.Reusable
 import javax.inject.Inject
 
 /**
- * This moshi can parse [Category], but it transitively depends on [UserCategoriesDAO]
+ * This moshi provider is global, but it cannot parse [Category], b/c doing so depends on a DAO.
+ *
+ * If you need to do so, use [MoshiWithCategoriesProvider].
  */
-class MoshiWithCategoriesProvider @Inject constructor(moshiWithCategoriesAdapters: MoshiWithCategoriesAdapters) {
+@Reusable
+class MoshiProvider @Inject constructor() {
     val moshi =
         Moshi.Builder()
             .add(PairAdapterFactory)
@@ -17,8 +21,7 @@ class MoshiWithCategoriesProvider @Inject constructor(moshiWithCategoriesAdapter
             .add(BigDecimalAdapter)
             .add(ResetStrategyAdapter)
             .add(ResolutionStrategyAdapter)
-            .addLast(KotlinJsonAdapterFactory())
-            .add(moshiWithCategoriesAdapters)
             .add(MiscAdapter)
+            .addLast(KotlinJsonAdapterFactory())
             .build()
 }

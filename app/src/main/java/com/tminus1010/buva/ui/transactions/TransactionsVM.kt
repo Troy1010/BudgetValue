@@ -4,7 +4,7 @@ import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.buva.app.TransactionsInteractor
-import com.tminus1010.buva.environment.ActivityWrapper
+import com.tminus1010.buva.environment.android_wrapper.ActivityWrapper
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.TableViewVMItem

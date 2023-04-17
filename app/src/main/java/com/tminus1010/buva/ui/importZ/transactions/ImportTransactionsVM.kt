@@ -3,7 +3,7 @@ package com.tminus1010.buva.ui.importZ.transactions
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.buva.data.TransactionsRepo
-import com.tminus1010.buva.environment.HostActivityWrapper
+import com.tminus1010.buva.environment.android_wrapper.HostActivityWrapper
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
 import com.tminus1010.tmcommonkotlin.view.NativeText

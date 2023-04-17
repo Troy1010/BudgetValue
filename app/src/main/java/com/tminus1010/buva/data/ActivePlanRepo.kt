@@ -8,8 +8,8 @@ import com.tminus1010.buva.all_layers.extensions.isZero
 import com.tminus1010.buva.domain.ActivePlan
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.CategoryAmounts
-import com.tminus1010.buva.environment.MoshiWithCategoriesProvider
-import com.tminus1010.buva.environment.UserCategoriesDAO
+import com.tminus1010.buva.environment.adapter.MoshiWithCategoriesProvider
+import com.tminus1010.buva.environment.database_or_datastore_or_similar.UserCategoriesDAO
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import kotlinx.coroutines.GlobalScope

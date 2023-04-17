@@ -10,9 +10,9 @@ import com.tminus1010.buva.core_testing.app
 import com.tminus1010.buva.environment.EnvironmentModule
 import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.app.DatePeriodService
-import com.tminus1010.buva.environment.CategoryDatabase
-import com.tminus1010.buva.environment.MiscDatabase
-import com.tminus1010.buva.environment.RoomWithCategoriesTypeConverter
+import com.tminus1010.buva.environment.database_or_datastore_or_similar.CategoryDatabase
+import com.tminus1010.buva.environment.database_or_datastore_or_similar.MiscDatabase
+import com.tminus1010.buva.environment.adapter.RoomWithCategoriesTypeConverter
 import com.tminus1010.buva.domain.CategoryAmounts
 import com.tminus1010.buva.domain.Plan
 import dagger.Module

@@ -8,10 +8,10 @@ import com.tminus1010.buva.core_testing.shared.FakeDataStore
 import com.tminus1010.buva.core_testing.app
 import com.tminus1010.buva.environment.EnvironmentModule
 import com.tminus1010.buva.core_testing.shared.Given
-import com.tminus1010.buva.environment.CategoryDatabase
-import com.tminus1010.buva.environment.MiscDatabase
-import com.tminus1010.buva.environment.MoshiWithCategoriesProvider
-import com.tminus1010.buva.environment.RoomWithCategoriesTypeConverter
+import com.tminus1010.buva.environment.database_or_datastore_or_similar.CategoryDatabase
+import com.tminus1010.buva.environment.database_or_datastore_or_similar.MiscDatabase
+import com.tminus1010.buva.environment.adapter.MoshiWithCategoriesProvider
+import com.tminus1010.buva.environment.adapter.RoomWithCategoriesTypeConverter
 import com.tminus1010.buva.domain.Transaction
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson

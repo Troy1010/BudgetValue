@@ -11,7 +11,7 @@ import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.all_layers.KEY2
 import com.tminus1010.buva.all_layers.android.viewBinding
 import com.tminus1010.buva.databinding.FragSetStringBinding
-import com.tminus1010.buva.environment.ParcelableLambdaWrapper
+import com.tminus1010.buva.environment.android_wrapper.ParcelableLambdaWrapper
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import dagger.hilt.android.AndroidEntryPoint
 

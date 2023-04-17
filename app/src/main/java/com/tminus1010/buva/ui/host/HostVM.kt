@@ -8,7 +8,7 @@ import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.app.IsReadyToBudget
 import com.tminus1010.buva.app.get
 import com.tminus1010.buva.data.SelectedHostPage
-import com.tminus1010.buva.environment.ActivityWrapper
+import com.tminus1010.buva.environment.android_wrapper.ActivityWrapper
 import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.ReadyToBudgetPresentationService
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM

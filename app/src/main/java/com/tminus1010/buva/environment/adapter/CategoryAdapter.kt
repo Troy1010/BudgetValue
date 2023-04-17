@@ -1,4 +1,4 @@
-package com.tminus1010.buva.environment
+package com.tminus1010.buva.environment.adapter
 
 import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.app.UserCategories

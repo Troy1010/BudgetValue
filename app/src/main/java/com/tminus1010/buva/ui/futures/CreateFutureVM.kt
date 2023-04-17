@@ -8,7 +8,7 @@ import com.tminus1010.buva.app.CategorizeTransactions
 import com.tminus1010.buva.app.TransactionsInteractor
 import com.tminus1010.buva.data.FuturesRepo
 import com.tminus1010.buva.domain.*
-import com.tminus1010.buva.environment.CategoryAdapter
+import com.tminus1010.buva.environment.adapter.CategoryAdapter
 import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.TransactionMatcherPresentationFactory
 import com.tminus1010.buva.ui.all_features.view_model_item.*
