@@ -6,7 +6,7 @@ import junit.framework.Assert.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
-internal class DatePeriodServiceTest {
+internal class DatePeriodUtilTest {
 
     @Test
     fun getPeriods() {
@@ -26,7 +26,7 @@ internal class DatePeriodServiceTest {
                 ),
             )
         // # When
-        val result = DatePeriodService.getPeriods(givenSelectableDuration, givenUsePeriodType, givenDatePeriod)
+        val result = DatePeriodUtil.getPeriods(givenSelectableDuration, givenUsePeriodType, givenDatePeriod)
         // # Then
         assertEquals(expected, result)
     }

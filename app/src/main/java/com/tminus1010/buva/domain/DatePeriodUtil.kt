@@ -8,7 +8,7 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.Month
 
-object DatePeriodService {
+object DatePeriodUtil {
     fun getPeriods(selectedDuration: SelectableDuration, usePeriodType: UsePeriodType, entirePeriod: LocalDatePeriod): List<LocalDatePeriod> {
         return sequence {
             var currentPageNumber = 0L

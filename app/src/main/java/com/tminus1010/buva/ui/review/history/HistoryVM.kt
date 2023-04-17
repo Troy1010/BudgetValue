@@ -48,7 +48,7 @@ class HistoryVM @Inject constructor(
                         is TransactionBlock ->
                             HistoryPresentationModel.TransactionBlockPresentationModel(
                                 it,
-                                Domain.guessAccountsTotalInPast(it.datePeriod!!.endDate, accountsRepo.accountsAggregate.first(), transactionsInteractor.transactionBlocks.first(), reconciliationsRepo.reconciliations.first()),
+                                MiscUtil.guessAccountsTotalInPast(it.datePeriod!!.endDate, accountsRepo.accountsAggregate.first(), transactionsInteractor.transactionBlocks.first(), reconciliationsRepo.reconciliations.first()),
                                 currentDatePeriod
                             )
                         is Reconciliation ->

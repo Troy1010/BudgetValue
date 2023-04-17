@@ -4,7 +4,7 @@ import com.tminus1010.buva.data.AccountsRepo
 import com.tminus1010.buva.data.CurrentDate
 import com.tminus1010.buva.data.ReconciliationsRepo
 import com.tminus1010.buva.data.SettingsRepo
-import com.tminus1010.buva.domain.Domain
+import com.tminus1010.buva.domain.MiscUtil
 import com.tminus1010.buva.domain.ReconciliationToDo
 import com.tminus1010.tmcommonkotlin.tuple.createTuple
 import kotlinx.coroutines.GlobalScope
@@ -42,7 +42,7 @@ class ReconciliationsToDoInteractor @Inject constructor(
 //                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod?.toDisplayStr()} b/c isFullyCategorized:$it") }
                                 && (currentDate.flow.value !in transactionBlock.datePeriod!!)
 //                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod.toDisplayStr()} b/c it's current") }
-                                && (!Domain.shouldSkip(reconciliationSkips, transactionBlock, anchorDateOffset))
+                                && (!MiscUtil.shouldSkip(reconciliationSkips, transactionBlock, anchorDateOffset))
 //                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod.toDisplayStr()} b/c it's skipped") }
                     }
                     .map { (transactionBlock) ->

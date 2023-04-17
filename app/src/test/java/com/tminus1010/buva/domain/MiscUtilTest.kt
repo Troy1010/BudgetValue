@@ -6,7 +6,7 @@ import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import java.time.LocalDate
 
-internal class DomainTest {
+internal class MiscUtilTest {
     @TestFactory
     fun isPeriodFullyImported(): List<DynamicTest> {
         // # Given
@@ -34,7 +34,7 @@ internal class DomainTest {
         ).map { (givenDatePeriod, givenTransactionImportInfos, expectedResult) ->
             DynamicTest.dynamicTest("Given datePeriod:$givenDatePeriod transactionImportInfos:${givenTransactionImportInfos.toString().take(60)}... __Then__ result:$expectedResult") {
                 // # When
-                val result = Domain.isPeriodFullyImported(givenDatePeriod, givenTransactionImportInfos)
+                val result = MiscUtil.isPeriodFullyImported(givenDatePeriod, givenTransactionImportInfos)
                 // # Then
                 assertEquals(expectedResult, result)
             }

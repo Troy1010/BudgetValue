@@ -68,7 +68,7 @@ class ReviewPieChartVM @Inject constructor(
         combine(userSelectedDuration, currentPageNumber, userUsePeriodType, transactionsInteractor.transactionsAggregate.map { it.mostRecentSpend })
         { userSelectedDuration, currentPageNumber, userUsePeriodType, mostRecentSpend ->
             val mostRecentSpendDate = mostRecentSpend?.date ?: throw NoMostRecentSpendException()
-            DatePeriodService.getPeriod(userSelectedDuration, userUsePeriodType, mostRecentSpendDate, currentPageNumber)
+            DatePeriodUtil.getPeriod(userSelectedDuration, userUsePeriodType, mostRecentSpendDate, currentPageNumber)
         }
             .pairwiseStartNull()
             .map { (a, b) ->
@@ -86,7 +86,7 @@ class ReviewPieChartVM @Inject constructor(
             val startDate = transactionsAggregate.oldestSpend?.date ?: return@combine listOf()
             val endDate = transactionsAggregate.mostRecentSpend?.date ?: return@combine listOf()
             val datePeriod = LocalDatePeriod(startDate, endDate)
-            DatePeriodService.getPeriods(userSelectedDuration, userUsePeriodType, datePeriod)
+            DatePeriodUtil.getPeriods(userSelectedDuration, userUsePeriodType, datePeriod)
         }
             .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
 

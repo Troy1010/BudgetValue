@@ -55,6 +55,7 @@ data class Category(
     }
 }
 
+// TODO: Why is this an extension..?
 fun Category.withDisplayType(categoryDisplayType: CategoryDisplayType): Category {
     return when (categoryDisplayType) {
         CategoryDisplayType.Special ->
