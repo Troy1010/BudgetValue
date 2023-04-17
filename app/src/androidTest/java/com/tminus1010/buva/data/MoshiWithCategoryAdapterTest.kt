@@ -33,7 +33,7 @@ import javax.inject.Singleton
 
 @UninstallModules(EnvironmentModule::class)
 @HiltAndroidTest
-class MoshiWithCategoriesAdaptersTest {
+class MoshiWithCategoryAdapterTest {
     @Test
     fun toAndFromJson() {
         // # When

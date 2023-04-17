@@ -8,7 +8,7 @@ import com.tminus1010.buva.all_layers.source_objects.SourceHashMap
 import com.tminus1010.buva.app.CategorizeTransactions
 import com.tminus1010.buva.data.FuturesRepo
 import com.tminus1010.buva.domain.*
-import com.tminus1010.buva.environment.adapter.CategoryAdapter
+import com.tminus1010.buva.environment.adapter.CategoryAdapterService
 import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.TransactionMatcherPresentationFactory
 import com.tminus1010.buva.ui.all_features.view_model_item.*
@@ -32,7 +32,7 @@ import javax.inject.Inject
 @HiltViewModel
 class FutureDetailsVM @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val categoryAdapter: CategoryAdapter,
+    private val categoryAdapterService: CategoryAdapterService,
     private val selectedCategoriesSharedVM: ChooseCategoriesSharedVM,
     private val futuresRepo: FuturesRepo,
     private val showToast: ShowToast,
@@ -96,7 +96,7 @@ class FutureDetailsVM @Inject constructor(
 
     private val userSetFillCategory = MutableSharedFlow<Category>()
     fun userSetFillCategory(categoryName: String) {
-        userSetFillCategory.onNext(categoryAdapter.parseCategory(categoryName))
+        userSetFillCategory.onNext(categoryAdapterService.parseCategory(categoryName))
     }
 
     fun userNavToChooseTransactionForTransactionMatcher(transactionMatcher: TransactionMatcher) {

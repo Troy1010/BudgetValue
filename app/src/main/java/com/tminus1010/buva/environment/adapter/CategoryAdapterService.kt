@@ -10,7 +10,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CategoryAdapter @Inject constructor(
+class CategoryAdapterService @Inject constructor(
     userCategories: UserCategories,
 ) {
     fun parseCategory(categoryName: String): Category {

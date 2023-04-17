@@ -9,7 +9,7 @@ import javax.inject.Inject
 /**
  * This moshi can parse [Category], but it transitively depends on [UserCategoriesDAO]
  */
-class MoshiWithCategoriesProvider @Inject constructor(moshiWithCategoriesAdapters: MoshiWithCategoriesAdapters) {
+class MoshiWithCategoriesProvider @Inject constructor(moshiWithCategoryAdapter: MoshiWithCategoryAdapter) {
     val moshi =
         Moshi.Builder()
             .add(PairAdapterFactory)
@@ -18,7 +18,7 @@ class MoshiWithCategoriesProvider @Inject constructor(moshiWithCategoriesAdapter
             .add(ResetStrategyAdapter)
             .add(ResolutionStrategyAdapter)
             .addLast(KotlinJsonAdapterFactory())
-            .add(moshiWithCategoriesAdapters)
+            .add(moshiWithCategoryAdapter)
             .add(MiscAdapter)
             .build()
 }

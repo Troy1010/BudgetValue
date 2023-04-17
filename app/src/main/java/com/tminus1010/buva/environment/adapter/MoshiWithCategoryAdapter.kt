@@ -14,8 +14,8 @@ import java.math.BigDecimal
 import javax.inject.Inject
 
 
-class MoshiWithCategoriesAdapters @Inject constructor(
-    private val categoryAdapter: CategoryAdapter,
+class MoshiWithCategoryAdapter @Inject constructor(
+    private val categoryAdapterService: CategoryAdapterService,
 ) {
     /**
      * [Category]
@@ -26,7 +26,7 @@ class MoshiWithCategoriesAdapters @Inject constructor(
 
     @FromJson
     fun fromJson1(s: String): Category =
-        categoryAdapter.parseCategory(s)
+        categoryAdapterService.parseCategory(s)
 
     /**
      * [CategoryAmounts]
