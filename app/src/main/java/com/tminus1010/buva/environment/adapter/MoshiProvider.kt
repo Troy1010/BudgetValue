@@ -17,6 +17,7 @@ object MoshiProvider {
             .add(BigDecimalAdapter)
             .add(ResetStrategyAdapter)
             .add(ResolutionStrategyAdapter)
+            .add(LocalDateAdapter)
             .add(MiscAdapter)
             .addLast(KotlinJsonAdapterFactory())
             .build()
