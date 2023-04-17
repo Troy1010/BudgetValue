@@ -4,15 +4,15 @@ import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.room.Room
-import com.tminus1010.buva.core_testing.shared.FakeDataStore
 import com.tminus1010.buva.core_testing.app
-import com.tminus1010.buva.environment.EnvironmentModule
+import com.tminus1010.buva.core_testing.shared.FakeDataStore
 import com.tminus1010.buva.core_testing.shared.Given
-import com.tminus1010.buva.environment.database_or_datastore_or_similar.CategoryDatabase
-import com.tminus1010.buva.environment.database_or_datastore_or_similar.MiscDatabase
+import com.tminus1010.buva.domain.Transaction
+import com.tminus1010.buva.environment.EnvironmentModule
 import com.tminus1010.buva.environment.adapter.MoshiWithCategoriesProvider
 import com.tminus1010.buva.environment.adapter.RoomWithCategoriesTypeConverter
-import com.tminus1010.buva.domain.Transaction
+import com.tminus1010.buva.environment.database_or_datastore_or_similar.CategoryDatabase
+import com.tminus1010.buva.environment.database_or_datastore_or_similar.MiscDatabase
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import dagger.Module
@@ -23,6 +23,7 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -35,14 +36,16 @@ import javax.inject.Singleton
 @HiltAndroidTest
 class CategoryAdapterTest {
     @Test
-    fun toAndFromJson() {
+    fun toAndFromJson() = runBlocking {
+        // # Given
+        val given = Given.transaction1
         // # When
-        val result =
-            moshiWithCategoriesProvider.moshi.toJson(Given.transaction1)
+        val actual =
+            moshiWithCategoriesProvider.moshiFlow.first().toJson(given)
                 .logx("json")
-                .let { moshiWithCategoriesProvider.moshi.fromJson<Transaction>(it) }
+                .let { moshiWithCategoriesProvider.moshiFlow.first().fromJson<Transaction>(it) }
         // # Then
-        assertEquals(Given.transaction1, result)
+        assertEquals(given, actual)
     }
 
     @get:Rule
