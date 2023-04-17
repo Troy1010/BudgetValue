@@ -8,7 +8,7 @@ import com.tminus1010.buva.app.CategorizeTransactions
 import com.tminus1010.buva.app.TransactionsInteractor
 import com.tminus1010.buva.data.FuturesRepo
 import com.tminus1010.buva.domain.*
-import com.tminus1010.buva.environment.adapter.UserCategoryMapProvider
+import com.tminus1010.buva.environment.adapter.MoshiWithCategoriesProvider
 import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.TransactionMatcherPresentationFactory
 import com.tminus1010.buva.ui.all_features.view_model_item.*
@@ -20,6 +20,7 @@ import com.tminus1010.tmcommonkotlin.androidx.ShowToast
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
+import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
@@ -29,7 +30,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateFutureVM @Inject constructor(
-    private val userCategoryMapProvider: UserCategoryMapProvider,
     private val selectedCategoriesSharedVM: ChooseCategoriesSharedVM,
     private val futuresRepo: FuturesRepo,
     private val showToast: ShowToast,
@@ -39,6 +39,7 @@ class CreateFutureVM @Inject constructor(
     private val transactionMatcherPresentationFactory: TransactionMatcherPresentationFactory,
     private val errors: Errors,
     private val navigator: Navigator,
+    private val moshiWithCategoriesProvider: MoshiWithCategoriesProvider,
 ) : ViewModel() {
     // # Setup
     val showAlertDialog = MutableSharedFlow<ShowAlertDialog>(1)
@@ -129,7 +130,7 @@ class CreateFutureVM @Inject constructor(
 
     private val userSetFillCategory = MutableSharedFlow<Category?>()
     fun userSetFillCategory(categoryName: String) {
-        userSetFillCategory.onNext(userCategoryMapProvider.parseCategory(categoryName))
+        userSetFillCategory.onNext(moshiWithCategoriesProvider.moshi.fromJson(categoryName))
     }
 
     fun userTryNavUp() {
