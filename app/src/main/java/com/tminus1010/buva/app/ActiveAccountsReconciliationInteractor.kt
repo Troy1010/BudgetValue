@@ -118,7 +118,7 @@ class ActiveAccountsReconciliationInteractor @Inject constructor(
                         is ResolutionStrategy.Basic -> x.validation(category, amount)
                     }
                 },
-                defaultAmountValidation = { if (it?.isZero ?: true) Validation.Success else Validation.Warning },
+                defaultAmountValidation = { if (it?.isZero ?: true) ValidationResult.Success else ValidationResult.Warning },
             )
         }
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)

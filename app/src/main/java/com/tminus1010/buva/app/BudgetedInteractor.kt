@@ -2,7 +2,7 @@ package com.tminus1010.buva.app
 
 import com.tminus1010.buva.all_layers.extensions.isZero
 import com.tminus1010.buva.domain.CategoryAmountsAndTotalWithValidation
-import com.tminus1010.buva.domain.Validation
+import com.tminus1010.buva.domain.ValidationResult
 import kotlinx.coroutines.flow.map
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -17,15 +17,15 @@ class BudgetedInteractor @Inject constructor(
                     categoryAmountsAndTotal = categoryAmountsAndTotalsAggregate.addedTogether,
                     caValidation = { category, amount ->
                         if ((amount ?: BigDecimal.ZERO) >= BigDecimal.ZERO)
-                            Validation.Success
+                            ValidationResult.Success
                         else
-                            Validation.Failure
+                            ValidationResult.Failure
                     },
                     defaultAmountValidation = {
                         if (it?.isZero ?: true)
-                            Validation.Success
+                            ValidationResult.Success
                         else
-                            Validation.Warning
+                            ValidationResult.Warning
                     },
                 )
             }

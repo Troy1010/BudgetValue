@@ -7,7 +7,7 @@ import com.tminus1010.buva.all_layers.extensions.getColorByAttr
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.buva.databinding.ItemEditTextBinding
 import com.tminus1010.buva.databinding.ItemTextViewBinding
-import com.tminus1010.buva.domain.Validation
+import com.tminus1010.buva.domain.ValidationResult
 import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
 import com.tminus1010.tmcommonkotlin.customviews.IViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipe3
@@ -15,7 +15,7 @@ import java.math.BigDecimal
 
 class AmountPresentationModel(
     val bigDecimal: BigDecimal?,
-    private val validation: (BigDecimal) -> Validation = { Validation.Success },
+    private val validation: (BigDecimal) -> ValidationResult = { ValidationResult.Success },
     private val onNewAmount: ((BigDecimal?) -> Unit)? = null,
     private val menuVMItems: MenuVMItems? = null,
 ) : IHasToViewItemRecipe {
@@ -29,11 +29,11 @@ class AmountPresentationModel(
                 vb.edittext.setTextColor(
                     context.theme.getColorByAttr(
                         when (validationResult) {
-                            Validation.Success ->
+                            ValidationResult.Success ->
                                 R.attr.colorOnBackground
-                            Validation.Warning ->
+                            ValidationResult.Warning ->
                                 R.attr.colorOnWarning
-                            Validation.Failure ->
+                            ValidationResult.Failure ->
                                 R.attr.colorOnError
                         }
                     )
@@ -47,11 +47,11 @@ class AmountPresentationModel(
                 vb.textview.setTextColor(
                     context.theme.getColorByAttr(
                         when (validationResult) {
-                            Validation.Success ->
+                            ValidationResult.Success ->
                                 R.attr.colorOnBackground
-                            Validation.Warning ->
+                            ValidationResult.Warning ->
                                 R.attr.colorOnWarning
-                            Validation.Failure ->
+                            ValidationResult.Failure ->
                                 R.attr.colorOnError
                         }
                     )
