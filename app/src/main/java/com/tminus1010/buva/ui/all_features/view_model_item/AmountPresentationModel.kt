@@ -26,7 +26,7 @@ class AmountPresentationModel(
             ViewItemRecipe3(context, ItemEditTextBinding::inflate) { vb ->
                 menuVMItems?.bind(vb.root)
                 vb.edittext.setText(s)
-                vb.edittext.setTextColor(
+                vb.edittext.setTextColor( // TODO: It seems like the color will be wrong if onDone changes the value..?
                     context.theme.getColorByAttr(
                         when (validationResult) {
                             ValidationResult.Success ->

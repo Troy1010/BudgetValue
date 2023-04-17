@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.buva.all_layers.categoryComparator
 import com.tminus1010.buva.all_layers.extensions.flatMapSourceMap
+import com.tminus1010.buva.all_layers.extensions.isZero
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.buva.all_layers.source_objects.SourceMap
 import com.tminus1010.buva.app.ActivePlanInteractor
@@ -13,6 +14,7 @@ import com.tminus1010.buva.data.CategoryRepo
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.ReconciliationStrategyGroup
 import com.tminus1010.buva.domain.ResetStrategy
+import com.tminus1010.buva.domain.ValidationResult
 import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.toDisplayStr
@@ -145,7 +147,7 @@ class PlanVM @Inject constructor(
                                     is ReconciliationStrategyGroup.Always ->
                                         TextVMItem(
                                             text1 = category.reconciliationStrategyGroup.resetStrategy.toDisplayStr(),
-                                            menuVMItems = getSharedMenuItems(category)
+                                            menuVMItems = getSharedMenuItems(category),
                                         )
                                     is ReconciliationStrategyGroup.Reservoir ->
                                         MoneyEditVMItem(
@@ -153,7 +155,13 @@ class PlanVM @Inject constructor(
                                                 is ResetStrategy.Basic -> x.budgetedMax?.toString() ?: "n/a"
                                                 null -> "n/a"
                                             },
-                                            onDone = { userSetBudgetMax(category, it) }
+                                            onDone = { userSetBudgetMax(category, it) },
+                                            validation = {
+                                                if (it.toMoneyBigDecimal().isZero) // TODO: Shouldn't this be defined in the app layer?
+                                                    ValidationResult.Failure
+                                                else
+                                                    ValidationResult.Success
+                                            },
                                         )
                                 }
                             }.toTypedArray(),
