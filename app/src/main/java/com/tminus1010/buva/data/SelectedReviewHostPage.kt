@@ -5,7 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.tminus1010.buva.R
-import com.tminus1010.buva.all_layers.extensions.shareInWithDefault
+import com.tminus1010.buva.all_layers.extensions.easyShareIn
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -23,7 +23,7 @@ class SelectedReviewHostPage @Inject constructor(
     val flow =
         dataStore.data
             .map { it[key]?.toIntOrNull() }
-            .shareInWithDefault(GlobalScope, SharingStarted.Eagerly, defaultValue)
+            .easyShareIn(GlobalScope, SharingStarted.Eagerly, defaultValue)
 
     fun setDefault() = set(defaultValue)
     fun set(int: Int) {
