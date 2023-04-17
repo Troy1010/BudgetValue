@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.tminus1010.buva.all_layers.extensions.easyShareIn
 import com.tminus1010.buva.all_layers.extensions.isZero
 import com.tminus1010.buva.domain.ActivePlan
 import com.tminus1010.buva.domain.Category
@@ -13,7 +14,10 @@ import com.tminus1010.buva.environment.database_or_datastore_or_similar.UserCate
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -35,9 +39,8 @@ class ActivePlanRepo @Inject constructor(
     val activePlan =
         userCategoriesDAO.fetchUserCategories()
             .flatMapLatest { dataStore.data }
-            .map { moshiWithCategoriesProvider.moshi.fromJson<ActivePlan>(it[key]) ?: defaultValue }
-            .distinctUntilChanged()
-            .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
+            .map { moshiWithCategoriesProvider.moshi.fromJson<ActivePlan>(it[key]) }
+            .easyShareIn(GlobalScope, SharingStarted.Eagerly, defaultValue)
 
     private suspend fun push(activePlan: ActivePlan?) {
         if (activePlan == null)
