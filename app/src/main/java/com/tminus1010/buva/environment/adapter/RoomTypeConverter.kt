@@ -1,26 +1,14 @@
 package com.tminus1010.buva.environment.adapter
 
 import androidx.room.TypeConverter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.tminus1010.buva.domain.*
+import com.tminus1010.buva.environment.adapter.MoshiProvider.moshi
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import java.math.BigDecimal
 import java.time.LocalDate
 
 object RoomTypeConverter {
-    val moshi =
-        Moshi.Builder()
-            .add(PairAdapterFactory)
-            .add(TripleAdapterFactory)
-            .add(BigDecimalAdapter)
-            .add(ResetStrategyAdapter)
-            .add(ResolutionStrategyAdapter)
-            .add(MiscAdapter)
-            .addLast(KotlinJsonAdapterFactory())
-            .build()
-
     @TypeConverter
     fun toJson(x: BigDecimal?): String? =
         moshi.toJson(x)
