@@ -94,7 +94,7 @@ class HostActivity : AppCompatActivity() {
         setContentView(vb.root)
         // # Setup
         // ## Logs
-        hostNavHostFrag.navController.addOnDestinationChangedListener { _, navDestination, _ -> Log.d("buva.Nav", "${navDestination.label}") }
+        hostNavHostFrag.navController.addOnDestinationChangedListener { _, navDestination, _ -> Log.d("buva.Nav", "nav`${navDestination.label}") }
         // ## Mediation
         ActivityWrapper.activity = this
         HostActivityWrapper.hostActivity = this
