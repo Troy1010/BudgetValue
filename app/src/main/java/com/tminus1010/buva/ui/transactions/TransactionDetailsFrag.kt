@@ -7,13 +7,11 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.KEY1
-import com.tminus1010.buva.environment.adapter.MoshiWithCategoriesProvider
+import com.tminus1010.buva.all_layers.android.viewBinding
 import com.tminus1010.buva.databinding.FragTransactionBinding
 import com.tminus1010.buva.domain.Transaction
-import com.tminus1010.buva.all_layers.android.viewBinding
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
-import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -24,7 +22,7 @@ class TransactionDetailsFrag : Fragment(R.layout.frag_transaction) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // # Events
-        viewModel.navUp.observe(viewLifecycleOwner) { nav.navigateUp() }
+        viewModel.navUp.observe(viewLifecycleOwner) { nav.navigateUp() } // TODO: Use Navigator instead
         // # State
         vb.buttonsview.bind(viewModel.buttons) { buttons = it }
         vb.tmTableViewTitle.bind(viewModel.transactionInfoTableView) { it.bind(this) }
@@ -32,9 +30,9 @@ class TransactionDetailsFrag : Fragment(R.layout.frag_transaction) {
     }
 
     companion object {
-        fun navTo(nav: NavController, transaction: Transaction, moshiWithCategoriesProvider: MoshiWithCategoriesProvider) {
+        fun navTo(nav: NavController, transaction: Transaction) {
             nav.navigate(R.id.transactionFrag, Bundle().apply {
-                putString(KEY1, moshiWithCategoriesProvider.moshi.toJson(transaction))
+                putParcelable(KEY1, transaction)
             })
         }
     }

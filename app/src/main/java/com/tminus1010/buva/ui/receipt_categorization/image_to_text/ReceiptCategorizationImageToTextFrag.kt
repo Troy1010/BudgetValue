@@ -19,12 +19,10 @@ import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.databinding.FragReceiptCategorizationImagetotextBinding
 import com.tminus1010.buva.domain.Transaction
 import com.tminus1010.buva.environment.adapter.MoshiProvider.moshi
-import com.tminus1010.buva.environment.adapter.MoshiWithCategoriesProvider
 import com.tminus1010.tmcommonkotlin.androidx.CreateImageFile
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
-import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import com.tminus1010.tmcommonkotlin.rx3.extensions.observe
 import com.tminus1010.tmcommonkotlin.view.extensions.easyToast
 import com.tminus1010.tmcommonkotlin.view.extensions.nav
@@ -88,11 +86,11 @@ class ReceiptCategorizationImageToTextFrag : Fragment(R.layout.frag_receipt_cate
     companion object {
         private var latestImageUri: Uri? = null
         private var latestImageFile: File? = null
-        fun navTo(nav: NavController, transaction: Transaction, moshiWithCategoriesProvider: MoshiWithCategoriesProvider) {
+        fun navTo(nav: NavController, transaction: Transaction) {
             nav.navigate(
                 R.id.receiptCategorizationImageToTextFrag,
                 Bundle().apply {
-                    putString(KEY1, moshiWithCategoriesProvider.moshi.toJson(transaction))
+                    putParcelable(KEY1, transaction)
                 },
             )
         }

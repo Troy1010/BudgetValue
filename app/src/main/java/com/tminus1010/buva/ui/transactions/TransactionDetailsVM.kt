@@ -6,7 +6,6 @@ import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.app.TransactionsInteractor
-import com.tminus1010.buva.environment.adapter.MoshiWithCategoriesProvider
 import com.tminus1010.buva.domain.CategoryAmounts
 import com.tminus1010.buva.domain.Transaction
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
@@ -14,7 +13,6 @@ import com.tminus1010.buva.ui.all_features.view_model_item.TableViewVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.TextVMItem
 import com.tminus1010.tmcommonkotlin.androidx.ShowToast
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
-import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
@@ -28,7 +26,6 @@ class TransactionDetailsVM @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val transactionsInteractor: TransactionsInteractor,
     showToast: ShowToast,
-    moshiWithCategoriesProvider: MoshiWithCategoriesProvider,
 ) : ViewModel() {
     // # User Intents
     fun userClearTransaction() {
@@ -39,7 +36,7 @@ class TransactionDetailsVM @Inject constructor(
     }
 
     // # Private
-    private val transaction = moshiWithCategoriesProvider.moshi.fromJson<Transaction>(savedStateHandle.get(KEY1))!!
+    private val transaction = savedStateHandle.get<Transaction>(KEY1)!!
 
     // # Events
     val navUp = MutableSharedFlow<Unit>()

@@ -5,9 +5,9 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.tminus1010.buva.all_layers.extensions.isZero
-import com.tminus1010.buva.environment.adapter.MoshiWithCategoriesProvider
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.CategoryAmounts
+import com.tminus1010.buva.environment.adapter.MoshiWithCategoriesProvider
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
 import kotlinx.coroutines.GlobalScope
@@ -28,12 +28,12 @@ class ActiveReconciliationRepo @Inject constructor(
      */
     val activeReconciliationCAs =
         dataStore.data
-            .map { moshiWithCategoriesProvider.moshi.fromJson<CategoryAmounts>(it[key]) }
+            .map { moshiWithCategoriesProvider.moshiFlow.first().fromJson<CategoryAmounts>(it[key]) }
             .filterNotNull()
-            .stateIn(GlobalScope, SharingStarted.Eagerly, CategoryAmounts())
+            .stateIn(GlobalScope, SharingStarted.Eagerly, CategoryAmounts()) // TODO: Why not use easyShareIn?
 
     suspend fun pushCategoryAmounts(categoryAmounts: CategoryAmounts) {
-        dataStore.edit { it[key] = moshiWithCategoriesProvider.moshi.toJson(categoryAmounts) }
+        dataStore.edit { it[key] = moshiWithCategoriesProvider.moshiFlow.first().toJson(categoryAmounts) }
     }
 
     suspend fun pushCategoryAmount(category: Category, amount: BigDecimal?) {
