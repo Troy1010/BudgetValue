@@ -70,7 +70,7 @@ class PlanVM @Inject constructor(
     }
 
     private fun userSetBudgetMax(category: Category, s: String) {
-        GlobalScope.launch { categoryRepo.push(category.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(ResetStrategy.Basic(s.toMoneyBigDecimal())))) }.use(throbberSharedVM)
+        GlobalScope.launch { categoryRepo.push(category.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(ResetStrategy.Basic(s.ifEmpty { null }?.toMoneyBigDecimal())))) }.use(throbberSharedVM)
     }
 
     private fun userSetTimeToAchieve(category: Category, s: String) {
@@ -152,14 +152,14 @@ class PlanVM @Inject constructor(
                                             menuVMItems = getSharedMenuItems(category),
                                         )
                                     is ReconciliationStrategyGroup.Reservoir ->
-                                        MoneyEditVMItem(
-                                            text1 = when (val x = category.reconciliationStrategyGroup.resetStrategy) {
+                                        EditTextVMItem(
+                                            text = when (val x = category.reconciliationStrategyGroup.resetStrategy) {
                                                 is ResetStrategy.Basic -> x.budgetedMax?.toString()
                                                 null -> null
                                             },
                                             onDone = { userSetBudgetMax(category, it) },
                                             validation = {
-                                                if (it.toMoneyBigDecimal().isZero) // TODO: Shouldn't this be defined in the app layer?
+                                                if (it?.toMoneyBigDecimal()?.isZero ?: false) // TODO: Shouldn't this be defined in the app layer?
                                                     ValidationResult.Failure
                                                 else
                                                     ValidationResult.Success
