@@ -33,6 +33,8 @@ data class Category(
                 CategoryDisplayType.Special
             reconciliationStrategyGroup is ReconciliationStrategyGroup.Always ->
                 CategoryDisplayType.Always
+            reconciliationStrategyGroup is ReconciliationStrategyGroup.Unlimited ->
+                CategoryDisplayType.Unlimited
             else ->
                 CategoryDisplayType.Reservoir
         }
@@ -60,6 +62,8 @@ fun Category.withDisplayType(categoryDisplayType: CategoryDisplayType): Category
     return when (categoryDisplayType) {
         CategoryDisplayType.Special ->
             error("Unhandled type:$categoryDisplayType")
+        CategoryDisplayType.Unlimited ->
+            this.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Unlimited)
         CategoryDisplayType.Always ->
             this.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Always)
         CategoryDisplayType.Reservoir ->

@@ -145,6 +145,7 @@ class PlanVM @Inject constructor(
                             TextVMItem(),
                             *categoryAmountItemObservablesRedefined.keys.map { category ->
                                 when (category.reconciliationStrategyGroup) {
+                                    is ReconciliationStrategyGroup.Unlimited,
                                     is ReconciliationStrategyGroup.Always ->
                                         TextVMItem(
                                             text1 = "n/a",

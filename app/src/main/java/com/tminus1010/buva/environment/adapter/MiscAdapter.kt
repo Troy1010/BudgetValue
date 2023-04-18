@@ -66,6 +66,7 @@ object MiscAdapter {
     fun toJson(x: ReconciliationStrategyGroup): String =
         when (x) {
             is ReconciliationStrategyGroup.Always -> "Always"
+            is ReconciliationStrategyGroup.Unlimited -> "Unlimited"
             is ReconciliationStrategyGroup.Reservoir ->
                 moshi.toJson(x.resetStrategy)
         }
@@ -73,8 +74,8 @@ object MiscAdapter {
     @FromJson
     fun fromJson421(s: String): ReconciliationStrategyGroup =
         when (s) {
-            "Always",
-            -> ReconciliationStrategyGroup.Always
+            "Always" -> ReconciliationStrategyGroup.Always
+            "Unlimited" -> ReconciliationStrategyGroup.Unlimited
             else ->
                 runCatching { ReconciliationStrategyGroup.Reservoir(moshi.fromJson<ResetStrategy?>(s)) }
                     .getOrElse { ReconciliationStrategyGroup.Reservoir(null) }
