@@ -8,6 +8,6 @@ object Validate {
         return if (bigDecimal == null || !bigDecimal.isZero)
             ValidationResult.Success
         else
-            ValidationResult.Failure
+            ValidationResult.Failure()
     }
 }

@@ -20,7 +20,7 @@ sealed class ResolutionStrategy : Parcelable {
         }
 
         fun validation(category: Category, budgetedAmount: BigDecimal?, activeReconciliationCAs: CategoryAmounts, activePlanCAs: CategoryAmounts): ValidationResult {
-            return if (activeReconciliationCAs[category] == calc(category, budgetedAmount, activeReconciliationCAs, activePlanCAs)) ValidationResult.Success else ValidationResult.Failure
+            return if (activeReconciliationCAs[category] == calc(category, budgetedAmount, activeReconciliationCAs, activePlanCAs)) ValidationResult.Success else ValidationResult.Failure()
         }
     }
 
@@ -46,7 +46,7 @@ sealed class ResolutionStrategy : Parcelable {
         }
 
         fun validation(category: Category, amount: BigDecimal?): ValidationResult {
-            return if ((amount ?: BigDecimal.ZERO) >= budgetedMin) ValidationResult.Success else ValidationResult.Failure
+            return if ((amount ?: BigDecimal.ZERO) >= budgetedMin) ValidationResult.Success else ValidationResult.Failure()
         }
     }
 }

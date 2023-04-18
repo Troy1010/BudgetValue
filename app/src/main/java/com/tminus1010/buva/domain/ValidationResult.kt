@@ -1,10 +1,9 @@
 package com.tminus1010.buva.domain
 
-// Left as a sealed class instead of an enum, in case it needs to have polymorphism later on.
 sealed class ValidationResult {
     object Success : ValidationResult()
-    object Warning : ValidationResult()
-    object Failure : ValidationResult()
+    class Warning(e: Throwable? = null) : ValidationResult()
+    class Failure(e: Throwable? = null) : ValidationResult()
 }
 
-val ValidationResult.isFailure get() = this == ValidationResult.Failure
+val ValidationResult.isFailure get() = this is ValidationResult.Failure

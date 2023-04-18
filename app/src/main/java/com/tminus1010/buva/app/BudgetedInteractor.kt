@@ -19,13 +19,13 @@ class BudgetedInteractor @Inject constructor(
                         if ((amount ?: BigDecimal.ZERO) >= BigDecimal.ZERO)
                             ValidationResult.Success
                         else
-                            ValidationResult.Failure
+                            ValidationResult.Failure()
                     },
                     defaultAmountValidation = {
                         if (it?.isZero ?: true)
                             ValidationResult.Success
                         else
-                            ValidationResult.Warning
+                            ValidationResult.Warning()
                     },
                 )
             }

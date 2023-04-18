@@ -27,9 +27,9 @@ fun ValidationResult.toColor(context: Context): Int {
         when (this) {
             ValidationResult.Success ->
                 R.attr.colorOnBackground
-            ValidationResult.Warning ->
+            is ValidationResult.Warning ->
                 R.attr.colorOnWarning
-            ValidationResult.Failure ->
+            is ValidationResult.Failure ->
                 R.attr.colorOnError
         }
     )
