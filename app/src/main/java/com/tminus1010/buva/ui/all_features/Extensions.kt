@@ -1,7 +1,11 @@
 package com.tminus1010.buva.ui.all_features
 
+import android.content.Context
+import com.tminus1010.buva.R
+import com.tminus1010.buva.all_layers.extensions.getColorByAttr
 import com.tminus1010.buva.domain.ResetStrategy
 import com.tminus1010.buva.domain.ResolutionStrategy
+import com.tminus1010.buva.domain.ValidationResult
 
 fun ResetStrategy?.toDisplayStr(): String? {
     return when (this) {
@@ -16,4 +20,17 @@ fun ResolutionStrategy?.toDisplayStr(): String? {
         is ResolutionStrategy.MatchPlan -> "Match Plan"
         null -> null
     }
+}
+
+fun ValidationResult.toColor(context: Context): Int {
+    return context.theme.getColorByAttr(
+        when (this) {
+            ValidationResult.Success ->
+                R.attr.colorOnBackground
+            ValidationResult.Warning ->
+                R.attr.colorOnWarning
+            ValidationResult.Failure ->
+                R.attr.colorOnError
+        }
+    )
 }
