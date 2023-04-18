@@ -34,7 +34,7 @@ class MoneyEditVMItem(
 
     override fun toViewItemRecipe(context: Context): IViewItemRecipe3 {
         return ViewItemRecipe3(context, ItemMoneyEditTextBinding::inflate) { vb ->
-            if (text1 != null) vb.moneyedittext.easyText3 = text1
+            vb.moneyedittext.easyText3 = text1
             if (text2 != null) vb.moneyedittext.bind(text2) { if (text.toString() != it) easyText3 = it; setTextColor(getColor(context, it ?: "")) }
             vb.moneyedittext.onDone(onDone)
             menuVMItems?.bind(vb.root)
