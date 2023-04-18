@@ -11,13 +11,9 @@ import com.tminus1010.buva.app.ActivePlanInteractor
 import com.tminus1010.buva.app.UserCategories
 import com.tminus1010.buva.data.ActivePlanRepo
 import com.tminus1010.buva.data.CategoryRepo
-import com.tminus1010.buva.domain.Category
-import com.tminus1010.buva.domain.ReconciliationStrategyGroup
-import com.tminus1010.buva.domain.ResetStrategy
-import com.tminus1010.buva.domain.ValidationResult
+import com.tminus1010.buva.domain.*
 import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
-import com.tminus1010.buva.ui.all_features.toDisplayStr
 import com.tminus1010.buva.ui.all_features.view_model_item.*
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
@@ -75,6 +71,12 @@ class PlanVM @Inject constructor(
 
     private fun userSetBudgetMax(category: Category, s: String) {
         GlobalScope.launch { categoryRepo.push(category.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(ResetStrategy.Basic(s.toMoneyBigDecimal())))) }.use(throbberSharedVM)
+    }
+
+    private fun userSetTimeToAchieve(category: Category, s: String) {
+        val max = (category.reconciliationStrategyGroup.resetStrategy as ResetStrategy.Basic).budgetedMax!!
+        val timeToAchieve = s.toBigDecimal()
+        GlobalScope.launch { activePlanRepo.updateCategoryAmount(category, MiscUtil.calcPlanValue(timeToAchieve, max)) }
     }
 
     // # Private
@@ -139,7 +141,7 @@ class PlanVM @Inject constructor(
                             }.toTypedArray()
                         ),
                         listOf(
-                            TextVMItem(text1 = "Reset Max", style = TextVMItem.Style.HEADER),
+                            TextVMItem(text1 = "Max", style = TextVMItem.Style.HEADER),
                             TextVMItem(),
                             TextVMItem(),
                             *categoryAmountItemObservablesRedefined.keys.map { category ->
@@ -163,6 +165,27 @@ class PlanVM @Inject constructor(
                                                     ValidationResult.Success
                                             },
                                         )
+                                }
+                            }.toTypedArray(),
+                        ),
+                        listOf(
+                            TextVMItem(text1 = "Time to achieve", style = TextVMItem.Style.HEADER),
+                            TextVMItem(),
+                            TextVMItem(),
+                            *categoryAmountItemObservablesRedefined.keys.map { category ->
+                                runCatching {
+                                    MoneyEditVMItem(
+                                        text1 = MiscUtil.calcTimeToAchieve(
+                                            planValue = categoryAmountItemObservablesRedefined[category]!!.value,
+                                            resetMax = (category.reconciliationStrategyGroup.resetStrategy as ResetStrategy.Basic).budgetedMax!!
+                                        ).toString(),
+                                        onDone = { userSetTimeToAchieve(category, it) },
+                                    )
+                                }.getOrElse {
+                                    TextVMItem(
+                                        text1 = "n/a",
+                                        menuVMItems = getSharedMenuItems(category),
+                                    )
                                 }
                             }.toTypedArray(),
                         ),
