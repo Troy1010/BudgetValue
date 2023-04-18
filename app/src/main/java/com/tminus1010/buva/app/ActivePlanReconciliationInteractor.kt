@@ -71,7 +71,7 @@ class ActivePlanReconciliationInteractor @Inject constructor(
                 .associateWith {
                     when (val x = it.reconciliationStrategyGroup.resetStrategy) {
                         is ResetStrategy.Basic -> x.calc(it, activeReconciliationCAs, budgetedCAs)
-                        else -> activeReconciliationCAs[it] ?: BigDecimal.ZERO
+                        else -> BigDecimal.ZERO
                     }
                 }
                 .toCategoryAmounts()
