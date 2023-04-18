@@ -10,8 +10,8 @@ sealed class ReconciliationStrategyGroup : Parcelable {
 
     @Parcelize
     object Always : ReconciliationStrategyGroup() {
-        override val resetStrategy: ResetStrategy
-            get() = ResetStrategy.Basic(null)
+        override val resetStrategy: ResetStrategy?
+            get() = null
         override val planResolutionStrategy: ResolutionStrategy
             get() = ResolutionStrategy.MatchPlan
         override val anytimeResolutionStrategy: ResolutionStrategy
@@ -20,8 +20,8 @@ sealed class ReconciliationStrategyGroup : Parcelable {
 
     @Parcelize
     object Unlimited : ReconciliationStrategyGroup() {
-        override val resetStrategy: ResetStrategy
-            get() = ResetStrategy.Basic(null)
+        override val resetStrategy: ResetStrategy?
+            get() = null
         override val planResolutionStrategy: ResolutionStrategy
             get() = ResolutionStrategy.Basic()
         override val anytimeResolutionStrategy: ResolutionStrategy
@@ -30,7 +30,7 @@ sealed class ReconciliationStrategyGroup : Parcelable {
 
     @Parcelize
     data class Reservoir(
-        override val resetStrategy: ResetStrategy? = null,
+        override val resetStrategy: ResetStrategy = ResetStrategy.Basic(),
     ) : ReconciliationStrategyGroup() {
         override val planResolutionStrategy: ResolutionStrategy
             get() = ResolutionStrategy.Basic()

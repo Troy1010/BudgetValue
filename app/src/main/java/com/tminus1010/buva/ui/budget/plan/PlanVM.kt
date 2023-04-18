@@ -69,7 +69,7 @@ class PlanVM @Inject constructor(
     }
 
     private fun userSetBudgetMax(category: Category, s: String) {
-        GlobalScope.launch { categoryRepo.push(category.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(ResetStrategy.Basic(s.ifEmpty { null }?.toMoneyBigDecimal())))) }.use(throbberSharedVM)
+        GlobalScope.launch { categoryRepo.push(category.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(ResetStrategy.Basic(s.toMoneyBigDecimal())))) }.use(throbberSharedVM)
     }
 
     private fun userSetTimeToAchieve(category: Category, s: String) {
@@ -146,16 +146,16 @@ class PlanVM @Inject constructor(
                             *categoryAmountItemObservablesRedefined.keys.map { category ->
                                 when (category.reconciliationStrategyGroup) {
                                     is ReconciliationStrategyGroup.Unlimited,
-                                    is ReconciliationStrategyGroup.Always ->
+                                    is ReconciliationStrategyGroup.Always,
+                                    ->
                                         TextVMItem(
                                             text1 = "n/a",
                                             menuVMItems = getSharedMenuItems(category),
                                         )
                                     is ReconciliationStrategyGroup.Reservoir ->
-                                        EditTextVMItem(
-                                            text = when (val x = category.reconciliationStrategyGroup.resetStrategy) {
-                                                is ResetStrategy.Basic -> x.budgetedMax?.toString()
-                                                null -> null
+                                        MoneyEditVMItem(
+                                            text1 = when (val x = category.reconciliationStrategyGroup.resetStrategy) {
+                                                is ResetStrategy.Basic -> x.budgetedMax.toString()
                                             },
                                             onDone = { userSetBudgetMax(category, it) },
                                             validation = { Validate.resetMax(it?.toMoneyBigDecimal()) },

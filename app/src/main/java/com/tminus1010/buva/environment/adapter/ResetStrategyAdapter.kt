@@ -13,9 +13,9 @@ object ResetStrategyAdapter {
         }
 
     @FromJson
-    fun fromJson(s: String): ResetStrategy =
+    fun fromJson(s: String): ResetStrategy? =
         if (s == "null")
-            ResetStrategy.Basic(null)
+            null
         else
             ResetStrategy.Basic(runCatching { s.toBigDecimal() }.getOrDefault(BigDecimal.ZERO))
 }

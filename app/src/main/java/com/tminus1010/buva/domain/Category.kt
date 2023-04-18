@@ -67,6 +67,6 @@ fun Category.withDisplayType(categoryDisplayType: CategoryDisplayType): Category
         CategoryDisplayType.Always ->
             this.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Always)
         CategoryDisplayType.Reservoir ->
-            this.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(ResetStrategy.Basic(null)))
+            this.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir())
     }
 }

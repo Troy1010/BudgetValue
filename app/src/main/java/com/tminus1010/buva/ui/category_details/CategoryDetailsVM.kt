@@ -91,12 +91,7 @@ class CategoryDetailsVM @Inject constructor(
     }
 
     fun userSetResetMax(x: BigDecimal?) {
-        when (val reconciliationStrategyGroup = category.value!!.reconciliationStrategyGroup) {
-            is ReconciliationStrategyGroup.Always ->
-                category.value = category.value!!.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(resetStrategy = ResetStrategy.Basic(x)))
-            is ReconciliationStrategyGroup.Reservoir ->
-                category.value = category.value!!.copy(reconciliationStrategyGroup = reconciliationStrategyGroup.copy(resetStrategy = ResetStrategy.Basic(x)))
-        }
+        category.value = category.value!!.copy(reconciliationStrategyGroup = ReconciliationStrategyGroup.Reservoir(resetStrategy = ResetStrategy.Basic(x ?: BigDecimal.ZERO)))
     }
 
     fun userAddSearchText() {

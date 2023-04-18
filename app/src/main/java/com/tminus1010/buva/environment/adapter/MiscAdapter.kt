@@ -77,8 +77,8 @@ object MiscAdapter {
             "Always" -> ReconciliationStrategyGroup.Always
             "Unlimited" -> ReconciliationStrategyGroup.Unlimited
             else ->
-                runCatching { ReconciliationStrategyGroup.Reservoir(moshi.fromJson<ResetStrategy?>(s)) }
-                    .getOrElse { ReconciliationStrategyGroup.Reservoir(null) }
+                runCatching { ReconciliationStrategyGroup.Reservoir(moshi.fromJson(s)) }
+                    .getOrElse { ReconciliationStrategyGroup.Reservoir() }
         }
 
     /**
