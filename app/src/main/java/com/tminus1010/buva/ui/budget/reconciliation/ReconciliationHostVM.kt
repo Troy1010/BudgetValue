@@ -4,10 +4,9 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.InvalidStateException
 import com.tminus1010.buva.all_layers.extensions.value
-import com.tminus1010.buva.app.ActiveAccountsReconciliationInteractor
-import com.tminus1010.buva.app.ActivePlanReconciliationInteractor
-import com.tminus1010.buva.app.ReconciliationsToDoInteractor
+import com.tminus1010.buva.app.*
 import com.tminus1010.buva.data.ActivePlanRepo
+import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.ReconciliationToDo
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
@@ -30,6 +29,7 @@ class ReconciliationHostVM @Inject constructor(
     private val throbberSharedVM: ThrobberSharedVM,
     private val activePlanReconciliationInteractor: ActivePlanReconciliationInteractor,
     private val activePlanRepo: ActivePlanRepo,
+    private val userCategories: UserCategories,
 ) : ViewModel() {
     // # User Intents
     fun userSave() {
@@ -67,6 +67,15 @@ class ReconciliationHostVM @Inject constructor(
                 GlobalScope.launch { activePlanReconciliationInteractor.resolve() }.use(throbberSharedVM)
             else ->
                 GlobalScope.launch { activeAccountsReconciliationInteractor.resolve() }.use(throbberSharedVM)
+        }
+    }
+
+    fun userFillIntoCategory(category: Category) {
+        when (reconciliationsToDoInteractor.currentReconciliationToDo.value) {
+            is ReconciliationToDo.PlanZ ->
+                GlobalScope.launch { activePlanReconciliationInteractor.fillIntoCategory(category) }.use(throbberSharedVM)
+            else ->
+                GlobalScope.launch { activeAccountsReconciliationInteractor.fillIntoCategory(category) }.use(throbberSharedVM)
         }
     }
 
@@ -122,7 +131,7 @@ class ReconciliationHostVM @Inject constructor(
             }
     val subTitle = reconciliationsToDoInteractor.reconciliationsToDo.map { NativeText.Plural(R.plurals.reconciliations_required, it.size, it.size) }
     val buttons =
-        reconciliationsToDoInteractor.currentReconciliationToDo.map {
+        userCategories.firstUnlimited.map { firstUnlimitedCategory ->
             listOfNotNull(
                 ButtonVMItem(
                     title = "Reset",
@@ -132,6 +141,12 @@ class ReconciliationHostVM @Inject constructor(
                     title = "Resolve",
                     onClick = ::userResolve,
                 ),
+                if (firstUnlimitedCategory != null)
+                    ButtonVMItem(
+                        title = "Fill Into Unlimited",
+                        onClick = { userFillIntoCategory(firstUnlimitedCategory) },
+                    )
+                else null,
                 ButtonVMItem(
                     title = "Save",
                     onClick = ::userSave
