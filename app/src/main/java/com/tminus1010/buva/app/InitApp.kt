@@ -47,7 +47,7 @@ class InitApp @Inject constructor(
                 Category("Misc", AmountFormula.Value(BigDecimal.ZERO), isRememberedWithEditByDefault = false),
                 Category("Food", AmountFormula.Value(BigDecimal.ZERO), reconciliationStrategyGroup = ReconciliationStrategyGroup.Always),
                 Category("Unknown", AmountFormula.Value(BigDecimal.ZERO), isRememberedWithEditByDefault = false),
-                Category("Savings", AmountFormula.Value(BigDecimal.ZERO)),
+                Category("Savings", AmountFormula.Value(BigDecimal.ZERO), reconciliationStrategyGroup = ReconciliationStrategyGroup.Unlimited),
                 Category("Emergency", AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Gifts", AmountFormula.Value(BigDecimal.ZERO)),
                 Category("Activities", AmountFormula.Value(BigDecimal.ZERO)),
