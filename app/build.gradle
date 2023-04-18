@@ -141,16 +141,16 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
 
     // # TMCommonKotlin
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-core:1.3.4'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-rx3:1.3.4'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-misc:1.3.4'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-tuple:1.3.4'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-view:1.3.4'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-coroutines:1.3.4'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-androidx:1.3.4'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-imagetotext:1.3.4'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-customviews:1.3.4'
-    testImplementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-testoverrides:1.3.4'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-core:1.4.0'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-rx3:1.4.0'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-misc:1.4.0'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-tuple:1.4.0'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-view:1.4.0'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-coroutines:1.4.0'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-androidx:1.4.0'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-imagetotext:1.4.0'
+    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-customviews:1.4.0'
+    testImplementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-testoverrides:1.4.0'
 
     // # Hilt
     implementation 'com.google.dagger:hilt-android:2.41'

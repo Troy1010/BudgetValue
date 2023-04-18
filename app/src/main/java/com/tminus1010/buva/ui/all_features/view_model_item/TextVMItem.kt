@@ -6,7 +6,7 @@ import com.tminus1010.buva.all_layers.extensions.getColorByAttr
 import com.tminus1010.buva.databinding.ItemHeaderBinding
 import com.tminus1010.buva.databinding.ItemTextViewBinding
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
-import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
+import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipeFactory
 import com.tminus1010.tmcommonkotlin.customviews.IViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.tuple.Box
@@ -23,7 +23,7 @@ class TextVMItem(
     val menuVMItems: MenuVMItems? = null,
     val backgroundColor: Int? = null,
     val style: Style = Style.ONE,
-) : IHasToViewItemRecipe {
+) : ViewItemRecipeFactory {
     enum class Style { ONE, TWO, HEADER }
 
     fun bind(textView: TextView) {

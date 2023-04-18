@@ -9,7 +9,7 @@ import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.tmcommonkotlin.customviews.IViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipe3
-import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
+import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipeFactory
 import com.tminus1010.buva.databinding.ItemSpinnerBinding
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +21,7 @@ class SpinnerVMItem<T>(
     private val values: Array<T>,
     private val initialValue: T? = null,
     private val onNewItem: (T) -> Unit
-) : IHasToViewItemRecipe {
+) : ViewItemRecipeFactory {
     constructor(values: Array<T>, behaviorSubject: BehaviorSubject<T>) : this(values, behaviorSubject.value, behaviorSubject::onNext)
     constructor(values: Array<T>, mutableStateFlow: MutableStateFlow<T>) : this(values, mutableStateFlow.value, mutableStateFlow::onNext)
 

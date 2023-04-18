@@ -6,7 +6,7 @@ import com.tminus1010.buva.databinding.ItemButtonBinding
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import com.tminus1010.tmcommonkotlin.androidx.extensions.lifecycleOwner
-import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
+import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipeFactory
 import com.tminus1010.tmcommonkotlin.customviews.IViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.rx3.extensions.observe
@@ -22,7 +22,7 @@ data class ButtonVMItem(
     val alpha: Flow<Float>? = null,
     val onLongClick: (() -> Unit)? = null,
     val onClick: () -> Unit,
-) : IHasToViewItemRecipe {
+) : ViewItemRecipeFactory {
     fun bind(button: Button) = button.apply {
         if (title2 != null)
             bind(title2) { text = it.logx("ButtonVMItem setting text"); requestLayout() }

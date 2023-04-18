@@ -17,7 +17,7 @@ import com.tminus1010.buva.ui.receipt_categorization.ReceiptCategorizationShared
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
 import com.tminus1010.tmcommonkotlin.androidx.ShowToast
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
-import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
+import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipeFactory
 import com.tminus1010.tmcommonkotlin.misc.extensions.distinctUntilChangedWith
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -207,7 +207,7 @@ class CreateFutureVM @Inject constructor(
         { categoryAmountFormulaItemFlows, fillCategory ->
             TableViewVMItem(
                 recipeGrid = listOf(
-                    listOf<IHasToViewItemRecipe>(
+                    listOf<ViewItemRecipeFactory>(
                         TextPresentationModel(TextPresentationModel.Style.HEADER, "Category"),
                         TextPresentationModel(TextPresentationModel.Style.HEADER, "Amount"),
                         TextPresentationModel(TextPresentationModel.Style.HEADER, "Fill"),

@@ -7,7 +7,7 @@ import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.buva.databinding.ItemAmountFormulaBinding
 import com.tminus1010.buva.domain.AmountFormula
 import com.tminus1010.buva.all_layers.android.onDone
-import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
+import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipeFactory
 import com.tminus1010.tmcommonkotlin.customviews.IViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
@@ -16,7 +16,7 @@ import com.tminus1010.tmcommonkotlin.view.extensions.easyVisibility
 data class AmountFormulaPresentationModel1(
     private val amountFormula: LiveData<AmountFormula>,
     private val onNewAmountFormula: (AmountFormula) -> Unit,
-) : IHasToViewItemRecipe {
+) : ViewItemRecipeFactory {
     fun userToggleIsPercentage() {
         when (val amountFormula = amountFormula.value) {
             is AmountFormula.Value -> onNewAmountFormula(AmountFormula.Percentage(amountFormula.amount))

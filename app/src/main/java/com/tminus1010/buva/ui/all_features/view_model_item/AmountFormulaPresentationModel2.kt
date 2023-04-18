@@ -7,13 +7,13 @@ import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipe3
 import com.tminus1010.buva.databinding.ItemAmountFormulaBinding
 import com.tminus1010.buva.domain.AmountFormula
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
-import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
+import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipeFactory
 import com.tminus1010.tmcommonkotlin.view.extensions.easyVisibility
 import kotlinx.coroutines.flow.Flow
 
 data class AmountFormulaPresentationModel2(
     private val amountFormula: Flow<AmountFormula>,
-) : IHasToViewItemRecipe {
+) : ViewItemRecipeFactory {
     fun bind(vb: ItemAmountFormulaBinding) {
         vb.root.isEnabled = false
         vb.moneyEditText.isEnabled = false

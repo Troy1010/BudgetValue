@@ -11,11 +11,11 @@ import com.tminus1010.buva.ui.all_features.view_model_item.EditTextVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItems
 import com.tminus1010.buva.ui.all_features.view_model_item.TextVMItem
-import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
+import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipeFactory
 import javax.inject.Inject
 
 class TransactionMatcherPresentationFactory @Inject constructor() {
-    fun viewModelItems(transactionMatcher: LiveData<TransactionMatcher?>, onChange: (TransactionMatcher) -> Unit, userNavToChooseTransactionForTransactionMatcher: (TransactionMatcher) -> Unit): LiveData<List<List<IHasToViewItemRecipe>>> {
+    fun viewModelItems(transactionMatcher: LiveData<TransactionMatcher?>, onChange: (TransactionMatcher) -> Unit, userNavToChooseTransactionForTransactionMatcher: (TransactionMatcher) -> Unit): LiveData<List<List<ViewItemRecipeFactory>>> {
         fun userUpdateSearchTotal(s: String) {
             onChange(TransactionMatcher.Multi(transactionMatcher.value!!.flattened().replaceFirst({ it == transactionMatcher }, TransactionMatcher.ByValue(s.toMoneyBigDecimal()))))
         }

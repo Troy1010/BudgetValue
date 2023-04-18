@@ -4,7 +4,7 @@ import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.domain.Transaction
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
-import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
+import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipeFactory
 import kotlinx.coroutines.flow.MutableSharedFlow
 
 class TransactionPresentationModel(private val transaction: Transaction) {
@@ -14,7 +14,7 @@ class TransactionPresentationModel(private val transaction: Transaction) {
     val description get() = transaction.description.take(30)
     val userTryNavToTransaction = MutableSharedFlow<Transaction>()
 
-    fun toVMItems(): List<IHasToViewItemRecipe> {
+    fun toVMItems(): List<ViewItemRecipeFactory> {
         return listOf(
             TextVMItem(text1 = date, backgroundColor = backgroundColor, onClick = { userTryNavToTransaction.onNext(transaction) }),
             TextVMItem(text1 = amount, backgroundColor = backgroundColor, onClick = { userTryNavToTransaction.onNext(transaction) }),

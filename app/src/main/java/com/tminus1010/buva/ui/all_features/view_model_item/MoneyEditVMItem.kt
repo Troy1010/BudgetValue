@@ -7,7 +7,7 @@ import com.tminus1010.buva.all_layers.extensions.easyText3
 import com.tminus1010.buva.all_layers.extensions.getColorByAttr
 import com.tminus1010.buva.databinding.ItemMoneyEditTextBinding
 import com.tminus1010.buva.domain.ValidationResult
-import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
+import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipeFactory
 import com.tminus1010.tmcommonkotlin.customviews.IViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
@@ -19,7 +19,7 @@ class MoneyEditVMItem(
     val validation: (String) -> ValidationResult = { ValidationResult.Success },
     val onDone: (String) -> Unit,
     val menuVMItems: MenuVMItems? = null,
-) : IHasToViewItemRecipe {
+) : ViewItemRecipeFactory {
     private fun getColor(context: Context, s: String) =
         context.theme.getColorByAttr(
             when (validation(s)) {

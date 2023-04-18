@@ -5,7 +5,7 @@ import android.widget.Button
 import com.tminus1010.buva.all_layers.extensions.getColorByAttr
 import com.tminus1010.buva.databinding.ItemCategoryBtnBinding
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
-import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
+import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipeFactory
 import com.tminus1010.tmcommonkotlin.customviews.IViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipe3
 import io.reactivex.rxjava3.core.Observable
@@ -22,7 +22,7 @@ data class ButtonVMItem2(
     val menuVMItemsFlow: Flow<MenuVMItems>? = null,
     val onLongClick: (() -> Unit)? = null,
     val onClick: () -> Unit,
-) : IHasToViewItemRecipe {
+) : ViewItemRecipeFactory {
     fun bind(button: Button) {
         button.text = title
         if (titleObservable != null)

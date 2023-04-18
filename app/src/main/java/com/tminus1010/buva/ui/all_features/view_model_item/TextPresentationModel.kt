@@ -3,7 +3,7 @@ package com.tminus1010.buva.ui.all_features.view_model_item
 import android.content.Context
 import com.tminus1010.tmcommonkotlin.customviews.IViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipe3
-import com.tminus1010.tmcommonkotlin.customviews.IHasToViewItemRecipe
+import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipeFactory
 import com.tminus1010.buva.databinding.ItemHeaderBinding
 import com.tminus1010.buva.databinding.ItemTextViewBinding
 import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
@@ -20,7 +20,7 @@ data class TextPresentationModel(
     val onClick: (() -> Unit)? = null,
     val onLongClick: (() -> Unit)? = null,
     val menuVMItems: MenuVMItems? = null,
-) : IHasToViewItemRecipe {
+) : ViewItemRecipeFactory {
     enum class Style { ONE, TWO, HEADER }
 
     override fun toViewItemRecipe(context: Context): IViewItemRecipe3 {
