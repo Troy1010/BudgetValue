@@ -6,3 +6,5 @@ sealed class ValidationResult {
     object Warning : ValidationResult()
     object Failure : ValidationResult()
 }
+
+val ValidationResult.isFailure get() = this == ValidationResult.Failure

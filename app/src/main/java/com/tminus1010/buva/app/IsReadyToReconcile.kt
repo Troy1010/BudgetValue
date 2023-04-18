@@ -1,8 +1,9 @@
 package com.tminus1010.buva.app
 
-import com.tminus1010.buva.all_layers.extensions.isZero
 import com.tminus1010.buva.domain.ReconciliationStrategyGroup
 import com.tminus1010.buva.domain.ResetStrategy
+import com.tminus1010.buva.domain.Validate
+import com.tminus1010.buva.domain.isFailure
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
@@ -15,7 +16,7 @@ class IsReadyToReconcile @Inject constructor(
         if (
             userCategories.flow.first().any { category ->
                 category.reconciliationStrategyGroup is ReconciliationStrategyGroup.Reservoir
-                        && (category.reconciliationStrategyGroup.resetStrategy as? ResetStrategy.Basic)?.let { it.budgetedMax?.isZero ?: false } ?: false
+                        && (category.reconciliationStrategyGroup.resetStrategy as? ResetStrategy.Basic)?.let { Validate.resetMax(it.budgetedMax).isFailure } ?: false
             }
         )
             throw PlanIsInvalidException()

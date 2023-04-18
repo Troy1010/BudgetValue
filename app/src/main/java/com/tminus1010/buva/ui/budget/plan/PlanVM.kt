@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tminus1010.buva.all_layers.categoryComparator
 import com.tminus1010.buva.all_layers.extensions.flatMapSourceMap
-import com.tminus1010.buva.all_layers.extensions.isZero
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.buva.all_layers.source_objects.SourceMap
 import com.tminus1010.buva.app.ActivePlanInteractor
@@ -158,12 +157,7 @@ class PlanVM @Inject constructor(
                                                 null -> null
                                             },
                                             onDone = { userSetBudgetMax(category, it) },
-                                            validation = {
-                                                if (it?.toMoneyBigDecimal()?.isZero ?: false) // TODO: Shouldn't this be defined in the app layer?
-                                                    ValidationResult.Failure
-                                                else
-                                                    ValidationResult.Success
-                                            },
+                                            validation = { Validate.resetMax(it?.toMoneyBigDecimal()) },
                                         )
                                 }
                             }.toTypedArray(),
