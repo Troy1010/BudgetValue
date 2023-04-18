@@ -74,8 +74,8 @@ class PlanVM @Inject constructor(
 
     private fun userSetTimeToAchieve(category: Category, s: String) {
         val max = (category.reconciliationStrategyGroup.resetStrategy as ResetStrategy.Basic).budgetedMax!!
-        val timeToAchieve = s.toBigDecimal()
-        GlobalScope.launch { activePlanRepo.updateCategoryAmount(category, MiscUtil.calcPlanValue(timeToAchieve, max)) }
+        val timeToAchieve = s.ifEmpty { null }?.toBigDecimal()
+        GlobalScope.launch { activePlanRepo.updateCategoryAmount(category, MiscUtil.calcPlanValue(timeToAchieve, max) ?: BigDecimal.ZERO) }
     }
 
     // # Private
@@ -172,7 +172,7 @@ class PlanVM @Inject constructor(
                                         text1 = MiscUtil.calcTimeToAchieve(
                                             planValue = categoryAmountItemObservablesRedefined[category]!!.value,
                                             resetMax = (category.reconciliationStrategyGroup.resetStrategy as ResetStrategy.Basic).budgetedMax!!
-                                        ).toString(),
+                                        )?.toString(),
                                         onDone = { userSetTimeToAchieve(category, it) },
                                     )
                                 }.getOrElse {

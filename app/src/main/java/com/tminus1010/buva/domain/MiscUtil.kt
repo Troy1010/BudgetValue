@@ -1,17 +1,21 @@
 package com.tminus1010.buva.domain
 
+import com.tminus1010.buva.all_layers.extensions.isZero
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.LocalDate
 
 object MiscUtil {
-    fun calcTimeToAchieve(planValue: BigDecimal, resetMax: BigDecimal): BigDecimal {
-        return resetMax / planValue
+    fun calcTimeToAchieve(planValue: BigDecimal, resetMax: BigDecimal): BigDecimal? {
+        return runCatching { resetMax / planValue }.getOrDefault(null)
     }
 
-    fun calcPlanValue(timeToAchieve: BigDecimal, resetMax: BigDecimal): BigDecimal {
-        return (resetMax.setScale(2) / timeToAchieve).setScale(2, RoundingMode.UP)
+    fun calcPlanValue(timeToAchieve: BigDecimal?, resetMax: BigDecimal): BigDecimal? {
+        return if (timeToAchieve == null || timeToAchieve.isZero)
+            null
+        else
+            (resetMax.setScale(2) / timeToAchieve).setScale(2, RoundingMode.UP)
     }
 
     fun shouldSkip(reconciliationSkips: List<ReconciliationSkip>, transactionBlock: TransactionBlock, anchorDateOffset: Long): Boolean {
