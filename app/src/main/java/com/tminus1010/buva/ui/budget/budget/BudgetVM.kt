@@ -34,7 +34,10 @@ class BudgetVM @Inject constructor(
                     *categories.map { category ->
                         listOf(
                             TextVMItem(category.name),
-                            AmountPresentationModel(budgeted.categoryAmounts[category], validation = { budgeted.validation(category) }),
+                            AmountPresentationModel(
+                                bigDecimal = budgeted.categoryAmounts[category],
+                                validation = { budgeted.validation(category) },
+                            ),
                         )
                     }.toTypedArray(),
                 ),
