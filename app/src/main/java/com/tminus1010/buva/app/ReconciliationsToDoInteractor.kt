@@ -35,15 +35,15 @@ class ReconciliationsToDoInteractor @Inject constructor(
                     }
                     .filter { (transactionBlock, reconciliation) ->
                         (reconciliation == null)
-//                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod?.toDisplayStr()} b/c reconciliation") }
-                                && transactionBlock.isFullyImported
+                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod?.toDisplayStr()} b/c reconciliation") }
+//                                && transactionBlock.isFullyImported
 //                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod?.toDisplayStr()} b/c isFullyImported:$it") }
-                                && transactionBlock.spendBlock.isFullyCategorized
+//                                && transactionBlock.spendBlock.isFullyCategorized
 //                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod?.toDisplayStr()} b/c isFullyCategorized:$it") }
-                                && (currentDate.flow.value !in transactionBlock.datePeriod!!)
+//                                && (currentDate.flow.value !in transactionBlock.datePeriod!!)
 //                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod.toDisplayStr()} b/c it's current") }
                                 && (!MiscUtil.shouldSkip(reconciliationSkips, transactionBlock, anchorDateOffset))
-//                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod.toDisplayStr()} b/c it's skipped") }
+                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod?.toDisplayStr()} b/c it's skipped") }
                     }
                     .map { (transactionBlock) ->
                         ReconciliationToDo.PlanZ(transactionBlock)
