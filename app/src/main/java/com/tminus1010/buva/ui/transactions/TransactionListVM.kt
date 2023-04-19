@@ -1,10 +1,13 @@
 package com.tminus1010.buva.ui.transactions
 
 import android.view.View
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.app.TransactionsInteractor
 import com.tminus1010.buva.environment.android_wrapper.ActivityWrapper
+import com.tminus1010.buva.environment.android_wrapper.ParcelableTransactionToBooleanLambdaWrapper
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.view_model_item.ButtonVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.TableViewVMItem
@@ -19,6 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TransactionListVM @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
     private val transactionsInteractor: TransactionsInteractor,
     private val throbberSharedVM: ThrobberSharedVM,
     private val activityWrapper: ActivityWrapper,
@@ -37,9 +41,10 @@ class TransactionListVM @Inject constructor(
     }
 
     // # Private
+    private val transactionFilter = savedStateHandle.get<ParcelableTransactionToBooleanLambdaWrapper>(KEY1)
     private val transactionPresentationModels =
         transactionsInteractor.transactionsAggregate
-            .map { it.transactions.map(::TransactionPresentationModel) }
+            .map { it.transactions.filter { transactionFilter?.lambda?.invoke(it) ?: true }.map(::TransactionPresentationModel) }
             .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
 
     // # Events

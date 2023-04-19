@@ -10,6 +10,7 @@ interface AndroidNavigationWrapper {
     suspend fun navToSetString(s: String): String?
     fun navToFutures()
     fun navToTransactions()
+    fun navToTransactions(transactions: List<Transaction>)
     fun navToHistory()
     fun navToCreateFuture()
     suspend fun navToChooseTransaction(): Transaction?

@@ -3,7 +3,7 @@ package com.tminus1010.buva.ui.transactions
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.android.viewBinding
 import com.tminus1010.buva.databinding.FragTransactionListBinding
@@ -15,7 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class TransactionListFrag : Fragment(R.layout.frag_transaction_list) {
     private val vb by viewBinding(FragTransactionListBinding::bind)
-    private val viewModel by activityViewModels<TransactionListVM>()
+    private val viewModel by viewModels<TransactionListVM>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

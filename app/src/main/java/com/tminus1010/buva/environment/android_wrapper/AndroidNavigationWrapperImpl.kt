@@ -1,8 +1,10 @@
 package com.tminus1010.buva.environment.android_wrapper
 
 import android.annotation.SuppressLint
+import android.os.Bundle
 import androidx.navigation.NavController
 import com.tminus1010.buva.R
+import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.domain.Category
 import com.tminus1010.buva.domain.Transaction
 import com.tminus1010.buva.ui.category_details.CategoryDetailsFrag
@@ -30,6 +32,15 @@ class AndroidNavigationWrapperImpl @Inject constructor() : AndroidNavigationWrap
 
     override fun navToTransactions() = launchOnMainThread {
         nav.navigate(R.id.transactionsFrag)
+    }
+
+    override fun navToTransactions(transactions: List<Transaction>) = launchOnMainThread {
+        nav.navigate(
+            R.id.transactionsFrag,
+            Bundle().apply {
+                putParcelable(KEY1, ParcelableTransactionToBooleanLambdaWrapper { it.id in transactions.map { it.id } })
+            },
+        )
     }
 
     override fun navToHistory() = launchOnMainThread {

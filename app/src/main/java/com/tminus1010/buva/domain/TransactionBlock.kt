@@ -12,7 +12,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class TransactionBlock private constructor(
     val datePeriod: LocalDatePeriod?,
-    private val transactions: List<Transaction>,
+    val transactions: List<Transaction>,
     val isFullyImported: Boolean,
 ) : CategoryAmountsAndTotal.FromTotal(
     transactions.fold(CategoryAmounts()) { acc, transaction -> acc.addTogether(transaction.categoryAmounts) },
