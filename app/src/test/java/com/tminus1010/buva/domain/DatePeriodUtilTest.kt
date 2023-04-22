@@ -1,7 +1,5 @@
 package com.tminus1010.buva.domain
 
-import com.tminus1010.buva.ui.review.review_pie_chart.SelectableDuration
-import com.tminus1010.buva.ui.review.review_pie_chart.UsePeriodType
 import junit.framework.Assert.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.LocalDate

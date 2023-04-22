@@ -1,7 +1,5 @@
 package com.tminus1010.buva.domain
 
-import com.tminus1010.buva.ui.review.review_pie_chart.SelectableDuration
-import com.tminus1010.buva.ui.review.review_pie_chart.UsePeriodType
 import com.tminus1010.tmcommonkotlin.core.extensions.nextOrSame
 import com.tminus1010.tmcommonkotlin.core.extensions.previousOrSame
 import java.time.DayOfWeek
