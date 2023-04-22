@@ -22,7 +22,7 @@ class MoneyEditText @JvmOverloads constructor(
     override val onEditorActionListener: Observable<Triple<TextView, Int, KeyEvent>> = _onEditorActionListener
 
     init {
-        easyText2 = "0"
+        easyText3 = "0"
         onDone { s ->
             s.toMoneyBigDecimal().toString()
                 .also { if (it != s) setText(it) }

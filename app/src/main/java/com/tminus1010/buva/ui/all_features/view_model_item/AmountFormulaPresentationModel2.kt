@@ -1,7 +1,7 @@
 package com.tminus1010.buva.ui.all_features.view_model_item
 
 import android.content.Context
-import com.tminus1010.buva.all_layers.extensions.easyText2
+import com.tminus1010.buva.all_layers.extensions.easyText3
 import com.tminus1010.tmcommonkotlin.customviews.IViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipe3
 import com.tminus1010.buva.databinding.ItemAmountFormulaBinding
@@ -17,7 +17,7 @@ data class AmountFormulaPresentationModel2(
     fun bind(vb: ItemAmountFormulaBinding) {
         vb.root.isEnabled = false
         vb.moneyEditText.isEnabled = false
-        vb.moneyEditText.bind(amountFormula) { easyText2 = it.toDisplayStr() }
+        vb.moneyEditText.bind(amountFormula) { easyText3 = it.toDisplayStr() }
         vb.tvPercentage.bind(amountFormula) { easyVisibility = it is AmountFormula.Percentage }
     }
 
