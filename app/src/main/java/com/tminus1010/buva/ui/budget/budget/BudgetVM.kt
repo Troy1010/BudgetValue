@@ -3,6 +3,8 @@ package com.tminus1010.buva.ui.budget.budget
 import androidx.lifecycle.ViewModel
 import com.tminus1010.buva.app.BudgetedInteractor
 import com.tminus1010.buva.app.UserCategories
+import com.tminus1010.buva.domain.ReconciliationStrategyGroup
+import com.tminus1010.buva.domain.ResetStrategy
 import com.tminus1010.buva.ui.all_features.view_model_item.AmountPresentationModel
 import com.tminus1010.buva.ui.all_features.view_model_item.DividerVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.TableViewVMItem
@@ -34,8 +36,13 @@ class BudgetVM @Inject constructor(
                     *categories.map { category ->
                         listOf(
                             TextVMItem(category.name),
-                            AmountPresentationModel(
-                                bigDecimal = budgeted.categoryAmounts[category],
+                            TextVMItem(
+                                text1 = when (category.reconciliationStrategyGroup) {
+                                    is ReconciliationStrategyGroup.Reservoir ->
+                                        "${budgeted.categoryAmounts[category]?.toString()} (${(category.reconciliationStrategyGroup.resetStrategy as? ResetStrategy.Basic)?.budgetedMax})"
+                                    else ->
+                                        budgeted.categoryAmounts[category]?.toString()
+                                },
                                 validation = { budgeted.validation(category) },
                             ),
                         )

@@ -5,10 +5,12 @@ import android.widget.TextView
 import com.tminus1010.buva.all_layers.extensions.getColorByAttr
 import com.tminus1010.buva.databinding.ItemHeaderBinding
 import com.tminus1010.buva.databinding.ItemTextViewBinding
-import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
-import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipeFactory
+import com.tminus1010.buva.domain.ValidationResult
+import com.tminus1010.buva.ui.all_features.toColor
 import com.tminus1010.tmcommonkotlin.customviews.IViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipe3
+import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipeFactory
+import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import com.tminus1010.tmcommonkotlin.tuple.Box
 import com.tminus1010.tmcommonkotlin.view.NativeText
 import io.reactivex.rxjava3.core.Observable
@@ -23,14 +25,19 @@ class TextVMItem(
     val menuVMItems: MenuVMItems? = null,
     val backgroundColor: Int? = null,
     val style: Style = Style.ONE,
+    val validation: (String?) -> ValidationResult = { ValidationResult.Success },
 ) : ViewItemRecipeFactory {
     enum class Style { ONE, TWO, HEADER }
 
     fun bind(textView: TextView) {
+        fun setColor() {
+            textView.setTextColor(validation(textView.text?.toString()).toColor(textView.context))
+        }
         textView.text = text1
-        text2?.also { textView.bind(text2) { text = it.first } }
-        text3?.also { textView.bind(text3) { text = it } }
-        text4?.also { textView.bind(text4) { text = it?.toCharSequence(this.context) } }
+        setColor()
+        text2?.also { textView.bind(text2) { text = it.first; setColor() } }
+        text3?.also { textView.bind(text3) { text = it; setColor() } }
+        text4?.also { textView.bind(text4) { text = it?.toCharSequence(this.context); setColor() } }
         textView.setOnClickListener { onClick?.invoke() }
         menuVMItems?.bind(textView)
         backgroundColor?.also { textView.setBackgroundColor(textView.context.theme.getColorByAttr(backgroundColor)) }
