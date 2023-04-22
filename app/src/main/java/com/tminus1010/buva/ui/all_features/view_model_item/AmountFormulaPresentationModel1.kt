@@ -2,7 +2,7 @@ package com.tminus1010.buva.ui.all_features.view_model_item
 
 import android.content.Context
 import androidx.lifecycle.LiveData
-import com.tminus1010.buva.all_layers.extensions.easyText3
+import com.tminus1010.buva.all_layers.extensions.easyText
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.buva.databinding.ItemAmountFormulaBinding
 import com.tminus1010.buva.domain.AmountFormula
@@ -35,7 +35,7 @@ data class AmountFormulaPresentationModel1(
     }
 
     fun bind(vb: ItemAmountFormulaBinding) {
-        vb.moneyEditText.bind(amountFormula) { easyText3 = it.toDisplayStr() }
+        vb.moneyEditText.bind(amountFormula) { easyText = it.toDisplayStr() }
         vb.tvPercentage.bind(amountFormula) { easyVisibility = it is AmountFormula.Percentage }
         vb.moneyEditText.onDone { userSetValue(it) }
         vb.root.bind(amountFormula) { amountFormula ->

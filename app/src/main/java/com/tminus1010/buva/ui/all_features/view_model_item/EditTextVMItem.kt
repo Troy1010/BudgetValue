@@ -3,7 +3,7 @@ package com.tminus1010.buva.ui.all_features.view_model_item
 import android.content.Context
 import android.widget.EditText
 import com.tminus1010.buva.all_layers.android.onDone
-import com.tminus1010.buva.all_layers.extensions.easyText3
+import com.tminus1010.buva.all_layers.extensions.easyText
 import com.tminus1010.buva.databinding.ItemEditTextBinding
 import com.tminus1010.buva.domain.ValidationResult
 import com.tminus1010.buva.ui.all_features.extensions.toColor
@@ -24,10 +24,10 @@ class EditTextVMItem(
     fun bind(editText: EditText) {
         fun setColor() {
             if (validation != null)
-                editText.setTextColor(validation!!(editText.easyText3?.toString()).toColor(editText.context))
+                editText.setTextColor(validation!!(editText.easyText?.toString()).toColor(editText.context))
         }
         editText.hint = hint
-        editText.easyText3 = text
+        editText.easyText = text
         setColor()
         textFlow?.also { editText.bind(textFlow) { if (text.toString() != it) setText(it); setColor() } }
         editText.onDone { onDone(it); setColor() }

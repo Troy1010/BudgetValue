@@ -1,12 +1,10 @@
 package com.tminus1010.buva.ui.all_features.view_model_item
 
 import android.content.Context
-import android.widget.EditText
-import com.tminus1010.buva.all_layers.extensions.easyText3
+import com.tminus1010.buva.all_layers.extensions.easyText
 import com.tminus1010.buva.all_layers.extensions.toMoneyBigDecimal
 import com.tminus1010.buva.data.AccountsRepo
 import com.tminus1010.buva.databinding.ItemAccountBinding
-import com.tminus1010.buva.databinding.ItemMoneyEditTextBinding
 import com.tminus1010.buva.domain.Account
 import com.tminus1010.buva.all_layers.android.onDone
 import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipeFactory
@@ -34,10 +32,10 @@ class AccountPresentationModel(
 
     // # State
     fun bind(vb: ItemAccountBinding) {
-        vb.edittextName.easyText3 = account.name
+        vb.edittextName.easyText = account.name
         vb.edittextName.onDone(::userSetTitle)
         MenuVMItems(MenuVMItem("Delete", ::userDeleteAccount)).bind(vb.edittextName)
-        vb.edittextAmount.easyText3 = account.amount.toString()
+        vb.edittextAmount.easyText = account.amount.toString()
         vb.edittextAmount.onDone(::userSetAmount)
         MenuVMItems(MenuVMItem("Delete", ::userDeleteAccount)).bind(vb.edittextAmount)
     }
