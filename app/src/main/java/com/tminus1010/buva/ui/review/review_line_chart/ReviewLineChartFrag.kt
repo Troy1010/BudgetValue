@@ -5,17 +5,17 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.tminus1010.buva.R
-import com.tminus1010.buva.databinding.FragReviewTotalLineChartBinding
+import com.tminus1010.buva.databinding.FragReviewLineChartBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ReviewTotalLineChartFrag : Fragment(R.layout.frag_review_total_line_chart) {
-    lateinit var vb: FragReviewTotalLineChartBinding
-    val reviewTotalLineChartVM by viewModels<ReviewTotalLineChartVM>()
+class ReviewLineChartFrag : Fragment(R.layout.frag_review_line_chart) {
+    lateinit var vb: FragReviewLineChartBinding
+    val reviewLineChartVM by viewModels<ReviewLineChartVM>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        vb = FragReviewTotalLineChartBinding.bind(view)
-        reviewTotalLineChartVM.lineChartVMItem.bind(vb.lineChart1)
+        vb = FragReviewLineChartBinding.bind(view)
+        reviewLineChartVM.lineChartVMItem.bind(vb.lineChart1)
     }
 }

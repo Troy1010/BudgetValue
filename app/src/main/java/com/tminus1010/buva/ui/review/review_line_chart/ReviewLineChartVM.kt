@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @HiltViewModel
-class ReviewTotalLineChartVM @Inject constructor(
+class ReviewLineChartVM @Inject constructor(
     transactionsInteractor: TransactionsInteractor,
     accountsRepo: AccountsRepo,
     reconciliationsRepo: ReconciliationsRepo,
