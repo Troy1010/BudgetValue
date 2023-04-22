@@ -5,6 +5,7 @@ import com.tminus1010.buva.app.BudgetedInteractor
 import com.tminus1010.buva.app.UserCategories
 import com.tminus1010.buva.domain.ReconciliationStrategyGroup
 import com.tminus1010.buva.domain.ResetStrategy
+import com.tminus1010.buva.ui.all_features.extensions.toMoneyDisplayStr
 import com.tminus1010.buva.ui.all_features.view_model_item.AmountPresentationModel
 import com.tminus1010.buva.ui.all_features.view_model_item.DividerVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.TableViewVMItem
@@ -39,9 +40,9 @@ class BudgetVM @Inject constructor(
                             TextVMItem(
                                 text1 = when (category.reconciliationStrategyGroup) {
                                     is ReconciliationStrategyGroup.Reservoir ->
-                                        "${budgeted.categoryAmounts[category]?.toString()} (${(category.reconciliationStrategyGroup.resetStrategy as? ResetStrategy.Basic)?.budgetedMax})"
+                                        "${budgeted.categoryAmounts[category].toMoneyDisplayStr()} (${(category.reconciliationStrategyGroup.resetStrategy as? ResetStrategy.Basic)?.budgetedMax})"
                                     else ->
-                                        budgeted.categoryAmounts[category]?.toString()
+                                        budgeted.categoryAmounts[category].toMoneyDisplayStr()
                                 },
                                 validation = { budgeted.validation(category) },
                             ),

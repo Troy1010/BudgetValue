@@ -1,6 +1,7 @@
 package com.tminus1010.buva.domain
 
 import android.os.Parcelable
+import com.tminus1010.buva.ui.all_features.extensions.toMoneyDisplayStr
 import kotlinx.parcelize.Parcelize
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -11,15 +12,15 @@ import java.math.RoundingMode
 sealed class AmountFormula : Parcelable {
     abstract fun calcAmount(total: BigDecimal): BigDecimal
     abstract fun isZero(): Boolean
-    abstract fun toDisplayStr(): String
+    abstract fun toDisplayStr(): String?
     abstract fun toDisplayStr2(): String
 
     @Parcelize
     data class Value(val amount: BigDecimal) : AmountFormula() {
         override fun calcAmount(total: BigDecimal) = amount
         override fun isZero() = amount.compareTo(BigDecimal.ZERO) == 0
-        override fun toDisplayStr() = amount.toString()
-        override fun toDisplayStr2() = "$${amount}"
+        override fun toDisplayStr() = amount.toMoneyDisplayStr()
+        override fun toDisplayStr2() = "$${amount.toMoneyDisplayStr()}"
     }
 
     @Parcelize

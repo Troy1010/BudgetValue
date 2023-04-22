@@ -13,6 +13,7 @@ import com.tminus1010.buva.data.CategoryRepo
 import com.tminus1010.buva.domain.*
 import com.tminus1010.buva.ui.all_features.Navigator
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
+import com.tminus1010.buva.ui.all_features.extensions.toMoneyDisplayStr
 import com.tminus1010.buva.ui.all_features.view_model_item.*
 import com.tminus1010.tmcommonkotlin.core.extensions.reflectXY
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.use
@@ -129,11 +130,11 @@ class PlanVM @Inject constructor(
                         ),
                         listOf(
                             TextVMItem(text1 = "Plan", style = TextVMItem.Style.HEADER),
-                            MoneyEditVMItem(text2 = activePlanRepo.activePlan.map { it.total.toString() }, onDone = { userSaveExpectedIncome(it) }),
+                            MoneyEditVMItem(text2 = activePlanRepo.activePlan.map { it.total.toMoneyDisplayStr() }, onDone = { userSaveExpectedIncome(it) }),
                             TextVMItem(text3 = activePlanRepo.activePlan.map { it.defaultAmount.toString() }),
                             *categoryAmountItemObservablesRedefined.map { (category, amount) ->
                                 MoneyEditVMItem(
-                                    text2 = amount.map { it.toString() },
+                                    text2 = amount.map { it.toMoneyDisplayStr() },
                                     onDone = { userSaveActivePlanCA(category, it) },
                                     menuVMItems = MenuVMItems(MenuVMItem("Fill into category", onClick = { userFillIntoCategory(category) }))
                                 )
@@ -155,7 +156,7 @@ class PlanVM @Inject constructor(
                                     is ReconciliationStrategyGroup.Reservoir ->
                                         MoneyEditVMItem(
                                             text1 = when (val x = category.reconciliationStrategyGroup.resetStrategy) {
-                                                is ResetStrategy.Basic -> x.budgetedMax.toString()
+                                                is ResetStrategy.Basic -> x.budgetedMax.toMoneyDisplayStr()
                                             },
                                             onDone = { userSetBudgetMax(category, it) },
                                             validation = { Validate.resetMax(it?.toMoneyBigDecimal()) },
@@ -173,7 +174,7 @@ class PlanVM @Inject constructor(
                                         text1 = MiscUtil.calcTimeToAchieve(
                                             planValue = categoryAmountItemObservablesRedefined[category]!!.value,
                                             resetMax = (category.reconciliationStrategyGroup.resetStrategy as ResetStrategy.Basic).budgetedMax!!
-                                        )?.toString(),
+                                        ).toMoneyDisplayStr(),
                                         onDone = { userSetTimeToAchieve(category, it) },
                                     )
                                 }.getOrElse {
