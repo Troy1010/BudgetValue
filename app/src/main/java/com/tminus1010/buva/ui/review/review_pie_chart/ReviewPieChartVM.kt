@@ -13,6 +13,7 @@ import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.all_layers.extensions.throttleFist
 import com.tminus1010.buva.all_layers.extensions.value
 import com.tminus1010.buva.app.TransactionsInteractor
+import com.tminus1010.buva.data.UsePeriodTypeRepo
 import com.tminus1010.buva.domain.*
 import com.tminus1010.buva.ui.all_features.view_model_item.PieChartVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.SpinnerVMItem
@@ -31,10 +32,10 @@ import javax.inject.Inject
 class ReviewPieChartVM @Inject constructor(
     transactionsInteractor: TransactionsInteractor,
     showToast: ShowToast,
+    usePeriodTypeRepo: UsePeriodTypeRepo,
 ) : ViewModel() {
     // # UserIntents
     val userSelectedDuration = MutableStateFlow(SelectableDuration.BY_6_MONTHS)
-    val userUsePeriodType = MutableStateFlow(UsePeriodType.USE_DAY_COUNT_PERIODS)
     val userPrevious = MutableSharedFlow<Unit>()
     val userNext = MutableSharedFlow<Unit>()
     val userClickDot = MutableSharedFlow<Int>()
@@ -65,7 +66,7 @@ class ReviewPieChartVM @Inject constructor(
             .plus(ColorTemplate.PASTEL_COLORS.toList())
 
     private val period =
-        combine(userSelectedDuration, currentPageNumber, userUsePeriodType, transactionsInteractor.transactionsAggregate.map { it.mostRecentSpend })
+        combine(userSelectedDuration, currentPageNumber, usePeriodTypeRepo.flow, transactionsInteractor.transactionsAggregate.map { it.mostRecentSpend })
         { userSelectedDuration, currentPageNumber, userUsePeriodType, mostRecentSpend ->
             val mostRecentSpendDate = mostRecentSpend?.date ?: throw NoMostRecentSpendException()
             DatePeriodUtil.getPeriod(userSelectedDuration, userUsePeriodType, mostRecentSpendDate, currentPageNumber)
@@ -81,7 +82,7 @@ class ReviewPieChartVM @Inject constructor(
             .shareIn(viewModelScope, SharingStarted.Lazily, 1)
 
     private val periods =
-        combine(userSelectedDuration, userUsePeriodType, transactionsInteractor.transactionsAggregate)
+        combine(userSelectedDuration, usePeriodTypeRepo.flow, transactionsInteractor.transactionsAggregate)
         { userSelectedDuration, userUsePeriodType, transactionsAggregate ->
             val startDate = transactionsAggregate.oldestSpend?.date ?: return@combine listOf()
             val endDate = transactionsAggregate.mostRecentSpend?.date ?: return@combine listOf()
@@ -171,7 +172,7 @@ class ReviewPieChartVM @Inject constructor(
     val selectableDurationSpinnerVMItem =
         SpinnerVMItem(SelectableDuration.values(), userSelectedDuration)
     val usePeriodTypeSpinnerVMItem =
-        SpinnerVMItem(UsePeriodType.values(), userUsePeriodType)
+        SpinnerVMItem(UsePeriodType.values(), usePeriodTypeRepo.flow, usePeriodTypeRepo::set)
     val title =
         period.map { it?.toDisplayStr() ?: "Forever" }
     val leftVisibility =
