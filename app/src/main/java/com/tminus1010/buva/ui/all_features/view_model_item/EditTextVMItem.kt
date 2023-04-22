@@ -6,7 +6,7 @@ import com.tminus1010.buva.all_layers.android.onDone
 import com.tminus1010.buva.all_layers.extensions.easyText3
 import com.tminus1010.buva.databinding.ItemEditTextBinding
 import com.tminus1010.buva.domain.ValidationResult
-import com.tminus1010.buva.ui.all_features.toColor
+import com.tminus1010.buva.ui.all_features.extensions.toColor
 import com.tminus1010.tmcommonkotlin.customviews.IViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipeFactory

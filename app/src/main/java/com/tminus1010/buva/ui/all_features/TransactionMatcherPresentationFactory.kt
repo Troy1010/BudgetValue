@@ -46,7 +46,7 @@ class TransactionMatcherPresentationFactory @Inject constructor() {
                                         onClick = { userNavToChooseTransactionForTransactionMatcher(transactionMatcher) }
                                     ),
                                 )
-                            )
+                            ),
                         )
                     is TransactionMatcher.SearchText ->
                         listOf(
@@ -64,7 +64,7 @@ class TransactionMatcherPresentationFactory @Inject constructor() {
                                         onClick = { userNavToChooseTransactionForTransactionMatcher(transactionMatcher) }
                                     ),
                                 )
-                            )
+                            ),
                         )
                     else -> error("Unhandled type")
                 }

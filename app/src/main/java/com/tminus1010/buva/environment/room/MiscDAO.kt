@@ -1,4 +1,4 @@
-package com.tminus1010.buva.environment.database_or_datastore_or_similar
+package com.tminus1010.buva.environment.room
 
 import androidx.room.*
 import com.tminus1010.buva.domain.*

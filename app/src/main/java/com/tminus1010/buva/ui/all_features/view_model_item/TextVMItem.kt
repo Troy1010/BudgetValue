@@ -6,7 +6,7 @@ import com.tminus1010.buva.all_layers.extensions.getColorByAttr
 import com.tminus1010.buva.databinding.ItemHeaderBinding
 import com.tminus1010.buva.databinding.ItemTextViewBinding
 import com.tminus1010.buva.domain.ValidationResult
-import com.tminus1010.buva.ui.all_features.toColor
+import com.tminus1010.buva.ui.all_features.extensions.toColor
 import com.tminus1010.tmcommonkotlin.customviews.IViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipe3
 import com.tminus1010.tmcommonkotlin.customviews.ViewItemRecipeFactory

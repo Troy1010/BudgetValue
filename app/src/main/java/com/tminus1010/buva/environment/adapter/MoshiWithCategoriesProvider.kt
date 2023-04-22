@@ -3,7 +3,7 @@ package com.tminus1010.buva.environment.adapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.tminus1010.buva.domain.Category
-import com.tminus1010.buva.environment.database_or_datastore_or_similar.UserCategoriesDAO
+import com.tminus1010.buva.environment.room.UserCategoriesDAO
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 

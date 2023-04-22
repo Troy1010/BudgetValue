@@ -7,8 +7,8 @@ import androidx.room.Room
 import com.tminus1010.buva.core_testing.shared.FakeDataStore
 import com.tminus1010.buva.core_testing.app
 import com.tminus1010.buva.environment.EnvironmentModule
-import com.tminus1010.buva.environment.database_or_datastore_or_similar.CategoryDatabase
-import com.tminus1010.buva.environment.database_or_datastore_or_similar.MiscDatabase
+import com.tminus1010.buva.environment.room.CategoryDatabase
+import com.tminus1010.buva.environment.room.MiscDatabase
 import com.tminus1010.buva.environment.adapter.RoomWithCategoriesTypeConverter
 import dagger.Module
 import dagger.Provides
