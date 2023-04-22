@@ -18,7 +18,7 @@ fun <T, X> Flow<T>.redoWhen(signal: Flow<X>) =
  *
  * It is very similar to .stateIn(), except it doesn't mess with your ability to use .first(). It will only give the default value if it was null otherwise.
  */
-fun <T> Flow<T?>.easyShareIn(scope: CoroutineScope, started: SharingStarted, defaultValue: T): Flow<T> {
+fun <T> Flow<T?>.easyShareIn(scope: CoroutineScope, started: SharingStarted, defaultValue: T): SharedFlow<T> {
     return map { it ?: defaultValue }.distinctUntilChanged().shareIn(scope, started, 1)
 }
 
