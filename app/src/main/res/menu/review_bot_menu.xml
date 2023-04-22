@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/spendPieChart"
-        android:title="Spend Pie" />
+        android:title="Pie" />
     <item
         android:id="@+id/spendBarChart"
         android:title="Spends" />
     <item
         android:id="@+id/totalLineChart"
-        android:title="Totals" />
+        android:title="Line" />
     <item
         android:id="@+id/history"
         android:title="History" />
