@@ -4,9 +4,6 @@
         android:id="@+id/spendPieChart"
         android:title="Pie" />
     <item
-        android:id="@+id/spendBarChart"
-        android:title="Spends" />
-    <item
         android:id="@+id/totalLineChart"
         android:title="Line" />
     <item

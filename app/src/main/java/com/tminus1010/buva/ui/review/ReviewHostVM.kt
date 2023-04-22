@@ -7,7 +7,6 @@ import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.data.SelectedReviewHostPage
 import com.tminus1010.buva.ui.review.history.HistoryFrag
 import com.tminus1010.buva.ui.review.review_pie_chart.ReviewPieChartFrag
-import com.tminus1010.buva.ui.review.review_spend_bar_chart.ReviewSpendBarChartFrag
 import com.tminus1010.buva.ui.review_spend_bar_chart.ReviewTotalLineChartFrag
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
@@ -38,9 +37,6 @@ class ReviewHostVM @Inject constructor(
                 }
                 R.id.history -> {
                     { HistoryFrag() }
-                }
-                R.id.spendBarChart -> {
-                    { ReviewSpendBarChartFrag() }
                 }
                 R.id.totalLineChart -> {
                     { ReviewTotalLineChartFrag() }

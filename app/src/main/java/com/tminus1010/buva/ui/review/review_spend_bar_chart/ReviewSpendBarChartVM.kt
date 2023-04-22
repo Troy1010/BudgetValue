@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import kotlin.math.absoluteValue
 
+// TODO: This is no loner used, should probably delete.
 @HiltViewModel
 class ReviewSpendBarChartVM @Inject constructor(
     transactionsInteractor: TransactionsInteractor,

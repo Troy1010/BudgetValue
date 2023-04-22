@@ -8,6 +8,7 @@ import com.tminus1010.buva.R
 import com.tminus1010.buva.databinding.FragReviewSpendBarChartBinding
 import dagger.hilt.android.AndroidEntryPoint
 
+// TODO: This is no loner used, should probably delete.
 @AndroidEntryPoint
 class ReviewSpendBarChartFrag : Fragment(R.layout.frag_review_spend_bar_chart) {
     lateinit var vb: FragReviewSpendBarChartBinding
