@@ -10,3 +10,10 @@ fun BigDecimal?.toMoneyDisplayStr() =
         this.setScale(0, RoundingMode.DOWN).easyEquals(this) -> this.setScale(0).toPlainString()
         else -> this.toPlainString()
     }
+
+@JvmName("toMoneyDisplayStrNonNull")
+fun BigDecimal.toMoneyDisplayStr() =
+    when {
+        this.setScale(0, RoundingMode.DOWN).easyEquals(this) -> this.setScale(0).toPlainString()
+        else -> this.toPlainString()
+    }
