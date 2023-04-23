@@ -41,6 +41,10 @@ class ReviewLineChartVM @Inject constructor(
                                 Color.GREEN,
                                 it.incomeBlock.total.toFloat().absoluteValue
                             ),
+                            createTuple(
+                                Color.MAGENTA,
+                                it.total.toFloat()
+                            ),
                         ),
                     )
                 }
