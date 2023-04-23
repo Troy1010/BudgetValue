@@ -23,6 +23,7 @@ import com.tminus1010.tmcommonkotlin.coroutines.extensions.divertErrors
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.pairwiseStartNull
 import com.tminus1010.tmcommonkotlin.misc.extensions.sum
+import com.tminus1010.tmcommonkotlin.tuple.createTuple
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import java.math.BigDecimal
@@ -102,12 +103,12 @@ class ReviewPieChartVM @Inject constructor(
     private val pieEntries =
         transactionBlock.map { transactionBlock ->
             val categoryAmountsRedefined =
-                CategoryAmounts(transactionBlock.categoryAmounts.plus(Category("Uncategorized") to transactionBlock.defaultAmount))
+                CategoryAmounts(transactionBlock.categoryAmounts.plus(createTuple(Category("Uncategorized"), transactionBlock.defaultAmount)))
             listOfNotNull(
                 *categoryAmountsRedefined.filter { it.value.abs() >= transactionBlock.total.abs() * BigDecimal(0.03) }
-                    .map { it.value.abs() to PieEntry(it.value.abs().toFloat(), it.key.name) }.toTypedArray(),
+                    .map { createTuple(it.value.abs(), PieEntry(it.value.abs().toFloat(), it.key.name)) }.toTypedArray(),
                 categoryAmountsRedefined.filter { it.value.abs() < transactionBlock.total.abs() * BigDecimal(0.03) }
-                    .let { if (it.isEmpty()) null else it.values.sum().abs() to PieEntry(it.values.sum().abs().toFloat(), "Other") },
+                    .let { if (it.isEmpty()) null else createTuple(it.values.sum().abs(), PieEntry(it.values.sum().abs().toFloat(), "Other")) },
             )
                 .sortedBy { it.first }
                 .map { it.second }
