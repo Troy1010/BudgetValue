@@ -79,6 +79,22 @@ class ReconciliationHostVM @Inject constructor(
         }
     }
 
+    fun userQuickSave() {
+        GlobalScope.launch(
+            block = {
+                when (reconciliationsToDoInteractor.currentReconciliationToDo.first()) {
+                    is ReconciliationToDo.PlanZ -> {
+                        activePlanReconciliationInteractor.quickSave()
+                    }
+                    else -> {
+                        activeAccountsReconciliationInteractor.quickSave()
+                    }
+                }
+            },
+        )
+            .use(throbberSharedVM)
+    }
+
     // # Private
     init {
         // Requirement: Whenever there's a new currentReconiliation, or the user changed something relevant, reset.
@@ -148,9 +164,13 @@ class ReconciliationHostVM @Inject constructor(
                     )
                 else null,
                 ButtonVMItem(
+                    title = "Quick Save",
+                    onClick = ::userQuickSave
+                ),
+                ButtonVMItem(
                     title = "Save",
                     onClick = ::userSave
-                )
+                ),
             )
         }
 }

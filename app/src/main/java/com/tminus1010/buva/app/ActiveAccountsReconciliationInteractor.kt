@@ -8,6 +8,7 @@ import com.tminus1010.buva.data.ActiveReconciliationRepo
 import com.tminus1010.buva.data.ReconciliationsRepo
 import com.tminus1010.buva.domain.*
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -23,6 +24,7 @@ class ActiveAccountsReconciliationInteractor @Inject constructor(
     private val accountsRepo: AccountsRepo,
     private val transactionsInteractor: TransactionsInteractor,
     private val historyInteractor: HistoryInteractor,
+    private val userCategories: UserCategories,
 ) {
     suspend fun fillIntoCategory(category: Category) {
         val activeReconciliationCAs = activeReconciliationRepo.activeReconciliationCAs.first()
@@ -31,6 +33,20 @@ class ActiveAccountsReconciliationInteractor @Inject constructor(
             category = category,
             amount = activeReconciliationCAs.calcCategoryAmountToGetTargetDefaultAmount(category, targetDefaultAmount),
         )
+    }
+
+    // TODO: Remove delays
+    suspend fun quickSave() {
+        reset()
+        delay(1000)
+        resolve()
+        delay(1000)
+        when (val x = userCategories.firstUnlimited.first()) {
+            null -> Unit
+            else -> fillIntoCategory(x)
+        }
+        delay(1000)
+        save()
     }
 
     suspend fun save() {
