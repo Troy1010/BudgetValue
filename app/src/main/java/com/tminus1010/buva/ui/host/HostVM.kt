@@ -81,10 +81,6 @@ class HostVM @Inject constructor(
     val topMenuVMItems =
         MenuVMItems(
             MenuVMItem(
-                title = "History",
-                onClick = { navigator.navToHistory(); unCheckAllMenuItems.onNext() },
-            ),
-            MenuVMItem(
                 title = "Transactions",
                 onClick = { navigator.navToTransactions(); unCheckAllMenuItems.onNext() },
             ),
