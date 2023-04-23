@@ -30,7 +30,7 @@ class ReviewLineChartVM @Inject constructor(
                         it.datePeriod!!.startDate.toDisplayStr(),
                         listOf(
                             createTuple(
-                                Color.BLUE,
+                                Color.CYAN,
                                 MiscUtil.guessAccountsTotalInPast(it.datePeriod.endDate, accountsRepo.accountsAggregate.first(), transactionsInteractor.transactionBlocks.first(), reconciliationsRepo.reconciliations.first()).toFloat()
                             ),
                             createTuple(
@@ -41,10 +41,10 @@ class ReviewLineChartVM @Inject constructor(
                                 Color.GREEN,
                                 it.incomeBlock.total.toFloat().absoluteValue
                             ),
-                            createTuple(
-                                Color.MAGENTA,
-                                it.total.toFloat()
-                            ),
+//                            createTuple(
+//                                Color.MAGENTA,
+//                                it.total.toFloat()
+//                            ),
                         ),
                     )
                 }
