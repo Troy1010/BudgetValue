@@ -6,7 +6,7 @@ import java.math.RoundingMode
 
 fun BigDecimal?.toMoneyDisplayStr() =
     when {
-        this == null -> null
+        this == null -> BigDecimal.ZERO.toPlainString()
         this.setScale(0, RoundingMode.DOWN).easyEquals(this) -> this.setScale(0).toPlainString()
         else -> this.toPlainString()
     }
