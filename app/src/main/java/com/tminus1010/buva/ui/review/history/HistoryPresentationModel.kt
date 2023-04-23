@@ -1,5 +1,6 @@
 package com.tminus1010.buva.ui.review.history
 
+import com.tminus1010.buva.all_layers.extensions.isZero
 import com.tminus1010.buva.data.CurrentDatePeriod
 import com.tminus1010.buva.data.ReconciliationsRepo
 import com.tminus1010.buva.domain.*
@@ -37,7 +38,13 @@ sealed class HistoryPresentationModel {
 
     class ReconciliationPresentationModel(reconciliation: Reconciliation, reconciliationsRepo: ReconciliationsRepo, throbberSharedVM: ThrobberSharedVM) : HistoryPresentationModel() {
         override val accountsTotal: Flow<NativeText?> = flowOf(null)
-        override val difference: Flow<NativeText?> = flowOf(NativeText.Simple(reconciliation.total.toMoneyDisplayStr()))
+        override val difference: Flow<NativeText?> =
+            flowOf(
+                if (reconciliation.total.isZero)
+                    null
+                else
+                    NativeText.Simple(reconciliation.total.toMoneyDisplayStr())
+            )
         override val incomeTotal: Flow<NativeText?> = flowOf(null)
         override val spendTotal: Flow<NativeText?> = flowOf(null)
         override val default: Flow<NativeText?> = flowOf(NativeText.Simple(reconciliation.defaultAmount.toMoneyDisplayStr()))
