@@ -29,6 +29,7 @@ class ReviewLineChartVM @Inject constructor(
                         listOf(
                             MiscUtil.guessAccountsTotalInPast(it.datePeriod.endDate, accountsRepo.accountsAggregate.first(), transactionsInteractor.transactionBlocks.first(), reconciliationsRepo.reconciliations.first()).toFloat(),
                             it.spendBlock.total.toFloat().absoluteValue,
+                            it.incomeBlock.total.toFloat().absoluteValue,
                         ),
                     )
                 }
