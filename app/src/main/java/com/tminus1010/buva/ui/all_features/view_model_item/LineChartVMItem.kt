@@ -32,8 +32,8 @@ class LineChartVMItem(
                 LineData(
                     (0..(mapLabelToValues.values.maxByOrNull { it.count() }?.count()?.minus(1) ?: 0)).map { j ->
                         LineDataSet(
-                            mapLabelToValues.withIndex().associate { it.key.index to it.value[j] }.map { (i, v) ->
-                                Entry(i.toFloat(), v)
+                            mapLabelToValues.withIndex().associate { it.key.index to it.value.getOrNull(j) }.mapNotNull { (i, v) ->
+                                v?.let { Entry(i.toFloat(), v) }
                             },
                             "label$j",
                         ).apply {
