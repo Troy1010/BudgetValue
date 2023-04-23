@@ -22,15 +22,18 @@ class ReviewLineChartVM @Inject constructor(
         transactionsInteractor.transactionBlocks.map { transactionBlocks ->
             transactionBlocks
                 .sortedBy { it.datePeriod?.startDate }
-                .map {
+                .associate {
                     Pair(
-                        MiscUtil.guessAccountsTotalInPast(it.datePeriod!!.endDate, accountsRepo.accountsAggregate.first(), transactionsInteractor.transactionBlocks.first(), reconciliationsRepo.reconciliations.first()).toFloat(),
-                        it.datePeriod.startDate.toDisplayStr(),
+                        it.datePeriod!!.startDate.toDisplayStr(),
+                        listOf(
+                            MiscUtil.guessAccountsTotalInPast(it.datePeriod.endDate, accountsRepo.accountsAggregate.first(), transactionsInteractor.transactionBlocks.first(), reconciliationsRepo.reconciliations.first()).toFloat(),
+                            it.spendBlock.total.toFloat(),
+                        ),
                     )
                 }
         }
     val lineChartVMItem =
         LineChartVMItem(
-            valuesAndLabels = valuesAndLabels,
+            mapLabelToValues = valuesAndLabels,
         )
 }
