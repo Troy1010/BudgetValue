@@ -40,7 +40,7 @@ class BudgetVM @Inject constructor(
                             TextVMItem(
                                 text1 = when (category.reconciliationStrategyGroup) {
                                     is ReconciliationStrategyGroup.Reservoir ->
-                                        "${budgeted.categoryAmounts[category].toMoneyDisplayStr()} (${(category.reconciliationStrategyGroup.resetStrategy as? ResetStrategy.Basic)?.budgetedMax})"
+                                        "${budgeted.categoryAmounts[category].toMoneyDisplayStr()}    (${(category.reconciliationStrategyGroup.resetStrategy as? ResetStrategy.Basic)?.budgetedMax})"
                                     else ->
                                         budgeted.categoryAmounts[category].toMoneyDisplayStr()
                                 },
