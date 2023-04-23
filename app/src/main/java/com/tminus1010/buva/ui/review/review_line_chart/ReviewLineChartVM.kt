@@ -19,7 +19,7 @@ class ReviewLineChartVM @Inject constructor(
     accountsRepo: AccountsRepo,
     reconciliationsRepo: ReconciliationsRepo,
 ) : ViewModel() {
-    private val valuesAndLabels =
+    private val mapLabelToValues =
         transactionsInteractor.transactionBlocks.map { transactionBlocks ->
             transactionBlocks
                 .sortedBy { it.datePeriod?.startDate }
@@ -35,6 +35,6 @@ class ReviewLineChartVM @Inject constructor(
         }
     val lineChartVMItem =
         LineChartVMItem(
-            mapLabelToValues = valuesAndLabels,
+            mapLabelToValues = mapLabelToValues,
         )
 }
