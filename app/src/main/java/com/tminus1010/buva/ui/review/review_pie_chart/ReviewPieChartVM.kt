@@ -8,7 +8,6 @@ import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import com.github.mikephil.charting.utils.ColorTemplate
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.all_layers.extensions.throttleFist
 import com.tminus1010.buva.all_layers.extensions.value
@@ -16,6 +15,7 @@ import com.tminus1010.buva.app.TransactionsInteractor
 import com.tminus1010.buva.data.SelectableDurationRepo
 import com.tminus1010.buva.data.UsePeriodTypeRepo
 import com.tminus1010.buva.domain.*
+import com.tminus1010.buva.ui.all_features.ColorSet
 import com.tminus1010.buva.ui.all_features.view_model_item.PieChartVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.SpinnerVMItem
 import com.tminus1010.tmcommonkotlin.androidx.ShowToast
@@ -59,12 +59,6 @@ class ReviewPieChartVM @Inject constructor(
         }
             .distinctUntilChanged()
             .shareIn(viewModelScope, SharingStarted.Lazily, 1)
-    private val _colors =
-        listOf<Int>()
-            .plus(ColorTemplate.VORDIPLOM_COLORS.toList())
-            .plus(ColorTemplate.JOYFUL_COLORS.toList())
-            .plus(ColorTemplate.COLORFUL_COLORS.toList())
-            .plus(ColorTemplate.PASTEL_COLORS.toList())
 
     private val period =
         combine(selectableDurationRepo.flow, currentPageNumber, usePeriodTypeRepo.flow, transactionsInteractor.transactionsAggregate.map { it.mostRecentSpend })
@@ -128,7 +122,7 @@ class ReviewPieChartVM @Inject constructor(
                 setDrawValues(false)
                 sliceSpace = 1f
                 selectionShift = 2f
-                colors = _colors
+                colors = ColorSet.one
             }
         }
 
