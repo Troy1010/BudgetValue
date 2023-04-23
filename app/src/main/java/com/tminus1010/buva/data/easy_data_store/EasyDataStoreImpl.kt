@@ -18,7 +18,7 @@ class EasyDataStoreImpl<T>(
     clazz: Class<T>,
 ) : EasyDataStore<T> {
     private val adapter = moshi.adapter(clazz)
-    private val key = stringPreferencesKey(javaClass.name)
+    private val key = stringPreferencesKey(Throwable().stackTrace[2].className)
 
     override val flow =
         dataStore.data
