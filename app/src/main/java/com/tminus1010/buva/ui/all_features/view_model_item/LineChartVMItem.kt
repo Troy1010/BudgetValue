@@ -14,7 +14,7 @@ import com.tminus1010.tmcommonkotlin.customviews.extensions.bind
 import kotlinx.coroutines.flow.Flow
 
 class LineChartVMItem(
-    private val mapLabelToValues: Flow<Map<String, List<Float>>>,
+    private val mapLabelToValues: Flow<Map<String, List<Pair<Int, Float>>>>,
     private val description: Description? = null,
     private val isLegendEnabled: Boolean = false,
     private val textColor: Int = Color.WHITE,
@@ -33,11 +33,12 @@ class LineChartVMItem(
                     (0..(mapLabelToValues.values.maxByOrNull { it.count() }?.count()?.minus(1) ?: 0)).map { j ->
                         LineDataSet(
                             mapLabelToValues.withIndex().associate { it.key.index to it.value.getOrNull(j) }.mapNotNull { (i, v) ->
-                                v?.let { Entry(i.toFloat(), v) }
+                                v?.let { Entry(i.toFloat(), v.second) }
                             },
                             "label$j",
                         ).apply {
                             valueTextColor = textColor
+                            color = mapLabelToValues.values.maxByOrNull { it.count() }?.get(j)?.first ?: Color.WHITE
                         }
                     }
                 )
