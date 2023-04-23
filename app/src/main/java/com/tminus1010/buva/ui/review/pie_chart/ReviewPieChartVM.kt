@@ -97,18 +97,22 @@ class ReviewPieChartVM @Inject constructor(
             )
         }
 
+    companion object {
+        private val otherColor = ColorSet.next()
+    }
+
     /**
      * A [PieEntry] represents 1 chunk of the pie, but without everything it needs, like color.
      */
-    private val pieEntries =
+    private val pieEntriesAndColors =
         transactionBlock.map { transactionBlock ->
             val categoryAmountsRedefined =
                 CategoryAmounts(transactionBlock.categoryAmounts.plus(createTuple(Category("Uncategorized"), transactionBlock.defaultAmount)))
             listOfNotNull(
                 *categoryAmountsRedefined.filter { it.value.abs() >= transactionBlock.total.abs() * BigDecimal(0.03) }
-                    .map { createTuple(it.value.abs(), PieEntry(it.value.abs().toFloat(), it.key.name)) }.toTypedArray(),
+                    .map { createTuple(it.value.abs(), createTuple(PieEntry(it.value.abs().toFloat(), it.key.name), it.key.color)) }.toTypedArray(),
                 categoryAmountsRedefined.filter { it.value.abs() < transactionBlock.total.abs() * BigDecimal(0.03) }
-                    .let { if (it.isEmpty()) null else createTuple(it.values.sum().abs(), PieEntry(it.values.sum().abs().toFloat(), "Other")) },
+                    .let { if (it.isEmpty()) null else createTuple(it.values.sum().abs(), createTuple(PieEntry(it.values.sum().abs().toFloat(), "Other"), otherColor)) },
             )
                 .sortedBy { it.first }
                 .map { it.second }
@@ -118,12 +122,14 @@ class ReviewPieChartVM @Inject constructor(
      * [PieDataSet] is a list of [PieEntry], combined with other information relevant to the entire list, like colors.
      */
     private val pieDataSet =
-        pieEntries.map { pieEntries ->
+        pieEntriesAndColors.map { pieEntriesAndColors ->
+            val pieEntries = pieEntriesAndColors.map { it.first }
+            val colors = pieEntriesAndColors.map { it.second }
             PieDataSet(pieEntries, null).apply {
                 setDrawValues(false)
                 sliceSpace = 1f
                 selectionShift = 2f
-                colors = ColorSet.one
+                this.colors = colors
             }
         }
 

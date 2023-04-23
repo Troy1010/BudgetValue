@@ -4,6 +4,7 @@ import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import com.tminus1010.buva.ui.all_features.ColorSet
 import com.tminus1010.tmcommonkotlin.tuple.createTuple
 import kotlinx.parcelize.Parcelize
 import java.math.BigDecimal
@@ -50,6 +51,9 @@ data class Category(
         result = 31 * result + reconciliationStrategyGroup.hashCode()
         return result
     }
+
+    @Ignore
+    val color = ColorSet.next()
 
     companion object {
         val DEFAULT = Category("Default", AmountFormula.Value(BigDecimal.ZERO), true)
