@@ -11,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import kotlin.math.absoluteValue
 
 @HiltViewModel
 class ReviewLineChartVM @Inject constructor(
@@ -27,7 +28,7 @@ class ReviewLineChartVM @Inject constructor(
                         it.datePeriod!!.startDate.toDisplayStr(),
                         listOf(
                             MiscUtil.guessAccountsTotalInPast(it.datePeriod.endDate, accountsRepo.accountsAggregate.first(), transactionsInteractor.transactionBlocks.first(), reconciliationsRepo.reconciliations.first()).toFloat(),
-                            it.spendBlock.total.toFloat(),
+                            it.spendBlock.total.toFloat().absoluteValue,
                         ),
                     )
                 }
