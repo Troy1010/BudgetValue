@@ -20,7 +20,7 @@ import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItem
 import com.tminus1010.buva.ui.all_features.view_model_item.MenuVMItems
 import com.tminus1010.buva.ui.choose_categories.ChooseCategoriesSharedVM
 import com.tminus1010.buva.ui.errors.Errors
-import com.tminus1010.buva.ui.review.review_pie_chart.NoMostRecentSpendException
+import com.tminus1010.buva.ui.review.pie_chart.NoMostRecentSpendException
 import com.tminus1010.tmcommonkotlin.androidx.ShowToast
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.divertErrors
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe

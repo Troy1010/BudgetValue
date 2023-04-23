@@ -6,7 +6,7 @@ import com.tminus1010.buva.R
 import com.tminus1010.buva.all_layers.KEY1
 import com.tminus1010.buva.data.SelectedReviewHostPage
 import com.tminus1010.buva.ui.review.history.HistoryFrag
-import com.tminus1010.buva.ui.review.review_pie_chart.ReviewPieChartFrag
+import com.tminus1010.buva.ui.review.pie_chart.ReviewPieChartFrag
 import com.tminus1010.buva.ui.review_spend_bar_chart.ReviewLineChartFrag
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
