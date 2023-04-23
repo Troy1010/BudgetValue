@@ -10,10 +10,9 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 
-open class EasyDataStore<T> @Inject constructor(
+open class EasyDataStore<T> constructor(
     private val dataStore: DataStore<Preferences>,
     private val defaultValue: T,
     private val adapter: JsonAdapter<T>,
