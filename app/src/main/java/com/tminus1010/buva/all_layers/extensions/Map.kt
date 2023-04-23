@@ -19,3 +19,7 @@ fun <K, V> Map<K, V>.reliableContains(k: K): Boolean {
     return entries.any { k == it.key }
 }
 
+fun <K, V> Map<K, V>.withIndex(): Map<IndexedValue<K>, V> {
+    return keys.withIndex().zip(values).associate { it }
+}
+
