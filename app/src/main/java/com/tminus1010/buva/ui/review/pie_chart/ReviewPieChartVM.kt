@@ -8,6 +8,7 @@ import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
+import com.tminus1010.buva.all_layers.extensions.isZero
 import com.tminus1010.buva.all_layers.extensions.onNext
 import com.tminus1010.buva.all_layers.extensions.throttleFist
 import com.tminus1010.buva.all_layers.extensions.value
@@ -112,7 +113,7 @@ class ReviewPieChartVM @Inject constructor(
                 *categoryAmountsRedefined.filter { it.value.abs() >= transactionBlock.total.abs() * BigDecimal(0.03) }
                     .map { createTuple(it.value.abs(), createTuple(PieEntry(it.value.abs().toFloat(), it.key.name), it.key.color)) }.toTypedArray(),
                 categoryAmountsRedefined.filter { it.value.abs() < transactionBlock.total.abs() * BigDecimal(0.03) }
-                    .let { if (it.isEmpty()) null else createTuple(it.values.sum().abs(), createTuple(PieEntry(it.values.sum().abs().toFloat(), "Other"), otherColor)) },
+                    .let { if (it.values.sum().isZero) null else createTuple(it.values.sum().abs(), createTuple(PieEntry(it.values.sum().abs().toFloat(), "Other"), otherColor)) },
             )
                 .sortedBy { it.first }
                 .map { it.second }
