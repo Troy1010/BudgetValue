@@ -34,7 +34,7 @@ class ActivePlanReconciliationInteractor @Inject constructor(
         val casAndTotalToPush =
             CategoryAmountsAndTotal.addTogether(
                 activeReconciliationCAsAndTotal.first(),
-                activePlanInteractor.activePlan.first()
+                CategoryAmountsAndTotal.FromTotal(activePlanInteractor.activePlan.first().categoryAmounts, BigDecimal.ZERO),
             )
         reconciliationsRepo.push(
             Reconciliation(
