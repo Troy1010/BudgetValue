@@ -1,4 +1,4 @@
-package com.tminus1010.buva.data
+package com.tminus1010.buva.data.easy_data_store
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -12,21 +12,21 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 
-open class EasyDataStore<T>(
+class EasyDataStoreImpl<T>(
     private val dataStore: DataStore<Preferences>,
     private val defaultValue: T,
     clazz: Class<T>,
-) {
+) : EasyDataStore<T> {
     private val adapter = moshi.adapter(clazz)
     private val key = stringPreferencesKey(javaClass.name)
 
-    val flow =
+    override val flow =
         dataStore.data
             .map { adapter.fromJson(it[key] ?: "null") }
             .easyShareIn(GlobalScope, SharingStarted.Eagerly, defaultValue)
 
-    fun setDefault() = set(defaultValue)
-    fun set(x: T) {
+    override fun setDefault() = set(defaultValue)
+    override fun set(x: T) {
         GlobalScope.launch { dataStore.edit { it[key] = adapter.toJson(x) } }
     }
 }

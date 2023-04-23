@@ -1,14 +1,11 @@
 package com.tminus1010.buva.data
 
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
+import com.tminus1010.buva.data.easy_data_store.EasyDataStore
+import com.tminus1010.buva.data.easy_data_store.EasyDataStoreFactory
+import com.tminus1010.buva.data.easy_data_store.create
 import com.tminus1010.buva.domain.SelectableDuration
 import javax.inject.Inject
 
 class SelectableDurationRepo @Inject constructor(
-    dataStore: DataStore<Preferences>,
-) : EasyDataStore<SelectableDuration>(
-    dataStore,
-    SelectableDuration.BY_MONTH,
-    SelectableDuration::class.java,
-)
+    easyDataStoreFactory: EasyDataStoreFactory,
+) : EasyDataStore<SelectableDuration> by easyDataStoreFactory.create(SelectableDuration.BY_MONTH)
