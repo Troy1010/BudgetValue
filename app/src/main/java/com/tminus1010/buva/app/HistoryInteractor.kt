@@ -2,7 +2,7 @@ package com.tminus1010.buva.app
 
 import com.tminus1010.buva.data.ReconciliationsRepo
 import com.tminus1010.buva.domain.CategoryAmountsAndTotalsAggregate
-import com.tminus1010.tmcommonkotlin.tuple.createTuple
+import com.tminus1010.tmcommonkotlin.tuple.tuple
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -15,7 +15,7 @@ class HistoryInteractor @Inject constructor(
     private val automaticBalanceInteractor: AutomaticBalanceInteractor,
 ) {
     val entireHistory =
-        combine(transactionsInteractor.transactionBlocks, reconciliationsRepo.reconciliations, automaticBalanceInteractor.automaticBalanceReconciliation, ::createTuple)
+        combine(transactionsInteractor.transactionBlocks, reconciliationsRepo.reconciliations, automaticBalanceInteractor.automaticBalanceReconciliation, ::tuple)
             .sample(500)
             .distinctUntilChanged()
             .map { (transactionBlocks, reconciliations, budgetedVsAccountsAutomaticReconciliation) ->

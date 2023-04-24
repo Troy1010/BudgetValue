@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.tminus1010.buva.ui.all_features.ColorSet
-import com.tminus1010.tmcommonkotlin.tuple.createTuple
+import com.tminus1010.tmcommonkotlin.tuple.tuple
 import kotlinx.parcelize.Parcelize
 import java.math.BigDecimal
 
@@ -25,7 +25,7 @@ data class Category(
         return transaction.categorize(this)
     }
 
-    override fun toString() = createTuple(name, "ReconciliationStrategyGroup.${reconciliationStrategyGroup::class.java.simpleName}", (reconciliationStrategyGroup.resetStrategy as? ResetStrategy.Basic)?.budgetedMax).toString() // for logs
+    override fun toString() = tuple(name, "ReconciliationStrategyGroup.${reconciliationStrategyGroup::class.java.simpleName}", (reconciliationStrategyGroup.resetStrategy as? ResetStrategy.Basic)?.budgetedMax).toString() // for logs
 
     @delegate:Ignore
     val displayType by lazy {

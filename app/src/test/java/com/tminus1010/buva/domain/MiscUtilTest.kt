@@ -1,6 +1,6 @@
 package com.tminus1010.buva.domain
 
-import com.tminus1010.tmcommonkotlin.tuple.createTuple
+import com.tminus1010.tmcommonkotlin.tuple.tuple
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
@@ -11,7 +11,7 @@ internal class MiscUtilTest {
     fun isPeriodFullyImported(): List<DynamicTest> {
         // # Given
         return listOf(
-            createTuple(
+            tuple(
                 LocalDatePeriod(startDate = LocalDate.parse("2023-04-05"), endDate = LocalDate.parse("2023-04-18")),
                 listOf(
                     TransactionImportInfo(period = LocalDatePeriod(startDate = LocalDate.parse("2022-07-25"), endDate = LocalDate.parse("2022-09-22")), id = 1),
@@ -21,7 +21,7 @@ internal class MiscUtilTest {
                 ),
                 false,
             ),
-            createTuple(
+            tuple(
                 LocalDatePeriod(startDate = LocalDate.parse("2023-03-22"), endDate = LocalDate.parse("2023-04-04")),
                 listOf(
                     TransactionImportInfo(period = LocalDatePeriod(startDate = LocalDate.parse("2022-07-25"), endDate = LocalDate.parse("2022-09-22")), id = 1),

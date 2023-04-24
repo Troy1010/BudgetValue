@@ -6,7 +6,7 @@ import com.tminus1010.buva.data.ReconciliationsRepo
 import com.tminus1010.buva.data.SettingsRepo
 import com.tminus1010.buva.domain.MiscUtil
 import com.tminus1010.buva.domain.ReconciliationToDo
-import com.tminus1010.tmcommonkotlin.tuple.createTuple
+import com.tminus1010.tmcommonkotlin.tuple.tuple
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
@@ -22,7 +22,7 @@ class ReconciliationsToDoInteractor @Inject constructor(
     accountsRepo: AccountsRepo,
 ) {
     private val planReconciliationsToDo =
-        combine(transactionsInteractor.transactionBlocks, reconciliationsRepo.reconciliations, reconciliationSkipInteractor.reconciliationSkips, settingsRepo.anchorDateOffset, ::createTuple)
+        combine(transactionsInteractor.transactionBlocks, reconciliationsRepo.reconciliations, reconciliationSkipInteractor.reconciliationSkips, settingsRepo.anchorDateOffset, ::tuple)
             .sample(50)
             .distinctUntilChanged()
             .map { (transactionBlocks, reconciliations, reconciliationSkips, anchorDateOffset) ->
@@ -53,7 +53,7 @@ class ReconciliationsToDoInteractor @Inject constructor(
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 
 //    private val accountReconciliationsToDo =
-//        combine(entireHistoryInteractor.categoryAmountsAndTotal, accountsRepo.accountsAggregate, ::createTuple)
+//        combine(entireHistoryInteractor.categoryAmountsAndTotal, accountsRepo.accountsAggregate, ::tuple)
 //            .flatMapLatest { (entireHistory, accountsAggregate) ->
 //                if (entireHistory.total.easyEquals(accountsAggregate.total))
 //                    flowOf(null)

@@ -3,7 +3,7 @@ package com.tminus1010.buva.environment.adapter
 import com.tminus1010.buva.environment.adapter.MoshiProvider.moshi
 import com.tminus1010.tmcommonkotlin.misc.extensions.fromJson
 import com.tminus1010.tmcommonkotlin.misc.extensions.toJson
-import com.tminus1010.tmcommonkotlin.tuple.createTuple
+import com.tminus1010.tmcommonkotlin.tuple.tuple
 import junit.framework.Assert.assertEquals
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
@@ -13,8 +13,8 @@ internal class LocalDateAdapterTest {
     @TestFactory
     fun test(): List<DynamicTest> {
         return listOf(
-            createTuple(LocalDate.parse("2022-01-01")),
-            createTuple<LocalDate?>(null),
+            tuple(LocalDate.parse("2022-01-01")),
+            tuple<LocalDate?>(null),
         )
             .map { (givenLocalDate) ->
                 DynamicTest.dynamicTest("Given localDate:$givenLocalDate") {

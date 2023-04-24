@@ -8,7 +8,7 @@ import com.tminus1010.buva.data.ReconciliationsRepo
 import com.tminus1010.buva.domain.MiscUtil
 import com.tminus1010.buva.ui.all_features.view_model_item.LineChartVMItem
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
-import com.tminus1010.tmcommonkotlin.tuple.createTuple
+import com.tminus1010.tmcommonkotlin.tuple.tuple
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -29,19 +29,19 @@ class ReviewLineChartVM @Inject constructor(
                     Pair(
                         it.datePeriod!!.startDate.toDisplayStr(),
                         listOf(
-                            createTuple(
+                            tuple(
                                 Color.CYAN,
                                 MiscUtil.guessAccountsTotalInPast(it.datePeriod.endDate, accountsRepo.accountsAggregate.first(), transactionsInteractor.transactionBlocks.first(), reconciliationsRepo.reconciliations.first()).toFloat()
                             ),
-                            createTuple(
+                            tuple(
                                 Color.RED,
                                 it.spendBlock.total.toFloat().absoluteValue
                             ),
-                            createTuple(
+                            tuple(
                                 Color.GREEN,
                                 it.incomeBlock.total.toFloat().absoluteValue
                             ),
-//                            createTuple(
+//                            tuple(
 //                                Color.MAGENTA,
 //                                it.total.toFloat()
 //                            ),
