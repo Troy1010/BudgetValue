@@ -27,12 +27,12 @@ internal class GuessPastUtilTest {
                         "2023-1-10".toLocalDate().toPeriod(7),
                         listOf(
                             Transaction(
-                                "2023-01-12".toLocalDate(),
+                                date = "2023-01-12".toLocalDate(),
                                 description = "fakeDescription",
                                 amount = "-60.00".toMoney(),
                                 categoryAmounts = CategoryAmounts(),
                                 categorizationDate = null,
-                                "fakeID"
+                                id = "fakeID"
                             )
                         ),
                         true,
@@ -72,7 +72,7 @@ internal class GuessPastUtilTest {
                 ),
                 listOf(
                     TransactionBlock(
-                        LocalDatePeriod("2023-01-10".toLocalDate(), 7),
+                        "2023-01-10".toLocalDate().toPeriod(7),
                         listOf(
                             Transaction(
                                 date = "2023-01-12".toLocalDate(),
@@ -80,7 +80,7 @@ internal class GuessPastUtilTest {
                                 amount = "-60.00".toMoney(),
                                 categoryAmounts = CategoryAmounts(),
                                 categorizationDate = null,
-                                "fakeID"
+                                id = "fakeID"
                             ).categorize(Given.categoryS)
                         ),
                         true,
