@@ -23,22 +23,6 @@ object MiscUtil {
         return reconciliationSkips.any { it.localDate(anchorDateOffset) in transactionBlock.datePeriod }
     }
 
-    fun guessAccountsTotalInPast(date: LocalDate?, accountsAggregate: AccountsAggregate, transactionBlocks: List<TransactionBlock>, reconciliations: List<Reconciliation>): BigDecimal {
-        return accountsAggregate.total
-            .minus(
-                transactionBlocks
-                    .let { if (date == null) listOf() else it.filter { date <= it.datePeriod!!.endDate } }
-                    .map { it.total }
-                    .sum()
-            )
-            .minus(
-                reconciliations
-                    .let { if (date == null) listOf() else it.filter { date <= it.date } }
-                    .map { it.total }
-                    .sum()
-            )
-    }
-
     fun sumedCategoryAmountsAndTotalToDate(date: LocalDate?, transactionBlocks: List<TransactionBlock>, reconciliations: List<Reconciliation>): CategoryAmountsAndTotal.FromTotal {
         val relevantReconciliations =
             if (date == null)

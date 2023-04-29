@@ -111,7 +111,7 @@ class ActiveAccountsReconciliationInteractor @Inject constructor(
                             categoryAmounts = activeReconciliationCAs,
                             total = when (currentReconciliationToDo) {
                                 is ReconciliationToDo.Accounts ->
-                                    MiscUtil.guessAccountsTotalInPast(currentReconciliationToDo.date, accountsAggregate, transactionBlocks, reconciliations)
+                                    GuessPastUtil.guessAccountsTotalInPast(currentReconciliationToDo.date, accountsAggregate, transactionBlocks, reconciliations)
                                 else -> BigDecimal.ZERO
                             },
                         )

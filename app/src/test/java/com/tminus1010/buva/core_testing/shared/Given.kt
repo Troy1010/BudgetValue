@@ -1,8 +1,7 @@
 package com.tminus1010.buva.core_testing.shared
 
 import com.tminus1010.buva.app.InitApp
-import com.tminus1010.buva.domain.CategoryAmounts
-import com.tminus1010.buva.domain.Transaction
+import com.tminus1010.buva.domain.*
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.math.BigDecimal
@@ -11,6 +10,11 @@ import java.time.LocalDate
 object Given {
     val givenCategories = Observable.just(InitApp.initCategories)
     val categories = InitApp.initCategories
+    val categoryS = Category("Savings", AmountFormula.Value(BigDecimal.ZERO), reconciliationStrategyGroup = ReconciliationStrategyGroup.Unlimited)
+    val category0 = categories.get(0)
+    val category1 = categories.get(1)
+    val category2 = categories.get(2)
+    val category3 = categories.get(3)
 
     //    val givenPlan1 = Plan(
 //        localDatePeriod = Observable.just(LocalDatePeriod(LocalDate.now(), Period.ofWeeks(2))),
@@ -31,7 +35,8 @@ object Given {
         categorizationDate = null,
         id = "eriuhtyuirethgyuidrthu"
     )
-//    val reconciliation1 = Reconciliation(
+
+    //    val reconciliation1 = Reconciliation(
 //        date = LocalDate.of(2020, 1, 2),
 //        defaultAmount = 33.toBigDecimal(),
 //        categoryAmounts = mapOf(

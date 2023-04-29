@@ -19,6 +19,7 @@ data class LocalDatePeriod(
     }
 
     constructor(startDate: LocalDate, period: Period) : this(startDate, startDate.plus(period))
+    constructor(startDate: LocalDate, days: Int) : this(startDate, startDate.plus(Period.ofDays(days)))
 
     @IgnoredOnParcel
     private val period = Period.between(startDate, endDate)

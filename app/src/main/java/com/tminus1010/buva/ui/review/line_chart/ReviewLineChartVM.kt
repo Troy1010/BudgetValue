@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.tminus1010.buva.app.TransactionsInteractor
 import com.tminus1010.buva.data.AccountsRepo
 import com.tminus1010.buva.data.ReconciliationsRepo
+import com.tminus1010.buva.domain.GuessPastUtil
 import com.tminus1010.buva.domain.MiscUtil
 import com.tminus1010.buva.ui.all_features.view_model_item.LineChartVMItem
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
@@ -31,7 +32,7 @@ class ReviewLineChartVM @Inject constructor(
                         listOf(
                             tuple(
                                 Color.CYAN,
-                                MiscUtil.guessAccountsTotalInPast(it.datePeriod.endDate, accountsRepo.accountsAggregate.first(), transactionsInteractor.transactionBlocks.first(), reconciliationsRepo.reconciliations.first()).toFloat()
+                                GuessPastUtil.guessAccountsTotalInPast(it.datePeriod.endDate, accountsRepo.accountsAggregate.first(), transactionsInteractor.transactionBlocks.first(), reconciliationsRepo.reconciliations.first()).toFloat()
                             ),
                             tuple(
                                 Color.RED,

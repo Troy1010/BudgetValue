@@ -53,7 +53,7 @@ data class Category(
     }
 
     @Ignore
-    val color = ColorSet.next()
+    val color = runCatching { ColorSet.next() }.getOrDefault(0) // TODO: Should probably add this to constructor so .next() can be mocked.
 
     companion object {
         val DEFAULT = Category("Default", AmountFormula.Value(BigDecimal.ZERO), true)
