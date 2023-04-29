@@ -14,7 +14,7 @@ internal class GuessPastUtilTest {
         return listOf(
             tuple(
                 "No Transactions",
-                LocalDate.parse("2023-01-01"),
+                "2023-1-1".toLocalDate(),
                 AccountsAggregate(listOf(Account("Account 1", BigDecimal("2000")))),
                 listOf(),
                 listOf(),
@@ -22,11 +22,11 @@ internal class GuessPastUtilTest {
             ),
             tuple(
                 "1 Transaction",
-                LocalDate.parse("2023-01-01"),
+                "2023-1-1".toLocalDate(),
                 AccountsAggregate(listOf(Account("Account 1", BigDecimal("2000")))),
                 listOf(
                     TransactionBlock(
-                        "2023-01-10".toLocalDate().toPeriod(7),
+                        "2023-1-10".toLocalDate().toPeriod(7),
                         listOf(
                             Transaction(
                                 LocalDate.parse("2023-01-12"),
