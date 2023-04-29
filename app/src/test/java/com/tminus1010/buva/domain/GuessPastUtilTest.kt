@@ -5,8 +5,6 @@ import com.tminus1010.tmcommonkotlin.tuple.tuple
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
-import java.math.BigDecimal
-import java.time.LocalDate
 
 internal class GuessPastUtilTest {
     @TestFactory
@@ -15,23 +13,23 @@ internal class GuessPastUtilTest {
             tuple(
                 "No Transactions",
                 "2023-1-1".toLocalDate(),
-                AccountsAggregate(listOf(Account("Account 1", BigDecimal("2000")))),
+                AccountsAggregate(listOf(Account("Account 1", Money("2000")))),
                 listOf(),
                 listOf(),
-                BigDecimal("2000"),
+                Money("2000"),
             ),
             tuple(
                 "1 Transaction",
                 "2023-1-1".toLocalDate(),
-                AccountsAggregate(listOf(Account("Account 1", BigDecimal("2000")))),
+                AccountsAggregate(listOf(Account("Account 1", Money("2000")))),
                 listOf(
                     TransactionBlock(
                         "2023-1-10".toLocalDate().toPeriod(7),
                         listOf(
                             Transaction(
-                                LocalDate.parse("2023-01-12"),
+                                "2023-01-12".toLocalDate(),
                                 description = "fakeDescription",
-                                amount = BigDecimal("-60.00"),
+                                amount = Money("-60.00"),
                                 categoryAmounts = CategoryAmounts(),
                                 categorizationDate = null,
                                 "fakeID"
@@ -59,27 +57,27 @@ internal class GuessPastUtilTest {
             tuple(
                 "No Transactions",
                 Given.categoryS,
-                LocalDate.parse("2023-01-01"),
+                "2023-01-01".toLocalDate(),
                 CategoryAmounts(),
                 listOf<TransactionBlock>(),
                 listOf<Reconciliation>(),
-                BigDecimal("0"),
+                Money("0"),
             ),
             tuple(
                 "1 Transaction",
                 Given.categoryS,
-                LocalDate.parse("2023-01-01"),
-                mapOf(
+                "2023-01-01".toLocalDate(),
+                CategoryAmounts(
                     Given.categoryS to Money("2500"),
-                ).toCategoryAmounts(),
+                ),
                 listOf(
                     TransactionBlock(
-                        LocalDatePeriod(LocalDate.parse("2023-01-10"), 7),
+                        LocalDatePeriod("2023-01-10".toLocalDate(), 7),
                         listOf(
                             Transaction(
-                                date = LocalDate.parse("2023-01-12"),
+                                date = "2023-01-12".toLocalDate(),
                                 description = "fakeDescription",
-                                amount = BigDecimal("-60.00"),
+                                amount = Money("-60.00"),
                                 categoryAmounts = CategoryAmounts(),
                                 categorizationDate = null,
                                 "fakeID"
