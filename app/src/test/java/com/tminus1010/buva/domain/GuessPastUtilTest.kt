@@ -26,7 +26,7 @@ internal class GuessPastUtilTest {
                 AccountsAggregate(listOf(Account("Account 1", BigDecimal("2000")))),
                 listOf(
                     TransactionBlock(
-                        LocalDatePeriod(LocalDate.parse("2023-01-10"), 7),
+                        "2023-01-10".toLocalDate().toPeriod(7),
                         listOf(
                             Transaction(
                                 LocalDate.parse("2023-01-12"),
