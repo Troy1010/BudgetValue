@@ -13,15 +13,15 @@ internal class GuessPastUtilTest {
             tuple(
                 "No Transactions",
                 "2023-1-1".toLocalDate(),
-                AccountsAggregate(listOf(Account("Account 1", Money("2000")))),
+                AccountsAggregate(listOf(Account("Account 1", "2000".toMoney()))),
                 listOf(),
                 listOf(),
-                Money("2000"),
+                "2000".toMoney(),
             ),
             tuple(
                 "1 Transaction",
                 "2023-1-1".toLocalDate(),
-                AccountsAggregate(listOf(Account("Account 1", Money("2000")))),
+                AccountsAggregate(listOf(Account("Account 1", "2000".toMoney()))),
                 listOf(
                     TransactionBlock(
                         "2023-1-10".toLocalDate().toPeriod(7),
@@ -29,7 +29,7 @@ internal class GuessPastUtilTest {
                             Transaction(
                                 "2023-01-12".toLocalDate(),
                                 description = "fakeDescription",
-                                amount = Money("-60.00"),
+                                amount = "-60.00".toMoney(),
                                 categoryAmounts = CategoryAmounts(),
                                 categorizationDate = null,
                                 "fakeID"
@@ -39,7 +39,7 @@ internal class GuessPastUtilTest {
                     )
                 ),
                 listOf<Reconciliation>(),
-                Money("2060"),
+                "2060".toMoney(),
             ),
         ).map { (testName, date, accountsAggregate, transactionBlocks, reconciliations, expected) ->
             DynamicTest.dynamicTest(testName) {
@@ -61,14 +61,14 @@ internal class GuessPastUtilTest {
                 CategoryAmounts(),
                 listOf<TransactionBlock>(),
                 listOf<Reconciliation>(),
-                Money("0"),
+                "0".toMoney(),
             ),
             tuple(
                 "1 Transaction",
                 Given.categoryS,
                 "2023-01-01".toLocalDate(),
                 CategoryAmounts(
-                    Given.categoryS to Money("2500"),
+                    Given.categoryS to "2500".toMoney(),
                 ),
                 listOf(
                     TransactionBlock(
@@ -77,7 +77,7 @@ internal class GuessPastUtilTest {
                             Transaction(
                                 date = "2023-01-12".toLocalDate(),
                                 description = "fakeDescription",
-                                amount = Money("-60.00"),
+                                amount = "-60.00".toMoney(),
                                 categoryAmounts = CategoryAmounts(),
                                 categorizationDate = null,
                                 "fakeID"
@@ -87,7 +87,7 @@ internal class GuessPastUtilTest {
                     )
                 ),
                 listOf(),
-                Money("2560"),
+                "2560".toMoney(),
             ),
         ).map { (testName, category, date, budgetedCAs, transactionBlocks, reconciliations, expected) ->
             DynamicTest.dynamicTest(testName) {
