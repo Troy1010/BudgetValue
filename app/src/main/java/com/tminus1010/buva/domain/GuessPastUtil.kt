@@ -9,13 +9,13 @@ object GuessPastUtil {
         return accountsAggregate.total
             .minus(
                 transactionBlocks
-                    .let { if (date == null) listOf() else it.filter { date <= it.datePeriod!!.endDate } }
+                    .let { if (date == null) listOf() else it.filter { date < it.datePeriod!!.endDate } }
                     .map { it.total }
                     .sum()
             )
             .minus(
                 reconciliations
-                    .let { if (date == null) listOf() else it.filter { date <= it.date } }
+                    .let { if (date == null) listOf() else it.filter { date < it.date } }
                     .map { it.total }
                     .sum()
             )
@@ -25,13 +25,13 @@ object GuessPastUtil {
         return (budgetedCAs[category] ?: BigDecimal.ZERO)
             .minus(
                 transactionBlocks
-                    .let { if (date == null) listOf() else it.filter { date <= it.datePeriod!!.endDate } }
+                    .let { if (date == null) listOf() else it.filter { date < it.datePeriod!!.endDate } }
                     .mapNotNull { it.categoryAmounts[category] }
                     .sum()
             )
             .minus(
                 reconciliations
-                    .let { if (date == null) listOf() else it.filter { date <= it.date } }
+                    .let { if (date == null) listOf() else it.filter { date < it.date } }
                     .mapNotNull { it.categoryAmounts[category] }
                     .sum()
             )

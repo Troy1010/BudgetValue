@@ -41,6 +41,29 @@ internal class GuessPastUtilTest {
                 listOf<Reconciliation>(),
                 "2060".toMoney(),
             ),
+            tuple(
+                "1 Transaction 2",
+                "2023-05-02".toLocalDate(),
+                AccountsAggregate(listOf(Account("Account 1", "20000".toMoney()))),
+                listOf(
+                    TransactionBlock(
+                        "2023-05-02".toLocalDate().toPeriod(7),
+                        listOf(
+                            Transaction(
+                                date = "2023-01-12".toLocalDate(),
+                                description = "fakeDescription",
+                                amount = "-60.00".toMoney(),
+                                categoryAmounts = CategoryAmounts(),
+                                categorizationDate = null,
+                                id = "fakeID",
+                            )
+                        ),
+                        true,
+                    )
+                ),
+                listOf<Reconciliation>(),
+                "20000".toMoney(),
+            ),
         ).map { (testName, date, accountsAggregate, transactionBlocks, reconciliations, expected) ->
             DynamicTest.dynamicTest(testName) {
                 // # When
@@ -80,7 +103,7 @@ internal class GuessPastUtilTest {
                                 amount = "-60.00".toMoney(),
                                 categoryAmounts = CategoryAmounts(),
                                 categorizationDate = null,
-                                id = "fakeID"
+                                id = "fakeID",
                             ).categorize(Given.categoryS)
                         ),
                         true,
