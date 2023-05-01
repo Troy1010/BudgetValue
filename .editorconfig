@@ -1,0 +1,6 @@
+root = true
+
+[*.{kt,java}] # Should I add xml,gradle,md here too?
+max_line_length = 10000
+ij_kotlin_allow_trailing_comma = true
+ij_kotlin_allow_trailing_comma_on_call_site = true
