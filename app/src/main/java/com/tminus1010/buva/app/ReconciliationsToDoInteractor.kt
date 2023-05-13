@@ -1,5 +1,6 @@
 package com.tminus1010.buva.app
 
+import com.tminus1010.buva.all_layers.logq
 import com.tminus1010.buva.data.AccountsRepo
 import com.tminus1010.buva.data.CurrentDate
 import com.tminus1010.buva.data.ReconciliationsRepo
@@ -30,20 +31,23 @@ class ReconciliationsToDoInteractor @Inject constructor(
                     .map { transactionBlock ->
                         Pair(
                             transactionBlock,
-                            reconciliations.find { it.date in transactionBlock.datePeriod!! }
+                            reconciliations.find { it.date in transactionBlock.datePeriod!! },
                         )
                     }
                     .filter { (transactionBlock, reconciliation) ->
+                        transactionBlock.datePeriod!!
                         (reconciliation == null)
-//                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod?.toDisplayStr()} b/c reconciliation") }
+                            .also { if (!it) logq("filtering out ReconciliationToDo.PlanZ ${transactionBlock.datePeriod.toDisplayStr()} b/c reconciliation") }
+                                && (currentDate.flow.value !in transactionBlock.datePeriod)
+                            .also { if (!it) logq("filtering out ReconciliationToDo.PlanZ ${transactionBlock.datePeriod.toDisplayStr()} b/c currentDate:${currentDate.flow.value} is within transactionBlock.datePeriod:${transactionBlock.datePeriod}") }
 //                                && transactionBlock.isFullyImported
-//                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod?.toDisplayStr()} b/c isFullyImported:$it") }
+//                            .also { if (!it) logz("filtering out ReconciliationToDo.PlanZ ${transactionBlock.datePeriod.toDisplayStr()} b/c isFullyImported:$it") }
 //                                && transactionBlock.spendBlock.isFullyCategorized
-//                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod?.toDisplayStr()} b/c isFullyCategorized:$it") }
-//                                && (currentDate.flow.value !in transactionBlock.datePeriod!!)
-//                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod.toDisplayStr()} b/c it's current") }
+//                            .also { if (!it) logz("filtering out ReconciliationToDo.PlanZ ${transactionBlock.datePeriod.toDisplayStr()} b/c isFullyCategorized:$it") }
+//                                && (currentDate.flow.value !in transactionBlock.datePeriod)
+//                            .also { if (!it) logz("filtering out ReconciliationToDo.PlanZ ${transactionBlock.datePeriod.toDisplayStr()} b/c it's current") }
                                 && (!MiscUtil.shouldSkip(reconciliationSkips, transactionBlock, anchorDateOffset))
-//                            .also { if (!it) logz("filtering for ReconciliationToDo.PlanZ ${transactionBlock.datePeriod?.toDisplayStr()} b/c it's skipped") }
+                            .also { if (!it) logq("filtering out ReconciliationToDo.PlanZ ${transactionBlock.datePeriod.toDisplayStr()} b/c it's skipped") }
                     }
                     .map { (transactionBlock) ->
                         ReconciliationToDo.PlanZ(transactionBlock)
@@ -52,7 +56,7 @@ class ReconciliationsToDoInteractor @Inject constructor(
             }
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
 
-//    private val accountReconciliationsToDo =
+    //    private val accountReconciliationsToDo =
 //        combine(entireHistoryInteractor.categoryAmountsAndTotal, accountsRepo.accountsAggregate, ::tuple)
 //            .flatMapLatest { (entireHistory, accountsAggregate) ->
 //                if (entireHistory.total.easyEquals(accountsAggregate.total))
@@ -65,11 +69,9 @@ class ReconciliationsToDoInteractor @Inject constructor(
 //                        )
 //                    }
 //            }
-
     val reconciliationsToDo =
         planReconciliationsToDo
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)
-
     val currentReconciliationToDo =
         reconciliationsToDo.map { it.firstOrNull() ?: ReconciliationToDo.Anytime }
             .shareIn(GlobalScope, SharingStarted.Eagerly, 1)

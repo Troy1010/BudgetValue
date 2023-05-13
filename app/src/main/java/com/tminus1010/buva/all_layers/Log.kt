@@ -3,6 +3,9 @@ package com.tminus1010.buva.all_layers
 import android.util.Log
 import com.tminus1010.tmcommonkotlin.core.isNonInstrumentationTest
 
+fun logq(msg: Any?) {
+    Log.d("LOGQ", "LQ`$msg")
+}
 
 inline fun <reified T> T.logc(prefix: Any? = null, lambda: (x: T) -> Any?): T {
     return this.apply {

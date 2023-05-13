@@ -7,9 +7,8 @@ import io.reactivex.rxjava3.plugins.RxJavaPlugins
 @Keep
 open class BaseApp : Application() {
     override fun onCreate() {
-        logz("!*!*! START")
+        logq("!*!*! START")
         super.onCreate()
-
         // # Configure Rx
         RxJavaPlugins.setErrorHandler { throw it.cause ?: it }
     }
