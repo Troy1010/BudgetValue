@@ -9,10 +9,11 @@ repositories {
     mavenLocal()
     google()
     mavenCentral()
+    maven(url = "https://jitpack.io")
 }
 
 dependencies {
-    implementation("com.android.tools.build:gradle:7.3.0")
+    implementation("com.android.tools.build:gradle:7.4.2")
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.20")
     implementation(gradleApi())
     implementation(localGroovy())

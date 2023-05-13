@@ -11,9 +11,9 @@ plugins {
 android {
     compileSdk 33
 
-    compileOptions.sourceCompatibility JavaVersion.VERSION_1_8
-    compileOptions.targetCompatibility JavaVersion.VERSION_1_8
-    kotlinOptions.jvmTarget = "1.8"
+    compileOptions.sourceCompatibility JavaVersion.VERSION_17
+    compileOptions.targetCompatibility JavaVersion.VERSION_17
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
 
     defaultConfig {
         applicationId "com.tminus1010.buva"
@@ -70,6 +70,26 @@ budgetValuePluginSettings {
 afterEvaluate {
     tasks.named("clean_uninstallAll").configure {
         group = "other2"
+    }
+}
+
+def tmcommonkotlin_version = "1.7.0"
+
+// Jitpack does not play nicely with libraries that depend on each other in the same project. This is a workaround.
+// It might no longer be necessary.. and it might actually be fixable on the publishing side.
+configurations.all {
+    resolutionStrategy.dependencySubstitution {
+        substitute module("com.github.Troy1010:tmcommonkotlin-androidx:$tmcommonkotlin_version") using module("com.github.Troy1010.TMCommonKotlin:tmcommonkotlin-androidx:$tmcommonkotlin_version")
+        substitute module("com.github.Troy1010:tmcommonkotlin-core:$tmcommonkotlin_version") using module("com.github.Troy1010.TMCommonKotlin:tmcommonkotlin-core:$tmcommonkotlin_version")
+        substitute module("com.github.Troy1010:tmcommonkotlin-coroutines:$tmcommonkotlin_version") using module("com.github.Troy1010.TMCommonKotlin:tmcommonkotlin-coroutines:$tmcommonkotlin_version")
+        substitute module("com.github.Troy1010:tmcommonkotlin-customviews:$tmcommonkotlin_version") using module("com.github.Troy1010.TMCommonKotlin:tmcommonkotlin-customviews:$tmcommonkotlin_version")
+        substitute module("com.github.Troy1010:tmcommonkotlin-dsl:$tmcommonkotlin_version") using module("com.github.Troy1010.TMCommonKotlin:tmcommonkotlin-dsl:$tmcommonkotlin_version")
+        substitute module("com.github.Troy1010:tmcommonkotlin-microphone:$tmcommonkotlin_version") using module("com.github.Troy1010.TMCommonKotlin:tmcommonkotlin-microphone:$tmcommonkotlin_version")
+        substitute module("com.github.Troy1010:tmcommonkotlin-misc:$tmcommonkotlin_version") using module("com.github.Troy1010.TMCommonKotlin:tmcommonkotlin-misc:$tmcommonkotlin_version")
+        substitute module("com.github.Troy1010:tmcommonkotlin-rx3:$tmcommonkotlin_version") using module("com.github.Troy1010.TMCommonKotlin:tmcommonkotlin-rx3:$tmcommonkotlin_version")
+        substitute module("com.github.Troy1010:tmcommonkotlin-tuple:$tmcommonkotlin_version") using module("com.github.Troy1010.TMCommonKotlin:tmcommonkotlin-tuple:$tmcommonkotlin_version")
+        substitute module("com.github.Troy1010:tmcommonkotlin-view:$tmcommonkotlin_version") using module("com.github.Troy1010.TMCommonKotlin:tmcommonkotlin-view:$tmcommonkotlin_version")
+        substitute module("com.github.Troy1010:tmcommonkotlin-testoverrides:$tmcommonkotlin_version") using module("com.github.Troy1010.TMCommonKotlin:tmcommonkotlin-testoverrides:$tmcommonkotlin_version")
     }
 }
 
@@ -141,16 +161,17 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
 
     // # TMCommonKotlin
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-core:1.5.0'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-rx3:1.5.0'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-misc:1.5.0'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-tuple:1.5.0'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-view:1.5.0'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-coroutines:1.5.0'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-androidx:1.5.0'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-imagetotext:1.5.0'
-    implementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-customviews:1.5.0'
-    testImplementation 'com.tminus1010.tmcommonkotlin:tmcommonkotlin-testoverrides:1.5.0'
+//    implementation 'com.github.Troy1010:TMCommonKotlin:$tmcommonkotlin_version'
+    implementation "com.github.Troy1010.TMCommonKotlin:tmcommonkotlin-core:$tmcommonkotlin_version"
+    implementation "com.github.Troy1010.TMCommonKotlin:tmcommonkotlin-rx3:$tmcommonkotlin_version"
+    implementation "com.github.Troy1010.TMCommonKotlin:tmcommonkotlin-misc:$tmcommonkotlin_version"
+    implementation "com.github.Troy1010.TMCommonKotlin:tmcommonkotlin-tuple:$tmcommonkotlin_version"
+    implementation "com.github.Troy1010.TMCommonKotlin:tmcommonkotlin-view:$tmcommonkotlin_version"
+    implementation "com.github.Troy1010.TMCommonKotlin:tmcommonkotlin-coroutines:$tmcommonkotlin_version"
+    implementation "com.github.Troy1010.TMCommonKotlin:tmcommonkotlin-androidx:$tmcommonkotlin_version"
+    implementation "com.github.Troy1010.TMCommonKotlin:tmcommonkotlin-imagetotext:$tmcommonkotlin_version"
+    implementation "com.github.Troy1010.TMCommonKotlin:tmcommonkotlin-customviews:$tmcommonkotlin_version"
+    testImplementation "com.github.Troy1010.TMCommonKotlin:tmcommonkotlin-testoverrides:$tmcommonkotlin_version"
 
     // # Hilt
     implementation 'com.google.dagger:hilt-android:2.41'
