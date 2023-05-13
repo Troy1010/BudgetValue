@@ -29,7 +29,7 @@ open class BuvaPlugin : Plugin<Project> {
                 dependsOn("clean", "installDebug", "launchApp")
             }
             // # Register launchDevEnvs
-            layout.projectDirectory.dir("src/androidTest/java/com/tminus1010/budgetvalue/__devEnvs").asFileTree.filter { it.name.startsWith("DevEnv") }.map { it.name.dropLast(3) }.forEach {
+            layout.projectDirectory.dir("src/androidTest/java/com/tminus1010/buva/devEnvs").asFileTree.filter { it.name.startsWith("DevEnv") }.map { it.name.dropLast(3) }.forEach {
                 tasks.register("launch$it", LaunchDevEnv::class.java, budgetValuePluginSettings.adbAbsolutePath, it)
                     .configure { setMustRunAfter(listOf("installDebug", "installDebugAndroidTest")) }
                 tasks.register("installLaunch$it") {
