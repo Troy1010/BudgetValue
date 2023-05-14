@@ -73,7 +73,7 @@ afterEvaluate {
     }
 }
 
-def tmcommonkotlin_version = "1.7.1"
+def tmcommonkotlin_version = "1.7.2"
 
 // Jitpack does not play nicely with libraries that depend on each other in the same project. This is a workaround.
 // It might no longer be necessary.. and it might actually be fixable on the publishing side.

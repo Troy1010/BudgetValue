@@ -33,7 +33,7 @@ class ReconciliationsToDoInteractor @Inject constructor(
             .map { (transactionBlocks, reconciliations, reconciliationSkips, anchorDateOffset) ->
                 transactionBlocks
                     .map { transactionBlock ->
-                        Pair(
+                        tuple(
                             transactionBlock,
                             reconciliations.find { it.date in transactionBlock.datePeriod!! },
                         )
@@ -41,9 +41,9 @@ class ReconciliationsToDoInteractor @Inject constructor(
                     .filter { (transactionBlock, reconciliation) ->
                         transactionBlock.datePeriod!!
                         (reconciliation == null)
-                            .also { if (!it) logq("filtering out ReconciliationToDo.PlanZ ${transactionBlock.datePeriod.toDisplayStr()} b/c reconciliation") }
+                            .also { if (!it) logv("filtering out ReconciliationToDo.PlanZ ${transactionBlock.datePeriod.toDisplayStr()} b/c reconciliation") }
                                 && (currentDate.flow.value !in transactionBlock.datePeriod)
-                            .also { if (!it) logq("filtering out ReconciliationToDo.PlanZ ${transactionBlock.datePeriod.toDisplayStr()} b/c currentDate:${currentDate.flow.value} is within transactionBlock.datePeriod:${transactionBlock.datePeriod}") }
+                            .also { if (!it) logv("filtering out ReconciliationToDo.PlanZ ${transactionBlock.datePeriod.toDisplayStr()} b/c currentDate:${currentDate.flow.value} is within transactionBlock.datePeriod:${transactionBlock.datePeriod}") }
 //                                && transactionBlock.isFullyImported
 //                            .also { if (!it) logz("filtering out ReconciliationToDo.PlanZ ${transactionBlock.datePeriod.toDisplayStr()} b/c isFullyImported:$it") }
 //                                && transactionBlock.spendBlock.isFullyCategorized
@@ -51,7 +51,7 @@ class ReconciliationsToDoInteractor @Inject constructor(
 //                                && (currentDate.flow.value !in transactionBlock.datePeriod)
 //                            .also { if (!it) logz("filtering out ReconciliationToDo.PlanZ ${transactionBlock.datePeriod.toDisplayStr()} b/c it's current") }
                                 && (!MiscUtil.shouldSkip(reconciliationSkips, transactionBlock, anchorDateOffset))
-                            .also { if (!it) logq("filtering out ReconciliationToDo.PlanZ ${transactionBlock.datePeriod.toDisplayStr()} b/c it's skipped") }
+                            .also { if (!it) logv("filtering out ReconciliationToDo.PlanZ ${transactionBlock.datePeriod.toDisplayStr()} b/c it's skipped") }
                     }
                     .map { (transactionBlock) ->
                         ReconciliationToDo.PlanZ(transactionBlock)
