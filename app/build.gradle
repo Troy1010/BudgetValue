@@ -11,9 +11,9 @@ plugins {
 android {
     compileSdk 33
 
-    compileOptions.sourceCompatibility JavaVersion.VERSION_17
-    compileOptions.targetCompatibility JavaVersion.VERSION_17
-    kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
+    compileOptions.sourceCompatibility JavaVersion.VERSION_11
+    compileOptions.targetCompatibility JavaVersion.VERSION_11
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_11.toString()
 
     defaultConfig {
         applicationId "com.tminus1010.buva"
