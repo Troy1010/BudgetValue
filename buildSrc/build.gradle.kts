@@ -17,7 +17,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.20")
     implementation(gradleApi())
     implementation(localGroovy())
-    implementation("com.github.Troy1010.TMCommonKotlin:tmcommonkotlin-dsl:1.7.0")
+    implementation("com.github.Troy1010.TMCommonKotlin:tmcommonkotlin-dsl:1.8.3")
     implementation("com.google.dagger:hilt-android-gradle-plugin:2.41")
 }
 
