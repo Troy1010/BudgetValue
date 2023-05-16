@@ -2,6 +2,7 @@
 ext["kotlin_version"] = "1.6.20"
 
 plugins {
+    id("groovy")
     `kotlin-dsl`
 }
 
