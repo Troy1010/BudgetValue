@@ -1,18 +1,18 @@
 import org.gradle.api.Project
 
-class SharedGroovy {
+class ImplementTMCommonKotlin {
     /**
      * Allegedly, Groovy does not let you pass project directly, it must be within a closure.
      *
      * The method starts with "get" to avoid using extra parenthesis.
      */
-    static Closure getImplementTMCommonKotlin() {
+    static Closure getInvoke() {
         return (Project project) -> {
-            getImplementTMCommonKotlinInternal(project)
+            getInvokeInternal(project)
         }
     }
 
-    private static void getImplementTMCommonKotlinInternal(Project project) {
+    private static void getInvokeInternal(Project project) {
         List<String> list = new ArrayList()
         list.add("tmcommonkotlin-androidx")
         list.add("tmcommonkotlin-core")
