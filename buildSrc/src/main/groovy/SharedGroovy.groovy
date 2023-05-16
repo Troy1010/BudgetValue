@@ -27,7 +27,8 @@ class SharedGroovy {
         list.forEach((s) -> {
             implementationAndSubstitute(project, version, s)
         })
-        testImplementationAndSubstitute(project, version, "tmcommonkotlin-testoverrides")
+        testImplementationAndSubstitute(project, version, "tmcommonkotlin-testoverridelog")
+        testImplementationAndSubstitute(project, version, "tmcommonkotlin-test")
     }
 
     private static void implementationAndSubstitute(Project project, String version, String s) {
