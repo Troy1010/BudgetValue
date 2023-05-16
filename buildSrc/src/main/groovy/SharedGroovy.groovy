@@ -13,7 +13,6 @@ class SharedGroovy {
     }
 
     private static void getImplementTMCommonKotlinInternal(Project project) {
-        String version = "1.8.3"
         List<String> list = new ArrayList()
         list.add("tmcommonkotlin-androidx")
         list.add("tmcommonkotlin-core")
@@ -25,38 +24,38 @@ class SharedGroovy {
         list.add("tmcommonkotlin-view")
         list.add("tmcommonkotlin-imagetotext")
         list.forEach((s) -> {
-            implementationAndSubstitute(project, version, s)
+            implementationAndSubstitute(project, s)
         })
-        testImplementationAndSubstitute(project, version, "tmcommonkotlin-testoverridelog")
-        testImplementationAndSubstitute(project, version, "tmcommonkotlin-test")
+        testImplementationAndSubstitute(project, "tmcommonkotlin-testoverridelog")
+        testImplementationAndSubstitute(project, "tmcommonkotlin-test")
     }
 
-    private static void implementationAndSubstitute(Project project, String version, String s) {
+    private static void implementationAndSubstitute(Project project, String s) {
         project.configurations.all {
             resolutionStrategy.dependencySubstitution {
-                substitute module("com.github.Troy1010:${s}:${version}") using module("com.github.Troy1010.TMCommonKotlin:${s}:${version}")
+                substitute module("com.github.Troy1010:${s}:${Constants.tmcommonkotlin}") using module("com.github.Troy1010.TMCommonKotlin:${s}:${Constants.tmcommonkotlin}")
             }
         }
         project.dependencies {
             if (project.property("useMavenLocal") == "true") {
                 implementation "com.tminus1010.tmcommonkotlin:${s}:+"
             } else {
-                implementation "com.github.Troy1010.TMCommonKotlin:${s}:${version}"
+                implementation "com.github.Troy1010.TMCommonKotlin:${s}:${Constants.tmcommonkotlin}"
             }
         }
     }
 
-    private static void testImplementationAndSubstitute(Project project, String version, String s) {
+    private static void testImplementationAndSubstitute(Project project, String s) {
         project.configurations.all {
             resolutionStrategy.dependencySubstitution {
-                substitute module("com.github.Troy1010:${s}:${version}") using module("com.github.Troy1010.TMCommonKotlin:${s}:${version}")
+                substitute module("com.github.Troy1010:${s}:${Constants.tmcommonkotlin}") using module("com.github.Troy1010.TMCommonKotlin:${s}:${Constants.tmcommonkotlin}")
             }
         }
         project.dependencies {
             if (project.property("useMavenLocal") == "true") {
                 testImplementation "com.tminus1010.tmcommonkotlin:${s}:+"
             } else {
-                testImplementation "com.github.Troy1010.TMCommonKotlin:${s}:${version}"
+                testImplementation "com.github.Troy1010.TMCommonKotlin:${s}:${Constants.tmcommonkotlin}"
             }
         }
     }
