@@ -7,6 +7,7 @@ import com.tminus1010.buva.app.BudgetedInteractor
 import com.tminus1010.buva.app.TransactionsInteractor
 import com.tminus1010.buva.app.UserCategories
 import com.tminus1010.buva.data.AccountsRepo
+import com.tminus1010.buva.data.CurrentDate
 import com.tminus1010.buva.data.ReconciliationsRepo
 import com.tminus1010.buva.domain.GuessPastUtil
 import com.tminus1010.buva.ui.all_features.view_model_item.LineChartVMItem
@@ -27,12 +28,14 @@ class ReviewLineChartVM @Inject constructor(
     private val reconciliationsRepo: ReconciliationsRepo,
     private val userCategories: UserCategories,
     private val budgetedInteractor: BudgetedInteractor,
+    private val currentDate: CurrentDate,
 ) : ViewModel() {
     private val mapLabelToValues =
-        combine(userCategories.flow, transactionsInteractor.transactionBlocks)
-        { userCategories, transactionBlocks ->
+        combine(userCategories.flow, transactionsInteractor.transactionBlocks, currentDate.flow)
+        { userCategories, transactionBlocks, currentDate ->
             val savingsCategory = userCategories.find { it.name == "Savings" } // TODO: Should be an easier way to get Settings.
             transactionBlocks
+                .filter { currentDate !in it.datePeriod!! }
                 .sortedBy { it.datePeriod?.startDate }
                 .drop(1)
                 .associate {
@@ -46,15 +49,15 @@ class ReviewLineChartVM @Inject constructor(
                                     accountsRepo.accountsAggregate.first(),
                                     transactionsInteractor.transactionBlocks.first(),
                                     reconciliationsRepo.reconciliations.first(),
-                                ).toFloat()
+                                ).toFloat(),
                             ),
                             tuple(
                                 Color.RED,
-                                it.spendBlock.total.toFloat().absoluteValue
+                                it.spendBlock.total.toFloat().absoluteValue,
                             ),
                             tuple(
                                 Color.GREEN,
-                                it.incomeBlock.total.toFloat().absoluteValue
+                                it.incomeBlock.total.toFloat().absoluteValue,
                             ),
                             if (savingsCategory != null)
                                 tuple(
@@ -65,7 +68,7 @@ class ReviewLineChartVM @Inject constructor(
                                         budgetedInteractor.budgeted.first().categoryAmounts,
                                         transactionsInteractor.transactionBlocks.first(),
                                         reconciliationsRepo.reconciliations.first(),
-                                    ).toFloat()
+                                    ).toFloat(),
                                 )
                             else null,
 //                            tuple(
