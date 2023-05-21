@@ -33,6 +33,7 @@ import com.tminus1010.buva.environment.android_wrapper.HostActivityWrapper
 import com.tminus1010.buva.ui.all_features.ReadyToBudgetPresentationService
 import com.tminus1010.buva.ui.all_features.ShowImportResultAlertDialog
 import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
+import com.tminus1010.buva.ui.review.line_chart.ReviewLineChartService
 import com.tminus1010.tmcommonkotlin.androidx.ShowAlertDialog
 import com.tminus1010.tmcommonkotlin.androidx.ShowToast
 import com.tminus1010.tmcommonkotlin.coroutines.extensions.observe
@@ -85,6 +86,9 @@ class HostActivity : AppCompatActivity() {
 
     @Inject
     lateinit var selectedHostPage: SelectedHostPage
+
+    @Inject
+    lateinit var reviewLineChartService: ReviewLineChartService
 
     val hostNavHostFrag by lazy { supportFragmentManager.findFragmentById(R.id.fragmentcontainerview) as HostNavHostFrag }
     private val nav by lazy { findNavController(R.id.fragmentcontainerview) }
