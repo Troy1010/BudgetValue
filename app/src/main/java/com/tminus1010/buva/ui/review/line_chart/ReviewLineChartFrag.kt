@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import com.tminus1010.buva.R
 import com.tminus1010.buva.databinding.FragReviewLineChartBinding
+import com.tminus1010.buva.ui.review.line_chart.ReviewLineChartVM
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

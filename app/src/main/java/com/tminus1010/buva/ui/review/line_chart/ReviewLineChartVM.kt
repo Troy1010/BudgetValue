@@ -1,4 +1,4 @@
-package com.tminus1010.buva.ui.review_spend_bar_chart
+package com.tminus1010.buva.ui.review.line_chart
 
 import android.graphics.Color
 import androidx.lifecycle.ViewModel
