@@ -10,6 +10,7 @@ import com.tminus1010.buva.data.AccountsRepo
 import com.tminus1010.buva.data.CurrentDate
 import com.tminus1010.buva.data.ReconciliationsRepo
 import com.tminus1010.buva.domain.GuessPastUtil
+import com.tminus1010.buva.ui.all_features.ThrobberSharedVM
 import com.tminus1010.buva.ui.all_features.view_model_item.LineChartVMItem
 import com.tminus1010.tmcommonkotlin.core.extensions.toDisplayStr
 import com.tminus1010.tmcommonkotlin.tuple.tuple
@@ -29,6 +30,7 @@ class ReviewLineChartVM @Inject constructor(
     private val userCategories: UserCategories,
     private val budgetedInteractor: BudgetedInteractor,
     private val currentDate: CurrentDate,
+    private val throbberSharedVM: ThrobberSharedVM,
 ) : ViewModel() {
     private val mapLabelToValues =
         combine(userCategories.flow, transactionsInteractor.transactionBlocks, currentDate.flow)
@@ -79,6 +81,7 @@ class ReviewLineChartVM @Inject constructor(
                     )
                 }
         }
+            .let(throbberSharedVM::decorate)
             .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
     val lineChartVMItem =
         LineChartVMItem(

@@ -4,15 +4,41 @@ import android.view.View
 import com.tminus1010.tmcommonkotlin.coroutines.IJobEvents
 import io.reactivex.rxjava3.core.Completable
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.scan
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.runBlocking
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ThrobberSharedVM @Inject constructor() : IJobEvents {
     // # Input
-    fun <T> decorate(flow: Flow<T>) = flow.onStart { asyncTaskStarted.emit(Unit) }.onCompletion { asyncTaskEnded.emit(Unit) }
+    fun <T> decorate(flow: Flow<T>): Flow<T> {
+        val started = AtomicBoolean(false)
+        return flow
+            .onStart {
+                if (started.compareAndSet(false, true))
+                    asyncTaskStarted.emit(Unit)
+            }
+            .onEach {
+                if (started.compareAndSet(true, false))
+                    asyncTaskEnded.emit(Unit)
+            }
+            .onCompletion {
+                if (started.compareAndSet(true, false))
+                    asyncTaskEnded.emit(Unit)
+            }
+    }
+
     fun decorate(completable: Completable) = completable.doOnSubscribe { runBlocking { asyncTaskStarted.emit(Unit) } }.doOnTerminate { runBlocking { asyncTaskEnded.emit(Unit) } }
 
     suspend fun asyncTaskStarted() {
