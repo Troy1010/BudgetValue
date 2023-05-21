@@ -34,6 +34,7 @@ class ReviewLineChartVM @Inject constructor(
             val savingsCategory = userCategories.find { it.name == "Savings" } // TODO: Should be an easier way to get Settings.
             transactionBlocks
                 .sortedBy { it.datePeriod?.startDate }
+                .drop(1)
                 .associate {
                     tuple(
                         it.datePeriod!!.startDate.toDisplayStr(),
