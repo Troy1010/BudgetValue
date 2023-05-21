@@ -94,7 +94,7 @@ class ReviewPieChartVM @Inject constructor(
             TransactionBlock(
                 period,
                 transactionsAggregate.spends,
-                false // TODO: isFullyImported isn't important..? So just using false here..?
+                false, // TODO: isFullyImported isn't important..? So just using false here..?
             )
         }
 
@@ -111,9 +111,9 @@ class ReviewPieChartVM @Inject constructor(
                 CategoryAmounts(transactionBlock.categoryAmounts.plus(tuple(Category("Uncategorized"), transactionBlock.defaultAmount)))
             listOfNotNull(
                 *categoryAmountsRedefined.filter { it.value.abs() >= transactionBlock.total.abs() * BigDecimal(0.03) }
-                    .map { tuple(it.value.abs(), tuple(PieEntry(it.value.abs().toFloat(), it.key.name), it.key.color)) }.toTypedArray(),
+                    .map { tuple(it.key.name, tuple(PieEntry(it.value.abs().toFloat(), it.key.name), it.key.color)) }.toTypedArray(),
                 categoryAmountsRedefined.filter { it.value.abs() < transactionBlock.total.abs() * BigDecimal(0.03) }
-                    .let { if (it.values.sum().isZero) null else tuple(it.values.sum().abs(), tuple(PieEntry(it.values.sum().abs().toFloat(), "Other"), otherColor)) },
+                    .let { if (it.values.sum().isZero) null else tuple("Other", tuple(PieEntry(it.values.sum().abs().toFloat(), "Other"), otherColor)) },
             )
                 .sortedBy { it.first }
                 .map { it.second }
@@ -147,6 +147,7 @@ class ReviewPieChartVM @Inject constructor(
                 is NoMoreDataException,
                 is TooFarBackException,
                 -> Unit
+
                 else -> logz("error:", it)
             }
         }
