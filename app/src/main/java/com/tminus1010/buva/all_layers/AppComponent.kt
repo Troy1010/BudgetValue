@@ -2,6 +2,7 @@ package com.tminus1010.buva.all_layers
 
 import android.app.Application
 import com.tminus1010.buva.data.ActivePlanRepo
+import com.tminus1010.buva.data.ActiveReconciliationRepo
 import com.tminus1010.buva.data.CategoryRepo
 import com.tminus1010.buva.data.SettingsRepo
 import com.tminus1010.buva.environment.EnvironmentModule
@@ -22,6 +23,7 @@ interface AppComponent {
     fun settingsRepo(): SettingsRepo
     fun activePlanRepo(): ActivePlanRepo
     fun categoryRepo(): CategoryRepo
+    fun activeReconciliationRepo(): ActiveReconciliationRepo
 
     @Component.Builder
     interface Builder {
