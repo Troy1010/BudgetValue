@@ -118,7 +118,7 @@ class ActivePlanRepoTest {
     val fakeDataStore: DataStore<Preferences> = FakeDataStore()
 
     @BindValue
-    val realSharedPreferences: SharedPreferences = EnvironmentModule.providesSharedPreferences(app)
+    val realSharedPreferences: SharedPreferences = EnvironmentModule().providesSharedPreferences(app)
 
     @BindValue
     val categoryDatabase: CategoryDatabase = Room.inMemoryDatabaseBuilder(app, CategoryDatabase::class.java).build()
