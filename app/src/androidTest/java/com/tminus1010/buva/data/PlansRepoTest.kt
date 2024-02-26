@@ -1,40 +1,20 @@
 package com.tminus1010.buva.data
 
-import android.content.SharedPreferences
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.room.Room
-import com.tminus1010.buva.core_testing.shared.FakeDataStore
-import com.tminus1010.buva.core_testing.shared.Given
-import com.tminus1010.buva.core_testing.app
-import com.tminus1010.buva.environment.EnvironmentModule
+import androidx.test.core.app.ApplicationProvider
+import com.tminus1010.buva.all_layers.DaggerAppComponent
 import com.tminus1010.buva.app.DatePeriodService
-import com.tminus1010.buva.environment.room.CategoryDatabase
-import com.tminus1010.buva.environment.room.MiscDatabase
-import com.tminus1010.buva.environment.adapter.RoomWithCategoriesTypeConverter
+import com.tminus1010.buva.core_testing.BaseFakeEnvironmentModule
+import com.tminus1010.buva.core_testing.shared.Given
 import com.tminus1010.buva.domain.CategoryAmounts
 import com.tminus1010.buva.domain.Plan
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.testing.BindValue
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.UninstallModules
-import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import java.math.BigDecimal
 import java.time.LocalDate
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@UninstallModules(EnvironmentModule::class)
-@HiltAndroidTest
 class PlansRepoTest {
     @Test
     fun default() = runBlocking {
@@ -54,7 +34,7 @@ class PlansRepoTest {
             Plan(
                 datePeriodService.getDatePeriod2(LocalDate.now()).first(),
                 BigDecimal("11"),
-                CategoryAmounts(Given.categories[0] to BigDecimal("9"))
+                CategoryAmounts(Given.categories[0] to BigDecimal("9")),
             )
         // # When
         plansRepo.push(givenPlan)
@@ -71,7 +51,7 @@ class PlansRepoTest {
             Plan(
                 datePeriodService.getDatePeriod2(LocalDate.now()).first(),
                 BigDecimal("11"),
-                CategoryAmounts(Given.categories[0] to BigDecimal("9"))
+                CategoryAmounts(Given.categories[0] to BigDecimal("9")),
             )
         plansRepo.push(givenPlan)
         Thread.sleep(1000)
@@ -84,8 +64,8 @@ class PlansRepoTest {
                 Plan(
                     datePeriodService.getDatePeriod2(LocalDate.now()).first(),
                     BigDecimal("11"),
-                    CategoryAmounts(Given.categories[0] to BigDecimal("35"))
-                )
+                    CategoryAmounts(Given.categories[0] to BigDecimal("35")),
+                ),
             ),
             plansRepo.plans.first(),
         )
@@ -99,7 +79,7 @@ class PlansRepoTest {
             Plan(
                 datePeriodService.getDatePeriod2(LocalDate.now()).first(),
                 BigDecimal("11"),
-                CategoryAmounts(Given.categories[0] to BigDecimal("9"))
+                CategoryAmounts(Given.categories[0] to BigDecimal("9")),
             )
         plansRepo.push(givenPlan)
         Thread.sleep(1000)
@@ -112,8 +92,8 @@ class PlansRepoTest {
                 Plan(
                     datePeriodService.getDatePeriod2(LocalDate.now()).first(),
                     BigDecimal("77"),
-                    CategoryAmounts(Given.categories[0] to BigDecimal("9"))
-                )
+                    CategoryAmounts(Given.categories[0] to BigDecimal("9")),
+                ),
             ),
             plansRepo.plans.first(),
         )
@@ -127,7 +107,7 @@ class PlansRepoTest {
             Plan(
                 datePeriodService.getDatePeriod2(LocalDate.now()).first(),
                 BigDecimal("11"),
-                CategoryAmounts(Given.categories[0] to BigDecimal("9"))
+                CategoryAmounts(Given.categories[0] to BigDecimal("9")),
             )
         plansRepo.push(givenPlan)
         Thread.sleep(1000)
@@ -135,7 +115,7 @@ class PlansRepoTest {
             Plan(
                 datePeriodService.getDatePeriod2(LocalDate.now()).first(),
                 BigDecimal("11"),
-                CategoryAmounts(Given.categories[0] to BigDecimal("9"))
+                CategoryAmounts(Given.categories[0] to BigDecimal("9")),
             )
         // # When
         plansRepo.updatePlan(givenPlan2)
@@ -152,7 +132,7 @@ class PlansRepoTest {
             Plan(
                 datePeriodService.getDatePeriod2(LocalDate.now()).first(),
                 BigDecimal("11"),
-                CategoryAmounts(Given.categories[0] to BigDecimal("9"))
+                CategoryAmounts(Given.categories[0] to BigDecimal("9")),
             )
         plansRepo.push(givenPlan)
         Thread.sleep(1000)
@@ -163,42 +143,19 @@ class PlansRepoTest {
         assertEquals(listOf<Plan>(), plansRepo.plans.first())
     }
 
-    @get:Rule
-    var hiltAndroidRule = HiltAndroidRule(this)
-
-    @Inject
     lateinit var plansRepo: PlansRepo
-
-    @Inject
-    lateinit var datePeriodService: DatePeriodService
-
-    @Inject
     lateinit var categoryRepo: CategoryRepo
+    lateinit var datePeriodService: DatePeriodService
 
     @Before
     fun before() {
-        hiltAndroidRule.inject()
-    }
-
-    @BindValue
-    val fakeDataStore: DataStore<Preferences> = FakeDataStore()
-
-    @BindValue
-    val realSharedPreferences: SharedPreferences = EnvironmentModule().providesSharedPreferences(app)
-
-    @BindValue
-    val categoryDatabase: CategoryDatabase = Room.inMemoryDatabaseBuilder(app, CategoryDatabase::class.java).build()
-
-    @InstallIn(SingletonComponent::class)
-    @Module
-    object MockModule {
-        @Provides
-        @Singleton
-        fun miscDatabase(roomWithCategoriesTypeConverter: RoomWithCategoriesTypeConverter): MiscDatabase {
-            return Room.inMemoryDatabaseBuilder(app, MiscDatabase::class.java)
-                .addTypeConverter(roomWithCategoriesTypeConverter)
-                .fallbackToDestructiveMigration()
+        val component =
+            DaggerAppComponent.builder()
+                .environmentModule(BaseFakeEnvironmentModule())
+                .application(ApplicationProvider.getApplicationContext())
                 .build()
-        }
+        plansRepo = component.plansRepo()
+        categoryRepo = component.categoryRepo()
+        datePeriodService = component.datePeriodService()
     }
 }

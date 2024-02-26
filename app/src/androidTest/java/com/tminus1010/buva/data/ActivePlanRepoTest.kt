@@ -14,7 +14,6 @@ import org.junit.Test
 import java.math.BigDecimal
 
 class ActivePlanRepoTest {
-
     @Test
     fun default() = runBlocking {
         // # Given

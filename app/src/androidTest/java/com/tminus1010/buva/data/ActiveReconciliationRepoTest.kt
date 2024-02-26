@@ -55,7 +55,6 @@ class ActiveReconciliationRepoTest {
         Thread.sleep(500) // Why is this necessary..?
     }
 
-    lateinit var activePlanRepo: ActivePlanRepo
     lateinit var categoryRepo: CategoryRepo
     lateinit var activeReconciliationRepo: ActiveReconciliationRepo
 
@@ -66,7 +65,6 @@ class ActiveReconciliationRepoTest {
                 .environmentModule(BaseFakeEnvironmentModule())
                 .application(ApplicationProvider.getApplicationContext())
                 .build()
-        activePlanRepo = component.activePlanRepo()
         categoryRepo = component.categoryRepo()
         activeReconciliationRepo = component.activeReconciliationRepo()
     }
