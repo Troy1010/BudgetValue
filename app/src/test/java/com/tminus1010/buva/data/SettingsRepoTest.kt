@@ -5,7 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.tminus1010.buva.all_layers.DaggerAppComponent
 import com.tminus1010.buva.core_testing.shared.FakeDataStore
-import com.tminus1010.buva.environment.EnvironmentModule2
+import com.tminus1010.buva.environment.EnvironmentModule
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -22,7 +22,7 @@ internal class SettingsRepoTest {
             DaggerAppComponent.builder()
                 .application(mockk())
                 .environmentModule2(
-                    object : EnvironmentModule2() {
+                    object : EnvironmentModule() {
                         override fun provideDataStore(application: Application): DataStore<Preferences> {
                             return FakeDataStore()
                         }

@@ -2,13 +2,13 @@ package com.tminus1010.buva.all_layers
 
 import android.app.Application
 import com.tminus1010.buva.data.SettingsRepo
-import com.tminus1010.buva.environment.EnvironmentModule2
+import com.tminus1010.buva.environment.EnvironmentModule
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [EnvironmentModule2::class])
+@Component(modules = [EnvironmentModule::class])
 interface AppComponent {
 
     fun settingsRepo(): SettingsRepo
@@ -17,7 +17,7 @@ interface AppComponent {
     interface Builder {
         @BindsInstance
         fun application(application: Application): Builder
-        fun environmentModule2(environmentModule2: EnvironmentModule2): Builder
+        fun environmentModule2(environmentModule: EnvironmentModule): Builder
         fun build(): AppComponent
     }
 }
