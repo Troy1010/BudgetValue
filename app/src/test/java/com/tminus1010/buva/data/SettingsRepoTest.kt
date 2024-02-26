@@ -21,7 +21,7 @@ internal class SettingsRepoTest {
         val settingsRepo =
             DaggerAppComponent.builder()
                 .application(mockk())
-                .environmentModule2(
+                .environmentModule(
                     object : EnvironmentModule() {
                         override fun provideDataStore(application: Application): DataStore<Preferences> {
                             return FakeDataStore()
