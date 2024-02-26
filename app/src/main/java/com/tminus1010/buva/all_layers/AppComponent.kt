@@ -8,7 +8,6 @@ import com.tminus1010.buva.data.CategoryRepo
 import com.tminus1010.buva.data.PlansRepo
 import com.tminus1010.buva.data.SettingsRepo
 import com.tminus1010.buva.environment.EnvironmentModule
-import com.tminus1010.buva.environment.EnvironmentModule_NotCurrentlyReplacedInUnitTests
 import com.tminus1010.buva.environment.adapter.MoshiWithCategoriesProvider
 import dagger.BindsInstance
 import dagger.Component
@@ -18,7 +17,6 @@ import javax.inject.Singleton
 @Component(
     modules = [
         EnvironmentModule::class,
-        EnvironmentModule_NotCurrentlyReplacedInUnitTests::class,
     ],
 )
 interface AppComponent {

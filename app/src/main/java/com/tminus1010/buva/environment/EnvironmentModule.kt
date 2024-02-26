@@ -7,14 +7,20 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.room.Room
 import com.tminus1010.buva.environment.adapter.RoomWithCategoriesTypeConverter
+import com.tminus1010.buva.environment.android_wrapper.AndroidNavigationWrapper
+import com.tminus1010.buva.environment.android_wrapper.AndroidNavigationWrapperImpl
 import com.tminus1010.buva.environment.room.CategoryDatabase
 import com.tminus1010.buva.environment.room.Migrations
+import com.tminus1010.buva.environment.room.MiscDAO
 import com.tminus1010.buva.environment.room.MiscDatabase
+import com.tminus1010.buva.environment.room.UserCategoriesDAO
+import com.tminus1010.tmcommonkotlin.imagetotext.ImageToText
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -44,4 +50,18 @@ open class EnvironmentModule {
     @Reusable
     open fun providesSharedPreferences(application: Application): SharedPreferences =
         application.getSharedPreferences("SharedPref", Context.MODE_PRIVATE)
+
+    @Provides
+    @Singleton
+    fun providesMiscDao(roomDatabase: MiscDatabase): MiscDAO = roomDatabase.miscDAO()
+
+    @Provides
+    @Singleton
+    fun provideUserCategoriesDAO(categoryDatabase: CategoryDatabase): UserCategoriesDAO = categoryDatabase.userCategoriesDAO()
+
+    @Provides
+    fun provideImageToText(application: Application): ImageToText = ImageToText(application)
+
+    @Provides
+    fun provideAndroidNavigationWrapper(): AndroidNavigationWrapper = AndroidNavigationWrapperImpl()
 }
